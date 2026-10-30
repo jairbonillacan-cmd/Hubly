@@ -1,0 +1,324 @@
+/*
+ * THESIS: una landing de producto clara que se atreve a mostrar el flujo real (aprobar una publicación) en vez de prometerlo; rechaza logos y cifras inventadas.
+ * OWN-WORLD: verde agencia, tinta verde oscura, amarillo marcador y coral; Bricolage Grotesque y Figtree; ventanas de app redondeadas con portadas dibujadas.
+ * STORY: el visitante reconoce su caos, ve cómo se ordena, entiende que es abierto y en desarrollo, y se une a la lista.
+ * FIRST VIEWPORT: titular centrado grande, subtítulo, formulario de lista de espera y enlace a GitHub, con la demo asomando debajo.
+ * FORM: dirección fijada por el usuario (landing de SaaS familiar); seed 72ca80b9.
+ * FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance.
+ */
+import { Cover, type CoverKind } from "@/components/Cover";
+import { HeroDemo } from "@/components/HeroDemo";
+import { WaitlistForm } from "@/components/WaitlistForm";
+
+const REPO_URL = "https://github.com/jairbonillacan-cmd/Hubly";
+
+const CHAOS = [
+  "Las fotos, en tres carpetas de Drive.",
+  "Los textos, en un documento que nadie encuentra.",
+  "Las aprobaciones, perdidas en WhatsApp.",
+  "Los reportes, a mano y a fin de mes.",
+];
+
+const GRID: { kind: CoverKind; label: string }[] = [
+  { kind: "cup", label: "Lun 12" },
+  { kind: "beans", label: "Mar 13" },
+  { kind: "sun", label: "Mié 14" },
+  { kind: "steam", label: "Jue 15" },
+  { kind: "leaf", label: "Vie 16" },
+  { kind: "cup", label: "Sáb 17" },
+];
+
+const REPORT = [
+  { label: "Instagram", value: 84 },
+  { label: "TikTok", value: 62 },
+  { label: "Facebook", value: 37 },
+  { label: "LinkedIn", value: 21 },
+];
+
+const ROADMAP = [
+  { state: "done", title: "Repositorio, licencia y esta página" },
+  { state: "next", title: "Calendario y publicación programada" },
+  { state: "later", title: "Parrillas y aprobación por enlace" },
+  { state: "later", title: "Reportes y panel de anuncios" },
+  { state: "later", title: "Asistente con la voz de cada marca" },
+];
+
+const ROADMAP_LABEL: Record<string, string> = {
+  done: "Hecho",
+  next: "Lo siguiente",
+  later: "Después",
+};
+
+const FAQ = [
+  {
+    question: "¿Ya puedo usar Hubly?",
+    answer:
+      "Todavía no. El proyecto está empezando y la app aún no existe. Únete a la lista o sigue el repositorio para enterarte cuando haya algo que probar.",
+  },
+  {
+    question: "¿Cuánto va a costar?",
+    answer:
+      "El código es abierto y alojarlo por tu cuenta no requiere pagar ninguna licencia; solo cubres tu propia infraestructura. Aún no hemos decidido si habrá una versión alojada por nosotros.",
+  },
+  {
+    question: "¿Qué redes sociales tendrá?",
+    answer:
+      "Queremos cubrir las principales, pero la lista definitiva y su orden todavía no están decididos. Puedes proponer las que más necesitas en GitHub.",
+  },
+  {
+    question: "¿Qué significa la licencia AGPL-3.0?",
+    answer:
+      "Puedes usar, modificar y alojar Hubly libremente. Si ofreces una versión modificada como servicio a otras personas, también tienes que compartir ese código.",
+  },
+  {
+    question: "¿Cómo puedo ayudar?",
+    answer:
+      "Cuéntanos cómo trabaja tu agencia y qué te quita más tiempo abriendo un issue en GitHub. Esa información es lo más útil en esta etapa.",
+  },
+];
+
+function Logo() {
+  return (
+    <a href="#inicio" className="logo" aria-label="Hubly, inicio">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="9" fill="#0a7a55" />
+        <path d="M16 16 9 9M16 16l7-7M16 16l-7 7M16 16l7 7" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" />
+        <circle cx="16" cy="16" r="5" fill="#ffd23f" />
+        <circle cx="8.5" cy="8.5" r="2.6" fill="#fff" />
+        <circle cx="23.5" cy="8.5" r="2.6" fill="#fff" />
+        <circle cx="8.5" cy="23.5" r="2.6" fill="#fff" />
+        <circle cx="23.5" cy="23.5" r="2.6" fill="#fff" />
+      </svg>
+      Hubly
+    </a>
+  );
+}
+
+function GitHubIcon() {
+  return (
+    <svg viewBox="0 0 16 16" className="icon" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.77-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"
+      />
+    </svg>
+  );
+}
+
+export default function Home() {
+  return (
+    <>
+      <header className="nav">
+        <div className="nav-inner">
+          <Logo />
+          <nav aria-label="Principal">
+            <a href="#funciones">Funciones</a>
+            <a href="#abierto">Código abierto</a>
+            <a href="#preguntas">Preguntas</a>
+          </nav>
+          <div className="nav-actions">
+            <a href={REPO_URL} className="nav-github">
+              <GitHubIcon />
+              <span>GitHub</span>
+            </a>
+            <a href="#lista" className="button button--primary button--small">
+              Unirme
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <main id="inicio">
+        <section className="hero">
+          <p className="hero-status">
+            <span aria-hidden="true" /> En desarrollo y de código abierto
+          </p>
+          <h1>
+            Todas las marcas de tu agencia, en <mark>un solo lugar</mark>
+          </h1>
+          <p className="hero-lead">
+            Programa publicaciones, arma parrillas, consigue aprobaciones y entrega reportes sin saltar entre diez herramientas.
+          </p>
+          <div className="hero-actions" id="lista">
+            <WaitlistForm />
+            <a href={REPO_URL} className="hero-github">
+              <GitHubIcon />
+              Seguir el proyecto en GitHub
+            </a>
+          </div>
+          <HeroDemo />
+        </section>
+
+        <section className="chaos" aria-labelledby="chaos-title">
+          <h2 id="chaos-title" className="sr-only">
+            El problema
+          </h2>
+          <ul>
+            {CHAOS.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+          <p className="chaos-close">Hubly quiere juntar todo eso en una sola pantalla.</p>
+        </section>
+
+        <section className="features" id="funciones" aria-label="Funciones previstas">
+          <article className="feature">
+            <div className="feature-text">
+              <h2>La parrilla se arma sola</h2>
+              <p>
+                Ordena las publicaciones por día y compártelas con un enlace o en PDF. Sin copiar y pegar en una presentación cada mes.
+              </p>
+              <p className="planned">Función prevista</p>
+            </div>
+            <div className="feature-visual feature-visual--yellow">
+              <div className="grid-sheet">
+                <p>Café Lunar · Octubre</p>
+                <ul>
+                  {GRID.map((item) => (
+                    <li key={item.label}>
+                      <Cover kind={item.kind} />
+                      <span>{item.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article className="feature feature--flip">
+            <div className="feature-text">
+              <h2>El cliente aprueba con un enlace</h2>
+              <p>
+                Sin cuenta y sin contraseña. Comenta o aprueba cada publicación, y tu equipo ve la respuesta en el mismo calendario.
+              </p>
+              <p className="planned">Función prevista</p>
+            </div>
+            <div className="feature-visual feature-visual--lilac">
+              <div className="thread">
+                <p className="bubble bubble--client">
+                  <b>Laura, cliente</b>
+                  Me encanta, pero cambiemos «este viernes» por «desde el 16».
+                </p>
+                <p className="bubble bubble--team">
+                  <b>Tu equipo</b>
+                  Hecho. ¿La apruebas así?
+                </p>
+                <p className="thread-approved">
+                  <svg viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="m4 10.5 4 4 8-9" />
+                  </svg>
+                  Laura aprobó la publicación
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <article className="feature">
+            <div className="feature-text">
+              <h2>El reporte, listo para enviar</h2>
+              <p>
+                Reúne los datos de las redes y los anuncios de cada cliente en un reporte mensual, sin pasar la tarde en una hoja de cálculo.
+              </p>
+              <p className="planned">Función prevista</p>
+            </div>
+            <div className="feature-visual feature-visual--coral">
+              <div className="report">
+                <p>
+                  Alcance por red <span>Datos de ejemplo</span>
+                </p>
+                <ul>
+                  {REPORT.map((row) => (
+                    <li key={row.label}>
+                      <span>{row.label}</span>
+                      <i style={{ width: `${row.value}%` }} />
+                      <b>{row.value} mil</b>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article className="feature feature--flip">
+            <div className="feature-text">
+              <h2>Textos con la voz de cada marca</h2>
+              <p>
+                Un asistente con IA que aprende cómo habla cada cliente y respeta sus reglas, para que el primer borrador no empiece en blanco.
+              </p>
+              <p className="planned">Función prevista</p>
+            </div>
+            <div className="feature-visual feature-visual--green">
+              <div className="voice">
+                <p className="voice-rule">
+                  Regla de Café Lunar: <s>«imperdible»</s> no se usa
+                </p>
+                <p className="voice-draft">Tu lunes merece una taza hecha con calma. ¿Empezamos?</p>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section className="open" id="abierto">
+          <div className="open-inner">
+            <h2>Tu herramienta, tus datos, tu servidor</h2>
+            <dl>
+              <div>
+                <dt>Alójalo donde quieras</dt>
+                <dd>La información de tus clientes se queda en la infraestructura que tú elijas.</dd>
+              </div>
+              <div>
+                <dt>Sin licencia por marca</dt>
+                <dd>Si lo alojas tú, crecer en clientes o en equipo no añade cobros de licencia.</dd>
+              </div>
+              <div>
+                <dt>Código a la vista</dt>
+                <dd>Publicado con licencia AGPL-3.0, para revisarlo, adaptarlo y mejorarlo entre todos.</dd>
+              </div>
+            </dl>
+            <a href={REPO_URL} className="button button--light">
+              <GitHubIcon />
+              Ver el repositorio
+            </a>
+          </div>
+        </section>
+
+        <section className="roadmap" aria-labelledby="roadmap-title">
+          <h2 id="roadmap-title">Dónde estamos</h2>
+          <p>Preferimos decirlo claro: esto apenas empieza. El orden puede cambiar según lo que nos cuenten las agencias.</p>
+          <ol>
+            {ROADMAP.map((item) => (
+              <li key={item.title} className={`roadmap-${item.state}`}>
+                <span>{ROADMAP_LABEL[item.state]}</span>
+                {item.title}
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="faq" id="preguntas">
+          <h2>Preguntas frecuentes</h2>
+          <div>
+            {FAQ.map((item) => (
+              <details key={item.question}>
+                <summary>{item.question}</summary>
+                <p>{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <section className="close">
+          <h2>Entérate cuando esté listo</h2>
+          <p>Solo te escribiremos para contarte novedades importantes de Hubly.</p>
+          <WaitlistForm tone="dark" />
+        </section>
+      </main>
+
+      <footer className="footer">
+        <Logo />
+        <p>Código abierto bajo licencia AGPL-3.0</p>
+        <a href={REPO_URL}>GitHub</a>
+      </footer>
+    </>
+  );
+}
