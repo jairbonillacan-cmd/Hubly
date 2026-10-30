@@ -1,3 +1,5 @@
-"use client";
+import { redirect } from "next/navigation";
 
-export { default } from "../tareas/page";
+export default function LibretasPage() {
+  redirect("/tareas?seccion=libretas");
+}

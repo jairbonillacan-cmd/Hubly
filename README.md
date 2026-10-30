@@ -14,7 +14,7 @@
 </p>
 
 > [!NOTE]
-> **Hubly está empezando.** Por ahora el repositorio contiene la landing; la aplicación todavía no existe. Las funciones de abajo son lo que queremos construir.
+> **Hubly está empezando.** El repositorio contiene la landing y un prototipo de la aplicación con datos de ejemplo: todavía no hay cuentas reales, conexión con redes ni publicación. Las funciones de abajo son lo que queremos construir.
 
 ## Qué quiere resolver
 
@@ -44,6 +44,8 @@ Las fotos en tres carpetas de Drive, los textos en un documento que nadie encuen
 ## Hoja de ruta
 
 - [x] Repositorio, licencia y landing
+- [x] Prototipo de la interfaz con datos de ejemplo
+- [ ] Cuentas, agencias y permisos reales
 - [ ] Calendario y publicación programada
 - [ ] Parrillas y aprobación por enlace
 - [ ] Reportes y panel de anuncios
@@ -51,7 +53,7 @@ Las fotos en tres carpetas de Drive, los textos en un documento que nadie encuen
 
 El orden puede cambiar según lo que nos cuenten las agencias.
 
-## Ejecutar la landing
+## Ejecutar el proyecto
 
 Necesitas [Node.js](https://nodejs.org) 20.9 o superior.
 

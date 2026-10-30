@@ -33,11 +33,30 @@ function ClientSharePortalInner() {
     syncFromServer();
   }, [syncFromServer]);
 
-  const brand =
-    brands.find((b) => b.shareToken === token || b.slug === token) || brands[0];
+  const brand = brands.find((b) => b.shareToken === token);
   const brandPosts = posts.filter((p) => p.brandId === brand?.id);
 
-  if (!brand) return null;
+  if (!brand) {
+    return (
+      <main
+        style={{
+          minHeight: "100vh",
+          display: "grid",
+          placeItems: "center",
+          padding: 24,
+          background: "var(--cream)",
+          textAlign: "center",
+        }}
+      >
+        <div>
+          <h1 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 8px" }}>Este enlace no es válido</h1>
+          <p style={{ fontSize: 14, margin: 0 }}>
+            Pide a tu agencia un enlace de revisión nuevo.
+          </p>
+        </div>
+      </main>
+    );
+  }
 
   const approvedCount = brandPosts.filter(
     (p) => p.status === "approved" || p.status === "scheduled" || p.status === "published"

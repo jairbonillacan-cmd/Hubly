@@ -233,7 +233,7 @@ export default function LoginPage() {
             }}
           >
             <Sparkles size={13} />
-            Hubly × Henry · Arquitectura Multi-Marca
+            Hubly · Todas tus marcas en un solo lugar
           </span>
           <h2
             style={{

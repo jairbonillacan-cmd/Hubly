@@ -1,10 +1,5 @@
 /**
  * Motor matemático y de precios de Hubly para agencias
- *
- * Fórmulas extraídas mediante ingeniería inversa (REA) de:
- * - https://www.henry.cm/calculadora (Calculadora de Horas)
- * - https://www.henry.cm/lp/pricing (Calculadora de Volumen)
- * - https://www.henry.cm/lp/comparar/* (Modelos de ROI y comparativas)
  */
 
 export type Currency = "mxn" | "usd" | "eur";

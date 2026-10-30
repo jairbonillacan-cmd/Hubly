@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Next.js (elección del usuario). Por ahora solo la landing. Sin hosting decidido: el código vive en el repo y no se publica todavía.
+Next.js (elección del usuario). Landing y prototipo de la aplicación con datos de ejemplo, sin backend. Sin hosting decidido: el código vive en el repo y no se publica todavía.
 
 ## Users
 
@@ -24,7 +24,7 @@ Es de código abierto: la agencia puede alojarlo en su propia infraestructura, c
 
 ## Capabilities and Constraints
 
-Todavía no hay producto ni código de la aplicación: todas las funciones son previstas y deben presentarse como tales. Funciones previstas: programación multired, parrillas, aprobación del cliente por enlace sin cuenta, reportes, panel de anuncios y asistente de IA con la voz de cada marca. La licencia es AGPL-3.0. Ideas sin compromiso (se presentan como tales): biblioteca de recursos, bandeja de comentarios y mensajes, permisos por rol, enlace en la biografía, importar desde Canva y Drive, plantillas de reportes, app móvil y API pública. Sin decidir: precios, versión alojada de pago, redes concretas soportadas, fecha de lanzamiento.
+Todavía no hay producto funcional, solo un prototipo sin cuentas ni conexión con redes: todas las funciones son previstas y deben presentarse como tales. Funciones previstas: programación multired, parrillas, aprobación del cliente por enlace sin cuenta, reportes, panel de anuncios y asistente de IA con la voz de cada marca. La licencia es AGPL-3.0. Ideas sin compromiso (se presentan como tales): biblioteca de recursos, bandeja de comentarios y mensajes, permisos por rol, enlace en la biografía, importar desde Canva y Drive, plantillas de reportes, app móvil y API pública. Sin decidir: precios, versión alojada de pago, redes concretas soportadas, fecha de lanzamiento.
 
 ## Brand Commitments
 

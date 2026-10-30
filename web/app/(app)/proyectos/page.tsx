@@ -1,3 +1,5 @@
-"use client";
+import { ArchivosYProyectosView } from "@/components/app/ArchivosYProyectosView";
 
-export { default } from "../tareas/page";
+export default function ProyectosPage() {
+  return <ArchivosYProyectosView section="proyectos" />;
+}

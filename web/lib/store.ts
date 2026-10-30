@@ -8,6 +8,7 @@ import {
   REFERENCE_FIXTURE_CLOCK,
 } from "./seed-data";
 import { selectAccountRecommendations } from "./domain-selectors";
+import { moveInList } from "./use-kanban-drag";
 import {
   buildReferenceFixtureWorkspace,
   clearWorkspaceStorage,
@@ -234,6 +235,7 @@ export interface HublyStoreState extends HublyWorkspaceData {
   ) => void;
   addAsset: (asset: Omit<MediaAsset, "id" | "uploadedAt" | "usedInPosts">) => void;
   addProject: (project: Omit<BrandProject, "id">) => void;
+  moveProject: (projectId: string, status: BrandProject["status"], beforeId: string | null) => void;
   sendChatMessage: (
     channelId: string,
     text: string,
@@ -1526,6 +1528,13 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   addProject: (projInput) => {
     set((s) => ({
       projects: [{ ...projInput, id: `proj-${Date.now()}` }, ...s.projects],
+    }));
+    persistWorkspaceState(get());
+  },
+
+  moveProject: (projectId, status, beforeId) => {
+    set((s) => ({
+      projects: moveInList(s.projects, projectId, beforeId, (p) => ({ ...p, status })),
     }));
     persistWorkspaceState(get());
   },

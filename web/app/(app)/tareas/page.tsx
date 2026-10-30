@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Plus,
   Search,
@@ -21,6 +21,11 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { moveInList, useKanbanDrag } from "@/lib/use-kanban-drag";
+import { KanbanDropSlot } from "@/components/app/KanbanDropSlot";
+
+const TASK_BOARD_STORAGE_KEY = "hubly:tareas:tablero:v1";
+const KANBAN_COLUMNS = ["todo", "in_progress", "done"] as const;
 
 interface LocalChecklistItem {
   id: string;
@@ -162,6 +167,48 @@ export default function TareasPage() {
   // Libretas state
   const [notebooks, setNotebooks] = useState<KraftNotebook[]>(INITIAL_NOTEBOOKS);
   const [activeNotebookId, setActiveNotebookId] = useState<string | null>(null);
+
+  const boardLoaded = useRef(false);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("seccion") === "libretas") {
+      setTopSection("libretas");
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(TASK_BOARD_STORAGE_KEY) || "null");
+      if (Array.isArray(saved?.lists) && Array.isArray(saved?.items)) {
+        setLists(saved.lists);
+        setItems(saved.items);
+      }
+    } catch {
+      // Sin almacenamiento disponible el tablero funciona solo en esta sesión.
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!boardLoaded.current) {
+      boardLoaded.current = true;
+      return;
+    }
+    try {
+      localStorage.setItem(TASK_BOARD_STORAGE_KEY, JSON.stringify({ lists, items }));
+    } catch {
+      // Sin almacenamiento disponible el tablero funciona solo en esta sesión.
+    }
+  }, [lists, items]);
+
+  const { drag, getCardProps, getColumnProps } = useKanbanDrag({
+    columns: KANBAN_COLUMNS,
+    onMove: (id, toCol, beforeId) => {
+      const status = toCol as LocalChecklistItem["status"];
+      setItems((prev) =>
+        moveInList(prev, id, beforeId, (it) => ({ ...it, status, done: status === "done" }))
+      );
+    },
+  });
 
   const toggleItem = (id: string) => {
     setItems((prev) =>
@@ -896,11 +943,14 @@ export default function TareasPage() {
                 return (
                   <div
                     key={col.key}
+                    {...getColumnProps(col.key)}
                     style={{
-                      background: "#F8FAFC",
+                      background: drag?.overCol === col.key ? "#F0F1F9" : "#F8FAFC",
                       borderRadius: 14,
-                      border: "1px solid #E2E8F0",
+                      border: `1px solid ${drag?.overCol === col.key ? "#6C77C1" : "#E2E8F0"}`,
                       padding: 16,
+                      minHeight: 160,
+                      transition: "background 120ms ease, border-color 120ms ease",
                       display: "flex",
                       flexDirection: "column",
                       gap: 10,
@@ -949,20 +999,28 @@ export default function TareasPage() {
                     </div>
 
                     {colItems.map((it) => (
+                      <React.Fragment key={it.id}>
+                      {drag?.overCol === col.key && drag.beforeId === it.id && (
+                        <KanbanDropSlot height={drag.height} />
+                      )}
                       <div
-                        key={it.id}
+                        {...getCardProps(it.id)}
                         onClick={() => toggleItem(it.id)}
                         style={{
                           background: "#FFFFFF",
                           borderRadius: 12,
                           border: "1px solid #E2E8F0",
                           padding: "12px 14px",
-                          cursor: "pointer",
+                          cursor: drag?.id === it.id ? "grabbing" : "grab",
+                          opacity: drag?.id === it.id ? 0.35 : 1,
                           boxShadow: "0 1px 2px rgba(15,23,42,0.03)",
                         }}
                       >
                         <div style={{ fontSize: 11, color: "#94A3B8", marginBottom: 4 }}>
-                          🚀 Primeros pasos
+                          {(() => {
+                            const list = lists.find((l) => l.id === it.listId);
+                            return list ? `${list.emoji} ${list.name}` : "";
+                          })()}
                         </div>
                         <div
                           style={{
@@ -1008,7 +1066,11 @@ export default function TareasPage() {
                           </span>
                         </div>
                       </div>
+                      </React.Fragment>
                     ))}
+                    {drag?.overCol === col.key && drag.beforeId === null && (
+                      <KanbanDropSlot height={drag.height} />
+                    )}
                   </div>
                 );
               })}
