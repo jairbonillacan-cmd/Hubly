@@ -8,9 +8,76 @@
  */
 import { Cover, type CoverKind } from "@/components/Cover";
 import { HeroDemo } from "@/components/HeroDemo";
+import { RoleTabs } from "@/components/RoleTabs";
 import { WaitlistForm } from "@/components/WaitlistForm";
 
 const REPO_URL = "https://github.com/jairbonillacan-cmd/Hubly";
+const NEW_ISSUE_URL = `${REPO_URL}/issues/new/choose`;
+
+const STEPS = [
+  {
+    title: "Conecta",
+    text: "Crea un espacio para cada cliente y enlaza sus redes y cuentas de anuncios.",
+  },
+  {
+    title: "Planea",
+    text: "Llena el calendario del mes, con textos, piezas y fechas en un solo sitio.",
+  },
+  {
+    title: "Aprueba",
+    text: "Envía un enlace al cliente y recibe sus comentarios sobre cada publicación.",
+  },
+  {
+    title: "Publica y reporta",
+    text: "Lo aprobado sale a su hora y, a fin de mes, el reporte se arma con esos datos.",
+  },
+];
+
+const ADS = [
+  { platform: "Meta", spend: "$1,240", result: "318 contactos" },
+  { platform: "Google", spend: "$860", result: "142 contactos" },
+  { platform: "TikTok", spend: "$410", result: "96 contactos" },
+];
+
+const COMPARISON = [
+  { task: "Planear el mes", today: "Una hoja de cálculo por cliente", hubly: "Un calendario por marca" },
+  { task: "Compartir la parrilla", today: "Una presentación armada a mano", hubly: "Un enlace siempre actualizado" },
+  { task: "Conseguir la aprobación", today: "Capturas y audios por WhatsApp", hubly: "Comentarios en cada publicación" },
+  { task: "Publicar", today: "Una alarma y varias apps abiertas", hubly: "Programado de una sola vez" },
+  { task: "Reportar", today: "Copiar datos de cada plataforma", hubly: "Un reporte con las cuentas conectadas" },
+];
+
+const IDEAS = [
+  "Biblioteca de recursos por marca",
+  "Comentarios y mensajes en una bandeja",
+  "Permisos por rol",
+  "Enlace en la biografía",
+  "Importar desde Canva y Drive",
+  "Plantillas de reportes",
+  "Aplicación móvil",
+  "API pública",
+];
+
+const CONTRIBUTE = [
+  {
+    title: "Cuéntanos tu flujo",
+    text: "Qué herramientas usas y en qué se te va el tiempo.",
+    href: NEW_ISSUE_URL,
+    link: "Abrir un issue",
+  },
+  {
+    title: "Sigue el proyecto",
+    text: "Una estrella en GitHub nos ayuda a que más agencias lo encuentren.",
+    href: REPO_URL,
+    link: "Ir al repositorio",
+  },
+  {
+    title: "Escribe código",
+    text: "Lee la guía y conversemos antes de empezar un cambio grande.",
+    href: `${REPO_URL}/blob/main/CONTRIBUTING.md`,
+    link: "Leer la guía",
+  },
+];
 
 const CHAOS = [
   "Las fotos, en tres carpetas de Drive.",
@@ -71,6 +138,16 @@ const FAQ = [
       "Puedes usar, modificar y alojar Hubly libremente. Si ofreces una versión modificada como servicio a otras personas, también tienes que compartir ese código.",
   },
   {
+    question: "¿Necesito saber de servidores para usarlo?",
+    answer:
+      "Para alojarlo por tu cuenta hará falta algo de conocimiento técnico o alguien que te ayude. Cuando llegue el momento publicaremos la guía de instalación.",
+  },
+  {
+    question: "¿Sirve si trabajo por mi cuenta?",
+    answer:
+      "Esa es la idea. Lo pensamos para equipos que llevan varias marcas, pero también para quien gestiona a sus clientes en solitario.",
+  },
+  {
     question: "¿Cómo puedo ayudar?",
     answer:
       "Cuéntanos cómo trabaja tu agencia y qué te quita más tiempo abriendo un issue en GitHub. Esa información es lo más útil en esta etapa.",
@@ -112,6 +189,7 @@ export default function Home() {
         <div className="nav-inner">
           <Logo />
           <nav aria-label="Principal">
+            <a href="#como-funciona">Cómo funciona</a>
             <a href="#funciones">Funciones</a>
             <a href="#abierto">Código abierto</a>
             <a href="#preguntas">Preguntas</a>
@@ -159,6 +237,22 @@ export default function Home() {
             ))}
           </ul>
           <p className="chaos-close">Hubly quiere juntar todo eso en una sola pantalla.</p>
+        </section>
+
+        <section className="steps" id="como-funciona">
+          <h2>Un mes de trabajo, en cuatro pasos</h2>
+          <p className="section-lead">Así imaginamos el recorrido de cada cliente dentro de Hubly.</p>
+          <ol>
+            {STEPS.map((step, index) => (
+              <li key={step.title}>
+                <span className="step-number" aria-hidden="true">
+                  {index + 1}
+                </span>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </li>
+            ))}
+          </ol>
         </section>
 
         <section className="features" id="funciones" aria-label="Funciones previstas">
@@ -241,6 +335,41 @@ export default function Home() {
 
           <article className="feature feature--flip">
             <div className="feature-text">
+              <h2>Los anuncios de cada cliente, juntos</h2>
+              <p>
+                Consulta el gasto y los resultados de cada plataforma en un mismo panel, sin entrar a una cuenta distinta por cliente.
+              </p>
+              <p className="planned">Función prevista</p>
+            </div>
+            <div className="feature-visual feature-visual--ink">
+              <div className="ads">
+                <p>
+                  Norte Bici · Octubre <span>Datos de ejemplo</span>
+                </p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">Plataforma</th>
+                      <th scope="col">Gasto</th>
+                      <th scope="col">Resultado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ADS.map((row) => (
+                      <tr key={row.platform}>
+                        <th scope="row">{row.platform}</th>
+                        <td>{row.spend}</td>
+                        <td>{row.result}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </article>
+
+          <article className="feature">
+            <div className="feature-text">
               <h2>Textos con la voz de cada marca</h2>
               <p>
                 Un asistente con IA que aprende cómo habla cada cliente y respeta sus reglas, para que el primer borrador no empiece en blanco.
@@ -256,6 +385,48 @@ export default function Home() {
               </div>
             </div>
           </article>
+        </section>
+
+        <section className="roles" aria-labelledby="roles-title">
+          <h2 id="roles-title">Pensado para todo el equipo, y también para el cliente</h2>
+          <RoleTabs />
+        </section>
+
+        <section className="compare" aria-labelledby="compare-title">
+          <h2 id="compare-title">El mismo mes, con menos vueltas</h2>
+          <div className="compare-table">
+            <table>
+              <thead>
+                <tr>
+                  <td />
+                  <th scope="col">Hoy</th>
+                  <th scope="col">Con Hubly</th>
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARISON.map((row) => (
+                  <tr key={row.task}>
+                    <th scope="row">{row.task}</th>
+                    <td>{row.today}</td>
+                    <td>{row.hubly}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="ideas" aria-labelledby="ideas-title">
+          <h2 id="ideas-title">Ideas sobre la mesa</h2>
+          <p className="section-lead">Todavía no son promesas. Dinos cuáles te harían falta y cuáles faltan en la lista.</p>
+          <ul>
+            {IDEAS.map((idea) => (
+              <li key={idea}>{idea}</li>
+            ))}
+          </ul>
+          <a href={NEW_ISSUE_URL} className="text-link">
+            Proponer una idea
+          </a>
         </section>
 
         <section className="open" id="abierto">
@@ -295,6 +466,21 @@ export default function Home() {
           </ol>
         </section>
 
+        <section className="contribute" aria-labelledby="contribute-title">
+          <h2 id="contribute-title">Constrúyelo con nosotros</h2>
+          <ul>
+            {CONTRIBUTE.map((item) => (
+              <li key={item.title}>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+                <a href={item.href} className="text-link">
+                  {item.link}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         <section className="faq" id="preguntas">
           <h2>Preguntas frecuentes</h2>
           <div>
@@ -315,9 +501,22 @@ export default function Home() {
       </main>
 
       <footer className="footer">
-        <Logo />
-        <p>Código abierto bajo licencia AGPL-3.0</p>
-        <a href={REPO_URL}>GitHub</a>
+        <div className="footer-brand">
+          <Logo />
+          <p>Código abierto bajo licencia AGPL-3.0</p>
+        </div>
+        <nav aria-label="Producto">
+          <h2>Producto</h2>
+          <a href="#como-funciona">Cómo funciona</a>
+          <a href="#funciones">Funciones</a>
+          <a href="#preguntas">Preguntas</a>
+        </nav>
+        <nav aria-label="Proyecto">
+          <h2>Proyecto</h2>
+          <a href={REPO_URL}>GitHub</a>
+          <a href={`${REPO_URL}/blob/main/CONTRIBUTING.md`}>Cómo contribuir</a>
+          <a href={`${REPO_URL}/blob/main/LICENSE`}>Licencia</a>
+        </nav>
       </footer>
     </>
   );
