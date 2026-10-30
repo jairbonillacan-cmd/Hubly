@@ -1,0 +1,154 @@
+[
+  {
+    "route": "/",
+    "width": 1440,
+    "status": 200,
+    "overflow": false,
+    "navOverlap": false,
+    "navOutsideViewport": false,
+    "mainPadding": "0px",
+    "dashboardGridDisplay": null,
+    "mobileMenuDisplay": null,
+    "sidebarRight": null,
+    "forestToken": "",
+    "headings": [
+      "Todas las marcas de tu agencia, en un solo lugar"
+    ],
+    "errors": []
+  },
+  {
+    "route": "/",
+    "width": 900,
+    "status": 200,
+    "overflow": false,
+    "navOverlap": false,
+    "navOutsideViewport": false,
+    "mainPadding": "0px",
+    "dashboardGridDisplay": null,
+    "mobileMenuDisplay": null,
+    "sidebarRight": null,
+    "forestToken": "",
+    "headings": [
+      "Todas las marcas de tu agencia, en un solo lugar"
+    ],
+    "errors": []
+  },
+  {
+    "route": "/",
+    "width": 375,
+    "status": 200,
+    "overflow": false,
+    "navOverlap": false,
+    "navOutsideViewport": false,
+    "mainPadding": "0px",
+    "dashboardGridDisplay": null,
+    "mobileMenuDisplay": null,
+    "sidebarRight": null,
+    "forestToken": "",
+    "headings": [
+      "Todas las marcas de tu agencia, en un solo lugar"
+    ],
+    "errors": []
+  },
+  {
+    "route": "/",
+    "width": 320,
+    "status": 200,
+    "overflow": true,
+    "navOverlap": false,
+    "navOutsideViewport": true,
+    "mainPadding": "0px",
+    "dashboardGridDisplay": null,
+    "mobileMenuDisplay": null,
+    "sidebarRight": null,
+    "forestToken": "",
+    "headings": [
+      "Todas las marcas de tu agencia, en un solo lugar"
+    ],
+    "errors": []
+  },
+  {
+    "route": "/dashboard",
+    "width": 1440,
+    "status": 200,
+    "overflow": false,
+    "navOverlap": false,
+    "navOutsideViewport": false,
+    "mainPadding": "0px",
+    "dashboardGridDisplay": "block",
+    "mobileMenuDisplay": "none",
+    "sidebarRight": 268,
+    "forestToken": "",
+    "headings": [
+      "Buenas tardes, Jair"
+    ],
+    "errors": [
+      "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+    ],
+    "inviteShowsTeamTable": true,
+    "inviteShowsDialog": 0,
+    "newPostDialogVisible": 1,
+    "dialogsAfterEscape": 1
+  },
+  {
+    "route": "/dashboard",
+    "width": 900,
+    "status": 200,
+    "overflow": false,
+    "navOverlap": false,
+    "navOutsideViewport": false,
+    "mainPadding": "0px",
+    "dashboardGridDisplay": "block",
+    "mobileMenuDisplay": "none",
+    "sidebarRight": 0,
+    "forestToken": "",
+    "headings": [
+      "Buenas tardes, Jair"
+    ],
+    "errors": [
+      "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+    ]
+  },
+  {
+    "route": "/dashboard",
+    "width": 375,
+    "status": 200,
+    "overflow": false,
+    "navOverlap": false,
+    "navOutsideViewport": false,
+    "mainPadding": "0px",
+    "dashboardGridDisplay": "block",
+    "mobileMenuDisplay": "none",
+    "sidebarRight": 0,
+    "forestToken": "",
+    "headings": [
+      "Buenas tardes, Jair"
+    ],
+    "errors": [
+      "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+    ]
+  },
+  {
+    "route": "/dashboard",
+    "width": 320,
+    "status": 200,
+    "overflow": true,
+    "navOverlap": false,
+    "navOutsideViewport": false,
+    "mainPadding": "0px",
+    "dashboardGridDisplay": "block",
+    "mobileMenuDisplay": "none",
+    "sidebarRight": 0,
+    "forestToken": "",
+    "headings": [
+      "Buenas tardes, Jair"
+    ],
+    "errors": [
+      "Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+    ]
+  },
+  {
+    "anonymousWorkspaceReadStatus": 200,
+    "returnsAgencyData": true
+  }
+]

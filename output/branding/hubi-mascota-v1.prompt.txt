@@ -1,0 +1,13 @@
+Modo: herramienta integrada image_gen.
+Nombre propuesto: Hubi.
+Referencia: output/branding/hubly-selected-original.png.
+Fondo transparente: true.
+
+Use case: illustration-story.
+Asset type: Original brand mascot for Hubly, suitable for the existing landing page, onboarding and product empty states.
+Reference image role: The supplied Hubly logo is a BRAND REFERENCE ONLY. Use its four-tile mosaic, rounded shape language and green/yellow colors as inspiration. Do not reproduce the wordmark or include any text.
+Primary request: Design one charming, memorable living mosaic character called Hubi. Its entire compact body is built from FOUR plump softly squared tiles arranged as a close 2x2 mosaic: three forest green #0a7a55 tiles and a golden-yellow #ffd23f top-right tile that sits just a little higher, echoing the reference logo. The four tiles form ONE coherent creature, not four characters. A pair of expressive cream oval eyes with dark ink-green #10291f pupils spans the upper two tiles, and a small warm confident smile sits below. Tiny dark-green curved eyebrows add personality. Two short green arms with simple rounded mitten hands and two short dark-green feet emerge from the mosaic. The right arm raises a welcoming wave; the other arm rests naturally by its side. Friendly clever agency sidekick, quietly capable, upbeat, appealing to adult creative teams.
+Art direction: premium contemporary 2D character design, strong graphic silhouette, polished flat vector-like illustration, asymmetric pose with confident clear curves. Solid colors, generous rounded forms, minimal facial details with excellent personality, one very restrained darker-green inset shape for structure if necessary. Make it feel like a distinctive designed brand character, with the originality and restraint of a top independent character studio. The yellow tile is a key recognizable feature.
+Composition: one single full-body character, front-facing with a tiny jaunty tilt, centered on a square canvas, large with safe breathing room around the raised hand and feet. No cropping.
+Background: genuinely transparent alpha, clean edges.
+Constraints: no words or lettering, no wordmark, no clothing, no accessories, no scenery, no floor, no ground shadow, no stickers, no secondary characters, no presentation sheet. Avoid robot antennae, mechanical joints, screens, generic round blob bodies, realistic fur, clay, 3D rendering, gradients, glows, textures, decorative sparkles, watermarks or unrelated colors. Preserve the brand palette and the unmistakable four-tile body.

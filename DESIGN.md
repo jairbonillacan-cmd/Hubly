@@ -25,10 +25,18 @@ Paleta completa de cuatro papeles sobre un fondo claro. El color llena regiones 
 
 ## Componentes
 
+- **Logo:** mosaico verde con una pieza amarilla y el nombre «hubly», elegido y adjuntado por el usuario. Se usa en el encabezado y el pie, a 120–154px de ancho, sin deformarlo. Archivo web: `web/public/brand/hubly-logo.webp`; original conservado en `output/branding/hubly-selected-original.png`. Procedencia: imagen generada durante la exploración de marca y devuelta por el usuario como selección final. La versión web solo recorta márgenes transparentes y reduce el tamaño, conservando el diseño y el canal alfa.
 - **Botones:** alto de 52px (42px en pequeño), radio de 14px (11px en pequeño), primario verde.
 - **Ventanas de app:** blancas, radio de 18-24px, sombra suave con desplazamiento.
 - **Etiquetas de estado:** por aprobar en amarillo, aprobada en verde, con cambios en coral.
 - **Portadas de ejemplo:** ilustraciones SVG planas (`web/components/Cover.tsx`).
+
+## App autenticada
+
+- **Acento único:** azul `#6C77C1` (hover `#5A65AF`, borde 3D `#4C56A0`). No se usa naranja ni ámbar; el verde y el rojo solo indican estado.
+- **Tipografía:** Bricolage Grotesque en toda la interfaz.
+- **Barra lateral:** 228px, estática; solo se desplaza el contenido, sin barras de scroll visibles. Iconos en gris y el activo en azul.
+- **Mascota:** el gato se llama **Hubi**.
 
 ## Reglas
 

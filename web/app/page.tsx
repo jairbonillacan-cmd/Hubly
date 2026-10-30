@@ -6,6 +6,9 @@
  * FORM: dirección fijada por el usuario (landing de SaaS familiar); seed 72ca80b9.
  * FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance.
  */
+import Image from "next/image";
+import Link from "next/link";
+import hublyLogo from "@/public/brand/hubly-logo.webp";
 import { Cover, type CoverKind } from "@/components/Cover";
 import { HeroDemo } from "@/components/HeroDemo";
 import { RoleTabs } from "@/components/RoleTabs";
@@ -154,19 +157,10 @@ const FAQ = [
   },
 ];
 
-function Logo() {
+function Logo({ preload = false }: { preload?: boolean }) {
   return (
     <a href="#inicio" className="logo" aria-label="Hubly, inicio">
-      <svg viewBox="0 0 32 32" aria-hidden="true">
-        <rect width="32" height="32" rx="9" fill="#0a7a55" />
-        <path d="M16 16 9 9M16 16l7-7M16 16l-7 7M16 16l7 7" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" />
-        <circle cx="16" cy="16" r="5" fill="#ffd23f" />
-        <circle cx="8.5" cy="8.5" r="2.6" fill="#fff" />
-        <circle cx="23.5" cy="8.5" r="2.6" fill="#fff" />
-        <circle cx="8.5" cy="23.5" r="2.6" fill="#fff" />
-        <circle cx="23.5" cy="23.5" r="2.6" fill="#fff" />
-      </svg>
-      Hubly
+      <Image src={hublyLogo} alt="Hubly" sizes="154px" preload={preload} />
     </a>
   );
 }
@@ -187,7 +181,7 @@ export default function Home() {
     <>
       <header className="nav">
         <div className="nav-inner">
-          <Logo />
+          <Logo preload />
           <nav aria-label="Principal">
             <a href="#como-funciona">Cómo funciona</a>
             <a href="#funciones">Funciones</a>
@@ -199,9 +193,12 @@ export default function Home() {
               <GitHubIcon />
               <span>GitHub</span>
             </a>
-            <a href="#lista" className="button button--primary button--small">
-              Unirme
-            </a>
+            <Link href="/login" className="nav-github">
+              <span>Entrar</span>
+            </Link>
+            <Link href="/dashboard" className="button button--primary button--small">
+              Abrir app demo
+            </Link>
           </div>
         </div>
       </header>
@@ -209,20 +206,28 @@ export default function Home() {
       <main id="inicio">
         <section className="hero">
           <p className="hero-status">
-            <span aria-hidden="true" /> En desarrollo y de código abierto
+            <span aria-hidden="true" /> Workspace Multi-Marca · Demo interactiva disponible
           </p>
           <h1>
             Todas las marcas de tu agencia, en <mark>un solo lugar</mark>
           </h1>
           <p className="hero-lead">
-            Programa publicaciones, arma parrillas, consigue aprobaciones y entrega reportes sin saltar entre diez herramientas.
+            Programa publicaciones, arma parrillas, consigue aprobaciones sin login y entrega reportes en 1 clic sin saltar entre diez herramientas.
           </p>
           <div className="hero-actions" id="lista">
             <WaitlistForm />
-            <a href={REPO_URL} className="hero-github">
-              <GitHubIcon />
-              Seguir el proyecto en GitHub
-            </a>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+              <Link href="/dashboard" className="button button--primary button--small">
+                Entrar al SaaS Demo →
+              </Link>
+              <Link href="/share/cafe-bruma-nov" className="hero-github">
+                Ver Portal de Cliente (Sin Login)
+              </Link>
+              <a href={REPO_URL} className="hero-github">
+                <GitHubIcon />
+                Seguir en GitHub
+              </a>
+            </div>
           </div>
           <HeroDemo />
         </section>

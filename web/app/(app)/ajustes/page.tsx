@@ -1,0 +1,790 @@
+"use client";
+
+import React, { useState } from "react";
+import {
+  User,
+  Shield,
+  Bell,
+  Puzzle,
+  Users,
+  UserCheck,
+  Building2,
+  CreditCard,
+  BarChart2,
+  Gift,
+  LogOut,
+  Camera,
+  Pencil,
+  Mail,
+  Lock,
+  RotateCcw,
+  Check,
+  X,
+} from "lucide-react";
+import { useHublyStore } from "@/lib/store";
+import { useHublyTheme } from "@/lib/theme";
+
+type SettingsTabId =
+  | "mi-perfil"
+  | "mi-cuenta"
+  | "notificaciones"
+  | "integraciones"
+  | "equipo"
+  | "roles"
+  | "marcas"
+  | "suscripcion"
+  | "uso"
+  | "recomienda";
+
+export default function AjustesPage() {
+  const brands = useHublyStore((s) => s.brands);
+  const activeBrandId = useHublyStore((s) => s.activeBrandId);
+  const team = useHublyStore((s) => s.team);
+  const profile = useHublyStore((s) => s.profile);
+  const updateProfile = useHublyStore((s) => s.updateProfile);
+  const resetDemoData = useHublyStore((s) => s.resetDemoData);
+
+  const activeBrand =
+    brands.find((b) => b.id === activeBrandId) ||
+    brands.find((b) => b.id === "brand-min") ||
+    brands[0];
+
+  const [activeTab, setActiveTab] = useState<SettingsTabId>("mi-perfil");
+  const [fullName, setFullName] = useState(profile?.name || "Jair");
+  const [savedProfile, setSavedProfile] = useState(false);
+  const { theme, setTheme } = useHublyTheme();
+  const themeMode = theme === "dark" ? "oscuro" : "claro";
+  const setThemeMode = (mode: "claro" | "oscuro") => setTheme(mode === "oscuro" ? "dark" : "light");
+  const [brandNameInput, setBrandNameInput] = useState(
+    activeBrand?.name && activeBrand.name !== "Café Bruma" ? activeBrand.name : "Min"
+  );
+  const [brandCategory, setBrandCategory] = useState(
+    "minerales y cristales decorativos al mayoreo"
+  );
+  const [timezone, setTimezone] = useState(profile?.timezone || "America/Mexico_City");
+  const [currency, setCurrency] = useState("USD ($)");
+  const [resetDone, setResetDone] = useState(false);
+  const [descubreOpen, setDescubreOpen] = useState(true);
+
+  const tabs: { id: SettingsTabId; label: string; icon: React.ReactNode }[] = [
+    { id: "mi-perfil", label: "Mi Perfil", icon: <User size={15} /> },
+    { id: "mi-cuenta", label: "Mi Cuenta", icon: <Shield size={15} /> },
+    { id: "notificaciones", label: "Notificaciones", icon: <Bell size={15} /> },
+    { id: "integraciones", label: "Integraciones", icon: <Puzzle size={15} /> },
+    { id: "equipo", label: "Equipo", icon: <Users size={15} /> },
+    { id: "roles", label: "Roles", icon: <UserCheck size={15} /> },
+    { id: "marcas", label: "Marcas", icon: <Building2 size={15} /> },
+    { id: "suscripcion", label: "Suscripción", icon: <CreditCard size={15} /> },
+    { id: "uso", label: "Uso", icon: <BarChart2 size={15} /> },
+    { id: "recomienda", label: "Recomienda Hubly", icon: <Gift size={15} /> },
+  ];
+
+  const handleSaveProfile = () => {
+    if (fullName.trim()) {
+      updateProfile({
+        name: fullName.trim(),
+        timezone: timezone.split(" ")[0] || "America/Mexico_City",
+      });
+    }
+    setSavedProfile(true);
+    setTimeout(() => setSavedProfile(false), 2000);
+  };
+
+  return (
+    <div
+      style={{
+        fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+        color: "#0F172A",
+        minHeight: "calc(100vh - 64px)",
+        position: "relative",
+        paddingBottom: 60,
+      }}
+    >
+      {/* Page Title matching 13-settings-1440.png */}
+      <div style={{ marginBottom: 24 }}>
+        <h1
+          style={{
+            fontSize: 24,
+            fontWeight: 800,
+            color: "#0F172A",
+            letterSpacing: "-0.02em",
+            margin: "0 0 4px",
+          }}
+        >
+          Configuración
+        </h1>
+        <p style={{ fontSize: 13.5, color: "#94A3B8", margin: 0 }}>
+          Gestiona tu perfil, equipo y configuración de la agencia
+        </p>
+      </div>
+
+      {/* Main 2-Column Layout matching 13-settings-1440.png */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "196px minmax(0, 1fr)",
+          gap: 28,
+          alignItems: "start",
+        }}
+      >
+        {/* Left 10-Tab Sidebar */}
+        <div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  style={{
+                    width: "100%",
+                    height: 36,
+                    padding: "0 12px",
+                    borderRadius: 8,
+                    border: isActive ? "1px solid rgba(108, 119, 193, 0.2)" : "1px solid transparent",
+                    background: isActive ? "rgba(108, 119, 193, 0.1)" : "transparent",
+                    color: isActive ? "#5A65AF" : "#475569",
+                    fontWeight: isActive ? 600 : 500,
+                    fontSize: 13,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    cursor: "pointer",
+                    textAlign: "left",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  <span style={{ color: isActive ? "#5A65AF" : "#64748B", display: "grid" }}>
+                    {tab.icon}
+                  </span>
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div
+            style={{
+              height: 1,
+              background: "#F1F5F9",
+              margin: "12px 0",
+            }}
+          />
+
+          <button
+            type="button"
+            style={{
+              width: "100%",
+              height: 36,
+              padding: "0 12px",
+              borderRadius: 10,
+              border: "none",
+              background: "transparent",
+              color: "#DC2626",
+              fontSize: 13,
+              fontWeight: 500,
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              cursor: "pointer",
+              textAlign: "left",
+            }}
+          >
+            <LogOut size={15} />
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
+
+        {/* Right Form Card */}
+        <div>
+          {/* TAB 1: MI PERFIL (1:1 with 13-settings-1440.png) */}
+          {activeTab === "mi-perfil" && (
+            <div
+              style={{
+                background: "#FFFFFF",
+                border: "1px solid #E2E8F0",
+                borderRadius: 20,
+                padding: "28px 32px",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: 17,
+                  fontWeight: 700,
+                  color: "#0F172A",
+                  margin: "0 0 4px",
+                }}
+              >
+                Mi Perfil
+              </h2>
+              <p style={{ fontSize: 13, color: "#94A3B8", margin: "0 0 24px" }}>
+                Tu información personal en la plataforma
+              </p>
+
+              {/* Avatar & Identity Block */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 18,
+                  paddingBottom: 24,
+                  borderBottom: "1px solid #F1F5F9",
+                }}
+              >
+                <button
+                  type="button"
+                  title="Agregar foto de perfil"
+                  style={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: 999,
+                    border: "none",
+                    background: "#6C77C1",
+                    color: "#FFFFFF",
+                    fontSize: 20,
+                    fontWeight: 700,
+                    display: "grid",
+                    placeItems: "center",
+                    cursor: "pointer",
+                    flexShrink: 0,
+                  }}
+                >
+                  JA
+                </button>
+
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
+                    {fullName}
+                  </div>
+                  <div style={{ fontSize: 12.5, color: "#94A3B8", margin: "2px 0 6px" }}>
+                    hola@agencia.demo
+                  </div>
+                  <div style={{ marginBottom: 8 }}>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        background: "#F1F5F9",
+                        color: "#475569",
+                        fontSize: 11,
+                        fontWeight: 600,
+                        padding: "2px 10px",
+                        borderRadius: 999,
+                      }}
+                    >
+                      Miembro
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 5,
+                      background: "transparent",
+                      border: "none",
+                      padding: 0,
+                      color: "#6C77C1",
+                      fontSize: 12,
+                      fontWeight: 600,
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Camera size={13} />
+                    <span>Cambiar foto</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* NOMBRE COMPLETO */}
+              <div style={{ marginTop: 22 }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: "#475569",
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
+                    marginBottom: 8,
+                  }}
+                >
+                  NOMBRE COMPLETO
+                </label>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <input
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Tu nombre"
+                    style={{
+                      flex: 1,
+                      height: 42,
+                      borderRadius: 12,
+                      border: "1px solid #E2E8F0",
+                      background: "#F8FAFC",
+                      padding: "0 14px",
+                      fontSize: 13.5,
+                      color: "#0F172A",
+                      outline: "none",
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSaveProfile}
+                    style={{
+                      height: 40,
+                      padding: "0 18px",
+                      borderRadius: 10,
+                      border: "none",
+                      background: savedProfile ? "#10B981" : "#9CA3AF",
+                      color: "#FFFFFF",
+                      fontSize: 13,
+                      fontWeight: 600,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 6,
+                      cursor: "pointer",
+                    }}
+                  >
+                    {savedProfile ? <Check size={13} /> : <Pencil size={13} />}
+                    <span>{savedProfile ? "Guardado" : "Guardar"}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* CORREO ELECTRÓNICO */}
+              <div style={{ marginTop: 22 }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: "#475569",
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
+                    marginBottom: 8,
+                  }}
+                >
+                  CORREO ELECTRÓNICO
+                </label>
+                <div
+                  style={{
+                    height: 42,
+                    borderRadius: 12,
+                    border: "1px solid #E2E8F0",
+                    background: "#F8FAFC",
+                    padding: "0 14px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    fontSize: 13.5,
+                    color: "#64748B",
+                  }}
+                >
+                  <Mail size={15} style={{ color: "#94A3B8" }} />
+                  <span>hola@agencia.demo</span>
+                </div>
+                <div style={{ fontSize: 11.5, color: "#94A3B8", marginTop: 6 }}>
+                  El correo no se puede cambiar desde aquí
+                </div>
+              </div>
+
+              {/* CONTRASEÑA */}
+              <div
+                style={{
+                  marginTop: 22,
+                  paddingBottom: 24,
+                  borderBottom: "1px solid #F1F5F9",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: "#475569",
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  CONTRASEÑA
+                </span>
+                <button
+                  type="button"
+                  style={{
+                    height: 38,
+                    padding: "0 16px",
+                    borderRadius: 10,
+                    border: "1px solid #CBD5E1",
+                    background: "#FFFFFF",
+                    color: "#334155",
+                    fontSize: 13,
+                    fontWeight: 600,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    cursor: "pointer",
+                  }}
+                >
+                  <Lock size={14} style={{ color: "#64748B" }} />
+                  <span>Cambiar contraseña</span>
+                </button>
+              </div>
+
+              {/* Apariencia */}
+              <div style={{ marginTop: 22 }}>
+                <h3
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "#0F172A",
+                    margin: "0 0 2px",
+                  }}
+                >
+                  Apariencia
+                </h3>
+                <p style={{ fontSize: 12.5, color: "#94A3B8", margin: "0 0 12px" }}>
+                  Elige el tema que más te acomode
+                </p>
+
+                <div
+                  style={{
+                    display: "inline-flex",
+                    background: "#F1F5F9",
+                    padding: 4,
+                    borderRadius: 12,
+                    gap: 2,
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setThemeMode("claro")}
+                    style={{
+                      padding: "6px 16px",
+                      borderRadius: 9,
+                      border: "none",
+                      background: themeMode === "claro" ? "#FFFFFF" : "transparent",
+                      color: themeMode === "claro" ? "#0F172A" : "#64748B",
+                      fontSize: 13,
+                      fontWeight: themeMode === "claro" ? 700 : 500,
+                      cursor: "pointer",
+                      boxShadow:
+                        themeMode === "claro" ? "0 1px 2px rgba(0, 0, 0, 0.06)" : "none",
+                    }}
+                  >
+                    Claro
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setThemeMode("oscuro")}
+                    style={{
+                      padding: "6px 16px",
+                      borderRadius: 9,
+                      border: "none",
+                      background: themeMode === "oscuro" ? "#FFFFFF" : "transparent",
+                      color: themeMode === "oscuro" ? "#0F172A" : "#64748B",
+                      fontSize: 13,
+                      fontWeight: themeMode === "oscuro" ? 700 : 500,
+                      cursor: "pointer",
+                      boxShadow:
+                        themeMode === "oscuro" ? "0 1px 2px rgba(0, 0, 0, 0.06)" : "none",
+                    }}
+                  >
+                    Oscuro
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB: MARCAS (And also rendered below fold when in mi-perfil for full DOM coverage) */}
+          {activeTab === "marcas" && (
+            <div
+              style={{
+                background: "#FFFFFF",
+                border: "1px solid #E2E8F0",
+                borderRadius: 20,
+                padding: "28px 32px",
+                marginTop: 0,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: 20,
+                }}
+              >
+                <div>
+                  <h2 style={{ fontSize: 17, fontWeight: 700, color: "#0F172A", margin: "0 0 4px" }}>
+                    Marca activa · {brandNameInput}
+                  </h2>
+                  <p style={{ fontSize: 13, color: "#94A3B8", margin: 0 }}>
+                    Configuración general de la marca, logo, categoría, zona horaria y moneda
+                  </p>
+                </div>
+                <span
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 12,
+                    background: "#6C77C1",
+                    color: "#FFFFFF",
+                    fontSize: 16,
+                    fontWeight: 800,
+                    display: "grid",
+                    placeItems: "center",
+                  }}
+                >
+                  M
+                </span>
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 16,
+                  marginBottom: 18,
+                }}
+              >
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: "#475569",
+                      textTransform: "uppercase",
+                      marginBottom: 6,
+                    }}
+                  >
+                    Nombre de la marca
+                  </label>
+                  <input
+                    value={brandNameInput}
+                    onChange={(e) => setBrandNameInput(e.target.value)}
+                    style={{
+                      width: "100%",
+                      height: 40,
+                      borderRadius: 10,
+                      border: "1px solid #E2E8F0",
+                      background: "#F8FAFC",
+                      padding: "0 12px",
+                      fontSize: 13.5,
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: "#475569",
+                      textTransform: "uppercase",
+                      marginBottom: 6,
+                    }}
+                  >
+                    Categoría
+                  </label>
+                  <input
+                    value={brandCategory}
+                    onChange={(e) => setBrandCategory(e.target.value)}
+                    style={{
+                      width: "100%",
+                      height: 40,
+                      borderRadius: 10,
+                      border: "1px solid #E2E8F0",
+                      background: "#F8FAFC",
+                      padding: "0 12px",
+                      fontSize: 13.5,
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: "#475569",
+                      textTransform: "uppercase",
+                      marginBottom: 6,
+                    }}
+                  >
+                    Zona horaria
+                  </label>
+                  <input
+                    value={timezone}
+                    onChange={(e) => setTimezone(e.target.value)}
+                    style={{
+                      width: "100%",
+                      height: 40,
+                      borderRadius: 10,
+                      border: "1px solid #E2E8F0",
+                      background: "#F8FAFC",
+                      padding: "0 12px",
+                      fontSize: 13.5,
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: "#475569",
+                      textTransform: "uppercase",
+                      marginBottom: 6,
+                    }}
+                  >
+                    Moneda
+                  </label>
+                  <input
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value)}
+                    style={{
+                      width: "100%",
+                      height: 40,
+                      borderRadius: 10,
+                      border: "1px solid #E2E8F0",
+                      background: "#F8FAFC",
+                      padding: "0 12px",
+                      fontSize: 13.5,
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div
+                style={{
+                  paddingTop: 16,
+                  borderTop: "1px solid #F1F5F9",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  gap: 12,
+                }}
+              >
+                <span style={{ fontSize: 12.5, color: "#64748B" }}>
+                  Persistencia local Zero-Config activa (<code>.data/hubly-db.json</code>)
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    resetDemoData();
+                    setResetDone(true);
+                    setTimeout(() => setResetDone(false), 2200);
+                  }}
+                  style={{
+                    height: 36,
+                    padding: "0 14px",
+                    borderRadius: 10,
+                    border: "1px solid #CBD5E1",
+                    background: "#FFFFFF",
+                    color: "#334155",
+                    fontSize: 12.5,
+                    fontWeight: 600,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    cursor: "pointer",
+                  }}
+                >
+                  {resetDone ? <Check size={14} /> : <RotateCcw size={14} />}
+                  <span>
+                    {resetDone ? "¡Datos restaurados!" : "Restaurar datos de demostración"}
+                  </span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* OTHER TABS */}
+          {activeTab !== "mi-perfil" && activeTab !== "marcas" && (
+            <div
+              style={{
+                background: "#FFFFFF",
+                border: "1px solid #E2E8F0",
+                borderRadius: 20,
+                padding: "28px 32px",
+              }}
+            >
+              <h2 style={{ fontSize: 17, fontWeight: 700, color: "#0F172A", margin: "0 0 6px" }}>
+                {tabs.find((t) => t.id === activeTab)?.label}
+              </h2>
+              <p style={{ fontSize: 13.5, color: "#64748B", marginBottom: 20 }}>
+                Configura las preferencias de{" "}
+                {tabs.find((t) => t.id === activeTab)?.label.toLowerCase()} para tu agencia y el
+                workspace de {brandNameInput}.
+              </p>
+
+              {activeTab === "equipo" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {team.map((m) => (
+                    <div
+                      key={m.id}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: "12px 16px",
+                        borderRadius: 12,
+                        border: "1px solid #E2E8F0",
+                        background: "#F8FAFC",
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontSize: 13.5, fontWeight: 700 }}>{m.name}</div>
+                        <div style={{ fontSize: 12, color: "#64748B" }}>
+                          {m.role} · {m.email}
+                        </div>
+                      </div>
+                      <span
+                        style={{
+                          padding: "3px 10px",
+                          borderRadius: 999,
+                          background: "#F0F1F9",
+                          color: "#6C77C1",
+                          fontSize: 11.5,
+                          fontWeight: 700,
+                        }}
+                      >
+                        Activo
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {activeTab !== "equipo" && (
+                <div
+                  style={{
+                    padding: 18,
+                    borderRadius: 14,
+                    background: "#F8FAFC",
+                    border: "1px solid #E2E8F0",
+                    fontSize: 13.5,
+                    color: "#334155",
+                  }}
+                >
+                  Plan Agencia Pro activo · Usuarios ilimitados, Uso de IA incluido y sincronización
+                  automática con Meta, TikTok, Instagram y LinkedIn.
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,484 @@
+import type { CoverKind } from "@/components/Cover";
+
+export type SocialNetwork =
+  | "Instagram"
+  | "TikTok"
+  | "Facebook"
+  | "LinkedIn"
+  | "YouTube"
+  | "X"
+  | "Threads"
+  | "Pinterest";
+
+export type PostStatus =
+  | "draft"
+  | "pending"
+  | "changes"
+  | "approved"
+  | "scheduled"
+  | "published";
+
+export type PostStatusLabel =
+  | "Borrador"
+  | "En aprobación"
+  | "Programado"
+  | "Publicado"
+  | "Requiere cambios";
+
+export type PostFormat = "Reel / Video" | "Carrusel" | "Imagen" | "Story" | "Texto";
+
+export interface PostComment {
+  id: string;
+  author: string;
+  role: "client" | "agency";
+  text: string;
+  createdAt: string;
+}
+
+export interface SocialPost {
+  id: string;
+  brandId: string;
+  title: string;
+  caption: string;
+  network?: SocialNetwork;
+  networks: SocialNetwork[];
+  format: PostFormat;
+  cover: CoverKind;
+  scheduledDate: string; // YYYY-MM-DD
+  scheduledTime: string; // HH:mm
+  status: PostStatus;
+  statusLabel?: PostStatusLabel;
+  assignee: string;
+  authorId?: string;
+  approverName?: string;
+  pillar: string;
+  metrics?: {
+    reach: number;
+    likes: number;
+    comments: number;
+    saves: number;
+    shares: number;
+  };
+  comments: PostComment[];
+}
+
+export type PostItem = SocialPost;
+
+export interface BuyerPersona {
+  id: string;
+  name: string;
+  ageRange: string;
+  occupation: string;
+  painPoints: string;
+  motivation: string;
+  accepted: boolean;
+}
+
+export interface BrandCore {
+  whatTheySell: string;
+  category: string;
+  websiteUrl: string;
+  toneOfVoice: string;
+  pillars: string[];
+  doWords: string[];
+  dontWords: string[];
+  personas: BuyerPersona[];
+}
+
+export type CommitmentPeriod =
+  | "mes_actual"
+  | "mes_anterior"
+  | "trimestre"
+  | "7d"
+  | "30d"
+  | "semana"
+  | "mes"
+  | "custom";
+
+export interface PeriodCommitmentSnapshot {
+  period: "mes_actual" | "mes_anterior" | "trimestre";
+  postsCommitted: number;
+  postsCompleted: number;
+  StoriesCommitted: number;
+  StoriesCompleted: number;
+  storiesCommitted: number;
+  storiesCompleted: number;
+  reelsCommitted: number;
+  reelsCompleted: number;
+  adCampaignsCommitted: number;
+  adCampaignsCompleted: number;
+  adSpend?: number;
+  reachTotal?: number;
+  clicksTotal?: number;
+  landingPageViewsPerWeek?: number;
+  clicksPerWeek?: number;
+}
+
+export interface CustomCommitmentMetric {
+  id: string;
+  checked?: boolean;
+  icon?: "globe" | "mouse" | "messages" | "reach";
+  title?: string;
+  subtitle?: string;
+  target?: string;
+  currentValue?: number;
+  name?: string;
+  unit?: string;
+  value?: number | string;
+}
+
+export interface AccountCommitment {
+  postsCommitted: number;
+  postsCompleted: number;
+  StoriesCommitted: number;
+  StoriesCompleted: number;
+  storiesCommitted: number;
+  storiesCompleted: number;
+  reelsCommitted: number;
+  reelsCompleted: number;
+  adCampaignsCommitted: number;
+  adCampaignsCompleted: number;
+  period: "mes_actual" | "mes_anterior" | "trimestre";
+  periodHistory: {
+    mes_actual: PeriodCommitmentSnapshot;
+    mes_anterior: PeriodCommitmentSnapshot;
+    trimestre: PeriodCommitmentSnapshot;
+  };
+  customMetrics?: CustomCommitmentMetric[];
+  hasDeclaredCommitments?: boolean;
+}
+
+export type BrandHealthStatus = "completa" | "en_progreso" | "en_riesgo" | "sin_compromisos";
+
+export interface BrandWorkspace {
+  id: string;
+  name: string;
+  slug: string;
+  handle: string;
+  shareToken: string;
+  initials: string;
+  initial: string;
+  color: string;
+  avatarBg: string;
+  avatarColor: string;
+  industry: string;
+  city: string;
+  connectedNetworks: SocialNetwork[];
+  Networks: SocialNetwork[];
+  monthlyPostTarget: number;
+  monthlyBudget: number;
+  monthlySpend?: number;
+  adBudget: number;
+  hasPaidAds: boolean;
+  paidAdsLabel: "con pauta" | "sin pauta";
+  healthStatus: BrandHealthStatus;
+  healthScore: number;
+  status?: string;
+  archived?: boolean;
+  commitments: AccountCommitment;
+  core: BrandCore;
+  bioLink: {
+    handle: string;
+    headline: string;
+    whatsapp: string;
+    buttons: { id: string; label: string; url: string }[];
+  };
+}
+
+export type BrandAccount = BrandWorkspace;
+export type Brand = BrandWorkspace;
+
+export type TaskDueBucket = "overdue" | "today" | "tomorrow" | "upcoming";
+export type TaskPriority = "Alta" | "Media" | "Baja" | "alta" | "media" | "baja";
+export type TaskStatus =
+  | "pendiente"
+  | "en_curso"
+  | "completada"
+  | "Pendiente"
+  | "En curso"
+  | "Completada"
+  | "todo"
+  | "in_progress"
+  | "done";
+
+export interface AgencyTask {
+  id: string;
+  brandId: string;
+  title: string;
+  description?: string;
+  dueLabel: string;
+  dueDate: string; // ISO YYYY-MM-DD
+  dueBucket?: TaskDueBucket;
+  assignee: string;
+  assigneeId: string;
+  assigneeName: string;
+  assigneeInitial: string;
+  listName: string;
+  listId?: string;
+  status: TaskStatus;
+  priority: TaskPriority;
+  completed: boolean;
+  completedAt?: string;
+  estimatedMinutes?: number;
+  spentMinutes?: number;
+  highlighted?: boolean;
+  tags: string[];
+}
+
+export type TaskItem = AgencyTask;
+export type Task = AgencyTask;
+
+export interface NotebookItem {
+  id: string;
+  brandId: string;
+  title: string;
+  subtitle: string;
+  stamp?: string;
+  variant?: "post" | "report" | "space" | "brand";
+  category: string;
+  content: string;
+  bgGradient: string;
+  accentColor: string;
+  updatedAt: string;
+  updatedBy: string;
+  isPinned: boolean;
+}
+
+export type NotebookNote = NotebookItem;
+
+export interface MediaAsset {
+  id: string;
+  brandId: string;
+  name: string;
+  kind: "video" | "image" | "pdf" | "doc";
+  cover: CoverKind;
+  sizeLabel: string;
+  aiTags: string[];
+  folder: string;
+  uploadedAt: string;
+  usedInPosts: number;
+}
+
+export interface BrandProject {
+  id: string;
+  brandId: string;
+  title: string;
+  description: string;
+  progress: number;
+  status: "En curso" | "Revisión" | "Completado";
+  dueDate: string;
+  deliverablesCount: number;
+}
+
+export interface AdCreative {
+  id: string;
+  brandId: string;
+  name: string;
+  platform: "Meta" | "Google" | "TikTok";
+  cover: CoverKind;
+  status: "Activo" | "Pausado";
+  spend: number;
+  results: number;
+  resultLabel: string;
+  cpa: number;
+  ctr: number;
+  clickScore: number;
+  hookScore: number;
+}
+
+export interface ChatMessage {
+  id: string;
+  channelId: string;
+  sender: string;
+  senderInitials: string;
+  text: string;
+  time: string;
+}
+
+export interface ChatChannel {
+  id: string;
+  name: string;
+  type: "brand" | "direct";
+  brandId?: string;
+  unread: number;
+}
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  initials: string;
+  avatarInitial: string;
+  avatarColor: string;
+  role: string;
+  email: string;
+  status: "Activo" | "Invitado";
+  baseActiveMinutes: number;
+  brandIds?: string[];
+  brandsCount: number;
+  tasksCompleted: number;
+  tasksInProgress: number;
+  postsPublished: number;
+  activeTimeLabel: string;
+  points: number;
+}
+
+export interface TeamInvitation {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  brandIds: string[];
+  createdAt: string;
+  status: "Pendiente" | "Aceptada" | "Cancelada";
+  inviteLink: string;
+}
+
+export type ActivityEventType =
+  | "task_completed"
+  | "task_started"
+  | "post_published"
+  | "post_submitted"
+  | "notebook_updated"
+  | "commitment_updated"
+  | "session_active";
+
+export interface ActivityEvent {
+  id: string;
+  memberId: string;
+  brandId?: string;
+  type: ActivityEventType;
+  timestamp: string; // ISO string
+  durationMinutes?: number;
+  metadata?: Record<string, string | number | boolean>;
+}
+
+export type RecommendationMetricKey = "posts" | "reels" | "stories" | "ads";
+
+export type RecommendationRuleId =
+  | "CONSISTENT_CAPACITY_UPGRADE"
+  | "PAID_ADS_CONVERSION_TRACKING"
+  | "OVERLOAD_RISK_ADJUSTMENT"
+  | "STORY_CADENCE_BOOST"
+  | "REELS_ENGAGEMENT_EXPANSION";
+
+export interface AccountRecommendation {
+  id: string;
+  brandId: string;
+  brandName: string;
+  brandInitial: string;
+  brandColor: string;
+  brandBg?: string;
+  metricKey: RecommendationMetricKey;
+  metricTitle?: string;
+  title?: string;
+  priority?: "alta" | "media" | "baja" | "Alta" | "Media" | "Baja";
+  icon?: "globe" | "mouse" | "messages" | "reach";
+  currentCommitted: number;
+  completedLastPeriod: number;
+  recommendedCommitted: number;
+  deltaPercent: number;
+  ruleId: RecommendationRuleId;
+  reason: string;
+  dataSourceLabel: string;
+  applied: boolean;
+}
+
+export type DashboardWidgetId =
+  | "tareas"
+  | "libretas"
+  | "hoy"
+  | "notificaciones"
+  | "aprobaciones"
+  | "grafica_ads"
+  | "ads_activos"
+  | "proyectos_criticos";
+
+export type DashboardWidgetSpan = 1 | 2 | 3;
+
+export interface DashboardWidgetConfig {
+  id: DashboardWidgetId;
+  title: string;
+  description: string;
+  visible: boolean;
+  enabled?: boolean;
+  order: number;
+  column: "left" | "right";
+  span?: DashboardWidgetSpan;
+}
+
+export interface OnboardingProgress {
+  brandCreatedOrSelected: boolean;
+  taskCreatedOrCompleted: boolean;
+  postCreatedOrScheduled: boolean;
+  teamCheckedOrInvited: boolean;
+  dismissed: boolean;
+  minimized: boolean;
+  manualOverrides?: Record<string, boolean>;
+}
+
+export interface TestClockConfig {
+  fixedIsoNow?: string | null;
+}
+
+export interface WorkspaceProfile {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  avatarInitial: string;
+  avatarUrl?: string;
+  timezone: string; // ej. "America/Mexico_City"
+  locale: string; // ej. "es-MX"
+  theme?: "claro" | "oscuro";
+}
+
+export interface AgencyInfo {
+  id: string;
+  name: string;
+  plan: string;
+  activeDays: number;
+  activeStreak: number;
+  bestStreak?: number;
+  xp?: number;
+  level?: number;
+  nextLevelXp?: number;
+  timezone: string;
+  currency: string;
+}
+
+export interface WorkspaceNotification {
+  id: string;
+  brandId?: string;
+  title: string;
+  body: string;
+  createdAt: string;
+  read: boolean;
+  kind: "aprobacion" | "tarea" | "comentario" | "sistema" | "ads";
+  actionUrl?: string;
+}
+
+export interface HublyWorkspaceData {
+  workspaceId: string;
+  agencyName: string;
+  profile: WorkspaceProfile;
+  agency: AgencyInfo;
+  testClock: TestClockConfig;
+  activeBrandId: string;
+  brands: BrandWorkspace[];
+  posts: SocialPost[];
+  tasks: AgencyTask[];
+  notebooks: NotebookItem[];
+  assets: MediaAsset[];
+  projects: BrandProject[];
+  ads: AdCreative[];
+  channels: ChatChannel[];
+  messages: ChatMessage[];
+  team: TeamMember[];
+  invitations: TeamInvitation[];
+  activityEvents: ActivityEvent[];
+  notifications: WorkspaceNotification[];
+  widgets: DashboardWidgetConfig[];
+  onboarding: OnboardingProgress;
+  dismissedRecommendationIds: string[];
+  appliedRecommendationsMap: Record<string, boolean>;
+}

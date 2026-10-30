@@ -1,20 +1,33 @@
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
+
 :root {
+  --forest: #10291f;
   --ink: #10291f;
   --ink-soft: #456256;
-  --ground: #f7f9f3;
+  --ground: #f6f5f0;
   --surface: #ffffff;
+  --surface-warm: #efece4;
+  --sidebar-bg: #0f241c;
   --line: #dde5da;
+  --line-strong: #c9d1c7;
   --green: #0a7a55;
   --green-deep: #075a3f;
   --green-pale: #dcf5e6;
   --yellow: #ffd23f;
+  --yellow-pale: #fff6d6;
   --coral: #ff5a3c;
   --coral-deep: #b5321a;
+  --coral-pale: #ffe6e0;
   --lilac: #d8ccff;
+  --lilac-pale: #f3efff;
   --shadow-window: 0 24px 60px -24px rgb(16 41 31 / 0.35), 0 2px 6px rgb(16 41 31 / 0.08);
   --shadow-sheet: 0 14px 30px -14px rgb(16 41 31 / 0.4);
+  --shadow-card: 0 4px 16px -4px rgb(16 41 31 / 0.07), 0 1px 2px rgb(16 41 31 / 0.04);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --display: var(--font-display), "Trebuchet MS", sans-serif;
+  --serif: var(--font-serif), Georgia, serif;
+  --mono: var(--font-mono), monospace;
   --gutter: clamp(16px, 4vw, 40px);
 }
 
@@ -27,6 +40,7 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 88px;
   scrollbar-color: var(--green) var(--line);
+  overflow-x: clip;
 }
 
 body {
@@ -185,17 +199,15 @@ a {
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  font-family: var(--display);
-  font-size: 1.3125rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  flex-shrink: 0;
+  min-height: 44px;
   text-decoration: none;
 }
 
-.logo svg {
-  width: 28px;
-  height: 28px;
+.logo img {
+  display: block;
+  width: 132px;
+  height: auto;
 }
 
 .nav nav {
@@ -1015,8 +1027,8 @@ a {
   margin-top: 10px;
 }
 
-.footer .logo {
-  color: var(--ink);
+.footer .logo img {
+  width: 154px;
 }
 
 .footer nav {
@@ -1488,12 +1500,28 @@ a {
 }
 
 @media (max-width: 560px) {
-  .nav-github span {
+  .logo img {
+    width: 92px;
+  }
+
+  .nav-github span,
+  .nav-actions a[href="/login"] {
     display: none;
   }
 
   .nav-inner {
-    gap: 12px;
+    gap: 8px;
+    padding: 6px 8px 6px 12px;
+  }
+
+  .nav-actions {
+    gap: 8px;
+  }
+
+  .nav-actions .button--small {
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 0.8125rem;
   }
 
   .demo-week {
@@ -1528,5 +1556,391 @@ a {
 
   * {
     transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   SISTEMA VISUAL HÍBRIDO SaaS (Hubly × Henry)
+   ========================================================================== */
+
+.font-display {
+  font-family: var(--display);
+}
+
+.font-serif-editorial {
+  font-family: var(--serif);
+}
+
+.font-mono-tech {
+  font-family: var(--mono);
+}
+
+.saas-shell {
+  display: grid;
+  grid-template-columns: 268px minmax(0, 1fr);
+  min-height: 100dvh;
+  background: var(--ground);
+  color: var(--ink);
+}
+
+.saas-shell.is-collapsed {
+  grid-template-columns: 76px minmax(0, 1fr);
+}
+
+.saas-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--sidebar-bg);
+  color: #f4f6f2;
+  border-right: 1px solid rgb(255 255 255 / 0.08);
+  padding: 18px 14px;
+  overflow-y: auto;
+  z-index: 30;
+}
+
+.saas-sidebar-section-label {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8fa99c;
+  padding: 14px 10px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.saas-nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 11px;
+  border-radius: 11px;
+  font-size: 0.925rem;
+  font-weight: 500;
+  color: #cfe0d7;
+  text-decoration: none;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.saas-nav-link:hover {
+  background: rgb(255 255 255 / 0.07);
+  color: #ffffff;
+}
+
+.saas-nav-link.is-active {
+  background: var(--green);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgb(10 122 85 / 0.35);
+}
+
+.saas-brand-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 13px;
+  background: rgb(255 255 255 / 0.06);
+  border: 1px solid rgb(255 255 255 / 0.12);
+  color: #ffffff;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.saas-brand-trigger:hover {
+  background: rgb(255 255 255 / 0.1);
+  border-color: rgb(255 255 255 / 0.22);
+}
+
+.saas-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.saas-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 28px;
+  background: rgb(246 245 240 / 0.88);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
+.saas-content {
+  flex: 1;
+  padding: 28px;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.saas-subnav {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--surface-warm);
+  border: 1px solid var(--line);
+}
+
+.saas-subnav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 13px;
+  border-radius: 9px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+
+.saas-subnav-item:hover {
+  color: var(--ink);
+}
+
+.saas-subnav-item.is-active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 1px 3px rgb(16 41 31 / 0.1);
+}
+
+.saas-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+}
+
+.saas-card-warm {
+  background: var(--surface-warm);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+.saas-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 15px;
+  border-radius: 11px;
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 120ms ease, background 140ms ease, border-color 140ms ease;
+  white-space: nowrap;
+}
+
+.saas-btn:active {
+  transform: translateY(1px);
+}
+
+.saas-btn-primary {
+  background: var(--green);
+  color: #ffffff;
+}
+
+.saas-btn-primary:hover {
+  background: var(--green-deep);
+}
+
+.saas-btn-ink {
+  background: var(--ink);
+  color: #ffffff;
+}
+
+.saas-btn-ink:hover {
+  background: #193d2f;
+}
+
+.saas-btn-secondary {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+
+.saas-btn-secondary:hover {
+  background: var(--surface-warm);
+}
+
+.saas-btn-yellow {
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+.saas-btn-coral {
+  background: var(--coral);
+  color: #ffffff;
+}
+
+.saas-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.saas-status-approved,
+.saas-status-scheduled,
+.saas-status-published {
+  background: var(--green-pale);
+  color: var(--green-deep);
+}
+
+.saas-status-pending {
+  background: var(--yellow-pale);
+  color: #7a5900;
+}
+
+.saas-status-changes {
+  background: var(--coral-pale);
+  color: var(--coral-deep);
+}
+
+.saas-status-draft {
+  background: var(--surface-warm);
+  color: var(--ink-soft);
+}
+
+.saas-notebook {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  border-radius: 14px;
+  min-height: 184px;
+  border: 1px solid rgb(16 41 31 / 0.12);
+  overflow: hidden;
+  transition: transform 160ms ease;
+}
+
+.saas-notebook:hover {
+  transform: translateY(-3px);
+}
+
+.saas-fab-ai {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 45;
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--yellow);
+  border: 2px solid rgb(255 255 255 / 0.2);
+  box-shadow: 0 14px 32px rgb(16 41 31 / 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease;
+}
+
+.saas-fab-ai:hover {
+  transform: scale(1.06);
+  background: var(--green-deep);
+}
+
+.saas-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgb(15 36 28 / 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.saas-modal {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow-window);
+  width: min(100%, 780px);
+  max-height: 90dvh;
+  overflow-y: auto;
+}
+
+@media (max-width: 960px) {
+  .saas-shell,
+  .saas-shell.is-collapsed {
+    grid-template-columns: 1fr;
+  }
+
+  .saas-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform 200ms var(--ease-out);
+  }
+
+  .saas-sidebar.is-mobile-open {
+    transform: translateX(0);
+  }
+
+  .saas-topbar {
+    padding: 12px 16px;
+  }
+
+  .saas-content {
+    padding: 18px 16px 84px;
+  }
+}
+
+@media print {
+  .saas-sidebar,
+  .saas-topbar,
+  .saas-fab-ai,
+  .no-print {
+    display: none !important;
+  }
+
+  .saas-shell {
+    display: block !important;
+    background: #ffffff !important;
+  }
+
+  .saas-content {
+    padding: 0 !important;
+    max-width: 100% !important;
   }
 }

@@ -1,0 +1,11 @@
+Mode: built-in image_gen; transparent_background: true.
+
+Use case: logo-brand.
+Asset type: Primary logo for Hubly, an open-source social-media management platform for marketing agencies that brings their clients' brands, content calendars and approvals together.
+Primary request: Create one distinctive polished logo, a compact original symbol paired with the lowercase wordmark "hubly". Communicate connection, creative collaboration, and everything in one place. Symbol: a clever abstract lowercase h constructed from two substantial softly rounded interlocking forms, with elegant negative space and an instantly recognizable silhouette. Optically balanced horizontal lockup, symbol on left, wordmark on right. Friendly confident bespoke geometric grotesque lettering with a Bricolage Grotesque character, generous bowls, purposeful kerning, and strong legibility. Make the symbol unique and simple enough for an app icon.
+Color palette: symbol forest green #0a7a55; wordmark deep ink green #10291f, matching the existing Hubly identity.
+Style/medium: impeccably clean flat vector-like logo artwork with solid fills and crisp edges, professionally resolved brand identity.
+Composition: One primary horizontal logo centered, large on the canvas, with clear safe margins, use a wide landscape canvas.
+Text (verbatim): "hubly" (h u b l y), all lowercase. No other text.
+Background: genuinely transparent.
+Constraints: one logo only, no presentation board, no mockup, no tagline, no gradients, no shadows, no 3D, no texture, no decorative network nodes, no stock chain-link or infinity symbol, no watermark.

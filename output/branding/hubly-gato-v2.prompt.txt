@@ -1,0 +1,13 @@
+Modo: herramienta integrada image_gen. Fondo transparente: true.
+Referencia de identidad: output/branding/hubly-selected-original.png.
+
+Design ONE minimal graphic CAT mascot for the Hubly brand. The reference is the Hubly logo, for its rounded confident geometry, forest green and yellow palette. Create a new graphic character, NOT a redrawing of a detailed illustrated kitten.
+
+ART DIRECTION: a tiny high-end editorial brand character that could be drawn with 10 simple vector shapes. Think a modern independent design studio's minimal animal symbol, clean, warm, slightly quirky, extremely restrained. Almost pictogram-simple, but with just enough personality to become a brand mascot.
+
+EXACT CHARACTER: an unmistakable seated cat, front facing. Its head is a wide low rounded rectangle, about twice as wide as it is tall, with two SHORT triangular ears whose tips are rounded. Its body is a smaller squat rounded trapezoid under the head. Two short pill-shaped paws at the base. One thick C-shaped tail beside its body. The face is ONLY two TINY solid dark-green vertical oval eyes and a miniature dark-green W mouth. No whites in the eyes, no pupils, no glints, no eyebrows, no muzzle patch, no whiskers. No internal anatomy lines. No waving hand. It should look calmly amused and knowing.
+The whole cat is forest green #0a7a55. ONE ear is entirely golden yellow #ffd23f, intentionally evoking the top-right yellow tile of the Hubly logo. Sparse tiny face details are deep green #10291f. These are the ONLY three colors. Distinct silhouette, extremely crisp clean curves.
+
+IMPORTANT: every shape is an absolutely UNIFORM SOLID FLAT fill. No shading, no color variations, no gradients, no dark-side lighting, no texture, no gloss, no 3D. No furry outlines. No children's-book illustration or expressive large cartoon eyes. Keep the silhouette softly geometric and friendly with a slightly offbeat character. Not a square-tile creature, not a robot, no accessories.
+
+One single full-body cat centered on a transparent square canvas with 15% breathing room. No words, no logo or text, no extra symbols, no floor, no background, no shadows, no glow, no watermark.

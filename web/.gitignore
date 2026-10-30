@@ -42,3 +42,6 @@ next-env.d.ts
 
 # ejemplo de variables de entorno
 !.env.example
+
+# persistencia local zero-config
+/.data/
