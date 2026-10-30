@@ -998,6 +998,15 @@ html.theme-switching, html.theme-switching *, html.theme-switching ::before, htm
 }
 
 .hubly-sidebar nav { gap: 1px !important; }
+.hubly-app-root.henry-app-root .hubly-sidebar :is(.hubly-nav-item, .henry-nav-item) { min-height: 30px; padding: 4px 12px; line-height: 20px; }
+.hubly-sidebar :is(.hubly-nav-item, .henry-nav-item) :is(svg, img) { width: 18px; height: 18px; }
+.hubly-sidebar :is(.hubly-section-label, .henry-section-label) { padding: 6px 12px 4px; }
+.hubly-app-root.henry-app-root .hubly-sidebar.henry-sidebar { padding-top: 14px; padding-bottom: 8px; }
+.hubly-sidebar > .hubly-sidebar-keep > div:first-child { padding-bottom: 6px !important; }
+.hubly-sidebar > :last-child > div:first-child { padding-bottom: 4px !important; }
+@media (max-height: 560px) {
+  .hubly-app-root.henry-app-root .hubly-sidebar.henry-sidebar { overflow-y: auto; }
+}
 .hubly-app-root .hubly-hubi-composer input, .hubly-app-root .hubly-hubi-composer input:focus { outline: none !important; box-shadow: none !important; }
 html.dark .hubly-task-group { border-color: #3D3D49; }
 html.dark .hubly-cal-date.is-today { border-color: transparent; background: #6C77C1; color: rgba(255, 255, 255, 0.85); }
@@ -1335,6 +1344,86 @@ html.dark .hubly-app-root [style^="color:#94A3B8" i],html.dark .hubly-app-root [
 html.dark .hubly-app-root [style^="color:#9CA3AF" i],html.dark .hubly-app-root [style*=";color:#9CA3AF" i],html.dark .hubly-app-root [style^="color: rgb(156, 163, 175)"],html.dark .hubly-app-root [style*=" color: rgb(156, 163, 175)"]{color:#9E9EAC!important}
 html.dark .hubly-app-root [style^="color:#8A8AAA" i],html.dark .hubly-app-root [style*=";color:#8A8AAA" i],html.dark .hubly-app-root [style^="color: rgb(138, 138, 170)"],html.dark .hubly-app-root [style*=" color: rgb(138, 138, 170)"]{color:#9E9EAC!important}
 html.dark .hubly-app-root [style*="solid #E2E8F0" i],html.dark .hubly-app-root [style*="solid rgb(226, 232, 240)"],html.dark .hubly-app-root [style*="solid #E5E7EB" i],html.dark .hubly-app-root [style*="solid rgb(229, 231, 235)"],html.dark .hubly-app-root [style*="solid #EAECEF" i],html.dark .hubly-app-root [style*="solid rgb(234, 236, 239)"],html.dark .hubly-app-root [style*="solid #E8E8F0" i],html.dark .hubly-app-root [style*="solid rgb(232, 232, 240)"],html.dark .hubly-app-root [style*="solid #F1F5F9" i],html.dark .hubly-app-root [style*="solid rgb(241, 245, 249)"],html.dark .hubly-app-root [style*="solid #EEF2F6" i],html.dark .hubly-app-root [style*="solid rgb(238, 242, 246)"],html.dark .hubly-app-root [style*="solid #CBD5E1" i],html.dark .hubly-app-root [style*="solid rgb(203, 213, 225)"],html.dark .hubly-app-root [style*="solid #D4D4E4" i],html.dark .hubly-app-root [style*="solid rgb(212, 212, 228)"],html.dark .hubly-app-root [style*="solid #D9DCF0" i],html.dark .hubly-app-root [style*="solid rgb(217, 220, 240)"],html.dark .hubly-app-root [style*="solid #F3F4F6" i],html.dark .hubly-app-root [style*="solid rgb(243, 244, 246)"],html.dark .hubly-app-root [style*="solid #EDEDF3" i],html.dark .hubly-app-root [style*="solid rgb(237, 237, 243)"]{border-color:#4C4C58!important}
+
+
+/* 8c. Contraer y expandir el sidebar */
+@media (min-width: 768px) {
+  .hubly-app-root.henry-app-root .hubly-sidebar.henry-sidebar,
+  .hubly-app-root.henry-app-root .hubly-sidebar.henry-sidebar.is-collapsed {
+    padding-right: 12px;
+    padding-left: 12px;
+    transition: width 220ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  .hubly-app-root.henry-app-root .hubly-sidebar.henry-sidebar.is-animating { overflow: hidden; }
+  .hubly-app-root.henry-app-root .hubly-sidebar-collapse-btn.henry-sidebar-collapse-btn {
+    transition: left 220ms cubic-bezier(0.4, 0, 0.2, 1), background 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+  }
+  .hubly-app-root.henry-app-root .hubly-main.henry-main { transition: margin-left 220ms cubic-bezier(0.4, 0, 0.2, 1), margin-right 250ms ease; }
+  .hubly-sidebar > nav { align-items: flex-start !important; }
+  .hubly-app-root.henry-app-root .hubly-sidebar > nav :is(.hubly-nav-item, .henry-nav-item) {
+    flex-shrink: 0;
+    width: 100%;
+    margin-left: 0;
+    overflow: hidden;
+    transition: width 220ms cubic-bezier(0.4, 0, 0.2, 1), margin 220ms cubic-bezier(0.4, 0, 0.2, 1), padding 220ms cubic-bezier(0.4, 0, 0.2, 1), background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+  }
+  .hubly-app-root.henry-app-root .hubly-sidebar.is-collapsed > nav :is(.hubly-nav-item, .henry-nav-item) {
+    justify-content: flex-start !important;
+    width: 38px;
+    height: auto;
+    min-height: 30px;
+    margin-left: 3px;
+    padding: 4px 9px;
+    border-radius: 8px;
+  }
+  .hubly-sidebar > nav :is(.hubly-nav-item, .henry-nav-item) span { white-space: nowrap; }
+  .hubly-sidebar.is-collapsing > :not(nav):not(.hubly-sidebar-collapse-btn),
+  .hubly-sidebar.is-collapsing > nav :is(.hubly-nav-item, .henry-nav-item) > span > span,
+  .hubly-sidebar.is-collapsing > nav :is(.hubly-nav-item, .henry-nav-item) > [data-testid] {
+    opacity: 0;
+    transition: opacity 90ms cubic-bezier(0.4, 0, 1, 1);
+  }
+  .hubly-sidebar.is-expanding > nav :is(.hubly-nav-item, .henry-nav-item) > span > span,
+  .hubly-sidebar.is-expanding > nav :is(.hubly-nav-item, .henry-nav-item) > [data-testid] {
+    animation: hubly-fade-in 140ms cubic-bezier(0, 0, 0.2, 1) 60ms both;
+  }
+}
+/* Sidebar retraído: las filas se ajustan a la altura para que todo entre */
+@media (min-width: 768px) {
+  .hubly-app-root.henry-app-root .hubly-sidebar.henry-sidebar.is-collapsed {
+    --rail-row: clamp(22px, calc((100dvh - 118px) / 14), 36px);
+    padding-top: 10px;
+    padding-bottom: 8px;
+  }
+  .hubly-sidebar.is-collapsed > div { gap: 0 !important; margin: 0 !important; padding: 0 !important; }
+  .hubly-sidebar.is-collapsed > div > div, .hubly-sidebar.is-collapsed > div > div > div { gap: 0 !important; margin: 0 !important; padding: 0 !important; }
+  .hubly-sidebar.is-collapsed > div:last-child { margin-top: auto !important; }
+  .hubly-sidebar.is-collapsed > nav { gap: 0 !important; }
+  .hubly-sidebar.is-collapsed > [style*="height: 1px"], .hubly-sidebar.is-collapsed > [style*="height:1px"] { flex-shrink: 0; margin: 4px auto !important; }
+  .hubly-app-root.henry-app-root .hubly-sidebar.is-collapsed > nav :is(.hubly-nav-item, .henry-nav-item) {
+    height: var(--rail-row);
+    min-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .hubly-app-root.henry-app-root .hubly-sidebar.is-collapsed :is(.hubly-icon-btn, .henry-icon-btn) { width: 38px; height: var(--rail-row); }
+  .hubly-sidebar.is-collapsed > div:last-child > div:last-child { margin-top: 4px !important; }
+}
+@media (min-width: 768px) and (max-height: 420px) {
+  .hubly-app-root.henry-app-root .hubly-sidebar.henry-sidebar.is-collapsed { overflow-y: auto; }
+}
+.hubly-collapse-chevron { transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1); }
+.is-collapsed .hubly-collapse-chevron { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) {
+  .hubly-app-root.henry-app-root .hubly-sidebar.henry-sidebar,
+  .hubly-app-root.henry-app-root .hubly-sidebar.henry-sidebar.is-collapsed,
+  .hubly-app-root.henry-app-root .hubly-sidebar-collapse-btn.henry-sidebar-collapse-btn,
+  .hubly-app-root.henry-app-root .hubly-main.henry-main,
+  .hubly-app-root.henry-app-root .hubly-sidebar > nav :is(.hubly-nav-item, .henry-nav-item),
+  .hubly-collapse-chevron {
+    transition-duration: 0.01ms !important;
+  }
+}
 
 /* 9. Movimiento reducido ---------------------------------------------------- */
 

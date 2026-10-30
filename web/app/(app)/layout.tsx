@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState, useLayoutEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -382,7 +382,58 @@ export default function SaaSAppLayout({
     setCollapsed((prev) => !prev);
   };
 
-  const isEffectiveCollapsed = (collapsed || aiDrawerOpen) && !mobileDrawerOpen;
+  const targetCollapsed = (collapsed || aiDrawerOpen) && !mobileDrawerOpen;
+  const [isEffectiveCollapsed, setRenderedCollapsed] = useState(targetCollapsed);
+  const [sidebarMotion, setSidebarMotion] = useState<"" | "collapsing" | "expanding">("");
+  const sidebarRef = useRef<HTMLElement | null>(null);
+  const sidebarTops = useRef<Map<Element, number> | null>(null);
+
+  useEffect(() => {
+    if (targetCollapsed === isEffectiveCollapsed) return;
+    const sidebar = sidebarRef.current;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!sidebar || reduced || mobileDrawerOpen) {
+      setRenderedCollapsed(targetCollapsed);
+      return;
+    }
+    const swap = () => {
+      sidebarTops.current = new Map(
+        Array.from(sidebar.children).map((el) => [el, el.getBoundingClientRect().top])
+      );
+      setRenderedCollapsed(targetCollapsed);
+    };
+    setSidebarMotion(targetCollapsed ? "collapsing" : "expanding");
+    const swapTimer = targetCollapsed ? window.setTimeout(swap, 100) : null;
+    if (!targetCollapsed) swap();
+    const endTimer = window.setTimeout(() => setSidebarMotion(""), 360);
+    return () => {
+      if (swapTimer !== null) window.clearTimeout(swapTimer);
+      window.clearTimeout(endTimer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [targetCollapsed]);
+
+  // Los bloques que cambian de altura se reacomodan en Y sin saltos.
+  useLayoutEffect(() => {
+    const tops = sidebarTops.current;
+    const sidebar = sidebarRef.current;
+    if (!tops || !sidebar) return;
+    sidebarTops.current = null;
+    Array.from(sidebar.children).forEach((el) => {
+      if (el.classList.contains("hubly-sidebar-collapse-btn")) return;
+      const before = tops.get(el);
+      const delta = before === undefined ? 0 : before - el.getBoundingClientRect().top;
+      const fades = !el.matches("nav");
+      el.animate(
+        [
+          { transform: `translateY(${delta}px)`, opacity: fades ? 0 : 1 },
+          { opacity: fades ? 0 : 1, offset: 0.55 },
+          { transform: "none", opacity: 1 },
+        ],
+        { duration: 220, easing: "cubic-bezier(0.4, 0, 0.2, 1)" }
+      );
+    });
+  }, [isEffectiveCollapsed]);
   const activeSidebarTab = isEffectiveCollapsed ? "inicio" : sidebarTab;
 
   return (
@@ -556,11 +607,12 @@ export default function SaaSAppLayout({
           FLOATING LEFT SIDEBAR (256px expanded / 68px collapsed / Mobile Drawer)
          ===================================================================== */}
       <aside
+        ref={sidebarRef}
         id="hubly-sidebar-nav"
         aria-label="Navegación principal de Hubly"
         className={`hubly-sidebar henry-sidebar ${
-          isEffectiveCollapsed ? "is-collapsed" : ""
-        } ${mobileDrawerOpen ? "is-mobile-drawer-open" : ""}`.trim()}
+          targetCollapsed ? "is-collapsed" : ""
+        } ${sidebarMotion ? `is-animating is-${sidebarMotion}` : ""} ${mobileDrawerOpen ? "is-mobile-drawer-open" : ""}`.trim()}
         data-sidebar-tab={activeSidebarTab}
         style={{
           transition:
@@ -588,21 +640,17 @@ export default function SaaSAppLayout({
             onClick={handleToggleCollapse}
             className="hubly-sidebar-collapse-btn henry-sidebar-collapse-btn"
             aria-label={
-              isEffectiveCollapsed
+              targetCollapsed
                 ? "Expandir barra lateral"
                 : "Colapsar barra lateral"
             }
             title={
-              isEffectiveCollapsed
+              targetCollapsed
                 ? "Expandir barra lateral"
                 : "Colapsar barra lateral"
             }
           >
-            {isEffectiveCollapsed ? (
-              <ChevronRight size={13} />
-            ) : (
-              <ChevronLeft size={13} />
-            )}
+            <ChevronLeft size={13} className="hubly-collapse-chevron" />
           </button>
         )}
 
