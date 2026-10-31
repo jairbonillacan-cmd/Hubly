@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHublyStore } from "@/lib/store";
+import { backendEnabled } from "@/lib/supabase/config";
 
 const STEPS = ["Tu agencia", "Tu primera marca", "Tu equipo"];
 
@@ -28,12 +29,24 @@ export default function OnboardingPage() {
     syncFromServer();
   }, [syncFromServer]);
 
-  const finish = (withInvites: boolean) => {
+  const finish = async (withInvites: boolean) => {
     const emails = withInvites ? invites.split(/[\s,;]+/).filter(Boolean) : [];
     const bad = emails.find((m) => !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m));
     if (bad) {
       setError(`«${bad}» no parece un correo válido.`);
       return;
+    }
+    if (backendEnabled) {
+      const res = await fetch("/api/agency", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: agency.trim() }),
+      });
+      if (!res.ok) {
+        setError("No se pudo crear la agencia. Inténtalo de nuevo.");
+        return;
+      }
+      await syncFromServer();
     }
     updateAgency({ name: agency.trim() });
     updateProfile({ name: userName.trim() });
@@ -43,8 +56,16 @@ export default function OnboardingPage() {
       handle: handle.trim() ? `@${handle.trim().replace(/^@/, "")}` : undefined,
     });
     toggleOnboardingStep("brandCreatedOrSelected", true);
-    for (const email of emails) inviteTeamMember({ email, role: "Strategist" });
-    if (emails.length) toggleOnboardingStep("teamCheckedOrInvited", true);
+    if (!backendEnabled) {
+      for (const email of emails) inviteTeamMember({ email, role: "Strategist" });
+      if (emails.length) toggleOnboardingStep("teamCheckedOrInvited", true);
+    }
+    // En modo real se espera el guardado antes de salir de esta página.
+    if (backendEnabled) {
+      await new Promise((r) => setTimeout(r, 1200));
+      window.location.assign("/dashboard");
+      return;
+    }
     router.push("/dashboard");
   };
 
@@ -67,7 +88,7 @@ export default function OnboardingPage() {
             e.preventDefault();
             setError(null);
             if (step < 2) setStep(step + 1);
-            else finish(true);
+            else void finish(true);
           }}
           style={{ display: "grid", gap: 12 }}
         >
@@ -93,14 +114,14 @@ export default function OnboardingPage() {
                 Correos, separados por comas
                 <textarea key="c" autoFocus rows={3} value={invites} onChange={(e) => setInvites(e.target.value)} style={{ ...field, resize: "vertical" }} />
               </label>
-              <p style={{ fontSize: 12.5, color: "#64748B", margin: 0 }}>Por ahora se crea un enlace de invitación para compartir; todavía no se envía correo.</p>
+              <p style={{ fontSize: 12.5, color: "#64748B", margin: 0 }}>{backendEnabled ? "Las invitaciones estarán disponibles pronto; este paso se puede omitir." : "Por ahora se crea un enlace de invitación para compartir; todavía no se envía correo."}</p>
             </>
           )}
           {error && <p role="alert" style={{ color: "#B91C1C", fontSize: 12.5, margin: 0 }}>{error}</p>}
           <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 4 }}>
             {step > 0 ? <button type="button" onClick={() => setStep(step - 1)} style={secondary}>Atrás</button> : <span />}
             <div style={{ display: "flex", gap: 8 }}>
-              {step === 2 && <button type="button" onClick={() => finish(false)} style={secondary}>Omitir</button>}
+              {step === 2 && <button type="button" onClick={() => void finish(false)} style={secondary}>Omitir</button>}
               <button type="submit" style={primary}>{step === 2 ? "Entrar a Hubly" : "Continuar"}</button>
             </div>
           </div>

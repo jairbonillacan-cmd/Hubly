@@ -333,10 +333,17 @@ function normalizeMember(member: Partial<TeamMember>): TeamMember {
 
 export function normalizeWorkspacePayload(
   rawInput: Partial<HublyWorkspaceData> | null | undefined,
-  workspaceId = "default"
+  workspaceId = "default",
+  options: { live?: boolean } = {}
 ): HublyWorkspaceData {
   const cleanId = sanitizeWorkspaceId(workspaceId);
   const seed = createSeedWorkspaceData(cleanId);
+  if (options.live) {
+    Object.assign(seed, {
+      brands: [], tasks: [], posts: [], team: [], assets: [], projects: [], ads: [],
+      channels: [], messages: [], activityEvents: [], agencyName: "",
+    });
+  }
   if (!rawInput || typeof rawInput !== "object") {
     return seed;
   }
@@ -409,7 +416,9 @@ export function normalizeWorkspacePayload(
     notebooks:
       Array.isArray(sanitized.notebooks) && sanitized.notebooks.length > 0
         ? sanitized.notebooks
-        : DEFAULT_NOTEBOOKS.map((n) => ({ ...n })),
+        : options.live
+          ? []
+          : DEFAULT_NOTEBOOKS.map((n) => ({ ...n })),
     assets:
       Array.isArray(sanitized.assets) && sanitized.assets.length > 0
         ? sanitized.assets

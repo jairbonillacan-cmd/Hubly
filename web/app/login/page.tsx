@@ -4,8 +4,15 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Sparkles, CheckCircle2, Lock, Mail } from "lucide-react";
+import { AuthCard } from "@/components/auth/AuthCard";
+import { backendEnabled } from "@/lib/supabase/config";
 
 export default function LoginPage() {
+  if (backendEnabled) return <AuthCard mode="login" />;
+  return <DemoLogin />;
+}
+
+function DemoLogin() {
   const router = useRouter();
   const [email, setEmail] = useState("jair@estudiobruma.mx");
   const [password, setPassword] = useState("••••••••••••");

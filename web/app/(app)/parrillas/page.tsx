@@ -28,6 +28,8 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { backendEnabled } from "@/lib/supabase/config";
+import { currentAgencyId } from "@/lib/live-workspace";
 import { Cover } from "@/components/Cover";
 import { STATUS_META } from "@/components/app/social/status-meta";
 import { PostMonthCalendar } from "@/components/app/social/PostMonthCalendar";
@@ -104,9 +106,30 @@ export default function ParrillasPage() {
     if (composerOpen) setShowDemoData(true);
   }, [composerOpen]);
 
-  const handleCopyClientLink = () => {
+  const liveShareUrl = async () => {
+    const res = await fetch("/api/share", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ brandId: activeBrand?.id, agencyId: currentAgencyId() }),
+    });
+    if (!res.ok) return null;
+    const { token } = (await res.json()) as { token: string };
+    return `${window.location.origin}/share/${token}`;
+  };
+
+  // Con cuentas reales cada enlace se genera al pedirlo: solo se guarda su hash.
+  const handleOpenPortal = async (e: React.MouseEvent) => {
+    if (!backendEnabled) return;
+    e.preventDefault();
+    const url = await liveShareUrl();
+    if (url) window.open(url, "_blank", "noopener");
+  };
+
+  const handleCopyClientLink = async (e?: React.MouseEvent) => {
     if (typeof window === "undefined") return;
-    const url = `${window.location.origin}/share/${shareToken}`;
+    if (backendEnabled) e?.preventDefault?.();
+    const url = backendEnabled ? await liveShareUrl() : `${window.location.origin}/share/${shareToken}`;
+    if (!url) return;
     navigator.clipboard?.writeText(url).catch(() => {});
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2200);
@@ -1177,6 +1200,7 @@ export default function ParrillasPage() {
 
               <Link
                 href={`/share/${shareToken}`}
+                onClick={handleOpenPortal}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -1674,6 +1698,7 @@ export default function ParrillasPage() {
 
               <Link
                 href={`/share/${shareToken}`}
+                onClick={handleOpenPortal}
                 style={{
                   fontSize: 12.5,
                   color: "var(--ui-text-4)",

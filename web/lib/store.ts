@@ -10,6 +10,8 @@ import {
 import { selectAccountRecommendations } from "./domain-selectors";
 import { localIsoDate } from "./date";
 import { moveInList } from "./use-kanban-drag";
+import { backendEnabled } from "./supabase/config";
+import { loadLiveWorkspace, queueLiveSave } from "./live-workspace";
 import {
   buildReferenceFixtureWorkspace,
   clearWorkspaceStorage,
@@ -315,6 +317,10 @@ function extractWorkspaceData(state: HublyStoreState): HublyWorkspaceData {
 
 function persistWorkspaceState(state: HublyStoreState): void {
   if (typeof window === "undefined") return;
+  if (backendEnabled) {
+    queueLiveSave(extractWorkspaceData(state));
+    return;
+  }
   const wsId = state.workspaceId || "default";
   const payload = extractWorkspaceData(state);
   saveWorkspaceToStorage(wsId, payload);
@@ -454,6 +460,22 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   syncFromServer: async (workspaceIdOverride) => {
     if (typeof window === "undefined") {
       set({ hydrated: true });
+      return;
+    }
+
+    if (backendEnabled) {
+      const loaded = await loadLiveWorkspace();
+      if (loaded.kind === "ok") {
+        set({ ...loaded.data, activeNotebookId: null, hydrated: true });
+      } else if (loaded.kind === "unauthenticated") {
+        window.location.assign("/login");
+      } else if (loaded.kind === "no_agency") {
+        if (window.location.pathname !== "/onboarding") window.location.assign("/onboarding");
+        else set({ hydrated: true });
+      } else {
+        window.dispatchEvent(new CustomEvent("hubly:save-state", { detail: "error" }));
+        set({ hydrated: true });
+      }
       return;
     }
 

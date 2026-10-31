@@ -1,0 +1,13 @@
+import { NextResponse } from "next/server";
+import { backendEnabled } from "@/lib/supabase/config";
+import { createSupabaseServer } from "@/lib/supabase/server";
+
+export async function POST(request: Request) {
+  if (!backendEnabled) return NextResponse.json({ error: "backend_disabled" }, { status: 404 });
+  const supabase = await createSupabaseServer();
+  const { brandId, agencyId } = (await request.json().catch(() => ({}))) as { brandId?: string; agencyId?: string };
+  if (!brandId || !agencyId) return NextResponse.json({ error: "invalid" }, { status: 400 });
+  const { data, error } = await supabase.rpc("create_share_link", { target_agency: agencyId, target_brand: brandId });
+  if (error) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  return NextResponse.json({ token: data });
+}

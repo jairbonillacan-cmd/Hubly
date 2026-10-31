@@ -1,11 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
+import { AuthCard } from "@/components/auth/AuthCard";
+import { backendEnabled } from "@/lib/supabase/config";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Building2, Sparkles, User, Mail } from "lucide-react";
 
 export default function RegisterPage() {
+  if (backendEnabled) return <AuthCard mode="register" />;
+  return <DemoRegister />;
+}
+
+function DemoRegister() {
   const router = useRouter();
   const [agencyName, setAgencyName] = useState("Estudio Bruma");
   const [name, setName] = useState("Jair Bonilla");

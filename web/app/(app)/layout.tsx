@@ -37,6 +37,7 @@ import { AutoSuggestionsModal } from "@/components/app/AutoSuggestionsModal";
 import { FloatingAIDrawer } from "@/components/app/FloatingAIDrawer";
 import { Handshake, Tags, Zap } from "lucide-react";
 import { AppDialogHost } from "@/components/app/AppDialogHost";
+import { SaveStatus } from "@/components/app/SaveStatus";
 import { DescubreHublyWidget } from "@/components/app/DescubreHublyWidget";
 import {
   HublyCatAvatar,
@@ -2000,6 +2001,7 @@ export default function SaaSAppLayout({
          ===================================================================== */}
       <DescubreHublyWidgetSurface />
       <AppDialogHost />
+      <SaveStatus />
       <FloatingAIDrawer />
       <PostComposerModal />
       <NewBrandModal />

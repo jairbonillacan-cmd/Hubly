@@ -22,6 +22,8 @@ import {
   X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { backendEnabled } from "@/lib/supabase/config";
+import { createSupabaseBrowser } from "@/lib/supabase/browser";
 import { useHublyStore } from "@/lib/store";
 import { useHublyTheme } from "@/lib/theme";
 
@@ -176,7 +178,14 @@ export default function AjustesPage() {
 
           <button
             type="button"
-            onClick={() => router.push("/")}
+            onClick={async () => {
+              if (backendEnabled) {
+                await createSupabaseBrowser().auth.signOut();
+                window.location.assign("/");
+                return;
+              }
+              router.push("/");
+            }}
             style={{
               width: "100%",
               height: 36,

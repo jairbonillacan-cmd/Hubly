@@ -1,0 +1,26 @@
+# Conectar Supabase
+
+Sin estas claves, Hubly corre en modo demo: datos locales y sin cuentas.
+
+1. Crea un proyecto en [supabase.com](https://supabase.com).
+2. En **SQL Editor**, pega y ejecuta `migrations/0001_agencias_y_espacios.sql`.
+3. En **Project Settings > API**, copia la URL y la clave publicable a `web/.env.local`:
+
+   ```bash
+   NEXT_PUBLIC_SUPABASE_URL=https://TU-PROYECTO.supabase.co
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=TU-CLAVE-PUBLICABLE
+   ```
+
+   Nunca uses aquí la clave `service_role` o secreta: la app no la necesita.
+
+4. En **Authentication > URL Configuration**, define el Site URL y agrega como Redirect URL `http://localhost:3000/auth/callback`, más la de producción.
+5. Para entrar con Google, activa el proveedor en **Authentication > Providers** con tus credenciales de Google.
+6. Reinicia `npm run dev` en `web/`. Registrarse lleva al onboarding, que crea la agencia.
+
+## Probar los permisos
+
+No requiere Supabase: corre el esquema en un Postgres local dentro de Node.
+
+```bash
+npm --prefix web run test:db
+```

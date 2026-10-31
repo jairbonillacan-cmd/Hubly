@@ -6,6 +6,8 @@ import {
   buildReferenceFixtureWorkspace,
   normalizeWorkspacePayload,
 } from "@/lib/workspace-repository";
+import { backendEnabled } from "@/lib/supabase/config";
+import { createSupabaseServer } from "@/lib/supabase/server";
 import type { HublyWorkspaceData } from "@/lib/types";
 
 const DATA_DIR = path.join(process.cwd(), ".data");
@@ -74,7 +76,73 @@ async function writeWorkspaceDb(
   return normalized;
 }
 
+const MAX_BODY_BYTES = 8 * 1024 * 1024;
+
+async function liveGet() {
+  const supabase = await createSupabaseServer();
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) return NextResponse.json({ error: "not_authenticated" }, { status: 401 });
+
+  const { data: membership } = await supabase
+    .from("agency_members")
+    .select("agency_id, role, agencies(name)")
+    .order("created_at")
+    .limit(1)
+    .maybeSingle();
+  if (!membership) return NextResponse.json({ error: "no_agency" }, { status: 404 });
+
+  const { data: row, error } = await supabase
+    .from("agency_workspaces")
+    .select("data, version")
+    .eq("agency_id", membership.agency_id)
+    .single();
+  if (error || !row) return NextResponse.json({ error: "load_failed" }, { status: 500 });
+
+  const agency = membership.agencies as unknown as { name: string } | null;
+  const data = normalizeWorkspacePayload(row.data as Partial<HublyWorkspaceData>, membership.agency_id, { live: true });
+  const name = (auth.user.user_metadata?.name as string) || auth.user.email || "";
+  data.agencyName = agency?.name || data.agencyName;
+  data.agency = { ...data.agency, id: membership.agency_id, name: data.agencyName };
+  data.profile = {
+    ...data.profile,
+    id: auth.user.id,
+    email: auth.user.email || "",
+    name: (row.data as Partial<HublyWorkspaceData>)?.profile?.name || name,
+    avatarInitial: ((row.data as Partial<HublyWorkspaceData>)?.profile?.name || name).slice(0, 1).toUpperCase(),
+  };
+  return NextResponse.json(
+    { data, version: row.version, agencyId: membership.agency_id, role: membership.role },
+    { headers: { "Cache-Control": "no-store" } }
+  );
+}
+
+async function livePost(request: Request) {
+  if (Number(request.headers.get("content-length") || 0) > MAX_BODY_BYTES) {
+    return NextResponse.json({ error: "too_large" }, { status: 413 });
+  }
+  const body = (await request.json().catch(() => null)) as {
+    agencyId?: string;
+    version?: number;
+    data?: HublyWorkspaceData;
+  } | null;
+  if (!body?.agencyId || typeof body.version !== "number" || !Array.isArray(body.data?.brands) || !Array.isArray(body.data?.posts)) {
+    return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
+  }
+  const supabase = await createSupabaseServer();
+  const { data, error } = await supabase.rpc("save_workspace", {
+    target_agency: body.agencyId,
+    new_data: body.data,
+    expected_version: body.version,
+  });
+  if (error) {
+    const status = error.message.includes("stale_version") ? 409 : error.message.includes("forbidden") ? 403 : 500;
+    return NextResponse.json({ error: error.message }, { status });
+  }
+  return NextResponse.json({ ok: true, version: data });
+}
+
 export async function GET(request: Request) {
+  if (backendEnabled) return liveGet();
   const { searchParams } = new URL(request.url);
   const workspaceId = sanitizeWorkspaceId(
     searchParams.get("workspaceId") || searchParams.get("workspace") || "default"
@@ -91,6 +159,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  if (backendEnabled) return livePost(request);
   try {
     const { searchParams } = new URL(request.url);
     const body = (await request.json()) as Partial<HublyWorkspaceData> & {

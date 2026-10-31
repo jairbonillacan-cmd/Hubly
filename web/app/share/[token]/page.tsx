@@ -13,6 +13,8 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { backendEnabled } from "@/lib/supabase/config";
+import type { BrandWorkspace, SocialPost } from "@/lib/types";
 import { Cover } from "@/components/Cover";
 import { SocialPreview } from "@/components/previews/SocialPreview";
 import {
@@ -26,21 +28,56 @@ function ClientSharePortalInner() {
   const token = params?.token || "";
 
   const syncFromServer = useHublyStore((s) => s.syncFromServer);
-  const brands = useHublyStore((s) => s.brands);
-  const posts = useHublyStore((s) => s.posts);
-  const updatePostStatus = useHublyStore((s) => s.updatePostStatus);
-  const approveAllBrandPosts = useHublyStore((s) => s.approveAllBrandPosts);
+  const demoBrands = useHublyStore((s) => s.brands);
+  const demoPosts = useHublyStore((s) => s.posts);
+  const demoUpdateStatus = useHublyStore((s) => s.updatePostStatus);
+  const demoApproveAll = useHublyStore((s) => s.approveAllBrandPosts);
+  const [live, setLive] = useState<{ brand: BrandWorkspace; posts: SocialPost[] } | null>(null);
+  const [liveLoading, setLiveLoading] = useState(backendEnabled);
+
+  const loadLive = React.useCallback(async () => {
+    const res = await fetch(`/api/share/${encodeURIComponent(token)}`, { cache: "no-store" });
+    setLive(res.ok ? await res.json() : null);
+    setLiveLoading(false);
+  }, [token]);
+
+  const sendDecision = async (postId: string, decision: string, comment: string | undefined, signer: string) => {
+    await fetch(`/api/share/${encodeURIComponent(token)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ postId, decision, comment, signer }),
+    });
+  };
+  const updatePostStatus = async (postId: string, status: "approved" | "changes", comment: string | undefined, signer: string, role: "client") => {
+    if (!backendEnabled) return demoUpdateStatus(postId, status, comment, signer, role);
+    await sendDecision(postId, status, comment, signer);
+    await loadLive();
+  };
+  const approveAllBrandPosts = async (brandId: string, signer: string) => {
+    if (!backendEnabled) return demoApproveAll(brandId, signer);
+    for (const p of live?.posts || []) {
+      if (p.status === "pending" || p.status === "changes") await sendDecision(p.id, "approved", undefined, signer);
+    }
+    await loadLive();
+  };
+  const brands = backendEnabled ? (live ? [live.brand] : []) : demoBrands;
+  const posts = backendEnabled ? live?.posts || [] : demoPosts;
 
   const [clientName, setClientName] = useState("Dirección de Marca (Cliente)");
   const [commentByPost, setCommentByPost] = useState<Record<string, string>>({});
   const [openCommentBox, setOpenCommentBox] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    syncFromServer();
-  }, [syncFromServer]);
+    if (backendEnabled) void loadLive();
+    else syncFromServer();
+  }, [syncFromServer, loadLive]);
 
-  const brand = brands.find((b) => b.shareToken === token);
+  const brand = backendEnabled ? brands[0] : brands.find((b) => b.shareToken === token);
   const brandPosts = posts.filter((p) => p.brandId === brand?.id);
+
+  if (liveLoading) {
+    return <main style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: "var(--cream)" }}>Cargando…</main>;
+  }
 
   if (!brand) {
     return (
