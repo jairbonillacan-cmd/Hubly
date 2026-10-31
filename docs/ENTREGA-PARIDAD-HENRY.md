@@ -52,3 +52,7 @@ Las políticas y funciones SQL se probaron en PGlite con un esquema `storage` m�
 - Los ajustes por red se guardan como referencia; todavía no se envían a ninguna red.
 - Un video HEVC muestra un aviso, sin transcodificación.
 - La semana calcula título y columnas del mismo intervalo.
+
+## Estabilidad de las pruebas de navegador
+
+Las últimas dos corridas completas dieron 58 de 58, sin cambios de código entre ellas. Una corrida anterior, justo después de editar `ia/page.tsx` con el servidor de desarrollo encendido, dio 56 aprobadas y no se registró cuáles fallaron. Puede ser una recompilación durante la prueba, pero no está confirmado.
