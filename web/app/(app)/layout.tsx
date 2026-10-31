@@ -9,6 +9,7 @@ import "./dashboard-polish.css";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { useHublyTheme } from "@/lib/theme";
 import { useHublyStore } from "@/lib/store";
+import { useLayer } from "@/lib/use-layer";
 import { PostComposerModal } from "@/components/app/PostComposerModal";
 import { NewBrandModal } from "@/components/app/NewBrandModal";
 import { CommandPaletteModal } from "@/components/app/CommandPaletteModal";
@@ -192,14 +193,17 @@ export default function SaaSAppLayout({
     setNotificationsOpen(false);
   }, [pathname]);
 
+  // Los menús del sidebar son capas: Escape los cierra a ellos antes que al editor.
+  useLayer(brandMenuOpen, () => setBrandMenuOpen(false));
+  useLayer(notificationsOpen, () => setNotificationsOpen(false));
+  useLayer(profileMenuOpen, () => setProfileMenuOpen(false));
+  useLayer(mobileDrawerOpen, () => setMobileDrawerOpen(false));
+
   // Global Escape key and outside-click dismissal for shell popovers & mobile drawer
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         if (mobileDrawerOpen) setMobileDrawerOpen(false);
-        if (brandMenuOpen) setBrandMenuOpen(false);
-        if (notificationsOpen) setNotificationsOpen(false);
-        if (profileMenuOpen) setProfileMenuOpen(false);
       }
     };
 
@@ -394,12 +398,24 @@ export default function SaaSAppLayout({
     window.setTimeout(() => setProfileSavedToast(false), 1800);
   };
 
+  // El editor retrae el sidebar al abrirse; después manda lo que la persona elija.
+  const [composerSidebarOpen, setComposerSidebarOpen] = useState(false);
+  useEffect(() => {
+    // Cada apertura del editor vuelve a la retracción automática.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (!composerOpen) setComposerSidebarOpen(false);
+  }, [composerOpen]);
+
   const handleToggleCollapse = () => {
+    if (composerOpen) {
+      setComposerSidebarOpen((prev) => !prev);
+      return;
+    }
     setUserToggledCollapse(true);
     setCollapsed((prev) => !prev);
   };
 
-  const targetCollapsed = (collapsed || aiDrawerOpen || composerOpen) && !mobileDrawerOpen;
+  const targetCollapsed = ((composerOpen ? !composerSidebarOpen : collapsed) || aiDrawerOpen) && !mobileDrawerOpen;
   const [isEffectiveCollapsed, setRenderedCollapsed] = useState(targetCollapsed);
   const [sidebarMotion, setSidebarMotion] = useState<"" | "collapsing" | "expanding">("");
   const sidebarRef = useRef<HTMLElement | null>(null);

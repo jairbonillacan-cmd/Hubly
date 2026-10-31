@@ -21,6 +21,14 @@ async function writeIndex(records: MediaRecord[]) {
   await fs.writeFile(INDEX, JSON.stringify(records, null, 2), "utf8");
 }
 
+// Varias subidas simultáneas no deben pisarse el índice: se escribe de una en una.
+let queue: Promise<unknown> = Promise.resolve();
+function exclusive<T>(task: () => Promise<T>): Promise<T> {
+  const run = queue.then(task, task);
+  queue = run.catch(() => {});
+  return run;
+}
+
 export const demoFilePath = (id: string) => (ID.test(id) ? path.join(DIR, id) : null);
 
 export async function demoList(brandId: string) {
@@ -29,7 +37,7 @@ export async function demoList(brandId: string) {
 
 export async function demoCreate(input: Omit<MediaRecord, "id" | "status" | "createdAt">) {
   const record: MediaRecord = { ...input, id: randomUUID(), status: "pending", createdAt: new Date().toISOString() };
-  await writeIndex([record, ...(await readIndex())]);
+  await exclusive(async () => writeIndex([record, ...(await readIndex())]));
   return record;
 }
 
@@ -38,12 +46,11 @@ export async function demoGet(id: string) {
 }
 
 export async function demoUpdate(id: string, patch: Partial<Pick<MediaRecord, "status" | "folder" | "name">>) {
-  const records = await readIndex();
-  await writeIndex(records.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+  await exclusive(async () => writeIndex((await readIndex()).map((r) => (r.id === id ? { ...r, ...patch } : r))));
 }
 
 export async function demoRemove(id: string) {
-  await writeIndex((await readIndex()).filter((r) => r.id !== id));
+  await exclusive(async () => writeIndex((await readIndex()).filter((r) => r.id !== id)));
   const file = demoFilePath(id);
   if (file) await fs.rm(file, { force: true });
 }

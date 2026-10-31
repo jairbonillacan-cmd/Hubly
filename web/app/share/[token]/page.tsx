@@ -1,6 +1,7 @@
 "use client";
 
 import React, { Suspense, useEffect, useState } from "react";
+import { shareMediaFileUrl } from "@/lib/media";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useHublyStore } from "@/lib/store";
@@ -326,7 +327,7 @@ function ClientSharePortalInner() {
                   </div>
                   {platform ? (
                     <SocialPreview
-                      post={socialPostToPreview(post, brand, platform)}
+                      post={socialPostToPreview(post, brand, platform, (assetId) => shareMediaFileUrl(token, assetId))}
                       config={POST_PREVIEW_CONFIG}
                     />
                   ) : (

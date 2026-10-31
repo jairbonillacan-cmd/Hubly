@@ -1,5 +1,6 @@
 "use client";
 
+import { postThumbnail } from "@/lib/post-draft";
 import { useMemo } from "react";
 import { Cover } from "@/components/Cover";
 import { useHublyStore } from "@/lib/store";
@@ -54,9 +55,9 @@ export function FeedSimulator({ posts }: { posts: SocialPost[] }) {
               aria-label={`${post.title}, ${post.scheduledDate}`}
               style={{ position: "relative", width: "100%", height: "100%", cursor: drag?.id === post.id ? "grabbing" : "grab", opacity: drag?.id === post.id ? 0.35 : 1 }}
             >
-              {post.mediaUrl ? (
+              {postThumbnail(post)?.kind === "image" ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={post.mediaUrl} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                <img src={postThumbnail(post)?.url} alt="" draggable={false} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               ) : (
                 <Cover kind={post.cover} />
               )}

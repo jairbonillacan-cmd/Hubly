@@ -1,5 +1,6 @@
 "use client";
 
+import { clearAllRecoveries } from "@/lib/post-draft";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AccessPanel } from "@/components/app/AccessPanel";
@@ -187,6 +188,7 @@ export default function AjustesPage() {
             type="button"
             onClick={async () => {
               if (backendEnabled) {
+                clearAllRecoveries(localStorage);
                 await createSupabaseBrowser().auth.signOut();
                 window.location.assign("/");
                 return;

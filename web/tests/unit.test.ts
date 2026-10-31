@@ -226,3 +226,75 @@ test("los límites de archivos se aplican por tipo", async () => {
   assert.equal(mp4UsesHevc(new TextEncoder().encode("moov....stsd........hvc1")), true);
   assert.equal(mp4UsesHevc(new TextEncoder().encode("moov....stsd........avc1")), false);
 });
+
+test("catálogo de redes: límites, corte del feed y reglas por red", async () => {
+  const { captionLevel, feedCutIndex, networkIssues, NETWORKS } = await import("../lib/network-catalog");
+  assert.equal(NETWORKS.length, 10);
+  assert.equal(captionLevel(260, 280), "near");
+  assert.equal(captionLevel(281, 280), "over");
+  assert.equal(captionLevel(10, 280), "ok");
+  assert.equal(feedCutIndex("a".repeat(126), "Instagram"), 125);
+  assert.equal(feedCutIndex("a".repeat(126), "X"), null);
+  assert.equal(feedCutIndex("a\nb\nc\nd", "Facebook"), 5);
+  const issues = (network: Parameters<typeof networkIssues>[0]["networks"][number], media: { kind: "image" | "video" }[], caption = "Hola") =>
+    networkIssues({ networks: [network], caption, media }).map((i) => i.message);
+  assert.ok(issues("Google Business", [{ kind: "video" }]).some((m) => m.includes("No admite videos")));
+  assert.ok(issues("YouTube", [{ kind: "image" }]).some((m) => m.includes("video")));
+  assert.deepEqual(issues("TikTok", [{ kind: "video" }]), []);
+  assert.ok(issues("TikTok", [{ kind: "image" }]).length > 0);
+  assert.ok(issues("X", [], "a".repeat(281)).some((m) => m.includes("280")));
+  assert.ok(issues("Reddit", []).some((m) => m.includes("título")));
+});
+
+test("borrador: ida y vuelta sin perder datos, herencia y sin fecha", async () => {
+  const { draftFromPost, draftToPost, captionFor, loadRecovery, saveRecovery, clearAllRecoveries, recoveryKey } = await import("../lib/post-draft");
+  const seed = createSeedWorkspaceData("prueba");
+  const post = {
+    ...seed.posts[0],
+    media: [{ id: "m", kind: "image" as const, name: "a.png", assetId: "x" }],
+    platformSettings: { X: { caption: "solo x" } },
+    assigneeIds: ["t1"],
+  };
+  const draft = draftFromPost(post, { brandId: "otra", assignee: "A" });
+  assert.equal(draft.brandId, post.brandId);
+  assert.equal(captionFor(draft, "X"), "solo x");
+  assert.equal(captionFor(draft, "Instagram"), draft.caption);
+  const saved = draftToPost(draft, post, "A");
+  assert.deepEqual(saved.media, post.media);
+  assert.deepEqual(saved.platformSettings, post.platformSettings);
+  assert.equal(saved.mediaUrl, undefined);
+  const nuevo = draftFromPost(null, { brandId: "b", assignee: "A" });
+  assert.equal(nuevo.scheduledDate, "");
+  assert.equal(nuevo.status, "draft");
+
+  const data = new Map<string, string>();
+  const storage = {
+    getItem: (k: string) => data.get(k) ?? null,
+    setItem: (k: string, v: string) => void data.set(k, v),
+    removeItem: (k: string) => void data.delete(k),
+    key: (i: number) => [...data.keys()][i] ?? null,
+    get length() { return data.size; },
+  };
+  const key = recoveryKey("u1:a1", "b", null);
+  saveRecovery(storage, key, nuevo);
+  assert.deepEqual(loadRecovery(storage, key)?.draft, nuevo);
+  storage.setItem("otra-clave", "1");
+  clearAllRecoveries(storage);
+  assert.equal(loadRecovery(storage, key), null);
+  assert.equal(storage.getItem("otra-clave"), "1");
+});
+
+test("duplicar crea un borrador limpio y eliminar quita el post", async () => {
+  const { useHublyStore } = await import("../lib/store");
+  const seed = createSeedWorkspaceData("prueba");
+  const original = { ...seed.posts[0], id: "orig", status: "published" as const, metrics: { reach: 1, likes: 1, comments: 1, saves: 1, shares: 1 }, publishedUrl: "https://x" };
+  useHublyStore.setState({ ...seed, posts: [original], role: null });
+  const id = useHublyStore.getState().duplicatePost("orig");
+  const copy = useHublyStore.getState().posts.find((p) => p.id === id);
+  assert.equal(copy?.status, "draft");
+  assert.equal(copy?.scheduledDate, "");
+  assert.equal(copy?.metrics, undefined);
+  assert.equal(copy?.publishedUrl, undefined);
+  useHublyStore.getState().deletePost("orig");
+  assert.equal(useHublyStore.getState().posts.some((p) => p.id === "orig"), false);
+});

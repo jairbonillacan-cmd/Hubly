@@ -129,6 +129,11 @@ export interface HublyStoreState extends HublyWorkspaceData {
   // UI & Modal Actions
   setActiveBrand: (brandId: string) => void;
   composerDefaultDate: string | null;
+  /** El editor tiene cambios sin guardar: abrir otro post pide decidir antes. */
+  composerDirty: boolean;
+  composerPending: { postId: string | null; defaultDate: string | null } | null;
+  setComposerDirty: (dirty: boolean) => void;
+  resolveComposerPending: (decision: "open" | "keep") => void;
   openComposer: (postId?: string | null, defaultDate?: string | null) => void;
   closeComposer: () => void;
   setCmdkOpen: (open: boolean) => void;
@@ -181,6 +186,9 @@ export interface HublyStoreState extends HublyWorkspaceData {
     role?: "client" | "agency"
   ) => void;
   approveAllBrandPosts: (brandId: string, authorName?: string, role?: "client" | "agency") => void;
+  deletePost: (postId: string) => void;
+  /** Devuelve el id de la copia, que nace como borrador sin fecha ni resultados. */
+  duplicatePost: (postId: string) => string | null;
   movePost: (postId: string, scheduledDate: string) => void;
   recordPublication: (postId: string, publication: { url: string; date: string }) => void;
   setPostResults: (postId: string, metrics: NonNullable<SocialPost["metrics"]>) => void;
@@ -426,6 +434,8 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   composerOpen: false,
   editingPostId: null,
   composerDefaultDate: null,
+  composerDirty: false,
+  composerPending: null,
   cmdkOpen: false,
   aiDrawerOpen: false,
   newBrandModalOpen: false,
@@ -451,7 +461,12 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     if (get().role !== "viewer") persistWorkspaceState(get());
   },
 
-  openComposer: (postId = null, defaultDate = null) =>
+  openComposer: (postId = null, defaultDate = null) => {
+    const state = get();
+    if (state.composerOpen && state.composerDirty && postId !== state.editingPostId) {
+      set({ composerPending: { postId, defaultDate }, cmdkOpen: false });
+      return;
+    }
     set({
       composerOpen: true,
       editingPostId: postId,
@@ -461,8 +476,20 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
       cmdkOpen: false,
       widgetConfigModalOpen: false,
       autoSuggestionsModalOpen: false,
-    }),
-  closeComposer: () => set({ composerOpen: false, editingPostId: null }),
+    });
+  },
+  closeComposer: () => set({ composerOpen: false, editingPostId: null, composerDirty: false, composerPending: null }),
+  setComposerDirty: (dirty) => {
+    if (get().composerDirty !== dirty) set({ composerDirty: dirty });
+  },
+  resolveComposerPending: (decision) => {
+    const pending = get().composerPending;
+    if (decision === "keep" || !pending) {
+      set({ composerPending: null });
+      return;
+    }
+    set({ composerOpen: true, editingPostId: pending.postId, composerDefaultDate: pending.defaultDate, composerDirty: false, composerPending: null });
+  },
   setCmdkOpen: (open) => set({ cmdkOpen: open }),
   setAiDrawerOpen: (open) => set({ aiDrawerOpen: open }),
   setNewBrandModalOpen: (open) => set({ newBrandModalOpen: open }),
@@ -1260,6 +1287,39 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     persistWorkspaceState(get());
   },
 
+  deletePost: (postId) => {
+    set((s) => ({ posts: s.posts.filter((p) => p.id !== postId) }));
+    persistWorkspaceState(get());
+  },
+
+  duplicatePost: (postId) => {
+    const source = get().posts.find((p) => p.id === postId);
+    if (!source) return null;
+    const id = `post-${Date.now()}`;
+    const copy: SocialPost = withPostLog(
+      {
+        ...source,
+        id,
+        title: `${source.title} (copia)`,
+        status: "draft",
+        statusLabel: "Borrador",
+        scheduledDate: "",
+        scheduledTime: "",
+        comments: [],
+        metrics: undefined,
+        metricsSource: undefined,
+        publishedUrl: undefined,
+        chat: [],
+        activity: [],
+      },
+      `Duplicó «${source.title}»`,
+      get().profile?.name || "Equipo"
+    );
+    set((s) => ({ posts: [copy, ...s.posts] }));
+    persistWorkspaceState(get());
+    return id;
+  },
+
   movePost: (postId, scheduledDate) => {
     set((s) => ({
       posts: s.posts.map((p) =>
@@ -1965,6 +2025,8 @@ const VIEWER_ACTIONS = new Set<string>([
   "setActiveBrand",
   "openComposer",
   "closeComposer",
+  "setComposerDirty",
+  "resolveComposerPending",
   "setCmdkOpen",
   "setAiDrawerOpen",
   "setNewBrandModalOpen",
@@ -1991,3 +2053,7 @@ for (const [name, action] of Object.entries(useHublyStore.getState())) {
   };
 }
 useHublyStore.setState(guardedActions as Partial<HublyStoreState>);
+
+if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
+  (window as unknown as { __hubly: typeof useHublyStore }).__hubly = useHublyStore;
+}

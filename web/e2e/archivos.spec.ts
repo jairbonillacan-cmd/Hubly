@@ -9,6 +9,7 @@ const PNG = Buffer.from(
 test("subir, encontrar y borrar un archivo real", async ({ page }) => {
   const nombre = `prueba-${Date.now()}.png`;
   await page.goto("/archivos");
+  await page.waitForLoadState("networkidle");
   await page.getByTestId("media-input").setInputFiles({ name: nombre, mimeType: "image/png", buffer: PNG });
   const archivo = page.locator(".hubly-media-file", { hasText: nombre });
   await expect(archivo).toBeVisible();
@@ -17,6 +18,7 @@ test("subir, encontrar y borrar un archivo real", async ({ page }) => {
   expect(Buffer.from(await respuesta.body()).equals(PNG)).toBe(true);
 
   await page.reload();
+  await page.waitForLoadState("networkidle");
   await page.getByLabel("Buscar archivos").fill(nombre);
   await expect(page.locator(".hubly-media-file", { hasText: nombre })).toBeVisible();
 
@@ -27,6 +29,7 @@ test("subir, encontrar y borrar un archivo real", async ({ page }) => {
 
 test("rechaza un archivo fuera de límite y permite quitarlo", async ({ page }) => {
   await page.goto("/archivos");
+  await page.waitForLoadState("networkidle");
   await page.getByTestId("media-input").setInputFiles({ name: "virus.exe", mimeType: "application/x-msdownload", buffer: Buffer.from("x") });
   await expect(page.locator(".hubly-media-queue")).toContainText("no se admite");
   await page.getByRole("button", { name: "Quitar virus.exe" }).click();
@@ -36,6 +39,7 @@ test("rechaza un archivo fuera de límite y permite quitarlo", async ({ page }) 
 test("un fallo de subida ofrece reintentar", async ({ page }) => {
   const nombre = `reintento-${Date.now()}.png`;
   await page.goto("/archivos");
+  await page.waitForLoadState("networkidle");
   let fallar = true;
   await page.route("**/api/media/*/file", async (route) => {
     if (route.request().method() === "PUT" && fallar) {

@@ -1,3 +1,4 @@
+import { mediaItemUrl } from "@/lib/post-draft";
 import type { BrandWorkspace, SocialNetwork, SocialPost } from "@/lib/types";
 import type { PreviewConfig, PreviewPost, SocialPlatform } from "./types";
 
@@ -31,10 +32,15 @@ export const POST_PREVIEW_CONFIG: PreviewConfig = {
 };
 
 export function socialPostToPreview(
-  post: Pick<SocialPost, "id" | "caption" | "format" | "cover" | "mediaUrl" | "scheduledDate">,
+  post: Pick<SocialPost, "id" | "caption" | "format" | "cover" | "mediaUrl" | "media" | "scheduledDate">,
   brand: Pick<BrandWorkspace, "name" | "handle" | "initials"> | undefined,
-  platform: SocialPlatform
+  platform: SocialPlatform,
+  resolveAsset?: (assetId: string) => string
 ): PreviewPost {
+  const media = (post.media ?? []).flatMap((item) => {
+    const url = mediaItemUrl(item, resolveAsset);
+    return url ? [{ id: item.id, type: item.kind, url, alt: item.name }] : [];
+  });
   return {
     id: post.id,
     platform,
@@ -45,7 +51,9 @@ export function socialPostToPreview(
       initials: brand?.initials,
     },
     content: post.caption,
-    media: post.mediaUrl
+    media: media.length
+      ? media
+      : post.mediaUrl
       ? [{ type: "image", url: post.mediaUrl, alt: "Imagen del post" }]
       : [{ type: "cover", coverKind: post.cover }],
     metrics: { likes: 0, comments: 0 },

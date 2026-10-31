@@ -8,7 +8,9 @@ export type SocialNetwork =
   | "YouTube"
   | "X"
   | "Threads"
-  | "Pinterest";
+  | "Pinterest"
+  | "Reddit"
+  | "Google Business";
 
 export type PostStatus =
   | "draft"
@@ -79,6 +81,9 @@ export interface SocialPost {
   customFields?: Record<string, string | number | boolean | null>;
 }
 
+/** `CoverKind` sin importar el componente en módulos que corren en el servidor. */
+export type CoverKindValue = CoverKind;
+
 export interface PostMedia {
   id: string;
   kind: "image" | "video";
@@ -128,6 +133,7 @@ export interface PostDocument {
   id: string;
   name: string;
   url: string;
+  folder?: string;
 }
 
 export interface PostChatMessage {
