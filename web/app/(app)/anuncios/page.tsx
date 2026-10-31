@@ -494,6 +494,7 @@ function DemoAnunciosPage() {
 
   return (
     <div
+      className="hubly-touch"
       style={{
         color: "var(--ui-text)",
         minHeight: "calc(100vh - 64px)",
@@ -516,8 +517,11 @@ function DemoAnunciosPage() {
       >
         {/* Left Pill Container */}
         <div
+          className="hubly-pill-scroll"
           style={{
             display: "inline-flex",
+            maxWidth: "100%",
+            overflowX: "auto",
             alignItems: "center",
             gap: 2,
             background: "var(--ui-muted)",
@@ -536,7 +540,7 @@ function DemoAnunciosPage() {
               borderRadius: 999,
               border: "none",
               background: activeSubNav === "tableros" ? "var(--ui-surface)" : "transparent",
-              color: activeSubNav === "tableros" ? "var(--hb-accent)" : "var(--ui-text-3)",
+              color: activeSubNav === "tableros" ? "var(--hb-accent-text)" : "var(--ui-text-3)",
               fontWeight: activeSubNav === "tableros" ? 600 : 500,
               fontSize: 13,
               cursor: "pointer",
@@ -559,7 +563,7 @@ function DemoAnunciosPage() {
               borderRadius: 999,
               border: "none",
               background: activeSubNav === "anuncios" ? "var(--ui-surface)" : "transparent",
-              color: activeSubNav === "anuncios" ? "var(--hb-accent)" : "var(--ui-text-3)",
+              color: activeSubNav === "anuncios" ? "var(--hb-accent-text)" : "var(--ui-text-3)",
               fontWeight: activeSubNav === "anuncios" ? 600 : 500,
               fontSize: 13,
               cursor: "pointer",
@@ -582,7 +586,7 @@ function DemoAnunciosPage() {
               borderRadius: 999,
               border: "none",
               background: activeSubNav === "ideas" ? "var(--ui-surface)" : "transparent",
-              color: activeSubNav === "ideas" ? "var(--hb-accent)" : "var(--ui-text-3)",
+              color: activeSubNav === "ideas" ? "var(--hb-accent-text)" : "var(--ui-text-3)",
               fontWeight: activeSubNav === "ideas" ? 600 : 500,
               fontSize: 13,
               cursor: "pointer",
@@ -644,7 +648,7 @@ function DemoAnunciosPage() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
+          gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
           gap: 16,
           marginBottom: 20,
         }}
@@ -828,7 +832,7 @@ function DemoAnunciosPage() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
+            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
             gap: 16,
           }}
         >

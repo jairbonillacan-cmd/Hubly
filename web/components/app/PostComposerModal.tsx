@@ -605,12 +605,14 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
           </div>
 
           <nav className="hubly-composer-tabs" aria-label="Secciones del post">
-            {TABS.map(({ id, label, Icon }) => (
-              <button key={id} type="button" aria-current={tab === id ? "true" : undefined} onClick={() => { setTab(id); setMobilePane("editar"); }}>
-                <Icon size={20} />
-                <span>{label}</span>
-              </button>
-            ))}
+            <div className="hubly-composer-tabs-scroll">
+              {TABS.map(({ id, label, Icon }) => (
+                <button key={id} type="button" aria-current={tab === id ? "true" : undefined} onClick={() => { setTab(id); setMobilePane("editar"); }}>
+                  <Icon size={20} />
+                  <span>{label}</span>
+                </button>
+              ))}
+            </div>
             <button type="button" className="hubly-composer-mobile-preview" aria-pressed={mobilePane === "vista"} onClick={() => setMobilePane(mobilePane === "vista" ? "editar" : "vista")}>
               {mobilePane === "vista" ? <Pencil size={17} /> : <Eye size={17} />}
               <span>{mobilePane === "vista" ? "Editar" : "Vista previa"}</span>

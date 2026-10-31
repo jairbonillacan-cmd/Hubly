@@ -61,7 +61,7 @@ test.describe("Buscador en escritorio", () => {
 
   test("teclado: flechas con scroll, vacío, limpiar, Enter, Ctrl+K y Escape devuelven el foco", async ({ page }) => {
     await abrirApp(page);
-    const abridor = page.getByRole("button", { name: "Buscar", exact: true });
+    const abridor = page.getByRole("button", { name: "Buscar", exact: true }).first();
     await abridor.click();
     await expect(paleta(page)).toBeVisible();
     const input = campo(page);
@@ -122,7 +122,7 @@ test.describe("Buscador en escritorio", () => {
     await page.addInitScript(() => localStorage.setItem("hubly-theme", "dark"));
     await abrirApp(page);
     await expect(page.locator("html")).toHaveClass(/dark/);
-    await page.getByRole("button", { name: "Buscar", exact: true }).click();
+    await page.getByRole("button", { name: "Buscar", exact: true }).first().click();
     await expect(campo(page)).toBeFocused();
 
     await campo(page).fill("x".repeat(200));

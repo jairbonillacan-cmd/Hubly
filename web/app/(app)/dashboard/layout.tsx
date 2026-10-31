@@ -12,7 +12,7 @@ export default function DashboardLayout({
   const pathname = usePathname();
 
   return (
-    <div style={{ width: "100%", minWidth: 0 }}>
+    <div className="hubly-touch" style={{ width: "100%", minWidth: 0 }}>
       <Suspense fallback={null}>
         <DashboardSubNav />
         <div key={pathname} className="tablero-aparece">

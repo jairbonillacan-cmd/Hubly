@@ -1137,7 +1137,7 @@ export function EquipoView() {
   );
 
   return (
-    <div style={{ maxWidth: 1120, width: "100%", paddingBottom: 48 }}>
+    <div className="hubly-touch" style={{ maxWidth: 1120, width: "100%", paddingBottom: 48 }}>
       {/* ====================================================================
           1. TOP HEADER ROW: Equipo · N persona(s) | 7d/30d/90d | Search | Invitar | Filtros
           ==================================================================== */}
@@ -1240,7 +1240,7 @@ export function EquipoView() {
                   style={{
                     border: "none",
                     background: active ? "var(--ui-surface)" : "transparent",
-                    color: active ? "var(--ui-text)" : "var(--ui-text-4)",
+                    color: active ? "var(--ui-text)" : "var(--ui-text-3)",
                     fontWeight: active ? 600 : 500,
                     fontSize: 12,
                     padding: "5px 11px",
@@ -1273,7 +1273,7 @@ export function EquipoView() {
               style={{
                 position: "absolute",
                 left: 11,
-                color: "var(--ui-text-5)",
+                color: "var(--ui-text-4)",
                 pointerEvents: "none",
               }}
             />
@@ -1306,7 +1306,7 @@ export function EquipoView() {
                   right: 8,
                   border: "none",
                   background: "transparent",
-                  color: "var(--ui-text-5)",
+                  color: "var(--ui-text-4)",
                   cursor: "pointer",
                   padding: 2,
                   display: "inline-flex",
@@ -1412,7 +1412,7 @@ export function EquipoView() {
                     borderRadius: 8,
                     border: !showAllTeamScope
                       ? "1px solid var(--hb-accent)"
-                      : "1px solid #E2E8F0",
+                      : "1px solid var(--ui-border)",
                     background: !showAllTeamScope ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
                     color: !showAllTeamScope ? "var(--hb-accent-text)" : "var(--ui-text-3)",
                     fontSize: 11.5,
@@ -1432,7 +1432,7 @@ export function EquipoView() {
                     borderRadius: 8,
                     border: showAllTeamScope
                       ? "1px solid var(--hb-accent)"
-                      : "1px solid #E2E8F0",
+                      : "1px solid var(--ui-border)",
                     background: showAllTeamScope ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
                     color: showAllTeamScope ? "var(--hb-accent-text)" : "var(--ui-text-3)",
                     fontSize: 11.5,
@@ -1850,7 +1850,7 @@ export function EquipoView() {
             <div
               style={{
                 fontSize: 12,
-                color: "var(--ui-text-5)",
+                color: "var(--ui-text-4)",
                 marginTop: 2,
               }}
             >
@@ -1982,7 +1982,7 @@ export function EquipoView() {
             style={{
               fontSize: 10.5,
               fontWeight: 700,
-              color: "var(--ui-text-5)",
+              color: "var(--ui-text-4)",
               textTransform: "uppercase",
               letterSpacing: "0.06em",
             }}
@@ -2048,7 +2048,7 @@ export function EquipoView() {
             style={{
               fontSize: 10.5,
               fontWeight: 700,
-              color: "var(--ui-text-5)",
+              color: "var(--ui-text-4)",
               textTransform: "uppercase",
               letterSpacing: "0.06em",
             }}
@@ -2088,7 +2088,7 @@ export function EquipoView() {
             style={{
               fontSize: 10.5,
               fontWeight: 700,
-              color: "var(--ui-text-5)",
+              color: "var(--ui-text-4)",
               textTransform: "uppercase",
               letterSpacing: "0.06em",
             }}
@@ -2278,7 +2278,7 @@ export function EquipoView() {
               alignItems: "center",
               justifyContent: "space-between",
               fontSize: 10.5,
-              color: "var(--ui-text-5)",
+              color: "var(--ui-text-4)",
               marginTop: 4,
             }}
           >
@@ -2321,7 +2321,7 @@ export function EquipoView() {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontSize: 12, color: "var(--ui-text-5)", fontWeight: 600 }}>
+            <span style={{ fontSize: 12, color: "var(--ui-text-4)", fontWeight: 600 }}>
               {activeMemberMetrics.xp} pts
             </span>
             <div
@@ -2342,7 +2342,7 @@ export function EquipoView() {
                     style={{
                       border: "none",
                       background: active ? "var(--hb-accent)" : "transparent",
-                      color: active ? "#FFFFFF" : "var(--ui-text-4)",
+                      color: active ? "#FFFFFF" : "var(--ui-text-3)",
                       fontSize: 11.5,
                       fontWeight: 600,
                       padding: "3px 10px",
@@ -2416,7 +2416,7 @@ export function EquipoView() {
                 <span
                   style={{
                     fontSize: 11.5,
-                    color: row.points > 0 ? "var(--ui-text-3)" : "#CBD5E1",
+                    color: row.points > 0 ? "var(--ui-text-3)" : "var(--ui-text-4)",
                     fontWeight: row.points > 0 ? 600 : 400,
                     textAlign: "right",
                   }}
@@ -2492,10 +2492,10 @@ export function EquipoView() {
                     key={ach.id}
                     className={`hubly-achievement ${ach.unlocked ? "is-unlocked" : ""}`}
                     style={{
-                      background: ach.unlocked ? "#F5F3FF" : "var(--ui-surface-2)",
+                      background: ach.unlocked ? "var(--ui-sky-soft)" : "var(--ui-surface-2)",
                       border: ach.unlocked
-                        ? "1px solid #BFE2F4"
-                        : "1px solid #F1F5F9",
+                        ? "1px solid var(--ui-sky-border)"
+                        : "1px solid var(--ui-border)",
                       borderRadius: 12,
                       padding: "14px 10px",
                       display: "flex",
@@ -2519,7 +2519,7 @@ export function EquipoView() {
                     <div
                       style={{
                         fontSize: 10.5,
-                        color: "var(--ui-text-4)",
+                        color: ach.unlocked ? "var(--ui-sky-text)" : "var(--ui-text-4)",
                         marginTop: 2,
                         lineHeight: 1.3,
                       }}
@@ -2562,7 +2562,7 @@ export function EquipoView() {
                           alignItems: "center",
                           justifyContent: "space-between",
                           fontSize: 10,
-                          color: "var(--ui-text-4)",
+                          color: ach.unlocked ? "var(--ui-sky-text)" : "var(--ui-text-4)",
                           fontWeight: 600,
                         }}
                       >
@@ -2660,7 +2660,7 @@ export function EquipoView() {
                     style={{
                       border: "none",
                       background: active ? "var(--hb-accent)" : "transparent",
-                      color: active ? "#FFFFFF" : "var(--ui-text-4)",
+                      color: active ? "#FFFFFF" : "var(--ui-text-3)",
                       fontSize: 11.5,
                       fontWeight: 600,
                       padding: "3px 10px",
@@ -2744,7 +2744,7 @@ export function EquipoView() {
                         style={{
                           fontSize: index < 3 ? 14 : 12,
                           fontWeight: 700,
-                          color: "var(--ui-text-5)",
+                          color: isCurrentUser ? "var(--ui-text-3)" : "var(--ui-text-4)",
                           width: 18,
                           textAlign: "center",
                           flexShrink: 0,
@@ -2757,7 +2757,7 @@ export function EquipoView() {
                           width: 30,
                           height: 30,
                           borderRadius: 9999,
-                          background: isCurrentUser ? "#BFE2F4" : "var(--ui-border)",
+                          background: isCurrentUser ? "var(--ui-sky-border)" : "var(--ui-border)",
                           color: isCurrentUser ? "var(--hb-accent-text)" : "var(--ui-text-2)",
                           fontSize: 12,
                           fontWeight: 700,
@@ -2786,14 +2786,14 @@ export function EquipoView() {
                               style={{
                                 fontSize: 11.5,
                                 fontWeight: 500,
-                                color: "#16324F",
+                                color: "var(--hb-accent-text)",
                               }}
                             >
                               (tú)
                             </span>
                           )}
                         </div>
-                        <div style={{ fontSize: 11, color: "var(--ui-text-4)" }}>
+                        <div style={{ fontSize: 11, color: isCurrentUser ? "var(--ui-text-3)" : "var(--ui-text-4)" }}>
                           {member.role} · {member.completedTasksCount} tareas ·{" "}
                           {member.publishedPostsCount} posts
                         </div>
@@ -2810,7 +2810,7 @@ export function EquipoView() {
                       >
                         {member.displayPoints} pts
                       </span>
-                      <div style={{ fontSize: 10.5, color: "var(--ui-text-5)" }}>
+                      <div style={{ fontSize: 10.5, color: isCurrentUser ? "var(--ui-text-3)" : "var(--ui-text-4)" }}>
                         Nv.{member.level} · {member.efficiencyScore} efic.
                       </div>
                     </div>
@@ -2951,9 +2951,9 @@ export function EquipoView() {
                     padding: "12px 14px",
                     borderRadius: 12,
                     border: item.unlocked
-                      ? "1px solid #BFE2F4"
-                      : "1px solid #E2E8F0",
-                    background: item.unlocked ? "#F5F3FF" : "var(--ui-surface-2)",
+                      ? "1px solid var(--ui-sky-border)"
+                      : "1px solid var(--ui-border)",
+                    background: item.unlocked ? "var(--ui-sky-soft)" : "var(--ui-surface-2)",
                     display: "flex",
                     flexDirection: "column",
                     gap: 6,
@@ -2984,7 +2984,7 @@ export function EquipoView() {
                   <div style={{ fontSize: 12.5, fontWeight: 700, color: "var(--ui-text)" }}>
                     {item.title}
                   </div>
-                  <div style={{ fontSize: 11, color: "var(--ui-text-4)", lineHeight: 1.35 }}>
+                  <div style={{ fontSize: 11, color: item.unlocked ? "var(--ui-sky-text)" : "var(--ui-text-4)", lineHeight: 1.35 }}>
                     {item.description}
                   </div>
                   <div
@@ -2995,7 +2995,7 @@ export function EquipoView() {
                       alignItems: "center",
                       justifyContent: "space-between",
                       fontSize: 10.5,
-                      color: "var(--ui-text-4)",
+                      color: item.unlocked ? "var(--ui-sky-text)" : "var(--ui-text-4)",
                       fontWeight: 600,
                     }}
                   >
@@ -3043,14 +3043,14 @@ export function EquipoView() {
             <span style={{ fontSize: 13, fontWeight: 700, color: "var(--ui-text-2)" }}>
               Cómo funcionan los puntos
             </span>
-            <span style={{ fontSize: 12, color: "var(--ui-text-5)" }}>
+            <span style={{ fontSize: 12, color: "var(--ui-text-4)" }}>
               · Se miden por esfuerzo, no por clicks
             </span>
           </div>
           <ChevronDown
             size={15}
             style={{
-              color: "var(--ui-text-5)",
+              color: "var(--ui-text-4)",
               transform: pointsAccordionOpen ? "rotate(180deg)" : "none",
               transition: "transform 180ms ease",
               flexShrink: 0,

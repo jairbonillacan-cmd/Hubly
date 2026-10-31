@@ -653,7 +653,7 @@ export function InicioView() {
                         fontWeight: 700,
                         letterSpacing: "0.08em",
                         textTransform: "uppercase",
-                        color: group.bucket === "overdue" ? "#EF4444" : "var(--ui-text-5)",
+                        color: group.bucket === "overdue" ? "#EF4444" : "var(--ui-text-4)",
                         marginBottom: 8,
                       }}
                     >
@@ -796,7 +796,7 @@ export function InicioView() {
                             <span
                               style={{
                                 fontSize: 12.5,
-                                color: "var(--ui-text-5)",
+                                color: "var(--ui-text-4)",
                                 textDecoration: "line-through",
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",

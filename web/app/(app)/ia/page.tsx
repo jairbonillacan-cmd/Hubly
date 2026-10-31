@@ -65,6 +65,7 @@ function DemoHublyAIPage() {
 
   return (
     <div
+      className="hubly-touch"
       style={{
         display: "flex",
         flexDirection: "column",
