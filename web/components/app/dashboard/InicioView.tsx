@@ -828,7 +828,7 @@ export function InicioView() {
               )}
               <div className="hb-widget-footer">
                 <Link href="/tareas" className="hb-widget-link">
-                  Mi Espacio →
+                  Mi espacio →
                 </Link>
               </div>
             </div>
@@ -1403,7 +1403,7 @@ export function InicioView() {
           </span>
         </h1>
         <p data-testid="dashboard-greeting-subtitle" className="hubly-hero-date">
-          {greetingInfo.dateTitleCase.replace(/ De (\S+)$/, (_, mes: string) => ` de ${mes.toLowerCase()}`)}
+          {greetingInfo.dateTitleCase}
         </p>
         <p className="hubly-hero-pending">
           {tasksBreakdown.pendingCount === 0 ? (
@@ -1609,7 +1609,7 @@ export function InicioView() {
                     NUEVA LIBRETA KRAFT
                   </span>
                   <h3 style={{ fontSize: 16, fontWeight: 800, color: "#2C1A0B", margin: 0 }}>
-                    Crear nota en Mi Espacio
+                    Crear nota en Mi espacio
                   </h3>
                 </div>
               </div>

@@ -440,7 +440,7 @@ export function NotebookReaderModal({
                       borderRadius: 9999,
                     }}
                   >
-                    <Check size={11} /> Guardado en Mi Espacio
+                    <Check size={11} /> Guardado en Mi espacio
                   </span>
                 )}
               </div>
@@ -899,7 +899,7 @@ export function NotebookReaderModal({
                 textDecoration: "none",
               }}
             >
-              <span>Abrir en Mi Espacio</span>
+              <span>Abrir en Mi espacio</span>
               <ExternalLink size={12} />
             </Link>
 

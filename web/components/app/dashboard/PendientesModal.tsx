@@ -170,10 +170,10 @@ export function PendientesModal({ open, onClose, groups, onToggle }: PendientesM
           }}
         >
           <span style={{ fontSize: 12, color: "#6B7886" }}>
-            Vencidas y de hoy. Lo demás vive en Mi Espacio.
+            Vencidas y de hoy. Lo demás vive en Mi espacio.
           </span>
           <Link href="/tareas" className="hbtn hbtn-secondary hbtn-sm" onClick={onClose}>
-            Abrir Mi Espacio
+            Abrir Mi espacio
           </Link>
         </div>
       </div>

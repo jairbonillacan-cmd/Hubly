@@ -115,7 +115,7 @@ export const DEFAULT_NOTEBOOKS: NotebookItem[] = [
     variant: "post",
     category: "Guía de operación",
     content:
-      "Guía paso a paso para programar el primer post de tu cliente sin fricción:\n1. Define el pilar del Núcleo de Marca.\n2. Redacta el copy con la voz oficial de la cuenta.\n3. Comparte la liga pública de revisión sin contraseñas para que tu cliente apruebe desde su celular.",
+      "Guía paso a paso para programar el primer post de tu cliente sin fricción:\n1. Define el pilar del Núcleo de marca.\n2. Redacta el copy con la voz oficial de la cuenta.\n3. Comparte la liga pública de revisión sin contraseñas para que tu cliente apruebe desde su celular.",
     bgGradient: "linear-gradient(180deg, #D9B78A 0%, #C79F6E 100%)",
     accentColor: "#16324F",
     updatedAt: "2026-10-26T10:00:00-06:00",

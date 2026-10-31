@@ -309,7 +309,7 @@ export default function SaaSAppLayout({
       },
       {
         href: "/tareas",
-        label: "Mi Espacio",
+        label: "Mi espacio",
         icon: NotebookIcon,
         badge: pendingTasksCount > 0 ? pendingTasksCount : undefined,
       },
@@ -343,7 +343,7 @@ export default function SaaSAppLayout({
 
   const brandNav = useMemo(
     () => [
-      { href: "/marca", label: "Núcleo de Marca", icon: BrainFilledIcon },
+      { href: "/marca", label: "Núcleo de marca", icon: BrainFilledIcon },
       {
         href: "/archivos",
         label: "Content Manager",
@@ -1814,7 +1814,7 @@ export default function SaaSAppLayout({
       </div>
 
       {/* =====================================================================
-          MOBILE BOTTOM TABBAR (< 768px): Mi Espacio, Social, Hubi, Ads, Más
+          MOBILE BOTTOM TABBAR (< 768px): Mi espacio, Social, Hubi, Ads, Más
          ===================================================================== */}
       <nav
         aria-label="Barra de navegación inferior móvil"
@@ -1851,7 +1851,7 @@ export default function SaaSAppLayout({
           }}
         >
           <NotebookIcon active={isNavActive("/tareas")} />
-          <span>Mi Espacio</span>
+          <span>Mi espacio</span>
         </Link>
 
         <Link

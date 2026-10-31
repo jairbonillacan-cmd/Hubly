@@ -1389,7 +1389,7 @@ export default function ParrillasPage() {
                     margin: "0 0 18px",
                   }}
                 >
-                  {activeBrand?.core?.whatTheySell || "Agrega una descripción en Núcleo de Marca."}
+                  {activeBrand?.core?.whatTheySell || "Agrega una descripción en Núcleo de marca."}
                 </p>
 
                 {siguenosEnabled && (

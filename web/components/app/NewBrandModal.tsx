@@ -908,7 +908,7 @@ export function NewBrandModal({
                     marginBottom: 5,
                   }}
                 >
-                  Tono de voz (Núcleo de Marca)
+                  Tono de voz (Núcleo de marca)
                 </label>
                 <input
                   id="new-brand-tone"

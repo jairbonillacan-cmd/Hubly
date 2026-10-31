@@ -30,6 +30,19 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
+// La subida de archivos sí llega a /api/media: se borran por nombre, también si la prueba falla.
+test.afterEach(async ({ request }) => {
+  const ws = (await (await request.get("/api/workspace")).json()) as { brands: { id: string }[] };
+  for (const marca of ws.brands ?? []) {
+    const res = await request.get(`/api/media?brandId=${encodeURIComponent(marca.id)}`);
+    if (!res.ok()) continue;
+    const { items } = (await res.json()) as { items: { id: string; name: string }[] };
+    for (const item of items.filter((x) => x.name === "a.png" || x.name === "b.png")) {
+      await request.delete(`/api/media/${item.id}`);
+    }
+  }
+});
+
 test("el sidebar funciona con el editor abierto y el borrador conserva su marca", async ({ page }) => {
   await abrirEditor(page);
   await page.getByLabel("Título del post").fill("Borrador de prueba");

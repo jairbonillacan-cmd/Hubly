@@ -12,7 +12,7 @@ export default defineConfig({
   reporter: "list",
   use: {
     baseURL: `http://localhost:${port}`,
-    channel: "chrome",
+    channel: process.env.E2E_CHANNEL || "chrome",
     viewport: { width: 1440, height: 900 },
     locale: "es-MX",
     timezoneId: "America/Mexico_City",
