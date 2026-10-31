@@ -32,8 +32,13 @@ import type {
   BrandCore,
   BrandProject,
   BrandWorkspace,
+  AutomationRule,
+  AutomationTrigger,
   ContentIdea,
   CustomCommitmentMetric,
+  Lead,
+  LeadStage,
+  Quote,
   DashboardWidgetConfig,
   DashboardWidgetId,
   DashboardWidgetSpan,
@@ -177,6 +182,14 @@ export interface HublyStoreState extends HublyWorkspaceData {
   addIdea: (idea: Pick<ContentIdea, "brandId" | "title" | "notes" | "pillar">) => void;
   removeIdea: (ideaId: string) => void;
   convertIdeaToPost: (ideaId: string) => void;
+  saveLead: (lead: Omit<Lead, "id" | "createdAt"> & { id?: string }) => void;
+  moveLead: (leadId: string, stage: LeadStage, beforeId: string | null) => void;
+  deleteLead: (leadId: string) => void;
+  saveQuote: (quote: Omit<Quote, "id" | "createdAt"> & { id?: string }) => void;
+  deleteQuote: (quoteId: string) => void;
+  addAutomation: (rule: Pick<AutomationRule, "name" | "trigger" | "action" | "text">) => void;
+  toggleAutomation: (ruleId: string) => void;
+  removeAutomation: (ruleId: string) => void;
 
   // Task Actions
   addTask: (task: AddTaskInput) => void;
@@ -278,6 +291,9 @@ function extractWorkspaceData(state: HublyStoreState): HublyWorkspaceData {
     brands: state.brands,
     posts: state.posts,
     ideas: state.ideas,
+    leads: state.leads,
+    quotes: state.quotes,
+    automations: state.automations,
     tasks: state.tasks,
     taskLists: state.taskLists,
     notebooks: state.notebooks,
@@ -309,6 +325,52 @@ function withPostLog(post: SocialPost, text: string, author: string): SocialPost
   const at = new Date().toISOString();
   const entry = { id: `pa-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, author, text, at };
   return { ...post, activity: [entry, ...(post.activity || [])] };
+}
+
+const STATUS_TO_TRIGGER: Partial<Record<PostStatus, AutomationTrigger>> = {
+  pending: "post_pending",
+  changes: "post_changes",
+  approved: "post_approved",
+};
+
+/** Se ejecuta en el navegador: sin backend no hay reglas corriendo en segundo plano. */
+function runAutomations(
+  get: () => HublyStoreState,
+  set: (patch: Partial<HublyStoreState>) => void,
+  postId: string,
+  status: PostStatus
+) {
+  const trigger = STATUS_TO_TRIGGER[status];
+  const state = get();
+  const post = state.posts.find((p) => p.id === postId);
+  if (!trigger || !post) return;
+  const fired = (state.automations || []).filter((r) => r.enabled && r.trigger === trigger);
+  if (fired.length === 0) return;
+  const today = localIsoDate();
+  for (const rule of fired) {
+    const text = rule.text.split("{post}").join(post.title);
+    if (rule.action === "create_task") {
+      state.addTask({
+        brandId: post.brandId,
+        title: text,
+        dueLabel: "Hoy",
+        dueDate: today,
+        assignee: post.assignee || state.profile?.name || "Equipo",
+        listName: "Automatizaciones",
+        status: "todo",
+        priority: "media",
+      });
+    } else {
+      state.addNotification({ brandId: post.brandId, title: rule.name, body: text, kind: "sistema", actionUrl: "/parrillas" });
+    }
+  }
+  const at = new Date().toISOString();
+  const firedIds = new Set(fired.map((r) => r.id));
+  set({
+    automations: (get().automations || []).map((r) =>
+      firedIds.has(r.id) ? { ...r, runs: r.runs + 1, lastRunAt: at } : r
+    ),
+  });
 }
 
 function createActivityItem(
@@ -936,6 +998,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   },
 
   savePost: (postInput) => {
+    const previousStatus = get().posts.find((p) => p.id === postInput.id)?.status;
     set((s) => {
       const statusLabel =
         postInput.statusLabel || STATUS_TO_LABEL[postInput.status] || "Borrador";
@@ -988,6 +1051,10 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
         editingPostId: null,
       };
     });
+    const savedId = postInput.id || get().posts[0]?.id;
+    if (savedId && previousStatus !== postInput.status) {
+      runAutomations(get, set, savedId, postInput.status);
+    }
     persistWorkspaceState(get());
   },
 
@@ -1033,6 +1100,73 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
         activityEvents: [event, ...s.activityEvents],
       };
     });
+    runAutomations(get, set, postId, status);
+    persistWorkspaceState(get());
+  },
+
+  saveLead: (input) => {
+    set((s) => {
+      const leads = s.leads || [];
+      if (input.id) {
+        return { leads: leads.map((l) => (l.id === input.id ? { ...l, ...input, id: l.id } : l)) };
+      }
+      return {
+        leads: [{ ...input, id: `lead-${Date.now()}`, createdAt: new Date().toISOString() }, ...leads],
+      };
+    });
+    persistWorkspaceState(get());
+  },
+
+  moveLead: (leadId, stage, beforeId) => {
+    set((s) => ({ leads: moveInList(s.leads || [], leadId, beforeId, (l) => ({ ...l, stage })) }));
+    persistWorkspaceState(get());
+  },
+
+  deleteLead: (leadId) => {
+    set((s) => ({
+      leads: (s.leads || []).filter((l) => l.id !== leadId),
+      quotes: (s.quotes || []).filter((q) => q.leadId !== leadId),
+    }));
+    persistWorkspaceState(get());
+  },
+
+  saveQuote: (input) => {
+    set((s) => {
+      const quotes = s.quotes || [];
+      if (input.id) {
+        return { quotes: quotes.map((q) => (q.id === input.id ? { ...q, ...input, id: q.id } : q)) };
+      }
+      return {
+        quotes: [{ ...input, id: `quote-${Date.now()}`, createdAt: new Date().toISOString() }, ...quotes],
+      };
+    });
+    persistWorkspaceState(get());
+  },
+
+  deleteQuote: (quoteId) => {
+    set((s) => ({ quotes: (s.quotes || []).filter((q) => q.id !== quoteId) }));
+    persistWorkspaceState(get());
+  },
+
+  addAutomation: (rule) => {
+    set((s) => ({
+      automations: [
+        { ...rule, id: `auto-${Date.now()}`, enabled: true, runs: 0 },
+        ...(s.automations || []),
+      ],
+    }));
+    persistWorkspaceState(get());
+  },
+
+  toggleAutomation: (ruleId) => {
+    set((s) => ({
+      automations: (s.automations || []).map((r) => (r.id === ruleId ? { ...r, enabled: !r.enabled } : r)),
+    }));
+    persistWorkspaceState(get());
+  },
+
+  removeAutomation: (ruleId) => {
+    set((s) => ({ automations: (s.automations || []).filter((r) => r.id !== ruleId) }));
     persistWorkspaceState(get());
   },
 
@@ -1126,6 +1260,9 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   },
 
   approveAllBrandPosts: (brandId, authorName = "Cliente") => {
+    const approvedIds = get()
+      .posts.filter((p) => p.brandId === brandId && (p.status === "pending" || p.status === "changes"))
+      .map((p) => p.id);
     set((s) => {
       const event = createActivityItem(s, {
         type: "post_published",
@@ -1158,6 +1295,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
         activityEvents: [event, ...s.activityEvents],
       };
     });
+    for (const id of approvedIds) runAutomations(get, set, id, "approved");
     persistWorkspaceState(get());
   },
 

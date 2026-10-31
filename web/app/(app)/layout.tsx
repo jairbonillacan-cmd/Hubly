@@ -35,6 +35,7 @@ import { NotebookReaderModal } from "@/components/app/NotebookReaderModal";
 import { WidgetConfigModal } from "@/components/app/WidgetConfigModal";
 import { AutoSuggestionsModal } from "@/components/app/AutoSuggestionsModal";
 import { FloatingAIDrawer } from "@/components/app/FloatingAIDrawer";
+import { Handshake, Tags, Zap } from "lucide-react";
 import { DescubreHublyWidget } from "@/components/app/DescubreHublyWidget";
 import {
   HublyCatAvatar,
@@ -62,6 +63,10 @@ const WidgetConfigModalSurface =
   WidgetConfigModal as unknown as React.ComponentType<Record<string, unknown>>;
 const AutoSuggestionsModalSurface =
   AutoSuggestionsModal as unknown as React.ComponentType<Record<string, unknown>>;
+const CrmNavIcon = () => <Handshake size={18} strokeWidth={2} aria-hidden="true" />;
+const BrandsNavIcon = () => <Tags size={18} strokeWidth={2} aria-hidden="true" />;
+const AutomationsNavIcon = () => <Zap size={18} strokeWidth={2} aria-hidden="true" />;
+
 const DescubreHublyWidgetSurface =
   DescubreHublyWidget as unknown as React.ComponentType<Record<string, unknown>>;
 
@@ -314,6 +319,24 @@ export default function SaaSAppLayout({
         href: "/calendario",
         label: "Calendario",
         icon: CalendarFilledIcon,
+        badge: undefined as number | undefined,
+      },
+      {
+        href: "/crm",
+        label: "CRM",
+        icon: CrmNavIcon,
+        badge: undefined as number | undefined,
+      },
+      {
+        href: "/marcas",
+        label: "Marcas",
+        icon: BrandsNavIcon,
+        badge: undefined as number | undefined,
+      },
+      {
+        href: "/automatizaciones",
+        label: "Automatizaciones",
+        icon: AutomationsNavIcon,
         badge: undefined as number | undefined,
       },
     ],

@@ -18,6 +18,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { MemberDrawer } from "@/components/app/dashboard/MemberDrawer";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import {
   selectGreetingAndDate,
@@ -880,6 +881,7 @@ export function EquipoView() {
   const [activityRange, setActivityRange] = useState<"Semana" | "Mes">("Semana");
   const [rankingRange, setRankingRange] = useState<"Hoy" | "Semana" | "Mes">("Semana");
   const [selectedMemberId, setSelectedMemberId] = useState<string>("tm-1");
+  const [drawerMemberId, setDrawerMemberId] = useState<string | null>(null);
   const [showAllTeamScope, setShowAllTeamScope] = useState<boolean>(false);
 
   // Interactive popovers / drawers / accordions
@@ -2766,6 +2768,16 @@ export function EquipoView() {
                     transition: "background 150ms ease, border-color 150ms ease",
                   }}
                 >
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDrawerMemberId(member.id);
+                    }}
+                    style={{ order: 1, alignSelf: "flex-end", border: 0, background: "transparent", color: "#5A65AF", fontSize: 12, fontWeight: 600, cursor: "pointer", padding: 0 }}
+                  >
+                    Ver perfil
+                  </button>
                   <div
                     style={{
                       display: "flex",
@@ -3212,6 +3224,7 @@ export function EquipoView() {
           </div>
         )}
       </div>
+      {drawerMemberId && (<MemberDrawer memberId={drawerMemberId} onClose={() => setDrawerMemberId(null)} />)}
     </div>
   );
 }

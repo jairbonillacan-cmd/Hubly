@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   devIndicators: false,
+  async redirects() {
+    return [{ source: "/libretas", destination: "/tareas?seccion=libretas", permanent: false }];
+  },
 };
 
 export default nextConfig;

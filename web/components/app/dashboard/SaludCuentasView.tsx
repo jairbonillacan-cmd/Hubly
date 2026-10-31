@@ -31,6 +31,46 @@ interface PeriodOption {
 
 const QUICK_PERIOD_IDS: CommitmentPeriod[] = ["7d", "30d", "semana", "mes_actual", "custom"];
 
+const METRIC_TEMPLATES: { label: string; items: { name: string; unit: "semana" | "mes" | "total" }[] }[] = [
+  {
+    label: "Contenido",
+    items: [
+      { name: "Posts en feed", unit: "semana" },
+      { name: "Reels publicados", unit: "semana" },
+      { name: "Stories publicadas", unit: "semana" },
+      { name: "Carruseles publicados", unit: "mes" },
+      { name: "Sesiones de foto o video", unit: "mes" },
+      { name: "Blogs publicados", unit: "mes" },
+    ],
+  },
+  {
+    label: "Comunidad",
+    items: [
+      { name: "Comentarios respondidos", unit: "semana" },
+      { name: "Mensajes respondidos", unit: "semana" },
+      { name: "Colaboraciones con creadores", unit: "mes" },
+      { name: "Nuevos seguidores", unit: "mes" },
+    ],
+  },
+  {
+    label: "Pauta",
+    items: [
+      { name: "Campañas activas", unit: "mes" },
+      { name: "Creativos nuevos", unit: "mes" },
+      { name: "Leads generados", unit: "mes" },
+      { name: "Ventas atribuidas", unit: "mes" },
+    ],
+  },
+  {
+    label: "Cliente",
+    items: [
+      { name: "Reportes entregados", unit: "mes" },
+      { name: "Juntas de seguimiento", unit: "mes" },
+      { name: "Parrillas aprobadas", unit: "mes" },
+    ],
+  },
+];
+
 const PERIOD_OPTIONS: PeriodOption[] = [
   {
     id: "semana",
@@ -3115,6 +3155,36 @@ export function SaludCuentasView() {
                           gap: 6,
                         }}
                       >
+                        <select
+                          aria-label="Plantilla de métrica"
+                          value=""
+                          onChange={(e) => {
+                            const template = METRIC_TEMPLATES.flatMap((g) => g.items).find(
+                              (t) => t.name === e.target.value
+                            );
+                            if (!template) return;
+                            setNewMetricName(template.name);
+                            setNewMetricUnit(template.unit);
+                          }}
+                          style={{
+                            padding: "5px 9px",
+                            borderRadius: 7,
+                            border: "1px solid #D1D5DB",
+                            fontSize: 12,
+                            background: "#FFFFFF",
+                          }}
+                        >
+                          <option value="">Usar plantilla…</option>
+                          {METRIC_TEMPLATES.map((group) => (
+                            <optgroup key={group.label} label={group.label}>
+                              {group.items.map((t) => (
+                                <option key={t.name} value={t.name}>
+                                  {t.name}
+                                </option>
+                              ))}
+                            </optgroup>
+                          ))}
+                        </select>
                         <input
                           type="text"
                           value={newMetricName}

@@ -374,6 +374,7 @@ function ClientSharePortalInner() {
                           setOpenCommentBox((prev) => ({ ...prev, [post.id]: false }));
                         }}
                         className="saas-btn saas-btn-primary saas-btn-sm"
+                        aria-label="Enviar solicitud de cambios"
                       >
                         <Send size={13} />
                       </button>

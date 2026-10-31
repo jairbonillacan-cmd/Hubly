@@ -109,6 +109,54 @@ export interface ContentIdea {
   convertedPostId?: string;
 }
 
+export type LeadStage = "nuevo" | "contactado" | "propuesta" | "ganado" | "perdido";
+
+export interface Lead {
+  id: string;
+  name: string;
+  company: string;
+  email: string;
+  phone: string;
+  source: string;
+  value: number; // MXN al mes
+  stage: LeadStage;
+  notes: string;
+  createdAt: string; // ISO
+}
+
+export type QuoteStatus = "Borrador" | "Enviada" | "Aceptada" | "Rechazada";
+
+export interface QuoteItem {
+  id: string;
+  description: string;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface Quote {
+  id: string;
+  leadId: string;
+  title: string;
+  status: QuoteStatus;
+  items: QuoteItem[];
+  createdAt: string; // ISO
+}
+
+export type AutomationTrigger = "post_pending" | "post_changes" | "post_approved";
+export type AutomationAction = "create_task" | "notify";
+
+export interface AutomationRule {
+  id: string;
+  name: string;
+  trigger: AutomationTrigger;
+  action: AutomationAction;
+  /** Texto de la tarea o notificación; {post} se sustituye por el título. */
+  text: string;
+  enabled: boolean;
+  runs: number;
+  lastRunAt?: string; // ISO
+}
+
 export type PostItem = SocialPost;
 
 export interface BuyerPersona {
@@ -520,6 +568,9 @@ export interface HublyWorkspaceData {
   brands: BrandWorkspace[];
   posts: SocialPost[];
   ideas?: ContentIdea[];
+  leads?: Lead[];
+  quotes?: Quote[];
+  automations?: AutomationRule[];
   tasks: AgencyTask[];
   taskLists?: TaskListDef[];
   notebooks: NotebookItem[];

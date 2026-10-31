@@ -13,7 +13,7 @@ export default function RegisterPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/dashboard");
+    router.push("/onboarding");
   };
 
   return (
