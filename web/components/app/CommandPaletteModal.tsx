@@ -137,6 +137,8 @@ export function CommandPaletteModal({
   }, [isOpen]);
 
   const allItems = useMemo<CommandItem[]>(() => {
+    // Cerrada no arma resultados: así el render del servidor no lee la fecha actual.
+    if (!isOpen) return [];
     const q = query.trim().toLowerCase();
 
     const quickActions: CommandItem[] = [
@@ -425,6 +427,7 @@ export function CommandPaletteModal({
         (item.badge && item.badge.toLowerCase().includes(q))
     );
   }, [
+    isOpen,
     query,
     brands,
     activeBrandId,
