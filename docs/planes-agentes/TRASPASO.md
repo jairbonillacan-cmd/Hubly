@@ -6,14 +6,14 @@
 
 | Rama | Estado |
 |---|---|
-| `paridad-henry` | Tiene A, B y C fusionados (`fae3e59`). Se usa en `C:\Users\jairb\Desktop\Hubly` |
-| `agente/integracion` | Lo mismo, más las correcciones de abajo. Está por delante de `paridad-henry`. Se usa en `C:\Users\jairb\Desktop\Hubly-wt\integracion` |
+| `paridad-henry` | Tiene A, B y C fusionados (`fae3e59`), más dos commits posteriores que no son de este agente: `d7d664d` (temporales de Supabase) y `c608087` (foto de perfil en Storage, migración `0005`). Se usa en `C:\Users\jairb\Desktop\Hubly` |
+| `agente/integracion` | Sale de `fae3e59` y añade las correcciones de abajo. No tiene esos dos commits. Una simulación de fusión con `paridad-henry` no dio conflictos. Se usa en `C:\Users\jairb\Desktop\Hubly-wt\integracion` |
 | `agente/opus-diseno`, `agente/gemini-flujos`, `agente/glm-calidad` | Entregas originales, ya integradas |
 | `main` | Sin cambios |
 
 Servidores que quedaron encendidos: 3000 (del usuario, nunca apagarlo ni reiniciarlo), 3001 (A), 3002 (B), 3003 (C) y 3004 (integración).
 
-**Sin commitear en la carpeta principal, del usuario:** `web/.env.example`, `supabase/aplicar-todo.sql`, `supabase/.temp/` y los planes en `docs/planes-agentes/`. No tocarlos.
+**Sin commitear en la carpeta principal:** los planes en `docs/planes-agentes/` (`00-COORDINACION.md`, `PLAN-*.md`, `comprobar-propiedad.mjs`). No tocarlos. Alguien más trabaja en esa carpeta: revisar `git log` antes de asumir su estado.
 
 ## Último trabajo: cuatro defectos
 
@@ -38,7 +38,7 @@ La corrida final se interrumpió por el límite de la cuenta.
 ## Lo que sigue
 
 1. En `C:\Users\jairb\Desktop\Hubly-wt\integracion\web`, con `$env:E2E_PORT="3004"` y `$env:E2E_BASE="http://localhost:3004"`, correr `npm run check:ui`, `npx tsc --noEmit`, `npm test`, `npm run test:db`, `npm run build`, `npx playwright test` y `npm run audit:controles`. Commitear la matriz.
-2. Revisar el título vacío de `/chat`: la última captura a 1440 aún decía «conversacion», sin acento, y el cambio ya está en el código.
+2. Corregir el título vacío de `/chat`: `web/app/(app)/chat/page.tsx` aún dice «Selecciona una conversacion», sin acento.
 3. Actualizar `docs/ENTREGA-PARIDAD-HENRY.md`.
 4. **Pedir permiso** y fusionar `agente/integracion` a `paridad-henry` en la carpeta principal, sin reiniciar el 3000.
 
