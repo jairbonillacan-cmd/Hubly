@@ -1,16 +1,30 @@
 # Entrega de paridad con Henry: 31 de octubre de 2026
 
-Rama `paridad-henry`. Nada se ha fusionado ni publicado.
+Rama `agente/integracion`: fusiona `agente/glm-calidad`, `agente/gemini-flujos` y `agente/opus-diseno`, sin conflictos, más sus colas. Nada se ha publicado.
 
 ## Pruebas de esta entrega
 
+Ejecutadas en la rama de integración, con servidor propio en el puerto 3004.
+
 | Comando | Resultado |
 |---|---|
+| `npm run check:ui` | Correcto. Deuda heredada sin empeorar: 1581 hallazgos |
 | `npx tsc --noEmit` | Sin errores |
 | `npm run build` | Compila |
-| `npm test` | 33 pasan |
+| `npm test` | 43 pasan |
 | `npm run test:db` | 69 pasan (PGlite con las migraciones reales y un `storage` mínimo) |
-| `npx playwright test` | 58 pasan, en modo demo contra el servidor de desarrollo |
+| `npx playwright test` | 88 pasan, en modo demo contra el servidor de desarrollo, con Chrome |
+| `npm run audit:controles` | 679 controles: 565 responden, 29 ya activos, 46 enlaces, 19 deshabilitados, 19 sin efecto visible, 0 con error, 1 omitido |
+
+## Pendiente tras la integración
+
+- **Táctiles en móvil:** una medición a 390 px en esta rama encontró controles bajo 44 px en las 12 rutas de B (por ejemplo 19 de 22 en `/tareas` y 9 de 9 en `/automatizaciones`), en claro y oscuro. Contradice la tabla de `entregas/B.md`, que las marca como conformes. Lo que sí se confirmó es que no hay desborde horizontal ni errores de página.
+- **Pestañas falsas en `/anuncios`:** «Tableros», «Anuncios» e «Ideas» solo cambian el resalte; el contenido es el mismo.
+- **Sin efecto visible en `/dashboard/equipo`:** «7 días», «30 días», «90 días» y «Semana» aparecen así en la matriz. Falta revisar a mano si son botones muertos o si solo no hay datos que cambien.
+- **`web/scripts/check-ui-baseline.json`:** sus topes siguen altos aunque se redujo deuda. No se ejecutó `--update`, porque el plan lo prohíbe sin autorización.
+- **Token de verde legible en oscuro:** falta en la guía; hoy `#059669` en `/anuncios` da menos de 4.5:1.
+- **Prueba inestable:** `calendario.spec.ts:77` falló 2 de 5 corridas durante el trabajo de A, por un post duplicado. Desde el bloqueo de escrituras no ha vuelto a fallar, pero la causa no está confirmada.
+- **Cola de B descartada:** el botón «Subir» sin selector de archivos en `MediaLibrary.tsx:196` no corresponde al código: esa línea es el botón de inicio y el `input` de archivo sí existe.
 
 ## Matriz de rutas
 

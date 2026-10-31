@@ -4,7 +4,7 @@ Generada con `npm run audit:controles` en modo demo el 2026-10-31 (previo a la i
 
 **Qué significa:** «responde» indica que pulsar cambió la página (el detalle dice qué cambió) sin error; no prueba que el resultado sea correcto ni que persista, porque la auditoría bloquea las escrituras. La persistencia y los permisos se prueban en `e2e/` y `tests/`. «Ya activo» es una pestaña o filtro que ya estaba seleccionado, así que no cambia nada: es lo esperado. «Sin efecto visible» pide revisión manual: puede ser un botón muerto o un cambio que la auditoría no detecta. Los editores (compositor) se abren pero no se recorren aquí: los cubre `compositor.spec.ts`.
 
-**Totales:** 687 controles (266 en páginas, 421 dentro de ventanas) · 573 responden · 29 ya activos · 42 enlaces · 23 sin efecto visible · 18 deshabilitados · 0 con error · 1 sin poder probar · 1 omitidos.
+**Totales:** 679 controles (259 en páginas, 420 dentro de ventanas) · 565 responden · 29 ya activos · 46 enlaces · 19 sin efecto visible · 19 deshabilitados · 0 con error · 0 sin poder probar · 1 omitidos.
 
 Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/dashboard/salud-cuentas`, `/estrategia` → `/marca`.
 
@@ -22,7 +22,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | — | Editar | responde | cambia un estado; cambia el texto |
 | `/dashboard` | — | Min (2) | responde | cambia el texto |
 | `/dashboard` | — | Nueva | responde | cambia el texto; cambia un campo |
-| `/dashboard` | — | Mi Espacio → | enlace | /tareas |
+| `/dashboard` | — | Mi espacio → | enlace | /tareas |
 | `/dashboard` | — | Nota | responde | abre una ventana; cambia el texto; cambia un campo |
 | `/dashboard` | — | TU PRIMER POST N° 01 · OCT 26 | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | — | REPORTES SIN POWERPOINT ★ N° 02 · OCT 26 | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
@@ -32,7 +32,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | — | Calendario → | enlace | /calendario |
 | `/dashboard` | — | Ver todas → | enlace | /parrillas |
 | `/dashboard` | Lo que te toca | Listo | responde | cierra una ventana; cambia el texto |
-| `/dashboard` | Lo que te toca | Abrir Mi Espacio | enlace | /tareas |
+| `/dashboard` | Lo que te toca | Abrir Mi espacio | enlace | /tareas |
 | `/dashboard` | Nueva marca / Cuenta de cliente | Cerrar modal de nueva marca | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | Nueva marca / Cuenta de cliente | Cafetería & Panadería | responde | cambia un estado; cambia un campo |
 | `/dashboard` | Nueva marca / Cuenta de cliente | Hospitalidad & Diseño | ya activo | estaba seleccionado |
@@ -69,17 +69,17 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | Invitar miembro al equipo | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | Invitar miembro al equipo | Generar invitación local | responde | cambia el texto |
 | `/dashboard` | Resultados de búsqueda | Crear o programar post Abre el compositor de posts, Reels y  | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo (editor: lo cubre compositor.spec) |
-| `/dashboard` | Resultados de búsqueda | Crear nueva marca Configura identidad y compromisos mensuale | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard` | Resultados de búsqueda | Invitar miembro al equipo Genera invitación local con rol y  | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard` | Resultados de búsqueda | Revisar sugerencias de metas Motor de reglas sobre el cumpli | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
-| `/dashboard` | Resultados de búsqueda | Configurar widgets del dashboard Mostrar, ocultar, cambiar c | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
+| `/dashboard` | Resultados de búsqueda | Crear marca Configura identidad y compromisos mensuales | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `/dashboard` | Resultados de búsqueda | Invitar al equipo Genera una invitación con rol y marcas asi | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `/dashboard` | Resultados de búsqueda | Revisar sugerencias Compromisos propuestos según el cumplimi | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
+| `/dashboard` | Resultados de búsqueda | Configurar widgets Mostrar, ocultar, cambiar columna o reord | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
 | `/dashboard` | Resultados de búsqueda | Pregúntale a Hubi Consulta tareas vencidas, salud de cuentas | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
 | `/dashboard` | Resultados de búsqueda | Dashboard · Inicio Resumen operativo, tareas, libretas y apr | responde | cierra una ventana; cambia un estado; cambia el texto |
-| `/dashboard` | Resultados de búsqueda | Dashboard · Salud de Cuentas Cumplimiento de entregas, presu | responde | navega a /dashboard/salud-cuentas; cierra una ventana; cambia un estado |
+| `/dashboard` | Resultados de búsqueda | Dashboard · Salud de cuentas Cumplimiento de entregas, presu | responde | navega a /dashboard/salud-cuentas; cierra una ventana; cambia un estado |
 | `/dashboard` | Resultados de búsqueda | Dashboard · Equipo Carga operativa, actividad semanal e invi | responde | navega a /dashboard/equipo; cierra una ventana; cambia un estado |
-| `/dashboard` | Resultados de búsqueda | Mi Espacio (Tareas y Libretas Kraft) Gestión de entregables  | responde | navega a /tareas; cierra una ventana; cambia un estado |
-| `/dashboard` | Resultados de búsqueda | Calendario Editorial Planeación mensual de publicaciones | responde | navega a /calendario; cierra una ventana; cambia un estado |
-| `/dashboard` | Resultados de búsqueda | Social Media / Parrillas Parrilla de contenidos y flujo de a | responde | navega a /parrillas; cierra una ventana; cambia un estado |
+| `/dashboard` | Resultados de búsqueda | Mi espacio · Tareas y libretas Entregables y notas de estrat | responde | navega a /tareas; cierra una ventana; cambia un estado |
+| `/dashboard` | Resultados de búsqueda | Calendario Planeación mensual de posts | responde | navega a /calendario; cierra una ventana; cambia un estado |
+| `/dashboard` | Resultados de búsqueda | Social Media · Parrillas Parrilla de posts y flujo de aproba | responde | navega a /parrillas; cierra una ventana; cambia un estado |
 | `/dashboard` | Resultados de búsqueda | CB Café Bruma (@cafebruma) Cafetería de especialidad y tosta | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `/dashboard` | Resultados de búsqueda | M Min (@min) minerales y cristales decorativos al mayoreo ·  | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `/dashboard` | Resultados de búsqueda | CN Clínica Norte (@clinicanorte.derma) Dermatología clínica  | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
@@ -87,8 +87,8 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | Resultados de búsqueda | REPORTES SIN POWERPOINT N° 02 · OCT 26 Reportes en vivo | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | Resultados de búsqueda | TU DÍA EN MI ESPACIO N° 03 · OCT 26 Productividad | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | Resultados de búsqueda | NÚCLEO DE MARCA N° 04 · OCT 26 Estrategia IA | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard` | Resultados de búsqueda | Conecta las redes de tu cliente Min · Jair · Vence 2026-10-3 | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
-| `/dashboard` | Resultados de búsqueda | Manda tu primer reporte Min · Jair · Vence 2026-11-01 alta | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
+| `/dashboard` | Resultados de búsqueda | Conecta las redes de tu cliente Min · Jair · Vence hoy Alta | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
+| `/dashboard` | Resultados de búsqueda | Manda tu primer reporte Min · Jair · Vence mañana Alta | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
 | `/dashboard` | Resultados de búsqueda | Ajustar horario a 8:00 am en post de panqué de cardamomo Caf | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
 | `/dashboard` | Resultados de búsqueda | Mandar liga de parrilla de noviembre a Elena por WhatsApp Ca | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
 | `/dashboard` | Configurar widgets del Dashboard | Cerrar configuración de widgets | responde | cierra una ventana; cambia un estado; cambia el texto |
@@ -150,7 +150,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | TU PRIMER POST | Lista de tareas | responde | cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | TU PRIMER POST | Deshacer | deshabilitado |  |
 | `/dashboard` | TU PRIMER POST | Rehacer | deshabilitado |  |
-| `/dashboard` | TU PRIMER POST | Abrir en Mi Espacio | enlace | /tareas?seccion=libretas |
+| `/dashboard` | TU PRIMER POST | Abrir en Mi espacio | enlace | /tareas?seccion=libretas |
 | `/dashboard` | TU PRIMER POST | Enviar pendientes a Tareas | responde | cambia el texto |
 | `/dashboard` | TU PRIMER POST | Eliminar | responde | cambia un estado; cambia el texto; cambia un campo; intenta guardar (bloqueado) |
 | `/dashboard` | TU PRIMER POST | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
@@ -173,7 +173,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | REPORTES SIN POWERPOINT | Lista de tareas | responde | cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | REPORTES SIN POWERPOINT | Deshacer | deshabilitado |  |
 | `/dashboard` | REPORTES SIN POWERPOINT | Rehacer | deshabilitado |  |
-| `/dashboard` | REPORTES SIN POWERPOINT | Abrir en Mi Espacio | enlace | /tareas?seccion=libretas |
+| `/dashboard` | REPORTES SIN POWERPOINT | Abrir en Mi espacio | enlace | /tareas?seccion=libretas |
 | `/dashboard` | REPORTES SIN POWERPOINT | Enviar pendientes a Tareas | responde | cambia el texto |
 | `/dashboard` | REPORTES SIN POWERPOINT | Eliminar | responde | cambia un estado; cambia el texto; cambia un campo; intenta guardar (bloqueado) |
 | `/dashboard` | REPORTES SIN POWERPOINT | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
@@ -196,7 +196,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | TU DÍA EN MI ESPACIO | Lista de tareas | responde | cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | TU DÍA EN MI ESPACIO | Deshacer | deshabilitado |  |
 | `/dashboard` | TU DÍA EN MI ESPACIO | Rehacer | deshabilitado |  |
-| `/dashboard` | TU DÍA EN MI ESPACIO | Abrir en Mi Espacio | enlace | /tareas?seccion=libretas |
+| `/dashboard` | TU DÍA EN MI ESPACIO | Abrir en Mi espacio | enlace | /tareas?seccion=libretas |
 | `/dashboard` | TU DÍA EN MI ESPACIO | Enviar pendientes a Tareas | responde | cambia el texto |
 | `/dashboard` | TU DÍA EN MI ESPACIO | Eliminar | responde | cambia un estado; cambia el texto; cambia un campo; intenta guardar (bloqueado) |
 | `/dashboard` | TU DÍA EN MI ESPACIO | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
@@ -219,7 +219,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | NÚCLEO DE MARCA | Lista de tareas | responde | cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | NÚCLEO DE MARCA | Deshacer | deshabilitado |  |
 | `/dashboard` | NÚCLEO DE MARCA | Rehacer | deshabilitado |  |
-| `/dashboard` | NÚCLEO DE MARCA | Abrir en Mi Espacio | enlace | /tareas?seccion=libretas |
+| `/dashboard` | NÚCLEO DE MARCA | Abrir en Mi espacio | enlace | /tareas?seccion=libretas |
 | `/dashboard` | NÚCLEO DE MARCA | Enviar pendientes a Tareas | responde | cambia el texto |
 | `/dashboard` | NÚCLEO DE MARCA | Eliminar | responde | cambia un estado; cambia el texto; cambia un campo; intenta guardar (bloqueado) |
 | `/dashboard` | NÚCLEO DE MARCA | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
@@ -438,16 +438,16 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/chat` | — | # General Sin mensajes aún | responde | cambia el texto; cambia un campo |
 | `/chat` | — | M Min 3 canales | responde | cambia el texto; cambia un campo |
 | `/notificaciones` | — | Marcar todo como leído | deshabilitado |  |
-| `/ia` | — | Conectar las redes | responde | cambia el texto |
-| `/ia` | — | Traer mis diseños y programarlos | responde | cambia el texto |
-| `/ia` | — | Invitar a mi equipo | responde | cambia el texto |
-| `/ia` | — | ¿Qué hay pendiente? | responde | cambia el texto |
+| `/ia` | — | Conectar las redes | enlace | /parrillas |
+| `/ia` | — | Traer mis diseños | enlace | /archivos |
+| `/ia` | — | Invitar a mi equipo | enlace | /ajustes?tab=equipo |
+| `/ia` | — | ¿Qué hay pendiente? | enlace | /tareas |
 | `/ia` | — | Dame ideas de contenido para esta semana | responde | cambia el texto |
 | `/ia` | — | Analiza qué tipo de posts funcionan mejor | responde | cambia el texto |
 | `/ia` | — | Ayúdame a armar una estrategia de anuncios | responde | cambia el texto |
 | `/ia` | — | Escribe un copy para Instagram | responde | cambia el texto |
 | `/ia` | — | Usar una plantilla | responde | cambia el texto |
-| `/ia` | — | Enviar mensaje a Hubi | no se pudo pulsar | elementHandle.click: Timeout 4000ms exceeded.; lo tapa aside. |
+| `/ia` | — | Enviar mensaje a Hubi | deshabilitado |  |
 | `/marcas` | — | Nueva marca | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/marcas` | — | Cards | ya activo | estaba seleccionado |
 | `/marcas` | — | Tabla | responde | cambia un estado; cambia el texto |
@@ -488,7 +488,6 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/marcas` | Nueva marca / Cuenta de cliente | Cancelar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/marcas` | Nueva marca / Cuenta de cliente | Crear marca | responde | cambia el texto |
 | `/marca` | — | Guardar | responde | cambia el texto; intenta guardar (bloqueado) |
-| `/marca` | — | Aceptar todas | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `/marca` | — | Agregar persona | responde | cambia el texto; cambia un campo; intenta guardar (bloqueado) |
 | `/marca` | — | Aceptada | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `/marca` | — | Eliminar Fernanda Ríos | responde | abre una ventana; cambia el texto |
@@ -496,16 +495,12 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/marca` | — | Eliminar Rodrigo Castellanos | responde | abre una ventana; cambia el texto |
 | `/marca` | — | Aceptada | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `/marca` | — | Eliminar Camila Vega | responde | abre una ventana; cambia el texto |
-| `/marca` | — | Aceptar | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/marca` | — | Eliminar Nueva persona | responde | abre una ventana; cambia el texto |
 | `/marca` | ¿Eliminar a «Fernanda Ríos»? | Cancelar | responde | cierra una ventana; cambia el texto |
 | `/marca` | ¿Eliminar a «Fernanda Ríos»? | Eliminar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo; intenta guardar (bloqueado) |
 | `/marca` | ¿Eliminar a «Rodrigo Castellanos»? | Cancelar | responde | cierra una ventana; cambia el texto |
 | `/marca` | ¿Eliminar a «Rodrigo Castellanos»? | Eliminar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo; intenta guardar (bloqueado) |
 | `/marca` | ¿Eliminar a «Camila Vega»? | Cancelar | responde | cierra una ventana; cambia el texto |
 | `/marca` | ¿Eliminar a «Camila Vega»? | Eliminar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo; intenta guardar (bloqueado) |
-| `/marca` | ¿Eliminar a «Nueva persona»? | Cancelar | responde | cierra una ventana; cambia el texto |
-| `/marca` | ¿Eliminar a «Nueva persona»? | Eliminar | responde | cierra una ventana; cambia el texto; cambia un campo; intenta guardar (bloqueado) |
 | `/archivos` | — | Ver proyectos | responde | cambia un estado; cambia el texto; cambia un campo |
 | `/archivos` | — | Inicio de la biblioteca | sin efecto visible |  |
 | `/archivos` | — | Carpeta | responde | cambia el texto; cambia un campo |
@@ -562,22 +557,19 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/anuncios` | — | Anuncios | sin efecto visible |  |
 | `/anuncios` | — | Ideas | sin efecto visible |  |
 | `/anuncios` | — | Reportes | enlace | /reportes |
-| `/anuncios` | — | Gasto Total | sin efecto visible |  |
-| `/anuncios` | — | Visitas al perfil | sin efecto visible |  |
-| `/anuncios` | — | Costo por visita al perfil | sin efecto visible |  |
-| `/anuncios` | — | CTR Promedio | sin efecto visible |  |
 | `/anuncios` | — | Buscar anuncios | responde | cambia el contenido |
 | `/anuncios` | — | Cards | sin efecto visible |  |
 | `/anuncios` | — | Tabla | responde | cambia el texto |
 | `/anuncios` | — | Funnels | responde | cambia el texto |
-| `/anuncios` | — | Analizar | responde | cambia el texto |
-| `/anuncios` | — | Analizar | responde | cambia el texto |
-| `/anuncios` | — | Analizar | responde | cambia el texto |
-| `/anuncios` | — | Analizar | responde | cambia el texto |
-| `/anuncios` | — | Analizar | responde | cambia el texto |
-| `/anuncios` | — | Analizar | responde | cambia el texto |
-| `/anuncios` | — | Analizar | responde | cambia el texto |
-| `/anuncios` | — | Analizar | responde | cambia el texto |
+| `/anuncios` | — | Ver ejemplo | responde | abre una ventana; cambia el texto |
+| `/anuncios` | — | Ver ejemplo | responde | abre una ventana; cambia el texto |
+| `/anuncios` | — | Ver ejemplo | responde | abre una ventana; cambia el texto |
+| `/anuncios` | — | Ver ejemplo | responde | abre una ventana; cambia el texto |
+| `/anuncios` | — | Ver ejemplo | responde | abre una ventana; cambia el texto |
+| `/anuncios` | — | Ver ejemplo | responde | abre una ventana; cambia el texto |
+| `/anuncios` | — | Ver ejemplo | responde | abre una ventana; cambia el texto |
+| `/anuncios` | — | Ver ejemplo | responde | abre una ventana; cambia el texto |
+| `/anuncios` | Ejemplo de diagnóstico | Cerrar | responde | cierra una ventana; cambia el texto |
 | `/crm` | — | Nueva cotización | deshabilitado |  |
 | `/crm` | — | Nuevo prospecto | responde | abre una ventana; cambia el texto; cambia un campo |
 | `/crm` | — | Pipeline | ya activo | estaba seleccionado |
@@ -614,21 +606,21 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `(sidebar y Hubi)` | — | Notificaciones | responde | abre una ventana; cambia un estado; cambia el texto |
 | `(sidebar y Hubi)` | — | Dashboard | enlace | /dashboard |
 | `(sidebar y Hubi)` | — | Chat | enlace | /chat |
-| `(sidebar y Hubi)` | — | Mi Espacio 2 | enlace | /tareas |
+| `(sidebar y Hubi)` | — | Mi espacio 2 | enlace | /tareas |
 | `(sidebar y Hubi)` | — | Calendario | enlace | /calendario |
 | `(sidebar y Hubi)` | — | CRM | enlace | /crm |
 | `(sidebar y Hubi)` | — | Marcas | enlace | /marcas |
 | `(sidebar y Hubi)` | — | Automatizaciones | enlace | /automatizaciones |
 | `(sidebar y Hubi)` | — | Cambiar marca activa (Min) | responde | abre una ventana; cambia un estado; cambia el texto |
 | `(sidebar y Hubi)` | — | Nueva marca | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `(sidebar y Hubi)` | — | Núcleo de Marca | enlace | /marca |
+| `(sidebar y Hubi)` | — | Núcleo de marca | enlace | /marca |
 | `(sidebar y Hubi)` | — | Content Manager | enlace | /archivos |
 | `(sidebar y Hubi)` | — | Proyectos | enlace | /proyectos |
 | `(sidebar y Hubi)` | — | Social Media | enlace | /parrillas |
 | `(sidebar y Hubi)` | — | Ads | enlace | /anuncios |
 | `(sidebar y Hubi)` | — | Cambiar tema | responde | cambia la clase de la página |
 | `(sidebar y Hubi)` | — | Soporte de Hubly | responde | abre una ventana; cambia un estado; cambia el texto |
-| `(sidebar y Hubi)` | — | Buscar (⌘K) | responde | abre una ventana; cambia un estado; cambia el texto |
+| `(sidebar y Hubi)` | — | Buscar | responde | abre una ventana; cambia un estado; cambia el texto |
 | `(sidebar y Hubi)` | — | Perfil de Jair (Dueño). Clic para editar perfil o espacio de | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `(sidebar y Hubi)` | — | Ir a Ajustes | enlace | /ajustes |
 | `(sidebar y Hubi)` | Seleccionar marca activa | CB Café Bruma | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
@@ -671,17 +663,17 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `(sidebar y Hubi)` | Hubi | Estatus del proyecto | responde | cambia el texto |
 | `(sidebar y Hubi)` | Hubi | Enviar consulta a Hubi | deshabilitado |  |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Crear o programar post Abre el compositor de posts, Reels y  | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo (editor: lo cubre compositor.spec) |
-| `(sidebar y Hubi)` | Resultados de búsqueda | Crear nueva marca Configura identidad y compromisos mensuale | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `(sidebar y Hubi)` | Resultados de búsqueda | Invitar miembro al equipo Genera invitación local con rol y  | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `(sidebar y Hubi)` | Resultados de búsqueda | Revisar sugerencias de metas Motor de reglas sobre el cumpli | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
-| `(sidebar y Hubi)` | Resultados de búsqueda | Configurar widgets del dashboard Mostrar, ocultar, cambiar c | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
+| `(sidebar y Hubi)` | Resultados de búsqueda | Crear marca Configura identidad y compromisos mensuales | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `(sidebar y Hubi)` | Resultados de búsqueda | Invitar al equipo Genera una invitación con rol y marcas asi | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `(sidebar y Hubi)` | Resultados de búsqueda | Revisar sugerencias Compromisos propuestos según el cumplimi | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
+| `(sidebar y Hubi)` | Resultados de búsqueda | Configurar widgets Mostrar, ocultar, cambiar columna o reord | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Pregúntale a Hubi Consulta tareas vencidas, salud de cuentas | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Dashboard · Inicio Resumen operativo, tareas, libretas y apr | responde | cierra una ventana; cambia un estado; cambia el texto |
-| `(sidebar y Hubi)` | Resultados de búsqueda | Dashboard · Salud de Cuentas Cumplimiento de entregas, presu | responde | navega a /dashboard/salud-cuentas; cierra una ventana; cambia un estado |
+| `(sidebar y Hubi)` | Resultados de búsqueda | Dashboard · Salud de cuentas Cumplimiento de entregas, presu | responde | navega a /dashboard/salud-cuentas; cierra una ventana; cambia un estado |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Dashboard · Equipo Carga operativa, actividad semanal e invi | responde | navega a /dashboard/equipo; cierra una ventana; cambia un estado |
-| `(sidebar y Hubi)` | Resultados de búsqueda | Mi Espacio (Tareas y Libretas Kraft) Gestión de entregables  | responde | navega a /tareas; cierra una ventana; cambia un estado |
-| `(sidebar y Hubi)` | Resultados de búsqueda | Calendario Editorial Planeación mensual de publicaciones | responde | navega a /calendario; cierra una ventana; cambia un estado |
-| `(sidebar y Hubi)` | Resultados de búsqueda | Social Media / Parrillas Parrilla de contenidos y flujo de a | responde | navega a /parrillas; cierra una ventana; cambia un estado |
+| `(sidebar y Hubi)` | Resultados de búsqueda | Mi espacio · Tareas y libretas Entregables y notas de estrat | responde | navega a /tareas; cierra una ventana; cambia un estado |
+| `(sidebar y Hubi)` | Resultados de búsqueda | Calendario Planeación mensual de posts | responde | navega a /calendario; cierra una ventana; cambia un estado |
+| `(sidebar y Hubi)` | Resultados de búsqueda | Social Media · Parrillas Parrilla de posts y flujo de aproba | responde | navega a /parrillas; cierra una ventana; cambia un estado |
 | `(sidebar y Hubi)` | Resultados de búsqueda | CB Café Bruma (@cafebruma) Cafetería de especialidad y tosta | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `(sidebar y Hubi)` | Resultados de búsqueda | M Min (@min) minerales y cristales decorativos al mayoreo ·  | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `(sidebar y Hubi)` | Resultados de búsqueda | CN Clínica Norte (@clinicanorte.derma) Dermatología clínica  | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
@@ -689,8 +681,8 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `(sidebar y Hubi)` | Resultados de búsqueda | REPORTES SIN POWERPOINT N° 02 · OCT 26 Reportes en vivo | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `(sidebar y Hubi)` | Resultados de búsqueda | TU DÍA EN MI ESPACIO N° 03 · OCT 26 Productividad | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `(sidebar y Hubi)` | Resultados de búsqueda | NÚCLEO DE MARCA N° 04 · OCT 26 Estrategia IA | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `(sidebar y Hubi)` | Resultados de búsqueda | Conecta las redes de tu cliente Min · Jair · Vence 2026-10-3 | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
-| `(sidebar y Hubi)` | Resultados de búsqueda | Manda tu primer reporte Min · Jair · Vence 2026-11-01 alta | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
+| `(sidebar y Hubi)` | Resultados de búsqueda | Conecta las redes de tu cliente Min · Jair · Vence hoy Alta | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
+| `(sidebar y Hubi)` | Resultados de búsqueda | Manda tu primer reporte Min · Jair · Vence mañana Alta | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Ajustar horario a 8:00 am en post de panqué de cardamomo Caf | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Mandar liga de parrilla de noviembre a Elena por WhatsApp Ca | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
 | `(sidebar y Hubi)` | Editar perfil y espacio de trabajo | Cerrar menú de perfil | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
