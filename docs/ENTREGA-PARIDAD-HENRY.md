@@ -18,7 +18,8 @@ Ejecutadas en la rama de integración, con servidor propio en el puerto 3004.
 
 ## Pendiente tras la integración
 
-- **Táctiles en móvil:** una medición a 390 px en esta rama encontró controles bajo 44 px en las 12 rutas de B (por ejemplo 19 de 22 en `/tareas` y 9 de 9 en `/automatizaciones`), en claro y oscuro. Contradice la tabla de `entregas/B.md`, que las marca como conformes. Lo que sí se confirmó es que no hay desborde horizontal ni errores de página.
+- **Táctiles en móvil:** la tabla de `entregas/B.md` marcaba sus rutas como conformes, pero una medición a 390 px encontró controles bajo 44 px en las 12 (por ejemplo 19 de 22 en `/tareas`). Se corrigió ampliando a `.hubly-main` la regla móvil. Quedan bajo 44 px, medidos en el contenido de cada página: las casillas de tarea en `/tareas` (círculo de 18 px con área pulsable de 44 px por pseudoelemento), la casilla «Ver archivadas» en `/marcas` (13 px, su etiqueta mide 44 de alto) y el nombre «Min» en sus tarjetas (27 de ancho). Las ventanas abiertas de esas rutas no se midieron.
+- **`/chat` a 390:** muestra la lista y el panel a la vez, y el texto «Selecciona una conversación» queda cortado en una columna de 103 px. Ya pasaba en la rama de B.
 - **Pestañas falsas en `/anuncios`:** «Tableros», «Anuncios» e «Ideas» solo cambian el resalte; el contenido es el mismo.
 - **Sin efecto visible en `/dashboard/equipo`:** «7 días», «30 días», «90 días» y «Semana» aparecen así en la matriz. Falta revisar a mano si son botones muertos o si solo no hay datos que cambien.
 - **`web/scripts/check-ui-baseline.json`:** sus topes siguen altos aunque se redujo deuda. No se ejecutó `--update`, porque el plan lo prohíbe sin autorización.
