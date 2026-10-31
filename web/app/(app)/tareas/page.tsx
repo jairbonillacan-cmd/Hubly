@@ -60,6 +60,7 @@ export default function TareasPage() {
           <button
             type="button"
             onClick={() => setTopSection("listas")}
+            aria-pressed={topSection === "listas"}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -98,6 +99,7 @@ export default function TareasPage() {
           <button
             type="button"
             onClick={() => setTopSection("libretas")}
+            aria-pressed={topSection === "libretas"}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -121,6 +123,7 @@ export default function TareasPage() {
           <button
             type="button"
             onClick={() => setTopSection("contenido")}
+            aria-pressed={topSection === "contenido"}
             style={{
               display: "inline-flex",
               alignItems: "center",

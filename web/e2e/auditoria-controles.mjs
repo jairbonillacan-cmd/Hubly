@@ -80,9 +80,10 @@ const enPagina = () => {
   const firma = () => ({
     url: `${location.pathname}${location.search}`,
     ventanas: ventanasVisibles().length,
-    texto: document.body.innerText.length,
-    nodos: (document.querySelector("main") || document.body).querySelectorAll("*").length,
-    estados: document.querySelectorAll('[aria-pressed="true"],[aria-selected="true"],[aria-expanded="true"],[aria-current],[aria-checked="true"]').length,
+    texto: document.body.innerText.slice(0, 15000),
+    campos: [...document.querySelectorAll("input, select, textarea")].map((e) => e.value).join("|"),
+    nodos: document.body.querySelectorAll("*").length,
+    estados: [...document.querySelectorAll('[aria-pressed="true"],[aria-selected="true"],[aria-expanded="true"],[aria-current],[aria-checked="true"]')].map((e) => e.getAttribute("aria-label") || e.innerText || e.tagName).join(";"),
     tema: document.documentElement.className,
     foco: document.activeElement ? `${document.activeElement.tagName}:${(document.activeElement.getAttribute("aria-label") || "").slice(0, 20)}` : "",
   });
@@ -102,8 +103,9 @@ const diferencias = (a, b) => {
   if (b.ventanas < a.ventanas) c.push("cierra una ventana");
   if (a.tema !== b.tema) c.push("cambia la clase de la página");
   if (a.estados !== b.estados) c.push("cambia un estado");
-  if (Math.abs(a.texto - b.texto) > 0 && a.url === b.url) c.push("cambia el texto");
+  if (a.texto !== b.texto && a.url === b.url) c.push("cambia el texto");
   else if (a.nodos !== b.nodos && a.url === b.url) c.push("cambia el contenido");
+  if (a.campos !== b.campos && a.url === b.url) c.push("cambia un campo");
   return c;
 };
 
@@ -267,7 +269,7 @@ const enVentana = filas.filter((f) => f.ventana).length;
 const md = [
   "# Matriz de controles de Hubly",
   "",
-  `Generada con \`npm run audit:controles\` en modo demo el ${new Date().toISOString().slice(0, 10)}. Cubre botones, enlaces y pestañas visibles al cargar cada ruta, la barra lateral y el botón de Hubi, y los controles dentro de cada menú, modal o panel que abre un control de la página (una ronda de profundidad).`,
+  `Generada con \`npm run audit:controles\` en modo demo el ${new Date().toISOString().slice(0, 10)} (previo a la integración). Cubre botones, enlaces y pestañas visibles al cargar cada ruta, la barra lateral y el botón de Hubi, y los controles dentro de cada menú, modal o panel que abre un control de la página (una ronda de profundidad).`,
   "",
   "**Qué significa:** «responde» indica que pulsar cambió la página (el detalle dice qué cambió) sin error; no prueba que el resultado sea correcto ni que persista, porque la auditoría bloquea las escrituras. La persistencia y los permisos se prueban en `e2e/` y `tests/`. «Ya activo» es una pestaña o filtro que ya estaba seleccionado, así que no cambia nada: es lo esperado. «Sin efecto visible» pide revisión manual: puede ser un botón muerto o un cambio que la auditoría no detecta. Los editores (compositor) se abren pero no se recorren aquí: los cubre `compositor.spec.ts`.",
   "",
