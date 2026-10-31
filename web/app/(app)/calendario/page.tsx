@@ -61,8 +61,8 @@ const FORMATS = ["Imagen", "Video", "Carrusel", "Reel", "Story", "Solo texto"];
 
 const KIND_STYLE: Record<EntryKind, { color: string; bg: string; Icon: typeof Hash }> = {
   post: { color: "var(--hb-accent-text)", bg: "rgb(var(--hb-accent-rgb) / 0.11)", Icon: Hash },
-  tarea: { color: "#6A6A8C", bg: "#F1F1F6", Icon: ListChecks },
-  actividad: { color: "#A97FC4", bg: "rgba(201, 166, 224, 0.14)", Icon: Camera },
+  tarea: { color: "var(--ui-text-3)", bg: "var(--ui-muted)", Icon: ListChecks },
+  actividad: { color: "var(--ui-text-3)", bg: "var(--ui-muted)", Icon: Camera },
 };
 
 const parseIso = (iso: string) => {

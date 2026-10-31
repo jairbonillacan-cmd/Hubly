@@ -612,8 +612,8 @@ export default function SaaSAppLayout({
             type="button"
             onClick={() => setCmdkOpen(true)}
             className="hubly-icon-btn hb-icon-btn"
-            aria-label="Buscar (⌘K)"
-            title="Buscar (⌘K)"
+            aria-label="Buscar"
+            title="Buscar"
             style={{ width: 32, height: 32 }}
           >
             <Search size={15} />
@@ -645,7 +645,7 @@ export default function SaaSAppLayout({
         aria-label="Navegación principal de Hubly"
         className={`hubly-sidebar hb-sidebar ${
           targetCollapsed ? "is-collapsed" : ""
-        } ${sidebarMotion ? `is-animating is-${sidebarMotion}` : ""} ${mobileDrawerOpen ? "is-mobile-drawer-open" : ""}`.trim()}
+        } ${sidebarMotion ? `is-animating is-${sidebarMotion}` : ""} ${mobileDrawerOpen ? "is-mobile-drawer-open" : ""} ${profileMenuOpen ? "has-profile-popover" : ""}`.trim()}
         data-sidebar-tab={activeSidebarTab}
         style={{
           transition:
@@ -1481,8 +1481,8 @@ export default function SaaSAppLayout({
               type="button"
               onClick={() => setCmdkOpen(true)}
               className="hubly-icon-btn hb-icon-btn"
-              aria-label="Buscar (⌘K)"
-              title="Buscar (⌘K)"
+              aria-label="Buscar"
+              title="Buscar"
             >
               <Search size={18} />
             </button>
