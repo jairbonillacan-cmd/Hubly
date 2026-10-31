@@ -5,12 +5,14 @@ import { backendEnabled } from "@/lib/supabase/config";
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useLayer } from "@/lib/use-layer";
 import {
   HublyBentoIcon as LayoutGrid,
   HublyCalendarIcon as Calendar,
   HublyCheckCircleIcon as CheckCircle2,
   HublyChevronDownIcon as ChevronDown,
   HublyCloseIcon as X,
+  HublyInfoIcon as Info,
   HublyMegaphoneIcon as Megaphone,
   HublyPresentationIcon as Presentation,
   HublyPulseIcon as Gauge,
@@ -450,6 +452,24 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
   );
 }
 
+function ExampleTag() {
+  return (
+    <span
+      style={{
+        flexShrink: 0,
+        background: "var(--ui-muted)",
+        color: "var(--ui-text-3)",
+        fontSize: 11,
+        fontWeight: 600,
+        padding: "2px 8px",
+        borderRadius: 999,
+      }}
+    >
+      Ejemplo
+    </span>
+  );
+}
+
 export default function AnunciosPage() {
   if (backendEnabled) return <LiveUnavailable title="Anuncios" text="Las métricas de anuncios aparecerán cuando conectes las cuentas publicitarias de esta marca." />;
   return <DemoAnunciosPage />;
@@ -464,6 +484,7 @@ function DemoAnunciosPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAd, setSelectedAd] = useState<SampleAdCard | null>(null);
   const [descubreOpen, setDescubreOpen] = useState(true);
+  useLayer(selectedAd !== null, () => setSelectedAd(null));
 
   const visibleAds = SAMPLE_ADS.filter((ad) =>
     searchQuery.trim()
@@ -600,6 +621,25 @@ function DemoAnunciosPage() {
         </div>
       </div>
 
+      <div
+        role="note"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginBottom: 16,
+          padding: "10px 12px",
+          border: "1px solid var(--ui-border)",
+          borderRadius: 12,
+          background: "var(--ui-surface-2)",
+          color: "var(--ui-text-2)",
+          fontSize: 12.5,
+        }}
+      >
+        <Info size={16} style={{ flexShrink: 0, color: "var(--hb-accent-text)" }} />
+        <span>Datos de ejemplo. Aún no hay una cuenta publicitaria conectada: estas cifras y anuncios no son de tu marca.</span>
+      </div>
+
       {/* 4 KPI Cards Row (1:1 with 11-analytics-ads-1440.png) */}
       <div
         style={{
@@ -624,9 +664,8 @@ function DemoAnunciosPage() {
               padding: "20px 22px",
             }}
           >
-            <div style={{ marginBottom: 8 }}>
+            <div style={{ marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
               <span
-                role="button"
                 style={{
                   fontSize: 12,
                   fontWeight: 600,
@@ -637,6 +676,7 @@ function DemoAnunciosPage() {
               >
                 {kpi.label}
               </span>
+              <ExampleTag />
             </div>
             <div
               style={{
@@ -867,25 +907,28 @@ function DemoAnunciosPage() {
                     marginBottom: 12,
                   }}
                 >
-                  <span
-                    style={{
-                      background: "#DCFCE7",
-                      color: "#15803D",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      padding: "3px 10px",
-                      borderRadius: 999,
-                    }}
-                  >
-                    {ad.status}
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                    <span
+                      style={{
+                        background: "#DCFCE7",
+                        color: "#15803D",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        padding: "3px 10px",
+                        borderRadius: 999,
+                      }}
+                    >
+                      {ad.status}
+                    </span>
+                    <ExampleTag />
                   </span>
 
                   <button
                     type="button"
                     onClick={() => setSelectedAd(ad)}
                     style={{
-                      background: "#16324F",
-                      color: "#FFFFFF",
+                      background: "var(--hb-accent)",
+                      color: "var(--on-accent)",
                       border: "none",
                       borderRadius: 8,
                       padding: "5px 12px",
@@ -898,7 +941,7 @@ function DemoAnunciosPage() {
                     }}
                   >
                     <Sparkles size={12} />
-                    <span>Analizar</span>
+                    <span>Ver ejemplo</span>
                   </button>
                 </div>
 
@@ -1102,7 +1145,10 @@ function DemoAnunciosPage() {
               {visibleAds.map((ad) => (
                 <tr key={ad.id} style={{ borderBottom: "1px solid var(--ui-muted)" }}>
                   <td style={{ padding: "12px 16px", fontWeight: 600, color: "var(--ui-text)" }}>
-                    {ad.title}
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                      {ad.title}
+                      <ExampleTag />
+                    </span>
                   </td>
                   <td style={{ padding: "12px 16px" }}>
                     <span
@@ -1165,6 +1211,9 @@ function DemoAnunciosPage() {
           }}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Ejemplo de diagnóstico"
             onClick={(e) => e.stopPropagation()}
             style={{
               width: "100%",
@@ -1196,10 +1245,12 @@ function DemoAnunciosPage() {
                   borderRadius: 999,
                 }}
               >
-                <Sparkles size={13} /> Diagnóstico Creativo Hubi
+                <Sparkles size={13} /> Ejemplo de diagnóstico
               </span>
               <button
                 type="button"
+                aria-label="Cerrar"
+                title="Cerrar"
                 onClick={() => setSelectedAd(null)}
                 style={{ background: "none", border: "none", cursor: "pointer", color: "var(--ui-text-4)" }}
               >
@@ -1207,7 +1258,11 @@ function DemoAnunciosPage() {
               </button>
             </div>
 
-            <h3 style={{ fontSize: 16, fontWeight: 800, color: "var(--ui-text)", margin: "0 0 10px" }}>
+            <p style={{ fontSize: 12.5, color: "var(--ui-text-4)", margin: "0 0 10px" }}>
+              Hubi todavía no analiza anuncios.
+            </p>
+
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--ui-text)", margin: "0 0 10px" }}>
               {selectedAd.title}
             </h3>
 
