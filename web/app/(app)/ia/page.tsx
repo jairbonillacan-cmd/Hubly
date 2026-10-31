@@ -367,7 +367,7 @@ function DemoHublyAIPage() {
                       networks: activeBrand.connectedNetworks.slice(0, 2),
                       format: "Reel / Video",
                       cover: "sun",
-                      scheduledDate: "2026-11-22",
+                      scheduledDate: "",
                       scheduledTime: "13:00",
                       status: "pending",
                       assignee: "Jair B.",

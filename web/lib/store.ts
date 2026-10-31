@@ -186,6 +186,8 @@ export interface HublyStoreState extends HublyWorkspaceData {
     role?: "client" | "agency"
   ) => void;
   approveAllBrandPosts: (brandId: string, authorName?: string, role?: "client" | "agency") => void;
+  /** Cambio puntual desde tabla o Kanban; el estado de publicación va por updatePostStatus. */
+  updatePostFields: (postId: string, patch: Partial<Pick<SocialPost, "workflowStatusId" | "format" | "assigneeIds" | "assignee" | "customFields">>) => void;
   deletePost: (postId: string) => void;
   /** Devuelve el id de la copia, que nace como borrador sin fecha ni resultados. */
   duplicatePost: (postId: string) => string | null;
@@ -1284,6 +1286,13 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
 
   setCalendarActivities: (activities) => {
     set({ calendarActivities: activities });
+    persistWorkspaceState(get());
+  },
+
+  updatePostFields: (postId, patch) => {
+    set((s) => ({
+      posts: s.posts.map((p) => (p.id === postId ? withPostLog({ ...p, ...patch }, "Actualizó el post desde el calendario", s.profile?.name || "Equipo") : p)),
+    }));
     persistWorkspaceState(get());
   },
 

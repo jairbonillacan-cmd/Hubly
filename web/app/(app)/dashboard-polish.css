@@ -1882,3 +1882,111 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
   .hubly-composer-foot small { display: none; }
   .hubly-phone-host { min-height: 560px; }
 }
+
+/* Calendario de Social Media: Mes, Semana, Tabla y Kanban */
+.hubly-social-calendar { display: flex; flex-direction: column; gap: 14px; color: var(--ui-text); }
+.hubly-social-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.hubly-social-period { display: flex; align-items: center; gap: 4px; }
+.hubly-social-period button { display: grid; place-items: center; min-width: 32px; height: 32px; border: 0; border-radius: 8px; background: transparent; color: var(--ui-text-2); font-size: 13px; font-weight: 600; cursor: pointer; }
+.hubly-social-period button:hover { background: var(--ui-muted); }
+.hubly-social-period .is-today { padding: 0 8px; }
+.hubly-social-period h2 { margin: 0 0 0 10px; font-size: 21px; font-weight: 800; color: var(--ui-text); }
+.hubly-social-tools { position: relative; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.hubly-social-quota { display: grid; place-items: center; min-width: 34px; height: 34px; padding: 0 6px; border: 2px solid var(--ui-border); border-radius: 999px; font-size: 11.5px; font-weight: 700; color: var(--ui-text-2); }
+.hubly-social-views { display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--ui-muted); }
+.hubly-social-views button { height: 30px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; color: var(--ui-text-3); font-size: 13px; font-weight: 600; cursor: pointer; }
+.hubly-social-views button[aria-selected="true"] { background: var(--ui-surface); color: var(--ui-text); box-shadow: 0 1px 2px rgb(15 23 42 / 0.1); }
+.hubly-social-iconset { display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--ui-muted); }
+.hubly-social-iconset button { display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 8px; background: transparent; color: var(--ui-text-2); cursor: pointer; }
+.hubly-social-iconset button:hover, .hubly-social-iconset button[aria-expanded="true"] { background: var(--ui-surface); }
+.hubly-social-iconset button[data-active] { color: var(--hb-accent-text); background: var(--ui-surface); }
+.hubly-social-pop { position: absolute; top: calc(100% + 8px); right: 0; z-index: 30; display: flex; flex-direction: column; gap: 6px; width: min(340px, calc(100vw - 32px)); max-height: 70vh; overflow-y: auto; padding: 14px; border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-surface); box-shadow: 0 16px 36px -14px rgb(8 15 24 / 0.35); }
+.hubly-social-pop h4 { margin: 6px 0 2px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ui-text-3); }
+.hubly-social-pop > div { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; }
+.hubly-social-pop label { display: flex; align-items: center; gap: 6px; font-size: 12.5px; }
+.hubly-social-menuitem { display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px; border: 0; border-radius: 10px; background: transparent; color: inherit; text-align: left; cursor: pointer; }
+.hubly-social-menuitem:hover { background: var(--ui-muted); }
+.hubly-social-menuitem .is-icon { display: grid; place-items: center; flex-shrink: 0; width: 34px; height: 34px; border-radius: 9px; background: var(--ui-muted); color: var(--ui-text-2); }
+.hubly-social-menuitem > span:nth-child(2) { flex: 1; min-width: 0; }
+.hubly-social-menuitem b { display: block; font-size: 13.5px; }
+.hubly-social-menuitem small { display: block; font-size: 12px; color: var(--ui-text-3); }
+.hubly-social-summary { margin: 0; font-size: 13px; color: var(--ui-text-3); }
+.hubly-social-summary button { border: 0; border-bottom: 1px dotted currentColor; background: transparent; color: var(--ui-text-2); font: inherit; cursor: pointer; }
+.hubly-social-month-scroll, .hubly-social-week-scroll, .hubly-social-table-scroll, .hubly-social-kanban { overflow-x: auto; }
+.hubly-social-month { display: grid; grid-template-columns: repeat(7, minmax(110px, 1fr)); min-width: 770px; border: 1px solid var(--ui-border); border-radius: 14px; overflow: hidden; background: var(--ui-surface); }
+.hubly-social-weekday { padding: 8px 10px; border-bottom: 1px solid var(--ui-border); font-size: 11.5px; font-weight: 700; color: var(--ui-text-3); }
+.hubly-social-day { display: flex; flex-direction: column; gap: 4px; min-height: 108px; padding: 6px; border-right: 1px solid var(--ui-border); border-bottom: 1px solid var(--ui-border); min-width: 0; }
+.hubly-social-day[data-outside] { background: var(--ui-muted); opacity: 0.65; }
+.hubly-social-day[data-over], .hubly-social-week-col[data-over], .hubly-social-column[data-over] { outline: 2px solid var(--hb-accent); outline-offset: -2px; }
+.hubly-social-day-head { display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--ui-text-2); }
+.hubly-social-day[data-today] .hubly-social-day-head span, .hubly-social-week-col[data-today] header b { display: grid; place-items: center; min-width: 22px; height: 22px; border-radius: 50%; background: var(--hb-accent); color: var(--on-accent); }
+.hubly-social-day-head button { display: grid; place-items: center; width: 22px; height: 22px; border: 0; border-radius: 6px; background: transparent; color: var(--ui-text-3); cursor: pointer; opacity: 0; }
+.hubly-social-day:hover .hubly-social-day-head button, .hubly-social-day-head button:focus-visible { opacity: 1; }
+.hubly-social-chip { display: flex; align-items: center; gap: 5px; width: 100%; min-width: 0; padding: 3px 6px; border: 0; border-left: 3px solid var(--hb-accent); border-radius: 6px; background: var(--ui-muted); color: var(--ui-text-1); font-size: 11.5px; text-align: left; cursor: pointer; }
+.hubly-social-chip > span:last-child { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.hubly-social-dots { display: inline-flex; flex-shrink: 0; align-items: center; gap: 3px; }
+.hubly-social-dots i { width: 7px; height: 7px; border-radius: 50%; }
+.hubly-social-badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; white-space: nowrap; background: var(--ui-muted); color: var(--ui-text-2); }
+.hubly-social-badge[data-tone="warn"] { background: color-mix(in srgb, #F59E0B 18%, var(--ui-surface)); color: var(--ui-text-1); }
+.hubly-social-badge[data-tone="info"] { background: rgb(var(--hb-accent-rgb) / 0.14); color: var(--hb-accent-text); }
+.hubly-social-badge[data-tone="ok"] { background: color-mix(in srgb, #10B981 18%, var(--ui-surface)); color: var(--ui-text-1); }
+.hubly-social-badge[data-tone="danger"] { background: color-mix(in srgb, #EF4444 16%, var(--ui-surface)); color: var(--ui-text-1); }
+.hubly-social-week { display: grid; grid-template-columns: repeat(7, minmax(170px, 1fr)); gap: 10px; min-width: 1190px; }
+.hubly-social-week-col { display: flex; flex-direction: column; gap: 8px; min-height: 420px; padding: 10px; border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-surface); }
+.hubly-social-week-col[data-today] { border-color: var(--hb-accent); }
+.hubly-social-week-col header { display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; font-weight: 700; color: var(--ui-text-2); }
+.hubly-social-card { border: 1px solid var(--ui-border); border-radius: 12px; background: var(--ui-surface); overflow: hidden; }
+.hubly-social-card[data-dragging] { opacity: 0.4; }
+.hubly-social-card-open { display: flex; flex-direction: column; gap: 5px; width: 100%; padding: 0 0 8px; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.hubly-social-card-open > :not(.hubly-social-card-media) { margin-inline: 8px; }
+.hubly-social-card-open strong { font-size: 12.5px; line-height: 1.25; overflow-wrap: anywhere; }
+.hubly-social-card-open em { font-size: 11px; font-style: normal; font-weight: 600; color: var(--hb-accent-text); }
+.hubly-social-card-media { position: relative; display: block; aspect-ratio: 4 / 3; background: var(--ui-muted); overflow: hidden; }
+.hubly-social-card-media.is-small { flex-shrink: 0; width: 36px; height: 36px; aspect-ratio: auto; border-radius: 8px; }
+.hubly-social-card-media img, .hubly-social-card-media video { width: 100%; height: 100%; object-fit: cover; }
+.hubly-social-play { position: absolute; left: 6px; bottom: 6px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: rgb(0 0 0 / 0.6); color: #FFFFFF; }
+.hubly-social-card-meta { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; color: var(--ui-text-3); }
+.hubly-social-card-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+.hubly-social-add { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 34px; margin-top: auto; border: 1.5px dashed var(--ui-border-strong); border-radius: 10px; background: transparent; color: var(--ui-text-2); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.hubly-social-add:hover { background: var(--ui-muted); }
+.hubly-social-undated h3 { margin: 0 0 8px; font-size: 13px; color: var(--ui-text-2); }
+.hubly-social-undated > div { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+.hubly-social-table-scroll { border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-surface); }
+.hubly-social-table { width: 100%; min-width: 1000px; border-collapse: collapse; font-size: 13px; color: var(--ui-text-1); }
+.hubly-social-modal .hubly-social-table { min-width: 620px; }
+.hubly-social-table th { padding: 10px 12px; border-bottom: 1px solid var(--ui-border); font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em; text-align: left; text-transform: uppercase; white-space: nowrap; color: var(--ui-text-3); }
+.hubly-social-table th button { display: inline-flex; align-items: center; gap: 4px; border: 0; background: transparent; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+.hubly-social-table td { padding: 8px 12px; border-bottom: 1px solid var(--ui-border); vertical-align: middle; }
+.hubly-social-table tbody tr { cursor: pointer; }
+.hubly-social-table tbody tr:hover { background: var(--ui-muted); }
+.hubly-social-table tr[data-muted] { opacity: 0.55; }
+.hubly-social-table-post { display: flex; align-items: center; gap: 10px; min-width: 240px; }
+.hubly-social-table-post button { min-width: 0; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 600; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.hubly-social-table-post small { flex-shrink: 0; color: var(--ui-text-3); }
+.hubly-social-table-new button { display: inline-flex; align-items: center; gap: 6px; border: 0; background: transparent; color: var(--ui-text-2); font: inherit; cursor: pointer; }
+.hubly-social-cell { max-width: 170px; height: 30px; padding: 0 6px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: var(--ui-text-1); font: inherit; font-size: 12.5px; }
+.hubly-social-cell:hover:not(:disabled), .hubly-social-cell:focus { border-color: var(--ui-border-strong); }
+.hubly-social-kanban-head label { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--ui-text-2); }
+.hubly-social-kanban-head .hubly-social-cell { border-color: var(--ui-border); }
+.hubly-social-kanban { display: flex; gap: 10px; align-items: flex-start; padding-bottom: 6px; }
+.hubly-social-column { display: flex; flex-direction: column; flex-shrink: 0; gap: 8px; width: 272px; padding: 10px; border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-surface); }
+.hubly-social-column[data-locked] { opacity: 0.55; }
+.hubly-social-column header { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: var(--ui-text-1); }
+.hubly-social-column header i { width: 9px; height: 9px; border-radius: 50%; }
+.hubly-social-column header b { margin-left: auto; font-size: 12px; color: var(--ui-text-3); }
+.hubly-social-column > div { display: flex; flex-direction: column; gap: 8px; }
+.hubly-social-kanban-item { display: flex; flex-direction: column; gap: 3px; }
+.hubly-social-kanban-item .hubly-social-cell { max-width: none; width: 100%; height: 26px; color: var(--ui-text-3); font-size: 11.5px; }
+.hubly-social-card[data-variant="kanban"] .hubly-social-card-media { aspect-ratio: 16 / 9; }
+.hubly-social-modal[data-wide] { width: min(960px, 100%); }
+.hubly-social-modal { width: min(620px, 100%); height: auto; max-height: min(720px, calc(100dvh - 32px)); }
+.hubly-social-modal-body { flex: 1; min-height: 0; overflow-y: auto; padding: 16px 20px; color: var(--ui-text); }
+.hubly-import-source, .hubly-import-map { display: grid; gap: 12px; }
+.hubly-import-source label, .hubly-import-map label { display: grid; gap: 4px; font-size: 12.5px; font-weight: 600; color: var(--ui-text-2); }
+.hubly-import-map .hubly-social-cell { max-width: none; border-color: var(--ui-border); height: 36px; }
+.hubly-import-source > button { justify-self: start; }
+.hubly-import-skip { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; font-size: 13px; }
+@media (max-width: 767.98px) {
+  .hubly-social-period h2 { font-size: 17px; }
+  .hubly-social-tools { width: 100%; }
+}

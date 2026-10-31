@@ -298,3 +298,52 @@ test("duplicar crea un borrador limpio y eliminar quita el post", async () => {
   useHublyStore.getState().deletePost("orig");
   assert.equal(useHublyStore.getState().posts.some((p) => p.id === "orig"), false);
 });
+
+test("calendario: semana desde el lunes, cruce de mes y año, zona de México", async () => {
+  const { monthGrid, periodLabel, shiftPeriod, todayInZone, weekDays, publicationLabel, sortPosts, inPeriod } = await import("../lib/calendar-views");
+  assert.deepEqual(weekDays("2026-11-01"), ["2026-10-26", "2026-10-27", "2026-10-28", "2026-10-29", "2026-10-30", "2026-10-31", "2026-11-01"]);
+  assert.equal(weekDays("2026-11-02")[0], "2026-11-02");
+  assert.match(periodLabel("2026-11-01", "semana"), /^26 oct.*1 nov.*2026$/);
+  assert.match(periodLabel("2026-12-31", "semana"), /28.*dic.*2026.*3 ene.*2027/);
+  assert.match(periodLabel("2026-11-15", "mes"), /^Noviembre 2026$/);
+  const grid = monthGrid("2026-02-10");
+  assert.equal(grid.length % 7, 0);
+  assert.equal(new Date(`${grid[0]}T12:00:00Z`).getUTCDay(), 1);
+  assert.ok(grid.includes("2026-02-28"));
+  assert.equal(shiftPeriod("2026-01-31", "mes", 1), "2026-02-01");
+  assert.equal(shiftPeriod("2026-12-15", "mes", 1), "2027-01-01");
+  assert.equal(shiftPeriod("2026-12-30", "semana", 1), "2027-01-06");
+  assert.equal(inPeriod("", "2026-11-01", "mes"), false);
+  // A las 02:00 UTC del 1 de noviembre todavía es 31 de octubre en Ciudad de México.
+  assert.equal(todayInZone(new Date("2026-11-01T02:00:00Z")), "2026-10-31");
+  assert.equal(publicationLabel({ status: "scheduled", scheduledDate: "2026-10-01" }, "2026-10-31").label, "Pendiente de registrar");
+  assert.equal(publicationLabel({ status: "scheduled", scheduledDate: "2026-11-01" }, "2026-10-31").label, "Planificado");
+  const posts = [{ title: "b", scheduledDate: "", scheduledTime: "" }, { title: "a", scheduledDate: "2026-10-02", scheduledTime: "" }, { title: "c", scheduledDate: "2026-10-01", scheduledTime: "" }] as never[];
+  assert.deepEqual(sortPosts(posts, "fecha", "desc", () => "").map((p: { title: string }) => p.title), ["a", "c", "b"]);
+});
+
+test("importar: separadores, comillas, fechas, mapeo y duplicados", async () => {
+  const { guessMapping, parseDelimited, parseImportDate, reviewRows } = await import("../lib/post-import");
+  assert.deepEqual(parseDelimited('Título,Copy\n"Uno, dos","di ""hola"""\n'), [["Título", "Copy"], ["Uno, dos", 'di "hola"']]);
+  assert.deepEqual(parseDelimited("a;b\n1;2"), [["a", "b"], ["1", "2"]]);
+  assert.deepEqual(parseDelimited("a\tb\n1\t2"), [["a", "b"], ["1", "2"]]);
+  assert.equal(parseImportDate("12/11/2026"), "2026-11-12");
+  assert.equal(parseImportDate("2026-11-12T10:00"), "2026-11-12");
+  assert.equal(parseImportDate("31/02/2026"), null);
+  assert.equal(parseImportDate("46000"), "2025-12-09");
+  assert.equal(parseImportDate("mañana"), null);
+  const mapping = guessMapping(["Título", "Descripción", "FECHA", "Red"]);
+  assert.deepEqual(mapping, { title: 0, caption: 1, date: 2, networks: 3 });
+  const rows = reviewRows(
+    [["Uno", "", "2026-11-12", "ig, tiktok"], ["Uno", "", "2026-11-12", "Instagram"], ["", "", "", ""], ["Dos", "", "ayer", "Orkut"]],
+    mapping,
+    [],
+    []
+  );
+  assert.deepEqual(rows[0].networks, ["Instagram", "TikTok"]);
+  assert.equal(rows[0].duplicate, false);
+  assert.equal(rows[1].duplicate, true);
+  assert.ok(rows[2].errors.length > 0);
+  assert.equal(rows[3].errors.length, 2);
+  assert.equal(rows[0].row, 2);
+});
