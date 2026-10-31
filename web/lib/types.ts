@@ -589,6 +589,7 @@ export interface WorkspaceProfile {
   role: string;
   avatarInitial: string;
   avatarUrl?: string;
+  avatarSourceUrl?: string; // original reducido, para reencuadrar la foto
   timezone: string; // ej. "America/Mexico_City"
   locale: string; // ej. "es-MX"
   theme?: "claro" | "oscuro";

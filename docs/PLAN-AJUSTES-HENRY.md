@@ -1,6 +1,8 @@
 # Traspaso: /ajustes más similar a Henry
 
-Estado al 31 de octubre de 2026: investigación terminada, implementación sin empezar. Ningún cambio de este commit rediseña `/ajustes`.
+Estado: `/ajustes` ya está rediseñado y comprobado en navegador (1440 claro, 1440 oscuro y 375). Lo implementado vive en `web/components/app/ajustes/` y `web/app/(app)/ajustes/page.tsx`; el plan de abajo se conserva como referencia de lo que se decidió y de lo que sigue marcado «Función prevista».
+
+Pendiente conocido: `npm run check:ui` falla por 4 reglas que ya fallaban en el commit anterior (CSS de personas y social, e iconos de lucide en `BuyerPersonas.tsx` y `ProjectEditModal.tsx`); ninguna es de `/ajustes`. Además, el recorte de foto y el flujo de contraseña por correo solo se probaron en modo demo.
 
 ## Evidencia
 

@@ -3,46 +3,46 @@
 import { useState } from "react";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseBrowser } from "@/lib/supabase/browser";
+import { useHublyStore } from "@/lib/store";
+import { HublyLockIcon } from "@/components/app/icons/DuotoneIcons";
 
-/** Solo existe con cuentas reales: en modo demo no hay contraseña que cambiar. */
+/** Solo existe con cuentas reales: en modo demo no hay contraseña que cambiar. Se cambia por correo, igual que al recuperar acceso. */
 export function ChangePassword() {
+  const email = useHublyStore((s) => s.profile?.email);
   const [open, setOpen] = useState(false);
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
 
-  if (!backendEnabled) return <span className="hubly-composer-hint">Disponible al iniciar sesión con una cuenta real.</span>;
-  if (!open) {
-    return (
-      <>
-        <button type="button" className="hubly-media-ghost" onClick={() => setOpen(true)}>Cambiar contraseña</button>
-        {message && <span role="status" className="hubly-composer-hint">{message.text}</span>}
-      </>
-    );
-  }
+  if (!backendEnabled) return <p className="hubly-ajustes-hint">Disponible al iniciar sesión con una cuenta real.</p>;
+
+  const send = async () => {
+    if (!email) return;
+    setBusy(true);
+    setMessage(null);
+    const { error } = await createSupabaseBrowser().auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent("/nueva-clave")}`,
+    });
+    setBusy(false);
+    if (error) return setMessage({ ok: false, text: "No pudimos enviar el correo. Inténtalo otra vez." });
+    setOpen(false);
+    setMessage({ ok: true, text: "Te enviamos un correo para cambiar tu contraseña." });
+  };
+
   return (
-    <form
-      className="hubly-composer-docform"
-      onSubmit={async (e) => {
-        e.preventDefault();
-        if (password.length < 8) return setMessage({ ok: false, text: "Usa al menos 8 caracteres." });
-        if (password !== confirm) return setMessage({ ok: false, text: "Las contraseñas no coinciden." });
-        setBusy(true);
-        const { error } = await createSupabaseBrowser().auth.updateUser({ password });
-        setBusy(false);
-        if (error) return setMessage({ ok: false, text: "No se pudo cambiar. Vuelve a iniciar sesión e inténtalo de nuevo." });
-        setPassword("");
-        setConfirm("");
-        setOpen(false);
-        setMessage({ ok: true, text: "Contraseña actualizada." });
-      }}
-    >
-      <input className="hubly-cal-input" type="password" autoComplete="new-password" aria-label="Nueva contraseña" placeholder="Nueva contraseña" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <input className="hubly-cal-input" type="password" autoComplete="new-password" aria-label="Confirmar contraseña" placeholder="Confirmar" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
-      <button type="submit" className="hubly-media-primary" disabled={busy}>Guardar</button>
-      <button type="button" className="hubly-media-ghost" onClick={() => setOpen(false)}>Cancelar</button>
-      {message && !message.ok && <span role="alert" className="hubly-composer-hint">{message.text}</span>}
-    </form>
+    <div className="hubly-ajustes-inline">
+      {open ? (
+        <>
+          <button type="button" className="hbtn hbtn-primary" disabled={busy} onClick={() => void send()}>
+            {busy ? "Enviando…" : "Enviar correo de restablecimiento"}
+          </button>
+          <button type="button" className="hbtn hbtn-ghost" disabled={busy} onClick={() => setOpen(false)}>Cancelar</button>
+        </>
+      ) : (
+        <button type="button" className="hbtn hbtn-secondary" onClick={() => { setMessage(null); setOpen(true); }}>
+          <HublyLockIcon size={17} /> Cambiar contraseña
+        </button>
+      )}
+      {message && <p role={message.ok ? "status" : "alert"} className="hubly-ajustes-hint">{message.text}</p>}
+    </div>
   );
 }

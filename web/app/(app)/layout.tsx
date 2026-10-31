@@ -1194,7 +1194,7 @@ export default function SaaSAppLayout({
                     width: 20,
                     height: 20,
                     borderRadius: 9999,
-                    background: "var(--hb-accent)",
+                    background: profile.avatarUrl ? `var(--hb-accent) center / cover url(${profile.avatarUrl})` : "var(--hb-accent)",
                     color: "#FFFFFF",
                     fontSize: 8.5,
                     fontWeight: 700,
@@ -1203,7 +1203,7 @@ export default function SaaSAppLayout({
                     justifyContent: "center",
                   }}
                 >
-                  {profile.avatarInitial}
+                  {profile.avatarUrl ? null : profile.avatarInitial}
                 </span>
 
                 <button
@@ -1532,7 +1532,7 @@ export default function SaaSAppLayout({
                   width: 32,
                   height: 32,
                   borderRadius: 9999,
-                  background: "var(--hb-accent)",
+                  background: profile.avatarUrl ? `var(--hb-accent) center / cover url(${profile.avatarUrl})` : "var(--hb-accent)",
                   color: "#FFFFFF",
                   fontWeight: 700,
                   fontSize: 12,
@@ -1542,7 +1542,7 @@ export default function SaaSAppLayout({
                   flexShrink: 0,
                 }}
               >
-                {profile.avatarInitial}
+                {profile.avatarUrl ? null : profile.avatarInitial}
               </div>
 
               {!isEffectiveCollapsed && (
