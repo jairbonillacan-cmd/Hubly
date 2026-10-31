@@ -48,6 +48,15 @@ const contrasteBajo = (page: Page) =>
     return malos;
   });
 
+// El guardado va por POST /api/workspace: se intercepta para que las pruebas no alteren los datos demo guardados.
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/workspace**", (route) =>
+    route.request().method() === "GET"
+      ? route.continue()
+      : route.fulfill({ status: 200, contentType: "application/json", body: "{\"ok\":true}" })
+  );
+});
+
 for (const esquema of ["light", "dark"] as const) {
   for (const ruta of RUTAS) {
     test(`${ruta} en ${esquema}: sin errores ni controles ilegibles`, async ({ page }) => {

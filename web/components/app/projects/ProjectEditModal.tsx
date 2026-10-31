@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X } from "lucide-react";
+import { HublyCloseIcon } from "@/components/app/icons/DuotoneIcons";
 import { useHublyStore } from "@/lib/store";
 import { useLayer } from "@/lib/use-layer";
 import type { BrandProject } from "@/lib/types";
@@ -34,7 +34,7 @@ export function ProjectEditModal({ project, onClose }: { project: BrandProject; 
       >
         <header className="hubly-picker-head">
           <div><h2>Editar proyecto</h2></div>
-          <button type="button" aria-label="Cerrar" autoFocus onClick={onClose}><X size={18} /></button>
+          <button type="button" aria-label="Cerrar" autoFocus onClick={onClose}><HublyCloseIcon size={18} /></button>
         </header>
         <div className="hubly-social-modal-body hubly-import-map">
           <label>Nombre<input className="hubly-cal-input" required disabled={readOnly} value={title} onChange={(e) => setTitle(e.target.value)} /></label>
