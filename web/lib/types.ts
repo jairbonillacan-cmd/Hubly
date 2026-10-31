@@ -60,6 +60,53 @@ export interface SocialPost {
     shares: number;
   };
   comments: PostComment[];
+  mediaUrl?: string;
+  notifyOnPublish?: boolean;
+  notes?: string;
+  todos?: PostTodo[];
+  documents?: PostDocument[];
+  chat?: PostChatMessage[];
+  activity?: PostActivityEntry[];
+}
+
+export interface PostTodo {
+  id: string;
+  text: string;
+  done: boolean;
+}
+
+export interface PostDocument {
+  id: string;
+  name: string;
+  url: string;
+}
+
+export interface PostChatMessage {
+  id: string;
+  author: string;
+  text: string;
+  at: string; // ISO
+}
+
+export interface PostActivityEntry {
+  id: string;
+  author: string;
+  text: string;
+  at: string; // ISO
+}
+
+export type PostExtrasPatch = Partial<
+  Pick<SocialPost, "notes" | "todos" | "documents" | "chat">
+>;
+
+export interface ContentIdea {
+  id: string;
+  brandId: string;
+  title: string;
+  notes: string;
+  pillar: string;
+  createdAt: string; // ISO
+  convertedPostId?: string;
 }
 
 export type PostItem = SocialPost;
@@ -466,6 +513,7 @@ export interface HublyWorkspaceData {
   activeBrandId: string;
   brands: BrandWorkspace[];
   posts: SocialPost[];
+  ideas?: ContentIdea[];
   tasks: AgencyTask[];
   notebooks: NotebookItem[];
   assets: MediaAsset[];

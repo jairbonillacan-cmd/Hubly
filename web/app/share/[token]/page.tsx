@@ -14,6 +14,12 @@ import {
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { Cover } from "@/components/Cover";
+import { SocialPreview } from "@/components/previews/SocialPreview";
+import {
+  networkToPlatform,
+  POST_PREVIEW_CONFIG,
+  socialPostToPreview,
+} from "@/components/previews/from-social-post";
 
 function ClientSharePortalInner() {
   const params = useParams<{ token: string }>();
@@ -228,6 +234,7 @@ function ClientSharePortalInner() {
             const isApproved =
               post.status === "approved" || post.status === "scheduled" || post.status === "published";
             const hasChanges = post.status === "changes";
+            const platform = networkToPlatform(post.network || post.networks[0]);
 
             return (
               <div
@@ -244,16 +251,12 @@ function ClientSharePortalInner() {
                     : undefined,
                 }}
               >
-                <div style={{ position: "relative", height: 220 }}>
-                  <Cover kind={post.cover} />
+                <div style={{ padding: "12px 12px 0" }}>
                   <div
                     style={{
-                      position: "absolute",
-                      top: 12,
-                      left: 12,
-                      right: 12,
                       display: "flex",
                       justifyContent: "space-between",
+                      marginBottom: 10,
                     }}
                   >
                     <span
@@ -284,6 +287,16 @@ function ClientSharePortalInner() {
                       {post.format}
                     </span>
                   </div>
+                  {platform ? (
+                    <SocialPreview
+                      post={socialPostToPreview(post, brand, platform)}
+                      config={POST_PREVIEW_CONFIG}
+                    />
+                  ) : (
+                    <div style={{ height: 220, borderRadius: 12, overflow: "hidden" }}>
+                      <Cover kind={post.cover} />
+                    </div>
+                  )}
                 </div>
 
                 <div style={{ padding: 20, display: "flex", flexDirection: "column", flex: 1 }}>

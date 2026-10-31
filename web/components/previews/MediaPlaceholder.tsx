@@ -195,7 +195,7 @@ export function MediaPlaceholder({
               letterSpacing: "0.02em",
             }}
           >
-            {isVideo ? "Video / Reel preview" : isCarousel ? `Slide ${activeIndex + 1}/${items.length}` : "Media preview"}
+            {isVideo ? "Video / Reel de ejemplo" : isCarousel ? `Slide ${activeIndex + 1}/${items.length}` : "Imagen de ejemplo"}
           </div>
         </div>
       )}

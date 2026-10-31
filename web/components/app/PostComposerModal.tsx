@@ -4,6 +4,7 @@ import React, { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Activity,
+  BarChart2,
   Bell,
   CheckSquare,
   Cloud,
@@ -20,9 +21,49 @@ import {
   X,
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { localIsoDate } from "@/lib/date";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
-import type { PostStatus, PostStatusLabel, SocialNetwork } from "@/lib/types";
+import { Cover, type CoverKind } from "@/components/Cover";
+import { SocialPreview } from "@/components/previews/SocialPreview";
+import {
+  networkToPlatform,
+  POST_PREVIEW_CONFIG,
+  socialPostToPreview,
+} from "@/components/previews/from-social-post";
+import type {
+  PostChatMessage,
+  PostDocument,
+  PostFormat,
+  PostStatus,
+  PostStatusLabel,
+  PostTodo,
+  SocialNetwork,
+} from "@/lib/types";
+
+const FORMATS: PostFormat[] = ["Imagen", "Carrusel", "Reel / Video", "Story", "Texto"];
+
+/** Reduce la imagen: se guarda dentro del workspace hasta que exista almacenamiento real. */
+function imageToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new window.Image();
+    img.onload = () => {
+      const scale = Math.min(1, 800 / Math.max(img.width, img.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext("2d")?.drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL("image/jpeg", 0.72));
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("imagen no válida"));
+    };
+    img.src = url;
+  });
+}
 
 export interface PostComposerModalProps {
   open?: boolean;
@@ -31,10 +72,11 @@ export interface PostComposerModalProps {
   defaultBrandId?: string;
 }
 
-type ComposerTab = "contenido" | "notas" | "todos" | "documentos" | "chat" | "actividad";
+type ComposerTab = "contenido" | "resultados" | "notas" | "todos" | "documentos" | "chat" | "actividad";
 
 const TABS: { id: ComposerTab; label: string; Icon: typeof ImageIcon }[] = [
   { id: "contenido", label: "Contenido", Icon: ImageIcon },
+  { id: "resultados", label: "Resultados", Icon: BarChart2 },
   { id: "notas", label: "Notas", Icon: NotebookPen },
   { id: "todos", label: "To-Dos", Icon: CheckSquare },
   { id: "documentos", label: "Documentos", Icon: FileText },
@@ -65,6 +107,8 @@ const NETWORKS: { id: SocialNetwork; glyph: React.ReactNode }[] = [
 const STATUS_OPTIONS: { value: PostStatus; label: PostStatusLabel; text: string }[] = [
   { value: "draft", label: "Borrador", text: "Borrador" },
   { value: "pending", label: "En aprobación", text: "Pendiente de revisión" },
+  { value: "changes", label: "Requiere cambios", text: "Cambios solicitados" },
+  { value: "approved", label: "Programado", text: "Aprobado" },
   { value: "scheduled", label: "Programado", text: "Programado" },
 ];
 
@@ -86,6 +130,10 @@ export function PostComposerModal({
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
   const profile = useHublyStore((s) => s.profile);
   const savePost = useHublyStore((s) => s.savePost);
+  const patchPost = useHublyStore((s) => s.patchPost);
+  const team = useHublyStore((s) => s.team);
+  const assets = useHublyStore((s) => s.assets);
+  const composerDefaultDate = useHublyStore((s) => s.composerDefaultDate);
 
   const isOpen = openProp !== undefined ? openProp : composerOpen;
   const presence = useModalPresence(isOpen);
@@ -101,15 +149,29 @@ export function PostComposerModal({
   const [scheduledTime, setScheduledTime] = useState("11:30");
   const [notifyOnPublish, setNotifyOnPublish] = useState(false);
   const [notes, setNotes] = useState("");
-  const [todos, setTodos] = useState<{ id: number; text: string; done: boolean }[]>([]);
+  const [todos, setTodos] = useState<PostTodo[]>([]);
   const [todoDraft, setTodoDraft] = useState("");
+  const [documents, setDocuments] = useState<PostDocument[]>([]);
+  const [docName, setDocName] = useState("");
+  const [docUrl, setDocUrl] = useState("");
+  const [chat, setChat] = useState<PostChatMessage[]>([]);
+  const [chatDraft, setChatDraft] = useState("");
   const [mediaUrl, setMediaUrl] = useState<string | null>(null);
+  const [cover, setCover] = useState<CoverKind>("steam");
+  const [format, setFormat] = useState<PostFormat>("Carrusel");
+  const [assignee, setAssignee] = useState("");
+  const [previewNet, setPreviewNet] = useState<SocialNetwork | null>(null);
+  const [assetsOpen, setAssetsOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const brandId = editingPost?.brandId || defaultBrandId || activeBrandId;
   const brand = brands.find((b) => b.id === brandId) || brands[0];
   const handle = brand?.handle || "tu_marca";
-  const previewNetwork = networks[0] || "Instagram";
+  const previewNetwork = previewNet && networks.includes(previewNet) ? previewNet : networks[0] || "Instagram";
+  const previewPlatform = networkToPlatform(previewNetwork);
+  const brandAssets = assets.filter((a) => a.brandId === brandId && (a.kind === "image" || a.kind === "video"));
+  const authorName = profile?.name || "Equipo";
+  const assigneeOptions = Array.from(new Set([assignee, ...team.map((m) => m.name)].filter(Boolean)));
 
   const handleClose = () => {
     setErrorMsg(null);
@@ -121,16 +183,30 @@ export function PostComposerModal({
     if (!isOpen) return;
     setTab("contenido");
     setErrorMsg(null);
-    setNotes("");
-    setTodos([]);
-    setMediaUrl(null);
+    setNotes(editingPost?.notes || "");
+    setTodos(editingPost?.todos || []);
+    setDocuments(editingPost?.documents || []);
+    setChat(editingPost?.chat || []);
+    setTodoDraft("");
+    setDocName("");
+    setDocUrl("");
+    setChatDraft("");
+    setMediaUrl(editingPost?.mediaUrl || null);
+    setCover(editingPost?.cover || "steam");
+    setFormat(editingPost?.format || "Carrusel");
+    setAssignee(editingPost?.assignee || profile?.name || "");
+    setNotifyOnPublish(editingPost?.notifyOnPublish || false);
+    setPreviewNet(null);
+    setAssetsOpen(false);
     setTitle(editingPost?.title || "");
     setCaption(editingPost?.caption || "");
     setNetworks(editingPost?.networks?.length ? editingPost.networks : ["Instagram"]);
     setStatus(editingPost?.status || "pending");
-    setScheduledDate(editingPost?.scheduledDate || new Date().toISOString().slice(0, 10));
+    setScheduledDate(editingPost?.scheduledDate || composerDefaultDate || localIsoDate());
     setScheduledTime(editingPost?.scheduledTime || "11:30");
-  }, [isOpen, editingPost]);
+    // Solo al abrir o cambiar de post: patchPost actualiza editingPost mientras se escribe.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, editingPost?.id]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -151,12 +227,38 @@ export function PostComposerModal({
       prev.includes(network) ? (prev.length > 1 ? prev.filter((n) => n !== network) : prev) : [...prev, network]
     );
 
-  const save = (finalStatus: PostStatus) => {
-    if (finalStatus === "scheduled" && !caption.trim()) {
-      setErrorMsg("Escribe el caption antes de programar.");
+  const updateTodos = (next: PostTodo[]) => {
+    setTodos(next);
+    if (editingPost) patchPost(editingPost.id, { todos: next });
+  };
+  const updateDocuments = (next: PostDocument[]) => {
+    setDocuments(next);
+    if (editingPost) patchPost(editingPost.id, { documents: next });
+  };
+  const updateChat = (next: PostChatMessage[]) => {
+    setChat(next);
+    if (editingPost) patchPost(editingPost.id, { chat: next });
+  };
+  const handleFile = async (file: File | undefined) => {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setErrorMsg("Por ahora solo se pueden subir imágenes.");
       return;
     }
-    const finalLabel = finalStatus === "draft" ? "Borrador" : finalStatus === "scheduled" ? "Programado" : statusOption.label;
+    try {
+      setMediaUrl(await imageToDataUrl(file));
+      setErrorMsg(null);
+    } catch {
+      setErrorMsg("No se pudo leer esa imagen.");
+    }
+  };
+
+  const save = (finalStatus: PostStatus) => {
+    if ((finalStatus === "scheduled" || finalStatus === "pending") && !caption.trim()) {
+      setErrorMsg(finalStatus === "scheduled" ? "Escribe el caption antes de programar." : "Escribe el caption antes de enviar a revisión.");
+      return;
+    }
+    const finalLabel = finalStatus === "draft" ? "Borrador" : finalStatus === "scheduled" ? "Programado" : finalStatus === "pending" ? "En aprobación" : statusOption.label;
     savePost({
       id: editingPost?.id,
       brandId,
@@ -164,13 +266,20 @@ export function PostComposerModal({
       caption: caption.trim(),
       network: networks[0],
       networks,
-      format: editingPost?.format || "Carrusel",
-      cover: editingPost?.cover || "steam",
+      format,
+      cover,
+      mediaUrl: mediaUrl || undefined,
+      notifyOnPublish,
+      notes,
+      todos,
+      documents,
+      chat,
+      activity: editingPost?.activity,
       status: finalStatus,
       statusLabel: finalLabel,
       scheduledDate,
       scheduledTime,
-      assignee: editingPost?.assignee || profile?.name || "Jair",
+      assignee: assignee || authorName,
       pillar: editingPost?.pillar || "General",
     });
     handleClose();
@@ -212,10 +321,14 @@ export function PostComposerModal({
         </header>
 
         <div className="hubly-composer-meta">
-          <button type="button">
+          <label>
             <User size={14} />
-            <span>{editingPost?.assignee || "Sin asignar"}</span>
-          </button>
+            <select aria-label="Responsable" value={assignee} onChange={(e) => setAssignee(e.target.value)}>
+              {assigneeOptions.map((name) => (
+                <option key={name} value={name}>{name}</option>
+              ))}
+            </select>
+          </label>
           <button type="button" aria-pressed={notifyOnPublish} onClick={() => setNotifyOnPublish((v) => !v)}>
             <Bell size={14} />
             <span>Avisar al publicar</span>
@@ -279,18 +392,20 @@ export function PostComposerModal({
                 </div>
 
                 <div className="hubly-composer-sources">
-                  <button type="button" onClick={() => fileRef.current?.click()}>
-                    <span><Upload size={18} /></span>
-                    <strong>Arrastra archivos aquí o <b>haz clic</b></strong>
-                    <small>Imágenes y videos · máx 10 archivos</small>
-                  </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      handleClose();
-                      router.push("/archivos");
+                    onClick={() => fileRef.current?.click()}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      void handleFile(e.dataTransfer.files?.[0]);
                     }}
                   >
+                    <span><Upload size={18} /></span>
+                    <strong>Arrastra una imagen aquí o <b>haz clic</b></strong>
+                    <small>{mediaUrl ? "Imagen lista · haz clic para cambiarla" : "Una imagen por post"}</small>
+                  </button>
+                  <button type="button" aria-expanded={assetsOpen} onClick={() => setAssetsOpen((v) => !v)}>
                     <span><Library size={18} /></span>
                     <strong>Elegir del <b>Content Manager</b></strong>
                     <small>Assets ya subidos de la marca</small>
@@ -312,13 +427,46 @@ export function PostComposerModal({
                     hidden
                     aria-label="Subir archivo"
                     onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) setMediaUrl(URL.createObjectURL(file));
+                      void handleFile(e.target.files?.[0]);
+                      e.target.value = "";
                     }}
                   />
                 </div>
 
-                <span className="hubly-composer-chip">General</span>
+                {assetsOpen && (
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(96px, 1fr))", gap: 8 }}>
+                    {brandAssets.length === 0 && (
+                      <span style={{ fontSize: 12.5, color: "#64748B" }}>Esta marca aún no tiene archivos.</span>
+                    )}
+                    {brandAssets.map((asset) => (
+                      <button
+                        key={asset.id}
+                        type="button"
+                        title={asset.name}
+                        aria-pressed={!mediaUrl && cover === asset.cover}
+                        onClick={() => {
+                          setCover(asset.cover);
+                          setMediaUrl(null);
+                          setAssetsOpen(false);
+                        }}
+                        style={{ border: "1px solid #E2E8F0", borderRadius: 10, padding: 0, overflow: "hidden", background: "#FFFFFF", cursor: "pointer", font: "inherit", textAlign: "left" }}
+                      >
+                        <span style={{ display: "block", height: 64, overflow: "hidden" }}><Cover kind={asset.cover} /></span>
+                        <small style={{ display: "block", padding: "4px 6px", fontSize: 10.5, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{asset.name}</small>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12.5, fontWeight: 600 }}>
+                  Formato
+                  <select className="hubly-cal-input" value={format} onChange={(e) => setFormat(e.target.value as PostFormat)}>
+                    {FORMATS.map((f) => (
+                      <option key={f} value={f}>{f}</option>
+                    ))}
+                  </select>
+                </label>
+
                 <textarea
                   className="hubly-composer-caption"
                   value={caption}
@@ -340,12 +488,42 @@ export function PostComposerModal({
               </>
             )}
 
+            {tab === "resultados" && (
+              editingPost?.metrics ? (
+                <div style={{ display: "grid", gap: 10 }}>
+                  <span style={{ fontSize: 12.5, fontWeight: 600, color: "#5360A5" }}>Datos de ejemplo</span>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))", gap: 10 }}>
+                    {[
+                      ["Alcance", editingPost.metrics.reach],
+                      ["Me gusta", editingPost.metrics.likes],
+                      ["Comentarios", editingPost.metrics.comments],
+                      ["Guardados", editingPost.metrics.saves],
+                      ["Compartidos", editingPost.metrics.shares],
+                    ].map(([label, value]) => (
+                      <div key={label} style={{ border: "1px solid #E2E8F0", borderRadius: 12, padding: 12 }}>
+                        <div style={{ fontSize: 11.5, color: "#64748B" }}>{label}</div>
+                        <div style={{ fontSize: 20, fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>{value.toLocaleString("es-MX")}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="hubly-cal-empty">
+                  <strong>Sin resultados</strong>
+                  <span>Aparecerán cuando el post se publique desde una cuenta conectada.</span>
+                </div>
+              )
+            )}
+
             {tab === "notas" && (
               <textarea
                 className="hubly-composer-caption"
                 style={{ minHeight: 280 }}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
+                onBlur={() => {
+                  if (editingPost) patchPost(editingPost.id, { notes });
+                }}
                 placeholder="Notas internas del equipo. No se publican."
                 aria-label="Notas"
               />
@@ -358,7 +536,7 @@ export function PostComposerModal({
                     <input
                       type="checkbox"
                       checked={todo.done}
-                      onChange={() => setTodos((prev) => prev.map((t) => (t.id === todo.id ? { ...t, done: !t.done } : t)))}
+                      onChange={() => updateTodos(todos.map((t) => (t.id === todo.id ? { ...t, done: !t.done } : t)))}
                     />
                     <span>{todo.text}</span>
                   </label>
@@ -367,7 +545,7 @@ export function PostComposerModal({
                   onSubmit={(e) => {
                     e.preventDefault();
                     if (!todoDraft.trim()) return;
-                    setTodos((prev) => [...prev, { id: Date.now(), text: todoDraft.trim(), done: false }]);
+                    updateTodos([...todos, { id: `todo-${Date.now()}`, text: todoDraft.trim(), done: false }]);
                     setTodoDraft("");
                   }}
                 >
@@ -376,38 +554,133 @@ export function PostComposerModal({
               </div>
             )}
 
-            {(tab === "documentos" || tab === "chat") && (
-              <div className="hubly-cal-empty">
-                <strong>{tab === "documentos" ? "Sin documentos" : "Sin mensajes"}</strong>
-                <span>Función prevista.</span>
+            {tab === "documentos" && (
+              <div style={{ display: "grid", gap: 10 }}>
+                {documents.length === 0 && (
+                  <span style={{ fontSize: 13, color: "#64748B" }}>Agrega enlaces a briefs, guiones o archivos de referencia.</span>
+                )}
+                {documents.map((doc) => (
+                  <div key={doc.id} style={{ display: "flex", alignItems: "center", gap: 8, border: "1px solid #E2E8F0", borderRadius: 10, padding: "8px 10px", fontSize: 13 }}>
+                    <FileText size={14} />
+                    <a href={doc.url} target="_blank" rel="noopener noreferrer" style={{ flex: 1, minWidth: 0, color: "#5A65AF", fontWeight: 600, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+                      {doc.name}
+                    </a>
+                    <button type="button" aria-label={`Quitar ${doc.name}`} onClick={() => updateDocuments(documents.filter((d) => d.id !== doc.id))} style={{ border: 0, background: "transparent", cursor: "pointer", color: "#64748B", display: "grid" }}>
+                      <X size={14} />
+                    </button>
+                  </div>
+                ))}
+                <form
+                  style={{ display: "flex", gap: 8, flexWrap: "wrap" }}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const url = docUrl.trim();
+                    if (!/^https?:\/\//i.test(url)) {
+                      setErrorMsg("El enlace debe empezar con http:// o https://");
+                      return;
+                    }
+                    setErrorMsg(null);
+                    updateDocuments([...documents, { id: `doc-${Date.now()}`, name: docName.trim() || url, url }]);
+                    setDocName("");
+                    setDocUrl("");
+                  }}
+                >
+                  <input className="hubly-cal-input" style={{ flex: "1 1 130px", minWidth: 0 }} value={docName} onChange={(e) => setDocName(e.target.value)} placeholder="Nombre" aria-label="Nombre del documento" />
+                  <input className="hubly-cal-input" style={{ flex: "2 1 180px", minWidth: 0 }} value={docUrl} onChange={(e) => setDocUrl(e.target.value)} placeholder="https://…" aria-label="Enlace del documento" />
+                  <button type="submit" className="hbtn hbtn-secondary hbtn-sm">Agregar</button>
+                </form>
+              </div>
+            )}
+
+            {tab === "chat" && (
+              <div style={{ display: "grid", gap: 8 }}>
+                {chat.length === 0 && <span style={{ fontSize: 13, color: "#64748B" }}>Conversación interna del equipo sobre este post.</span>}
+                {chat.map((m) => (
+                  <div key={m.id} style={{ background: "#F1F5F9", borderRadius: 12, padding: "8px 11px", fontSize: 13 }}>
+                    <strong style={{ display: "block", fontSize: 12 }}>
+                      {m.author} · <small style={{ fontWeight: 400 }}>{new Date(m.at).toLocaleString("es-MX", { dateStyle: "short", timeStyle: "short" })}</small>
+                    </strong>
+                    {m.text}
+                  </div>
+                ))}
+                <form
+                  style={{ display: "flex", gap: 8 }}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!chatDraft.trim()) return;
+                    updateChat([...chat, { id: `msg-${Date.now()}`, author: authorName, text: chatDraft.trim(), at: new Date().toISOString() }]);
+                    setChatDraft("");
+                  }}
+                >
+                  <input className="hubly-cal-input" style={{ flex: 1, minWidth: 0 }} value={chatDraft} onChange={(e) => setChatDraft(e.target.value)} placeholder="Escribe un mensaje…" aria-label="Mensaje al equipo" />
+                  <button type="submit" className="hbtn hbtn-secondary hbtn-sm">Enviar</button>
+                </form>
               </div>
             )}
 
             {tab === "actividad" && (
-              <div className="hubly-cal-empty">
-                <strong>{editingPost ? "Post creado" : "Aún sin actividad"}</strong>
-                <span>{editingPost ? `Última programación: ${editingPost.scheduledDate}` : "El historial empieza al guardar."}</span>
-              </div>
+              editingPost?.activity?.length ? (
+                <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 10 }}>
+                  {editingPost.activity.map((entry) => (
+                    <li key={entry.id} style={{ fontSize: 13, borderLeft: "2px solid #D9DCF0", paddingLeft: 10 }}>
+                      <strong>{entry.author}</strong> {entry.text}
+                      <small style={{ display: "block", color: "#64748B" }}>
+                        {new Date(entry.at).toLocaleString("es-MX", { dateStyle: "short", timeStyle: "short" })}
+                      </small>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <div className="hubly-cal-empty">
+                  <strong>Aún sin actividad</strong>
+                  <span>El historial empieza al guardar cambios en este post.</span>
+                </div>
+              )
             )}
           </div>
 
           <aside className="hubly-composer-preview">
-            <span className="hubly-composer-network-pill">{previewNetwork}</span>
-            <div className="hubly-composer-phone">
-              <div className="hubly-composer-notch" />
-              <div className="hubly-composer-phone-head"><b>{previewNetwork}</b></div>
-              <div className="hubly-composer-phone-user"><i />{handle.replace("@", "")}</div>
-              <div className="hubly-composer-phone-media">
-                {mediaUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={mediaUrl} alt="Vista previa" />
-                ) : (
-                  <span><Play size={14} /><small>Sin media</small></span>
-                )}
-              </div>
-              <p><b>{handle.replace("@", "")}</b> {caption || "Escribe tu caption…"}</p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 4, justifyContent: "center" }}>
+              {networks.map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  className="hubly-composer-network-pill"
+                  aria-pressed={n === previewNetwork}
+                  onClick={() => setPreviewNet(n)}
+                  style={{ border: 0, cursor: "pointer", opacity: n === previewNetwork ? 1 : 0.55 }}
+                >
+                  {n}
+                </button>
+              ))}
             </div>
-            <small>{previewNetwork} Post · 1:1</small>
+            {previewPlatform ? (
+              <SocialPreview
+                key={previewPlatform}
+                post={socialPostToPreview(
+                  { id: editingPost?.id || "nuevo", caption: caption || "Escribe tu caption…", format, cover, mediaUrl: mediaUrl || undefined, scheduledDate },
+                  brand,
+                  previewPlatform
+                )}
+                config={POST_PREVIEW_CONFIG}
+              />
+            ) : (
+              <div className="hubly-composer-phone">
+                <div className="hubly-composer-notch" />
+                <div className="hubly-composer-phone-head"><b>{previewNetwork}</b></div>
+                <div className="hubly-composer-phone-user"><i />{handle.replace("@", "")}</div>
+                <div className="hubly-composer-phone-media">
+                  {mediaUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={mediaUrl} alt="Vista previa" />
+                  ) : (
+                    <Cover kind={cover} />
+                  )}
+                </div>
+                <p><b>{handle.replace("@", "")}</b> {caption || "Escribe tu caption…"}</p>
+              </div>
+            )}
+            <small>{previewNetwork} · {format}</small>
           </aside>
         </div>
 
@@ -418,6 +691,9 @@ export function PostComposerModal({
           </button>
           <button type="button" className="hbtn hbtn-secondary" onClick={() => save("draft")}>
             Guardar borrador
+          </button>
+          <button type="button" className="hbtn hbtn-secondary" onClick={() => save("pending")}>
+            Enviar a revisión
           </button>
           <button type="button" className="hbtn hbtn-primary" onClick={() => save("scheduled")}>
             Programar

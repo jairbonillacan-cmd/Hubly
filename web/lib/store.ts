@@ -8,6 +8,7 @@ import {
   REFERENCE_FIXTURE_CLOCK,
 } from "./seed-data";
 import { selectAccountRecommendations } from "./domain-selectors";
+import { localIsoDate } from "./date";
 import { moveInList } from "./use-kanban-drag";
 import {
   buildReferenceFixtureWorkspace,
@@ -31,6 +32,7 @@ import type {
   BrandCore,
   BrandProject,
   BrandWorkspace,
+  ContentIdea,
   CustomCommitmentMetric,
   DashboardWidgetConfig,
   DashboardWidgetId,
@@ -39,6 +41,7 @@ import type {
   MediaAsset,
   NotebookItem,
   PeriodCommitmentSnapshot,
+  PostExtrasPatch,
   PostStatus,
   PostStatusLabel,
   SocialNetwork,
@@ -115,7 +118,8 @@ export interface HublyStoreState extends HublyWorkspaceData {
 
   // UI & Modal Actions
   setActiveBrand: (brandId: string) => void;
-  openComposer: (postId?: string | null) => void;
+  composerDefaultDate: string | null;
+  openComposer: (postId?: string | null, defaultDate?: string | null) => void;
   closeComposer: () => void;
   setCmdkOpen: (open: boolean) => void;
   setAiDrawerOpen: (open: boolean) => void;
@@ -167,6 +171,12 @@ export interface HublyStoreState extends HublyWorkspaceData {
     role?: "client" | "agency"
   ) => void;
   approveAllBrandPosts: (brandId: string, authorName?: string) => void;
+  movePost: (postId: string, scheduledDate: string) => void;
+  patchPost: (postId: string, patch: PostExtrasPatch) => void;
+  addPostComment: (postId: string, text: string, authorName: string, role: "client" | "agency") => void;
+  addIdea: (idea: Pick<ContentIdea, "brandId" | "title" | "notes" | "pillar">) => void;
+  removeIdea: (ideaId: string) => void;
+  convertIdeaToPost: (ideaId: string) => void;
 
   // Task Actions
   addTask: (task: AddTaskInput) => void;
@@ -263,6 +273,7 @@ function extractWorkspaceData(state: HublyStoreState): HublyWorkspaceData {
     activeBrandId: state.activeBrandId,
     brands: state.brands,
     posts: state.posts,
+    ideas: state.ideas,
     tasks: state.tasks,
     notebooks: state.notebooks,
     assets: state.assets,
@@ -287,6 +298,12 @@ function persistWorkspaceState(state: HublyStoreState): void {
   const payload = extractWorkspaceData(state);
   saveWorkspaceToStorage(wsId, payload);
   pushWorkspaceToApi(wsId, payload).catch(() => {});
+}
+
+function withPostLog(post: SocialPost, text: string, author: string): SocialPost {
+  const at = new Date().toISOString();
+  const entry = { id: `pa-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, author, text, at };
+  return { ...post, activity: [entry, ...(post.activity || [])] };
 }
 
 function createActivityItem(
@@ -325,6 +342,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   })),
   composerOpen: false,
   editingPostId: null,
+  composerDefaultDate: null,
   cmdkOpen: false,
   aiDrawerOpen: false,
   newBrandModalOpen: false,
@@ -345,10 +363,11 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     persistWorkspaceState(get());
   },
 
-  openComposer: (postId = null) =>
+  openComposer: (postId = null, defaultDate = null) =>
     set({
       composerOpen: true,
       editingPostId: postId,
+      composerDefaultDate: defaultDate,
       inviteModalOpen: false,
       newBrandModalOpen: false,
       cmdkOpen: false,
@@ -919,13 +938,17 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
         return {
           posts: s.posts.map((p) =>
             p.id === postInput.id
-              ? {
-                  ...p,
-                  ...postInput,
-                  statusLabel,
-                  id: p.id,
-                  comments: p.comments,
-                }
+              ? withPostLog(
+                  {
+                    ...p,
+                    ...postInput,
+                    statusLabel,
+                    id: p.id,
+                    comments: p.comments,
+                  },
+                  `Guardó el post como «${statusLabel}»`,
+                  s.profile?.name || "Equipo"
+                )
               : p
           ),
           composerOpen: false,
@@ -933,19 +956,16 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
         };
       }
       const createdId = `post-${Date.now()}`;
-      const created: SocialPost = {
-        ...postInput,
-        id: createdId,
-        statusLabel,
-        comments: [],
-        metrics: postInput.metrics || {
-          reach: 8400,
-          likes: 520,
-          comments: 32,
-          saves: 180,
-          shares: 45,
+      const created = withPostLog(
+        {
+          ...postInput,
+          id: createdId,
+          statusLabel,
+          comments: [],
         },
-      };
+        "Creó el post",
+        s.profile?.name || "Equipo"
+      );
       const event = createActivityItem(s, {
         type: created.status === "published" ? "post_published" : "post_submitted",
         brandId: created.brandId,
@@ -984,12 +1004,16 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
               },
             ]
           : p.comments;
-        return {
-          ...p,
-          status,
-          statusLabel: STATUS_TO_LABEL[status] || p.statusLabel,
-          comments: nextComments,
-        };
+        return withPostLog(
+          {
+            ...p,
+            status,
+            statusLabel: STATUS_TO_LABEL[status] || p.statusLabel,
+            comments: nextComments,
+          },
+          `Cambió el estado a «${STATUS_TO_LABEL[status] || status}»`,
+          authorName
+        );
       });
 
       const event = createActivityItem(s, {
@@ -1005,6 +1029,95 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
       };
     });
     persistWorkspaceState(get());
+  },
+
+  movePost: (postId, scheduledDate) => {
+    set((s) => ({
+      posts: s.posts.map((p) =>
+        p.id === postId && p.scheduledDate !== scheduledDate
+          ? withPostLog({ ...p, scheduledDate }, `Movió la fecha a ${scheduledDate}`, s.profile?.name || "Equipo")
+          : p
+      ),
+    }));
+    persistWorkspaceState(get());
+  },
+
+  patchPost: (postId, patch) => {
+    set((s) => ({
+      posts: s.posts.map((p) => (p.id === postId ? { ...p, ...patch } : p)),
+    }));
+    persistWorkspaceState(get());
+  },
+
+  addPostComment: (postId, text, authorName, role) => {
+    const clean = text.trim();
+    if (!clean) return;
+    set((s) => ({
+      posts: s.posts.map((p) =>
+        p.id === postId
+          ? {
+              ...p,
+              comments: [
+                ...p.comments,
+                { id: `c-${Date.now()}`, author: authorName, role, text: clean, createdAt: "Ahora mismo" },
+              ],
+            }
+          : p
+      ),
+    }));
+    persistWorkspaceState(get());
+  },
+
+  addIdea: (idea) => {
+    set((s) => ({
+      ideas: [
+        { ...idea, id: `idea-${Date.now()}`, createdAt: new Date().toISOString() },
+        ...(s.ideas || []),
+      ],
+    }));
+    persistWorkspaceState(get());
+  },
+
+  removeIdea: (ideaId) => {
+    set((s) => ({ ideas: (s.ideas || []).filter((i) => i.id !== ideaId) }));
+    persistWorkspaceState(get());
+  },
+
+  convertIdeaToPost: (ideaId) => {
+    const idea = (get().ideas || []).find((i) => i.id === ideaId);
+    if (!idea) return;
+    const postId = idea.convertedPostId || `post-${Date.now()}`;
+    if (!idea.convertedPostId) {
+      set((s) => {
+        const created = withPostLog(
+          {
+            id: postId,
+            brandId: idea.brandId,
+            title: idea.title,
+            caption: idea.notes,
+            network: "Instagram",
+            networks: ["Instagram"],
+            format: "Carrusel",
+            cover: "steam",
+            scheduledDate: localIsoDate(),
+            scheduledTime: "11:30",
+            status: "draft",
+            statusLabel: "Borrador",
+            assignee: s.profile?.name || "Equipo",
+            pillar: idea.pillar || "General",
+            comments: [],
+          },
+          "Creó el post desde una idea",
+          s.profile?.name || "Equipo"
+        );
+        return {
+          posts: [created, ...s.posts],
+          ideas: (s.ideas || []).map((i) => (i.id === ideaId ? { ...i, convertedPostId: postId } : i)),
+        };
+      });
+      persistWorkspaceState(get());
+    }
+    get().openComposer(postId);
   },
 
   approveAllBrandPosts: (brandId, authorName = "Cliente") => {

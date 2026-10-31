@@ -29,7 +29,12 @@ import {
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { Cover } from "@/components/Cover";
-import type { PostStatus } from "@/lib/types";
+import { STATUS_META } from "@/components/app/social/status-meta";
+import { PostMonthCalendar } from "@/components/app/social/PostMonthCalendar";
+import { IdeasBoard } from "@/components/app/social/IdeasBoard";
+import { ProductionBoard } from "@/components/app/social/ProductionBoard";
+import { PostInbox } from "@/components/app/social/PostInbox";
+import { OrganicAnalytics } from "@/components/app/social/OrganicAnalytics";
 
 type SocialSubTab =
   | "calendario"
@@ -39,15 +44,6 @@ type SocialSubTab =
   | "tableros"
   | "reportes"
   | "links";
-
-const STATUS_META: Record<PostStatus, { label: string; bg: string; color: string }> = {
-  draft: { label: "Borrador", bg: "#F1F5F9", color: "#475569" },
-  pending: { label: "Esperando cliente", bg: "#ECEEF8", color: "#5360A5" },
-  changes: { label: "Cambios solicitados", bg: "#FEE2E2", color: "#B91C1C" },
-  approved: { label: "Aprobado por cliente", bg: "#DCFCE7", color: "#15803D" },
-  scheduled: { label: "Programado", bg: "#DBEAFE", color: "#1D4ED8" },
-  published: { label: "Publicado", bg: "#DCFCE7", color: "#15803D" },
-};
 
 export default function ParrillasPage() {
   const brands = useHublyStore((s) => s.brands);
@@ -59,6 +55,8 @@ export default function ParrillasPage() {
 
   const [activeTab, setActiveTab] = useState<SocialSubTab>("calendario");
   const [showDemoData, setShowDemoData] = useState(false);
+  const [calendarMode, setCalendarMode] = useState<"mes" | "tarjetas">("mes");
+  const composerOpen = useHublyStore((s) => s.composerOpen);
   const [moreNetworksOpen, setMoreNetworksOpen] = useState(false);
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [accountsModalOpen, setAccountsModalOpen] = useState(false);
@@ -100,6 +98,11 @@ export default function ParrillasPage() {
       : "min";
   const shareToken = activeBrand?.shareToken || "min-nov";
   const brandPosts = posts.filter((p) => p.brandId === activeBrand?.id);
+
+  // Quien acaba de usar el editor debe ver su post en el calendario.
+  useEffect(() => {
+    if (composerOpen) setShowDemoData(true);
+  }, [composerOpen]);
 
   const handleCopyClientLink = () => {
     if (typeof window === "undefined") return;
@@ -1215,10 +1218,35 @@ export default function ParrillasPage() {
             </div>
           </div>
 
-          <div
+          <div role="group" aria-label="Vista de la parrilla" style={{ display: "inline-flex", gap: 2, background: "#F1F5F9", padding: 3, borderRadius: 10, marginBottom: 14 }}>
+            {(["mes", "tarjetas"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                aria-pressed={calendarMode === m}
+                onClick={() => setCalendarMode(m)}
+                style={{
+                  border: "none",
+                  borderRadius: 8,
+                  padding: "5px 12px",
+                  fontSize: 12.5,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  background: calendarMode === m ? "#FFFFFF" : "transparent",
+                  color: calendarMode === m ? "#5360A5" : "#475569",
+                }}
+              >
+                {m === "mes" ? "Mes" : "Tarjetas"}
+              </button>
+            ))}
+          </div>
+
+          {calendarMode === "mes" && <PostMonthCalendar posts={brandPosts} />}
+
+          {calendarMode === "tarjetas" && <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 320px), 1fr))",
               gap: 16,
             }}
           >
@@ -1348,13 +1376,7 @@ export default function ParrillasPage() {
                       <button
                         type="button"
                         onClick={() =>
-                          updatePostStatus(
-                            post.id,
-                            "changes",
-                            "Ajustar gancho inicial.",
-                            "Cliente",
-                            "client"
-                          )
+                          updatePostStatus(post.id, "changes", undefined, "Jair", "agency")
                         }
                         style={{
                           padding: "7px 10px",
@@ -1394,7 +1416,7 @@ export default function ParrillasPage() {
                 </div>
               );
             })}
-          </div>
+          </div>}
         </div>
       )}
 
@@ -2096,50 +2118,10 @@ export default function ParrillasPage() {
         </div>
       )}
 
-      {/* OTHER SUB-TABS (Ideas, Mensajes, Analytics, Tableros) */}
-      {(activeTab === "ideas" ||
-        activeTab === "mensajes" ||
-        activeTab === "analytics" ||
-        activeTab === "tableros") && (
-        <div
-          style={{
-            background: "#FFFFFF",
-            border: "1px solid #E2E8F0",
-            borderRadius: 16,
-            padding: 36,
-            textAlign: "center",
-          }}
-        >
-          <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0F172A", margin: "0 0 8px" }}>
-            {activeTab === "ideas" && `Ideas de contenido para ${brandName}`}
-            {activeTab === "mensajes" && `Bandeja unificada de mensajes de ${brandName}`}
-            {activeTab === "analytics" && `Analítica orgánica de ${brandName}`}
-            {activeTab === "tableros" && `Tableros personalizados de ${brandName}`}
-          </h2>
-          <p style={{ fontSize: 13.5, color: "#64748B", margin: "0 0 20px" }}>
-            Conecta una red social o explora la parrilla con datos de ejemplo de {brandName}.
-          </p>
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab("calendario");
-              setShowDemoData(true);
-            }}
-            style={{
-              background: "#6C77C1",
-              color: "#FFFFFF",
-              border: "none",
-              borderRadius: 10,
-              padding: "10px 18px",
-              fontSize: 13.5,
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            Ver parrilla con datos de ejemplo →
-          </button>
-        </div>
-      )}
+      {activeTab === "ideas" && <IdeasBoard brandId={activeBrand?.id || ""} brandName={brandName} />}
+      {activeTab === "mensajes" && <PostInbox key={activeBrand?.id} posts={brandPosts} />}
+      {activeTab === "analytics" && <OrganicAnalytics posts={brandPosts} />}
+      {activeTab === "tableros" && <ProductionBoard posts={brandPosts} />}
 
       {/* Modal: Traer mi mes */}
       {importModalOpen && (

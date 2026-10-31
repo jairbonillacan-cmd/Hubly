@@ -315,6 +315,13 @@ function normalizePost(post: Partial<SocialPost>): SocialPost {
     pillar: post.pillar || "General",
     metrics: post.metrics,
     comments: Array.isArray(post.comments) ? post.comments : [],
+    mediaUrl: post.mediaUrl,
+    notifyOnPublish: post.notifyOnPublish,
+    notes: post.notes,
+    todos: post.todos,
+    documents: post.documents,
+    chat: post.chat,
+    activity: post.activity,
   };
 }
 
@@ -417,6 +424,7 @@ export function normalizeWorkspacePayload(
     activeBrandId,
     brands,
     posts,
+    ideas: Array.isArray(sanitized.ideas) ? sanitized.ideas : [],
     tasks,
     notebooks:
       Array.isArray(sanitized.notebooks) && sanitized.notebooks.length > 0
