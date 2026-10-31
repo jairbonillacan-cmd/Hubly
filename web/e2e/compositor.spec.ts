@@ -17,6 +17,12 @@ const abrirEditor = async (page: Page, ruta = "/calendario") => {
 const editor = (page: Page) => page.locator(".hubly-composer");
 
 test.beforeEach(async ({ page }) => {
+  // El guardado va por POST /api/workspace: se intercepta para que las pruebas no alteren los datos demo guardados.
+  await page.route("**/api/workspace**", (route) =>
+    route.request().method() === "GET"
+      ? route.continue()
+      : route.fulfill({ status: 200, contentType: "application/json", body: "{\"ok\":true}" })
+  );
   await page.addInitScript(() => {
     if (sessionStorage.getItem("e2e-limpio")) return;
     sessionStorage.setItem("e2e-limpio", "1");

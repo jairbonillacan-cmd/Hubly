@@ -38,6 +38,15 @@ const limpiar = async (page: Page, prefijo: string) => {
   await page.waitForLoadState("networkidle");
 };
 
+// El guardado va por POST /api/workspace: se intercepta para que las pruebas no alteren los datos demo guardados.
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/workspace**", (route) =>
+    route.request().method() === "GET"
+      ? route.continue()
+      : route.fulfill({ status: 200, contentType: "application/json", body: "{\"ok\":true}" })
+  );
+});
+
 test("las cuatro vistas comparten posts, filtros y período", async ({ page }) => {
   await abrir(page);
   await crear(page, TITULO, hoy());
