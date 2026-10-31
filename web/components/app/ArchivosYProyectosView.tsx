@@ -309,6 +309,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       key={v.id}
                       type="button"
                       onClick={() => setProjectView(v.id)}
+                      aria-pressed={active}
                       style={{
                         background: active ? "var(--ui-surface)" : "transparent",
                         color: active ? "var(--ui-text)" : "var(--ui-text-4)",
