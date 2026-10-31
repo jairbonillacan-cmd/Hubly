@@ -110,6 +110,8 @@ async function liveGet(requestedAgency: string | null) {
     email: auth.user.email || "",
     name,
     avatarInitial: name.slice(0, 1).toUpperCase(),
+    avatarUrl: (auth.user.user_metadata?.avatar_url as string) || undefined,
+    avatarSourceUrl: (auth.user.user_metadata?.avatar_source_url as string) || undefined,
   };
   const { data: members } = await supabase.rpc("list_members", { target_agency: membership.agency_id });
   const ROLE_LABEL: Record<string, string> = { owner: "Dueño", admin: "Administración", editor: "Edición", viewer: "Solo lectura" };
