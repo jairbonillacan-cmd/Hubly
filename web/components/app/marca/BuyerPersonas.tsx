@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Plus, Trash2 } from "lucide-react";
+import { HublyCheckIcon, HublyPlusIcon, HublyTrashIcon } from "@/components/app/icons/DuotoneIcons";
 import { useHublyStore } from "@/lib/store";
 import { askConfirm } from "@/components/app/AppDialogHost";
 import type { BrandWorkspace, BuyerPersona } from "@/lib/types";
@@ -33,7 +33,7 @@ export function BuyerPersonas({ brand }: { brand: BrandWorkspace }) {
           <div>
             {pending.length > 0 && (
               <button type="button" className="hubly-media-ghost" onClick={() => save(personas.map((p) => ({ ...p, accepted: true })))}>
-                <Check size={15} aria-hidden /> Aceptar todas
+                <HublyCheckIcon size={15} aria-hidden /> Aceptar todas
               </button>
             )}
             <button
@@ -41,7 +41,7 @@ export function BuyerPersonas({ brand }: { brand: BrandWorkspace }) {
               className="hubly-media-primary"
               onClick={() => save([...personas, { id: `bp-${Date.now()}`, name: "Nueva persona", ageRange: "", occupation: "", painPoints: "", motivation: "", accepted: false }])}
             >
-              <Plus size={15} aria-hidden /> Agregar persona
+              <HublyPlusIcon size={15} aria-hidden /> Agregar persona
             </button>
           </div>
         )}
@@ -58,7 +58,7 @@ export function BuyerPersonas({ brand }: { brand: BrandWorkspace }) {
               {!readOnly && (
                 <>
                   <button type="button" aria-pressed={persona.accepted} onClick={() => patch(persona.id, { accepted: !persona.accepted })}>
-                    <Check size={14} aria-hidden /> {persona.accepted ? "Aceptada" : "Aceptar"}
+                    <HublyCheckIcon size={14} aria-hidden /> {persona.accepted ? "Aceptada" : "Aceptar"}
                   </button>
                   <button
                     type="button"
@@ -67,7 +67,7 @@ export function BuyerPersonas({ brand }: { brand: BrandWorkspace }) {
                       if (await askConfirm(`¿Eliminar a «${persona.name}»?`)) save(personas.filter((p) => p.id !== persona.id));
                     }}
                   >
-                    <Trash2 size={14} />
+                    <HublyTrashIcon size={14} />
                   </button>
                 </>
               )}
