@@ -2199,3 +2199,66 @@ html.dark .hubly-cal-types button[aria-checked="true"] { border-color: var(--hb-
   .hubly-salud :is(.hbtn, .hubly-cal-pill, .hubly-cal-tab, .hubly-cal-input, .hubly-salud-more) { min-height: 44px; }
   .hubly-salud-check input { width: 20px; height: 20px; }
 }
+/* Buscador global: campo, grupos de resultados y ayuda fija de teclado. */
+.hubly-command-overlay { align-items: flex-start; padding-top: min(12vh, 108px); }
+.hubly-cal-modal.hubly-command {
+  max-width: 672px;
+  max-height: min(640px, 80dvh);
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--ui-surface);
+  color: var(--ui-text);
+}
+.hubly-command-search { display: flex; align-items: center; gap: 16px; padding: 20px 24px; border-bottom: 1px solid var(--ui-border); color: var(--ui-text-4); flex-shrink: 0; }
+.hubly-command-search > svg { flex-shrink: 0; }
+.hubly-command-field { flex: 1; min-width: 0; }
+.hubly-command-field label { display: block; margin-bottom: 4px; color: var(--ui-text-4); font-size: 11px; font-weight: 500; }
+.hubly-command-field input { width: 100%; min-width: 0; padding: 4px 0; border: 0; border-radius: 6px; background: transparent; color: var(--ui-text); font-size: 16px; font-weight: 500; caret-color: var(--hb-accent-text); }
+.hubly-command-field input::placeholder { color: var(--ui-text-4); opacity: 1; }
+.hubly-command-field input:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
+.hubly-command kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 2px 6px; border: 0; border-radius: 6px; background: var(--ui-muted); color: var(--ui-text-4); font: inherit; font-size: 11px; white-space: nowrap; }
+.hubly-command-shortcut { flex-shrink: 0; }
+.hubly-command-results { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--ui-border-strong) transparent; padding: 8px 0 16px; }
+.hubly-command-group + .hubly-command-group { margin-top: 16px; }
+.hubly-command-heading { padding: 16px 24px 8px; color: var(--ui-text-4); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.hubly-command-option { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 12px 24px; cursor: pointer; color: var(--ui-text); transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-command-option[aria-selected="true"] { background: var(--ui-sky-soft); color: var(--ui-sky-text); }
+.hubly-command-icon { display: inline-grid; place-items: center; width: 36px; height: 36px; flex-shrink: 0; border-radius: 12px; color: var(--ui-text-3); background: var(--ui-muted); }
+.hubly-command-option[aria-selected="true"] .hubly-command-icon { color: var(--hb-accent-text); background: rgb(var(--hb-accent-rgb) / 0.08); }
+.hubly-command-copy { flex: 1; min-width: 0; }
+.hubly-command-label { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; line-height: 1.5; }
+.hubly-command-description { display: block; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; line-height: 1.5; color: var(--ui-text-4); }
+.hubly-command-meta { max-width: 100px; color: var(--ui-text-4); font-size: 11px; overflow-wrap: anywhere; }
+.hubly-command-chevron { flex-shrink: 0; color: var(--ui-text-4); }
+.hubly-command-option[aria-selected="true"] .hubly-command-chevron { color: var(--hb-accent-text); }
+.hubly-command-brand { width: 24px; height: 24px; border-radius: 8px; color: var(--on-accent); font-size: 11px; font-weight: 600; display: inline-grid; place-items: center; }
+.hubly-command-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-shrink: 0; padding: 10px 24px; border-top: 1px solid var(--ui-border); background: var(--ui-surface-2); color: var(--ui-text-4); font-size: 11px; }
+.hubly-command-hints { display: flex; gap: 16px; }
+.hubly-command-hints > span { display: inline-flex; align-items: center; gap: 4px; }
+.hubly-command-close { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px; border: 0; border-radius: 8px; background: transparent; color: var(--ui-text-4); font-size: 11px; cursor: pointer; }
+.hubly-command-close:hover { color: var(--hb-accent-text); background: var(--ui-muted); }
+.hubly-command-close:focus-visible, .hubly-command-option:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: -2px; }
+.hubly-command-touch-hint { display: none; }
+.hubly-command-empty { gap: 12px; min-height: 240px; padding: 32px 24px; overflow-y: auto; overflow-wrap: anywhere; }
+.hubly-command-empty strong { font-size: 13px; }
+.hubly-command-empty span { font-size: 11px; }
+@media (max-width: 767.98px) {
+  .hubly-command-search { gap: 12px; padding: 16px; }
+  .hubly-command-heading { padding-right: 16px; padding-left: 16px; }
+  .hubly-command-option { padding: 12px 16px; }
+  .hubly-command-label, .hubly-command-description { white-space: normal; overflow-wrap: anywhere; }
+  .hubly-command-meta { max-width: 64px; }
+  .hubly-command-shortcut, .hubly-command-hints { display: none; }
+  .hubly-command-touch-hint { display: block; }
+  .hubly-command-footer { gap: 8px; padding: 8px 16px; padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+  .hubly-command-close, .hubly-command-search .hubly-cal-modal-close { min-width: 44px; min-height: 44px; }
+}
+@media (max-width: 640px) {
+  .hubly-sheet.hubly-command { animation-duration: 180ms; animation-delay: 0ms; }
+  .hubly-sheet.hubly-command[data-state="closing"] { animation-duration: 150ms; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hubly-command-option { transition: none; }
+  .hubly-sheet.hubly-command { animation: none; }
+}

@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useId, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHublyStore } from "@/lib/store";
+import { useLayer } from "@/lib/use-layer";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { openNotebookModal } from "@/components/app/NotebookReaderModal";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
@@ -14,6 +15,10 @@ import {
   HublyClipboardIcon as CheckSquare,
   HublyDocumentIcon as FileText,
   HublyEnterIcon as CornerDownLeft,
+  HublyChevronRightIcon as ChevronRight,
+  HublyCloseIcon as Close,
+  HublyArrowUpIcon as ArrowUp,
+  HublyArrowDownIcon as ArrowDown,
   HublyMegaphoneIcon as Megaphone,
   HublyNotebookIcon as BookOpen,
   HublyPeopleIcon as Users,
@@ -57,7 +62,9 @@ export function CommandPaletteModal({
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const previousActiveElementRef = useRef<HTMLElement | null>(null);
+  const listId = useId();
+  const keyboardSelection = useRef(true);
+  const [shortcut, setShortcut] = useState("Ctrl K");
 
   const cmdkOpen = useHublyStore((s) => s.cmdkOpen);
   const setCmdkOpen = useHublyStore((s) => s.setCmdkOpen);
@@ -84,26 +91,29 @@ export function CommandPaletteModal({
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const handleClose = () => {
-    setQuery("");
+  const handleClose = useCallback(() => {
     if (onCloseProp) {
       onCloseProp();
     } else {
       setCmdkOpen(false);
     }
-  };
+  }, [onCloseProp, setCmdkOpen]);
+
+  useLayer(isOpen, handleClose);
 
   // Global Cmd+K / Ctrl+K shortcut
   useEffect(() => {
+    setShortcut(/Mac|iPhone|iPad/.test(navigator.platform) ? "⌘ K" : "Ctrl K");
     const onGlobalKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setCmdkOpen(!useHublyStore.getState().cmdkOpen);
+        if (isOpen) handleClose();
+        else setCmdkOpen(true);
       }
     };
     window.addEventListener("keydown", onGlobalKeyDown);
     return () => window.removeEventListener("keydown", onGlobalKeyDown);
-  }, [setCmdkOpen]);
+  }, [isOpen, handleClose, setCmdkOpen]);
 
   // Reset search query when opened
   useEffect(() => {
@@ -119,11 +129,10 @@ export function CommandPaletteModal({
     const quickActions: CommandItem[] = [
       {
         id: "act-composer",
-        group: "Acciones rápidas",
-        label: "Crear o programar publicación",
+        group: "Acciones",
+        label: "Crear o programar post",
         sublabel: "Abre el compositor de posts, Reels y Stories",
-        badge: "Acción",
-        icon: <Plus size={14} style={{ color: "var(--hb-accent-text)" }} />,
+        icon: <Plus size={17} />,
         action: () => {
           handleClose();
           window.requestAnimationFrame(() => openComposer(null));
@@ -131,11 +140,10 @@ export function CommandPaletteModal({
       },
       {
         id: "act-new-brand",
-        group: "Acciones rápidas",
-        label: "Crear nueva marca / cuenta de cliente",
+        group: "Acciones",
+        label: "Crear nueva marca",
         sublabel: "Configura identidad y compromisos mensuales",
-        badge: "Acción",
-        icon: <Building2 size={14} style={{ color: "var(--hb-accent-text)" }} />,
+        icon: <Building2 size={17} />,
         action: () => {
           handleClose();
           window.requestAnimationFrame(() => setNewBrandModalOpen(true));
@@ -143,11 +151,10 @@ export function CommandPaletteModal({
       },
       {
         id: "act-invite-team",
-        group: "Acciones rápidas",
+        group: "Acciones",
         label: "Invitar miembro al equipo",
         sublabel: "Genera invitación local con rol y marcas asignadas",
-        badge: "Equipo",
-        icon: <UserPlus size={14} style={{ color: "var(--hb-accent-text)" }} />,
+        icon: <UserPlus size={17} />,
         action: () => {
           handleClose();
           window.requestAnimationFrame(() => setInviteModalOpen(true));
@@ -155,11 +162,10 @@ export function CommandPaletteModal({
       },
       {
         id: "act-suggestions",
-        group: "Acciones rápidas",
-        label: "Revisar sugerencias automáticas de metas",
+        group: "Acciones",
+        label: "Revisar sugerencias de metas",
         sublabel: "Motor de reglas sobre el cumplimiento del último mes",
-        badge: "Salud",
-        icon: <Sparkles size={14} style={{ color: "var(--hb-accent-text)" }} />,
+        icon: <Sparkles size={17} />,
         action: () => {
           handleClose();
           window.requestAnimationFrame(() => setAutoSuggestionsModalOpen(true));
@@ -167,11 +173,10 @@ export function CommandPaletteModal({
       },
       {
         id: "act-widgets",
-        group: "Acciones rápidas",
-        label: "Configurar widgets del Dashboard",
+        group: "Acciones",
+        label: "Configurar widgets del dashboard",
         sublabel: "Mostrar, ocultar, cambiar columna o reordenar widgets",
-        badge: "Dashboard",
-        icon: <LayoutGrid size={14} style={{ color: "var(--hb-accent-text)" }} />,
+        icon: <LayoutGrid size={17} />,
         action: () => {
           handleClose();
           window.requestAnimationFrame(() => setWidgetConfigModalOpen(true));
@@ -179,11 +184,10 @@ export function CommandPaletteModal({
       },
       {
         id: "act-hubly-ai",
-        group: "Acciones rápidas",
+        group: "Acciones",
         label: "Pregúntale a Hubi",
         sublabel: "Consulta tareas vencidas, salud de cuentas y aprobaciones",
-        badge: "Hubi",
-        icon: <HublyCatAvatar size={16} />,
+        icon: <HublyCatAvatar size={24} />,
         action: () => {
           handleClose();
           window.requestAnimationFrame(() => setAiDrawerOpen(true));
@@ -194,10 +198,10 @@ export function CommandPaletteModal({
     const navigationItems: CommandItem[] = [
       {
         id: "nav-dashboard",
-        group: "Navegación",
+        group: "Páginas",
         label: "Dashboard · Inicio",
         sublabel: "Resumen operativo, tareas, libretas y aprobaciones",
-        icon: <LayoutGrid size={14} style={{ color: "var(--hb-accent-text)" }} />,
+        icon: <LayoutGrid size={17} />,
         action: () => {
           handleClose();
           router.push("/dashboard");
@@ -205,10 +209,10 @@ export function CommandPaletteModal({
       },
       {
         id: "nav-cuentas",
-        group: "Navegación",
+        group: "Páginas",
         label: "Dashboard · Salud de Cuentas",
         sublabel: "Cumplimiento de entregas, presupuesto y estado de pauta",
-        icon: <Sparkles size={14} style={{ color: "var(--hb-accent-text)" }} />,
+        icon: <Sparkles size={17} />,
         action: () => {
           handleClose();
           router.push("/dashboard?tab=cuentas");
@@ -216,10 +220,10 @@ export function CommandPaletteModal({
       },
       {
         id: "nav-equipo",
-        group: "Navegación",
+        group: "Páginas",
         label: "Dashboard · Equipo",
         sublabel: "Carga operativa, actividad semanal e invitaciones",
-        icon: <Users size={14} style={{ color: "var(--hb-accent-text)" }} />,
+        icon: <Users size={17} />,
         action: () => {
           handleClose();
           router.push("/dashboard?tab=equipo");
@@ -227,10 +231,10 @@ export function CommandPaletteModal({
       },
       {
         id: "nav-tareas",
-        group: "Navegación",
+        group: "Páginas",
         label: "Mi Espacio (Tareas y Libretas Kraft)",
         sublabel: "Gestión de entregables y notas de estrategia",
-        icon: <CheckSquare size={14} style={{ color: "var(--hb-accent-text)" }} />,
+        icon: <CheckSquare size={17} />,
         action: () => {
           handleClose();
           router.push("/tareas");
@@ -238,10 +242,10 @@ export function CommandPaletteModal({
       },
       {
         id: "nav-calendario",
-        group: "Navegación",
+        group: "Páginas",
         label: "Calendario Editorial",
         sublabel: "Planeación mensual de publicaciones",
-        icon: <Calendar size={14} style={{ color: "var(--hb-accent-text)" }} />,
+        icon: <Calendar size={17} />,
         action: () => {
           handleClose();
           router.push("/calendario");
@@ -249,10 +253,10 @@ export function CommandPaletteModal({
       },
       {
         id: "nav-parrillas",
-        group: "Navegación",
+        group: "Páginas",
         label: "Social Media / Parrillas",
         sublabel: "Parrilla de contenidos y flujo de aprobación",
-        icon: <FileText size={14} style={{ color: "var(--ui-text-4)" }} />,
+        icon: <FileText size={17} />,
         action: () => {
           handleClose();
           router.push("/parrillas");
@@ -260,10 +264,10 @@ export function CommandPaletteModal({
       },
       {
         id: "nav-marca",
-        group: "Navegación",
+        group: "Páginas",
         label: "Núcleo de Marca",
         sublabel: "Tono de voz, arquetipos y pilares editoriales",
-        icon: <BookOpen size={14} style={{ color: "var(--ui-text-4)" }} />,
+        icon: <BookOpen size={17} />,
         action: () => {
           handleClose();
           router.push("/marca");
@@ -271,10 +275,10 @@ export function CommandPaletteModal({
       },
       {
         id: "nav-anuncios",
-        group: "Navegación",
+        group: "Páginas",
         label: "Ads / Campañas Activas",
         sublabel: "Rendimiento de pauta, clics y ROAS",
-        icon: <Megaphone size={14} style={{ color: "#E11D48" }} />,
+        icon: <Megaphone size={17} />,
         action: () => {
           handleClose();
           router.push("/anuncios");
@@ -282,10 +286,10 @@ export function CommandPaletteModal({
       },
       {
         id: "nav-chat",
-        group: "Navegación",
+        group: "Páginas",
         label: "Chat de Agencia",
         sublabel: "Conversaciones por canal de marca",
-        icon: <MessageSquare size={14} style={{ color: "var(--ui-text-4)" }} />,
+        icon: <MessageSquare size={17} />,
         action: () => {
           handleClose();
           router.push("/chat");
@@ -293,10 +297,10 @@ export function CommandPaletteModal({
       },
       {
         id: "nav-ajustes",
-        group: "Navegación",
+        group: "Páginas",
         label: "Ajustes del Workspace",
         sublabel: "Configuración de cuenta y preferencias",
-        icon: <Settings size={14} style={{ color: "var(--ui-text-4)" }} />,
+        icon: <Settings size={17} />,
         action: () => {
           handleClose();
           router.push("/ajustes");
@@ -311,19 +315,7 @@ export function CommandPaletteModal({
       sublabel: `${b.industry} · Salud ${b.healthScore}%`,
       badge: b.id === activeBrandId ? "Activa" : "Cambiar marca",
       icon: (
-        <span
-          style={{
-            width: 18,
-            height: 18,
-            borderRadius: 5,
-            background: b.color,
-            color: "#FFFFFF",
-            fontSize: 9,
-            fontWeight: 700,
-            display: "inline-grid",
-            placeItems: "center",
-          }}
-        >
+        <span className="hubly-command-brand" style={{ background: b.color }}>
           {b.initials}
         </span>
       ),
@@ -341,7 +333,7 @@ export function CommandPaletteModal({
         label: t.title,
         sublabel: `${b?.name || "Agencia"} · ${t.assignee} · Vence ${t.dueDate}`,
         badge: t.completed ? "Completada" : String(t.priority),
-        icon: <CheckSquare size={14} style={{ color: "var(--ui-text-4)" }} />,
+        icon: <CheckSquare size={17} />,
         action: () => {
           setActiveBrand(t.brandId);
           handleClose();
@@ -358,7 +350,7 @@ export function CommandPaletteModal({
         label: p.title,
         sublabel: `${b?.name || "Marca"} · ${p.network || p.networks?.[0] || "Instagram"} (${p.format}) · ${p.scheduledDate}`,
         badge: p.statusLabel || p.status,
-        icon: <FileText size={14} style={{ color: "var(--hb-accent-text)" }} />,
+        icon: <FileText size={17} />,
         action: () => {
           handleClose();
           window.requestAnimationFrame(() => openComposer(p.id));
@@ -372,7 +364,7 @@ export function CommandPaletteModal({
       label: nb.title,
       sublabel: nb.subtitle,
       badge: nb.category || nb.stamp || "Libreta",
-      icon: <BookOpen size={14} style={{ color: "#8C6239" }} />,
+      icon: <BookOpen size={17} />,
       action: () => {
         handleClose();
         window.requestAnimationFrame(() => openNotebookModal(nb.id));
@@ -385,7 +377,7 @@ export function CommandPaletteModal({
       label: m.name,
       sublabel: `${m.role} · ${m.email}`,
       badge: m.status,
-      icon: <Users size={14} style={{ color: "var(--hb-accent-text)" }} />,
+      icon: <Users size={17} />,
       action: () => {
         handleClose();
         router.push("/dashboard?tab=equipo");
@@ -419,7 +411,6 @@ export function CommandPaletteModal({
         item.group.toLowerCase().includes(q) ||
         (item.badge && item.badge.toLowerCase().includes(q))
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     query,
     brands,
@@ -428,102 +419,61 @@ export function CommandPaletteModal({
     posts,
     notebooks,
     teamMembers,
-    router,
+    router, handleClose, openComposer, setActiveBrand, setNewBrandModalOpen,
+    setInviteModalOpen, setAutoSuggestionsModalOpen, setWidgetConfigModalOpen, setAiDrawerOpen,
   ]);
 
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [query]);
-
-  // Focus trap, Escape key, Arrow navigation & Scroll lock
+  // Opening owns focus and scroll lock; typing and selection never restart it.
   useEffect(() => {
     if (!isOpen) return;
-
-    previousActiveElementRef.current =
-      document.activeElement as HTMLElement | null;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-
-    const rafId = window.requestAnimationFrame(() => {
-      inputRef.current?.focus();
-    });
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        e.stopPropagation();
-        handleClose();
-        return;
-      }
-
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        setSelectedIndex((prev) =>
-          allItems.length > 0 ? (prev + 1) % allItems.length : 0
-        );
-        return;
-      }
-
-      if (e.key === "ArrowUp") {
-        e.preventDefault();
-        setSelectedIndex((prev) =>
-          allItems.length > 0
-            ? (prev - 1 + allItems.length) % allItems.length
-            : 0
-        );
-        return;
-      }
-
-      if (e.key === "Enter" && allItems[selectedIndex]) {
-        e.preventDefault();
-        allItems[selectedIndex].action();
-        return;
-      }
-
-      if (e.key === "Tab") {
-        const focusables = getFocusableElements(dialogRef.current);
-        if (focusables.length === 0) {
-          e.preventDefault();
-          return;
-        }
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        const active = document.activeElement as HTMLElement | null;
-
-        if (e.shiftKey) {
-          if (!active || active === first || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (!active || active === last || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown, true);
-
+    const rafId = window.requestAnimationFrame(() => inputRef.current?.focus());
     return () => {
       window.cancelAnimationFrame(rafId);
-      document.removeEventListener("keydown", handleKeyDown, true);
-      const remainingDialogs = document.querySelectorAll(
-        '[role="dialog"][aria-modal="true"]'
-      );
-      if (remainingDialogs.length <= 1) {
-        document.body.style.overflow = prevOverflow || "";
-      }
-      const prevEl = previousActiveElementRef.current;
-      if (prevEl && document.body.contains(prevEl)) {
-        window.requestAnimationFrame(() => {
-          prevEl.focus();
-        });
-      }
+      document.body.style.overflow = prevOverflow;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, allItems, selectedIndex]);
+  }, [isOpen]);
+
+  const activeIndex = Math.min(selectedIndex, Math.max(0, allItems.length - 1));
+  useEffect(() => {
+    if (isOpen && keyboardSelection.current) {
+      dialogRef.current?.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: "nearest" });
+    }
+  }, [isOpen, activeIndex, allItems]);
+
+  const updateQuery = (value: string) => {
+    keyboardSelection.current = true;
+    setQuery(value);
+    setSelectedIndex(0);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.nativeEvent.isComposing) return;
+    if (e.target === inputRef.current) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        keyboardSelection.current = true;
+        const direction = e.key === "ArrowDown" ? 1 : -1;
+        setSelectedIndex(allItems.length ? (activeIndex + direction + allItems.length) % allItems.length : 0);
+      } else if (e.key === "Enter" && allItems[activeIndex]) {
+        e.preventDefault();
+        allItems[activeIndex].action();
+      }
+    }
+    if (e.key === "Tab") {
+      const focusables = getFocusableElements(dialogRef.current);
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last?.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first?.focus();
+      }
+    }
+  };
 
   const presence = useModalPresence(isOpen);
   if (!presence.mounted) return null;
@@ -544,286 +494,94 @@ export function CommandPaletteModal({
 
   return (
     <div
-      className="hubly-overlay"
+      className="hubly-overlay hubly-cal-overlay hubly-command-overlay"
       data-state={presence.state}
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) handleClose();
-      }}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 120,
-        background: "rgba(15, 23, 42, 0.35)",
-        backdropFilter: "blur(3px)",
-        display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "center",
-        padding: "11vh 16px 24px",
-      }}
+      onMouseDown={(e) => { if (e.target === e.currentTarget) handleClose(); }}
     >
       <div
         ref={dialogRef}
-        className="hubly-sheet"
+        className="hubly-sheet hubly-cal-modal hubly-command"
         data-state={presence.state}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        style={{
-          width: "100%",
-          maxWidth: 560,
-          background: "var(--ui-surface)",
-          borderRadius: 16,
-          border: "1px solid var(--ui-border)",
-          boxShadow: "0 20px 50px rgba(15, 23, 42, 0.18)",
-          overflow: "hidden",
-          display: "flex",
-          flexDirection: "column",
-          color: "var(--ui-text)",
-        }}
+        onKeyDown={handleKeyDown}
       >
-        <h2
-          id={titleId}
-          style={{
-            position: "absolute",
-            width: 1,
-            height: 1,
-            padding: 0,
-            margin: -1,
-            overflow: "hidden",
-            clip: "rect(0, 0, 0, 0)",
-            whiteSpace: "nowrap",
-            border: 0,
-          }}
-        >
-          Buscador rápido y paleta de comandos de Hubly
-        </h2>
-
-        {/* Search Input Bar */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            padding: "13px 16px",
-            borderBottom: "1px solid var(--ui-muted)",
-          }}
-        >
-          <Search size={16} style={{ color: "var(--ui-text-5)", flexShrink: 0 }} />
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar tareas, marcas, posts, libretas o comandos..."
-            aria-label="Buscar tareas, marcas, posts, libretas o comandos"
-            style={{
-              flex: 1,
-              border: "none",
-              outline: "none",
-              background: "transparent",
-              fontSize: 13.5,
-              color: "var(--ui-text)",
-              fontFamily: "inherit",
-            }}
-          />
-          <button
-            type="button"
-            onClick={handleClose}
-            aria-label="Cerrar paleta de comandos (Escape)"
-            style={{
-              fontSize: 10,
-              fontWeight: 700,
-              color: "var(--ui-text-5)",
-              background: "var(--ui-surface-2)",
-              border: "1px solid var(--ui-border)",
-              borderRadius: 5,
-              padding: "2px 6px",
-              letterSpacing: "0.04em",
-              cursor: "pointer",
-            }}
-          >
-            ESC
-          </button>
-        </div>
-
-        {/* Results List */}
-        <div
-          style={{
-            maxHeight: 370,
-            overflowY: "auto",
-            padding: "8px 8px 10px",
-          }}
-        >
-          {groupedSections.length > 0 ? (
-            groupedSections.map((section) => (
-              <div key={section.group} style={{ marginBottom: 8 }}>
-                <div
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 700,
-                    color: "var(--ui-text-5)",
-                    letterSpacing: "0.06em",
-                    textTransform: "uppercase",
-                    padding: "4px 10px 4px",
-                  }}
-                >
-                  {section.group}
-                </div>
-
-                {section.entries.map(({ item, flatIdx }) => {
-                  const active = flatIdx === selectedIndex;
-                  return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onMouseEnter={() => setSelectedIndex(flatIdx)}
-                      onClick={item.action}
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: 10,
-                        padding: "8px 10px",
-                        borderRadius: 10,
-                        border: "none",
-                        background: active ? "var(--ui-muted)" : "transparent",
-                        color: "var(--ui-text)",
-                        fontSize: 13,
-                        fontWeight: active ? 600 : 500,
-                        cursor: "pointer",
-                        textAlign: "left",
-                        fontFamily: "inherit",
-                      }}
-                    >
-                      <span
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 10,
-                          minWidth: 0,
-                        }}
-                      >
-                        <span
-                          style={{
-                            width: 24,
-                            height: 24,
-                            borderRadius: 7,
-                            background: active ? "var(--ui-surface)" : "var(--ui-surface-2)",
-                            border: "1px solid var(--ui-border)",
-                            display: "inline-grid",
-                            placeItems: "center",
-                            flexShrink: 0,
-                          }}
-                        >
-                          {item.icon}
-                        </span>
-                        <span style={{ minWidth: 0 }}>
-                          <span
-                            style={{
-                              display: "block",
-                              color: "var(--ui-text)",
-                              lineHeight: 1.25,
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {item.label}
-                          </span>
-                          {item.sublabel && (
-                            <span
-                              style={{
-                                display: "block",
-                                fontSize: 11,
-                                color: "var(--ui-text-4)",
-                                fontWeight: 400,
-                                marginTop: 1,
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              {item.sublabel}
-                            </span>
-                          )}
-                        </span>
-                      </span>
-
-                      <span
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 6,
-                          flexShrink: 0,
-                        }}
-                      >
-                        {item.badge && (
-                          <span
-                            style={{
-                              fontSize: 10.5,
-                              fontWeight: 600,
-                              padding: "2px 7px",
-                              borderRadius: 9999,
-                              background: "var(--ui-accent-soft)",
-                              color: "var(--hb-accent-text)",
-                            }}
-                          >
-                            {item.badge}
-                          </span>
-                        )}
-                        {active && (
-                          <CornerDownLeft
-                            size={13}
-                            style={{ color: "var(--ui-text-4)" }}
-                          />
-                        )}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            ))
-          ) : (
-            <div
-              style={{
-                padding: "28px 16px",
-                textAlign: "center",
-                fontSize: 13,
-                color: "var(--ui-text-4)",
-              }}
-            >
-              No se encontraron resultados para{" "}
-              <strong style={{ color: "var(--ui-text)" }}>&ldquo;{query}&rdquo;</strong>
-            </div>
-          )}
-        </div>
-
-        {/* Footer */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "8px 16px",
-            borderTop: "1px solid var(--ui-muted)",
-            background: "#FAFAFA",
-            fontSize: 11,
-            color: "var(--ui-text-5)",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <span>
-              <strong style={{ color: "var(--ui-text-4)" }}>↑↓</strong> navegar
-            </span>
-            <span>
-              <strong style={{ color: "var(--ui-text-4)" }}>↵</strong> abrir
-            </span>
-            <span>
-              <strong style={{ color: "var(--ui-text-4)" }}>esc</strong> cerrar
-            </span>
+        <div className="hubly-command-search">
+          <Search size={22} />
+          <div className="hubly-command-field">
+            <label id={titleId} htmlFor={`${listId}-input`}>Buscar en Hubly</label>
+            <input
+              id={`${listId}-input`}
+              ref={inputRef}
+              type="text"
+              role="combobox"
+              aria-expanded={isOpen}
+              aria-controls={listId}
+              aria-autocomplete="list"
+              aria-activedescendant={allItems[activeIndex] ? `${listId}-${allItems[activeIndex].id}` : undefined}
+              autoComplete="off"
+              spellCheck={false}
+              value={query}
+              onChange={(e) => updateQuery(e.target.value)}
+              placeholder="Busca una acción, página o marca…"
+            />
           </div>
-          <span>Hubly Command · ⌘K</span>
+          {query && (
+            <button type="button" className="hubly-cal-modal-close" aria-label="Limpiar búsqueda" title="Limpiar búsqueda"
+              onClick={() => { updateQuery(""); inputRef.current?.focus(); }}>
+              <Close size={14} />
+            </button>
+          )}
+          <kbd className="hubly-command-shortcut">{shortcut}</kbd>
+        </div>
+
+        <div id={listId} className="hubly-command-results" role="listbox" tabIndex={-1} aria-label="Resultados de búsqueda">
+          {groupedSections.map((section, groupIndex) => (
+            <div key={section.group} role="group" aria-labelledby={`${listId}-group-${groupIndex}`} className="hubly-command-group">
+              <div id={`${listId}-group-${groupIndex}`} className="hubly-command-heading">{section.group}</div>
+              {section.entries.map(({ item, flatIdx }) => (
+                <div
+                  key={item.id}
+                  id={`${listId}-${item.id}`}
+                  role="option"
+                  aria-selected={flatIdx === activeIndex}
+                  tabIndex={-1}
+                  className="hubly-command-option"
+                  onPointerMove={(e) => { if (e.pointerType === "mouse") { keyboardSelection.current = false; setSelectedIndex(flatIdx); } }}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={item.action}
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); item.action(); } }}
+                >
+                  <span className="hubly-command-icon" aria-hidden="true">{item.icon}</span>
+                  <span className="hubly-command-copy">
+                    <span className="hubly-command-label" title={item.label}>{item.label}</span>
+                    {item.sublabel && <span className="hubly-command-description" title={item.sublabel}>{item.sublabel}</span>}
+                  </span>
+                  {item.badge && <span className="hubly-command-meta">{item.badge}</span>}
+                  <ChevronRight size={14} className="hubly-command-chevron" aria-hidden="true" />
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        {allItems.length === 0 && (
+          <div className="hubly-cal-empty hubly-command-empty" role="status">
+            <Search size={22} aria-hidden="true" />
+            <strong>Sin resultados para «{query}»</strong>
+            <span>Prueba con otro nombre o limpia la búsqueda.</span>
+            <button type="button" className="hbtn hbtn-secondary" onClick={() => { updateQuery(""); inputRef.current?.focus(); }}>Limpiar búsqueda</button>
+          </div>
+        )}
+        <span className="sr-only" role="status">{allItems.length ? `${allItems.length} resultados` : ""}</span>
+
+        <div className="hubly-command-footer">
+          <div className="hubly-command-hints" aria-hidden="true">
+            <span><kbd><ArrowUp size={14} /></kbd><kbd><ArrowDown size={14} /></kbd> Navegar</span>
+            <span><kbd><CornerDownLeft size={14} /></kbd> Abrir</span>
+          </div>
+          <span className="hubly-command-touch-hint">Toca un resultado para abrirlo</span>
+          <button type="button" className="hubly-command-close" onClick={handleClose}><kbd>Esc</kbd> Cerrar</button>
         </div>
       </div>
     </div>

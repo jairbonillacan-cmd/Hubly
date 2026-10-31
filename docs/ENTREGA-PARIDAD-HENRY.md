@@ -153,3 +153,33 @@ Sin empezar. En `web/.data/media/` están `a.png`, `b.png`, `06-calendario-seman
 7. `npx tsc --noEmit`, `npm run build`, `npm test`, `npm run test:db`, `npx playwright test`, y actualizar este documento.
 
 Decisiones que necesito: (a) si aceptas quitar «Custom» del periodo; (b) si en `/ia` prefieres enlaces reales o respuestas de ejemplo en las cuatro tarjetas de acción; (c) si `/anuncios` debe ocultarse por completo mientras no haya cuentas conectadas, en lugar de mostrar datos de ejemplo.
+
+## Traspaso: rediseño del buscador global (trabajo de otra sesión)
+
+Esta parte **no la hice yo**. Según el usuario, la hizo GPT 6 en otra sesión; el repositorio no registra quién fue. Yo solo la leí, corrí `tsc` y su script de verificación, y la subí tal como estaba, **sin terminar y sin revisar a fondo**. Archivos: `web/components/app/CommandPaletteModal.tsx` (reescrito, +232 −411 con el CSS), reglas `hubly-command-*` al final de `web/app/(app)/dashboard-polish.css` y `web/e2e/verificar-buscador.cjs` (copia del script de verificación que dejó en `output/`, con la ruta de `@playwright/test` corregida).
+
+### Qué cambió en el buscador (⌘/Ctrl K, botón «Buscar» del sidebar)
+
+- El diálogo tiene ahora la forma de las recetas de la guía: `hubly-overlay` + `hubly-sheet`, `useLayer` (Escape y devolución del foco a quien lo abrió), `useModalPresence`, ancho máximo de 672 px y alto máximo de 640 px.
+- Accesibilidad de combobox: campo con `role="combobox"`, `aria-controls`, `aria-activedescendant`; lista con `role="listbox"`, grupos con `role="group"` y opciones con `role="option"` y `aria-selected`. Anuncia el número de resultados en una región `role="status"`. La etiqueta visible «Buscar en Hubly» da nombre al diálogo.
+- Teclado: flechas con vuelta al principio y al final, Enter abre, Tab queda atrapado dentro, y el elemento seleccionado se desplaza a la vista solo cuando la selección viene del teclado (no del ratón).
+- Se muestra el atajo según la plataforma (`⌘ K` o `Ctrl K`), y una ayuda fija abajo (Navegar, Abrir, Esc Cerrar). En móvil la ayuda de teclado se oculta y aparece «Toca un resultado para abrirlo».
+- Los grupos se renombraron: «Acciones rápidas» → «Acciones», «Navegación» → «Páginas»; los textos pasan a la capitalización de la guía («Crear o programar post», «Crear nueva marca»). Se quitaron las insignias de las acciones y los colores fijos de los iconos (`#E11D48` y otros); los iconos pasan a 17 px.
+- Estado vacío: «Sin resultados para «…»» con botón «Limpiar búsqueda».
+- El CSS usa tokens (`--ui-*`, `--hb-accent`, `--on-accent`) y trae reglas para móvil (objetivos de 44 px), movimiento reducido y modo oscuro por tokens.
+
+### Dónde se quedó
+
+- `npx tsc --noEmit` pasa.
+- `web/e2e/verificar-buscador.cjs` (`node e2e/verificar-buscador.cjs` desde `web/`, con `localhost:3000` encendido) recorre: abrir desde el botón, foco en el campo, 15 flechas con scroll, vacío, Tab a «Limpiar búsqueda», buscar «calendario» + Enter, ⌘/Ctrl K, Escape y devolución del foco, modo oscuro, y 375 px. **Lo corrí hoy a las 13:41: pasa hasta el modo oscuro y el vacío en escritorio, y falla en el paso de móvil**: después de cambiar a 375 px y recargar, `Control+K` no abre el diálogo (no aparece el `combobox`). No sé si es un defecto del componente en móvil o del script (pulsa el atajo antes de que la página termine de cargar). Hay que investigarlo.
+- Las capturas que dejó están en `output/` (`search-before*.png`, `search-desktop.png`, `search-dark.png`, `search-empty.png`, `search-debug.png`), que no se sube. Si quieres compararlas, regenéralas con el script.
+- No hay prueba de Playwright propia del buscador dentro de `e2e/`; el script es una verificación suelta, no parte de `npx playwright test`.
+- `check:ui` no se ejecutó sobre estos cambios.
+
+### Por revisar
+
+1. Corregir o explicar el fallo de móvil del script y, si es del componente, arreglarlo.
+2. Pasar el script a una prueba de `e2e/*.spec.ts` y bloquear las escrituras a `/api/`.
+3. Mirar el diálogo en 1440 claro, 1440 oscuro y 390 (`npm run check:ui`, foco y hover).
+4. Algunos destinos de las acciones apuntan a `/dashboard?tab=cuentas` y `/dashboard?tab=equipo`, mientras que las pantallas reales son `/dashboard/salud-cuentas` y `/dashboard/equipo`. Conviene comprobarlo.
+5. Los textos de las acciones y páginas siguen en tono mixto («Ajustes del Workspace», «Libretas Kraft», «ROAS»); la guía pide español de México y vocabulario fijo.
