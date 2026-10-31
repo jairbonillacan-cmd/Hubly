@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { addDays, dueLabelFor, localIsoDate } from "../lib/date";
 import { notebookPlainText, notebookTasks, notebookToHtml } from "../lib/notebook-content";
+import { buildCaptionSystemPrompt } from "../lib/ai-caption";
+import { buildMonthlyReport } from "../lib/reporting";
 import { safeNextPath } from "../lib/supabase/config";
+import type { SocialPost } from "../lib/types";
 import { moveInList } from "../lib/use-kanban-drag";
 
 test("localIsoDate usa la fecha local", () => {
@@ -61,4 +64,33 @@ test("safeNextPath bloquea redirecciones externas", () => {
   assert.equal(safeNextPath("https://evil.com"), "/dashboard");
   assert.equal(safeNextPath("/\\evil.com"), "/dashboard");
   assert.equal(safeNextPath(null, "/onboarding"), "/onboarding");
+});
+
+test("buildMonthlyReport solo cuenta publicados medidos del mes", () => {
+  const base = { brandId: "b", networks: ["Instagram"], comments: [] } as unknown as SocialPost;
+  const metrics = { reach: 100, likes: 10, comments: 5, saves: 2, shares: 5 };
+  const posts = [
+    { ...base, id: "1", scheduledDate: "2026-11-02", status: "published", network: "Instagram", metrics },
+    { ...base, id: "2", scheduledDate: "2026-11-03", status: "published", network: "TikTok" },
+    { ...base, id: "3", scheduledDate: "2026-11-04", status: "pending", metrics },
+    { ...base, id: "4", scheduledDate: "2026-12-01", status: "published", metrics },
+  ] as SocialPost[];
+  const r = buildMonthlyReport(posts, "2026-11");
+  assert.equal(r.planned, 3);
+  assert.equal(r.published, 2);
+  assert.equal(r.measured, 1);
+  assert.equal(r.reach, 100);
+  assert.equal(r.interactions, 20);
+  assert.equal(r.engagementRate, 20);
+  assert.deepEqual(r.byNetwork.map((n) => n.network), ["Instagram", "TikTok"]);
+  assert.equal(buildMonthlyReport([], "2026-11").engagementRate, null);
+});
+
+test("el prompt de IA incluye la voz de la marca y limita lo que recibe", () => {
+  const p = buildCaptionSystemPrompt({ name: "Sol", toneOfVoice: "cercano", dontWords: ["barato"] }, "Instagram", "Reel");
+  assert.match(p, /Marca: Sol/);
+  assert.match(p, /Tono de voz: cercano/);
+  assert.match(p, /evita: barato/);
+  assert.match(p, /No inventes/);
+  assert.ok(buildCaptionSystemPrompt({ name: "x".repeat(5000) }).length < 1000);
 });

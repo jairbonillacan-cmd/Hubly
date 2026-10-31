@@ -1,6 +1,7 @@
 "use client";
 
 import type { SocialPost } from "@/lib/types";
+import { backendEnabled } from "@/lib/supabase/config";
 
 const fmt = (n: number) => n.toLocaleString("es-MX");
 
@@ -9,7 +10,7 @@ export function OrganicAnalytics({ posts }: { posts: SocialPost[] }) {
   if (measured.length === 0) {
     return (
       <p style={{ fontSize: 13.5, color: "var(--ui-text-4)", textAlign: "center", padding: 36, background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 14 }}>
-        Sin datos todavía. Las métricas aparecerán cuando se conecten las cuentas de esta marca.
+        Sin datos todavía. Captura resultados en la pestaña Resultados de cada post publicado.
       </p>
     );
   }
@@ -35,7 +36,7 @@ export function OrganicAnalytics({ posts }: { posts: SocialPost[] }) {
   return (
     <div style={{ display: "grid", gap: 16 }}>
       <p role="note" style={{ margin: 0, fontSize: 12.5, fontWeight: 600, color: "var(--ui-accent-text)", background: "#ECEEF8", borderRadius: 10, padding: "8px 12px" }}>
-        Datos de ejemplo: todavía no hay cuentas conectadas.
+        {backendEnabled ? "Resultados capturados a mano en cada post." : "Datos de ejemplo: todavía no hay cuentas conectadas."}
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12 }}>

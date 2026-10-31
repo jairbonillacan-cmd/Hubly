@@ -78,18 +78,17 @@ async function writeWorkspaceDb(
 
 const MAX_BODY_BYTES = 8 * 1024 * 1024;
 
-async function liveGet() {
+async function liveGet(requestedAgency: string | null) {
   const supabase = await createSupabaseServer();
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return NextResponse.json({ error: "not_authenticated" }, { status: 401 });
 
-  const { data: membership } = await supabase
+  const { data: memberships } = await supabase
     .from("agency_members")
     .select("agency_id, role, agencies(name)")
     .eq("user_id", auth.user.id)
-    .order("created_at")
-    .limit(1)
-    .maybeSingle();
+    .order("created_at");
+  const membership = memberships?.find((m) => m.agency_id === requestedAgency) ?? memberships?.[0];
   if (!membership) return NextResponse.json({ error: "no_agency" }, { status: 404 });
 
   const { data: row, error } = await supabase
@@ -143,7 +142,16 @@ async function liveGet() {
     Object.assign(data.agency, { plan: "", activeDays: 0, activeStreak: 0, bestStreak: 0, xp: 0, level: 1 });
   }
   return NextResponse.json(
-    { data, version: row.version, agencyId: membership.agency_id, role: membership.role },
+    {
+      data,
+      version: row.version,
+      agencyId: membership.agency_id,
+      role: membership.role,
+      agencies: (memberships ?? []).map((m) => ({
+        id: m.agency_id,
+        name: (m.agencies as unknown as { name: string } | null)?.name || "",
+      })),
+    },
     { headers: { "Cache-Control": "no-store" } }
   );
 }
@@ -175,7 +183,7 @@ async function livePost(request: Request) {
 }
 
 export async function GET(request: Request) {
-  if (backendEnabled) return liveGet();
+  if (backendEnabled) return liveGet(new URL(request.url).searchParams.get("agencyId"));
   const { searchParams } = new URL(request.url);
   const workspaceId = sanitizeWorkspaceId(
     searchParams.get("workspaceId") || searchParams.get("workspace") || "default"

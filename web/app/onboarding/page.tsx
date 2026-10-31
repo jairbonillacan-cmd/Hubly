@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHublyStore } from "@/lib/store";
 import { backendEnabled } from "@/lib/supabase/config";
+import { selectLiveAgency } from "@/lib/live-workspace";
 
 const STEPS = ["Tu agencia", "Tu primera marca", "Tu equipo"];
 
@@ -40,12 +41,13 @@ export default function OnboardingPage() {
       const res = await fetch("/api/agency", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: agency.trim() }),
+        body: JSON.stringify({ name: agency.trim(), another: new URLSearchParams(window.location.search).has("nueva") }),
       });
       if (!res.ok) {
         setError("No se pudo crear la agencia. Inténtalo de nuevo.");
         return;
       }
+      selectLiveAgency(((await res.json()) as { agencyId: string }).agencyId);
       await syncFromServer();
     }
     updateAgency({ name: agency.trim() });

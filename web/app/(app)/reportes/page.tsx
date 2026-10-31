@@ -1,6 +1,6 @@
 "use client";
 
-import { LiveUnavailable } from "@/components/app/LiveUnavailable";
+import { MonthlyReport } from "@/components/app/reports/MonthlyReport";
 import { backendEnabled } from "@/lib/supabase/config";
 
 import React, { useState } from "react";
@@ -22,7 +22,7 @@ import { useHublyStore } from "@/lib/store";
 import { Cover } from "@/components/Cover";
 
 export default function ReportesPage() {
-  if (backendEnabled) return <LiveUnavailable title="Reportes" text="Los reportes aparecerán cuando conectes las cuentas de esta marca." />;
+  if (backendEnabled) return <LiveReportes />;
   return <DemoReportesPage />;
 }
 
@@ -658,4 +658,10 @@ function DemoReportesPage() {
       )}
     </div>
   );
+}
+
+function LiveReportes() {
+  const brand = useHublyStore((s) => s.brands.find((b) => b.id === s.activeBrandId));
+  const posts = useHublyStore((s) => s.posts);
+  return <MonthlyReport brand={brand} posts={posts.filter((p) => p.brandId === brand?.id)} />;
 }

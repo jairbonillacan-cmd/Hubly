@@ -34,6 +34,7 @@ import { Cover } from "@/components/Cover";
 import { STATUS_META } from "@/components/app/social/status-meta";
 import { PostMonthCalendar } from "@/components/app/social/PostMonthCalendar";
 import { FeedSimulator } from "@/components/app/social/FeedSimulator";
+import { MonthlyReport } from "@/components/app/reports/MonthlyReport";
 import { IdeasBoard } from "@/components/app/social/IdeasBoard";
 import { ProductionBoard } from "@/components/app/social/ProductionBoard";
 import { PostInbox } from "@/components/app/social/PostInbox";
@@ -57,7 +58,7 @@ export default function ParrillasPage() {
   const approveAllBrandPosts = useHublyStore((s) => s.approveAllBrandPosts);
 
   const [activeTab, setActiveTab] = useState<SocialSubTab>("calendario");
-  const [showDemoData, setShowDemoData] = useState(false);
+  const [showDemoData, setShowDemoData] = useState(backendEnabled);
   const [calendarMode, setCalendarMode] = useState<"mes" | "feed" | "tarjetas">("mes");
   const profileName = useHublyStore((s) => s.profile?.name) || "Equipo";
   const composerOpen = useHublyStore((s) => s.composerOpen);
@@ -1149,6 +1150,7 @@ export default function ParrillasPage() {
               <button
                 type="button"
                 onClick={() => setShowDemoData(false)}
+                hidden={backendEnabled}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -1171,7 +1173,7 @@ export default function ParrillasPage() {
                   Parrilla mensual de {brandName} ({brandPosts.length} publicaciones)
                 </div>
                 <div style={{ fontSize: 12.5, color: "var(--ui-text-4)" }}>
-                  Datos de ejemplo interactivos · Aprueba, solicita cambios o programa nuevos posts
+                  {backendEnabled ? "La publicación en redes aún es manual: regístrala en la pestaña Resultados de cada post." : "Datos de ejemplo interactivos · Aprueba, solicita cambios o programa nuevos posts"}
                 </div>
               </div>
             </div>
@@ -1446,7 +1448,8 @@ export default function ParrillasPage() {
       )}
 
       {/* TAB 6: REPORTES (10b-social-media-reportes-1440.png) */}
-      {activeTab === "reportes" && (
+      {activeTab === "reportes" && backendEnabled && <MonthlyReport brand={activeBrand} posts={brandPosts} />}
+      {activeTab === "reportes" && !backendEnabled && (
         <div>
           {/* Secondary Toolbar */}
           <div

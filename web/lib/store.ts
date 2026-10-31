@@ -179,6 +179,9 @@ export interface HublyStoreState extends HublyWorkspaceData {
   ) => void;
   approveAllBrandPosts: (brandId: string, authorName?: string) => void;
   movePost: (postId: string, scheduledDate: string) => void;
+  recordPublication: (postId: string, publication: { url: string; date: string }) => void;
+  setPostResults: (postId: string, metrics: NonNullable<SocialPost["metrics"]>) => void;
+  setCalendarActivities: (activities: unknown[]) => void;
   patchPost: (postId: string, patch: PostExtrasPatch) => void;
   addPostComment: (postId: string, text: string, authorName: string, role: "client" | "agency") => void;
   addIdea: (idea: Pick<ContentIdea, "brandId" | "title" | "notes" | "pillar">) => void;
@@ -298,6 +301,7 @@ function extractWorkspaceData(state: HublyStoreState): HublyWorkspaceData {
     automations: state.automations,
     tasks: state.tasks,
     taskLists: state.taskLists,
+    calendarActivities: state.calendarActivities,
     notebooks: state.notebooks,
     assets: state.assets,
     projects: state.projects,
@@ -471,6 +475,11 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     if (backendEnabled) {
       const loaded = await loadLiveWorkspace();
       if (loaded.kind === "ok") {
+        // Onboarding interrumpido: sin marcas no hay pantalla que mostrar.
+        if (loaded.data.brands.length === 0 && window.location.pathname !== "/onboarding") {
+          window.location.assign("/onboarding");
+          return;
+        }
         // La marca activa es de cada persona, no de la agencia.
         let activeBrandId = loaded.data.activeBrandId;
         try {
@@ -1206,6 +1215,37 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
 
   removeAutomation: (ruleId) => {
     set((s) => ({ automations: (s.automations || []).filter((r) => r.id !== ruleId) }));
+    persistWorkspaceState(get());
+  },
+
+  recordPublication: (postId, { url, date }) => {
+    set((s) => ({
+      posts: s.posts.map((p) =>
+        p.id === postId
+          ? withPostLog(
+              { ...p, status: "published", statusLabel: "Publicado", publishedUrl: url || undefined, scheduledDate: date || p.scheduledDate },
+              "Registró la publicación a mano",
+              s.profile?.name || "Equipo"
+            )
+          : p
+      ),
+    }));
+    persistWorkspaceState(get());
+  },
+
+  setPostResults: (postId, metrics) => {
+    set((s) => ({
+      posts: s.posts.map((p) =>
+        p.id === postId
+          ? withPostLog({ ...p, metrics, metricsSource: "manual" }, "Capturó resultados a mano", s.profile?.name || "Equipo")
+          : p
+      ),
+    }));
+    persistWorkspaceState(get());
+  },
+
+  setCalendarActivities: (activities) => {
+    set({ calendarActivities: activities });
     persistWorkspaceState(get());
   },
 

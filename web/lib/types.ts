@@ -61,6 +61,8 @@ export interface SocialPost {
   };
   comments: PostComment[];
   mediaUrl?: string;
+  publishedUrl?: string;
+  metricsSource?: "manual";
   notifyOnPublish?: boolean;
   notes?: string;
   todos?: PostTodo[];
@@ -573,6 +575,7 @@ export interface HublyWorkspaceData {
   automations?: AutomationRule[];
   tasks: AgencyTask[];
   taskLists?: TaskListDef[];
+  calendarActivities?: unknown[];
   notebooks: NotebookItem[];
   assets: MediaAsset[];
   projects: BrandProject[];

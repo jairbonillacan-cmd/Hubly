@@ -86,6 +86,15 @@ async function handle(req, res, body, url) {
   }
   if (p === "/auth/v1/logout") return send(204);
 
+  if (p === "/v1/messages") {
+    const brief = body.messages?.[0]?.content || "";
+    return send(200, {
+      id: "msg_mock", type: "message", role: "assistant", model: body.model, stop_reason: "end_turn", stop_sequence: null,
+      usage: { input_tokens: 1, output_tokens: 1 },
+      content: [{ type: "text", text: `[respuesta simulada] ${brief}` }],
+    });
+  }
+
   const user = fromAuth(req);
   if (p.startsWith("/rest/v1/rpc/")) {
     const fn = p.slice("/rest/v1/rpc/".length).replace(/\W/g, "");

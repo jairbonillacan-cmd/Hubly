@@ -292,6 +292,8 @@ function normalizePost(post: Partial<SocialPost>): SocialPost {
     metrics: post.metrics,
     comments: Array.isArray(post.comments) ? post.comments : [],
     mediaUrl: post.mediaUrl,
+    publishedUrl: post.publishedUrl,
+    metricsSource: post.metricsSource,
     notifyOnPublish: post.notifyOnPublish,
     notes: post.notes,
     todos: post.todos,
@@ -413,6 +415,7 @@ export function normalizeWorkspacePayload(
     automations: Array.isArray(sanitized.automations) ? sanitized.automations : [],
     tasks,
     taskLists: Array.isArray(sanitized.taskLists) ? sanitized.taskLists : [],
+    calendarActivities: Array.isArray(sanitized.calendarActivities) ? sanitized.calendarActivities : [],
     notebooks:
       Array.isArray(sanitized.notebooks) && sanitized.notebooks.length > 0
         ? sanitized.notebooks

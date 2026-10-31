@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return NextResponse.json({ error: "not_authenticated" }, { status: 401 });
 
-  const { name } = (await request.json().catch(() => ({}))) as { name?: string };
+  const { name, another } = (await request.json().catch(() => ({}))) as { name?: string; another?: boolean };
   const clean = typeof name === "string" ? name.trim() : "";
   if (!clean) return NextResponse.json({ error: "name_required" }, { status: 400 });
 
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     .eq("user_id", auth.user.id)
     .limit(1)
     .maybeSingle();
-  if (existing) return NextResponse.json({ agencyId: existing.agency_id });
+  if (existing && !another) return NextResponse.json({ agencyId: existing.agency_id });
 
   const { data, error } = await supabase.rpc("create_agency", { agency_name: clean });
   if (error) return NextResponse.json({ error: "create_failed" }, { status: 500 });

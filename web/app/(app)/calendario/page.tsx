@@ -19,6 +19,7 @@ import {
   X,
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { backendEnabled } from "@/lib/supabase/config";
 import { selectGreetingAndDate } from "@/lib/domain-selectors";
 import { useModalPresence } from "@/lib/use-modal-presence";
 
@@ -158,13 +159,20 @@ export default function CalendarioPage() {
 
   useEffect(() => setAnchorIso(todayIso), [todayIso]);
 
+  const sharedActivities = useHublyStore((s) => s.calendarActivities);
+  const setSharedActivities = useHublyStore((s) => s.setCalendarActivities);
+
   useEffect(() => {
+    if (backendEnabled) {
+      setActivities((sharedActivities || []) as CalendarActivity[]);
+      return;
+    }
     try {
       setActivities(JSON.parse(localStorage.getItem(storageKey) || "[]"));
     } catch {
       setActivities([]);
     }
-  }, [storageKey]);
+  }, [storageKey, sharedActivities]);
 
   useEffect(() => {
     if (!filtersOpen) return;
@@ -327,7 +335,8 @@ export default function CalendarioPage() {
       },
     ];
     setActivities(next);
-    try {
+    if (backendEnabled) setSharedActivities(next);
+    else try {
       localStorage.setItem(storageKey, JSON.stringify(next));
     } catch {
       /* La actividad sigue visible durante esta sesión. */

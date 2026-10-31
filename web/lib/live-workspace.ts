@@ -14,6 +14,22 @@ let pending: HublyWorkspaceData | null = null;
 let timer: ReturnType<typeof setTimeout> | undefined;
 let inFlight = false;
 let readOnly = false;
+let agencies: { id: string; name: string }[] = [];
+const AGENCY_KEY = "hubly:agencia-activa";
+
+export const liveAgencies = () => agencies;
+export function selectLiveAgency(id: string) {
+  try {
+    localStorage.setItem(AGENCY_KEY, id);
+  } catch {}
+}
+function selectedAgency() {
+  try {
+    return localStorage.getItem(AGENCY_KEY);
+  } catch {
+    return null;
+  }
+}
 
 export const currentAgencyId = () => agencyId;
 export const hasPendingSave = () => pending !== null || inFlight;
@@ -24,11 +40,13 @@ function emit(state: SaveState) {
 
 export async function loadLiveWorkspace(): Promise<LiveLoad> {
   try {
-    const res = await fetch("/api/workspace", { cache: "no-store" });
+    const wanted = selectedAgency();
+    const res = await fetch(`/api/workspace${wanted ? `?agencyId=${encodeURIComponent(wanted)}` : ""}`, { cache: "no-store" });
     if (res.status === 401) return { kind: "unauthenticated" };
     if (res.status === 404) return { kind: "no_agency" };
     if (!res.ok) return { kind: "error" };
-    const json = (await res.json()) as { data: HublyWorkspaceData; version: number; agencyId: string; role: string };
+    const json = (await res.json()) as { data: HublyWorkspaceData; version: number; agencyId: string; role: string; agencies?: { id: string; name: string }[] };
+    agencies = json.agencies ?? [];
     agencyId = json.agencyId;
     version = json.version;
     readOnly = json.role === "viewer";

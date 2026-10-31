@@ -13,6 +13,11 @@ const KIND_LABEL: Record<WorkspaceNotification["kind"], string> = {
   ads: "Anuncios",
 };
 
+const when = (value: string) => {
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? value : d.toLocaleString("es-MX", { dateStyle: "short", timeStyle: "short" });
+};
+
 export default function NotificacionesPage() {
   const notifications = useHublyStore((s) => s.notifications);
   const brands = useHublyStore((s) => s.brands);
@@ -81,7 +86,7 @@ export default function NotificacionesPage() {
                 }}
               >
                 <div style={{ fontSize: 11.5, color: "var(--ui-text-4)", marginBottom: 4 }}>
-                  {[KIND_LABEL[n.kind], brand?.name, n.createdAt].filter(Boolean).join(" · ")}
+                  {[KIND_LABEL[n.kind], brand?.name, when(n.createdAt)].filter(Boolean).join(" · ")}
                 </div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>{n.title}</div>
                 <div style={{ fontSize: 13, color: "var(--ui-text-3)", marginTop: 2 }}>{n.body}</div>

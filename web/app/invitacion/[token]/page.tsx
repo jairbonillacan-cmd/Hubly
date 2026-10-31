@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { selectLiveAgency } from "@/lib/live-workspace";
 
 const ROLE_LABEL: Record<string, string> = { admin: "Administración", editor: "Edición", viewer: "Solo lectura" };
 
@@ -24,6 +25,8 @@ function InvitacionView() {
   const accept = async () => {
     const res = await fetch(`/api/invitations/${encodeURIComponent(token)}`, { method: "POST" });
     if (res.ok) {
+      const { agencyId } = (await res.json()) as { agencyId?: string };
+      if (agencyId) selectLiveAgency(agencyId);
       window.location.assign("/dashboard");
       return;
     }

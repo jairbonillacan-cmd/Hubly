@@ -82,6 +82,12 @@ ok("revocado no abre", (await as(null, "anon", `select public.get_share_portal($
 ok("revocado no decide", (await as(null, "anon", `select public.submit_share_decision($1,'p1','approved',null,'X') r`, [tok]))[0].r === false);
 await db.query(`update public.share_links set revoked_at=null, expires_at=now()-interval '1 day'`);
 ok("caducado no abre", (await as(null, "anon", `select public.get_share_portal($1) p`, [tok]))[0].p === null);
+const tokN = (await as(A, "authenticated", `select public.create_share_link($1,'b1') t`, [ag]))[0].t;
+await db.query(`update public.agency_workspaces set data = jsonb_set(data,'{posts,0,status}','"pending"') where agency_id=$1`, [ag]);
+await as(null, "anon", `select public.submit_share_decision($1,'p1','approved',null,'Lu')`, [tokN]);
+const docN = (await db.query(`select data from public.agency_workspaces where agency_id=$1`, [ag])).rows[0].data;
+ok("decisión crea notificación", docN.notifications?.[0]?.title === "Lu aprobó un post" && docN.notifications[0].body === "T1" && docN.notifications[0].read === false);
+
 // Miembros e historial (0002)
 ok("miembro lista el equipo", (await as(D, "authenticated", `select * from public.list_members($1)`, [ag])).length === 2);
 await errs("ajeno no lista el equipo", () => as(B, "authenticated", `select * from public.list_members($1)`, [ag]), "forbidden");

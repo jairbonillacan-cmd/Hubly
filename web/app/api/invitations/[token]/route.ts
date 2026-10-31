@@ -17,10 +17,10 @@ export async function POST(_request: Request, { params }: Ctx) {
   if (!backendEnabled) return NextResponse.json({ error: "backend_disabled" }, { status: 404 });
   const { token } = await params;
   const supabase = await createSupabaseServer();
-  const { error } = await supabase.rpc("accept_invitation", { raw_token: token });
+  const { data, error } = await supabase.rpc("accept_invitation", { raw_token: token });
   if (error) {
     const code = error.message.includes("email_mismatch") ? "email_mismatch" : "invalid";
     return NextResponse.json({ error: code }, { status: 403 });
   }
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, agencyId: data });
 }

@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { localIsoDate } from "@/lib/date";
+import { backendEnabled } from "@/lib/supabase/config";
+import { CaptionAssistant, ManualResults } from "@/components/app/social/ComposerExtras";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import { Cover, type CoverKind } from "@/components/Cover";
@@ -368,11 +370,12 @@ export function PostComposerModal({
                 <div className="hubly-composer-banner">
                   <HublyCatAvatar size={36} />
                   <div>
-                    <strong>Para que salga, conecta las redes de {brand?.name || "tu marca"}</strong>
-                    <span>Tu post se guarda mientras tanto.</span>
+                    <strong>{backendEnabled ? "La publicación automática llegará pronto" : `Para que salga, conecta las redes de ${brand?.name || "tu marca"}`}</strong>
+                    <span>{backendEnabled ? "Por ahora publica en la red y regístralo en Resultados." : "Tu post se guarda mientras tanto."}</span>
                   </div>
                   <button
                     type="button"
+                    hidden={backendEnabled}
                     className="hbtn hbtn-primary hbtn-sm"
                     onClick={() => {
                       handleClose();
@@ -467,6 +470,12 @@ export function PostComposerModal({
                   </select>
                 </label>
 
+                <CaptionAssistant
+                  brand={brand}
+                  network={previewNetwork}
+                  format={format}
+                  onUse={setCaption}
+                />
                 <textarea
                   className="hubly-composer-caption"
                   value={caption}
@@ -488,7 +497,11 @@ export function PostComposerModal({
               </>
             )}
 
-            {tab === "resultados" && (
+            {tab === "resultados" && editingPost && (backendEnabled || editingPost.metricsSource === "manual") && (
+              <ManualResults key={editingPost.id} post={editingPost} />
+            )}
+
+            {tab === "resultados" && !(editingPost && (backendEnabled || editingPost.metricsSource === "manual")) && (
               editingPost?.metrics ? (
                 <div style={{ display: "grid", gap: 10 }}>
                   <span style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ui-accent-text)" }}>Datos de ejemplo</span>

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useHublyStore } from "@/lib/store";
-import { currentAgencyId } from "@/lib/live-workspace";
+import { currentAgencyId, liveAgencies, selectLiveAgency } from "@/lib/live-workspace";
 import { askConfirm } from "@/components/app/AppDialogHost";
 
 interface Member { user_id: string; role: string; email: string; name: string }
@@ -67,6 +67,23 @@ export function AccessPanel() {
 
   return (
     <div style={{ display: "grid", gap: 22 }}>
+      <section style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+        <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 600 }}>
+          Agencia
+          <select
+            value={agencyId || ""}
+            onChange={(e) => {
+              selectLiveAgency(e.target.value);
+              window.location.assign("/dashboard");
+            }}
+            style={field}
+          >
+            {liveAgencies().map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+          </select>
+        </label>
+        <a href="/onboarding?nueva=1" style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ui-accent-text-2)" }}>Crear otra agencia</a>
+      </section>
+
       {error && <p role="alert" style={{ margin: 0, color: "#B91C1C", fontSize: 13 }}>{error}</p>}
 
       <section>
