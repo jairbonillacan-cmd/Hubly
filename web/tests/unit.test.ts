@@ -185,3 +185,44 @@ test("un 409 conserva el cambio hasta que la persona elige", async () => {
   Reflect.deleteProperty(globalThis, "window");
   Reflect.deleteProperty(globalThis, "localStorage");
 });
+
+test("Post v2: el medio heredado se convierte una vez y los campos nuevos sobreviven", async () => {
+  const { normalizeWorkspacePayload } = await import("../lib/workspace-repository");
+  const seed = createSeedWorkspaceData("prueba");
+  const legacy = { ...seed.posts[0], id: "viejo", mediaUrl: "data:image/jpeg;base64,AAA", media: undefined };
+  const nuevo = {
+    ...seed.posts[0],
+    id: "nuevo",
+    media: [{ id: "m", kind: "video" as const, name: "a.mp4", assetId: "x" }],
+    platformSettings: { Pinterest: { caption: "pin", boardName: "Tablero" } },
+    workflowStatusId: "diseno",
+    assigneeIds: ["a", "b"],
+    customFields: { prioridad: "alta" },
+    scheduledDate: "",
+  };
+  const once = normalizeWorkspacePayload({ ...seed, posts: [legacy, nuevo] }, "prueba");
+  const twice = normalizeWorkspacePayload(once, "prueba");
+  assert.deepEqual(twice.posts, once.posts);
+  assert.equal(once.schemaVersion, 2);
+  const viejo = once.posts.find((p) => p.id === "viejo");
+  assert.equal(viejo?.media?.[0]?.url, legacy.mediaUrl);
+  assert.equal(viejo?.mediaUrl, legacy.mediaUrl);
+  const guardado = once.posts.find((p) => p.id === "nuevo");
+  assert.deepEqual(guardado?.media, nuevo.media);
+  assert.deepEqual(guardado?.platformSettings, nuevo.platformSettings);
+  assert.equal(guardado?.workflowStatusId, "diseno");
+  assert.deepEqual(guardado?.assigneeIds, ["a", "b"]);
+  assert.equal(guardado?.scheduledDate, "");
+});
+
+test("los límites de archivos se aplican por tipo", async () => {
+  const { mediaRejection, mp4UsesHevc, MAX_VIDEO_BYTES, MAX_IMAGE_BYTES } = await import("../lib/media");
+  assert.equal(mediaRejection("image/png", MAX_IMAGE_BYTES), null);
+  assert.ok(mediaRejection("image/png", MAX_IMAGE_BYTES + 1));
+  assert.equal(mediaRejection("video/mp4", MAX_VIDEO_BYTES), null);
+  assert.ok(mediaRejection("video/mp4", MAX_VIDEO_BYTES + 1));
+  assert.ok(mediaRejection("application/x-msdownload", 10));
+  assert.ok(mediaRejection("image/svg+xml", 10));
+  assert.equal(mp4UsesHevc(new TextEncoder().encode("moov....stsd........hvc1")), true);
+  assert.equal(mp4UsesHevc(new TextEncoder().encode("moov....stsd........avc1")), false);
+});

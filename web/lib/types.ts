@@ -70,6 +70,52 @@ export interface SocialPost {
   documents?: PostDocument[];
   chat?: PostChatMessage[];
   activity?: PostActivityEntry[];
+  /** Hasta diez archivos en el orden de publicación; `mediaUrl` queda solo para posts antiguos. */
+  media?: PostMedia[];
+  platformSettings?: Partial<Record<SocialNetwork, PlatformSettings>>;
+  workflowStatusId?: string | null;
+  assigneeIds?: string[];
+  color?: string;
+  customFields?: Record<string, string | number | boolean | null>;
+}
+
+export interface PostMedia {
+  id: string;
+  kind: "image" | "video";
+  name: string;
+  /** Archivo de la biblioteca; sin él, `url` contiene el dato heredado. */
+  assetId?: string;
+  url?: string;
+}
+
+export interface PlatformSettings {
+  /** Con valor, esta red deja de heredar el copy general. */
+  caption?: string;
+  format?: PostFormat;
+  title?: string;
+  link?: string;
+  boardName?: string;
+  firstComment?: string;
+  location?: string;
+  subreddit?: string;
+  flair?: string;
+  topicType?: "STANDARD" | "EVENT" | "OFFER";
+  callToAction?: string;
+  couponCode?: string;
+  privacy?: string;
+}
+
+export interface WorkflowStatus {
+  id: string;
+  name: string;
+  color: string;
+}
+
+export interface CustomFieldDefinition {
+  id: string;
+  name: string;
+  type: "text" | "number" | "select" | "date" | "url" | "checkbox";
+  options?: { id: string; label: string; color: string }[];
 }
 
 export interface PostTodo {
@@ -249,6 +295,9 @@ export interface AccountCommitment {
 export type BrandHealthStatus = "completa" | "en_progreso" | "en_riesgo" | "sin_compromisos";
 
 export interface BrandWorkspace {
+  mediaFolders?: string[];
+  workflowStatuses?: WorkflowStatus[];
+  customFieldDefinitions?: CustomFieldDefinition[];
   id: string;
   name: string;
   slug: string;
@@ -563,6 +612,8 @@ export interface WorkspaceNotification {
 }
 
 export interface HublyWorkspaceData {
+  /** Versión del documento; 2 introduce `media` y ajustes por red en los posts. */
+  schemaVersion?: number;
   workspaceId: string;
   agencyName: string;
   profile: WorkspaceProfile;

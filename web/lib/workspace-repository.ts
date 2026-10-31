@@ -12,6 +12,7 @@ import type {
   BrandWorkspace,
   HublyWorkspaceData,
   SocialNetwork,
+  PostMedia,
   SocialPost,
   TaskItem,
   TeamMember,
@@ -282,8 +283,9 @@ function normalizePost(post: Partial<SocialPost>): SocialPost {
     networks,
     format: post.format || "Carrusel",
     cover: post.cover || "cup",
-    scheduledDate: post.scheduledDate || "2026-11-04",
-    scheduledTime: post.scheduledTime || "12:00",
+    // Sin fecha es válido: el post queda en la bandeja de pendientes de programar.
+    scheduledDate: post.scheduledDate || "",
+    scheduledTime: post.scheduledTime || "",
     status,
     statusLabel,
     assignee: post.assignee || "Jair B.",
@@ -301,7 +303,21 @@ function normalizePost(post: Partial<SocialPost>): SocialPost {
     documents: post.documents,
     chat: post.chat,
     activity: post.activity,
+    media: normalizePostMedia(post),
+    platformSettings: post.platformSettings,
+    workflowStatusId: post.workflowStatusId,
+    assigneeIds: post.assigneeIds,
+    color: post.color,
+    customFields: post.customFields,
   };
+}
+
+/** Convierte el medio único heredado; repetirlo no cambia el resultado. */
+function normalizePostMedia(post: Partial<SocialPost>): PostMedia[] | undefined {
+  if (Array.isArray(post.media)) return post.media;
+  if (!post.mediaUrl) return undefined;
+  const kind = post.mediaUrl.startsWith("data:video") ? "video" : "image";
+  return [{ id: `heredado-${post.id || "post"}`, kind, name: "Archivo original", url: post.mediaUrl }];
 }
 
 function normalizeMember(member: Partial<TeamMember>): TeamMember {
@@ -393,6 +409,7 @@ export function normalizeWorkspacePayload(
     sanitized.agency?.name || sanitized.agencyName || seed.agencyName;
 
   return {
+    schemaVersion: 2,
     workspaceId: cleanId,
     agencyName,
     profile: {

@@ -290,6 +290,7 @@ const STATUS_TO_LABEL: Record<PostStatus, PostStatusLabel> = {
 
 function extractWorkspaceData(state: HublyStoreState): HublyWorkspaceData {
   return {
+    schemaVersion: 2,
     workspaceId: state.workspaceId || "default",
     agencyName: state.agencyName,
     profile: state.profile,

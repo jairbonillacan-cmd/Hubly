@@ -10,7 +10,8 @@ const RUTAS = [
 const contrasteBajo = (page: Page) =>
   page.evaluate(() => {
     const parse = (c: string) => {
-      const m = c.match(/[\d.]+/g)?.map(Number) ?? [0, 0, 0, 0];
+      const srgb = c.startsWith("color(srgb");
+      const m = (c.replace("srgb", "").match(/[\d.]+/g)?.map(Number) ?? [0, 0, 0, 0]).map((v, i) => (srgb && i < 3 ? v * 255 : v));
       return { r: m[0], g: m[1], b: m[2], a: m[3] ?? 1 };
     };
     const lum = ({ r, g, b }: { r: number; g: number; b: number }) => {

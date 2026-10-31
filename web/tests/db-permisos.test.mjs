@@ -8,6 +8,13 @@ await db.exec(`
   create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('test.uid', true), '')::uuid $$;
   grant usage on schema auth, public to anon, authenticated;
   grant execute on function auth.uid() to anon, authenticated;
+  -- Lo mínimo de Supabase Storage para aplicar y probar sus políticas.
+  create schema storage;
+  create table storage.buckets (id text primary key, name text, public boolean, file_size_limit bigint);
+  create table storage.objects (id uuid primary key default gen_random_uuid(), bucket_id text references storage.buckets(id), name text);
+  alter table storage.objects enable row level security;
+  grant usage on schema storage to anon, authenticated;
+  grant select, insert, delete on storage.objects to anon, authenticated;
 `);
 const dir = new URL("../../supabase/migrations/", import.meta.url);
 for (const f of fs.readdirSync(dir).sort()) await db.exec(fs.readFileSync(new URL(f, dir), "utf8"));
@@ -111,5 +118,54 @@ const p1b = (await db.query(`select data from public.agency_workspaces where age
 ok("actividad registra firma sin cuenta", p1b.activity[0].author.includes("Ana") && p1b.activity[0].author.includes("sin cuenta") && p1b.status === "changes");
 ok("otra agencia intacta", (await db.query(`select version from public.agency_workspaces where agency_id=$1`, [agB])).rows[0].version === 1);
 
+// Archivos: la ruta manda la agencia, y el portal solo abre medios de posts que muestra.
+{
+  const asA = (sql, params) => as(A, "authenticated", sql, params);
+  const [agencyM, agencyN] = [
+    (await asA(`select public.create_agency('Medios') id`))[0].id,
+    (await as(B, "authenticated", `select public.create_agency('Otra medios') id`))[0].id,
+  ];
+  const path = `${agencyM}/b1/foto.png`;
+  const oculto = `${agencyM}/b1/oculto.png`;
+  const insertAsset = `insert into public.media_assets (agency_id, brand_id, name, kind, mime, size_bytes, path, status) values ($1,'b1',$2,'image','image/png',10,$3,'ready') returning id`;
+  const asset = (await asA(insertAsset, [agencyM, "foto.png", path]))[0].id;
+  const assetOculto = (await asA(insertAsset, [agencyM, "oculto.png", oculto]))[0].id;
+  await errs("otra agencia no registra archivos", () => as(B, "authenticated", insertAsset, [agencyM, "x.png", `${agencyM}/b1/x.png`]), "row-level");
+  ok("otra agencia no ve archivos", (await as(B, "authenticated", `select * from public.media_assets where agency_id=$1`, [agencyM])).length === 0);
+  await asA(`insert into storage.objects (bucket_id, name) values ('media',$1),('media',$2)`, [path, oculto]);
+  await errs("otra agencia no sube a su ruta", () => as(B, "authenticated", `insert into storage.objects (bucket_id, name) values ('media',$1)`, [`${agencyM}/b1/intruso.png`]), "row-level");
+  await as(B, "authenticated", `insert into storage.objects (bucket_id, name) values ('media',$1)`, [`${agencyN}/b1/propio.png`]);
+  ok("miembro lee sus archivos", (await asA(`select * from storage.objects where name=$1`, [path])).length === 1);
+  ok("otra agencia no lee el archivo", (await as(B, "authenticated", `select * from storage.objects where name=$1`, [path])).length === 0);
+  ok("anon sin token no lee el archivo", (await as(null, "anon", `select * from storage.objects where name=$1`, [path])).length === 0);
+  await db.query(`update public.agency_workspaces set data=$2 where agency_id=$1`, [agencyM, JSON.stringify({
+    brands: [{ id: "b1", name: "Marca" }],
+    posts: [
+      { id: "m1", brandId: "b1", title: "Con medio", status: "pending", comments: [], notes: "INTERNA", media: [{ id: "x", assetId: asset, kind: "image", name: "foto.png" }], platformSettings: { Pinterest: { caption: "pin", boardName: "SECRETO" } } },
+      { id: "m2", brandId: "b1", title: "Borrador", status: "draft", comments: [], media: [{ id: "y", assetId: assetOculto, kind: "image", name: "oculto.png" }] },
+    ],
+  })]);
+  const token = (await asA(`select public.create_share_link($1,'b1') t`, [agencyM]))[0].t;
+  const rawToken = typeof token === "string" ? token : token?.token;
+  const conToken = async (name, t) => {
+    await db.exec(`reset role; select set_config('test.uid','',false); select set_config('request.headers', '${JSON.stringify({ "x-hubly-share-token": t })}', false); set role anon;`);
+    try { return (await db.query(`select * from storage.objects where name=$1`, [name])).rows; }
+    finally { await db.exec(`reset role; select set_config('request.headers','',false)`); }
+  };
+  ok("el portal abre un medio de su post", (await conToken(path, rawToken)).length === 1);
+  ok("el portal no abre medios de borradores", (await conToken(oculto, rawToken)).length === 0);
+  ok("un token falso no abre medios", (await conToken(path, "falso")).length === 0);
+  ok("el portal traduce un medio compartido", (await as(null, "anon", `select public.share_media_path($1,$2) p`, [rawToken, asset]))[0].p === path);
+  ok("el portal no traduce medios de borradores", (await as(null, "anon", `select public.share_media_path($1,$2) p`, [rawToken, assetOculto]))[0].p === null);
+  const portal = (await as(null, "anon", `select public.get_share_portal($1) p`, [rawToken]))[0].p;
+  const visto = portal.posts.find((p) => p.id === "m1");
+  ok("el portal recibe el medio", visto?.media?.[0]?.assetId === asset);
+  ok("el portal recibe el copy por red", visto?.platformCaptions?.Pinterest === "pin");
+  ok("el portal no recibe ajustes internos", !JSON.stringify(portal).includes("SECRETO") && !JSON.stringify(portal).includes("INTERNA"));
+  ok("el portal no recibe borradores", !portal.posts.some((p) => p.id === "m2"));
+  await as(null, "anon", `select public.submit_share_decision($1,'m1','approved','','Cliente')`, [rawToken]);
+  const tras = (await db.query(`select data from public.agency_workspaces where agency_id=$1`, [agencyM])).rows[0].data;
+  ok("aprobar en el portal etiqueta Aprobado", tras.posts.find((p) => p.id === "m1").statusLabel === "Aprobado");
+}
 console.log(`\n${pass} ok, ${fail} fallos`);
 process.exit(fail ? 1 : 0);

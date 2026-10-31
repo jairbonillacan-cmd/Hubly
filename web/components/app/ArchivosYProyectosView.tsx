@@ -6,6 +6,7 @@ import { useHublyStore } from "@/lib/store";
 import { Cover } from "@/components/Cover";
 import { KanbanDropSlot } from "@/components/app/KanbanDropSlot";
 import { useKanbanDrag } from "@/lib/use-kanban-drag";
+import { MediaLibrary } from "@/components/app/media/MediaLibrary";
 import type { BrandProject } from "@/lib/types";
 import {
   HublyArchiveIcon as Archive,
@@ -87,12 +88,10 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [projectSearchOpen, setProjectSearchOpen] = useState(false);
   const [projectSearchQuery, setProjectSearchQuery] = useState("");
-  const [showDemoAssets, setShowDemoAssets] = useState(false);
   const [newProjectModal, setNewProjectModal] = useState(false);
   const [newProjTitle, setNewProjTitle] = useState("");
   const [newProjDesc, setNewProjDesc] = useState("");
   const [toast, setToast] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (tabParam === "proyectos") {
@@ -133,34 +132,6 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
     return true;
   });
 
-  const handleUploadDemoAsset = () => {
-    addAsset({
-      brandId: activeBrand.id,
-      name: `clip-${activeBrand.slug}-${Date.now().toString().slice(-3)}.mp4`,
-      kind: "video",
-      cover: "sun",
-      sizeLabel: "28.4 MB · 0:34",
-      aiTags: ["videos sin usar", "vertical", activeBrand.slug],
-      folder: "Subidas recientes",
-    });
-    setShowDemoAssets(true);
-    triggerToast("Archivo subido y etiquetado por Hubi");
-  };
-
-  const handleCreateDocument = () => {
-    addAsset({
-      brandId: activeBrand.id,
-      name: `brief-creativo-${activeBrand.slug}.doc`,
-      kind: "doc",
-      cover: "leaf",
-      sizeLabel: "1.2 MB · Documento",
-      aiTags: ["brief", "scripts", "estrategia"],
-      folder: "Documentos",
-    });
-    setShowDemoAssets(true);
-    triggerToast("Documento creado en la biblioteca de la marca");
-  };
-
   const handleCreateProject = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newProjTitle.trim()) return;
@@ -183,13 +154,6 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
 
   return (
     <div style={{ maxWidth: 1140, margin: "0 auto", color: "var(--ui-text)" }}>
-      <input
-        ref={fileInputRef}
-        type="file"
-        style={{ display: "none" }}
-        onChange={handleUploadDemoAsset}
-      />
-
       {toast && (
         <div
           style={{
@@ -216,506 +180,31 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
 
       {/* ==================== CONTENT MANAGER MODE (08-content-manager-1440.png) ==================== */}
       {mode === "content" && (
-        <div>
-          {/* Top Search Bar matching 08-content-manager-1440.png */}
-          <div
-            style={{
-              background: "var(--ui-surface-2)",
-              border: "1px solid var(--ui-muted)",
-              borderRadius: 14,
-              padding: "8px 12px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 12,
-              marginBottom: 16,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                flex: 1,
-                minWidth: 220,
-              }}
-            >
-              <Search size={17} style={{ color: "var(--ui-text-5)", flexShrink: 0 }} />
-              <Sparkles size={15} style={{ color: "#8B5CF6", flexShrink: 0 }} />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder='Busca "videos sin usar" o "scripts"'
-                style={{
-                  border: "none",
-                  outline: "none",
-                  background: "transparent",
-                  width: "100%",
-                  fontSize: 14,
-                  color: "var(--ui-text)",
-                  fontFamily: "inherit",
-                }}
-              />
+        <>
+          <div className="hubly-media-page-head">
+            <div>
+              <h1>Content Manager</h1>
+              <p>Archivos de {activeBrand.name}. Lo que subas aquí está disponible al crear un post.</p>
             </div>
-
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <button
-                type="button"
-                onClick={() => {
-                  setSearchQuery("videos sin usar");
-                  setShowDemoAssets(true);
-                }}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  color: "var(--ui-text-3)",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  padding: "6px 12px",
-                  borderRadius: 8,
-                  cursor: "pointer",
-                }}
-              >
-                Filtros
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setShowDemoAssets(true)}
-                style={{
-                  background: "var(--ui-accent-soft)",
-                  border: "none",
-                  color: "var(--hb-accent-text)",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  padding: "6px 12px",
-                  borderRadius: 8,
-                  cursor: "pointer",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 5,
-                }}
-              >
-                <Sparkles size={13} />
-                <span>Buscar</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleCreateDocument}
-                aria-label="Crear"
-                style={{
-                  background: "var(--hb-accent)",
-                  border: "none",
-                  color: "#FFFFFF",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  padding: "6px 14px",
-                  borderRadius: 9,
-                  cursor: "pointer",
-                }}
-              >
-                Crear
-              </button>
-            </div>
+            <button type="button" className="hubly-media-ghost" onClick={() => setMode("proyectos")}>Ver proyectos</button>
           </div>
-
-          {/* Sub-nav Pill Row: (Archivos active | Carpetas) + right button var(--hb-accent) Subir contenido */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 12,
-              flexWrap: "wrap",
-              marginBottom: 20,
-            }}
-          >
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                background: "var(--ui-muted)",
-                padding: 3,
-                borderRadius: 999,
-                gap: 2,
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => {
-                  setContentSubTab("archivos");
-                  setMode("content");
-                }}
-                style={{
-                  background: contentSubTab === "archivos" ? "var(--ui-surface)" : "transparent",
-                  color: contentSubTab === "archivos" ? "var(--ui-text)" : "var(--ui-text-4)",
-                  boxShadow:
-                    contentSubTab === "archivos"
-                      ? "0 1px 2px rgba(15, 23, 42, 0.08)"
-                      : "none",
-                  border: "none",
-                  borderRadius: 999,
-                  padding: "5px 14px",
-                  fontSize: 12.5,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                Archivos
-              </button>
-              <button
-                type="button"
-                onClick={() => setContentSubTab("carpetas")}
-                style={{
-                  background: contentSubTab === "carpetas" ? "var(--ui-surface)" : "transparent",
-                  color: contentSubTab === "carpetas" ? "var(--ui-text)" : "var(--ui-text-4)",
-                  boxShadow:
-                    contentSubTab === "carpetas"
-                      ? "0 1px 2px rgba(15, 23, 42, 0.08)"
-                      : "none",
-                  border: "none",
-                  borderRadius: 999,
-                  padding: "5px 14px",
-                  fontSize: 12.5,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                Carpetas
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode("proyectos")}
-                style={{
-                  background: "transparent",
-                  color: "var(--ui-text-4)",
-                  border: "none",
-                  borderRadius: 999,
-                  padding: "5px 14px",
-                  fontSize: 12.5,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                Proyectos
-              </button>
-            </div>
-
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <button
-                type="button"
-                onClick={() => setShowDemoAssets(!showDemoAssets)}
-                style={{
-                  background: "var(--ui-surface)",
-                  border: "1px solid var(--ui-border)",
-                  color: "var(--ui-text-3)",
-                  fontSize: 12.5,
-                  fontWeight: 600,
-                  padding: "7px 14px",
-                  borderRadius: 9,
-                  cursor: "pointer",
-                }}
-              >
-                {showDemoAssets
-                  ? "Ver estado vacío"
-                  : `Ver archivos demo (${brandAssets.length})`}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                style={{
-                  background: "var(--hb-accent)",
-                  color: "#FFFFFF",
-                  border: "none",
-                  borderRadius: 9,
-                  padding: "8px 16px",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  cursor: "pointer",
-                }}
-              >
-                <Upload size={14} />
-                <span>Subir contenido</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Main Dashed Upload Dropzone matching 08-content-manager-1440.png & prompt specs */}
-          {contentSubTab === "archivos" && !showDemoAssets && (
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              style={{
-                border: "1.5px dashed var(--ui-border-strong)",
-                borderRadius: 16,
-                minHeight: 380,
-                background: "var(--ui-surface)",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "48px 24px",
-                textAlign: "center",
-                cursor: "pointer",
-              }}
-            >
-              <GoldenCloudUploadIllustration />
-
-              <h3
-                style={{
-                  fontSize: 16,
-                  fontWeight: 700,
-                  color: "var(--ui-text)",
-                  margin: "14px 0 4px",
-                }}
-              >
-                La biblioteca de la marca
-              </h3>
-
-              <div
-                style={{
-                  fontSize: 13.5,
-                  fontWeight: 600,
-                  color: "var(--ui-text-2)",
-                  marginBottom: 6,
-                }}
-              >
-                Sube tu primer archivo
-              </div>
-
-              <p
-                style={{
-                  fontSize: 13,
-                  color: "var(--ui-text-4)",
-                  maxWidth: 440,
-                  lineHeight: 1.55,
-                  margin: "0 0 6px",
-                }}
-              >
-                Sube fotos, videos, briefs y PDFs. Hubi los ve, los describe y los etiqueta solo, y después los encuentras buscando por lo que sale en ellos, no por cómo se llaman.
-              </p>
-
-              <div
-                style={{
-                  fontSize: 12.5,
-                  color: "var(--ui-text-5)",
-                  marginBottom: 18,
-                }}
-              >
-                Arrastra archivos aquí o haz clic para seleccionar
-              </div>
-
-              <div
-                onClick={(e) => e.stopPropagation()}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  flexWrap: "wrap",
-                  justifyContent: "center",
-                  marginBottom: 16,
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={handleUploadDemoAsset}
-                  style={{
-                    background: "var(--hb-accent)",
-                    color: "#FFFFFF",
-                    border: "none",
-                    borderRadius: 10,
-                    height: 36,
-                    padding: "0 16px",
-                    fontSize: 13,
-                    fontWeight: 700,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    cursor: "pointer",
-                  }}
-                >
-                  <Upload size={14} />
-                  <span>Subir archivos</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleCreateDocument}
-                  style={{
-                    background: "var(--ui-surface)",
-                    color: "var(--ui-text-1)",
-                    border: "1px solid var(--ui-border)",
-                    borderRadius: 10,
-                    height: 36,
-                    padding: "0 16px",
-                    fontSize: 13,
-                    fontWeight: 600,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    cursor: "pointer",
-                  }}
-                >
-                  <PlusCircle size={14} style={{ color: "var(--ui-text-2)" }} />
-                  <span>Crear documento</span>
-                </button>
-              </div>
-
-              <div style={{ fontSize: 12, color: "var(--ui-text-5)" }}>
-                También puedes arrastrar archivos aquí desde tu computadora.
-              </div>
-            </div>
+          <MediaLibrary brandId={activeBrand.id} />
+          {brandAssets.length > 0 && (
+            <details className="hubly-media-samples">
+              <summary>Archivos de ejemplo ({brandAssets.length})</summary>
+              <ul>
+                {brandAssets.map((asset) => (
+                  <li key={asset.id}>
+                    <strong>{asset.name}</strong>
+                    <span>{asset.folder} · {asset.sizeLabel}</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
           )}
-
-          {/* Carpetas View */}
-          {contentSubTab === "carpetas" && (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-                gap: 14,
-              }}
-            >
-              {["Reels y Videos", "Fotografía de Producto", "Brand Book & Briefs", "Subidas recientes"].map(
-                (folderName, idx) => (
-                  <div
-                    key={folderName}
-                    onClick={() => {
-                      setContentSubTab("archivos");
-                      setShowDemoAssets(true);
-                    }}
-                    style={{
-                      border: "1px solid var(--ui-border)",
-                      borderRadius: 14,
-                      padding: 18,
-                      background: "var(--ui-surface)",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 12,
-                      cursor: "pointer",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 10,
-                        background: "#E6F4FB",
-                        color: "var(--ui-accent-text-2)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Folder size={20} />
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 13.5, fontWeight: 700, color: "var(--ui-text)" }}>
-                        {folderName}
-                      </div>
-                      <div style={{ fontSize: 12, color: "var(--ui-text-4)" }}>{idx + 1} archivos</div>
-                    </div>
-                  </div>
-                )
-              )}
-            </div>
-          )}
-
-          {/* Uploaded Demo Assets Grid */}
-          {contentSubTab === "archivos" && showDemoAssets && (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-                gap: 16,
-              }}
-            >
-              {brandAssets.map((asset) => (
-                <div
-                  key={asset.id}
-                  style={{
-                    border: "1px solid var(--ui-border)",
-                    borderRadius: 16,
-                    background: "var(--ui-surface)",
-                    overflow: "hidden",
-                  }}
-                >
-                  <div style={{ height: 150, position: "relative" }}>
-                    <Cover kind={asset.cover} />
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 10,
-                        left: 10,
-                        right: 10,
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <span
-                        style={{
-                          background: "rgba(255,255,255,0.92)",
-                          color: "var(--ui-text-2)",
-                          fontSize: 11,
-                          fontWeight: 600,
-                          padding: "2px 8px",
-                          borderRadius: 999,
-                        }}
-                      >
-                        {asset.folder}
-                      </span>
-                      <span
-                        style={{
-                          background: asset.usedInPosts === 0 ? "#E6F4FB" : "#DCFCE7",
-                          color: asset.usedInPosts === 0 ? "var(--ui-accent-text)" : "#15803D",
-                          fontSize: 11,
-                          fontWeight: 700,
-                          padding: "2px 8px",
-                          borderRadius: 999,
-                        }}
-                      >
-                        {asset.usedInPosts === 0 ? "Sin usar" : `Usado (${asset.usedInPosts})`}
-                      </span>
-                    </div>
-                  </div>
-                  <div style={{ padding: 14 }}>
-                    <div style={{ fontWeight: 700, fontSize: 13.5, marginBottom: 4 }}>
-                      {asset.name}
-                    </div>
-                    <div style={{ fontSize: 11.5, color: "var(--ui-text-4)", marginBottom: 8 }}>
-                      {asset.sizeLabel} · {asset.uploadedAt}
-                    </div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                      {asset.aiTags.map((tag) => (
-                        <span
-                          key={tag}
-                          style={{
-                            fontSize: 10.5,
-                            padding: "2px 8px",
-                            borderRadius: 999,
-                            background: "var(--ui-muted)",
-                            color: "var(--ui-text-3)",
-                            fontWeight: 500,
-                          }}
-                        >
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        </>
       )}
 
-      {/* ==================== PROYECTOS MODE (09-projects-1440.png) ==================== */}
       {mode === "proyectos" && (
         <div>
           {/* Top Header Bar matching 09-projects-1440.png */}
