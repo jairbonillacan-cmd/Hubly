@@ -6,8 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "check:ui": "node scripts/check-ui.mjs",
     "test:db": "node tests/db-permisos.test.mjs",
     "dev:live": "node tests/dev-live.mjs",
+    "audit:controles": "node e2e/auditoria-controles.mjs",
     "test": "tsx --test \"tests/**/*.test.ts\" \"components/**/*.test.ts\" \"lib/**/*.test.ts\""
   },
   "dependencies": {

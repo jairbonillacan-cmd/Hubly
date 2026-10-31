@@ -55,12 +55,12 @@ function DemoHublyAIPage() {
     const clean = promptText.trim();
     if (!clean) return;
 
-    const personaName = activeBrand.core.personas[0]?.name || "Fernanda Ríos";
+    const personaName = activeBrand.core.personas[0]?.name || "tu audiencia principal";
     const item = {
       id: `hb-msg-${Date.now()}`,
       prompt: clean,
-      replyTitle: `Propuesta para Min · ${clean}`,
-      replyBody: `Basado en el Núcleo de Marca de Min y en el perfil de ${personaName}:\n\n• Gancho visual (primeros 3s): Muestra la pieza mineral con escala real en mano y luz natural sin filtros.\n• Copy sugerido: "Lo que ves en foto es exactamente la pieza que llega a tu tienda. Lotes mayoristas curados con medidas exactas."\n• CTA: Escríbenos por WhatsApp para recibir el catálogo mayorista de esta semana.`,
+      replyTitle: `Ejemplo para ${activeBrand.name} · ${clean}`,
+      replyBody: `Respuesta de ejemplo, no generada con IA. Basada en la plantilla de ${activeBrand.name} y en el perfil de ${personaName}:\n\n• Gancho visual (primeros 3s): Muestra la pieza mineral con escala real en mano y luz natural sin filtros.\n• Copy sugerido: "Lo que ves en foto es exactamente la pieza que llega a tu tienda. Lotes mayoristas curados con medidas exactas."\n• CTA: Escríbenos por WhatsApp para recibir el catálogo mayorista de esta semana.`,
     };
     setMessages((prev) => [item, ...prev]);
     setInput("");
@@ -460,26 +460,7 @@ function DemoHublyAIPage() {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <button
-              disabled
-              data-planned
-              type="button"
-              title="Adjuntar"
-              style={{
-                width: 28,
-                height: 28,
-                borderRadius: 8,
-                border: "none",
-                background: "transparent",
-                color: "var(--ui-text-4)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-              }}
-            >
-              <Paperclip size={15} />
-            </button>
+            
 
             <button
               type="button"

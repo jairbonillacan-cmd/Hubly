@@ -1,6 +1,6 @@
 # Design
 
-Sistema visual de Hubly, tal como está construido en `web/app/globals.css`.
+Sistema visual de Hubly, tal como está construido en `web/app/globals.css`. Para trabajar en la interfaz de la app, las reglas operativas están en [docs/GUIA-UX-UI-AGENTES.md](docs/GUIA-UX-UI-AGENTES.md).
 
 ## Identidad de marca aprobada
 
@@ -52,7 +52,7 @@ El marino no se distingue sobre fondos oscuros: nunca se escribe como color fijo
 - **Acción:** `--hb-accent`, marino `#16324F` (hover `#0F2539`, borde 3D `#0B1C2E`). El verde y el rojo solo indican estado.
 - **Acento celeste:** `--ui-sky*`, con texto marino sobre `#DCEFF9` (11.08:1). Marca el ítem activo y el botón destacado. Nunca lleva texto blanco.
 - **Tipografía:** Bricolage Grotesque en toda la interfaz.
-- **Barra lateral:** 228px, estática; solo se desplaza el contenido, sin barras de scroll visibles. Iconos propios a dos tonos (`web/components/app/icons/DuotoneIcons.tsx`): gris azulado en reposo y marino con celeste en el activo, controlados con `--hi-soft` y `--hi-strong`.
+- **Barra lateral:** flotante, 256px (68px colapsada); solo se desplaza el contenido, sin barras de scroll visibles. Iconos propios a dos tonos (`web/components/app/icons/DuotoneIcons.tsx`): gris azulado en reposo y marino con celeste en el activo, controlados con `--hi-soft` y `--hi-strong`.
 - **Nuevo post:** al abrir, el modal crece desde su centro con un resorte (`scale(0.96)` y 20px abajo hasta su lugar, 500ms) y el sidebar se retrae a la vez. Las capas van en este orden: velo, sidebar y modal, para que la retracción se vea sin tapar el modal. Al cerrar, el sidebar vuelve a su estado anterior.
 - **Mascota:** el gato se llama **Hubi**. Es marino: va sobre blanco o celeste pálido, nunca directamente sobre marino o fondos oscuros. `HublyCatAvatar` ya le da una base blanca.
 - **Acceso:** `AuthShell` (`web/components/auth/AuthShell.tsx`) une formulario y panel celeste con Hubi.

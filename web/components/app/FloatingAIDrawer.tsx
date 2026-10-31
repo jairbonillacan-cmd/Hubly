@@ -552,9 +552,7 @@ export function FloatingAIDrawer() {
                 aria-label="Escribe una consulta para Hubi"
               />
               <div>
-                <button type="button" aria-label="Adjuntar (función prevista)" title="Función prevista" disabled>
-                  <Paperclip size={15} />
-                </button>
+                
                 <span>Demo local con datos de tu workspace</span>
                 <button type="submit" aria-label="Enviar consulta a Hubi" disabled={!prompt.trim()}>
                   <ArrowUp size={15} />

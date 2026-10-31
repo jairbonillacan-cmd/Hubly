@@ -101,8 +101,8 @@ test("Kanban: mover cambia el atributo y nunca marca como publicado", async ({ p
   expect(estado).toBe("approved");
   for (const grupo of ["estatus", "formato", "responsable"]) await page.getByLabel("Columnas por").selectOption(grupo);
   await page.getByLabel("Columnas por").selectOption("estatus");
-  await page.getByLabel(`Mover ${TITULO} a otra columna`).selectOption("diseno");
-  await expect(page.getByRole("region", { name: "En diseño" }).getByText(TITULO)).toBeVisible();
+  await page.getByLabel(`Mover ${TITULO} a otra columna`).selectOption("pendiente");
+  await expect(page.getByRole("region", { name: "Pendiente de revisión" }).getByText(TITULO)).toBeVisible();
   await limpiar(page, TITULO);
 });
 

@@ -41,9 +41,7 @@ function DemoReportesPage() {
   const brandName =
     activeBrand?.name || "";
 
-  const [execSummary, setExecSummary] = useState(
-    "Durante el periodo del 23 al 30 de octubre consolidamos el posicionamiento mayorista de Min (Mineralia USA) en Instagram y Meta Ads, logrando 268 visitas calificadas al perfil con un CTR promedio de 5.40% y un costo por visita de $8.33 USD."
-  );
+  const [execSummary, setExecSummary] = useState("");
   const [showPrintableSheet, setShowPrintableSheet] = useState(true);
 
   const brandPosts = posts.filter((p) => p.brandId === activeBrand?.id);
@@ -170,29 +168,7 @@ function DemoReportesPage() {
             <span>Tableros</span>
           </Link>
 
-          <button
-            disabled
-            data-planned
-            title="Función prevista"
-            type="button"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 7,
-              padding: "6px 14px",
-              borderRadius: 999,
-              border: "none",
-              background: "var(--ui-surface)",
-              color: "var(--hb-accent-text)",
-              fontWeight: 600,
-              fontSize: 13,
-              cursor: "pointer",
-              boxShadow: "0 1px 2px rgba(15, 23, 42, 0.06)",
-            }}
-          >
-            <Presentation size={14} style={{ color: "var(--hb-accent-text)" }} />
-            <span>Reportes</span>
-          </button>
+          
 
           <Link
             href="/parrillas?tab=liga"
@@ -245,47 +221,10 @@ function DemoReportesPage() {
           gap: 12,
         }}
       >
-        <button
-          disabled
-          data-planned
-          title="Función prevista"
-          type="button"
-          style={{
-            width: 38,
-            height: 32,
-            borderRadius: 10,
-            border: "none",
-            background: "var(--ui-accent-soft)",
-            color: "var(--hb-accent-text)",
-            display: "grid",
-            placeItems: "center",
-            cursor: "pointer",
-          }}
-        >
-          <Home size={16} />
-        </button>
+        
 
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <button
-            disabled
-            data-planned
-            title="Función prevista"
-            type="button"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              background: "transparent",
-              border: "none",
-              color: "var(--ui-text-2)",
-              fontSize: 13,
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            <MessageCircle size={15} />
-            <span>Comentarios</span>
-          </button>
+          
 
           <div
             style={{
@@ -359,7 +298,10 @@ function DemoReportesPage() {
 
           <button
             type="button"
-            onClick={() => setShowPrintableSheet(true)}
+            onClick={() => {
+              setExecSummary("");
+              setShowPrintableSheet(true);
+            }}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -419,7 +361,10 @@ function DemoReportesPage() {
 
         <button
           type="button"
-          onClick={() => setShowPrintableSheet(true)}
+          onClick={() => {
+              setExecSummary("");
+              setShowPrintableSheet(true);
+            }}
           style={{
             display: "inline-flex",
             alignItems: "center",

@@ -7,6 +7,8 @@ import { Cover } from "@/components/Cover";
 import { KanbanDropSlot } from "@/components/app/KanbanDropSlot";
 import { useKanbanDrag } from "@/lib/use-kanban-drag";
 import { MediaLibrary } from "@/components/app/media/MediaLibrary";
+import { ProjectEditModal } from "@/components/app/projects/ProjectEditModal";
+import { askConfirm } from "@/components/app/AppDialogHost";
 import type { BrandProject } from "@/lib/types";
 import {
   HublyArchiveIcon as Archive,
@@ -73,6 +75,9 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
   const addAsset = useHublyStore((s) => s.addAsset);
   const addProject = useHublyStore((s) => s.addProject);
   const moveProject = useHublyStore((s) => s.moveProject);
+  const updateProject = useHublyStore((s) => s.updateProject);
+  const deleteProject = useHublyStore((s) => s.deleteProject);
+  const readOnly = useHublyStore((s) => s.role === "viewer");
   const projectDrag = useKanbanDrag({
     columns: PROJECT_COLUMNS,
     onMove: (id, toCol, beforeId) => moveProject(id, toCol as BrandProject["status"], beforeId),
@@ -89,6 +94,8 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
   const [projectSearchOpen, setProjectSearchOpen] = useState(false);
   const [projectSearchQuery, setProjectSearchQuery] = useState("");
   const [newProjectModal, setNewProjectModal] = useState(false);
+  const [projectFilter, setProjectFilter] = useState<"todos" | BrandProject["status"] | "archivados">("todos");
+  const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
   const [newProjTitle, setNewProjTitle] = useState("");
   const [newProjDesc, setNewProjDesc] = useState("");
   const [toast, setToast] = useState<string | null>(null);
@@ -121,16 +128,16 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
     return true;
   });
 
-  const brandProjects = projects.filter((p) => {
-    if (p.brandId !== activeBrand.id) return false;
-    if (projectSearchQuery.trim()) {
-      const q = projectSearchQuery.toLowerCase();
-      return (
-        p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)
-      );
-    }
-    return true;
-  });
+  const ownProjects = projects.filter((p) => p.brandId === activeBrand.id);
+  const brandProjects = ownProjects
+    .filter((p) => {
+      if (projectFilter === "archivados" ? !p.archived : p.archived) return false;
+      if (projectFilter !== "todos" && projectFilter !== "archivados" && p.status !== projectFilter) return false;
+      const q = projectSearchQuery.trim().toLowerCase();
+      return !q || p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q);
+    })
+    .sort((x, y) => Number(Boolean(y.pinned)) - Number(Boolean(x.pinned)));
+  const editingProject = ownProjects.find((p) => p.id === editingProjectId);
 
   const handleCreateProject = (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,8 +150,8 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
         "Proyecto creado para agrupar listas, entregables y páginas de campaña.",
       progress: 0,
       status: "En curso",
-      dueDate: "2026-11-30",
-      deliverablesCount: 6,
+      dueDate: "",
+      deliverablesCount: 0,
     });
     setNewProjTitle("");
     setNewProjDesc("");
@@ -242,35 +249,26 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 <Search size={16} />
               </button>
 
-              <button
-                disabled
-                data-planned
-                title="Función prevista"
-                type="button"
-                style={{
-                  border: "none",
-                  background: "transparent",
-                  color: "var(--ui-text)",
-                  fontSize: 13.5,
-                  fontWeight: 600,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  cursor: "pointer",
-                  padding: "4px 8px",
-                }}
+              <select
+                aria-label="Filtrar proyectos"
+                className="hubly-social-cell"
+                value={projectFilter}
+                onChange={(e) => setProjectFilter(e.target.value as typeof projectFilter)}
               >
-                <span>Todos</span>
-                <ChevronDown size={13} style={{ color: "var(--ui-text-4)" }} />
-              </button>
+                <option value="todos">Todos</option>
+                {PROJECT_COLUMNS.map((s) => <option key={s} value={s}>{s}</option>)}
+                <option value="archivados">Archivados</option>
+              </select>
 
-              <span style={{ fontSize: 12.5, color: "var(--ui-text-5)", fontWeight: 500 }}>
-                1 de 1
+              <span style={{ fontSize: 12.5, color: "var(--ui-text-3)", fontWeight: 500 }}>
+                {brandProjects.length} de {ownProjects.filter((p) => !p.archived).length}
               </span>
 
               {projectSearchOpen && (
                 <input
                   type="text"
+                  autoFocus
+                  aria-label="Buscar proyecto por nombre"
                   value={projectSearchQuery}
                   onChange={(e) => setProjectSearchQuery(e.target.value)}
                   placeholder="Filtrar proyectos..."
@@ -357,99 +355,43 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
 
           {projectView === "filas" && (
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {/* Additional Brand Projects from Store */}
-              {brandProjects.map((proj) => (
-                <div
-                  key={proj.id}
-                  style={{
-                    border: "1px solid var(--ui-border)",
-                    borderRadius: 18,
-                    padding: "18px 22px",
-                    background: "var(--ui-surface)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 16,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: 16, minWidth: 260, flex: 1 }}>
-                    <div
-                      style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: 12,
-                        background: "var(--ui-accent-soft)",
-                        color: "var(--hb-accent-text)",
-                        fontSize: 16,
-                        fontWeight: 700,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                      }}
-                    >
-                      {proj.title.slice(0, 1).toUpperCase()}
-                    </div>
-                    <div style={{ minWidth: 0 }}>
-                      <h3
-                        style={{
-                          fontSize: 15,
-                          fontWeight: 700,
-                          color: "var(--ui-text)",
-                          margin: "0 0 3px 0",
-                        }}
-                      >
-                        {proj.title}
-                      </h3>
-                      <p
-                        style={{
-                          fontSize: 13,
-                          color: "var(--ui-text-4)",
-                          margin: 0,
-                          maxWidth: 560,
-                        }}
-                      >
-                        {proj.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                    <div
-                      style={{
-                        width: 82,
-                        height: 6,
-                        borderRadius: 999,
-                        background: "var(--ui-muted)",
-                        overflow: "hidden",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: `${proj.progress}%`,
-                          height: "100%",
-                          background: "var(--hb-accent)",
-                        }}
-                      />
-                    </div>
-                    <span style={{ fontSize: 12.5, fontWeight: 700, color: "var(--ui-accent-text-2)" }}>
-                      {proj.progress}%
-                    </span>
-                    <span
-                      style={{
-                        background: "#DCFCE7",
-                        color: "#15803D",
-                        fontSize: 12,
-                        fontWeight: 600,
-                        padding: "4px 12px",
-                        borderRadius: 999,
-                      }}
-                    >
-                      {proj.status}
-                    </span>
-                  </div>
+              {brandProjects.length === 0 && (
+                <div className="hubly-media-empty">
+                  <p>{projectSearchQuery.trim() || projectFilter !== "todos" ? "Ningún proyecto coincide con el filtro." : "Aún no hay proyectos en esta marca."}</p>
+                  {!readOnly && <button type="button" className="hubly-media-primary" onClick={() => setNewProjectModal(true)}>Nuevo proyecto</button>}
                 </div>
+              )}
+              {brandProjects.map((proj) => (
+                <article key={proj.id} className="hubly-project-row" data-pinned={proj.pinned || undefined}>
+                  <button type="button" className="hubly-project-open" onClick={() => setEditingProjectId(proj.id)}>
+                    <span className="hubly-project-mark" aria-hidden>{proj.title.slice(0, 1).toUpperCase()}</span>
+                    <span>
+                      <strong>{proj.title}</strong>
+                      <small>{proj.description}</small>
+                    </span>
+                  </button>
+                  <div className="hubly-project-meta">
+                    <span className="hubly-project-bar" aria-hidden><i style={{ width: `${proj.progress}%` }} /></span>
+                    <b>{proj.progress}%</b>
+                    <span>{proj.dueDate ? new Date(`${proj.dueDate}T12:00:00`).toLocaleDateString("es-MX", { day: "numeric", month: "short" }) : "Sin fecha"}</span>
+                    <span className="hubly-social-badge" data-tone={proj.status === "Completado" ? "ok" : proj.status === "Revisión" ? "warn" : "info"}>{proj.status}</span>
+                  </div>
+                  {!readOnly && (
+                    <div className="hubly-project-actions">
+                      <button type="button" aria-label={`${proj.pinned ? "Soltar" : "Fijar"} ${proj.title}`} aria-pressed={Boolean(proj.pinned)} onClick={() => updateProject(proj.id, { pinned: !proj.pinned })}><Pin size={15} /></button>
+                      <button type="button" aria-label={`${proj.archived ? "Restaurar" : "Archivar"} ${proj.title}`} onClick={() => updateProject(proj.id, { archived: !proj.archived, pinned: false })}><Archive size={15} /></button>
+                      <button
+                        type="button"
+                        aria-label={`Eliminar ${proj.title}`}
+                        onClick={async () => {
+                          if (await askConfirm(`¿Eliminar el proyecto «${proj.title}»?`)) deleteProject(proj.id);
+                        }}
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  )}
+                </article>
               ))}
             </div>
           )}
@@ -632,6 +574,8 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
           )}
 
           {/* Modal to create project */}
+          {editingProject && <ProjectEditModal key={editingProject.id} project={editingProject} onClose={() => setEditingProjectId(null)} />}
+
           {newProjectModal && (
             <div
               onClick={() => setNewProjectModal(false)}

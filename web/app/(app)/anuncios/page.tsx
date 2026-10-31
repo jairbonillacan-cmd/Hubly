@@ -594,64 +594,9 @@ function DemoAnunciosPage() {
 
         {/* Right Date Picker Pill + Settings Icon with Red Notification Dot */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <button
-            disabled
-            data-planned
-            title="Función prevista"
-            type="button"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 7,
-              height: 32,
-              padding: "0 14px",
-              borderRadius: 999,
-              border: "1px solid var(--ui-border)",
-              background: "var(--ui-surface)",
-              color: "var(--ui-text)",
-              fontSize: 12.5,
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            <Calendar size={13} style={{ color: "var(--ui-text-4)" }} />
-            <span>23 oct - 30 oct</span>
-            <ChevronDown size={13} style={{ color: "var(--ui-text-4)" }} />
-          </button>
+          
 
-          <button
-            disabled
-            data-planned
-            type="button"
-            aria-label="Conexión y sincronización con Meta"
-            title="Los datos de Meta podrían estar desactualizados"
-            style={{
-              width: 34,
-              height: 34,
-              borderRadius: 999,
-              border: "1px solid var(--ui-border)",
-              background: "var(--ui-surface)",
-              color: "var(--ui-text-3)",
-              display: "grid",
-              placeItems: "center",
-              position: "relative",
-              cursor: "pointer",
-            }}
-          >
-            <Settings size={15} />
-            <span
-              style={{
-                position: "absolute",
-                top: 2,
-                right: 2,
-                width: 7,
-                height: 7,
-                borderRadius: 999,
-                background: "#EF4444",
-                border: "1.5px solid var(--ui-surface)",
-              }}
-            />
-          </button>
+          
         </div>
       </div>
 
@@ -757,29 +702,7 @@ function DemoAnunciosPage() {
             />
           )}
 
-          <button
-            disabled
-            data-planned
-            type="button"
-            title="Filtros y orden"
-            style={{
-              height: 34,
-              padding: "0 14px",
-              borderRadius: 999,
-              border: "1px solid var(--ui-border)",
-              background: "var(--ui-surface)",
-              color: "var(--ui-text-2)",
-              fontSize: 12.5,
-              fontWeight: 600,
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              cursor: "pointer",
-            }}
-          >
-            <SlidersHorizontal size={13} />
-            <span>Filtros</span>
-          </button>
+          
         </div>
 
         {/* Right: View Switcher (Cards | Tabla | Funnels) + Métricas 5 */}
@@ -856,44 +779,7 @@ function DemoAnunciosPage() {
             </button>
           </div>
 
-          <button
-            disabled
-            data-planned
-            title="Función prevista"
-            type="button"
-            style={{
-              height: 38,
-              padding: "0 14px",
-              borderRadius: 999,
-              border: "1px solid var(--ui-border)",
-              background: "var(--ui-surface)",
-              color: "var(--ui-text)",
-              fontSize: 13,
-              fontWeight: 600,
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              cursor: "pointer",
-            }}
-          >
-            <SlidersHorizontal size={14} style={{ color: "var(--ui-text-3)" }} />
-            <span>Métricas</span>
-            <span
-              style={{
-                width: 20,
-                height: 20,
-                borderRadius: 999,
-                background: "var(--ui-muted)",
-                color: "var(--ui-text-3)",
-                fontSize: 11.5,
-                fontWeight: 700,
-                display: "inline-grid",
-                placeItems: "center",
-              }}
-            >
-              5
-            </span>
-          </button>
+          
         </div>
       </div>
 

@@ -29,9 +29,9 @@ Cubierto en las 21 rutas, en claro y oscuro: carga sin errores de consola y cont
 
 ## Pendiente del plan
 
-- **Matriz por control** de las 21 rutas (resultado, persistencia, permisos). Solo existe la matriz por ruta de arriba.
-- **Criterio de listas** en tareas, proyectos, recursos y cuentas: esas pantallas no se rediseñaron.
-- **Revalidación en Henry en vivo:** `capture_browser_scenario` de REA falla con `execution_failure`. Se tomaron de la especificación: 5 agrupaciones de Kanban, límites de 20 y 100 MB y pasos del importador. El importador de Henry trae publicaciones de cuentas conectadas, así que el de Hubly (tablas) es deliberadamente distinto.
+- **Matriz por control:** la genera `npm run audit:controles` en [MATRIZ-CONTROLES.md](MATRIZ-CONTROLES.md). Cubre lo visible al cargar cada ruta y si pulsar produce un cambio; no cubre ventanas abiertas, y la persistencia solo se prueba en los flujos de `e2e/`.
+- **Criterio de listas:** Proyectos ya tiene filtro, conteo, edición, fijar, archivar y eliminar. Marcas y Tareas ya tenían búsqueda y vistas. Salud de Cuentas no se revisó con este criterio.
+- **Revalidación en Henry en vivo:** `capture_browser_scenario` ya funciona. Observado el 31 de octubre: «Columnas por» ofrece Estatus, Formato, Responsable y Publicación (`ev_94a53490a97b38c5d84e64403c68ffeb728d971277fd38654c312f459370d664`), y las pantallas de Kanban, Proyectos y Marcas (`ev_f3bbcb90cca23ab371886d350d20b92e6f8363809f5608dc76a91a3fda5ac761`, `ev_e3be0c7219ebb3e057c482009f67c50bbe4996b3d6bece1890fe0b04fcab6a94`, `ev_a961606cd273cce5a5c2f97edd2cabc03027609a3de7ba9afba83227405320e2`). Sigue sin observarse la opción «Pilar», los límites de 20 y 100 MB (vienen del bundle) y los pasos actuales del importador. El importador de Henry trae publicaciones de cuentas conectadas, así que el de Hubly (tablas) es deliberadamente distinto.
 - **Comparación visual sistemática** de las ocho escenas: se revisaron capturas de compositor, sidebar, móvil, tabla, Kanban y semana; no todas las combinaciones de escritorio/móvil y claro/oscuro.
 - **Pantallas con datos de ejemplo** que siguen fuera de este alcance, como `/anuncios` y las pestañas de reportes y enlaces en modo demo.
 

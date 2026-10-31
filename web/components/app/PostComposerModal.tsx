@@ -30,6 +30,7 @@ import {
   saveRecovery,
   type PostDraft,
 } from "@/lib/post-draft";
+import { DEFAULT_WORKFLOW } from "@/lib/calendar-views";
 import { moveInList } from "@/lib/use-kanban-drag";
 import type { CustomFieldDefinition, PlatformSettings, PostFormat, PostMedia, PostStatus, SocialNetwork, WorkflowStatus } from "@/lib/types";
 import {
@@ -97,12 +98,6 @@ const GLYPHS: Record<SocialNetwork, React.ReactNode> = {
 };
 
 const POST_COLORS = ["#16324F", "#2A76B0", "#0F766E", "#15803D", "#B45309", "#B91C1C", "#7C3AED", "#BE185D"];
-const DEFAULT_WORKFLOW: WorkflowStatus[] = [
-  { id: "pendiente", name: "Pendiente de revisión", color: "#F59E0B" },
-  { id: "diseno", name: "En diseño", color: "#2A76B0" },
-  { id: "copy", name: "Copy listo", color: "#0F766E" },
-  { id: "interno", name: "Aprobado interno", color: "#15803D" },
-];
 const FIELD_TYPES: { id: CustomFieldDefinition["type"]; label: string }[] = [
   { id: "text", label: "Texto" },
   { id: "number", label: "Número" },
@@ -193,6 +188,10 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
       assignee: profile?.name || "",
       date: composerDefaultDate,
     });
+    if (!editingPost) {
+      const catalog = brands.find((b) => b.id === initial.brandId)?.workflowStatuses;
+      initial.workflowStatusId = (catalog?.length ? catalog : DEFAULT_WORKFLOW)[0].id;
+    }
     const recovered = readOnly ? null : loadRecovery(localStorage, recoveryKey(owner, initial.brandId, initial.postId));
     const useRecovered = recovered && !draftsEqual(recovered.draft, initial);
     /* eslint-disable react-hooks/set-state-in-effect -- abrir otro post reinicia toda la sesión de edición */

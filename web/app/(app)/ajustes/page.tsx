@@ -1,5 +1,6 @@
 "use client";
 
+import { ChangePassword } from "@/components/app/ajustes/ChangePassword";
 import { clearAllRecoveries } from "@/lib/post-draft";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -298,27 +299,7 @@ export default function AjustesPage() {
                       Miembro
                     </span>
                   </div>
-                  <button
-                    disabled
-                    data-planned
-                    title="Función prevista"
-                    type="button"
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 5,
-                      background: "transparent",
-                      border: "none",
-                      padding: 0,
-                      color: "var(--hb-accent-text)",
-                      fontSize: 12,
-                      fontWeight: 600,
-                      cursor: "pointer",
-                    }}
-                  >
-                    <Camera size={13} />
-                    <span>Cambiar foto</span>
-                  </button>
+                  
                 </div>
               </div>
 
@@ -437,29 +418,8 @@ export default function AjustesPage() {
                 >
                   CONTRASEÑA
                 </span>
-                <button
-                  disabled
-                  data-planned
-                  title="Función prevista"
-                  type="button"
-                  style={{
-                    height: 38,
-                    padding: "0 16px",
-                    borderRadius: 10,
-                    border: "1px solid var(--ui-border-strong)",
-                    background: "var(--ui-surface)",
-                    color: "var(--ui-text-2)",
-                    fontSize: 13,
-                    fontWeight: 600,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 8,
-                    cursor: "pointer",
-                  }}
-                >
-                  <Lock size={14} style={{ color: "var(--ui-text-4)" }} />
-                  <span>Cambiar contraseña</span>
-                </button>
+                <ChangePassword />
+                
               </div>
 
               {/* Apariencia */}

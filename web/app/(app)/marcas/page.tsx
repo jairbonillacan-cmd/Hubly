@@ -98,11 +98,11 @@ export default function MarcasPage() {
       {view === "cards" && visible.length > 0 && (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))", gap: 14 }}>
           {visible.map((b) => (
-            <div key={b.id} role="button" tabIndex={0} onClick={() => open(b)} onKeyDown={(e) => { if (e.key === "Enter" && e.target === e.currentTarget) open(b); }} style={{ cursor: "pointer", background: "var(--ui-surface)", border: `1px solid ${b.id === activeBrandId ? "var(--hb-accent)" : "var(--ui-border)"}`, borderRadius: 14, padding: 16 }}>
+            <div key={b.id} onClick={() => open(b)} style={{ cursor: "pointer", background: "var(--ui-surface)", border: `1px solid ${b.id === activeBrandId ? "var(--hb-accent)" : "var(--ui-border)"}`, borderRadius: 14, padding: 16 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
                 {badge(b)}
                 <span style={{ minWidth: 0, flex: 1 }}>
-                  <span style={{ display: "block", fontSize: 14.5, fontWeight: 700, color: "var(--ui-text)" }}>{b.name}</span>
+                  <button type="button" onClick={(e) => { e.stopPropagation(); open(b); }} style={{ display: "block", padding: 0, border: 0, background: "transparent", fontSize: 14.5, fontWeight: 700, color: "var(--ui-text)", cursor: "pointer", textAlign: "left" }}>{b.name}</button>
                   <span style={{ display: "block", fontSize: 12, color: "var(--ui-text-4)" }}>{b.handle}</span>
                 </span>
                 {archiveBtn(b)}

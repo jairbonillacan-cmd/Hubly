@@ -57,7 +57,7 @@ const INITIAL_LOCAL_MESSAGES: LocalThreadMessage[] = [
     senderInitials: "J",
     senderBg: "#E6F4FB",
     senderColor: "var(--hb-accent-text)",
-    text: "Notas rápidas: conectar las redes de Min y mandar el primer reporte mensual este viernes.",
+    text: "Notas rápidas: conectar las redes y mandar el primer reporte mensual este viernes.",
     time: "09:15",
   },
 ];

@@ -187,7 +187,7 @@ export interface HublyStoreState extends HublyWorkspaceData {
   ) => void;
   approveAllBrandPosts: (brandId: string, authorName?: string, role?: "client" | "agency") => void;
   /** Cambio puntual desde tabla o Kanban; el estado de publicación va por updatePostStatus. */
-  updatePostFields: (postId: string, patch: Partial<Pick<SocialPost, "workflowStatusId" | "format" | "assigneeIds" | "assignee" | "customFields">>) => void;
+  updatePostFields: (postId: string, patch: Partial<Pick<SocialPost, "workflowStatusId" | "format" | "assigneeIds" | "assignee" | "customFields" | "pillar">>) => void;
   deletePost: (postId: string) => void;
   /** Devuelve el id de la copia, que nace como borrador sin fecha ni resultados. */
   duplicatePost: (postId: string) => string | null;
@@ -281,6 +281,8 @@ export interface HublyStoreState extends HublyWorkspaceData {
   addAsset: (asset: Omit<MediaAsset, "id" | "uploadedAt" | "usedInPosts">) => void;
   addProject: (project: Omit<BrandProject, "id">) => void;
   moveProject: (projectId: string, status: BrandProject["status"], beforeId: string | null) => void;
+  updateProject: (projectId: string, patch: Partial<Omit<BrandProject, "id" | "brandId">>) => void;
+  deleteProject: (projectId: string) => void;
   sendChatMessage: (
     channelId: string,
     text: string,
@@ -1979,6 +1981,16 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     set((s) => ({
       projects: [{ ...projInput, id: `proj-${Date.now()}` }, ...s.projects],
     }));
+    persistWorkspaceState(get());
+  },
+
+  updateProject: (projectId, patch) => {
+    set((s) => ({ projects: s.projects.map((p) => (p.id === projectId ? { ...p, ...patch } : p)) }));
+    persistWorkspaceState(get());
+  },
+
+  deleteProject: (projectId) => {
+    set((s) => ({ projects: s.projects.filter((p) => p.id !== projectId) }));
     persistWorkspaceState(get());
   },
 

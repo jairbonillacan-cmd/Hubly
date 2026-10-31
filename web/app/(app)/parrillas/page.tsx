@@ -879,47 +879,10 @@ export default function ParrillasPage() {
               marginBottom: 48,
             }}
           >
-            <button
-              disabled
-              data-planned
-              title="Función prevista"
-              type="button"
-              style={{
-                width: 38,
-                height: 32,
-                borderRadius: 10,
-                border: "none",
-                background: "var(--ui-accent-soft)",
-                color: "var(--hb-accent-text)",
-                display: "grid",
-                placeItems: "center",
-                cursor: "pointer",
-              }}
-            >
-              <Home size={16} />
-            </button>
+            
 
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <button
-                disabled
-                data-planned
-                title="Función prevista"
-                type="button"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  background: "transparent",
-                  border: "none",
-                  color: "var(--ui-text-2)",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                <MessageCircle size={15} />
-                <span>Comentarios</span>
-              </button>
+              
 
               <div
                 style={{
@@ -930,43 +893,8 @@ export default function ParrillasPage() {
                   gap: 2,
                 }}
               >
-                <button
-                  disabled
-                  data-planned
-                  title="Función prevista"
-                  type="button"
-                  style={{
-                    width: 28,
-                    height: 26,
-                    borderRadius: 7,
-                    border: "none",
-                    background: "var(--ui-surface)",
-                    color: "var(--ui-text)",
-                    display: "grid",
-                    placeItems: "center",
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
-                  }}
-                >
-                  <LayoutGrid size={14} />
-                </button>
-                <button
-                  disabled
-                  data-planned
-                  title="Función prevista"
-                  type="button"
-                  style={{
-                    width: 28,
-                    height: 26,
-                    borderRadius: 7,
-                    border: "none",
-                    background: "transparent",
-                    color: "var(--ui-text-4)",
-                    display: "grid",
-                    placeItems: "center",
-                  }}
-                >
-                  <List size={14} />
-                </button>
+                
+                
               </div>
 
               <Link
@@ -1240,23 +1168,7 @@ export default function ParrillasPage() {
                     {lbl}
                   </button>
                 ))}
-                <button
-                  disabled
-                  data-planned
-                  title="Función prevista"
-                  type="button"
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    color: "var(--ui-text-4)",
-                    fontSize: 13,
-                    fontWeight: 500,
-                    cursor: "pointer",
-                    padding: 0,
-                  }}
-                >
-                  Más ▾
-                </button>
+                
               </div>
 
               {/* Cards List */}
@@ -1297,22 +1209,7 @@ export default function ParrillasPage() {
                   </div>
 
                   <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                    <button
-                      disabled
-                      data-planned
-                      title="Función prevista"
-                      type="button"
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        color: "var(--ui-text-4)",
-                        fontSize: 12.5,
-                        fontWeight: 500,
-                        cursor: "pointer",
-                      }}
-                    >
-                      Editar
-                    </button>
+                    
 
                     {/* Toggle ON */}
                     <button
@@ -1429,22 +1326,7 @@ export default function ParrillasPage() {
                   </div>
 
                   <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                    <button
-                      disabled
-                      data-planned
-                      title="Función prevista"
-                      type="button"
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        color: "var(--ui-text-4)",
-                        fontSize: 12.5,
-                        fontWeight: 500,
-                        cursor: "pointer",
-                      }}
-                    >
-                      Más
-                    </button>
+                    
 
                     {/* Toggle OFF */}
                     <button
@@ -1521,8 +1403,7 @@ export default function ParrillasPage() {
                     margin: "0 0 18px",
                   }}
                 >
-                  Mineralia USA vende minerales, cristales o piezas decorativas de origen natural —
-                  probablemente colecciones curadas para...
+                  {activeBrand?.core?.whatTheySell || "Agrega una descripción en Núcleo de Marca."}
                 </p>
 
                 {siguenosEnabled && (

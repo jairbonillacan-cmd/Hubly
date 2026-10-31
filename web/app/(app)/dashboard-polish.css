@@ -1990,3 +1990,56 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
   .hubly-social-period h2 { font-size: 17px; }
   .hubly-social-tools { width: 100%; }
 }
+
+/* Kanban compacto: columnas abiertas y tarjetas horizontales, como en la referencia */
+.hubly-social-column { padding: 0; border: 0; border-radius: 12px; background: transparent; }
+.hubly-social-column[data-over] { outline-offset: 4px; }
+.hubly-social-knew { display: inline-flex; align-items: center; gap: 5px; align-self: flex-start; height: 28px; padding: 0 4px; border: 0; background: transparent; color: var(--ui-text-3); font-size: 13px; cursor: pointer; }
+.hubly-social-knew:hover { color: var(--ui-text); }
+.hubly-social-knew.is-column { flex-shrink: 0; align-self: flex-start; margin-top: -2px; white-space: nowrap; }
+.hubly-social-kcard { border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-surface); }
+.hubly-social-kcard:hover { border-color: var(--ui-border-strong); }
+.hubly-social-kcard[data-dragging] { opacity: 0.4; }
+.hubly-social-kcard-open { display: flex; flex-direction: column; gap: 8px; width: 100%; padding: 10px 12px; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.hubly-social-kcard-top { display: flex; gap: 10px; min-width: 0; }
+.hubly-social-kcard-top > span:last-child { min-width: 0; }
+.hubly-social-kcard-top strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: 13px; font-weight: 500; line-height: 1.3; color: var(--ui-text-1); }
+.hubly-social-kcard-top small { display: block; margin-top: 3px; font-size: 11.5px; color: var(--ui-text-3); }
+.hubly-social-kcard-thumb { position: relative; display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 50px; border-radius: 6px; background: var(--ui-muted); overflow: hidden; text-align: center; }
+.hubly-social-kcard-thumb img, .hubly-social-kcard-thumb video { width: 100%; height: 100%; object-fit: cover; }
+.hubly-social-kcard-thumb small { margin: 0; font-size: 8.5px; line-height: 1.1; }
+.hubly-social-kcard-open em { font-size: 11px; font-style: normal; font-weight: 600; color: var(--hb-accent-text); }
+.hubly-social-kanban-item { position: relative; }
+.hubly-social-kanban-item > .hubly-social-cell { position: absolute; top: 4px; right: 4px; width: 22px !important; height: 22px !important; padding: 0; border-radius: 6px; opacity: 0; color: var(--ui-text-1); cursor: pointer; background: var(--ui-muted); }
+.hubly-social-kanban-item:hover > .hubly-social-cell, .hubly-social-kanban-item > .hubly-social-cell:focus { opacity: 1; width: auto !important; max-width: 170px; padding: 0 4px; }
+.hubly-project-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 14px 20px; border: 1px solid var(--ui-border); border-radius: 18px; background: var(--ui-surface); }
+.hubly-project-row[data-pinned] { border-color: var(--hb-accent); }
+.hubly-project-open { display: flex; align-items: center; gap: 14px; flex: 1 1 280px; min-width: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.hubly-project-open > span:last-child { min-width: 0; }
+.hubly-project-open strong { display: block; font-size: 15px; color: var(--ui-text); }
+.hubly-project-open small { display: block; overflow: hidden; font-size: 13px; color: var(--ui-text-3); white-space: nowrap; text-overflow: ellipsis; }
+.hubly-project-mark { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px; background: var(--ui-accent-soft); color: var(--hb-accent-text); font-size: 16px; font-weight: 700; }
+.hubly-project-meta { display: flex; align-items: center; gap: 12px; font-size: 12.5px; color: var(--ui-text-3); }
+.hubly-project-meta b { color: var(--ui-accent-text-2); }
+.hubly-project-bar { display: block; width: 82px; height: 6px; border-radius: 999px; background: var(--ui-muted); overflow: hidden; }
+.hubly-project-bar i { display: block; height: 100%; background: var(--hb-accent); }
+.hubly-project-actions { display: flex; gap: 2px; }
+.hubly-project-actions button { display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 8px; background: transparent; color: var(--ui-text-3); cursor: pointer; }
+.hubly-project-actions button:hover { background: var(--ui-muted); color: var(--ui-text); }
+.hubly-project-actions button[aria-pressed="true"] { color: var(--hb-accent-text); }
+.hubly-personas { display: flex; flex-direction: column; gap: 16px; }
+.hubly-personas > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.hubly-personas > header > div:last-child { display: flex; gap: 8px; flex-wrap: wrap; }
+.hubly-personas h3 { margin: 0 0 2px; font-size: 20px; font-weight: 800; color: var(--ui-text); }
+.hubly-personas header p { margin: 0; font-size: 13.5px; color: var(--ui-text-3); }
+.hubly-personas-list { display: flex; flex-direction: column; gap: 14px; }
+.hubly-personas-list article { padding: 18px; border: 1px solid var(--ui-border); border-radius: 16px; background: var(--ui-surface); }
+.hubly-personas-list article[data-accepted] { border-color: var(--hb-accent); }
+.hubly-personas-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.hubly-personas-head > span { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border-radius: 13px; background: var(--hb-accent); color: var(--on-accent); font-size: 14px; font-weight: 800; }
+.hubly-personas-head input { flex: 1 1 160px; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ui-text); font-size: 17px; font-weight: 800; }
+.hubly-personas-head button { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 10px; border: 1px solid var(--ui-border); border-radius: 999px; background: var(--ui-surface); color: var(--ui-text-2); font-size: 12px; font-weight: 600; cursor: pointer; }
+.hubly-personas-head button[aria-pressed="true"] { border-color: var(--hb-accent); background: rgb(var(--hb-accent-rgb) / 0.12); color: var(--hb-accent-text); }
+.hubly-personas-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+.hubly-personas-fields label { display: grid; gap: 4px; font-size: 11.5px; font-weight: 700; color: var(--ui-text-3); }
+.hubly-personas-fields :is(input, textarea) { width: 100%; padding: 8px 10px; border: 1px solid var(--ui-border); border-radius: 9px; background: var(--ui-surface-2); color: var(--ui-text-1); font: inherit; font-size: 13.5px; font-weight: 400; resize: vertical; }

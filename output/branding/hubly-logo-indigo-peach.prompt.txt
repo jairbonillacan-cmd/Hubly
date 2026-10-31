@@ -1,0 +1,10 @@
+Tool: built-in image_gen, edit mode, transparent_background=true.
+Input: web/public/brand/hubly-logo.webp (original green/yellow logo).
+
+Edit this existing Hubly logo for the project's new palette. Recolor only; preserve the exact 2x2 four organic tiles mark, geometry, spacing, typography, wordmark, proportions and layout. Keep text exactly 'hubly' in the same lowercase heavy rounded lettering as the input. Replace the three green icon tiles with flat indigo #5360A5. Replace the one yellow top-right tile with flat peach #F4A574. Replace the dark green wordmark with dark ink #1B1E3A. The background must remain truly transparent, preserving clean antialiased edges. A single horizontal logo only, no extra text, no presentation board, no shadow, no gradient, no mockup. This is a precise color update of the supplied image, do not redesign or reinterpret it.
+
+Cleanup edit prompt:
+Clean up this logo asset for production. Keep the same exact four tile icon, the same lowercase wordmark 'hubly', same shapes and position. Make the image a perfectly clean FLAT vector-like logo on a truly transparent background. Remove ALL colored artifacts, stray blue/yellow/magenta outlines, all tiny pixels, blue rectangular regions in negative spaces, and any horizontal lines below the logo. The gaps between letters and around every tile must be fully transparent. All three blue tiles are solid flat #5360A5, the peach top-right tile solid #F4A574, the wordmark solid dark #1B1E3A. No gradients, no texture, no outlines, no shadows, no 3D. Clean antialiased contours only. No redesign. Deliver one tightly framed horizontal logo.
+
+Saved master: output/branding/hubly-logo-indigo-peach.png
+Web export: web/public/brand/hubly-logo.webp (600px wide, lossless WebP with alpha).

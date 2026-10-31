@@ -427,6 +427,8 @@ export interface BrandProject {
   status: "En curso" | "Revisión" | "Completado";
   dueDate: string;
   deliverablesCount: number;
+  pinned?: boolean;
+  archived?: boolean;
 }
 
 export interface AdCreative {
