@@ -80,10 +80,10 @@ const enPagina = () => {
   const firma = () => ({
     url: `${location.pathname}${location.search}`,
     ventanas: ventanasVisibles().length,
-    texto: (document.querySelector("main") || document.body).innerText.slice(0, 10000),
+    texto: document.body.innerText.slice(0, 15000),
     campos: [...document.querySelectorAll("input, select, textarea")].map((e) => e.value).join("|"),
-    nodos: (document.querySelector("main") || document.body).querySelectorAll("*").length,
-    estados: document.querySelectorAll('[aria-pressed="true"],[aria-selected="true"],[aria-expanded="true"],[aria-current],[aria-checked="true"]').length,
+    nodos: document.body.querySelectorAll("*").length,
+    estados: [...document.querySelectorAll('[aria-pressed="true"],[aria-selected="true"],[aria-expanded="true"],[aria-current],[aria-checked="true"]')].map((e) => e.getAttribute("aria-label") || e.innerText || e.tagName).join(";"),
     tema: document.documentElement.className,
     foco: document.activeElement ? `${document.activeElement.tagName}:${(document.activeElement.getAttribute("aria-label") || "").slice(0, 20)}` : "",
   });
