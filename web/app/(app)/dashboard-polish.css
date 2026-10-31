@@ -2300,6 +2300,8 @@ html.dark .hubly-cal-types button[aria-checked="true"] { border-color: var(--hb-
   .hubly-sidebar.is-mobile-drawer-open :is(a, button, [role="button"]) { min-height: 44px; }
   .hubly-app-root.hb-app-root .hubly-sidebar.is-mobile-drawer-open :is(.hubly-nav-item, .hb-nav-item) { min-height: 44px; }
   .hubly-sidebar.is-mobile-drawer-open :is(.hubly-icon-btn, .hubly-sidebar-tab, button:has(> svg:only-child)) { min-width: 44px; }
+  .hubly-composer :is(button, [role="button"], [role="tab"], select, textarea, input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"])) { min-height: 44px; }
+  .hubly-composer :is(.hubly-cal-icon, .hubly-composer-networks button, .hubly-composer-toolbar button, button:has(> svg:only-child)) { min-width: 44px; }
   :is(.hubly-touch, .hubly-cal, .hubly-dashboard-subnav-wrap) :is(button, [role="button"], [role="tab"], [role="checkbox"], [role="switch"], [role="radio"], select, summary, textarea, input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"])) { min-height: 44px; }
   :is(.hubly-touch, .hubly-cal, .hubly-dashboard-subnav-wrap) :is(a[href], .hubly-subnav-tab) { display: inline-flex; align-items: center; min-height: 44px; }
   :is(.hubly-touch, .hubly-cal, .hubly-dashboard-subnav-wrap) :is(.hubly-icon-btn, .hubly-cal-icon, .hubly-cal-reveal, .hubly-cal-tab, .hubly-seg-pill, button:has(> svg:only-child)) { min-width: 44px; }

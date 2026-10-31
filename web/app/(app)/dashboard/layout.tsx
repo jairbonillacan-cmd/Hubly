@@ -15,7 +15,7 @@ export default function DashboardLayout({
     <div className="hubly-touch" style={{ width: "100%", minWidth: 0 }}>
       <Suspense fallback={null}>
         <DashboardSubNav />
-        <div key={pathname} className="tablero-aparece">
+        <div key={pathname}>
           {children}
         </div>
       </Suspense>

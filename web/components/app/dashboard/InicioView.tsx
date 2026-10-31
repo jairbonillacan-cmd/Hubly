@@ -1403,7 +1403,7 @@ export function InicioView() {
           </span>
         </h1>
         <p data-testid="dashboard-greeting-subtitle" className="hubly-hero-date">
-          {greetingInfo.dateTitleCase}
+          {greetingInfo.dateTitleCase.replace(/ De (\S+)$/, (_, mes: string) => ` de ${mes.toLowerCase()}`)}
         </p>
         <p className="hubly-hero-pending">
           {tasksBreakdown.pendingCount === 0 ? (
