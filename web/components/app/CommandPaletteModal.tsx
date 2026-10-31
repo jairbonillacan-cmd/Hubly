@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useHublyStore } from "@/lib/store";
 import { useLayer } from "@/lib/use-layer";
 import { useModalPresence } from "@/lib/use-modal-presence";
+import { dueLabelFor, localIsoDate } from "@/lib/date";
+import { STATUS_META } from "@/components/app/social/status-meta";
 import { openNotebookModal } from "@/components/app/NotebookReaderModal";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import {
@@ -42,6 +44,17 @@ interface CommandItem {
   badge?: string;
   icon: React.ReactNode;
   action: () => void;
+}
+
+function dueText(iso: string): string {
+  const label = dueLabelFor(iso);
+  if (!iso) return label;
+  const verb = iso < localIsoDate() ? "Venció" : "Vence";
+  return `${verb} ${label.charAt(0).toLowerCase()}${label.slice(1)}`;
+}
+
+function capitalize(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 function getFocusableElements(container: HTMLElement | null): HTMLElement[] {
@@ -141,7 +154,7 @@ export function CommandPaletteModal({
       {
         id: "act-new-brand",
         group: "Acciones",
-        label: "Crear nueva marca",
+        label: "Crear marca",
         sublabel: "Configura identidad y compromisos mensuales",
         icon: <Building2 size={17} />,
         action: () => {
@@ -152,8 +165,8 @@ export function CommandPaletteModal({
       {
         id: "act-invite-team",
         group: "Acciones",
-        label: "Invitar miembro al equipo",
-        sublabel: "Genera invitación local con rol y marcas asignadas",
+        label: "Invitar al equipo",
+        sublabel: "Genera una invitación con rol y marcas asignadas",
         icon: <UserPlus size={17} />,
         action: () => {
           handleClose();
@@ -163,8 +176,8 @@ export function CommandPaletteModal({
       {
         id: "act-suggestions",
         group: "Acciones",
-        label: "Revisar sugerencias de metas",
-        sublabel: "Motor de reglas sobre el cumplimiento del último mes",
+        label: "Revisar sugerencias",
+        sublabel: "Compromisos propuestos según el cumplimiento del último mes",
         icon: <Sparkles size={17} />,
         action: () => {
           handleClose();
@@ -174,7 +187,7 @@ export function CommandPaletteModal({
       {
         id: "act-widgets",
         group: "Acciones",
-        label: "Configurar widgets del dashboard",
+        label: "Configurar widgets",
         sublabel: "Mostrar, ocultar, cambiar columna o reordenar widgets",
         icon: <LayoutGrid size={17} />,
         action: () => {
@@ -210,12 +223,12 @@ export function CommandPaletteModal({
       {
         id: "nav-cuentas",
         group: "Páginas",
-        label: "Dashboard · Salud de Cuentas",
+        label: "Dashboard · Salud de cuentas",
         sublabel: "Cumplimiento de entregas, presupuesto y estado de pauta",
         icon: <Sparkles size={17} />,
         action: () => {
           handleClose();
-          router.push("/dashboard?tab=cuentas");
+          router.push("/dashboard/salud-cuentas");
         },
       },
       {
@@ -226,14 +239,14 @@ export function CommandPaletteModal({
         icon: <Users size={17} />,
         action: () => {
           handleClose();
-          router.push("/dashboard?tab=equipo");
+          router.push("/dashboard/equipo");
         },
       },
       {
         id: "nav-tareas",
         group: "Páginas",
-        label: "Mi Espacio (Tareas y Libretas Kraft)",
-        sublabel: "Gestión de entregables y notas de estrategia",
+        label: "Mi espacio · Tareas y libretas",
+        sublabel: "Entregables y notas de estrategia",
         icon: <CheckSquare size={17} />,
         action: () => {
           handleClose();
@@ -243,8 +256,8 @@ export function CommandPaletteModal({
       {
         id: "nav-calendario",
         group: "Páginas",
-        label: "Calendario Editorial",
-        sublabel: "Planeación mensual de publicaciones",
+        label: "Calendario",
+        sublabel: "Planeación mensual de posts",
         icon: <Calendar size={17} />,
         action: () => {
           handleClose();
@@ -254,8 +267,8 @@ export function CommandPaletteModal({
       {
         id: "nav-parrillas",
         group: "Páginas",
-        label: "Social Media / Parrillas",
-        sublabel: "Parrilla de contenidos y flujo de aprobación",
+        label: "Social Media · Parrillas",
+        sublabel: "Parrilla de posts y flujo de aprobación",
         icon: <FileText size={17} />,
         action: () => {
           handleClose();
@@ -265,8 +278,8 @@ export function CommandPaletteModal({
       {
         id: "nav-marca",
         group: "Páginas",
-        label: "Núcleo de Marca",
-        sublabel: "Tono de voz, arquetipos y pilares editoriales",
+        label: "Núcleo de marca",
+        sublabel: "Qué vende la marca, su categoría y sus buyer personas",
         icon: <BookOpen size={17} />,
         action: () => {
           handleClose();
@@ -276,8 +289,8 @@ export function CommandPaletteModal({
       {
         id: "nav-anuncios",
         group: "Páginas",
-        label: "Ads / Campañas Activas",
-        sublabel: "Rendimiento de pauta, clics y ROAS",
+        label: "Ads · Anuncios",
+        sublabel: "Gasto, visitas y CTR de tus anuncios",
         icon: <Megaphone size={17} />,
         action: () => {
           handleClose();
@@ -287,8 +300,8 @@ export function CommandPaletteModal({
       {
         id: "nav-chat",
         group: "Páginas",
-        label: "Chat de Agencia",
-        sublabel: "Conversaciones por canal de marca",
+        label: "Chat",
+        sublabel: "Mensajes directos y canales por marca",
         icon: <MessageSquare size={17} />,
         action: () => {
           handleClose();
@@ -298,8 +311,8 @@ export function CommandPaletteModal({
       {
         id: "nav-ajustes",
         group: "Páginas",
-        label: "Ajustes del Workspace",
-        sublabel: "Configuración de cuenta y preferencias",
+        label: "Ajustes",
+        sublabel: "Perfil, cuenta, notificaciones, equipo y marcas",
         icon: <Settings size={17} />,
         action: () => {
           handleClose();
@@ -331,8 +344,8 @@ export function CommandPaletteModal({
         id: `task-${t.id}`,
         group: "Tareas",
         label: t.title,
-        sublabel: `${b?.name || "Agencia"} · ${t.assignee} · Vence ${t.dueDate}`,
-        badge: t.completed ? "Completada" : String(t.priority),
+        sublabel: `${b?.name || "Agencia"} · ${t.assignee}${t.completed ? "" : ` · ${dueText(t.dueDate)}`}`,
+        badge: t.completed ? "Completada" : capitalize(String(t.priority)),
         icon: <CheckSquare size={17} />,
         action: () => {
           setActiveBrand(t.brandId);
@@ -346,10 +359,10 @@ export function CommandPaletteModal({
       const b = brands.find((br) => br.id === p.brandId);
       return {
         id: `post-${p.id}`,
-        group: "Publicaciones",
+        group: "Posts",
         label: p.title,
-        sublabel: `${b?.name || "Marca"} · ${p.network || p.networks?.[0] || "Instagram"} (${p.format}) · ${p.scheduledDate}`,
-        badge: p.statusLabel || p.status,
+        sublabel: `${b?.name || "Marca"} · ${p.network || p.networks?.[0] || "Instagram"} (${p.format}) · ${dueLabelFor(p.scheduledDate)}`,
+        badge: STATUS_META[p.status]?.label || p.statusLabel || p.status,
         icon: <FileText size={17} />,
         action: () => {
           handleClose();
@@ -360,7 +373,7 @@ export function CommandPaletteModal({
 
     const notebookItems: CommandItem[] = notebooks.map((nb) => ({
       id: `nb-${nb.id}`,
-      group: "Libretas Kraft",
+      group: "Libretas",
       label: nb.title,
       sublabel: nb.subtitle,
       badge: nb.category || nb.stamp || "Libreta",
@@ -380,7 +393,7 @@ export function CommandPaletteModal({
       icon: <Users size={17} />,
       action: () => {
         handleClose();
-        router.push("/dashboard?tab=equipo");
+        router.push("/dashboard/equipo");
       },
     }));
 

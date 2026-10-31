@@ -2249,7 +2249,7 @@ html.dark .hubly-cal-types button[aria-checked="true"] { border-color: var(--hb-
   .hubly-command-option { padding: 12px 16px; }
   .hubly-command-label, .hubly-command-description { white-space: normal; overflow-wrap: anywhere; }
   .hubly-command-meta { max-width: 64px; }
-  .hubly-command-shortcut, .hubly-command-hints { display: none; }
+  .hubly-command .hubly-command-shortcut, .hubly-command-hints { display: none; }
   .hubly-command-touch-hint { display: block; }
   .hubly-command-footer { gap: 8px; padding: 8px 16px; padding-bottom: max(8px, env(safe-area-inset-bottom)); }
   .hubly-command-close, .hubly-command-search .hubly-cal-modal-close { min-width: 44px; min-height: 44px; }
