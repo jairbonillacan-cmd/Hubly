@@ -4,7 +4,7 @@ Generada con `npm run audit:controles` en modo demo el 2026-10-31. Cubre botones
 
 **Qué significa:** «responde» indica que pulsar cambió la página, sin error; no prueba que el resultado sea correcto ni que persista, porque la auditoría bloquea las escrituras. La persistencia y los permisos se prueban en `e2e/` y `tests/`. «Sin efecto visible» pide revisión manual: puede ser un botón muerto o un cambio que esta firma no detecta. No cubre controles dentro de ventanas abiertas.
 
-**Totales:** 222 controles · 154 responden · 23 enlaces · 33 sin efecto visible · 4 deshabilitados · 0 con error · 7 sin poder probar · 1 omitidos.
+**Totales:** 221 controles · 146 responden · 28 enlaces · 33 sin efecto visible · 4 deshabilitados · 0 con error · 9 sin poder probar · 1 omitidos.
 
 Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/dashboard/salud-cuentas`, `/estrategia` → `/marca`.
 
@@ -13,16 +13,15 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | Inicio | enlace | /dashboard |
 | `/dashboard` | Cuentas | enlace | /dashboard/salud-cuentas |
 | `/dashboard` | Equipo | enlace | /dashboard/equipo |
-| `/dashboard` | 3 pendientes | responde |  |
+| `/dashboard` | 2 pendientes | responde |  |
 | `/dashboard` | Nuevo post | responde |  |
 | `/dashboard` | Nueva marca | responde |  |
 | `/dashboard` | Invitar equipo | responde |  |
 | `/dashboard` | Buscar | responde |  |
 | `/dashboard` | + Widget | responde |  |
 | `/dashboard` | Editar | responde |  |
-| `/dashboard` | Min (3) | responde |  |
+| `/dashboard` | Min (2) | responde |  |
 | `/dashboard` | Nueva | responde |  |
-| `/dashboard` | Ver completadas (1) | responde |  |
 | `/dashboard` | Mi Espacio → | enlace | /tareas |
 | `/dashboard` | Nota | responde |  |
 | `/dashboard` | TU PRIMER POST N° 01 · OCT 26 | responde |  |
@@ -48,7 +47,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard/equipo` | Ver perfil 🥇 L Lucía Ramírez Diseño y Dirección de Arte · 1 | responde |  |
 | `/dashboard/equipo` | Ver perfil | responde |  |
 | `/dashboard/equipo` | Ver perfil 🥈 D Diego Morales Paid Media y Analítica · 8 tar | responde |  |
-| `/dashboard/equipo` | Ver perfil 🥉 J Jair (tú) Dueño · 0 tareas · 0 posts 63 pts  | no reproducible |  |
+| `/dashboard/equipo` | Ver perfil 🥉 J Jair (tú) Dueño · 0 tareas · 0 posts 63 pts  | sin efecto visible |  |
 | `/dashboard/equipo` | Cómo funcionan los puntos · Se miden por esfuerzo, no por cl | responde |  |
 | `/dashboard/salud-cuentas` | Inicio | enlace | /dashboard |
 | `/dashboard/salud-cuentas` | Cuentas | enlace | /dashboard/salud-cuentas |
@@ -88,14 +87,10 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/calendario` | Filtros | responde |  |
 | `/calendario` | Exportar reporte mensual de octubre con resultados de Meta A | responde |  |
 | `/calendario` | Grabar 2 cápsulas de fotoprotección con la Dra. Lozano Tarea | responde |  |
-| `/calendario` | E2E calendario 1793471683608 Imagen · Min | responde |  |
-| `/calendario` | E2E calendario 1793471671804 Imagen · Min | responde |  |
-| `/calendario` | asd Tarea · Min | responde |  |
+| `/calendario` | Conecta las redes de tu cliente Tarea · Min | responde |  |
 | `/calendario` | Ajustar horario a 8:00 am en post de panqué de cardamomo Tar | responde |  |
 | `/calendario` | Mandar liga de parrilla de noviembre a Elena por WhatsApp Ta | responde |  |
-| `/calendario` | sda Tarea · Min | responde |  |
 | `/calendario` | Tueste de la semana · Coatepec lavado Carrusel · Café Bruma  | responde |  |
-| `/calendario` | asd Story · Min 11:30 | responde |  |
 | `/tareas` | ≡ Listas | sin efecto visible |  |
 | `/tareas` | Libretas | responde |  |
 | `/tareas` | Contenido | responde |  |
@@ -110,11 +105,6 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/tareas` | Cambiar orden | responde |  |
 | `/tareas` | Elige qué se ve en cada tarea | responde |  |
 | `/tareas` | Filtrar tareas | responde |  |
-| `/tareas` | Opciones de dsa | responde |  |
-| `/tareas` | asd J Hoy | responde |  |
-| `/tareas` | Completar asd | responde |  |
-| `/tareas` | sda J Hoy | responde |  |
-| `/tareas` | Completar sda | responde |  |
 | `/tareas` | Opciones de Primeros pasos | responde |  |
 | `/tareas` | Conecta las redes de tu cliente J Hoy | responde |  |
 | `/tareas` | Completar Conecta las redes de tu cliente | responde |  |
@@ -137,27 +127,36 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/ia` | Ayúdame a armar una estrategia de anuncios | responde |  |
 | `/ia` | Escribe un copy para Instagram | responde |  |
 | `/ia` | Usar una plantilla | responde |  |
-| `/ia` | Enviar mensaje a Hubi | sin efecto visible |  |
+| `/ia` | Enviar mensaje a Hubi | no se pudo pulsar | locator.click: Timeout 2500ms exceeded. |
 | `/marcas` | Nueva marca | responde |  |
 | `/marcas` | Cards | sin efecto visible |  |
 | `/marcas` | Tabla | responde |  |
 | `/marcas` | Por usuario | responde |  |
-| `/marcas` | CB Café Bruma @cafebruma Cafetería de especialidad y tostado | responde |  |
+| `/marcas` | Café Bruma | responde |  |
 | `/marcas` | Archivar Café Bruma | no se pudo pulsar | locator.click: Timeout 2500ms exceeded. |
-| `/marcas` | M Min @min minerales y cristales decorativos al mayoreo · Gu | responde |  |
+| `/marcas` | Min | responde |  |
 | `/marcas` | Archivar Min | deshabilitado |  |
-| `/marcas` | CN Clínica Norte @clinicanorte.derma Dermatología clínica y  | responde |  |
+| `/marcas` | Clínica Norte | responde |  |
 | `/marcas` | Archivar Clínica Norte | no se pudo pulsar | locator.click: Timeout 2500ms exceeded. |
 | `/marca` | Guardar | responde |  |
 | `/marca` | Agregar persona | responde |  |
 | `/marca` | Aceptada | responde |  |
-| `/marca` | Eliminar Fernanda Ríos | no reproducible |  |
-| `/marca` | Eliminar Rodrigo Castellanos | no reproducible |  |
-| `/marca` | Eliminar Camila Vega | no reproducible |  |
+| `/marca` | Eliminar Mariana Garza | responde |  |
+| `/marca` | Eliminar Andrés Lozano | responde |  |
 | `/archivos` | Ver proyectos | responde |  |
 | `/archivos` | Inicio de la biblioteca | sin efecto visible |  |
 | `/archivos` | Carpeta | responde |  |
 | `/archivos` | Subir | sin efecto visible |  |
+| `/archivos` | b.png 1 KB | enlace | /api/media/84f2543b-52d7-4059-a4ef-154396a29ad4/file |
+| `/archivos` | Eliminar b.png | no reproducible |  |
+| `/archivos` | a.png 1 KB | enlace | /api/media/36805afd-120d-4624-a6ca-f4c78d1fbfee/file |
+| `/archivos` | Eliminar a.png | no reproducible |  |
+| `/archivos` | WhatsApp Image 2026-10-27 at 09.57.42.jpeg 314 KB | enlace | /api/media/d165a776-2899-4137-baee-fd957f514082/file |
+| `/archivos` | Eliminar WhatsApp Image 2026-10-27 at 09.57.42.jpeg | no reproducible |  |
+| `/archivos` | 06-calendario-semana.png 204 KB | enlace | /api/media/511aeb92-4d39-4c61-b0ae-b3e5f1ac1bf8/file |
+| `/archivos` | Eliminar 06-calendario-semana.png | no reproducible |  |
+| `/archivos` | prueba-1793468364818.png 1 KB | enlace | /api/media/8c414a1f-43a4-4a90-8ac3-f17ab171a6fe/file |
+| `/archivos` | Eliminar prueba-1793468364818.png | no reproducible |  |
 | `/proyectos` | Buscar proyecto | responde |  |
 | `/proyectos` | Filas | sin efecto visible |  |
 | `/proyectos` | Kanban | responde |  |
