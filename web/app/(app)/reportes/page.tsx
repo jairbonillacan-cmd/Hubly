@@ -68,8 +68,10 @@ function DemoReportesPage() {
         }}
       >
         <div
+          className="hubly-pill-scroll"
           style={{
             display: "inline-flex",
+            maxWidth: "100%",
             alignItems: "center",
             gap: 2,
             background: "var(--ui-muted)",

@@ -139,6 +139,7 @@ export function DescubreHublyWidget() {
       {!onboarding.dismissed && !anyModalOpen && (
         <aside
           data-mision-pildora
+          data-desplegado={minimized ? undefined : ""}
           aria-label="Checklist de inicio rápido Descubre Hubly"
           style={{
             position: "fixed",

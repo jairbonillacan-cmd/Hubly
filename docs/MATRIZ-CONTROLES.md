@@ -4,7 +4,7 @@ Generada con `npm run audit:controles` en modo demo el 2026-10-31 (previo a la i
 
 **Qué significa:** «responde» indica que pulsar cambió la página (el detalle dice qué cambió) sin error; no prueba que el resultado sea correcto ni que persista, porque la auditoría bloquea las escrituras. La persistencia y los permisos se prueban en `e2e/` y `tests/`. «Ya activo» es una pestaña o filtro que ya estaba seleccionado, así que no cambia nada: es lo esperado. «Sin efecto visible» pide revisión manual: puede ser un botón muerto o un cambio que la auditoría no detecta. Los editores (compositor) se abren pero no se recorren aquí: los cubre `compositor.spec.ts`.
 
-**Totales:** 679 controles (259 en páginas, 420 dentro de ventanas) · 565 responden · 29 ya activos · 46 enlaces · 19 sin efecto visible · 19 deshabilitados · 0 con error · 0 sin poder probar · 1 omitidos.
+**Totales:** 679 controles (259 en páginas, 420 dentro de ventanas) · 564 responden · 29 ya activos · 49 enlaces · 17 sin efecto visible · 19 deshabilitados · 0 con error · 0 sin poder probar · 1 omitidos.
 
 Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/dashboard/salud-cuentas`, `/estrategia` → `/marca`.
 
@@ -455,7 +455,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/marcas` | — | Ver archivadas (0) | responde | cambia el texto |
 | `/marcas` | — | Café Bruma | responde | navega a /marca; cambia un estado; intenta guardar (bloqueado) |
 | `/marcas` | — | Archivar Café Bruma | responde | cambia el texto; intenta guardar (bloqueado) |
-| `/marcas` | — | Min | responde | navega a /marca; cambia un estado; intenta guardar (bloqueado) |
+| `/marcas` | — | Min | responde | intenta guardar (bloqueado) |
 | `/marcas` | — | Archivar Min | deshabilitado |  |
 | `/marcas` | — | Clínica Norte | responde | navega a /marca; cambia un estado; intenta guardar (bloqueado) |
 | `/marcas` | — | Archivar Clínica Norte | responde | cambia el texto; intenta guardar (bloqueado) |
@@ -505,7 +505,8 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/archivos` | — | Inicio de la biblioteca | sin efecto visible |  |
 | `/archivos` | — | Carpeta | responde | cambia el texto; cambia un campo |
 | `/archivos` | — | Subir | responde | abre el selector de archivos |
-| `/archivos` | — | Subir archivos | responde | abre el selector de archivos |
+| `/archivos` | — | portada_operacion_cartago.jpg 287 KB | enlace | /api/media/2e346774-4a64-4ee3-a8db-8bde97ef052a/file |
+| `/archivos` | — | Eliminar portada_operacion_cartago.jpg | sin efecto visible |  |
 | `/proyectos` | — | Buscar proyecto | responde | cambia el contenido; cambia un campo |
 | `/proyectos` | — | Filas | ya activo | estaba seleccionado |
 | `/proyectos` | — | Kanban | responde | cambia un estado; cambia el texto |
@@ -553,9 +554,8 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/reportes` | — | Exportar PDF | responde | abre la impresión |
 | `/reportes` | — | Nuevo | responde | cambia un campo |
 | `/reportes` | — | Nuevo reporte | responde | cambia un campo |
-| `/anuncios` | — | Tableros | sin efecto visible |  |
-| `/anuncios` | — | Anuncios | sin efecto visible |  |
-| `/anuncios` | — | Ideas | sin efecto visible |  |
+| `/anuncios` | — | Tableros | enlace | /parrillas?tab=tableros |
+| `/anuncios` | — | Ideas | enlace | /parrillas?tab=ideas |
 | `/anuncios` | — | Reportes | enlace | /reportes |
 | `/anuncios` | — | Buscar anuncios | responde | cambia el contenido |
 | `/anuncios` | — | Cards | sin efecto visible |  |
