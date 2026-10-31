@@ -309,21 +309,21 @@ export function NewBrandModal({
           width: "100%",
           maxWidth: 640,
           maxHeight: "92vh",
-          background: "#FFFFFF",
+          background: "var(--ui-surface)",
           borderRadius: 20,
-          border: "1px solid #E2E8F0",
+          border: "1px solid var(--ui-border)",
           boxShadow: "0 24px 60px rgba(15, 23, 42, 0.22)",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
-          color: "#0F172A",
+          color: "var(--ui-text)",
         }}
       >
         {/* Header */}
         <div
           style={{
             padding: "16px 22px",
-            borderBottom: "1px solid #F1F5F9",
+            borderBottom: "1px solid var(--ui-muted)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -354,7 +354,7 @@ export function NewBrandModal({
                   margin: 0,
                   fontSize: 16,
                   fontWeight: 700,
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                 }}
               >
                 Nueva marca / Cuenta de cliente
@@ -363,7 +363,7 @@ export function NewBrandModal({
                 style={{
                   margin: "2px 0 0",
                   fontSize: 12,
-                  color: "#64748B",
+                  color: "var(--ui-text-4)",
                 }}
               >
                 Configura identidad, industria y compromisos mensuales iniciales
@@ -379,9 +379,9 @@ export function NewBrandModal({
               width: 32,
               height: 32,
               borderRadius: 9999,
-              border: "1px solid #E2E8F0",
-              background: "#F8FAFC",
-              color: "#64748B",
+              border: "1px solid var(--ui-border)",
+              background: "var(--ui-surface-2)",
+              color: "var(--ui-text-4)",
               display: "grid",
               placeItems: "center",
               cursor: "pointer",
@@ -444,7 +444,7 @@ export function NewBrandModal({
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
-                    color: "#475569",
+                    color: "var(--ui-text-3)",
                     marginBottom: 5,
                   }}
                 >
@@ -465,9 +465,9 @@ export function NewBrandModal({
                     height: 38,
                     padding: "0 12px",
                     borderRadius: 10,
-                    border: "1px solid #CBD5E1",
+                    border: "1px solid var(--ui-border-strong)",
                     fontSize: 13.5,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                   }}
                 />
               </div>
@@ -481,7 +481,7 @@ export function NewBrandModal({
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
-                    color: "#475569",
+                    color: "var(--ui-text-3)",
                     marginBottom: 5,
                   }}
                 >
@@ -501,9 +501,9 @@ export function NewBrandModal({
                     height: 38,
                     padding: "0 12px",
                     borderRadius: 10,
-                    border: "1px solid #CBD5E1",
+                    border: "1px solid var(--ui-border-strong)",
                     fontSize: 13,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                   }}
                 />
               </div>
@@ -517,7 +517,7 @@ export function NewBrandModal({
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
-                    color: "#475569",
+                    color: "var(--ui-text-3)",
                     marginBottom: 5,
                   }}
                 >
@@ -537,11 +537,11 @@ export function NewBrandModal({
                     height: 38,
                     padding: "0 10px",
                     borderRadius: 10,
-                    border: "1px solid #CBD5E1",
+                    border: "1px solid var(--ui-border-strong)",
                     fontSize: 13,
                     fontWeight: 700,
                     textAlign: "center",
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                   }}
                 />
               </div>
@@ -564,7 +564,7 @@ export function NewBrandModal({
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
-                    color: "#475569",
+                    color: "var(--ui-text-3)",
                     marginBottom: 5,
                   }}
                 >
@@ -584,9 +584,9 @@ export function NewBrandModal({
                     height: 38,
                     padding: "0 12px",
                     borderRadius: 10,
-                    border: "1px solid #CBD5E1",
+                    border: "1px solid var(--ui-border-strong)",
                     fontSize: 13,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                   }}
                 />
               </div>
@@ -600,7 +600,7 @@ export function NewBrandModal({
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
-                    color: "#475569",
+                    color: "var(--ui-text-3)",
                     marginBottom: 5,
                   }}
                 >
@@ -617,9 +617,9 @@ export function NewBrandModal({
                     height: 38,
                     padding: "0 12px",
                     borderRadius: 10,
-                    border: "1px solid #CBD5E1",
+                    border: "1px solid var(--ui-border-strong)",
                     fontSize: 13,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                   }}
                 />
               </div>
@@ -640,8 +640,8 @@ export function NewBrandModal({
                       border: active
                         ? "1px solid #D9DCF0"
                         : "1px solid #E2E8F0",
-                      background: active ? "#F0F1F9" : "#F8FAFC",
-                      color: active ? "#6C77C1" : "#475569",
+                      background: active ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
+                      color: active ? "#6C77C1" : "var(--ui-text-3)",
                       fontSize: 11.5,
                       fontWeight: 600,
                       cursor: "pointer",
@@ -662,7 +662,7 @@ export function NewBrandModal({
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
-                  color: "#475569",
+                  color: "var(--ui-text-3)",
                   marginBottom: 7,
                 }}
               >
@@ -704,8 +704,8 @@ export function NewBrandModal({
               style={{
                 padding: 14,
                 borderRadius: 14,
-                background: "#F8FAFC",
-                border: "1px solid #E2E8F0",
+                background: "var(--ui-surface-2)",
+                border: "1px solid var(--ui-border)",
               }}
             >
               <div
@@ -722,12 +722,12 @@ export function NewBrandModal({
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
-                    color: "#334155",
+                    color: "var(--ui-text-2)",
                   }}
                 >
                   Compromisos mensuales iniciales
                 </span>
-                <span style={{ fontSize: 11, color: "#64748B" }}>
+                <span style={{ fontSize: 11, color: "var(--ui-text-4)" }}>
                   Impacta en Salud de Cuentas
                 </span>
               </div>
@@ -764,9 +764,9 @@ export function NewBrandModal({
                   <div
                     key={item.label}
                     style={{
-                      background: "#FFFFFF",
+                      background: "var(--ui-surface)",
                       borderRadius: 10,
-                      border: "1px solid #E2E8F0",
+                      border: "1px solid var(--ui-border)",
                       padding: "8px 10px",
                       display: "flex",
                       flexDirection: "column",
@@ -777,7 +777,7 @@ export function NewBrandModal({
                       style={{
                         fontSize: 11,
                         fontWeight: 600,
-                        color: "#64748B",
+                        color: "var(--ui-text-4)",
                       }}
                     >
                       {item.label}
@@ -799,9 +799,9 @@ export function NewBrandModal({
                           width: 24,
                           height: 24,
                           borderRadius: 6,
-                          border: "1px solid #E2E8F0",
-                          background: "#F8FAFC",
-                          color: "#475569",
+                          border: "1px solid var(--ui-border)",
+                          background: "var(--ui-surface-2)",
+                          color: "var(--ui-text-3)",
                           display: "grid",
                           placeItems: "center",
                           cursor: "pointer",
@@ -814,7 +814,7 @@ export function NewBrandModal({
                         style={{
                           fontSize: 14,
                           fontWeight: 700,
-                          color: "#0F172A",
+                          color: "var(--ui-text)",
                         }}
                       >
                         {item.value}
@@ -827,9 +827,9 @@ export function NewBrandModal({
                           width: 24,
                           height: 24,
                           borderRadius: 6,
-                          border: "1px solid #E2E8F0",
-                          background: "#F8FAFC",
-                          color: "#475569",
+                          border: "1px solid var(--ui-border)",
+                          background: "var(--ui-surface-2)",
+                          color: "var(--ui-text-3)",
                           display: "grid",
                           placeItems: "center",
                           cursor: "pointer",
@@ -861,7 +861,7 @@ export function NewBrandModal({
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
-                    color: "#475569",
+                    color: "var(--ui-text-3)",
                     marginBottom: 5,
                   }}
                 >
@@ -879,9 +879,9 @@ export function NewBrandModal({
                     height: 36,
                     padding: "0 10px",
                     borderRadius: 10,
-                    border: "1px solid #CBD5E1",
+                    border: "1px solid var(--ui-border-strong)",
                     fontSize: 13,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                   }}
                 />
               </div>
@@ -895,7 +895,7 @@ export function NewBrandModal({
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
-                    color: "#475569",
+                    color: "var(--ui-text-3)",
                     marginBottom: 5,
                   }}
                 >
@@ -911,9 +911,9 @@ export function NewBrandModal({
                     height: 36,
                     padding: "0 12px",
                     borderRadius: 10,
-                    border: "1px solid #CBD5E1",
+                    border: "1px solid var(--ui-border-strong)",
                     fontSize: 13,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                   }}
                 />
               </div>
@@ -924,8 +924,8 @@ export function NewBrandModal({
           <div
             style={{
               padding: "14px 22px",
-              borderTop: "1px solid #F1F5F9",
-              background: "#F8FAFC",
+              borderTop: "1px solid var(--ui-muted)",
+              background: "var(--ui-surface-2)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -938,7 +938,7 @@ export function NewBrandModal({
                 alignItems: "center",
                 gap: 6,
                 fontSize: 12,
-                color: "#64748B",
+                color: "var(--ui-text-4)",
               }}
             >
               <Sparkles size={13} style={{ color: "#6C77C1" }} />
@@ -955,9 +955,9 @@ export function NewBrandModal({
                   height: 36,
                   padding: "0 14px",
                   borderRadius: 10,
-                  border: "1px solid #CBD5E1",
-                  background: "#FFFFFF",
-                  color: "#475569",
+                  border: "1px solid var(--ui-border-strong)",
+                  background: "var(--ui-surface)",
+                  color: "var(--ui-text-3)",
                   fontSize: 12.5,
                   fontWeight: 600,
                   cursor: "pointer",

@@ -35,16 +35,16 @@ export function ProductionBoard({ posts }: { posts: SocialPost[] }) {
       {...(draggable ? getCardProps(post.id) : {})}
       onClick={() => openComposer(post.id)}
       style={{
-        background: "#FFFFFF",
-        border: "1px solid #E2E8F0",
+        background: "var(--ui-surface)",
+        border: "1px solid var(--ui-border)",
         borderRadius: 11,
         padding: "10px 12px",
         cursor: draggable ? (drag?.id === post.id ? "grabbing" : "grab") : "pointer",
         opacity: drag?.id === post.id ? 0.35 : 1,
       }}
     >
-      <div style={{ fontSize: 13, fontWeight: 650, color: "#0F172A", marginBottom: 4 }}>{post.title}</div>
-      <div style={{ fontSize: 11.5, color: "#64748B" }}>
+      <div style={{ fontSize: 13, fontWeight: 650, color: "var(--ui-text)", marginBottom: 4 }}>{post.title}</div>
+      <div style={{ fontSize: 11.5, color: "var(--ui-text-4)" }}>
         {post.scheduledDate} · {post.networks.join(", ")}
       </div>
     </div>
@@ -55,8 +55,8 @@ export function ProductionBoard({ posts }: { posts: SocialPost[] }) {
       key={status}
       {...(droppable ? getColumnProps(status) : {})}
       style={{
-        background: drag?.overCol === status ? "#F0F1F9" : "#F8FAFC",
-        border: `1px solid ${drag?.overCol === status ? "#6C77C1" : "#E2E8F0"}`,
+        background: drag?.overCol === status ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
+        border: `1px solid ${drag?.overCol === status ? "#6C77C1" : "var(--ui-border)"}`,
         borderRadius: 14,
         padding: 12,
         minHeight: 200,
@@ -69,7 +69,7 @@ export function ProductionBoard({ posts }: { posts: SocialPost[] }) {
         <span style={{ fontSize: 12.5, fontWeight: 700, color: STATUS_META[status].color }}>
           {STATUS_META[status].label}
         </span>
-        <span style={{ fontSize: 11.5, fontWeight: 700, color: "#475569" }}>{items.length}</span>
+        <span style={{ fontSize: 11.5, fontWeight: 700, color: "var(--ui-text-3)" }}>{items.length}</span>
       </div>
       {items.map((p) => renderCard(p, droppable))}
     </div>
@@ -77,12 +77,12 @@ export function ProductionBoard({ posts }: { posts: SocialPost[] }) {
 
   return (
     <div>
-      <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12.5, color: "#475569", marginBottom: 12 }}>
+      <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12.5, color: "var(--ui-text-3)", marginBottom: 12 }}>
         Red
         <select
           value={network}
           onChange={(e) => setNetwork(e.target.value as SocialNetwork | "todas")}
-          style={{ border: "1px solid #CBD5E1", borderRadius: 8, padding: "5px 8px", fontSize: 12.5, background: "#FFFFFF" }}
+          style={{ border: "1px solid var(--ui-border-strong)", borderRadius: 8, padding: "5px 8px", fontSize: 12.5, background: "var(--ui-surface)" }}
         >
           <option value="todas">Todas</option>
           {networks.map((n) => (

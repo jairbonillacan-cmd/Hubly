@@ -9,7 +9,7 @@ import React, { useState } from "react";
 export interface HublyIconProps extends React.SVGProps<SVGSVGElement> {
   size?: number | string;
   className?: string;
-  /** Apply #henry-rough / #rough-paper organic displacement filter (default: true for illustrated icons) */
+  /** Apply #hb-rough / #rough-paper organic displacement filter (default: true for illustrated icons) */
   rough?: boolean;
   /** Optional accessible title */
   title?: string;
@@ -19,7 +19,6 @@ export interface HublyIconProps extends React.SVGProps<SVGSVGElement> {
   active?: boolean;
 }
 
-export type HenryIconProps = HublyIconProps;
 
 export interface HublyCatAvatarProps {
   /** Pixel dimension (width & height). Default: 28 */
@@ -34,7 +33,7 @@ export interface HublyCatAvatarProps {
   status?: "online" | "busy" | "away" | "offline" | null;
   /** Force inline SVG rendering instead of /brand/hubly-gato.png (or used automatically on img error) */
   useSvgFallback?: boolean;
-  /** Apply #henry-rough SVG filter when rendering inline SVG */
+  /** Apply #hb-rough SVG filter when rendering inline SVG */
   rough?: boolean;
   /** Accessible label / title */
   title?: string;
@@ -71,8 +70,8 @@ export interface KraftNotebookShapeSvgProps extends React.SVGProps<SVGSVGElement
 
 /**
  * Global SVG `<defs>` providing organic hand-drawn displacement filters:
- * - `#henry-rough` & `#rough-paper`: fractalNoise (baseFrequency="0.04 0.06", numOctaves=2, seed=3, scale=0.55)
- * - `#henry-rough-subtle` & `#rough-edges`: fractalNoise (baseFrequency="0.05", numOctaves=1, seed=7, scale=0.55)
+ * - `#hb-rough` & `#rough-paper`: fractalNoise (baseFrequency="0.04 0.06", numOctaves=2, seed=3, scale=0.55)
+ * - `#hb-rough-subtle` & `#rough-edges`: fractalNoise (baseFrequency="0.05", numOctaves=1, seed=7, scale=0.55)
  */
 export function RoughPaperSvgDefs() {
   return (
@@ -83,7 +82,7 @@ export function RoughPaperSvgDefs() {
       aria-hidden="true"
     >
       <defs>
-        <filter id="henry-rough">
+        <filter id="hb-rough">
           <feTurbulence
             type="fractalNoise"
             baseFrequency="0.04 0.06"
@@ -92,7 +91,7 @@ export function RoughPaperSvgDefs() {
           />
           <feDisplacementMap in="SourceGraphic" scale={0.55} />
         </filter>
-        <filter id="henry-rough-subtle">
+        <filter id="hb-rough-subtle">
           <feTurbulence
             type="fractalNoise"
             baseFrequency="0.05"
@@ -138,7 +137,6 @@ export function RoughPaperSvgDefs() {
   );
 }
 
-export const HenryRoughFilterDefs = RoughPaperSvgDefs;
 export const HublyRoughFilterDefs = RoughPaperSvgDefs;
 
 /* ==========================================================================
@@ -303,7 +301,7 @@ export function HublyCatInlineSvg({
       xmlns="http://www.w3.org/2000/svg"
       className={`inline-block flex-shrink-0 ${className}`.trim()}
       style={{
-        filter: rough ? "url(#henry-rough)" : undefined,
+        filter: rough ? "url(#hb-rough)" : undefined,
         ...style,
       }}
       role={title ? "img" : "presentation"}
@@ -652,7 +650,7 @@ export function HublyLogoWordmark({
 }
 
 /* ==========================================================================
-   4. ILLUSTRATED MODULE 21224 ICONS (28x28 viewBox with #henry-rough filter)
+   4. ILLUSTRATED MODULE 21224 ICONS (28x28 viewBox with #hb-rough filter)
    ========================================================================== */
 
 const INK = "#26241E";
@@ -676,7 +674,7 @@ function IconSvg({
       xmlns="http://www.w3.org/2000/svg"
       className={`inline-block flex-shrink-0 ${className}`.trim()}
       style={{
-        filter: rough ? "url(#henry-rough)" : undefined,
+        filter: rough ? "url(#hb-rough)" : undefined,
         ...style,
       }}
       role={title ? "img" : "presentation"}
@@ -690,7 +688,7 @@ function IconSvg({
 }
 
 /**
- * 1. HublyAvatarIcon / HenryAvatarIcon (28x28 illustrated vector icon of the Hubly cat `#0a7a55` + `#ffd23f`)
+ * 1. HublyAvatarIcon / HublyAvatarIcon (28x28 illustrated vector icon of the Hubly cat `#0a7a55` + `#ffd23f`)
  */
 export function HublyAvatarIcon(props: HublyIconProps) {
   return (
@@ -772,8 +770,6 @@ export function HublyAvatarIcon(props: HublyIconProps) {
   );
 }
 
-export const HenryAvatarIcon = HublyAvatarIcon;
-export const HenryCatIcon = HublyCatAvatar;
 
 /**
  * Legacy orange tabby icon preserved for backwards reference if needed
@@ -861,7 +857,6 @@ export function HublyHomeIcon(props: HublyIconProps) {
     </IconSvg>
   );
 }
-export const HenryHomeIcon = HublyHomeIcon;
 
 /**
  * 3. Dashboard / Bento Grid
@@ -917,7 +912,6 @@ export function HublyBentoIcon(props: HublyIconProps) {
     </IconSvg>
   );
 }
-export const HenryBentoIcon = HublyBentoIcon;
 
 /**
  * 4. Chat / Speech Bubbles
@@ -945,7 +939,6 @@ export function HublyChatIcon(props: HublyIconProps) {
     </IconSvg>
   );
 }
-export const HenryChatIcon = HublyChatIcon;
 
 /**
  * 5. Mi Espacio / Notebook
@@ -1005,7 +998,6 @@ export function HublyNotebookIcon(props: HublyIconProps) {
     </IconSvg>
   );
 }
-export const HenryNotebookIcon = HublyNotebookIcon;
 
 /**
  * 6. Calendario / Tear-off Calendar
@@ -1066,7 +1058,6 @@ export function HublyCalendarIcon(props: HublyIconProps) {
     </IconSvg>
   );
 }
-export const HenryCalendarIcon = HublyCalendarIcon;
 
 /**
  * 7. Núcleo de Marca / Brain
@@ -1135,7 +1126,6 @@ export function HublyBrainIcon(props: HublyIconProps) {
     </IconSvg>
   );
 }
-export const HenryBrainIcon = HublyBrainIcon;
 
 /**
  * 8. Content Manager / Manila Folder
@@ -1192,7 +1182,6 @@ export function HublyFolderIcon(props: HublyIconProps) {
     </IconSvg>
   );
 }
-export const HenryFolderIcon = HublyFolderIcon;
 
 /**
  * 9. Proyectos / Stacked Diamond Layers
@@ -1232,7 +1221,6 @@ export function HublyLayersIcon(props: HublyIconProps) {
     </IconSvg>
   );
 }
-export const HenryLayersIcon = HublyLayersIcon;
 
 /**
  * 10. Social Media / Tactile 3D Hashtag (#)
@@ -1287,7 +1275,6 @@ export function HublyHashIcon(props: HublyIconProps) {
     </IconSvg>
   );
 }
-export const HenryHashIcon = HublyHashIcon;
 
 /**
  * 11. Ads / Bullseye Target with Dart
@@ -1345,7 +1332,6 @@ export function HublyTargetIcon(props: HublyIconProps) {
     </IconSvg>
   );
 }
-export const HenryTargetIcon = HublyTargetIcon;
 
 /**
  * 12. Clipboard / Primeros Pasos
@@ -1418,7 +1404,6 @@ export function HublyClipboardIcon(props: HublyIconProps) {
     </IconSvg>
   );
 }
-export const HenryClipboardIcon = HublyClipboardIcon;
 
 /**
  * 13. Memo / Pinned Note
@@ -1483,7 +1468,6 @@ export function HublyMemoIcon(props: HublyIconProps) {
     </IconSvg>
   );
 }
-export const HenryMemoIcon = HublyMemoIcon;
 
 /**
  * 14. Bell / Brass Notification Bell
@@ -1538,7 +1522,6 @@ export function HublyBellIcon(props: HublyIconProps) {
     </IconSvg>
   );
 }
-export const HenryBellIcon = HublyBellIcon;
 
 /**
  * 15. Sun + Cloud Weather Icon (Greeting banner)
@@ -1570,11 +1553,9 @@ export function HublySunWeatherIcon(props: HublyIconProps) {
     </IconSvg>
   );
 }
-export const HenrySunWeatherIcon = HublySunWeatherIcon;
 
 export const HUBLY_ICONS = {
   avatar: HublyAvatarIcon,
-  henry: HublyAvatarIcon,
   hubly: HublyAvatarIcon,
   home: HublyHomeIcon,
   bento: HublyBentoIcon,
@@ -1599,9 +1580,7 @@ export const HUBLY_ICONS = {
   sun_weather: HublySunWeatherIcon,
 } as const;
 
-export const HENRY_ICONS = HUBLY_ICONS;
 export type HublyIconKey = keyof typeof HUBLY_ICONS;
-export type HenryIconKey = HublyIconKey;
 
 /* ==========================================================================
    5. VECTOR UI ICONS (44 Lucide-compatible stroke icons from Module 61371)

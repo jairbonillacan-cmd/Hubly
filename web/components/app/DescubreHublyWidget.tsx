@@ -128,14 +128,14 @@ export function DescubreHublyWidget() {
             right: 22,
             bottom: 66,
             width: minimized ? "auto" : 272,
-            background: "#FFFFFF",
+            background: "var(--ui-surface)",
             borderRadius: minimized ? 9999 : 16,
-            border: "1px solid #E2E8F0",
+            border: "1px solid var(--ui-border)",
             padding: minimized ? "7px 14px" : "14px 16px 14px",
             zIndex: 68,
             boxShadow:
               "0 10px 28px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(15, 23, 42, 0.03)",
-            color: "#0F172A",
+            color: "var(--ui-text)",
             transition: "all 0.18s ease",
           }}
         >
@@ -154,7 +154,7 @@ export function DescubreHublyWidget() {
                   cursor: "pointer",
                   fontSize: 12.5,
                   fontWeight: 700,
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                   fontFamily: "inherit",
                 }}
               >
@@ -164,7 +164,7 @@ export function DescubreHublyWidget() {
                   style={{
                     padding: "2px 7px",
                     borderRadius: 9999,
-                    background: "#F0F1F9",
+                    background: "var(--ui-accent-soft)",
                     color: "#6C77C1",
                     fontSize: 11,
                     fontWeight: 700,
@@ -172,7 +172,7 @@ export function DescubreHublyWidget() {
                 >
                   {status.completedCount} de {status.totalCount}
                 </span>
-                <ChevronUp size={14} style={{ color: "#64748B" }} />
+                <ChevronUp size={14} style={{ color: "var(--ui-text-4)" }} />
               </button>
 
               <button
@@ -182,7 +182,7 @@ export function DescubreHublyWidget() {
                 style={{
                   border: "none",
                   background: "transparent",
-                  color: "#94A3B8",
+                  color: "var(--ui-text-5)",
                   padding: 2,
                   cursor: "pointer",
                   display: "grid",
@@ -211,7 +211,7 @@ export function DescubreHublyWidget() {
                     style={{
                       fontSize: 13,
                       fontWeight: 700,
-                      color: "#0F172A",
+                      color: "var(--ui-text)",
                     }}
                   >
                     Descubre Hubly
@@ -224,7 +224,7 @@ export function DescubreHublyWidget() {
                   <span
                     style={{
                       fontSize: 11.5,
-                      color: "#64748B",
+                      color: "var(--ui-text-4)",
                       fontWeight: 600,
                     }}
                   >
@@ -239,7 +239,7 @@ export function DescubreHublyWidget() {
                       background: "transparent",
                       border: "none",
                       padding: 2,
-                      color: "#94A3B8",
+                      color: "var(--ui-text-5)",
                       cursor: "pointer",
                       display: "inline-flex",
                       alignItems: "center",
@@ -256,7 +256,7 @@ export function DescubreHublyWidget() {
                       background: "transparent",
                       border: "none",
                       padding: 2,
-                      color: "#94A3B8",
+                      color: "var(--ui-text-5)",
                       cursor: "pointer",
                       display: "inline-flex",
                       alignItems: "center",
@@ -274,7 +274,7 @@ export function DescubreHublyWidget() {
                   height: 4,
                   width: "100%",
                   borderRadius: 9999,
-                  background: "#F1F5F9",
+                  background: "var(--ui-muted)",
                   overflow: "hidden",
                   marginBottom: 11,
                 }}
@@ -359,7 +359,7 @@ export function DescubreHublyWidget() {
                             textAlign: "left",
                             fontSize: 12.5,
                             fontWeight: 500,
-                            color: step.completed ? "#94A3B8" : "#334155",
+                            color: step.completed ? "var(--ui-text-5)" : "var(--ui-text-2)",
                             textDecoration: step.completed
                               ? "line-through"
                               : "none",
@@ -380,8 +380,8 @@ export function DescubreHublyWidget() {
                         style={{
                           padding: "2px 7px",
                           borderRadius: 6,
-                          border: "1px solid #E2E8F0",
-                          background: "#F8FAFC",
+                          border: "1px solid var(--ui-border)",
+                          background: "var(--ui-surface-2)",
                           color: "#6C77C1",
                           fontSize: 10.5,
                           fontWeight: 700,
@@ -403,6 +403,5 @@ export function DescubreHublyWidget() {
   );
 }
 
-export const DescubreHenryWidget = DescubreHublyWidget;
 
 export default DescubreHublyWidget;

@@ -28,8 +28,7 @@ export function HublyAvatarIllustration({ size = 34 }: { size?: number }) {
   return <HublyCatAvatar size={size} />;
 }
 
-// Backwards-compatible alias so any existing import of HenryAvatarIllustration renders the Hubly cat
-export const HenryAvatarIllustration = HublyAvatarIllustration;
+// Backwards-compatible alias so any existing import of HublyAvatarIllustration renders the Hubly cat
 
 interface LocalAssistantTurn {
   id: string;
@@ -368,7 +367,7 @@ export function FloatingAIDrawer() {
       {!aiDrawerOpen && !anyOtherModalOpen && (
         <button
           type="button"
-          data-henry-fab
+          data-hb-fab
           className="hubly-hubi-fab"
           onClick={() => setAiDrawerOpen(true)}
           aria-label="Pregúntale a Hubi"
@@ -479,13 +478,13 @@ export function FloatingAIDrawer() {
                               ? "14px 14px 4px 14px"
                               : "14px 14px 14px 4px",
                           background:
-                            turn.role === "user" ? "#6C77C1" : "#F8FAFC",
+                            turn.role === "user" ? "#6C77C1" : "var(--ui-surface-2)",
                           border:
                             turn.role === "user"
                               ? "none"
                               : "1px solid #E2E8F0",
                           color:
-                            turn.role === "user" ? "#FFFFFF" : "#1E293B",
+                            turn.role === "user" ? "#FFFFFF" : "var(--ui-text-1)",
                           fontSize: 12.5,
                           lineHeight: 1.55,
                           whiteSpace: "pre-line",
@@ -511,7 +510,7 @@ export function FloatingAIDrawer() {
                               padding: "5px 11px",
                               borderRadius: 8,
                               border: "1px solid #D9DCF0",
-                              background: "#F0F1F9",
+                              background: "var(--ui-accent-soft)",
                               color: "#6C77C1",
                               fontSize: 11.5,
                               fontWeight: 700,
@@ -524,7 +523,7 @@ export function FloatingAIDrawer() {
                             <CheckCircle2 size={12} />
                             <span>{turn.actionLabel || "Abrir"}</span>
                           </button>
-                          <span style={{ fontSize: 10.5, color: "#94A3B8" }}>
+                          <span style={{ fontSize: 10.5, color: "var(--ui-text-5)" }}>
                             {turn.timestamp}
                           </span>
                         </div>

@@ -161,7 +161,7 @@ export default function ParrillasPage() {
     <div
       style={{
         fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-        color: "#0F172A",
+        color: "var(--ui-text)",
         minHeight: "calc(100vh - 64px)",
         position: "relative",
         paddingBottom: 60,
@@ -174,7 +174,7 @@ export default function ParrillasPage() {
           alignItems: "center",
           justifyContent: "space-between",
           paddingBottom: 14,
-          borderBottom: "1px solid #E2E8F0",
+          borderBottom: "1px solid var(--ui-border)",
           marginBottom: 20,
           flexWrap: "wrap",
           gap: 12,
@@ -185,7 +185,7 @@ export default function ParrillasPage() {
             display: "inline-flex",
             alignItems: "center",
             gap: 2,
-            background: "#F1F5F9",
+            background: "var(--ui-muted)",
             padding: 4,
             borderRadius: 999,
             overflowX: "auto",
@@ -206,8 +206,8 @@ export default function ParrillasPage() {
                   padding: "6px 14px",
                   borderRadius: 999,
                   border: "none",
-                  background: isActive ? "#FFFFFF" : "transparent",
-                  color: isActive ? "#6C77C1" : "#475569",
+                  background: isActive ? "var(--ui-surface)" : "transparent",
+                  color: isActive ? "#6C77C1" : "var(--ui-text-3)",
                   fontWeight: isActive ? 600 : 500,
                   fontSize: 13,
                   cursor: "pointer",
@@ -234,13 +234,13 @@ export default function ParrillasPage() {
             borderRadius: 8,
             border: "none",
             background: "transparent",
-            color: "#334155",
+            color: "var(--ui-text-2)",
             fontSize: 13,
             fontWeight: 600,
             cursor: "pointer",
           }}
         >
-          <Link2 size={14} style={{ color: "#64748B" }} />
+          <Link2 size={14} style={{ color: "var(--ui-text-4)" }} />
           <span>Cuentas</span>
         </button>
       </div>
@@ -274,12 +274,12 @@ export default function ParrillasPage() {
               >
                 1
               </span>
-              <span style={{ fontSize: 13.5, fontWeight: 700, color: "#0F172A" }}>
+              <span style={{ fontSize: 13.5, fontWeight: 700, color: "var(--ui-text)" }}>
                 Conecta una red
               </span>
             </div>
 
-            <div style={{ width: 32, height: 1, background: "#E2E8F0" }} />
+            <div style={{ width: 32, height: 1, background: "var(--ui-border)" }} />
 
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
               <span
@@ -287,8 +287,8 @@ export default function ParrillasPage() {
                   width: 24,
                   height: 24,
                   borderRadius: 999,
-                  background: "#F1F5F9",
-                  color: "#94A3B8",
+                  background: "var(--ui-muted)",
+                  color: "var(--ui-text-5)",
                   fontSize: 12,
                   fontWeight: 700,
                   display: "inline-grid",
@@ -297,12 +297,12 @@ export default function ParrillasPage() {
               >
                 2
               </span>
-              <span style={{ fontSize: 13.5, fontWeight: 500, color: "#94A3B8" }}>
+              <span style={{ fontSize: 13.5, fontWeight: 500, color: "var(--ui-text-5)" }}>
                 Hubi arma tu reporte
               </span>
             </div>
 
-            <div style={{ width: 32, height: 1, background: "#E2E8F0" }} />
+            <div style={{ width: 32, height: 1, background: "var(--ui-border)" }} />
 
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
               <span
@@ -310,8 +310,8 @@ export default function ParrillasPage() {
                   width: 24,
                   height: 24,
                   borderRadius: 999,
-                  background: "#F1F5F9",
-                  color: "#94A3B8",
+                  background: "var(--ui-muted)",
+                  color: "var(--ui-text-5)",
                   fontSize: 12,
                   fontWeight: 700,
                   display: "inline-grid",
@@ -320,7 +320,7 @@ export default function ParrillasPage() {
               >
                 3
               </span>
-              <span style={{ fontSize: 13.5, fontWeight: 500, color: "#94A3B8" }}>
+              <span style={{ fontSize: 13.5, fontWeight: 500, color: "var(--ui-text-5)" }}>
                 Tu primer post
               </span>
             </div>
@@ -340,8 +340,8 @@ export default function ParrillasPage() {
               marginBottom: 28,
             }}
           >
-            <div style={{ fontSize: 13.5, color: "#475569", lineHeight: 1.5 }}>
-              <strong style={{ color: "#0F172A", fontWeight: 700 }}>
+            <div style={{ fontSize: 13.5, color: "var(--ui-text-3)", lineHeight: 1.5 }}>
+              <strong style={{ color: "var(--ui-text)", fontWeight: 700 }}>
                 ¿Ya tienes el mes de {brandName} en Excel, Notion o Canva?
               </strong>{" "}
               Tráelo tal cual: Hubi lo acomoda en tu calendario en 30 segundos.
@@ -381,7 +381,7 @@ export default function ParrillasPage() {
                 style={{
                   fontSize: 28,
                   fontWeight: 800,
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                   letterSpacing: "-0.02em",
                   margin: "0 0 18px",
                 }}
@@ -415,7 +415,7 @@ export default function ParrillasPage() {
                   >
                     1
                   </span>
-                  <span style={{ fontWeight: 700, color: "#0F172A" }}>Conecta una red</span>
+                  <span style={{ fontWeight: 700, color: "var(--ui-text)" }}>Conecta una red</span>
                   <span style={{ color: "#6C77C1", fontSize: 12.5, fontWeight: 600 }}>
                     ← estás aquí
                   </span>
@@ -428,7 +428,7 @@ export default function ParrillasPage() {
                       height: 22,
                       borderRadius: 999,
                       background: "#ECEEF8",
-                      color: "#5A65AF",
+                      color: "var(--ui-accent-text-2)",
                       fontSize: 11.5,
                       fontWeight: 700,
                       display: "inline-grid",
@@ -438,7 +438,7 @@ export default function ParrillasPage() {
                   >
                     2
                   </span>
-                  <span style={{ color: "#334155" }}>
+                  <span style={{ color: "var(--ui-text-2)" }}>
                     Hubi arma su parrilla y su reporte, solos
                   </span>
                 </div>
@@ -460,7 +460,7 @@ export default function ParrillasPage() {
                   >
                     3
                   </span>
-                  <span style={{ color: "#334155" }}>
+                  <span style={{ color: "var(--ui-text-2)" }}>
                     Los ves, los compartes y lo pruebas
                   </span>
                 </div>
@@ -482,15 +482,15 @@ export default function ParrillasPage() {
                   style={{
                     height: 48,
                     borderRadius: 12,
-                    border: "1px solid #CBD5E1",
-                    background: "#FFFFFF",
+                    border: "1px solid var(--ui-border-strong)",
+                    background: "var(--ui-surface)",
                     padding: "0 16px",
                     display: "flex",
                     alignItems: "center",
                     gap: 10,
                     fontSize: 14,
                     fontWeight: 700,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                     cursor: "pointer",
                   }}
                 >
@@ -517,15 +517,15 @@ export default function ParrillasPage() {
                   style={{
                     height: 48,
                     borderRadius: 12,
-                    border: "1px solid #CBD5E1",
-                    background: "#FFFFFF",
+                    border: "1px solid var(--ui-border-strong)",
+                    background: "var(--ui-surface)",
                     padding: "0 16px",
                     display: "flex",
                     alignItems: "center",
                     gap: 10,
                     fontSize: 14,
                     fontWeight: 700,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                     cursor: "pointer",
                   }}
                 >
@@ -542,15 +542,15 @@ export default function ParrillasPage() {
                   style={{
                     height: 48,
                     borderRadius: 12,
-                    border: "1px solid #CBD5E1",
-                    background: "#FFFFFF",
+                    border: "1px solid var(--ui-border-strong)",
+                    background: "var(--ui-surface)",
                     padding: "0 16px",
                     display: "flex",
                     alignItems: "center",
                     gap: 10,
                     fontSize: 14,
                     fontWeight: 700,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                     cursor: "pointer",
                   }}
                 >
@@ -567,15 +567,15 @@ export default function ParrillasPage() {
                   style={{
                     height: 48,
                     borderRadius: 12,
-                    border: "1px solid #CBD5E1",
-                    background: "#FFFFFF",
+                    border: "1px solid var(--ui-border-strong)",
+                    background: "var(--ui-surface)",
                     padding: "0 16px",
                     display: "flex",
                     alignItems: "center",
                     gap: 10,
                     fontSize: 14,
                     fontWeight: 700,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                     cursor: "pointer",
                   }}
                 >
@@ -623,11 +623,11 @@ export default function ParrillasPage() {
                         style={{
                           padding: "8px 10px",
                           borderRadius: 10,
-                          border: "1px solid #CBD5E1",
-                          background: "#FFFFFF",
+                          border: "1px solid var(--ui-border-strong)",
+                          background: "var(--ui-surface)",
                           fontSize: 12.5,
                           fontWeight: 600,
-                          color: "#0F172A",
+                          color: "var(--ui-text)",
                           cursor: "pointer",
                         }}
                       >
@@ -642,7 +642,7 @@ export default function ParrillasPage() {
               <div
                 style={{
                   marginTop: 14,
-                  background: "#F8FAFC",
+                  background: "var(--ui-surface-2)",
                   borderRadius: 14,
                   padding: "14px 16px",
                   display: "flex",
@@ -656,8 +656,8 @@ export default function ParrillasPage() {
                     width: 36,
                     height: 36,
                     borderRadius: 999,
-                    background: "#FFFFFF",
-                    border: "1px solid #E2E8F0",
+                    background: "var(--ui-surface)",
+                    border: "1px solid var(--ui-border)",
                     display: "grid",
                     placeItems: "center",
                     flexShrink: 0,
@@ -700,8 +700,8 @@ export default function ParrillasPage() {
                     <path d="M14 20c1.2.8 2.8.8 4 0" stroke="#0F172A" strokeWidth="1.4" strokeLinecap="round" />
                   </svg>
                 </div>
-                <div style={{ fontSize: 12.5, lineHeight: 1.5, color: "#475569" }}>
-                  <strong style={{ color: "#0F172A", fontWeight: 700 }}>
+                <div style={{ fontSize: 12.5, lineHeight: 1.5, color: "var(--ui-text-3)" }}>
+                  <strong style={{ color: "var(--ui-text)", fontWeight: 700 }}>
                     Conectar es 100% seguro.
                   </strong>{" "}
                   Hubly es una app aprobada por cada plataforma: entras con su login oficial, tu
@@ -718,9 +718,9 @@ export default function ParrillasPage() {
                   margin: "18px 0",
                 }}
               >
-                <div style={{ flex: 1, height: 1, background: "#E2E8F0" }} />
-                <span style={{ fontSize: 12.5, color: "#64748B" }}>o</span>
-                <div style={{ flex: 1, height: 1, background: "#E2E8F0" }} />
+                <div style={{ flex: 1, height: 1, background: "var(--ui-border)" }} />
+                <span style={{ fontSize: 12.5, color: "var(--ui-text-4)" }}>o</span>
+                <div style={{ flex: 1, height: 1, background: "var(--ui-border)" }} />
               </div>
 
               {/* Mandarle la liga a mi cliente */}
@@ -731,9 +731,9 @@ export default function ParrillasPage() {
                   width: "100%",
                   height: 52,
                   borderRadius: 12,
-                  border: "1px solid #CBD5E1",
-                  background: "#FFFFFF",
-                  color: "#0F172A",
+                  border: "1px solid var(--ui-border-strong)",
+                  background: "var(--ui-surface)",
+                  color: "var(--ui-text)",
                   fontSize: 14,
                   fontWeight: 700,
                   display: "flex",
@@ -750,7 +750,7 @@ export default function ParrillasPage() {
                 style={{
                   textAlign: "center",
                   fontSize: 12,
-                  color: "#64748B",
+                  color: "var(--ui-text-4)",
                   margin: "8px 0 14px",
                 }}
               >
@@ -765,8 +765,8 @@ export default function ParrillasPage() {
                   width: "100%",
                   height: 42,
                   borderRadius: 12,
-                  border: "1px solid #CBD5E1",
-                  background: "#FFFFFF",
+                  border: "1px solid var(--ui-border-strong)",
+                  background: "var(--ui-surface)",
                   color: "#6C77C1",
                   fontSize: 13.5,
                   fontWeight: 600,
@@ -788,7 +788,7 @@ export default function ParrillasPage() {
                   fontSize: 11,
                   fontWeight: 700,
                   letterSpacing: "0.06em",
-                  color: "#64748B",
+                  color: "var(--ui-text-4)",
                   textTransform: "uppercase",
                   marginBottom: 8,
                 }}
@@ -930,7 +930,7 @@ export default function ParrillasPage() {
                     top: 12,
                     left: 12,
                     background: "rgba(255, 255, 255, 0.94)",
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                     fontSize: 11.5,
                     fontWeight: 700,
                     padding: "4px 10px",
@@ -987,7 +987,7 @@ export default function ParrillasPage() {
                     display: "grid",
                     placeItems: "center",
                     cursor: "pointer",
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                     boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
                   }}
                 >
@@ -999,7 +999,7 @@ export default function ParrillasPage() {
               <div
                 style={{
                   fontSize: 12.5,
-                  color: "#475569",
+                  color: "var(--ui-text-3)",
                   margin: "10px 0 18px",
                 }}
               >
@@ -1009,8 +1009,8 @@ export default function ParrillasPage() {
               {/* Bottom Card: ¿Te dejo lista Min? */}
               <div
                 style={{
-                  background: "#F8FAFC",
-                  border: "1px solid #E2E8F0",
+                  background: "var(--ui-surface-2)",
+                  border: "1px solid var(--ui-border)",
                   borderRadius: 16,
                   padding: "18px 20px",
                   display: "flex",
@@ -1029,7 +1029,7 @@ export default function ParrillasPage() {
                     flexShrink: 0,
                     display: "grid",
                     placeItems: "center",
-                    border: "2px solid #FFFFFF",
+                    border: "2px solid var(--ui-surface)",
                     boxShadow: "0 2px 6px rgba(15,23,42,0.1)",
                   }}
                 >
@@ -1046,7 +1046,7 @@ export default function ParrillasPage() {
                     style={{
                       fontSize: 14.5,
                       fontWeight: 700,
-                      color: "#0F172A",
+                      color: "var(--ui-text)",
                       marginBottom: 2,
                     }}
                   >
@@ -1055,7 +1055,7 @@ export default function ParrillasPage() {
                   <div
                     style={{
                       fontSize: 13,
-                      color: "#475569",
+                      color: "var(--ui-text-3)",
                       marginBottom: 12,
                     }}
                   >
@@ -1083,9 +1083,9 @@ export default function ParrillasPage() {
                       target="_blank"
                       rel="noreferrer"
                       style={{
-                        background: "#FFFFFF",
-                        color: "#0F172A",
-                        border: "1px solid #CBD5E1",
+                        background: "var(--ui-surface)",
+                        color: "var(--ui-text)",
+                        border: "1px solid var(--ui-border-strong)",
                         borderRadius: 10,
                         padding: "8px 16px",
                         fontSize: 13,
@@ -1117,9 +1117,9 @@ export default function ParrillasPage() {
               gap: 12,
               marginBottom: 20,
               padding: "14px 18px",
-              background: "#F8FAFC",
+              background: "var(--ui-surface-2)",
               borderRadius: 14,
-              border: "1px solid #E2E8F0",
+              border: "1px solid var(--ui-border)",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -1132,9 +1132,9 @@ export default function ParrillasPage() {
                   gap: 6,
                   padding: "7px 12px",
                   borderRadius: 10,
-                  border: "1px solid #CBD5E1",
-                  background: "#FFFFFF",
-                  color: "#0F172A",
+                  border: "1px solid var(--ui-border-strong)",
+                  background: "var(--ui-surface)",
+                  color: "var(--ui-text)",
                   fontSize: 12.5,
                   fontWeight: 600,
                   cursor: "pointer",
@@ -1144,10 +1144,10 @@ export default function ParrillasPage() {
                 <span>Volver a Conectar red</span>
               </button>
               <div>
-                <div style={{ fontSize: 15, fontWeight: 800, color: "#0F172A" }}>
+                <div style={{ fontSize: 15, fontWeight: 800, color: "var(--ui-text)" }}>
                   Parrilla mensual de {brandName} ({brandPosts.length} publicaciones)
                 </div>
-                <div style={{ fontSize: 12.5, color: "#64748B" }}>
+                <div style={{ fontSize: 12.5, color: "var(--ui-text-4)" }}>
                   Datos de ejemplo interactivos · Aprueba, solicita cambios o programa nuevos posts
                 </div>
               </div>
@@ -1163,8 +1163,8 @@ export default function ParrillasPage() {
                   gap: 6,
                   padding: "8px 14px",
                   borderRadius: 10,
-                  border: "1px solid #CBD5E1",
-                  background: "#FFFFFF",
+                  border: "1px solid var(--ui-border-strong)",
+                  background: "var(--ui-surface)",
                   color: "#15803D",
                   fontSize: 12.5,
                   fontWeight: 600,
@@ -1183,9 +1183,9 @@ export default function ParrillasPage() {
                   gap: 6,
                   padding: "8px 14px",
                   borderRadius: 10,
-                  border: "1px solid #CBD5E1",
-                  background: "#FFFFFF",
-                  color: "#0F172A",
+                  border: "1px solid var(--ui-border-strong)",
+                  background: "var(--ui-surface)",
+                  color: "var(--ui-text)",
                   fontSize: 12.5,
                   fontWeight: 600,
                   textDecoration: "none",
@@ -1218,7 +1218,7 @@ export default function ParrillasPage() {
             </div>
           </div>
 
-          <div role="group" aria-label="Vista de la parrilla" style={{ display: "inline-flex", gap: 2, background: "#F1F5F9", padding: 3, borderRadius: 10, marginBottom: 14 }}>
+          <div role="group" aria-label="Vista de la parrilla" style={{ display: "inline-flex", gap: 2, background: "var(--ui-muted)", padding: 3, borderRadius: 10, marginBottom: 14 }}>
             {(["mes", "tarjetas"] as const).map((m) => (
               <button
                 key={m}
@@ -1232,8 +1232,8 @@ export default function ParrillasPage() {
                   fontSize: 12.5,
                   fontWeight: 600,
                   cursor: "pointer",
-                  background: calendarMode === m ? "#FFFFFF" : "transparent",
-                  color: calendarMode === m ? "#5360A5" : "#475569",
+                  background: calendarMode === m ? "var(--ui-surface)" : "transparent",
+                  color: calendarMode === m ? "var(--ui-accent-text)" : "var(--ui-text-3)",
                 }}
               >
                 {m === "mes" ? "Mes" : "Tarjetas"}
@@ -1256,8 +1256,8 @@ export default function ParrillasPage() {
                 <div
                   key={post.id}
                   style={{
-                    background: "#FFFFFF",
-                    border: "1px solid #E2E8F0",
+                    background: "var(--ui-surface)",
+                    border: "1px solid var(--ui-border)",
                     borderRadius: 16,
                     overflow: "hidden",
                     display: "flex",
@@ -1310,7 +1310,7 @@ export default function ParrillasPage() {
                         display: "flex",
                         justifyContent: "space-between",
                         fontSize: 11.5,
-                        color: "#64748B",
+                        color: "var(--ui-text-4)",
                         marginBottom: 6,
                       }}
                     >
@@ -1320,14 +1320,14 @@ export default function ParrillasPage() {
                       <span>{post.networks.join(" · ")}</span>
                     </div>
 
-                    <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0F172A", margin: "0 0 6px" }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: "var(--ui-text)", margin: "0 0 6px" }}>
                       {post.title}
                     </h3>
 
                     <p
                       style={{
                         fontSize: 12.5,
-                        color: "#475569",
+                        color: "var(--ui-text-3)",
                         lineHeight: 1.5,
                         margin: "0 0 14px",
                         display: "-webkit-box",
@@ -1343,7 +1343,7 @@ export default function ParrillasPage() {
                       style={{
                         marginTop: "auto",
                         paddingTop: 12,
-                        borderTop: "1px solid #F1F5F9",
+                        borderTop: "1px solid var(--ui-muted)",
                         display: "flex",
                         gap: 8,
                       }}
@@ -1381,9 +1381,9 @@ export default function ParrillasPage() {
                         style={{
                           padding: "7px 10px",
                           borderRadius: 8,
-                          border: "1px solid #CBD5E1",
-                          background: "#FFFFFF",
-                          color: "#334155",
+                          border: "1px solid var(--ui-border-strong)",
+                          background: "var(--ui-surface)",
+                          color: "var(--ui-text-2)",
                           fontSize: 12,
                           fontWeight: 600,
                           cursor: "pointer",
@@ -1402,9 +1402,9 @@ export default function ParrillasPage() {
                         style={{
                           padding: "7px 9px",
                           borderRadius: 8,
-                          border: "1px solid #CBD5E1",
-                          background: "#FFFFFF",
-                          color: "#334155",
+                          border: "1px solid var(--ui-border-strong)",
+                          background: "var(--ui-surface)",
+                          color: "var(--ui-text-2)",
                           cursor: "pointer",
                         }}
                         title="Editar"
@@ -1430,7 +1430,7 @@ export default function ParrillasPage() {
               alignItems: "center",
               justifyContent: "space-between",
               paddingBottom: 14,
-              borderBottom: "1px solid #E2E8F0",
+              borderBottom: "1px solid var(--ui-border)",
               marginBottom: 48,
             }}
           >
@@ -1444,7 +1444,7 @@ export default function ParrillasPage() {
                 height: 32,
                 borderRadius: 10,
                 border: "none",
-                background: "#F0F1F9",
+                background: "var(--ui-accent-soft)",
                 color: "#6C77C1",
                 display: "grid",
                 placeItems: "center",
@@ -1466,7 +1466,7 @@ export default function ParrillasPage() {
                   gap: 6,
                   background: "transparent",
                   border: "none",
-                  color: "#334155",
+                  color: "var(--ui-text-2)",
                   fontSize: 13,
                   fontWeight: 600,
                   cursor: "pointer",
@@ -1479,7 +1479,7 @@ export default function ParrillasPage() {
               <div
                 style={{
                   display: "inline-flex",
-                  background: "#F1F5F9",
+                  background: "var(--ui-muted)",
                   padding: 3,
                   borderRadius: 10,
                   gap: 2,
@@ -1495,8 +1495,8 @@ export default function ParrillasPage() {
                     height: 26,
                     borderRadius: 7,
                     border: "none",
-                    background: "#FFFFFF",
-                    color: "#0F172A",
+                    background: "var(--ui-surface)",
+                    color: "var(--ui-text)",
                     display: "grid",
                     placeItems: "center",
                     boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
@@ -1515,7 +1515,7 @@ export default function ParrillasPage() {
                     borderRadius: 7,
                     border: "none",
                     background: "transparent",
-                    color: "#64748B",
+                    color: "var(--ui-text-4)",
                     display: "grid",
                     placeItems: "center",
                   }}
@@ -1581,7 +1581,7 @@ export default function ParrillasPage() {
               style={{
                 fontSize: 18,
                 fontWeight: 700,
-                color: "#0F172A",
+                color: "var(--ui-text)",
                 margin: "0 0 6px",
               }}
             >
@@ -1590,7 +1590,7 @@ export default function ParrillasPage() {
             <p
               style={{
                 fontSize: 13.5,
-                color: "#64748B",
+                color: "var(--ui-text-4)",
                 margin: "0 0 20px",
               }}
             >
@@ -1629,7 +1629,7 @@ export default function ParrillasPage() {
               alignItems: "center",
               justifyContent: "space-between",
               paddingBottom: 14,
-              borderBottom: "1px solid #E2E8F0",
+              borderBottom: "1px solid var(--ui-border)",
               flexWrap: "wrap",
               gap: 12,
             }}
@@ -1641,7 +1641,7 @@ export default function ParrillasPage() {
                 style={{
                   background: "transparent",
                   border: "none",
-                  color: "#64748B",
+                  color: "var(--ui-text-4)",
                   fontSize: 13,
                   cursor: "pointer",
                   padding: 0,
@@ -1664,7 +1664,7 @@ export default function ParrillasPage() {
                   cursor: "pointer",
                 }}
               >
-                <span style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
+                <span style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>
                   hubly.app/@{brandHandle}
                 </span>
                 <span style={{ fontSize: 12.5, fontWeight: 600, color: "#6C77C1" }}>
@@ -1676,7 +1676,7 @@ export default function ParrillasPage() {
                 href={`/share/${shareToken}`}
                 style={{
                   fontSize: 12.5,
-                  color: "#64748B",
+                  color: "var(--ui-text-4)",
                   textDecoration: "none",
                   fontWeight: 500,
                 }}
@@ -1687,7 +1687,7 @@ export default function ParrillasPage() {
               <span
                 style={{
                   background: "#6C77C1",
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                   fontSize: 12,
                   fontWeight: 700,
                   padding: "5px 12px",
@@ -1704,7 +1704,7 @@ export default function ParrillasPage() {
               href="/ajustes"
               style={{
                 fontSize: 13,
-                color: "#64748B",
+                color: "var(--ui-text-4)",
                 fontWeight: 500,
                 textDecoration: "none",
               }}
@@ -1730,7 +1730,7 @@ export default function ParrillasPage() {
                   display: "flex",
                   alignItems: "center",
                   gap: 24,
-                  borderBottom: "1px solid #E2E8F0",
+                  borderBottom: "1px solid var(--ui-border)",
                   marginBottom: 18,
                 }}
               >
@@ -1751,7 +1751,7 @@ export default function ParrillasPage() {
                         background: "transparent",
                         border: "none",
                         borderBottom: active ? "2px solid #6C77C1" : "2px solid transparent",
-                        color: active ? "#6C77C1" : "#64748B",
+                        color: active ? "#6C77C1" : "var(--ui-text-4)",
                         fontWeight: active ? 600 : 500,
                         fontSize: 13.5,
                         padding: "8px 0 12px",
@@ -1802,7 +1802,7 @@ export default function ParrillasPage() {
                   style={{
                     background: "transparent",
                     border: "none",
-                    color: "#64748B",
+                    color: "var(--ui-text-4)",
                     fontSize: 13,
                     fontWeight: 500,
                     cursor: "pointer",
@@ -1818,8 +1818,8 @@ export default function ParrillasPage() {
                 {/* Card 1: Síguenos */}
                 <div
                   style={{
-                    background: "#FFFFFF",
-                    border: "1px solid #E2E8F0",
+                    background: "var(--ui-surface)",
+                    border: "1px solid var(--ui-border)",
                     borderRadius: 14,
                     padding: "16px 18px",
                     display: "flex",
@@ -1831,7 +1831,7 @@ export default function ParrillasPage() {
                   <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                     <span
                       style={{
-                        color: "#94A3B8",
+                        color: "var(--ui-text-5)",
                         fontSize: 15,
                         cursor: "grab",
                         userSelect: "none",
@@ -1841,10 +1841,10 @@ export default function ParrillasPage() {
                       ⠿
                     </span>
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>
                         Síguenos
                       </div>
-                      <div style={{ fontSize: 12, color: "#94A3B8", marginTop: 2 }}>
+                      <div style={{ fontSize: 12, color: "var(--ui-text-5)", marginTop: 2 }}>
                         Sitio y redes · 1 ícono
                       </div>
                     </div>
@@ -1859,7 +1859,7 @@ export default function ParrillasPage() {
                       style={{
                         background: "transparent",
                         border: "none",
-                        color: "#64748B",
+                        color: "var(--ui-text-4)",
                         fontSize: 12.5,
                         fontWeight: 500,
                         cursor: "pointer",
@@ -1878,7 +1878,7 @@ export default function ParrillasPage() {
                         height: 22,
                         borderRadius: 999,
                         border: "none",
-                        background: siguenosEnabled ? "#6C77C1" : "#CBD5E1",
+                        background: siguenosEnabled ? "#6C77C1" : "var(--ui-border-strong)",
                         position: "relative",
                         cursor: "pointer",
                         transition: "background 0.15s ease",
@@ -1892,7 +1892,7 @@ export default function ParrillasPage() {
                           width: 16,
                           height: 16,
                           borderRadius: 999,
-                          background: "#FFFFFF",
+                          background: "var(--ui-surface)",
                           transition: "left 0.15s ease",
                         }}
                       />
@@ -1903,8 +1903,8 @@ export default function ParrillasPage() {
                 {/* Card 2: Escríbenos por WhatsApp */}
                 <div
                   style={{
-                    background: "#FFFFFF",
-                    border: "1px solid #E2E8F0",
+                    background: "var(--ui-surface)",
+                    border: "1px solid var(--ui-border)",
                     borderRadius: 14,
                     padding: "16px 18px",
                     display: "flex",
@@ -1916,7 +1916,7 @@ export default function ParrillasPage() {
                   <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                     <span
                       style={{
-                        color: "#94A3B8",
+                        color: "var(--ui-text-5)",
                         fontSize: 15,
                         cursor: "grab",
                         userSelect: "none",
@@ -1943,7 +1943,7 @@ export default function ParrillasPage() {
                     </div>
 
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: 500, color: "#94A3B8" }}>
+                      <div style={{ fontSize: 14, fontWeight: 500, color: "var(--ui-text-5)" }}>
                         Escríbenos por WhatsApp
                       </div>
                       {editingWhatsapp ? (
@@ -1957,7 +1957,7 @@ export default function ParrillasPage() {
                             marginTop: 4,
                             padding: "4px 8px",
                             borderRadius: 6,
-                            border: "1px solid #CBD5E1",
+                            border: "1px solid var(--ui-border-strong)",
                             fontSize: 12.5,
                           }}
                         />
@@ -1991,7 +1991,7 @@ export default function ParrillasPage() {
                       style={{
                         background: "transparent",
                         border: "none",
-                        color: "#64748B",
+                        color: "var(--ui-text-4)",
                         fontSize: 12.5,
                         fontWeight: 500,
                         cursor: "pointer",
@@ -2010,7 +2010,7 @@ export default function ParrillasPage() {
                         height: 22,
                         borderRadius: 999,
                         border: "none",
-                        background: whatsappEnabled ? "#6C77C1" : "#CBD5E1",
+                        background: whatsappEnabled ? "#6C77C1" : "var(--ui-border-strong)",
                         position: "relative",
                         cursor: "pointer",
                         transition: "background 0.15s ease",
@@ -2024,7 +2024,7 @@ export default function ParrillasPage() {
                           width: 16,
                           height: 16,
                           borderRadius: 999,
-                          background: "#FFFFFF",
+                          background: "var(--ui-surface)",
                           transition: "left 0.15s ease",
                         }}
                       />
@@ -2037,7 +2037,7 @@ export default function ParrillasPage() {
             {/* Right Column: iPhone Bio-Link Mockup Preview */}
             <div
               style={{
-                borderLeft: "1px solid #E2E8F0",
+                borderLeft: "1px solid var(--ui-border)",
                 paddingLeft: 32,
                 paddingTop: 24,
                 display: "flex",
@@ -2049,8 +2049,8 @@ export default function ParrillasPage() {
                   width: 332,
                   minHeight: 620,
                   borderRadius: 32,
-                  background: "#FFFFFF",
-                  border: "1px solid #F1F5F9",
+                  background: "var(--ui-surface)",
+                  border: "1px solid var(--ui-muted)",
                   boxShadow: "0 12px 40px rgba(15, 23, 42, 0.06)",
                   padding: "32px 24px",
                   display: "flex",
@@ -2061,7 +2061,7 @@ export default function ParrillasPage() {
                   style={{
                     fontSize: 22,
                     fontWeight: 800,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                     margin: "0 0 8px",
                   }}
                 >
@@ -2071,7 +2071,7 @@ export default function ParrillasPage() {
                   style={{
                     fontSize: 13.5,
                     lineHeight: 1.5,
-                    color: "#64748B",
+                    color: "var(--ui-text-4)",
                     margin: "0 0 18px",
                   }}
                 >
@@ -2118,7 +2118,7 @@ export default function ParrillasPage() {
                     marginTop: 20,
                     textAlign: "center",
                     fontSize: 12,
-                    color: "#94A3B8",
+                    color: "var(--ui-text-5)",
                   }}
                 >
                   hecho con{" "}
@@ -2127,10 +2127,10 @@ export default function ParrillasPage() {
                       fontFamily: "Georgia, serif",
                       fontSize: 14,
                       fontWeight: 700,
-                      color: "#94A3B8",
+                      color: "var(--ui-text-5)",
                     }}
                   >
-                    henry
+                    hubly
                   </strong>
                 </div>
               </div>
@@ -2163,7 +2163,7 @@ export default function ParrillasPage() {
             style={{
               width: "100%",
               maxWidth: 460,
-              background: "#FFFFFF",
+              background: "var(--ui-surface)",
               borderRadius: 18,
               padding: 24,
               boxShadow: "0 24px 48px rgba(15, 23, 42, 0.2)",
@@ -2183,12 +2183,12 @@ export default function ParrillasPage() {
               <button
                 type="button"
                 onClick={() => setImportModalOpen(false)}
-                style={{ background: "none", border: "none", cursor: "pointer", color: "#64748B" }}
+                style={{ background: "none", border: "none", cursor: "pointer", color: "var(--ui-text-4)" }}
               >
                 <X size={18} />
               </button>
             </div>
-            <p style={{ fontSize: 13.5, color: "#475569", lineHeight: 1.5, marginBottom: 16 }}>
+            <p style={{ fontSize: 13.5, color: "var(--ui-text-3)", lineHeight: 1.5, marginBottom: 16 }}>
               Pega tu tabla de Excel, enlace de Notion o presentación de Canva y Hubi acomoda cada
               publicación en el calendario automáticamente.
             </p>
@@ -2199,8 +2199,8 @@ export default function ParrillasPage() {
                 style={{
                   padding: "8px 14px",
                   borderRadius: 10,
-                  border: "1px solid #CBD5E1",
-                  background: "#FFFFFF",
+                  border: "1px solid var(--ui-border-strong)",
+                  background: "var(--ui-surface)",
                   fontSize: 13,
                   fontWeight: 600,
                   cursor: "pointer",
@@ -2251,7 +2251,7 @@ export default function ParrillasPage() {
             style={{
               width: "100%",
               maxWidth: 440,
-              background: "#FFFFFF",
+              background: "var(--ui-surface)",
               borderRadius: 18,
               padding: 24,
               boxShadow: "0 24px 48px rgba(15, 23, 42, 0.2)",
@@ -2271,12 +2271,12 @@ export default function ParrillasPage() {
               <button
                 type="button"
                 onClick={() => setAccountsModalOpen(false)}
-                style={{ background: "none", border: "none", cursor: "pointer", color: "#64748B" }}
+                style={{ background: "none", border: "none", cursor: "pointer", color: "var(--ui-text-4)" }}
               >
                 <X size={18} />
               </button>
             </div>
-            <p style={{ fontSize: 13, color: "#64748B", marginBottom: 14 }}>
+            <p style={{ fontSize: 13, color: "var(--ui-text-4)", marginBottom: 14 }}>
               Conecta o administra los perfiles oficiales de tu cliente.
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -2289,7 +2289,7 @@ export default function ParrillasPage() {
                     justifyContent: "space-between",
                     padding: "10px 14px",
                     borderRadius: 10,
-                    border: "1px solid #E2E8F0",
+                    border: "1px solid var(--ui-border)",
                   }}
                 >
                   <span style={{ fontSize: 13.5, fontWeight: 600 }}>{net}</span>

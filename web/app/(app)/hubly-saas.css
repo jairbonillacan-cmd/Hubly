@@ -1,10 +1,10 @@
 /* ==========================================================================
    HUBLY 1:1 SAAS DESIGN SYSTEM & ISOLATED STYLESHEET (hubly-saas.css)
-   Strictly scoped under .hubly-app-root and .henry-app-root (transition alias)
+   Strictly scoped under .hubly-app-root and .hb-app-root (transition alias)
    Guarantees ZERO visual or layout regressions on the public landing page (/)
    ========================================================================== */
 
-:is(.hubly-app-root, .henry-app-root) {
+:is(.hubly-app-root, .hb-app-root) {
   /* ------------------------------------------------------------------------
      1. Core SaaS Color Palette (Surfaces, Accents, Text, Semantic, Borders)
      ------------------------------------------------------------------------ */
@@ -100,7 +100,7 @@
   --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.05);
   --shadow-lg: 0 8px 32px rgba(15, 23, 42, 0.10), 0 2px 8px rgba(15, 23, 42, 0.06);
   --shadow-xl: 0 24px 64px rgba(15, 23, 42, 0.14), 0 8px 24px rgba(15, 23, 42, 0.08);
-  --shadow-henry: 0 8px 24px rgba(108, 119, 193, 0.35), 0 2px 8px rgba(108, 119, 193, 0.20);
+  --shadow-hb: 0 8px 24px rgba(108, 119, 193, 0.35), 0 2px 8px rgba(108, 119, 193, 0.20);
   --shadow-primary: 0 8px 24px rgba(108, 119, 193, 0.30), 0 2px 8px rgba(108, 119, 193, 0.15);
 
   /* Typography Families */
@@ -117,24 +117,24 @@
   --hubly-z-modal: 60;
 
   /* Legacy Variable Mapping for Transition Compatibility */
-  --henry-bg: #FAFAFA;
-  --henry-surface: #FFFFFF;
-  --henry-border: #E2E8F0;
-  --henry-border-subtle: #F1F5F9;
-  --henry-border-card: #EDF2F7;
-  --henry-text: #0F172A;
-  --henry-text-secondary: #334155;
-  --henry-text-muted: #64748B;
-  --henry-text-subtle: #94A3B8;
-  --henry-indigo: #6C77C1;
-  --henry-indigo-hover: #5A65AF;
-  --henry-indigo-soft: #F0F1F9;
-  --henry-amber-bg: #F5F6FB;
-  --henry-amber-pill: #ECEEF8;
-  --henry-amber-border: #D9DCF0;
-  --henry-amber-text: #5360A5;
-  --henry-amber-accent: #6C77C1;
-  --henry-gold-avatar: #CAA052;
+  --hb-bg: #FAFAFA;
+  --hb-surface: #FFFFFF;
+  --hb-border: #E2E8F0;
+  --hb-border-subtle: #F1F5F9;
+  --hb-border-card: #EDF2F7;
+  --hb-text: #0F172A;
+  --hb-text-secondary: #334155;
+  --hb-text-muted: #64748B;
+  --hb-text-subtle: #94A3B8;
+  --hb-indigo: #6C77C1;
+  --hb-indigo-hover: #5A65AF;
+  --hb-indigo-soft: #F0F1F9;
+  --hb-amber-bg: #F5F6FB;
+  --hb-amber-pill: #ECEEF8;
+  --hb-amber-border: #D9DCF0;
+  --hb-amber-text: #5360A5;
+  --hb-amber-accent: #6C77C1;
+  --hb-gold-avatar: #CAA052;
 
   /* Neutralize Landing Page CSS Variables Inside SaaS Root */
   --ink: #0F172A;
@@ -196,50 +196,50 @@ nextjs-portal,
   display: none !important;
 }
 
-html:has(.hubly-app-root, .henry-app-root),
-body:has(.hubly-app-root, .henry-app-root) {
+html:has(.hubly-app-root, .hb-app-root),
+body:has(.hubly-app-root, .hb-app-root) {
   background: #FAFAFA !important;
   color: #0F172A !important;
   scrollbar-width: none !important;
   overflow-x: hidden;
 }
 
-html:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar,
-body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
+html:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
+body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   width: 0px !important;
   height: 0px !important;
   display: none !important;
 }
 
-:is(.hubly-app-root, .henry-app-root) ::-webkit-scrollbar,
-:is(.hubly-app-root, .henry-app-root) .hubly-scroll::-webkit-scrollbar {
+:is(.hubly-app-root, .hb-app-root) ::-webkit-scrollbar,
+:is(.hubly-app-root, .hb-app-root) .hubly-scroll::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 
-:is(.hubly-app-root, .henry-app-root) ::-webkit-scrollbar-track,
-:is(.hubly-app-root, .henry-app-root) .hubly-scroll::-webkit-scrollbar-track {
+:is(.hubly-app-root, .hb-app-root) ::-webkit-scrollbar-track,
+:is(.hubly-app-root, .hb-app-root) .hubly-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
 
-:is(.hubly-app-root, .henry-app-root) ::-webkit-scrollbar-thumb,
-:is(.hubly-app-root, .henry-app-root) .hubly-scroll::-webkit-scrollbar-thumb {
+:is(.hubly-app-root, .hb-app-root) ::-webkit-scrollbar-thumb,
+:is(.hubly-app-root, .hb-app-root) .hubly-scroll::-webkit-scrollbar-thumb {
   background: rgba(148, 163, 184, 0.38);
   border-radius: 9999px;
 }
 
-:is(.hubly-app-root, .henry-app-root) ::-webkit-scrollbar-thumb:hover,
-:is(.hubly-app-root, .henry-app-root) .hubly-scroll::-webkit-scrollbar-thumb:hover {
+:is(.hubly-app-root, .hb-app-root) ::-webkit-scrollbar-thumb:hover,
+:is(.hubly-app-root, .hb-app-root) .hubly-scroll::-webkit-scrollbar-thumb:hover {
   background: rgba(100, 116, 139, 0.55);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-scroll {
+:is(.hubly-app-root, .hb-app-root) .hubly-scroll {
   scrollbar-width: thin;
   scrollbar-color: rgba(148, 163, 184, 0.38) transparent;
   -webkit-overflow-scrolling: touch;
 }
 
-:is(.hubly-app-root, .henry-app-root) ::selection {
+:is(.hubly-app-root, .hb-app-root) ::selection {
   background: #ECEEF8;
   color: #0F172A;
 }
@@ -248,8 +248,8 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
    3. ACCESSIBLE FOCUS RING CONTRACT (.hubly-focus-ring & :focus-visible)
    ========================================================================== */
 
-:is(.hubly-app-root, .henry-app-root) :focus-visible,
-:is(.hubly-app-root, .henry-app-root) .hubly-focus-ring:focus-visible {
+:is(.hubly-app-root, .hb-app-root) :focus-visible,
+:is(.hubly-app-root, .hb-app-root) .hubly-focus-ring:focus-visible {
   outline: 2px solid #6C77C1 !important;
   outline-offset: 2px !important;
 }
@@ -258,12 +258,12 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
    4. TYPOGRAPHY SCALE & EDITORIAL / MONO HELPERS
    ========================================================================== */
 
-:is(.hubly-app-root, .henry-app-root) h1,
-:is(.hubly-app-root, .henry-app-root) h2,
-:is(.hubly-app-root, .henry-app-root) h3,
-:is(.hubly-app-root, .henry-app-root) h4,
-:is(.hubly-app-root, .henry-app-root) h5,
-:is(.hubly-app-root, .henry-app-root) h6 {
+:is(.hubly-app-root, .hb-app-root) h1,
+:is(.hubly-app-root, .hb-app-root) h2,
+:is(.hubly-app-root, .hb-app-root) h3,
+:is(.hubly-app-root, .hb-app-root) h4,
+:is(.hubly-app-root, .hb-app-root) h5,
+:is(.hubly-app-root, .hb-app-root) h6 {
   font-family: var(--hubly-font-sans);
   letter-spacing: -0.02em;
   line-height: 1.25;
@@ -272,27 +272,27 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   margin: 0;
 }
 
-:is(.hubly-app-root, .henry-app-root) h1 {
+:is(.hubly-app-root, .hb-app-root) h1 {
   font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;
 }
 
-:is(.hubly-app-root, .henry-app-root) h2 {
+:is(.hubly-app-root, .hb-app-root) h2 {
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
-:is(.hubly-app-root, .henry-app-root) h3 {
+:is(.hubly-app-root, .hb-app-root) h3 {
   font-size: 16px;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-greeting-h1,
-:is(.hubly-app-root, .henry-app-root) .saas-heading-xl {
+:is(.hubly-app-root, .hb-app-root) .hubly-greeting-h1,
+:is(.hubly-app-root, .hb-app-root) .saas-heading-xl {
   font-family: var(--hubly-font-sans);
   font-size: 28px;
   font-weight: 700;
@@ -301,7 +301,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   color: #0F172A;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-subtitle-date {
+:is(.hubly-app-root, .hb-app-root) .hubly-subtitle-date {
   font-family: var(--hubly-font-sans);
   font-size: 13px;
   font-weight: 400;
@@ -309,8 +309,8 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   color: #64748B;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-widget-title,
-:is(.hubly-app-root, .henry-app-root) .saas-heading-md {
+:is(.hubly-app-root, .hb-app-root) .hubly-widget-title,
+:is(.hubly-app-root, .hb-app-root) .saas-heading-md {
   font-family: var(--hubly-font-sans);
   font-size: 14px;
   font-weight: 600;
@@ -319,7 +319,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   color: #0F172A;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-heading-lg {
+:is(.hubly-app-root, .hb-app-root) .saas-heading-lg {
   font-family: var(--hubly-font-sans);
   font-size: 20px;
   font-weight: 700;
@@ -328,9 +328,9 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   color: #0F172A;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-mono,
-:is(.hubly-app-root, .henry-app-root) .hg-tabular,
-:is(.hubly-app-root, .henry-app-root) kbd {
+:is(.hubly-app-root, .hb-app-root) .hubly-mono,
+:is(.hubly-app-root, .hb-app-root) .hg-tabular,
+:is(.hubly-app-root, .hb-app-root) kbd {
   font-family: var(--hubly-font-mono);
   font-variant-numeric: tabular-nums;
 }
@@ -339,7 +339,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
    5. 3D TACTILE SQUIRCLE BUTTON SYSTEM (.hbtn & Variants)
    ========================================================================== */
 
-:is(.hubly-app-root, .henry-app-root) .hbtn {
+:is(.hubly-app-root, .hb-app-root) .hbtn {
   --hbtn-edge: #CBD5E1;
   position: relative;
   display: inline-flex;
@@ -375,38 +375,38 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
 }
 
 @supports (corner-shape: squircle) {
-  :is(.hubly-app-root, .henry-app-root) .hbtn {
+  :is(.hubly-app-root, .hb-app-root) .hbtn {
     corner-shape: squircle;
   }
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn:hover:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #F8FAFC;
   border-color: #94A3B8;
   color: #0F172A;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn:focus-visible {
+:is(.hubly-app-root, .hb-app-root) .hbtn:focus-visible {
   outline: 2px solid #6C77C1 !important;
   outline-offset: 2px !important;
 }
 
 /* Tactile 3D Press: :hover revierte el hundimiento si el puntero sale antes de soltar */
-:is(.hubly-app-root, .henry-app-root) .hbtn:is(:active:hover, :active:focus-visible):not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn:is(:active:hover, :active:focus-visible):not(:disabled):not([aria-disabled="true"]) {
   transform: translateY(3px);
   box-shadow: 0 1px 0 0 var(--hbtn-edge);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn.is-selected,
-:is(.hubly-app-root, .henry-app-root) .hbtn[aria-pressed="true"] {
+:is(.hubly-app-root, .hb-app-root) .hbtn.is-selected,
+:is(.hubly-app-root, .hb-app-root) .hbtn[aria-pressed="true"] {
   --hbtn-edge: #4C56A0;
   background: #F0F1F9;
   color: #6C77C1;
   border-color: #6C77C1;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn:disabled,
-:is(.hubly-app-root, .henry-app-root) .hbtn[aria-disabled="true"] {
+:is(.hubly-app-root, .hb-app-root) .hbtn:disabled,
+:is(.hubly-app-root, .hb-app-root) .hbtn[aria-disabled="true"] {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
@@ -415,7 +415,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
 }
 
 /* --- .hbtn Size Modifiers --- */
-:is(.hubly-app-root, .henry-app-root) .hbtn-lg {
+:is(.hubly-app-root, .hb-app-root) .hbtn-lg {
   height: 44px;
   padding: 0 22px;
   font-size: 14.5px;
@@ -428,19 +428,19 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
     0 5px 10px rgba(15, 23, 42, 0.08);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-lg:active:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn-lg:active:not(:disabled):not([aria-disabled="true"]) {
   transform: translateY(3px);
   box-shadow: 0 1px 0 var(--hbtn-edge);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-sm {
+:is(.hubly-app-root, .hb-app-root) .hbtn-sm {
   height: 30px;
   padding: 0 12px;
   font-size: 12.5px;
   border-radius: 10px;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-xs {
+:is(.hubly-app-root, .hb-app-root) .hbtn-xs {
   height: 24px;
   padding: 0 10px;
   font-size: 11.5px;
@@ -451,193 +451,193 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
     0 2px 0 var(--hbtn-edge);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-xs:active:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn-xs:active:not(:disabled):not([aria-disabled="true"]) {
   transform: translateY(2px);
   box-shadow: 0 1px 0 var(--hbtn-edge);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-ic {
+:is(.hubly-app-root, .hb-app-root) .hbtn-ic {
   width: 36px;
   padding: 0;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-lg.hbtn-ic {
+:is(.hubly-app-root, .hb-app-root) .hbtn-lg.hbtn-ic {
   width: 44px;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-sm.hbtn-ic {
+:is(.hubly-app-root, .hb-app-root) .hbtn-sm.hbtn-ic {
   width: 30px;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-xs.hbtn-ic {
+:is(.hubly-app-root, .hb-app-root) .hbtn-xs.hbtn-ic {
   width: 24px;
 }
 
 /* --- .hbtn Color Variants --- */
 
 /* 1. Indigo / Primary (.hbtn-indigo, .hbtn-primary) */
-:is(.hubly-app-root, .henry-app-root) .hbtn-indigo,
-:is(.hubly-app-root, .henry-app-root) .hbtn-primary {
+:is(.hubly-app-root, .hb-app-root) .hbtn-indigo,
+:is(.hubly-app-root, .hb-app-root) .hbtn-primary {
   --hbtn-edge: #4C56A0;
   background: #6C77C1;
   color: #FFFFFF;
   border: 1px solid #5A65AF;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-indigo:hover:not(:disabled):not([aria-disabled="true"]),
-:is(.hubly-app-root, .henry-app-root) .hbtn-primary:hover:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn-indigo:hover:not(:disabled):not([aria-disabled="true"]),
+:is(.hubly-app-root, .hb-app-root) .hbtn-primary:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #5A65AF;
   border-color: #4C56A0;
   color: #FFFFFF;
 }
 
-/* 2. Amber / Henry (.hbtn-amber, .hbtn-henry) */
-:is(.hubly-app-root, .henry-app-root) .hbtn-amber,
-:is(.hubly-app-root, .henry-app-root) .hbtn-henry {
+/* 2. Amber (.hbtn-amber, .hbtn-hb) */
+:is(.hubly-app-root, .hb-app-root) .hbtn-amber,
+:is(.hubly-app-root, .hb-app-root) .hbtn-hb {
   --hbtn-edge: #4C56A0;
   background: #FFFFFF;
   color: #0F172A;
   border: 1.5px solid #6C77C1;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-amber:hover:not(:disabled):not([aria-disabled="true"]),
-:is(.hubly-app-root, .henry-app-root) .hbtn-henry:hover:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn-amber:hover:not(:disabled):not([aria-disabled="true"]),
+:is(.hubly-app-root, .hb-app-root) .hbtn-hb:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #F5F6FB;
   border-color: #5A65AF;
   color: #0F172A;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-amber-solid {
+:is(.hubly-app-root, .hb-app-root) .hbtn-amber-solid {
   --hbtn-edge: #4C56A0;
   background: #6C77C1;
   color: #4A3200;
   border: 1px solid #6C77C1;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-amber-solid:hover:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn-amber-solid:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #5A65AF;
   color: #4A3200;
 }
 
 /* 3. Secondary / Neutral White (.hbtn-secondary) */
-:is(.hubly-app-root, .henry-app-root) .hbtn-secondary {
+:is(.hubly-app-root, .hb-app-root) .hbtn-secondary {
   --hbtn-edge: #C9C9DC;
   background: #FFFFFF;
   color: #334155;
   border: 1px solid #D4D4E4;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-secondary:hover:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn-secondary:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #F8FAFC;
   border-color: #CBD5E1;
   color: #0F172A;
 }
 
 /* 4. Blue (.hbtn-blue) */
-:is(.hubly-app-root, .henry-app-root) .hbtn-blue {
+:is(.hubly-app-root, .hb-app-root) .hbtn-blue {
   --hbtn-edge: #1E40AF;
   background: #2563EB;
   color: #FFFFFF;
   border: 1px solid #1D4ED8;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-blue:hover:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn-blue:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #1D4ED8;
   border-color: #1E40AF;
   color: #FFFFFF;
 }
 
 /* 5. Pink (.hbtn-pink) */
-:is(.hubly-app-root, .henry-app-root) .hbtn-pink {
+:is(.hubly-app-root, .hb-app-root) .hbtn-pink {
   --hbtn-edge: #9D174D;
   background: #EC4899;
   color: #FFFFFF;
   border: 1px solid #DB2777;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-pink:hover:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn-pink:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #DB2777;
   border-color: #9D174D;
   color: #FFFFFF;
 }
 
 /* 6. Purple (.hbtn-purple) */
-:is(.hubly-app-root, .henry-app-root) .hbtn-purple {
+:is(.hubly-app-root, .hb-app-root) .hbtn-purple {
   --hbtn-edge: #4C1D95;
   background: #7C3AED;
   color: #FFFFFF;
   border: 1px solid #6D28D9;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-purple:hover:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn-purple:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #6D28D9;
   border-color: #4C1D95;
   color: #FFFFFF;
 }
 
 /* 7. Danger (.hbtn-danger) */
-:is(.hubly-app-root, .henry-app-root) .hbtn-danger {
+:is(.hubly-app-root, .hb-app-root) .hbtn-danger {
   --hbtn-edge: #B91C1C;
   background: #EF4444;
   color: #FFFFFF;
   border: 1px solid #DC2626;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-danger:hover:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn-danger:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #DC2626;
   border-color: #B91C1C;
   color: #FFFFFF;
 }
 
 /* 8. Ghost Variants (.hbtn-ghost, .hbtn-ghost-primary, .hbtn-ghost-danger) */
-:is(.hubly-app-root, .henry-app-root) .hbtn-ghost,
-:is(.hubly-app-root, .henry-app-root) .hbtn-ghost-primary,
-:is(.hubly-app-root, .henry-app-root) .hbtn-ghost-danger {
+:is(.hubly-app-root, .hb-app-root) .hbtn-ghost,
+:is(.hubly-app-root, .hb-app-root) .hbtn-ghost-primary,
+:is(.hubly-app-root, .hb-app-root) .hbtn-ghost-danger {
   --hbtn-edge: transparent;
   background: transparent;
   border-color: transparent;
   box-shadow: none;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-ghost {
+:is(.hubly-app-root, .hb-app-root) .hbtn-ghost {
   color: #475569;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-ghost:hover:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn-ghost:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #F1F5F9;
   border-color: transparent;
   color: #0F172A;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-ghost-primary {
+:is(.hubly-app-root, .hb-app-root) .hbtn-ghost-primary {
   color: #6C77C1;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-ghost-primary:hover:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn-ghost-primary:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #F0F1F9;
   border-color: transparent;
   color: #5A65AF;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-ghost-danger {
+:is(.hubly-app-root, .hb-app-root) .hbtn-ghost-danger {
   color: #DC2626;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-ghost-danger:hover:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn-ghost-danger:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #FEF2F2;
   border-color: transparent;
   color: #B91C1C;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hbtn-ghost:active:not(:disabled):not([aria-disabled="true"]),
-:is(.hubly-app-root, .henry-app-root) .hbtn-ghost-primary:active:not(:disabled):not([aria-disabled="true"]),
-:is(.hubly-app-root, .henry-app-root) .hbtn-ghost-danger:active:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hbtn-ghost:active:not(:disabled):not([aria-disabled="true"]),
+:is(.hubly-app-root, .hb-app-root) .hbtn-ghost-primary:active:not(:disabled):not([aria-disabled="true"]),
+:is(.hubly-app-root, .hb-app-root) .hbtn-ghost-danger:active:not(:disabled):not([aria-disabled="true"]) {
   transform: translateY(1px);
   box-shadow: none;
 }
 
 /* Spinner inside .hbtn */
-:is(.hubly-app-root, .henry-app-root) .hbtn-spin {
+:is(.hubly-app-root, .hb-app-root) .hbtn-spin {
   width: 14px;
   height: 14px;
   border-radius: 50%;
@@ -657,14 +657,14 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
    6. DECOMPILED ELEVATION & SURFACE SYSTEM (.hq-card, .hq-rail, .hq-soft, .hq-pop)
    ========================================================================== */
 
-:is(.hubly-app-root, .henry-app-root) .hq-rail {
+:is(.hubly-app-root, .hb-app-root) .hq-rail {
   background: #FFFFFF;
   border: 1px solid #E2E8F0;
   border-radius: 18px;
   box-shadow: var(--shadow-lg);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hq-card {
+:is(.hubly-app-root, .hb-app-root) .hq-card {
   background: #FFFFFF;
   border: 1px solid #E2E8F0;
   border-radius: 16px;
@@ -673,26 +673,26 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
     0 12px 30px -20px rgba(108, 119, 193, 0.22);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hq-card-i {
+:is(.hubly-app-root, .hb-app-root) .hq-card-i {
   transition:
     box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hq-card-i:hover {
+:is(.hubly-app-root, .hb-app-root) .hq-card-i:hover {
   border-color: #CBD5E1;
   box-shadow:
     0 2px 4px rgba(26, 26, 46, 0.05),
     0 20px 44px -22px rgba(108, 119, 193, 0.32);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hq-inset {
+:is(.hubly-app-root, .hb-app-root) .hq-inset {
   background: #F8FAFC;
   border-radius: 13px;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hq-soft {
+:is(.hubly-app-root, .hb-app-root) .hq-soft {
   background: #FFFFFF;
   border-radius: 20px;
   box-shadow:
@@ -700,25 +700,25 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
     0 10px 28px -14px rgba(108, 119, 193, 0.30);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hq-soft-i {
+:is(.hubly-app-root, .hb-app-root) .hq-soft-i {
   transition:
     box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hq-soft-i:hover {
+:is(.hubly-app-root, .hb-app-root) .hq-soft-i:hover {
   box-shadow:
     0 2px 4px rgba(26, 26, 46, 0.06),
     0 18px 40px -16px rgba(108, 119, 193, 0.42);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hq-soft-on {
+:is(.hubly-app-root, .hb-app-root) .hq-soft-on {
   box-shadow:
     0 0 0 2px #6C77C1,
     0 10px 28px -14px rgba(108, 119, 193, 0.40);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hq-pop {
+:is(.hubly-app-root, .hb-app-root) .hq-pop {
   background: #FFFFFF;
   border-radius: 18px;
   border: 1px solid #E2E8F0;
@@ -727,7 +727,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
     0 24px 60px -20px rgba(26, 26, 46, 0.34);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hq-glass {
+:is(.hubly-app-root, .hb-app-root) .hq-glass {
   background: rgba(255, 255, 255, 0.78);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   backdrop-filter: blur(16px) saturate(140%);
@@ -738,7 +738,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
    7. FLOATING SIDEBAR (256px expanded / 68px collapsed / Mobile Drawer)
    ========================================================================== */
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-sidebar, .henry-sidebar) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-sidebar, .hb-sidebar) {
   width: 256px;
   min-width: 256px;
   height: calc(100dvh - 16px);
@@ -762,14 +762,14 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   user-select: none;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-sidebar, .henry-sidebar).is-collapsed {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-sidebar, .hb-sidebar).is-collapsed {
   width: 68px;
   min-width: 68px;
   padding: 16px 8px 14px;
   align-items: center;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-sidebar-collapse-btn, .henry-sidebar-collapse-btn) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-sidebar-collapse-btn, .hb-sidebar-collapse-btn) {
   position: absolute;
   top: 50%;
   right: -12px;
@@ -794,17 +794,17 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
     transform 140ms ease;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-sidebar-collapse-btn, .henry-sidebar-collapse-btn):hover {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-sidebar-collapse-btn, .hb-sidebar-collapse-btn):hover {
   color: #0F172A;
   border-color: #CBD5E1;
   background: #F8FAFC;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-sidebar-collapse-btn, .henry-sidebar-collapse-btn):active {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-sidebar-collapse-btn, .hb-sidebar-collapse-btn):active {
   transform: translateY(-50%) scale(0.94);
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-logo-serif, .henry-logo-serif) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-logo-serif, .hb-logo-serif) {
   font-family: var(--hubly-font-serif);
   font-size: 22px;
   font-weight: 700;
@@ -815,7 +815,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   display: inline-block;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-section-label, .henry-section-label) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-section-label, .hb-section-label) {
   font-size: 10.5px;
   font-weight: 600;
   color: #94A3B8;
@@ -825,7 +825,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
 }
 
 /* Sidebar Navigation Items (6 Mandatory States) */
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-nav-item, .henry-nav-item) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-nav-item, .hb-nav-item) {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -847,30 +847,30 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
     transform 90ms ease;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-nav-item, .henry-nav-item):hover:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-nav-item, .hb-nav-item):hover:not(:disabled):not([aria-disabled="true"]) {
   background: #F8FAFC;
   color: #0F172A;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-nav-item, .henry-nav-item):active:not(:disabled):not([aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-nav-item, .hb-nav-item):active:not(:disabled):not([aria-disabled="true"]) {
   background: #F1F5F9;
   transform: scale(0.99);
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-nav-item, .henry-nav-item):is(.active, .is-selected, [aria-current="page"]) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-nav-item, .hb-nav-item):is(.active, .is-selected, [aria-current="page"]) {
   background: #F5F6FB;
   border: 1px solid #D9DCF0;
   color: #5360A5;
   font-weight: 600;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-nav-item, .henry-nav-item):is(:disabled, [aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-nav-item, .hb-nav-item):is(:disabled, [aria-disabled="true"]) {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-sidebar, .henry-sidebar).is-collapsed :is(.hubly-nav-item, .henry-nav-item) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-sidebar, .hb-sidebar).is-collapsed :is(.hubly-nav-item, .hb-nav-item) {
   width: 38px;
   height: 38px;
   padding: 0;
@@ -878,7 +878,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   border-radius: 10px;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-icon-btn, .henry-icon-btn) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-icon-btn, .hb-icon-btn) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -894,17 +894,17 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   text-decoration: none;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-icon-btn, .henry-icon-btn):hover:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-icon-btn, .hb-icon-btn):hover:not(:disabled) {
   color: #475569;
   background: #F8FAFC;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-icon-btn, .henry-icon-btn):active:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-icon-btn, .hb-icon-btn):active:not(:disabled) {
   transform: scale(0.94);
   background: #F1F5F9;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-icon-btn, .henry-icon-btn):disabled {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-icon-btn, .hb-icon-btn):disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -913,7 +913,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
    8. MAIN WORKSPACE AREA & STACKING CONTEXTS
    ========================================================================== */
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-main, .henry-main, .saas-main) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-main, .hb-main, .saas-main) {
   position: relative;
   z-index: var(--hubly-z-canvas);
   flex: 1;
@@ -925,7 +925,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   overflow-x: hidden;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-page, .henry-page, .saas-page, .saas-content) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-page, .hb-page, .saas-page, .saas-content) {
   flex: 1;
   width: 100%;
   max-width: 1320px;
@@ -935,29 +935,29 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
 }
 
 /* Stacking Utility Layers */
-:is(.hubly-app-root, .henry-app-root) .hubly-layer-canvas {
+:is(.hubly-app-root, .hb-app-root) .hubly-layer-canvas {
   z-index: var(--hubly-z-canvas);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-layer-subnav {
+:is(.hubly-app-root, .hb-app-root) .hubly-layer-subnav {
   position: sticky;
   top: 0;
   z-index: var(--hubly-z-subnav);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-layer-popover {
+:is(.hubly-app-root, .hb-app-root) .hubly-layer-popover {
   z-index: var(--hubly-z-popover);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-layer-floating {
+:is(.hubly-app-root, .hb-app-root) .hubly-layer-floating {
   z-index: var(--hubly-z-floating);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-layer-drawer {
+:is(.hubly-app-root, .hb-app-root) .hubly-layer-drawer {
   z-index: var(--hubly-z-drawer);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-layer-modal {
+:is(.hubly-app-root, .hb-app-root) .hubly-layer-modal {
   z-index: var(--hubly-z-modal);
 }
 
@@ -965,7 +965,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
    9. SUBNAVIGATION TABS (Inicio, Salud de Cuentas, Equipo)
    ========================================================================== */
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-subnav, .henry-pill-tabs, .saas-pill-nav, .saas-subnav) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav, .hb-pill-tabs, .saas-pill-nav, .saas-subnav) {
   display: inline-flex;
   align-items: center;
   gap: 2px;
@@ -977,7 +977,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   box-sizing: border-box;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-subnav-tab, .henry-pill-tab, .saas-pill, .saas-subnav-item) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav-tab, .hb-pill-tab, .saas-pill, .saas-subnav-item) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1003,31 +1003,31 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
     transform 90ms ease;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-subnav-tab, .henry-pill-tab, .saas-pill, .saas-subnav-item):hover:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav-tab, .hb-pill-tab, .saas-pill, .saas-subnav-item):hover:not(:disabled) {
   color: #0F172A;
   background: rgba(255, 255, 255, 0.55);
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-subnav-tab, .henry-pill-tab, .saas-pill, .saas-subnav-item):active:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav-tab, .hb-pill-tab, .saas-pill, .saas-subnav-item):active:not(:disabled) {
   transform: translateY(1px);
 }
 
 /* Active Pill Contract: Warm Amber #6C77C1 with white text & subtle shadow, plus segmented white/indigo support */
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-subnav-tab.is-amber-active, .hubly-subnav-tab[data-variant="amber"]:is(.active, .is-active, [aria-selected="true"])) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav-tab.is-amber-active, .hubly-subnav-tab[data-variant="amber"]:is(.active, .is-active, [aria-selected="true"])) {
   background: #6C77C1;
   color: #FFFFFF;
   border-color: #6C77C1;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-subnav-tab, .henry-pill-tab, .saas-pill, .saas-subnav-item):is(.active, .is-active, [aria-selected="true"]) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav-tab, .hb-pill-tab, .saas-pill, .saas-subnav-item):is(.active, .is-active, [aria-selected="true"]) {
   background: #FFFFFF;
   color: #6C77C1;
   border-color: rgba(226, 232, 240, 0.85);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-subnav-tab, .henry-pill-tab, .saas-pill, .saas-subnav-item):disabled {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav-tab, .hb-pill-tab, .saas-pill, .saas-subnav-item):disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -1036,7 +1036,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
    10. CARDS, BENTO GRID, FILTER PILLS & NOTEBOOK CARDS
    ========================================================================== */
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-card, .henry-card, .saas-card) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-card, .hb-card, .saas-card) {
   background: #FFFFFF;
   border: 1px solid #E2E8F0;
   border-radius: 16px;
@@ -1046,14 +1046,14 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   padding: 20px;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-card-warm, .saas-card-warm) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-card-warm, .saas-card-warm) {
   background: #F8FAFC;
   border: 1px solid #E2E8F0;
   border-radius: 16px;
   padding: 20px;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-card-amber) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-card-amber) {
   background: #F5F6FB;
   border: 1px solid #D9DCF0;
   border-radius: 16px;
@@ -1061,35 +1061,35 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
 }
 
 /* Symmetric 2-Column Dashboard Widget Grid on Desktop (>=1024px) */
-:is(.hubly-app-root, .henry-app-root) .hubly-widgets-grid {
+:is(.hubly-app-root, .hb-app-root) .hubly-widgets-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
   width: 100%;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-bento, .saas-bento) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-bento, .saas-bento) {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 20px;
   width: 100%;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-col-1 { grid-column: span 1 / span 1; }
-:is(.hubly-app-root, .henry-app-root) .saas-col-2 { grid-column: span 2 / span 2; }
-:is(.hubly-app-root, .henry-app-root) .saas-col-3 { grid-column: span 3 / span 3; }
-:is(.hubly-app-root, .henry-app-root) .saas-col-4 { grid-column: span 4 / span 4; }
-:is(.hubly-app-root, .henry-app-root) .saas-col-5 { grid-column: span 5 / span 5; }
-:is(.hubly-app-root, .henry-app-root) .saas-col-6 { grid-column: span 6 / span 6; }
-:is(.hubly-app-root, .henry-app-root) .saas-col-7 { grid-column: span 7 / span 7; }
-:is(.hubly-app-root, .henry-app-root) .saas-col-8 { grid-column: span 8 / span 8; }
-:is(.hubly-app-root, .henry-app-root) .saas-col-9 { grid-column: span 9 / span 9; }
-:is(.hubly-app-root, .henry-app-root) .saas-col-10 { grid-column: span 10 / span 10; }
-:is(.hubly-app-root, .henry-app-root) .saas-col-11 { grid-column: span 11 / span 11; }
-:is(.hubly-app-root, .henry-app-root) .saas-col-12 { grid-column: span 12 / span 12; }
+:is(.hubly-app-root, .hb-app-root) .saas-col-1 { grid-column: span 1 / span 1; }
+:is(.hubly-app-root, .hb-app-root) .saas-col-2 { grid-column: span 2 / span 2; }
+:is(.hubly-app-root, .hb-app-root) .saas-col-3 { grid-column: span 3 / span 3; }
+:is(.hubly-app-root, .hb-app-root) .saas-col-4 { grid-column: span 4 / span 4; }
+:is(.hubly-app-root, .hb-app-root) .saas-col-5 { grid-column: span 5 / span 5; }
+:is(.hubly-app-root, .hb-app-root) .saas-col-6 { grid-column: span 6 / span 6; }
+:is(.hubly-app-root, .hb-app-root) .saas-col-7 { grid-column: span 7 / span 7; }
+:is(.hubly-app-root, .hb-app-root) .saas-col-8 { grid-column: span 8 / span 8; }
+:is(.hubly-app-root, .hb-app-root) .saas-col-9 { grid-column: span 9 / span 9; }
+:is(.hubly-app-root, .hb-app-root) .saas-col-10 { grid-column: span 10 / span 10; }
+:is(.hubly-app-root, .hb-app-root) .saas-col-11 { grid-column: span 11 / span 11; }
+:is(.hubly-app-root, .hb-app-root) .saas-col-12 { grid-column: span 12 / span 12; }
 
 /* Filter Pills (6 States) */
-:is(.hubly-app-root, .henry-app-root) .hubly-filter-pill {
+:is(.hubly-app-root, .hb-app-root) .hubly-filter-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1111,28 +1111,28 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
     transform 80ms ease;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-filter-pill:hover:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) .hubly-filter-pill:hover:not(:disabled) {
   color: #0F172A;
   background: rgba(15, 23, 42, 0.04);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-filter-pill:active:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) .hubly-filter-pill:active:not(:disabled) {
   transform: translateY(1px);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-filter-pill:is(.active, .is-selected, [aria-pressed="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hubly-filter-pill:is(.active, .is-selected, [aria-pressed="true"]) {
   background: #F5F6FB;
   color: #5360A5;
   border-color: #D9DCF0;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-filter-pill:disabled {
+:is(.hubly-app-root, .hb-app-root) .hubly-filter-pill:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
 /* Kraft Notebook Card (6 States) */
-:is(.hubly-app-root, .henry-app-root) .hubly-notebook-card {
+:is(.hubly-app-root, .hb-app-root) .hubly-notebook-card {
   position: relative;
   border-radius: 6px 14px 14px 6px;
   cursor: pointer;
@@ -1146,24 +1146,24 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
     box-shadow 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-notebook-card:hover:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) .hubly-notebook-card:hover:not(:disabled) {
   transform: translateY(-3px);
   box-shadow:
     0 12px 24px rgba(15, 23, 42, 0.16),
     0 4px 8px rgba(15, 23, 42, 0.10);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-notebook-card:active:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) .hubly-notebook-card:active:not(:disabled) {
   transform: translateY(-1px) scale(0.99);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-notebook-card:is(.is-selected, [aria-selected="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hubly-notebook-card:is(.is-selected, [aria-selected="true"]) {
   box-shadow:
     0 0 0 2.5px #6C77C1,
     0 10px 24px rgba(108, 119, 193, 0.25);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-notebook-card:is(:disabled, [aria-disabled="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hubly-notebook-card:is(:disabled, [aria-disabled="true"]) {
   opacity: 0.5;
   filter: grayscale(0.4);
   cursor: not-allowed;
@@ -1174,7 +1174,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
    11. BUTTONS (.saas-btn Legacy & Alias Support)
    ========================================================================== */
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn {
+:is(.hubly-app-root, .hb-app-root) .saas-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1199,94 +1199,94 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
     transform 85ms ease;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn:hover:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) .saas-btn:hover:not(:disabled) {
   background: #F8FAFC;
   border-color: #94A3B8;
   color: #0F172A;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn:active:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) .saas-btn:active:not(:disabled) {
   transform: translateY(1px);
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn:disabled {
+:is(.hubly-app-root, .hb-app-root) .saas-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn-sm {
+:is(.hubly-app-root, .hb-app-root) .saas-btn-sm {
   height: 32px;
   padding: 0 11px;
   border-radius: 9px;
   font-size: 12.5px;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn-primary {
+:is(.hubly-app-root, .hb-app-root) .saas-btn-primary {
   background: #6C77C1;
   color: #FFFFFF;
   border-color: #6C77C1;
   box-shadow: 0 1px 2px rgba(91, 103, 202, 0.25);
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn-primary:hover:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) .saas-btn-primary:hover:not(:disabled) {
   background: #5A65AF;
   border-color: #5A65AF;
   color: #FFFFFF;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn-secondary {
+:is(.hubly-app-root, .hb-app-root) .saas-btn-secondary {
   background: #FFFFFF;
   color: #334155;
   border: 1px solid #CBD5E1;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn-secondary:hover:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) .saas-btn-secondary:hover:not(:disabled) {
   background: #F8FAFC;
   color: #0F172A;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn-ghost {
+:is(.hubly-app-root, .hb-app-root) .saas-btn-ghost {
   background: transparent;
   color: #64748B;
   border-color: transparent;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn-ghost:hover:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) .saas-btn-ghost:hover:not(:disabled) {
   background: #F1F5F9;
   color: #0F172A;
   border-color: transparent;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.saas-btn-amber, .saas-btn-yellow) {
+:is(.hubly-app-root, .hb-app-root) :is(.saas-btn-amber, .saas-btn-yellow) {
   background: #FFFFFF;
   color: #0F172A;
   border: 1.5px solid #6C77C1;
   box-shadow: 0 1px 3px rgba(108, 119, 193, 0.12);
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.saas-btn-amber, .saas-btn-yellow):hover:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) :is(.saas-btn-amber, .saas-btn-yellow):hover:not(:disabled) {
   background: #F5F6FB;
   border-color: #5A65AF;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn-ink {
+:is(.hubly-app-root, .hb-app-root) .saas-btn-ink {
   background: #0F172A;
   color: #FFFFFF;
   border-color: #0F172A;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn-ink:hover:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) .saas-btn-ink:hover:not(:disabled) {
   background: #1E293B;
   color: #FFFFFF;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn-coral {
+:is(.hubly-app-root, .hb-app-root) .saas-btn-coral {
   background: #EF4444;
   color: #FFFFFF;
   border-color: #EF4444;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-btn-coral:hover:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) .saas-btn-coral:hover:not(:disabled) {
   background: #DC2626;
   border-color: #DC2626;
 }
@@ -1295,7 +1295,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
    12. BADGES & STATUS PILLS (10px - 11.5px Scale)
    ========================================================================== */
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-badge, .saas-badge, .saas-status) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-badge, .saas-badge, .saas-status) {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -1308,27 +1308,27 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   white-space: nowrap;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-badge-indigo, .saas-badge-forest, .saas-status-approved, .saas-status-scheduled, .saas-status-published) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-badge-indigo, .saas-badge-forest, .saas-status-approved, .saas-status-scheduled, .saas-status-published) {
   background: #F0F1F9;
   color: #6C77C1;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-badge-success) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-badge-success) {
   background: #ECFDF5;
   color: #059669;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-badge-amber, .saas-badge-amber, .saas-status-pending) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-badge-amber, .saas-badge-amber, .saas-status-pending) {
   background: #ECEEF8;
   color: #5360A5;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-badge-danger, .saas-badge-coral, .saas-status-changes) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-badge-danger, .saas-badge-coral, .saas-status-changes) {
   background: #FEF2F2;
   color: #DC2626;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-badge-neutral, .saas-badge-neutral, .saas-status-draft) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-badge-neutral, .saas-badge-neutral, .saas-status-draft) {
   background: #F1F5F9;
   color: #64748B;
 }
@@ -1337,7 +1337,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
    13. FORM INPUTS, SELECTS, TEXTAREAS & CHECKBOXES (6 States)
    ========================================================================== */
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-input, .saas-input, .hubly-select, .saas-select, .hubly-textarea, .saas-textarea) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-input, .saas-input, .hubly-select, .saas-select, .hubly-textarea, .saas-textarea) {
   width: 100%;
   border-radius: 10px;
   border: 1px solid #E2E8F0;
@@ -1354,20 +1354,20 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
     background-color 130ms ease;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-input, .saas-input, .hubly-textarea, .saas-textarea)::placeholder {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-input, .saas-input, .hubly-textarea, .saas-textarea)::placeholder {
   color: #94A3B8;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-input, .saas-input, .hubly-select, .saas-select, .hubly-textarea, .saas-textarea):hover:not(:disabled):not(:focus) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-input, .saas-input, .hubly-select, .saas-select, .hubly-textarea, .saas-textarea):hover:not(:disabled):not(:focus) {
   border-color: #CBD5E1;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-input, .saas-input, .hubly-select, .saas-select, .hubly-textarea, .saas-textarea):focus {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-input, .saas-input, .hubly-select, .saas-select, .hubly-textarea, .saas-textarea):focus {
   border-color: #6C77C1;
   box-shadow: 0 0 0 3px rgba(91, 103, 202, 0.12);
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-input, .saas-input, .hubly-select, .saas-select, .hubly-textarea, .saas-textarea):disabled {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-input, .saas-input, .hubly-select, .saas-select, .hubly-textarea, .saas-textarea):disabled {
   background: #F8FAFC;
   color: #94A3B8;
   border-color: #E2E8F0;
@@ -1376,7 +1376,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
 }
 
 /* Custom Checkbox (.hubly-checkbox) */
-:is(.hubly-app-root, .henry-app-root) .hubly-checkbox {
+:is(.hubly-app-root, .hb-app-root) .hubly-checkbox {
   width: 18px;
   height: 18px;
   border-radius: 5px;
@@ -1394,22 +1394,22 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
     transform 80ms ease;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-checkbox:hover:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) .hubly-checkbox:hover:not(:disabled) {
   border-color: #6C77C1;
   background: #F0F1F9;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-checkbox:active:not(:disabled) {
+:is(.hubly-app-root, .hb-app-root) .hubly-checkbox:active:not(:disabled) {
   transform: scale(0.93);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-checkbox:is(:checked, .is-checked, [aria-checked="true"]) {
+:is(.hubly-app-root, .hb-app-root) .hubly-checkbox:is(:checked, .is-checked, [aria-checked="true"]) {
   background: #6C77C1;
   border-color: #6C77C1;
   color: #FFFFFF;
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-checkbox:disabled {
+:is(.hubly-app-root, .hb-app-root) .hubly-checkbox:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   background: #F1F5F9;
@@ -1419,7 +1419,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
    14. CALENDAR GRID, TABLES & TASK ROWS (6 States)
    ========================================================================== */
 
-:is(.hubly-app-root, .henry-app-root) .saas-cal-grid {
+:is(.hubly-app-root, .hb-app-root) .saas-cal-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 1px;
@@ -1429,7 +1429,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   overflow: hidden;
 }
 
-:is(.hubly-app-root, .henry-app-root) .saas-cal-cell {
+:is(.hubly-app-root, .hb-app-root) .saas-cal-cell {
   background: #FFFFFF;
   min-height: 112px;
   padding: 8px;
@@ -1438,14 +1438,14 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   gap: 4px;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-table, .saas-table) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-table, .saas-table) {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
   font-variant-numeric: tabular-nums;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-table, .saas-table) th {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-table, .saas-table) th {
   text-align: left;
   font-size: 11px;
   font-weight: 700;
@@ -1457,7 +1457,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   border-bottom: 1px solid #E5E7EB;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-table, .saas-table) td {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-table, .saas-table) td {
   padding: 12px 14px;
   border-bottom: 1px solid #F1F5F9;
   color: #334155;
@@ -1465,19 +1465,19 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   transition: background-color 120ms ease;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-table, .saas-table) tbody tr:hover td {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-table, .saas-table) tbody tr:hover td {
   background: #F8FAFC;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-table, .saas-table) tbody tr:active td {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-table, .saas-table) tbody tr:active td {
   background: #F1F5F9;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-table, .saas-table) tbody tr:is(.is-selected, [aria-selected="true"]) td {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-table, .saas-table) tbody tr:is(.is-selected, [aria-selected="true"]) td {
   background: #F0F1F9;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-table, .saas-table) tbody tr:is(.is-disabled, [aria-disabled="true"]) td {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-table, .saas-table) tbody tr:is(.is-disabled, [aria-disabled="true"]) td {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -1486,17 +1486,17 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
    15. MODALS, DRAWERS & FLOATING WIDGETS (z-index Contract: 45, 50, 60)
    ========================================================================== */
 
-:is(.hubly-app-root, .henry-app-root) .hubly-floating-widget {
+:is(.hubly-app-root, .hb-app-root) .hubly-floating-widget {
   position: fixed;
   z-index: var(--hubly-z-floating);
 }
 
-:is(.hubly-app-root, .henry-app-root) .hubly-ai-drawer {
+:is(.hubly-app-root, .hb-app-root) .hubly-ai-drawer {
   position: fixed;
   z-index: var(--hubly-z-drawer);
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-modal-backdrop, .saas-modal-backdrop) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-modal-backdrop, .saas-modal-backdrop) {
   position: fixed;
   inset: 0;
   z-index: var(--hubly-z-modal);
@@ -1509,7 +1509,7 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
   padding: 20px;
 }
 
-:is(.hubly-app-root, .henry-app-root) :is(.hubly-modal, .saas-modal) {
+:is(.hubly-app-root, .hb-app-root) :is(.hubly-modal, .saas-modal) {
   background: #FFFFFF;
   border: 1px solid #E2E8F0;
   border-radius: 20px;
@@ -1529,72 +1529,72 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
 
 /* Desktop & Tablet (>= 768px): Shell exterior padding 8px */
 @media (min-width: 768px) {
-  :is(.hubly-app-root, .henry-app-root) {
+  :is(.hubly-app-root, .hb-app-root) {
     padding: 8px;
   }
 
-  :is(.hubly-app-root, .henry-app-root) .hubly-mobile-topbar,
-  :is(.hubly-app-root, .henry-app-root) .hubly-mobile-tabbar {
+  :is(.hubly-app-root, .hb-app-root) .hubly-mobile-topbar,
+  :is(.hubly-app-root, .hb-app-root) .hubly-mobile-tabbar {
     display: none !important;
   }
 }
 
 /* Tablet & Below (<= 1024px): Stack 2-column widgets into 1 column */
 @media (max-width: 1024px) {
-  :is(.hubly-app-root, .henry-app-root) .hubly-widgets-grid,
-  :is(.hubly-app-root, .henry-app-root) :is(.hubly-bento, .saas-bento) {
+  :is(.hubly-app-root, .hb-app-root) .hubly-widgets-grid,
+  :is(.hubly-app-root, .hb-app-root) :is(.hubly-bento, .saas-bento) {
     grid-template-columns: 1fr;
   }
 
-  :is(.hubly-app-root, .henry-app-root) .saas-col-1,
-  :is(.hubly-app-root, .henry-app-root) .saas-col-2,
-  :is(.hubly-app-root, .henry-app-root) .saas-col-3,
-  :is(.hubly-app-root, .henry-app-root) .saas-col-4,
-  :is(.hubly-app-root, .henry-app-root) .saas-col-5,
-  :is(.hubly-app-root, .henry-app-root) .saas-col-6,
-  :is(.hubly-app-root, .henry-app-root) .saas-col-7,
-  :is(.hubly-app-root, .henry-app-root) .saas-col-8,
-  :is(.hubly-app-root, .henry-app-root) .saas-col-9,
-  :is(.hubly-app-root, .henry-app-root) .saas-col-10,
-  :is(.hubly-app-root, .henry-app-root) .saas-col-11,
-  :is(.hubly-app-root, .henry-app-root) .saas-col-12 {
+  :is(.hubly-app-root, .hb-app-root) .saas-col-1,
+  :is(.hubly-app-root, .hb-app-root) .saas-col-2,
+  :is(.hubly-app-root, .hb-app-root) .saas-col-3,
+  :is(.hubly-app-root, .hb-app-root) .saas-col-4,
+  :is(.hubly-app-root, .hb-app-root) .saas-col-5,
+  :is(.hubly-app-root, .hb-app-root) .saas-col-6,
+  :is(.hubly-app-root, .hb-app-root) .saas-col-7,
+  :is(.hubly-app-root, .hb-app-root) .saas-col-8,
+  :is(.hubly-app-root, .hb-app-root) .saas-col-9,
+  :is(.hubly-app-root, .hb-app-root) .saas-col-10,
+  :is(.hubly-app-root, .hb-app-root) .saas-col-11,
+  :is(.hubly-app-root, .hb-app-root) .saas-col-12 {
     grid-column: span 1 / span 1;
   }
 
-  :is(.hubly-app-root, .henry-app-root) :is(.hubly-page, .henry-page, .saas-page, .saas-content) {
+  :is(.hubly-app-root, .hb-app-root) :is(.hubly-page, .hb-page, .saas-page, .saas-content) {
     padding: 16px 24px 72px;
   }
 }
 
 /* Mobile (< 768px): Shell exterior padding 0, hide desktop sidebar, compact page */
 @media (max-width: 767.98px) {
-  :is(.hubly-app-root, .henry-app-root) {
+  :is(.hubly-app-root, .hb-app-root) {
     padding: 0;
     flex-direction: column;
     overflow-x: hidden;
   }
 
-  :is(.hubly-app-root, .henry-app-root) :is(.hubly-sidebar, .henry-sidebar):not(.is-mobile-drawer-open) {
+  :is(.hubly-app-root, .hb-app-root) :is(.hubly-sidebar, .hb-sidebar):not(.is-mobile-drawer-open) {
     display: none;
   }
 
-  :is(.hubly-app-root, .henry-app-root) :is(.hubly-page, .henry-page, .saas-page, .saas-content) {
+  :is(.hubly-app-root, .hb-app-root) :is(.hubly-page, .hb-page, .saas-page, .saas-content) {
     padding: 14px 16px 88px;
     max-width: 100vw;
     overflow-x: hidden;
   }
 
-  :is(.hubly-app-root, .henry-app-root) .hubly-greeting-h1,
-  :is(.hubly-app-root, .henry-app-root) .saas-heading-xl {
+  :is(.hubly-app-root, .hb-app-root) .hubly-greeting-h1,
+  :is(.hubly-app-root, .hb-app-root) .saas-heading-xl {
     font-size: 24px;
     line-height: 1.2;
   }
 
-  :is(.hubly-app-root, .henry-app-root) :is(.hubly-modal-backdrop, .saas-modal-backdrop) {
+  :is(.hubly-app-root, .hb-app-root) :is(.hubly-modal-backdrop, .saas-modal-backdrop) {
     padding: 12px;
   }
 
-  :is(.hubly-app-root, .henry-app-root) :is(.hubly-modal, .saas-modal) {
+  :is(.hubly-app-root, .hb-app-root) :is(.hubly-modal, .saas-modal) {
     width: calc(100% - 8px);
     padding: 18px 16px;
     border-radius: 18px;
@@ -1603,50 +1603,50 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
 
 /* Standard Mobile Viewport (<= 375px) */
 @media (max-width: 375px) {
-  :is(.hubly-app-root, .henry-app-root) :is(.hubly-page, .henry-page, .saas-page, .saas-content) {
+  :is(.hubly-app-root, .hb-app-root) :is(.hubly-page, .hb-page, .saas-page, .saas-content) {
     padding: 12px 14px 86px;
   }
 
-  :is(.hubly-app-root, .henry-app-root) :is(.hubly-card, .henry-card, .saas-card, .hq-card) {
+  :is(.hubly-app-root, .hb-app-root) :is(.hubly-card, .hb-card, .saas-card, .hq-card) {
     padding: 16px;
     border-radius: 14px;
   }
 
-  :is(.hubly-app-root, .henry-app-root) :is(.hubly-subnav, .henry-pill-tabs, .saas-pill-nav, .saas-subnav) {
+  :is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav, .hb-pill-tabs, .saas-pill-nav, .saas-subnav) {
     max-width: 100%;
     overflow-x: auto;
     scrollbar-width: none;
   }
 
-  :is(.hubly-app-root, .henry-app-root) :is(.hubly-subnav, .henry-pill-tabs, .saas-pill-nav, .saas-subnav)::-webkit-scrollbar {
+  :is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav, .hb-pill-tabs, .saas-pill-nav, .saas-subnav)::-webkit-scrollbar {
     display: none;
   }
 }
 
 /* Compact Mobile Viewport (<= 320px): Zero horizontal overflow */
 @media (max-width: 320px) {
-  :is(.hubly-app-root, .henry-app-root) :is(.hubly-page, .henry-page, .saas-page, .saas-content) {
+  :is(.hubly-app-root, .hb-app-root) :is(.hubly-page, .hb-page, .saas-page, .saas-content) {
     padding: 10px 10px 84px;
   }
 
-  :is(.hubly-app-root, .henry-app-root) .hubly-greeting-h1,
-  :is(.hubly-app-root, .henry-app-root) .saas-heading-xl {
+  :is(.hubly-app-root, .hb-app-root) .hubly-greeting-h1,
+  :is(.hubly-app-root, .hb-app-root) .saas-heading-xl {
     font-size: 21px;
   }
 
-  :is(.hubly-app-root, .henry-app-root) .hbtn,
-  :is(.hubly-app-root, .henry-app-root) .saas-btn {
+  :is(.hubly-app-root, .hb-app-root) .hbtn,
+  :is(.hubly-app-root, .hb-app-root) .saas-btn {
     padding: 0 10px;
     font-size: 12px;
     height: 34px;
   }
 
-  :is(.hubly-app-root, .henry-app-root) :is(.hubly-subnav-tab, .henry-pill-tab, .saas-pill, .saas-subnav-item) {
+  :is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav-tab, .hb-pill-tab, .saas-pill, .saas-subnav-item) {
     padding: 0 10px;
     font-size: 12px;
   }
 
-  :is(.hubly-app-root, .henry-app-root) :is(.hubly-card, .henry-card, .saas-card, .hq-card) {
+  :is(.hubly-app-root, .hb-app-root) :is(.hubly-card, .hb-card, .saas-card, .hq-card) {
     padding: 12px;
   }
 }
@@ -1656,17 +1656,17 @@ body:has(.hubly-app-root, .henry-app-root)::-webkit-scrollbar {
    ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
-  :is(.hubly-app-root, .henry-app-root) *,
-  :is(.hubly-app-root, .henry-app-root) *::before,
-  :is(.hubly-app-root, .henry-app-root) *::after {
+  :is(.hubly-app-root, .hb-app-root) *,
+  :is(.hubly-app-root, .hb-app-root) *::before,
+  :is(.hubly-app-root, .hb-app-root) *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 
-  :is(.hubly-app-root, .henry-app-root) .hbtn:active:not(:disabled),
-  :is(.hubly-app-root, .henry-app-root) .hubly-notebook-card:hover:not(:disabled) {
+  :is(.hubly-app-root, .hb-app-root) .hbtn:active:not(:disabled),
+  :is(.hubly-app-root, .hb-app-root) .hubly-notebook-card:hover:not(:disabled) {
     transform: none !important;
   }
 }

@@ -96,7 +96,7 @@ export default function AjustesPage() {
     <div
       style={{
         fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-        color: "#0F172A",
+        color: "var(--ui-text)",
         minHeight: "calc(100vh - 64px)",
         position: "relative",
         paddingBottom: 60,
@@ -108,14 +108,14 @@ export default function AjustesPage() {
           style={{
             fontSize: 24,
             fontWeight: 800,
-            color: "#0F172A",
+            color: "var(--ui-text)",
             letterSpacing: "-0.02em",
             margin: "0 0 4px",
           }}
         >
           Configuración
         </h1>
-        <p style={{ fontSize: 13.5, color: "#94A3B8", margin: 0 }}>
+        <p style={{ fontSize: 13.5, color: "var(--ui-text-5)", margin: 0 }}>
           Gestiona tu perfil, equipo y configuración de la agencia
         </p>
       </div>
@@ -146,7 +146,7 @@ export default function AjustesPage() {
                     borderRadius: 8,
                     border: isActive ? "1px solid rgba(108, 119, 193, 0.2)" : "1px solid transparent",
                     background: isActive ? "rgba(108, 119, 193, 0.1)" : "transparent",
-                    color: isActive ? "#5A65AF" : "#475569",
+                    color: isActive ? "var(--ui-accent-text-2)" : "var(--ui-text-3)",
                     fontWeight: isActive ? 600 : 500,
                     fontSize: 13,
                     display: "flex",
@@ -157,7 +157,7 @@ export default function AjustesPage() {
                     transition: "all 0.15s ease",
                   }}
                 >
-                  <span style={{ color: isActive ? "#5A65AF" : "#64748B", display: "grid" }}>
+                  <span style={{ color: isActive ? "var(--ui-accent-text-2)" : "var(--ui-text-4)", display: "grid" }}>
                     {tab.icon}
                   </span>
                   <span>{tab.label}</span>
@@ -169,7 +169,7 @@ export default function AjustesPage() {
           <div
             style={{
               height: 1,
-              background: "#F1F5F9",
+              background: "var(--ui-muted)",
               margin: "12px 0",
             }}
           />
@@ -205,8 +205,8 @@ export default function AjustesPage() {
           {activeTab === "mi-perfil" && (
             <div
               style={{
-                background: "#FFFFFF",
-                border: "1px solid #E2E8F0",
+                background: "var(--ui-surface)",
+                border: "1px solid var(--ui-border)",
                 borderRadius: 20,
                 padding: "28px 32px",
               }}
@@ -215,13 +215,13 @@ export default function AjustesPage() {
                 style={{
                   fontSize: 17,
                   fontWeight: 700,
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                   margin: "0 0 4px",
                 }}
               >
                 Mi Perfil
               </h2>
-              <p style={{ fontSize: 13, color: "#94A3B8", margin: "0 0 24px" }}>
+              <p style={{ fontSize: 13, color: "var(--ui-text-5)", margin: "0 0 24px" }}>
                 Tu información personal en la plataforma
               </p>
 
@@ -232,7 +232,7 @@ export default function AjustesPage() {
                   alignItems: "center",
                   gap: 18,
                   paddingBottom: 24,
-                  borderBottom: "1px solid #F1F5F9",
+                  borderBottom: "1px solid var(--ui-muted)",
                 }}
               >
                 <button
@@ -259,18 +259,18 @@ export default function AjustesPage() {
                 </button>
 
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>
                     {fullName}
                   </div>
-                  <div style={{ fontSize: 12.5, color: "#94A3B8", margin: "2px 0 6px" }}>
+                  <div style={{ fontSize: 12.5, color: "var(--ui-text-5)", margin: "2px 0 6px" }}>
                     hola@agencia.demo
                   </div>
                   <div style={{ marginBottom: 8 }}>
                     <span
                       style={{
                         display: "inline-block",
-                        background: "#F1F5F9",
-                        color: "#475569",
+                        background: "var(--ui-muted)",
+                        color: "var(--ui-text-3)",
                         fontSize: 11,
                         fontWeight: 600,
                         padding: "2px 10px",
@@ -311,7 +311,7 @@ export default function AjustesPage() {
                     display: "block",
                     fontSize: 11,
                     fontWeight: 700,
-                    color: "#475569",
+                    color: "var(--ui-text-3)",
                     letterSpacing: "0.05em",
                     textTransform: "uppercase",
                     marginBottom: 8,
@@ -328,11 +328,11 @@ export default function AjustesPage() {
                       flex: 1,
                       height: 42,
                       borderRadius: 12,
-                      border: "1px solid #E2E8F0",
-                      background: "#F8FAFC",
+                      border: "1px solid var(--ui-border)",
+                      background: "var(--ui-surface-2)",
                       padding: "0 14px",
                       fontSize: 13.5,
-                      color: "#0F172A",
+                      color: "var(--ui-text)",
                       outline: "none",
                     }}
                   />
@@ -367,7 +367,7 @@ export default function AjustesPage() {
                     display: "block",
                     fontSize: 11,
                     fontWeight: 700,
-                    color: "#475569",
+                    color: "var(--ui-text-3)",
                     letterSpacing: "0.05em",
                     textTransform: "uppercase",
                     marginBottom: 8,
@@ -379,20 +379,20 @@ export default function AjustesPage() {
                   style={{
                     height: 42,
                     borderRadius: 12,
-                    border: "1px solid #E2E8F0",
-                    background: "#F8FAFC",
+                    border: "1px solid var(--ui-border)",
+                    background: "var(--ui-surface-2)",
                     padding: "0 14px",
                     display: "flex",
                     alignItems: "center",
                     gap: 10,
                     fontSize: 13.5,
-                    color: "#64748B",
+                    color: "var(--ui-text-4)",
                   }}
                 >
-                  <Mail size={15} style={{ color: "#94A3B8" }} />
+                  <Mail size={15} style={{ color: "var(--ui-text-5)" }} />
                   <span>hola@agencia.demo</span>
                 </div>
-                <div style={{ fontSize: 11.5, color: "#94A3B8", marginTop: 6 }}>
+                <div style={{ fontSize: 11.5, color: "var(--ui-text-5)", marginTop: 6 }}>
                   El correo no se puede cambiar desde aquí
                 </div>
               </div>
@@ -402,7 +402,7 @@ export default function AjustesPage() {
                 style={{
                   marginTop: 22,
                   paddingBottom: 24,
-                  borderBottom: "1px solid #F1F5F9",
+                  borderBottom: "1px solid var(--ui-muted)",
                   display: "flex",
                   alignItems: "center",
                   gap: 12,
@@ -412,7 +412,7 @@ export default function AjustesPage() {
                   style={{
                     fontSize: 11,
                     fontWeight: 700,
-                    color: "#475569",
+                    color: "var(--ui-text-3)",
                     letterSpacing: "0.05em",
                     textTransform: "uppercase",
                   }}
@@ -428,9 +428,9 @@ export default function AjustesPage() {
                     height: 38,
                     padding: "0 16px",
                     borderRadius: 10,
-                    border: "1px solid #CBD5E1",
-                    background: "#FFFFFF",
-                    color: "#334155",
+                    border: "1px solid var(--ui-border-strong)",
+                    background: "var(--ui-surface)",
+                    color: "var(--ui-text-2)",
                     fontSize: 13,
                     fontWeight: 600,
                     display: "inline-flex",
@@ -439,7 +439,7 @@ export default function AjustesPage() {
                     cursor: "pointer",
                   }}
                 >
-                  <Lock size={14} style={{ color: "#64748B" }} />
+                  <Lock size={14} style={{ color: "var(--ui-text-4)" }} />
                   <span>Cambiar contraseña</span>
                 </button>
               </div>
@@ -450,20 +450,20 @@ export default function AjustesPage() {
                   style={{
                     fontSize: 14,
                     fontWeight: 700,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                     margin: "0 0 2px",
                   }}
                 >
                   Apariencia
                 </h3>
-                <p style={{ fontSize: 12.5, color: "#94A3B8", margin: "0 0 12px" }}>
+                <p style={{ fontSize: 12.5, color: "var(--ui-text-5)", margin: "0 0 12px" }}>
                   Elige el tema que más te acomode
                 </p>
 
                 <div
                   style={{
                     display: "inline-flex",
-                    background: "#F1F5F9",
+                    background: "var(--ui-muted)",
                     padding: 4,
                     borderRadius: 12,
                     gap: 2,
@@ -476,8 +476,8 @@ export default function AjustesPage() {
                       padding: "6px 16px",
                       borderRadius: 9,
                       border: "none",
-                      background: themeMode === "claro" ? "#FFFFFF" : "transparent",
-                      color: themeMode === "claro" ? "#0F172A" : "#64748B",
+                      background: themeMode === "claro" ? "var(--ui-surface)" : "transparent",
+                      color: themeMode === "claro" ? "var(--ui-text)" : "var(--ui-text-4)",
                       fontSize: 13,
                       fontWeight: themeMode === "claro" ? 700 : 500,
                       cursor: "pointer",
@@ -494,8 +494,8 @@ export default function AjustesPage() {
                       padding: "6px 16px",
                       borderRadius: 9,
                       border: "none",
-                      background: themeMode === "oscuro" ? "#FFFFFF" : "transparent",
-                      color: themeMode === "oscuro" ? "#0F172A" : "#64748B",
+                      background: themeMode === "oscuro" ? "var(--ui-surface)" : "transparent",
+                      color: themeMode === "oscuro" ? "var(--ui-text)" : "var(--ui-text-4)",
                       fontSize: 13,
                       fontWeight: themeMode === "oscuro" ? 700 : 500,
                       cursor: "pointer",
@@ -514,8 +514,8 @@ export default function AjustesPage() {
           {activeTab === "marcas" && (
             <div
               style={{
-                background: "#FFFFFF",
-                border: "1px solid #E2E8F0",
+                background: "var(--ui-surface)",
+                border: "1px solid var(--ui-border)",
                 borderRadius: 20,
                 padding: "28px 32px",
                 marginTop: 0,
@@ -530,10 +530,10 @@ export default function AjustesPage() {
                 }}
               >
                 <div>
-                  <h2 style={{ fontSize: 17, fontWeight: 700, color: "#0F172A", margin: "0 0 4px" }}>
+                  <h2 style={{ fontSize: 17, fontWeight: 700, color: "var(--ui-text)", margin: "0 0 4px" }}>
                     Marca activa · {brandNameInput}
                   </h2>
-                  <p style={{ fontSize: 13, color: "#94A3B8", margin: 0 }}>
+                  <p style={{ fontSize: 13, color: "var(--ui-text-5)", margin: 0 }}>
                     Configuración general de la marca, logo, categoría, zona horaria y moneda
                   </p>
                 </div>
@@ -568,7 +568,7 @@ export default function AjustesPage() {
                       display: "block",
                       fontSize: 11,
                       fontWeight: 700,
-                      color: "#475569",
+                      color: "var(--ui-text-3)",
                       textTransform: "uppercase",
                       marginBottom: 6,
                     }}
@@ -582,8 +582,8 @@ export default function AjustesPage() {
                       width: "100%",
                       height: 40,
                       borderRadius: 10,
-                      border: "1px solid #E2E8F0",
-                      background: "#F8FAFC",
+                      border: "1px solid var(--ui-border)",
+                      background: "var(--ui-surface-2)",
                       padding: "0 12px",
                       fontSize: 13.5,
                     }}
@@ -596,7 +596,7 @@ export default function AjustesPage() {
                       display: "block",
                       fontSize: 11,
                       fontWeight: 700,
-                      color: "#475569",
+                      color: "var(--ui-text-3)",
                       textTransform: "uppercase",
                       marginBottom: 6,
                     }}
@@ -610,8 +610,8 @@ export default function AjustesPage() {
                       width: "100%",
                       height: 40,
                       borderRadius: 10,
-                      border: "1px solid #E2E8F0",
-                      background: "#F8FAFC",
+                      border: "1px solid var(--ui-border)",
+                      background: "var(--ui-surface-2)",
                       padding: "0 12px",
                       fontSize: 13.5,
                     }}
@@ -624,7 +624,7 @@ export default function AjustesPage() {
                       display: "block",
                       fontSize: 11,
                       fontWeight: 700,
-                      color: "#475569",
+                      color: "var(--ui-text-3)",
                       textTransform: "uppercase",
                       marginBottom: 6,
                     }}
@@ -638,8 +638,8 @@ export default function AjustesPage() {
                       width: "100%",
                       height: 40,
                       borderRadius: 10,
-                      border: "1px solid #E2E8F0",
-                      background: "#F8FAFC",
+                      border: "1px solid var(--ui-border)",
+                      background: "var(--ui-surface-2)",
                       padding: "0 12px",
                       fontSize: 13.5,
                     }}
@@ -652,7 +652,7 @@ export default function AjustesPage() {
                       display: "block",
                       fontSize: 11,
                       fontWeight: 700,
-                      color: "#475569",
+                      color: "var(--ui-text-3)",
                       textTransform: "uppercase",
                       marginBottom: 6,
                     }}
@@ -666,8 +666,8 @@ export default function AjustesPage() {
                       width: "100%",
                       height: 40,
                       borderRadius: 10,
-                      border: "1px solid #E2E8F0",
-                      background: "#F8FAFC",
+                      border: "1px solid var(--ui-border)",
+                      background: "var(--ui-surface-2)",
                       padding: "0 12px",
                       fontSize: 13.5,
                     }}
@@ -678,7 +678,7 @@ export default function AjustesPage() {
               <div
                 style={{
                   paddingTop: 16,
-                  borderTop: "1px solid #F1F5F9",
+                  borderTop: "1px solid var(--ui-muted)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
@@ -686,7 +686,7 @@ export default function AjustesPage() {
                   gap: 12,
                 }}
               >
-                <span style={{ fontSize: 12.5, color: "#64748B" }}>
+                <span style={{ fontSize: 12.5, color: "var(--ui-text-4)" }}>
                   Persistencia local Zero-Config activa (<code>.data/hubly-db.json</code>)
                 </span>
                 <button
@@ -700,9 +700,9 @@ export default function AjustesPage() {
                     height: 36,
                     padding: "0 14px",
                     borderRadius: 10,
-                    border: "1px solid #CBD5E1",
-                    background: "#FFFFFF",
-                    color: "#334155",
+                    border: "1px solid var(--ui-border-strong)",
+                    background: "var(--ui-surface)",
+                    color: "var(--ui-text-2)",
                     fontSize: 12.5,
                     fontWeight: 600,
                     display: "inline-flex",
@@ -724,16 +724,16 @@ export default function AjustesPage() {
           {activeTab !== "mi-perfil" && activeTab !== "marcas" && (
             <div
               style={{
-                background: "#FFFFFF",
-                border: "1px solid #E2E8F0",
+                background: "var(--ui-surface)",
+                border: "1px solid var(--ui-border)",
                 borderRadius: 20,
                 padding: "28px 32px",
               }}
             >
-              <h2 style={{ fontSize: 17, fontWeight: 700, color: "#0F172A", margin: "0 0 6px" }}>
+              <h2 style={{ fontSize: 17, fontWeight: 700, color: "var(--ui-text)", margin: "0 0 6px" }}>
                 {tabs.find((t) => t.id === activeTab)?.label}
               </h2>
-              <p style={{ fontSize: 13.5, color: "#64748B", marginBottom: 20 }}>
+              <p style={{ fontSize: 13.5, color: "var(--ui-text-4)", marginBottom: 20 }}>
                 Configura las preferencias de{" "}
                 {tabs.find((t) => t.id === activeTab)?.label.toLowerCase()} para tu agencia y el
                 workspace de {brandNameInput}.
@@ -750,13 +750,13 @@ export default function AjustesPage() {
                         justifyContent: "space-between",
                         padding: "12px 16px",
                         borderRadius: 12,
-                        border: "1px solid #E2E8F0",
-                        background: "#F8FAFC",
+                        border: "1px solid var(--ui-border)",
+                        background: "var(--ui-surface-2)",
                       }}
                     >
                       <div>
                         <div style={{ fontSize: 13.5, fontWeight: 700 }}>{m.name}</div>
-                        <div style={{ fontSize: 12, color: "#64748B" }}>
+                        <div style={{ fontSize: 12, color: "var(--ui-text-4)" }}>
                           {m.role} · {m.email}
                         </div>
                       </div>
@@ -764,7 +764,7 @@ export default function AjustesPage() {
                         style={{
                           padding: "3px 10px",
                           borderRadius: 999,
-                          background: "#F0F1F9",
+                          background: "var(--ui-accent-soft)",
                           color: "#6C77C1",
                           fontSize: 11.5,
                           fontWeight: 700,
@@ -782,10 +782,10 @@ export default function AjustesPage() {
                   style={{
                     padding: 18,
                     borderRadius: 14,
-                    background: "#F8FAFC",
-                    border: "1px solid #E2E8F0",
+                    background: "var(--ui-surface-2)",
+                    border: "1px solid var(--ui-border)",
                     fontSize: 13.5,
-                    color: "#334155",
+                    color: "var(--ui-text-2)",
                   }}
                 >
                   Plan Agencia Pro activo · Usuarios ilimitados, Uso de IA incluido y sincronización

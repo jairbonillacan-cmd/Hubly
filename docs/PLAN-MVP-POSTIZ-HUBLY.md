@@ -5,7 +5,7 @@ Estado: propuesta de arquitectura e implementación; no se han integrado depende
 ## 1. Decisiones del producto
 
 - Incorporar el código fuente de Postiz al proyecto y adaptarlo. No limitar el trabajo a consumir una instancia externa mediante una API key.
-- Mantener el frontend de Hubly y su objetivo de fidelidad visual a la referencia de Henry, sustituyendo nombre, logo y personaje por los de Hubly.
+- Mantener el frontend de Hubly con identidad visual propia.
 - Utilizar Supabase Auth para correo/contraseña, verificación, recuperación y Google. Una sola identidad y un solo acceso para el usuario.
 - Utilizar PostgreSQL de Supabase para los datos de negocio y Supabase Storage para archivos privados.
 - Cada agencia tiene equipo y marcas. Un usuario puede pertenecer a varias agencias y disponer de permisos distintos en cada una.
@@ -20,7 +20,7 @@ Estado: propuesta de arquitectura e implementación; no se han integrado depende
 - La API selecciona archivos JSON por un workspaceId suministrado por el cliente. Esa separación de archivos no verifica propiedad ni membresía.
 - El navegador persiste y puede enviar el workspace completo. Hay semillas y fixtures que no deben convertirse en datos reales de nuevas cuentas.
 - El portal público busca un token y, si no coincide, utiliza la primera marca. Este comportamiento debe desaparecer antes de admitir usuarios reales.
-- Existen dos hojas de estilos de aplicación y recursos antiguos de Henry junto a los de Hubly. Debe consolidarse el contrato visual sin romper la landing.
+- Existen varias hojas de estilos de aplicación. Debe consolidarse el contrato visual sin romper la landing.
 
 ## 3. Base de código y responsabilidades
 
@@ -168,7 +168,7 @@ Registro o Google → confirmación correspondiente → perfil → crear agencia
 
 ### Fase 0 — Congelar referencias y auditar el código incorporado
 
-Inventariar módulos Postiz que se reutilizan y cambios necesarios en auth, permisos, OAuth, medios y publicación. Registrar tag/commit y pruebas base. Medir el estado actual de Hubly y preservar los cambios locales existentes. REA se utiliza para contrastar la referencia de Henry; el código abierto de Postiz se estudia directamente y se valida con pruebas.
+Inventariar módulos Postiz que se reutilizan y cambios necesarios en auth, permisos, OAuth, medios y publicación. Registrar tag/commit y pruebas base. Medir el estado actual de Hubly y preservar los cambios locales existentes. El código abierto de Postiz se estudia directamente y se valida con pruebas.
 
 Entrega: matriz reutilizar/adaptar/desarrollar, arquitectura, contrato visual, migraciones propuestas y patch log upstream.
 

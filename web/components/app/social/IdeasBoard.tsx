@@ -63,16 +63,16 @@ export function IdeasBoard({ brandId, brandName }: { brandId: string; brandName:
       </form>
 
       {brandIdeas.length === 0 ? (
-        <p style={{ fontSize: 13.5, color: "#64748B", textAlign: "center", padding: 24 }}>
+        <p style={{ fontSize: 13.5, color: "var(--ui-text-4)", textAlign: "center", padding: 24 }}>
           Aún no hay ideas guardadas para esta marca.
         </p>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))", gap: 14 }}>
           {brandIdeas.map((idea) => (
             <article key={idea.id} style={{ ...card, display: "flex", flexDirection: "column", gap: 8 }}>
-              <span style={{ fontSize: 11.5, fontWeight: 700, color: "#5360A5" }}>{idea.pillar}</span>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: "var(--ui-accent-text)" }}>{idea.pillar}</span>
               <h3 style={{ fontSize: 14.5, fontWeight: 700, margin: 0 }}>{idea.title}</h3>
-              {idea.notes && <p style={{ fontSize: 12.5, color: "#475569", margin: 0, whiteSpace: "pre-line" }}>{idea.notes}</p>}
+              {idea.notes && <p style={{ fontSize: 12.5, color: "var(--ui-text-3)", margin: 0, whiteSpace: "pre-line" }}>{idea.notes}</p>}
               <div style={{ display: "flex", gap: 8, marginTop: "auto", paddingTop: 8 }}>
                 <button type="button" onClick={() => convertIdeaToPost(idea.id)} style={{ ...primary, flex: 1 }}>
                   {idea.convertedPostId ? "Abrir post" : "Convertir en post"}
@@ -82,7 +82,7 @@ export function IdeasBoard({ brandId, brandName }: { brandId: string; brandName:
                   type="button"
                   aria-label={`Eliminar idea ${idea.title}`}
                   onClick={() => removeIdea(idea.id)}
-                  style={{ border: "1px solid #CBD5E1", background: "#FFFFFF", color: "#475569", borderRadius: 8, padding: "0 9px", cursor: "pointer", display: "grid", placeItems: "center" }}
+                  style={{ border: "1px solid var(--ui-border-strong)", background: "var(--ui-surface)", color: "var(--ui-text-3)", borderRadius: 8, padding: "0 9px", cursor: "pointer", display: "grid", placeItems: "center" }}
                 >
                   <Trash2 size={13} />
                 </button>
@@ -95,8 +95,8 @@ export function IdeasBoard({ brandId, brandName }: { brandId: string; brandName:
   );
 }
 
-const card = { background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 16 } as const;
-const field = { border: "1px solid #CBD5E1", borderRadius: 9, padding: "8px 11px", fontSize: 13, fontFamily: "inherit", minWidth: 0 } as const;
+const card = { background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 14, padding: 16 } as const;
+const field = { border: "1px solid var(--ui-border-strong)", borderRadius: 9, padding: "8px 11px", fontSize: 13, fontFamily: "inherit", minWidth: 0 } as const;
 const primary = {
   display: "inline-flex",
   alignItems: "center",

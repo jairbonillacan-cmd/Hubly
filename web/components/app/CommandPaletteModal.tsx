@@ -252,7 +252,7 @@ export function CommandPaletteModal({
         group: "Navegación",
         label: "Social Media / Parrillas",
         sublabel: "Parrilla de contenidos y flujo de aprobación",
-        icon: <FileText size={14} style={{ color: "#64748B" }} />,
+        icon: <FileText size={14} style={{ color: "var(--ui-text-4)" }} />,
         action: () => {
           handleClose();
           router.push("/parrillas");
@@ -263,7 +263,7 @@ export function CommandPaletteModal({
         group: "Navegación",
         label: "Núcleo de Marca",
         sublabel: "Tono de voz, arquetipos y pilares editoriales",
-        icon: <BookOpen size={14} style={{ color: "#64748B" }} />,
+        icon: <BookOpen size={14} style={{ color: "var(--ui-text-4)" }} />,
         action: () => {
           handleClose();
           router.push("/marca");
@@ -285,7 +285,7 @@ export function CommandPaletteModal({
         group: "Navegación",
         label: "Chat de Agencia",
         sublabel: "Conversaciones por canal de marca",
-        icon: <MessageSquare size={14} style={{ color: "#64748B" }} />,
+        icon: <MessageSquare size={14} style={{ color: "var(--ui-text-4)" }} />,
         action: () => {
           handleClose();
           router.push("/chat");
@@ -296,7 +296,7 @@ export function CommandPaletteModal({
         group: "Navegación",
         label: "Ajustes del Workspace",
         sublabel: "Configuración de cuenta y preferencias",
-        icon: <Settings size={14} style={{ color: "#64748B" }} />,
+        icon: <Settings size={14} style={{ color: "var(--ui-text-4)" }} />,
         action: () => {
           handleClose();
           router.push("/ajustes");
@@ -341,7 +341,7 @@ export function CommandPaletteModal({
         label: t.title,
         sublabel: `${b?.name || "Agencia"} · ${t.assignee} · Vence ${t.dueDate}`,
         badge: t.completed ? "Completada" : String(t.priority),
-        icon: <CheckSquare size={14} style={{ color: "#64748B" }} />,
+        icon: <CheckSquare size={14} style={{ color: "var(--ui-text-4)" }} />,
         action: () => {
           setActiveBrand(t.brandId);
           handleClose();
@@ -571,14 +571,14 @@ export function CommandPaletteModal({
         style={{
           width: "100%",
           maxWidth: 560,
-          background: "#FFFFFF",
+          background: "var(--ui-surface)",
           borderRadius: 16,
-          border: "1px solid #E2E8F0",
+          border: "1px solid var(--ui-border)",
           boxShadow: "0 20px 50px rgba(15, 23, 42, 0.18)",
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
-          color: "#0F172A",
+          color: "var(--ui-text)",
         }}
       >
         <h2
@@ -605,10 +605,10 @@ export function CommandPaletteModal({
             alignItems: "center",
             gap: 10,
             padding: "13px 16px",
-            borderBottom: "1px solid #F1F5F9",
+            borderBottom: "1px solid var(--ui-muted)",
           }}
         >
-          <Search size={16} style={{ color: "#94A3B8", flexShrink: 0 }} />
+          <Search size={16} style={{ color: "var(--ui-text-5)", flexShrink: 0 }} />
           <input
             ref={inputRef}
             type="text"
@@ -622,7 +622,7 @@ export function CommandPaletteModal({
               outline: "none",
               background: "transparent",
               fontSize: 13.5,
-              color: "#0F172A",
+              color: "var(--ui-text)",
               fontFamily: "inherit",
             }}
           />
@@ -633,9 +633,9 @@ export function CommandPaletteModal({
             style={{
               fontSize: 10,
               fontWeight: 700,
-              color: "#94A3B8",
-              background: "#F8FAFC",
-              border: "1px solid #E2E8F0",
+              color: "var(--ui-text-5)",
+              background: "var(--ui-surface-2)",
+              border: "1px solid var(--ui-border)",
               borderRadius: 5,
               padding: "2px 6px",
               letterSpacing: "0.04em",
@@ -661,7 +661,7 @@ export function CommandPaletteModal({
                   style={{
                     fontSize: 10,
                     fontWeight: 700,
-                    color: "#94A3B8",
+                    color: "var(--ui-text-5)",
                     letterSpacing: "0.06em",
                     textTransform: "uppercase",
                     padding: "4px 10px 4px",
@@ -687,8 +687,8 @@ export function CommandPaletteModal({
                         padding: "8px 10px",
                         borderRadius: 10,
                         border: "none",
-                        background: active ? "#F1F5F9" : "transparent",
-                        color: "#0F172A",
+                        background: active ? "var(--ui-muted)" : "transparent",
+                        color: "var(--ui-text)",
                         fontSize: 13,
                         fontWeight: active ? 600 : 500,
                         cursor: "pointer",
@@ -709,8 +709,8 @@ export function CommandPaletteModal({
                             width: 24,
                             height: 24,
                             borderRadius: 7,
-                            background: active ? "#FFFFFF" : "#F8FAFC",
-                            border: "1px solid #E2E8F0",
+                            background: active ? "var(--ui-surface)" : "var(--ui-surface-2)",
+                            border: "1px solid var(--ui-border)",
                             display: "inline-grid",
                             placeItems: "center",
                             flexShrink: 0,
@@ -722,7 +722,7 @@ export function CommandPaletteModal({
                           <span
                             style={{
                               display: "block",
-                              color: "#0F172A",
+                              color: "var(--ui-text)",
                               lineHeight: 1.25,
                               overflow: "hidden",
                               textOverflow: "ellipsis",
@@ -736,7 +736,7 @@ export function CommandPaletteModal({
                               style={{
                                 display: "block",
                                 fontSize: 11,
-                                color: "#64748B",
+                                color: "var(--ui-text-4)",
                                 fontWeight: 400,
                                 marginTop: 1,
                                 overflow: "hidden",
@@ -765,7 +765,7 @@ export function CommandPaletteModal({
                               fontWeight: 600,
                               padding: "2px 7px",
                               borderRadius: 9999,
-                              background: "#F0F1F9",
+                              background: "var(--ui-accent-soft)",
                               color: "#6C77C1",
                             }}
                           >
@@ -775,7 +775,7 @@ export function CommandPaletteModal({
                         {active && (
                           <CornerDownLeft
                             size={13}
-                            style={{ color: "#64748B" }}
+                            style={{ color: "var(--ui-text-4)" }}
                           />
                         )}
                       </span>
@@ -790,11 +790,11 @@ export function CommandPaletteModal({
                 padding: "28px 16px",
                 textAlign: "center",
                 fontSize: 13,
-                color: "#64748B",
+                color: "var(--ui-text-4)",
               }}
             >
               No se encontraron resultados para{" "}
-              <strong style={{ color: "#0F172A" }}>&ldquo;{query}&rdquo;</strong>
+              <strong style={{ color: "var(--ui-text)" }}>&ldquo;{query}&rdquo;</strong>
             </div>
           )}
         </div>
@@ -806,21 +806,21 @@ export function CommandPaletteModal({
             alignItems: "center",
             justifyContent: "space-between",
             padding: "8px 16px",
-            borderTop: "1px solid #F1F5F9",
+            borderTop: "1px solid var(--ui-muted)",
             background: "#FAFAFA",
             fontSize: 11,
-            color: "#94A3B8",
+            color: "var(--ui-text-5)",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <span>
-              <strong style={{ color: "#64748B" }}>↑↓</strong> navegar
+              <strong style={{ color: "var(--ui-text-4)" }}>↑↓</strong> navegar
             </span>
             <span>
-              <strong style={{ color: "#64748B" }}>↵</strong> abrir
+              <strong style={{ color: "var(--ui-text-4)" }}>↵</strong> abrir
             </span>
             <span>
-              <strong style={{ color: "#64748B" }}>esc</strong> cerrar
+              <strong style={{ color: "var(--ui-text-4)" }}>esc</strong> cerrar
             </span>
           </div>
           <span>Hubly Command · ⌘K</span>

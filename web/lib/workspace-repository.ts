@@ -20,7 +20,7 @@ import type {
 export const WORKSPACE_STORAGE_PREFIX = "hubly:workspace:v3:";
 export const LEGACY_STORAGE_KEYS = [
   "hubly-workspace-v2",
-  "henry-workspace-v1",
+  "hb-workspace-v1",
   "hubly-workspace-storage-v1",
 ] as const;
 
@@ -93,30 +93,6 @@ export function resolveTestClockFromUrl(search?: string): string | null {
   } catch {
     return null;
   }
-}
-
-/**
- * Reemplaza recursivamente referencias heredadas de "Henry" por "Hubly"
- * durante la migración de versiones previas del almacenamiento.
- */
-export function sanitizeHenryToHubly<T>(input: T): T {
-  if (typeof input === "string") {
-    return input
-      .replace(/https?:\/\/(www\.)?henry\.cm/gi, "https://hubly.cm")
-      .replace(/\bHenry\b/g, "Hubly")
-      .replace(/\bhenry\b/g, "hubly") as unknown as T;
-  }
-  if (Array.isArray(input)) {
-    return input.map((item) => sanitizeHenryToHubly(item)) as unknown as T;
-  }
-  if (input && typeof input === "object") {
-    const out: Record<string, unknown> = {};
-    for (const [key, val] of Object.entries(input as Record<string, unknown>)) {
-      out[key] = sanitizeHenryToHubly(val);
-    }
-    return out as T;
-  }
-  return input;
 }
 
 function normalizeBrand(
@@ -373,7 +349,7 @@ export function normalizeWorkspacePayload(
       ? (rawInput.state as Partial<HublyWorkspaceData>)
       : rawInput;
 
-  const sanitized = sanitizeHenryToHubly(unwrapped);
+  const sanitized = unwrapped;
 
   const seedBrandsById = new Map(seed.brands.map((b) => [b.id, b]));
   const brands =

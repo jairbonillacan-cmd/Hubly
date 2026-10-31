@@ -74,14 +74,14 @@ export function MonthDragCalendar({
           <ChevronRight size={16} />
         </button>
         <strong style={{ fontSize: 15, textTransform: "capitalize" }}>{title}</strong>
-        <span style={{ fontSize: 12, color: "#64748B", marginLeft: "auto" }}>{hint}</span>
+        <span style={{ fontSize: 12, color: "var(--ui-text-4)", marginLeft: "auto" }}>{hint}</span>
       </div>
 
       <div style={{ overflowX: "auto" }}>
-        <div style={{ minWidth: 720, border: "1px solid #E2E8F0", borderRadius: 14, overflow: "hidden", background: "#E2E8F0" }}>
+        <div style={{ minWidth: 720, border: "1px solid var(--ui-border)", borderRadius: 14, overflow: "hidden", background: "var(--ui-border)" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(7, minmax(0, 1fr))", gap: 1 }}>
             {WEEKDAYS.map((d) => (
-              <div key={d} style={{ background: "#F8FAFC", padding: "8px 10px", fontSize: 11.5, fontWeight: 700, color: "#64748B" }}>
+              <div key={d} style={{ background: "var(--ui-surface-2)", padding: "8px 10px", fontSize: 11.5, fontWeight: 700, color: "var(--ui-text-4)" }}>
                 {d}
               </div>
             ))}
@@ -102,7 +102,7 @@ export function MonthDragCalendar({
                     flexDirection: "column",
                     gap: 4,
                     minWidth: 0,
-                    background: drag?.overCol === key ? "#F0F1F9" : inMonth ? "#FFFFFF" : "#FAFBFC",
+                    background: drag?.overCol === key ? "var(--ui-accent-soft)" : inMonth ? "var(--ui-surface)" : "#FAFBFC",
                     boxShadow: drag?.overCol === key ? "inset 0 0 0 1.5px #6C77C1" : undefined,
                   }}
                 >
@@ -111,7 +111,7 @@ export function MonthDragCalendar({
                       style={{
                         fontSize: 12,
                         fontWeight: key === today ? 800 : 600,
-                        color: key === today ? "#FFFFFF" : inMonth ? "#334155" : "#94A3B8",
+                        color: key === today ? "#FFFFFF" : inMonth ? "var(--ui-text-2)" : "var(--ui-text-5)",
                         background: key === today ? "#6C77C1" : "transparent",
                         minWidth: 22,
                         height: 22,
@@ -126,7 +126,7 @@ export function MonthDragCalendar({
                       type="button"
                       aria-label={`${addLabel} el ${key}`}
                       onClick={() => onAdd(key)}
-                      style={{ border: 0, background: "transparent", color: "#94A3B8", cursor: "pointer", padding: 2, display: "grid" }}
+                      style={{ border: 0, background: "transparent", color: "var(--ui-text-5)", cursor: "pointer", padding: 2, display: "grid" }}
                     >
                       <Plus size={14} />
                     </button>
@@ -170,9 +170,9 @@ const navBtn = {
   width: 30,
   height: 30,
   borderRadius: 8,
-  border: "1px solid #CBD5E1",
-  background: "#FFFFFF",
-  color: "#334155",
+  border: "1px solid var(--ui-border-strong)",
+  background: "var(--ui-surface)",
+  color: "var(--ui-text-2)",
   display: "grid",
   placeItems: "center",
   cursor: "pointer",

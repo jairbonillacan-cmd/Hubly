@@ -42,7 +42,7 @@ export default function ReportesPage() {
     <div
       style={{
         fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-        color: "#0F172A",
+        color: "var(--ui-text)",
         minHeight: "calc(100vh - 64px)",
         paddingBottom: 60,
       }}
@@ -54,7 +54,7 @@ export default function ReportesPage() {
           alignItems: "center",
           justifyContent: "space-between",
           paddingBottom: 14,
-          borderBottom: "1px solid #E2E8F0",
+          borderBottom: "1px solid var(--ui-border)",
           marginBottom: 14,
           flexWrap: "wrap",
           gap: 12,
@@ -65,7 +65,7 @@ export default function ReportesPage() {
             display: "inline-flex",
             alignItems: "center",
             gap: 2,
-            background: "#F1F5F9",
+            background: "var(--ui-muted)",
             padding: 4,
             borderRadius: 999,
             overflowX: "auto",
@@ -79,7 +79,7 @@ export default function ReportesPage() {
               gap: 7,
               padding: "6px 14px",
               borderRadius: 999,
-              color: "#475569",
+              color: "var(--ui-text-3)",
               fontWeight: 500,
               fontSize: 13,
               textDecoration: "none",
@@ -111,7 +111,7 @@ export default function ReportesPage() {
               gap: 7,
               padding: "6px 14px",
               borderRadius: 999,
-              color: "#475569",
+              color: "var(--ui-text-3)",
               fontWeight: 500,
               fontSize: 13,
               textDecoration: "none",
@@ -129,7 +129,7 @@ export default function ReportesPage() {
               gap: 7,
               padding: "6px 14px",
               borderRadius: 999,
-              color: "#475569",
+              color: "var(--ui-text-3)",
               fontWeight: 500,
               fontSize: 13,
               textDecoration: "none",
@@ -147,7 +147,7 @@ export default function ReportesPage() {
               gap: 7,
               padding: "6px 14px",
               borderRadius: 999,
-              color: "#475569",
+              color: "var(--ui-text-3)",
               fontWeight: 500,
               fontSize: 13,
               textDecoration: "none",
@@ -165,7 +165,7 @@ export default function ReportesPage() {
               gap: 7,
               padding: "6px 14px",
               borderRadius: 999,
-              color: "#475569",
+              color: "var(--ui-text-3)",
               fontWeight: 500,
               fontSize: 13,
               textDecoration: "none",
@@ -187,7 +187,7 @@ export default function ReportesPage() {
               padding: "6px 14px",
               borderRadius: 999,
               border: "none",
-              background: "#FFFFFF",
+              background: "var(--ui-surface)",
               color: "#6C77C1",
               fontWeight: 600,
               fontSize: 13,
@@ -207,7 +207,7 @@ export default function ReportesPage() {
               gap: 7,
               padding: "6px 14px",
               borderRadius: 999,
-              color: "#475569",
+              color: "var(--ui-text-3)",
               fontWeight: 500,
               fontSize: 13,
               textDecoration: "none",
@@ -226,13 +226,13 @@ export default function ReportesPage() {
             gap: 6,
             padding: "6px 12px",
             borderRadius: 8,
-            color: "#334155",
+            color: "var(--ui-text-2)",
             fontSize: 13,
             fontWeight: 600,
             textDecoration: "none",
           }}
         >
-          <Link2 size={14} style={{ color: "#64748B" }} />
+          <Link2 size={14} style={{ color: "var(--ui-text-4)" }} />
           <span>Cuentas</span>
         </Link>
       </div>
@@ -244,7 +244,7 @@ export default function ReportesPage() {
           alignItems: "center",
           justifyContent: "space-between",
           paddingBottom: 14,
-          borderBottom: "1px solid #E2E8F0",
+          borderBottom: "1px solid var(--ui-border)",
           marginBottom: 28,
           flexWrap: "wrap",
           gap: 12,
@@ -260,7 +260,7 @@ export default function ReportesPage() {
             height: 32,
             borderRadius: 10,
             border: "none",
-            background: "#F0F1F9",
+            background: "var(--ui-accent-soft)",
             color: "#6C77C1",
             display: "grid",
             placeItems: "center",
@@ -282,7 +282,7 @@ export default function ReportesPage() {
               gap: 6,
               background: "transparent",
               border: "none",
-              color: "#334155",
+              color: "var(--ui-text-2)",
               fontSize: 13,
               fontWeight: 600,
               cursor: "pointer",
@@ -295,7 +295,7 @@ export default function ReportesPage() {
           <div
             style={{
               display: "inline-flex",
-              background: "#F1F5F9",
+              background: "var(--ui-muted)",
               padding: 3,
               borderRadius: 10,
               gap: 2,
@@ -310,8 +310,8 @@ export default function ReportesPage() {
                 height: 26,
                 borderRadius: 7,
                 border: "none",
-                background: !showPrintableSheet ? "#FFFFFF" : "transparent",
-                color: !showPrintableSheet ? "#0F172A" : "#64748B",
+                background: !showPrintableSheet ? "var(--ui-surface)" : "transparent",
+                color: !showPrintableSheet ? "var(--ui-text)" : "var(--ui-text-4)",
                 display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
@@ -329,8 +329,8 @@ export default function ReportesPage() {
                 height: 26,
                 borderRadius: 7,
                 border: "none",
-                background: showPrintableSheet ? "#FFFFFF" : "transparent",
-                color: showPrintableSheet ? "#0F172A" : "#64748B",
+                background: showPrintableSheet ? "var(--ui-surface)" : "transparent",
+                color: showPrintableSheet ? "var(--ui-text)" : "var(--ui-text-4)",
                 display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
@@ -348,9 +348,9 @@ export default function ReportesPage() {
               display: "inline-flex",
               alignItems: "center",
               gap: 6,
-              background: "#FFFFFF",
-              color: "#0F172A",
-              border: "1px solid #CBD5E1",
+              background: "var(--ui-surface)",
+              color: "var(--ui-text)",
+              border: "1px solid var(--ui-border-strong)",
               borderRadius: 10,
               padding: "7px 14px",
               fontSize: 13,
@@ -394,8 +394,8 @@ export default function ReportesPage() {
           justifyContent: "center",
           textAlign: "center",
           padding: "36px 20px",
-          background: "#FFFFFF",
-          border: "1px solid #E2E8F0",
+          background: "var(--ui-surface)",
+          border: "1px solid var(--ui-border)",
           borderRadius: 18,
           marginBottom: 28,
         }}
@@ -428,10 +428,10 @@ export default function ReportesPage() {
           </svg>
         </div>
 
-        <h2 style={{ fontSize: 18, fontWeight: 700, color: "#0F172A", margin: "0 0 6px" }}>
+        <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--ui-text)", margin: "0 0 6px" }}>
           No hay reportes aún
         </h2>
-        <p style={{ fontSize: 13.5, color: "#64748B", margin: "0 0 18px" }}>
+        <p style={{ fontSize: 13.5, color: "var(--ui-text-4)", margin: "0 0 18px" }}>
           Crea tu primer reporte para empezar
         </p>
 
@@ -461,8 +461,8 @@ export default function ReportesPage() {
       {showPrintableSheet && (
         <div
           style={{
-            background: "#FFFFFF",
-            border: "1px solid #E2E8F0",
+            background: "var(--ui-surface)",
+            border: "1px solid var(--ui-border)",
             borderRadius: 20,
             padding: "32px 36px",
             boxShadow: "0 4px 20px rgba(15, 23, 42, 0.04)",
@@ -537,16 +537,16 @@ export default function ReportesPage() {
               <div
                 key={kpi.label}
                 style={{
-                  background: "#F8FAFC",
-                  border: "1px solid #E2E8F0",
+                  background: "var(--ui-surface-2)",
+                  border: "1px solid var(--ui-border)",
                   borderRadius: 14,
                   padding: "16px 18px",
                 }}
               >
-                <div style={{ fontSize: 12, color: "#64748B", fontWeight: 600, marginBottom: 6 }}>
+                <div style={{ fontSize: 12, color: "var(--ui-text-4)", fontWeight: 600, marginBottom: 6 }}>
                   {kpi.label}
                 </div>
-                <div style={{ fontSize: 24, fontWeight: 800, color: "#0F172A", marginBottom: 4 }}>
+                <div style={{ fontSize: 24, fontWeight: 800, color: "var(--ui-text)", marginBottom: 4 }}>
                   {kpi.value}
                 </div>
                 <div
@@ -573,7 +573,7 @@ export default function ReportesPage() {
                 display: "block",
                 fontSize: 14,
                 fontWeight: 700,
-                color: "#0F172A",
+                color: "var(--ui-text)",
                 marginBottom: 8,
               }}
             >
@@ -587,11 +587,11 @@ export default function ReportesPage() {
                 width: "100%",
                 padding: "12px 14px",
                 borderRadius: 12,
-                border: "1px solid #CBD5E1",
-                background: "#F8FAFC",
+                border: "1px solid var(--ui-border-strong)",
+                background: "var(--ui-surface-2)",
                 fontSize: 13.5,
                 lineHeight: 1.55,
-                color: "#1E293B",
+                color: "var(--ui-text-1)",
                 fontFamily: "inherit",
               }}
             />
@@ -599,7 +599,7 @@ export default function ReportesPage() {
 
           {/* Top Posts Grid */}
           <div>
-            <h3 style={{ fontSize: 15, fontWeight: 700, color: "#0F172A", margin: "0 0 12px" }}>
+            <h3 style={{ fontSize: 15, fontWeight: 700, color: "var(--ui-text)", margin: "0 0 12px" }}>
               Publicaciones destacadas del mes
             </h3>
             <div
@@ -614,19 +614,19 @@ export default function ReportesPage() {
                   key={post.id}
                   style={{
                     borderRadius: 14,
-                    border: "1px solid #E2E8F0",
+                    border: "1px solid var(--ui-border)",
                     overflow: "hidden",
-                    background: "#F8FAFC",
+                    background: "var(--ui-surface-2)",
                   }}
                 >
                   <div style={{ height: 140, position: "relative" }}>
                     <Cover kind={post.cover} />
                   </div>
                   <div style={{ padding: 14 }}>
-                    <div style={{ fontSize: 11.5, color: "#64748B", marginBottom: 4 }}>
+                    <div style={{ fontSize: 11.5, color: "var(--ui-text-4)", marginBottom: 4 }}>
                       {post.networks.join(" · ")} · {post.format}
                     </div>
-                    <div style={{ fontSize: 13.5, fontWeight: 700, color: "#0F172A", marginBottom: 8 }}>
+                    <div style={{ fontSize: 13.5, fontWeight: 700, color: "var(--ui-text)", marginBottom: 8 }}>
                       {post.title}
                     </div>
                     <div

@@ -182,7 +182,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
   };
 
   return (
-    <div style={{ maxWidth: 1140, margin: "0 auto", color: "#0F172A" }}>
+    <div style={{ maxWidth: 1140, margin: "0 auto", color: "var(--ui-text)" }}>
       <input
         ref={fileInputRef}
         type="file"
@@ -220,8 +220,8 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
           {/* Top Search Bar matching 08-content-manager-1440.png */}
           <div
             style={{
-              background: "#F8FAFC",
-              border: "1px solid #F1F5F9",
+              background: "var(--ui-surface-2)",
+              border: "1px solid var(--ui-muted)",
               borderRadius: 14,
               padding: "8px 12px",
               display: "flex",
@@ -240,7 +240,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 minWidth: 220,
               }}
             >
-              <Search size={17} style={{ color: "#94A3B8", flexShrink: 0 }} />
+              <Search size={17} style={{ color: "var(--ui-text-5)", flexShrink: 0 }} />
               <Sparkles size={15} style={{ color: "#8B5CF6", flexShrink: 0 }} />
               <input
                 type="text"
@@ -253,7 +253,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                   background: "transparent",
                   width: "100%",
                   fontSize: 14,
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                   fontFamily: "inherit",
                 }}
               />
@@ -269,7 +269,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 style={{
                   background: "transparent",
                   border: "none",
-                  color: "#475569",
+                  color: "var(--ui-text-3)",
                   fontSize: 13,
                   fontWeight: 600,
                   padding: "6px 12px",
@@ -284,7 +284,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 type="button"
                 onClick={() => setShowDemoAssets(true)}
                 style={{
-                  background: "#F0F1F9",
+                  background: "var(--ui-accent-soft)",
                   border: "none",
                   color: "#6C77C1",
                   fontSize: 13,
@@ -336,7 +336,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                background: "#F1F5F9",
+                background: "var(--ui-muted)",
                 padding: 3,
                 borderRadius: 999,
                 gap: 2,
@@ -349,8 +349,8 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                   setMode("content");
                 }}
                 style={{
-                  background: contentSubTab === "archivos" ? "#FFFFFF" : "transparent",
-                  color: contentSubTab === "archivos" ? "#0F172A" : "#64748B",
+                  background: contentSubTab === "archivos" ? "var(--ui-surface)" : "transparent",
+                  color: contentSubTab === "archivos" ? "var(--ui-text)" : "var(--ui-text-4)",
                   boxShadow:
                     contentSubTab === "archivos"
                       ? "0 1px 2px rgba(15, 23, 42, 0.08)"
@@ -369,8 +369,8 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 type="button"
                 onClick={() => setContentSubTab("carpetas")}
                 style={{
-                  background: contentSubTab === "carpetas" ? "#FFFFFF" : "transparent",
-                  color: contentSubTab === "carpetas" ? "#0F172A" : "#64748B",
+                  background: contentSubTab === "carpetas" ? "var(--ui-surface)" : "transparent",
+                  color: contentSubTab === "carpetas" ? "var(--ui-text)" : "var(--ui-text-4)",
                   boxShadow:
                     contentSubTab === "carpetas"
                       ? "0 1px 2px rgba(15, 23, 42, 0.08)"
@@ -390,7 +390,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 onClick={() => setMode("proyectos")}
                 style={{
                   background: "transparent",
-                  color: "#64748B",
+                  color: "var(--ui-text-4)",
                   border: "none",
                   borderRadius: 999,
                   padding: "5px 14px",
@@ -408,9 +408,9 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 type="button"
                 onClick={() => setShowDemoAssets(!showDemoAssets)}
                 style={{
-                  background: "#FFFFFF",
-                  border: "1px solid #E2E8F0",
-                  color: "#475569",
+                  background: "var(--ui-surface)",
+                  border: "1px solid var(--ui-border)",
+                  color: "var(--ui-text-3)",
                   fontSize: 12.5,
                   fontWeight: 600,
                   padding: "7px 14px",
@@ -451,10 +451,10 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
             <div
               onClick={() => fileInputRef.current?.click()}
               style={{
-                border: "1.5px dashed #CBD5E1",
+                border: "1.5px dashed var(--ui-border-strong)",
                 borderRadius: 16,
                 minHeight: 380,
-                background: "#FFFFFF",
+                background: "var(--ui-surface)",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -470,7 +470,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 style={{
                   fontSize: 16,
                   fontWeight: 700,
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                   margin: "14px 0 4px",
                 }}
               >
@@ -481,7 +481,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 style={{
                   fontSize: 13.5,
                   fontWeight: 600,
-                  color: "#334155",
+                  color: "var(--ui-text-2)",
                   marginBottom: 6,
                 }}
               >
@@ -491,7 +491,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
               <p
                 style={{
                   fontSize: 13,
-                  color: "#64748B",
+                  color: "var(--ui-text-4)",
                   maxWidth: 440,
                   lineHeight: 1.55,
                   margin: "0 0 6px",
@@ -503,7 +503,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
               <div
                 style={{
                   fontSize: 12.5,
-                  color: "#94A3B8",
+                  color: "var(--ui-text-5)",
                   marginBottom: 18,
                 }}
               >
@@ -547,9 +547,9 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                   type="button"
                   onClick={handleCreateDocument}
                   style={{
-                    background: "#FFFFFF",
-                    color: "#1E293B",
-                    border: "1px solid #E2E8F0",
+                    background: "var(--ui-surface)",
+                    color: "var(--ui-text-1)",
+                    border: "1px solid var(--ui-border)",
                     borderRadius: 10,
                     height: 36,
                     padding: "0 16px",
@@ -561,12 +561,12 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                     cursor: "pointer",
                   }}
                 >
-                  <PlusCircle size={14} style={{ color: "#334155" }} />
+                  <PlusCircle size={14} style={{ color: "var(--ui-text-2)" }} />
                   <span>Crear documento</span>
                 </button>
               </div>
 
-              <div style={{ fontSize: 12, color: "#94A3B8" }}>
+              <div style={{ fontSize: 12, color: "var(--ui-text-5)" }}>
                 También puedes arrastrar archivos aquí desde tu computadora.
               </div>
             </div>
@@ -590,10 +590,10 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       setShowDemoAssets(true);
                     }}
                     style={{
-                      border: "1px solid #E2E8F0",
+                      border: "1px solid var(--ui-border)",
                       borderRadius: 14,
                       padding: 18,
-                      background: "#FFFFFF",
+                      background: "var(--ui-surface)",
                       display: "flex",
                       alignItems: "center",
                       gap: 12,
@@ -606,7 +606,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                         height: 40,
                         borderRadius: 10,
                         background: "#ECEEF8",
-                        color: "#5A65AF",
+                        color: "var(--ui-accent-text-2)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -615,10 +615,10 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       <Folder size={20} />
                     </div>
                     <div>
-                      <div style={{ fontSize: 13.5, fontWeight: 700, color: "#0F172A" }}>
+                      <div style={{ fontSize: 13.5, fontWeight: 700, color: "var(--ui-text)" }}>
                         {folderName}
                       </div>
-                      <div style={{ fontSize: 12, color: "#64748B" }}>{idx + 1} archivos</div>
+                      <div style={{ fontSize: 12, color: "var(--ui-text-4)" }}>{idx + 1} archivos</div>
                     </div>
                   </div>
                 )
@@ -639,9 +639,9 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 <div
                   key={asset.id}
                   style={{
-                    border: "1px solid #E2E8F0",
+                    border: "1px solid var(--ui-border)",
                     borderRadius: 16,
-                    background: "#FFFFFF",
+                    background: "var(--ui-surface)",
                     overflow: "hidden",
                   }}
                 >
@@ -660,7 +660,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       <span
                         style={{
                           background: "rgba(255,255,255,0.92)",
-                          color: "#334155",
+                          color: "var(--ui-text-2)",
                           fontSize: 11,
                           fontWeight: 600,
                           padding: "2px 8px",
@@ -672,7 +672,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       <span
                         style={{
                           background: asset.usedInPosts === 0 ? "#ECEEF8" : "#DCFCE7",
-                          color: asset.usedInPosts === 0 ? "#5360A5" : "#15803D",
+                          color: asset.usedInPosts === 0 ? "var(--ui-accent-text)" : "#15803D",
                           fontSize: 11,
                           fontWeight: 700,
                           padding: "2px 8px",
@@ -687,7 +687,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                     <div style={{ fontWeight: 700, fontSize: 13.5, marginBottom: 4 }}>
                       {asset.name}
                     </div>
-                    <div style={{ fontSize: 11.5, color: "#64748B", marginBottom: 8 }}>
+                    <div style={{ fontSize: 11.5, color: "var(--ui-text-4)", marginBottom: 8 }}>
                       {asset.sizeLabel} · {asset.uploadedAt}
                     </div>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
@@ -698,8 +698,8 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                             fontSize: 10.5,
                             padding: "2px 8px",
                             borderRadius: 999,
-                            background: "#F1F5F9",
-                            color: "#475569",
+                            background: "var(--ui-muted)",
+                            color: "var(--ui-text-3)",
                             fontWeight: 500,
                           }}
                         >
@@ -728,7 +728,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
               flexWrap: "wrap",
               paddingBottom: 14,
               marginBottom: 22,
-              borderBottom: "1px solid #F1F5F9",
+              borderBottom: "1px solid var(--ui-muted)",
             }}
           >
             {/* Left: Search icon + Todos dropdown + 1 de 1 */}
@@ -743,7 +743,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                   borderRadius: 8,
                   border: "none",
                   background: "transparent",
-                  color: "#334155",
+                  color: "var(--ui-text-2)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -761,7 +761,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 style={{
                   border: "none",
                   background: "transparent",
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                   fontSize: 13.5,
                   fontWeight: 600,
                   display: "inline-flex",
@@ -772,10 +772,10 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 }}
               >
                 <span>Todos</span>
-                <ChevronDown size={13} style={{ color: "#64748B" }} />
+                <ChevronDown size={13} style={{ color: "var(--ui-text-4)" }} />
               </button>
 
-              <span style={{ fontSize: 12.5, color: "#94A3B8", fontWeight: 500 }}>
+              <span style={{ fontSize: 12.5, color: "var(--ui-text-5)", fontWeight: 500 }}>
                 1 de 1
               </span>
 
@@ -789,7 +789,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                     height: 32,
                     padding: "0 10px",
                     borderRadius: 8,
-                    border: "1px solid #E2E8F0",
+                    border: "1px solid var(--ui-border)",
                     fontSize: 12.5,
                     outline: "none",
                   }}
@@ -803,7 +803,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  background: "#F1F5F9",
+                  background: "var(--ui-muted)",
                   padding: 3,
                   borderRadius: 999,
                   gap: 2,
@@ -823,8 +823,8 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       type="button"
                       onClick={() => setProjectView(v.id)}
                       style={{
-                        background: active ? "#FFFFFF" : "transparent",
-                        color: active ? "#0F172A" : "#64748B",
+                        background: active ? "var(--ui-surface)" : "transparent",
+                        color: active ? "var(--ui-text)" : "var(--ui-text-4)",
                         boxShadow: active ? "0 1px 2px rgba(15, 23, 42, 0.08)" : "none",
                         border: "none",
                         borderRadius: 999,
@@ -873,10 +873,10 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 <div
                   key={proj.id}
                   style={{
-                    border: "1px solid #E2E8F0",
+                    border: "1px solid var(--ui-border)",
                     borderRadius: 18,
                     padding: "18px 22px",
-                    background: "#FFFFFF",
+                    background: "var(--ui-surface)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
@@ -890,7 +890,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                         width: 44,
                         height: 44,
                         borderRadius: 12,
-                        background: "#F0F1F9",
+                        background: "var(--ui-accent-soft)",
                         color: "#6C77C1",
                         fontSize: 16,
                         fontWeight: 700,
@@ -907,7 +907,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                         style={{
                           fontSize: 15,
                           fontWeight: 700,
-                          color: "#0F172A",
+                          color: "var(--ui-text)",
                           margin: "0 0 3px 0",
                         }}
                       >
@@ -916,7 +916,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       <p
                         style={{
                           fontSize: 13,
-                          color: "#64748B",
+                          color: "var(--ui-text-4)",
                           margin: 0,
                           maxWidth: 560,
                         }}
@@ -932,7 +932,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                         width: 82,
                         height: 6,
                         borderRadius: 999,
-                        background: "#F1F5F9",
+                        background: "var(--ui-muted)",
                         overflow: "hidden",
                       }}
                     >
@@ -944,7 +944,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                         }}
                       />
                     </div>
-                    <span style={{ fontSize: 12.5, fontWeight: 700, color: "#5A65AF" }}>
+                    <span style={{ fontSize: 12.5, fontWeight: 700, color: "var(--ui-accent-text-2)" }}>
                       {proj.progress}%
                     </span>
                     <span
@@ -979,8 +979,8 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                   key={col}
                   {...projectDrag.getColumnProps(col)}
                   style={{
-                    background: projectDrag.drag?.overCol === col ? "#F0F1F9" : "#F8FAFC",
-                    border: `1px solid ${projectDrag.drag?.overCol === col ? "#6C77C1" : "#E2E8F0"}`,
+                    background: projectDrag.drag?.overCol === col ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
+                    border: `1px solid ${projectDrag.drag?.overCol === col ? "#6C77C1" : "var(--ui-border)"}`,
                     borderRadius: 16,
                     padding: 16,
                     minHeight: 160,
@@ -994,7 +994,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                     style={{
                       fontSize: 13,
                       fontWeight: 700,
-                      color: "#0F172A",
+                      color: "var(--ui-text)",
                       marginBottom: 2,
                     }}
                   >
@@ -1010,8 +1010,8 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                         <div
                           {...projectDrag.getCardProps(p.id)}
                           style={{
-                            background: "#FFFFFF",
-                            border: "1px solid #E2E8F0",
+                            background: "var(--ui-surface)",
+                            border: "1px solid var(--ui-border)",
                             borderRadius: 12,
                             padding: 14,
                             cursor: projectDrag.drag?.id === p.id ? "grabbing" : "grab",
@@ -1021,7 +1021,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                           <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>
                             {p.title}
                           </div>
-                          <div style={{ fontSize: 12.5, color: "#64748B" }}>
+                          <div style={{ fontSize: 12.5, color: "var(--ui-text-4)" }}>
                             {p.description ? `${p.description} ` : ""}
                             {p.progress}% completado.
                           </div>
@@ -1040,15 +1040,15 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
           {projectView === "tabla" && (
             <div
               style={{
-                border: "1px solid #E2E8F0",
+                border: "1px solid var(--ui-border)",
                 borderRadius: 16,
-                background: "#FFFFFF",
+                background: "var(--ui-surface)",
                 overflow: "hidden",
               }}
             >
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13.5 }}>
                 <thead>
-                  <tr style={{ background: "#F8FAFC", textAlign: "left", color: "#64748B" }}>
+                  <tr style={{ background: "var(--ui-surface-2)", textAlign: "left", color: "var(--ui-text-4)" }}>
                     <th style={{ padding: "12px 16px" }}>Proyecto</th>
                     <th style={{ padding: "12px 16px" }}>Avance</th>
                     <th style={{ padding: "12px 16px" }}>Estado</th>
@@ -1056,9 +1056,9 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 </thead>
                 <tbody>
                   {brandProjects.map((p) => (
-                    <tr key={p.id} style={{ borderTop: "1px solid #F1F5F9" }}>
+                    <tr key={p.id} style={{ borderTop: "1px solid var(--ui-muted)" }}>
                       <td style={{ padding: "14px 16px", fontWeight: 700 }}>{p.title}</td>
-                      <td style={{ padding: "14px 16px", color: "#5A65AF", fontWeight: 700 }}>
+                      <td style={{ padding: "14px 16px", color: "var(--ui-accent-text-2)", fontWeight: 700 }}>
                         {p.progress}%
                       </td>
                       <td style={{ padding: "14px 16px" }}>
@@ -1087,10 +1087,10 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
           <div
             style={{
               marginTop: 28,
-              border: "1px dashed #E2E8F0",
+              border: "1px dashed var(--ui-border)",
               borderRadius: 18,
               padding: "36px 24px",
-              background: "#FFFFFF",
+              background: "var(--ui-surface)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -1103,7 +1103,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 width: 44,
                 height: 44,
                 borderRadius: 12,
-                background: "#F0F1F9",
+                background: "var(--ui-accent-soft)",
                 color: "#6C77C1",
                 display: "flex",
                 alignItems: "center",
@@ -1113,10 +1113,10 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
             >
               <Layers size={20} />
             </div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: "#0F172A", marginBottom: 4 }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: "var(--ui-text)", marginBottom: 4 }}>
               Sin proyectos
             </div>
-            <p style={{ fontSize: 13, color: "#64748B", margin: "0 0 16px" }}>
+            <p style={{ fontSize: 13, color: "var(--ui-text-4)", margin: "0 0 16px" }}>
               Crea un proyecto para agrupar listas y páginas
             </p>
             <button
@@ -1161,7 +1161,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 onClick={(e) => e.stopPropagation()}
                 onSubmit={handleCreateProject}
                 style={{
-                  background: "#FFFFFF",
+                  background: "var(--ui-surface)",
                   borderRadius: 18,
                   padding: 24,
                   width: "100%",
@@ -1178,7 +1178,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       display: "block",
                       fontSize: 12,
                       fontWeight: 700,
-                      color: "#475569",
+                      color: "var(--ui-text-3)",
                       marginBottom: 6,
                     }}
                   >
@@ -1195,7 +1195,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       height: 40,
                       padding: "0 12px",
                       borderRadius: 10,
-                      border: "1px solid #CBD5E1",
+                      border: "1px solid var(--ui-border-strong)",
                       fontSize: 13.5,
                     }}
                   />
@@ -1206,7 +1206,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       display: "block",
                       fontSize: 12,
                       fontWeight: 700,
-                      color: "#475569",
+                      color: "var(--ui-text-3)",
                       marginBottom: 6,
                     }}
                   >
@@ -1221,7 +1221,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       width: "100%",
                       padding: "10px 12px",
                       borderRadius: 10,
-                      border: "1px solid #CBD5E1",
+                      border: "1px solid var(--ui-border-strong)",
                       fontSize: 13.5,
                       fontFamily: "inherit",
                     }}
@@ -1232,8 +1232,8 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                     type="button"
                     onClick={() => setNewProjectModal(false)}
                     style={{
-                      background: "#F1F5F9",
-                      color: "#334155",
+                      background: "var(--ui-muted)",
+                      color: "var(--ui-text-2)",
                       border: "none",
                       borderRadius: 10,
                       height: 38,

@@ -25,7 +25,7 @@ export default function TareasPage() {
     <div
       style={{
         minHeight: "calc(100vh - 48px)",
-        background: "#FFFFFF",
+        background: "var(--ui-surface)",
         borderRadius: 16,
         padding: "12px 0 40px",
         fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
@@ -48,7 +48,7 @@ export default function TareasPage() {
             display: "inline-flex",
             alignItems: "center",
             gap: 4,
-            background: "#F1F5F9",
+            background: "var(--ui-muted)",
             padding: 4,
             borderRadius: 12,
           }}
@@ -63,8 +63,8 @@ export default function TareasPage() {
               padding: "6px 14px",
               borderRadius: 9,
               border: "none",
-              background: topSection === "listas" ? "#FFFFFF" : "transparent",
-              color: topSection === "listas" ? "#6C77C1" : "#64748B",
+              background: topSection === "listas" ? "var(--ui-surface)" : "transparent",
+              color: topSection === "listas" ? "#6C77C1" : "var(--ui-text-4)",
               fontWeight: 600,
               fontSize: 13.5,
               boxShadow:
@@ -101,8 +101,8 @@ export default function TareasPage() {
               padding: "6px 14px",
               borderRadius: 9,
               border: "none",
-              background: topSection === "libretas" ? "#FFFFFF" : "transparent",
-              color: topSection === "libretas" ? "#6C77C1" : "#64748B",
+              background: topSection === "libretas" ? "var(--ui-surface)" : "transparent",
+              color: topSection === "libretas" ? "#6C77C1" : "var(--ui-text-4)",
               fontWeight: 600,
               fontSize: 13.5,
               boxShadow:
@@ -110,7 +110,7 @@ export default function TareasPage() {
               cursor: "pointer",
             }}
           >
-            <BookOpen size={14} style={{ color: "#94A3B8" }} />
+            <BookOpen size={14} style={{ color: "var(--ui-text-5)" }} />
             <span>Libretas</span>
           </button>
 
@@ -124,8 +124,8 @@ export default function TareasPage() {
               padding: "6px 14px",
               borderRadius: 9,
               border: "none",
-              background: topSection === "contenido" ? "#FFFFFF" : "transparent",
-              color: topSection === "contenido" ? "#6C77C1" : "#64748B",
+              background: topSection === "contenido" ? "var(--ui-surface)" : "transparent",
+              color: topSection === "contenido" ? "#6C77C1" : "var(--ui-text-4)",
               fontWeight: 600,
               fontSize: 13.5,
               boxShadow:
@@ -133,7 +133,7 @@ export default function TareasPage() {
               cursor: "pointer",
             }}
           >
-            <Folder size={14} style={{ color: "#94A3B8" }} />
+            <Folder size={14} style={{ color: "var(--ui-text-5)" }} />
             <span>Contenido</span>
           </button>
         </div>
@@ -156,8 +156,8 @@ export default function TareasPage() {
               width: 36,
               height: 36,
               borderRadius: 10,
-              border: "1px solid #E2E8F0",
-              background: "#FFFFFF",
+              border: "1px solid var(--ui-border)",
+              background: "var(--ui-surface)",
               color: "#6C77C1",
               display: "grid",
               placeItems: "center",
@@ -187,9 +187,9 @@ export default function TareasPage() {
               key={asset.id}
               style={{
                 borderRadius: 14,
-                border: "1px solid #E2E8F0",
+                border: "1px solid var(--ui-border)",
                 padding: 16,
-                background: "#FFFFFF",
+                background: "var(--ui-surface)",
                 display: "flex",
                 flexDirection: "column",
                 gap: 8,
@@ -208,17 +208,17 @@ export default function TareasPage() {
                     fontWeight: 700,
                     padding: "2px 8px",
                     borderRadius: 999,
-                    background: "#F0F1F9",
+                    background: "var(--ui-accent-soft)",
                     color: "#6C77C1",
                     textTransform: "uppercase",
                   }}
                 >
                   {asset.kind}
                 </span>
-                <span style={{ fontSize: 11.5, color: "#94A3B8" }}>{asset.sizeLabel}</span>
+                <span style={{ fontSize: 11.5, color: "var(--ui-text-5)" }}>{asset.sizeLabel}</span>
               </div>
-              <div style={{ fontSize: 13.5, fontWeight: 700, color: "#0F172A" }}>{asset.name}</div>
-              <div style={{ fontSize: 12, color: "#64748B" }}>Carpeta: {asset.folder}</div>
+              <div style={{ fontSize: 13.5, fontWeight: 700, color: "var(--ui-text)" }}>{asset.name}</div>
+              <div style={{ fontSize: 12, color: "var(--ui-text-4)" }}>Carpeta: {asset.folder}</div>
               <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 4 }}>
                 {asset.aiTags.slice(0, 3).map((tag) => (
                   <span
@@ -227,8 +227,8 @@ export default function TareasPage() {
                       fontSize: 10.5,
                       padding: "2px 7px",
                       borderRadius: 999,
-                      background: "#F1F5F9",
-                      color: "#475569",
+                      background: "var(--ui-muted)",
+                      color: "var(--ui-text-3)",
                       display: "inline-flex",
                       alignItems: "center",
                       gap: 3,

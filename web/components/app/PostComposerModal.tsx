@@ -436,7 +436,7 @@ export function PostComposerModal({
                 {assetsOpen && (
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(96px, 1fr))", gap: 8 }}>
                     {brandAssets.length === 0 && (
-                      <span style={{ fontSize: 12.5, color: "#64748B" }}>Esta marca aún no tiene archivos.</span>
+                      <span style={{ fontSize: 12.5, color: "var(--ui-text-4)" }}>Esta marca aún no tiene archivos.</span>
                     )}
                     {brandAssets.map((asset) => (
                       <button
@@ -449,7 +449,7 @@ export function PostComposerModal({
                           setMediaUrl(null);
                           setAssetsOpen(false);
                         }}
-                        style={{ border: "1px solid #E2E8F0", borderRadius: 10, padding: 0, overflow: "hidden", background: "#FFFFFF", cursor: "pointer", font: "inherit", textAlign: "left" }}
+                        style={{ border: "1px solid var(--ui-border)", borderRadius: 10, padding: 0, overflow: "hidden", background: "var(--ui-surface)", cursor: "pointer", font: "inherit", textAlign: "left" }}
                       >
                         <span style={{ display: "block", height: 64, overflow: "hidden" }}><Cover kind={asset.cover} /></span>
                         <small style={{ display: "block", padding: "4px 6px", fontSize: 10.5, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{asset.name}</small>
@@ -491,7 +491,7 @@ export function PostComposerModal({
             {tab === "resultados" && (
               editingPost?.metrics ? (
                 <div style={{ display: "grid", gap: 10 }}>
-                  <span style={{ fontSize: 12.5, fontWeight: 600, color: "#5360A5" }}>Datos de ejemplo</span>
+                  <span style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ui-accent-text)" }}>Datos de ejemplo</span>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))", gap: 10 }}>
                     {[
                       ["Alcance", editingPost.metrics.reach],
@@ -500,8 +500,8 @@ export function PostComposerModal({
                       ["Guardados", editingPost.metrics.saves],
                       ["Compartidos", editingPost.metrics.shares],
                     ].map(([label, value]) => (
-                      <div key={label} style={{ border: "1px solid #E2E8F0", borderRadius: 12, padding: 12 }}>
-                        <div style={{ fontSize: 11.5, color: "#64748B" }}>{label}</div>
+                      <div key={label} style={{ border: "1px solid var(--ui-border)", borderRadius: 12, padding: 12 }}>
+                        <div style={{ fontSize: 11.5, color: "var(--ui-text-4)" }}>{label}</div>
                         <div style={{ fontSize: 20, fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>{value.toLocaleString("es-MX")}</div>
                       </div>
                     ))}
@@ -557,15 +557,15 @@ export function PostComposerModal({
             {tab === "documentos" && (
               <div style={{ display: "grid", gap: 10 }}>
                 {documents.length === 0 && (
-                  <span style={{ fontSize: 13, color: "#64748B" }}>Agrega enlaces a briefs, guiones o archivos de referencia.</span>
+                  <span style={{ fontSize: 13, color: "var(--ui-text-4)" }}>Agrega enlaces a briefs, guiones o archivos de referencia.</span>
                 )}
                 {documents.map((doc) => (
-                  <div key={doc.id} style={{ display: "flex", alignItems: "center", gap: 8, border: "1px solid #E2E8F0", borderRadius: 10, padding: "8px 10px", fontSize: 13 }}>
+                  <div key={doc.id} style={{ display: "flex", alignItems: "center", gap: 8, border: "1px solid var(--ui-border)", borderRadius: 10, padding: "8px 10px", fontSize: 13 }}>
                     <FileText size={14} />
-                    <a href={doc.url} target="_blank" rel="noopener noreferrer" style={{ flex: 1, minWidth: 0, color: "#5A65AF", fontWeight: 600, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+                    <a href={doc.url} target="_blank" rel="noopener noreferrer" style={{ flex: 1, minWidth: 0, color: "var(--ui-accent-text-2)", fontWeight: 600, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
                       {doc.name}
                     </a>
-                    <button type="button" aria-label={`Quitar ${doc.name}`} onClick={() => updateDocuments(documents.filter((d) => d.id !== doc.id))} style={{ border: 0, background: "transparent", cursor: "pointer", color: "#64748B", display: "grid" }}>
+                    <button type="button" aria-label={`Quitar ${doc.name}`} onClick={() => updateDocuments(documents.filter((d) => d.id !== doc.id))} style={{ border: 0, background: "transparent", cursor: "pointer", color: "var(--ui-text-4)", display: "grid" }}>
                       <X size={14} />
                     </button>
                   </div>
@@ -594,9 +594,9 @@ export function PostComposerModal({
 
             {tab === "chat" && (
               <div style={{ display: "grid", gap: 8 }}>
-                {chat.length === 0 && <span style={{ fontSize: 13, color: "#64748B" }}>Conversación interna del equipo sobre este post.</span>}
+                {chat.length === 0 && <span style={{ fontSize: 13, color: "var(--ui-text-4)" }}>Conversación interna del equipo sobre este post.</span>}
                 {chat.map((m) => (
-                  <div key={m.id} style={{ background: "#F1F5F9", borderRadius: 12, padding: "8px 11px", fontSize: 13 }}>
+                  <div key={m.id} style={{ background: "var(--ui-muted)", borderRadius: 12, padding: "8px 11px", fontSize: 13 }}>
                     <strong style={{ display: "block", fontSize: 12 }}>
                       {m.author} · <small style={{ fontWeight: 400 }}>{new Date(m.at).toLocaleString("es-MX", { dateStyle: "short", timeStyle: "short" })}</small>
                     </strong>
@@ -624,7 +624,7 @@ export function PostComposerModal({
                   {editingPost.activity.map((entry) => (
                     <li key={entry.id} style={{ fontSize: 13, borderLeft: "2px solid #D9DCF0", paddingLeft: 10 }}>
                       <strong>{entry.author}</strong> {entry.text}
-                      <small style={{ display: "block", color: "#64748B" }}>
+                      <small style={{ display: "block", color: "var(--ui-text-4)" }}>
                         {new Date(entry.at).toLocaleString("es-MX", { dateStyle: "short", timeStyle: "short" })}
                       </small>
                     </li>

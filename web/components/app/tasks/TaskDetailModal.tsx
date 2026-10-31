@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { askConfirm } from "@/components/app/AppDialogHost";
 import { dueLabelFor } from "@/lib/date";
 import type { AgencyTask } from "@/lib/types";
 import { normalizedStatus } from "./task-utils";
@@ -76,11 +77,11 @@ export function TaskDetailModal({
         aria-modal="true"
         aria-label="Editar tarea"
         onSubmit={save}
-        style={{ width: "100%", maxWidth: 480, maxHeight: "90vh", overflowY: "auto", background: "#FFFFFF", borderRadius: 16, padding: 20, display: "grid", gap: 12 }}
+        style={{ width: "100%", maxWidth: 480, maxHeight: "90vh", overflowY: "auto", background: "var(--ui-surface)", borderRadius: 16, padding: 20, display: "grid", gap: 12 }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <input autoFocus value={title} onChange={(e) => setTitle(e.target.value)} aria-label="Título" style={{ ...field, flex: 1, minWidth: 0, fontSize: 15, fontWeight: 700 }} />
-          <button type="button" aria-label="Cerrar" onClick={onClose} style={{ border: 0, background: "transparent", cursor: "pointer", color: "#64748B", display: "grid" }}>
+          <button type="button" aria-label="Cerrar" onClick={onClose} style={{ border: 0, background: "transparent", cursor: "pointer", color: "var(--ui-text-4)", display: "grid" }}>
             <X size={18} />
           </button>
         </div>
@@ -122,8 +123,8 @@ export function TaskDetailModal({
         <div style={{ display: "flex", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
           <button
             type="button"
-            onClick={() => {
-              if (window.confirm(`¿Eliminar la tarea «${task.title}»?`)) {
+            onClick={async () => {
+              if (await askConfirm(`¿Eliminar la tarea «${task.title}»?`)) {
                 deleteTask(task.id);
                 onClose();
               }
@@ -141,5 +142,5 @@ export function TaskDetailModal({
   );
 }
 
-const field = { width: "100%", border: "1px solid #CBD5E1", borderRadius: 9, padding: "8px 10px", fontSize: 13, fontFamily: "inherit", background: "#FFFFFF" } as const;
-const lab = { display: "grid", gap: 4, fontSize: 12, fontWeight: 600, color: "#475569" } as const;
+const field = { width: "100%", border: "1px solid var(--ui-border-strong)", borderRadius: 9, padding: "8px 10px", fontSize: 13, fontFamily: "inherit", background: "var(--ui-surface)" } as const;
+const lab = { display: "grid", gap: 4, fontSize: 12, fontWeight: 600, color: "var(--ui-text-3)" } as const;

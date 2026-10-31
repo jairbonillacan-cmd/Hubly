@@ -19,7 +19,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-interface HenryAdCard {
+interface SampleAdCard {
   id: string;
   title: string;
   artworkKind: "thehive" | "taxco-quartz" | "veracruz-amethyst" | "mineralia-live" | "bee-here";
@@ -34,9 +34,9 @@ interface HenryAdCard {
   aiInsight: string;
 }
 
-const HENRY_ADS: HenryAdCard[] = [
+const SAMPLE_ADS: SampleAdCard[] = [
   {
-    id: "henry-ad-1",
+    id: "hb-ad-1",
     title: "Publicación de Instagram: Fall in Round Top looks...",
     artworkKind: "thehive",
     status: "Activo",
@@ -51,7 +51,7 @@ const HENRY_ADS: HenryAdCard[] = [
       "El cartel de 'THE HIVE · Through October 31' genera alta intención presencial en compradores mayoristas de Round Top. Mantén presupuesto activo hasta el cierre del show.",
   },
   {
-    id: "henry-ad-2",
+    id: "hb-ad-2",
     title: "Instagram post: TAXCO QUARTZ FROM GUERRERO,...",
     artworkKind: "taxco-quartz",
     status: "Activo",
@@ -66,7 +66,7 @@ const HENRY_ADS: HenryAdCard[] = [
       "Mejor volumen de visitas al perfil (47) con excelente eficiencia ($7.72/visita). Mostrar la drusa de cuarzo de Taxco en mano da escala real inmediata.",
   },
   {
-    id: "henry-ad-3",
+    id: "hb-ad-3",
     title: "Publicación de Instagram: Fall in Round Top looks...",
     artworkKind: "thehive",
     status: "Activo",
@@ -81,7 +81,7 @@ const HENRY_ADS: HenryAdCard[] = [
       "Variación de audiencia abierta para The Fall Show. Buen CTR inicial; considera rotar hacia el formato de video en mano para bajar el costo por resultado.",
   },
   {
-    id: "henry-ad-4",
+    id: "hb-ad-4",
     title: "Instagram post: 💜VERACRUZ AMETHYST | TATATILA,...",
     artworkKind: "veracruz-amethyst",
     status: "Activo",
@@ -96,7 +96,7 @@ const HENRY_ADS: HenryAdCard[] = [
       "El costo por visita más bajo del top 4 ($7.65). El contraste de la amatista de Tatatila, Veracruz en primer plano detiene el scroll en los primeros 1.5 segundos.",
   },
   {
-    id: "henry-ad-5",
+    id: "hb-ad-5",
     title: "Instagram post: 🎃 MineraliA LIVE SALE — Rare Specimens...",
     artworkKind: "mineralia-live",
     status: "Activo",
@@ -111,7 +111,7 @@ const HENRY_ADS: HenryAdCard[] = [
       "Anuncio de urgencia para transmisión en vivo (@amethysts.us). Convierte muy bien en recordatorios y mensajes directos previos al Live.",
   },
   {
-    id: "henry-ad-6",
+    id: "hb-ad-6",
     title: "Instagram post: MineraliA LIVE SALE — Wholesale Lot...",
     artworkKind: "mineralia-live",
     status: "Activo",
@@ -126,7 +126,7 @@ const HENRY_ADS: HenryAdCard[] = [
       "Segmentación de dueños de boutiques de decoración y wellness. Excelente retención visual por el titular amarillo de alto contraste.",
   },
   {
-    id: "henry-ad-7",
+    id: "hb-ad-7",
     title: "Publicación de Instagram: Fall in Round Top looks...",
     artworkKind: "thehive",
     status: "Activo",
@@ -141,7 +141,7 @@ const HENRY_ADS: HenryAdCard[] = [
       "Retargeting de visitantes del perfil en Texas y compradores mayoristas recurrentes.",
   },
   {
-    id: "henry-ad-8",
+    id: "hb-ad-8",
     title: "Publicación de Instagram: 🐝 LAST DAYS — BEE HERE BEFORE IT ENDS...",
     artworkKind: "bee-here",
     status: "Activo",
@@ -157,7 +157,7 @@ const HENRY_ADS: HenryAdCard[] = [
   },
 ];
 
-function AdPosterArtwork({ kind }: { kind: HenryAdCard["artworkKind"] }) {
+function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
   if (kind === "thehive") {
     return (
       <svg
@@ -454,10 +454,10 @@ export default function AnunciosPage() {
   const [viewMode, setViewMode] = useState<"cards" | "table" | "funnels">("cards");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedAd, setSelectedAd] = useState<HenryAdCard | null>(null);
+  const [selectedAd, setSelectedAd] = useState<SampleAdCard | null>(null);
   const [descubreOpen, setDescubreOpen] = useState(true);
 
-  const visibleAds = HENRY_ADS.filter((ad) =>
+  const visibleAds = SAMPLE_ADS.filter((ad) =>
     searchQuery.trim()
       ? ad.title.toLowerCase().includes(searchQuery.trim().toLowerCase())
       : true
@@ -467,7 +467,7 @@ export default function AnunciosPage() {
     <div
       style={{
         fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-        color: "#0F172A",
+        color: "var(--ui-text)",
         minHeight: "calc(100vh - 64px)",
         position: "relative",
         paddingBottom: 60,
@@ -480,7 +480,7 @@ export default function AnunciosPage() {
           alignItems: "center",
           justifyContent: "space-between",
           paddingBottom: 14,
-          borderBottom: "1px solid #E2E8F0",
+          borderBottom: "1px solid var(--ui-border)",
           marginBottom: 22,
           flexWrap: "wrap",
           gap: 12,
@@ -492,7 +492,7 @@ export default function AnunciosPage() {
             display: "inline-flex",
             alignItems: "center",
             gap: 2,
-            background: "#F1F5F9",
+            background: "var(--ui-muted)",
             padding: 4,
             borderRadius: 999,
           }}
@@ -507,8 +507,8 @@ export default function AnunciosPage() {
               padding: "6px 14px",
               borderRadius: 999,
               border: "none",
-              background: activeSubNav === "tableros" ? "#FFFFFF" : "transparent",
-              color: activeSubNav === "tableros" ? "#6C77C1" : "#475569",
+              background: activeSubNav === "tableros" ? "var(--ui-surface)" : "transparent",
+              color: activeSubNav === "tableros" ? "#6C77C1" : "var(--ui-text-3)",
               fontWeight: activeSubNav === "tableros" ? 600 : 500,
               fontSize: 13,
               cursor: "pointer",
@@ -530,8 +530,8 @@ export default function AnunciosPage() {
               padding: "6px 14px",
               borderRadius: 999,
               border: "none",
-              background: activeSubNav === "anuncios" ? "#FFFFFF" : "transparent",
-              color: activeSubNav === "anuncios" ? "#6C77C1" : "#475569",
+              background: activeSubNav === "anuncios" ? "var(--ui-surface)" : "transparent",
+              color: activeSubNav === "anuncios" ? "#6C77C1" : "var(--ui-text-3)",
               fontWeight: activeSubNav === "anuncios" ? 600 : 500,
               fontSize: 13,
               cursor: "pointer",
@@ -553,8 +553,8 @@ export default function AnunciosPage() {
               padding: "6px 14px",
               borderRadius: 999,
               border: "none",
-              background: activeSubNav === "ideas" ? "#FFFFFF" : "transparent",
-              color: activeSubNav === "ideas" ? "#6C77C1" : "#475569",
+              background: activeSubNav === "ideas" ? "var(--ui-surface)" : "transparent",
+              color: activeSubNav === "ideas" ? "#6C77C1" : "var(--ui-text-3)",
               fontWeight: activeSubNav === "ideas" ? 600 : 500,
               fontSize: 13,
               cursor: "pointer",
@@ -574,7 +574,7 @@ export default function AnunciosPage() {
               gap: 7,
               padding: "6px 14px",
               borderRadius: 999,
-              color: "#475569",
+              color: "var(--ui-text-3)",
               fontWeight: 500,
               fontSize: 13,
               textDecoration: "none",
@@ -599,17 +599,17 @@ export default function AnunciosPage() {
               height: 32,
               padding: "0 14px",
               borderRadius: 999,
-              border: "1px solid #E2E8F0",
-              background: "#FFFFFF",
-              color: "#0F172A",
+              border: "1px solid var(--ui-border)",
+              background: "var(--ui-surface)",
+              color: "var(--ui-text)",
               fontSize: 12.5,
               fontWeight: 600,
               cursor: "pointer",
             }}
           >
-            <Calendar size={13} style={{ color: "#64748B" }} />
+            <Calendar size={13} style={{ color: "var(--ui-text-4)" }} />
             <span>23 oct - 30 oct</span>
-            <ChevronDown size={13} style={{ color: "#64748B" }} />
+            <ChevronDown size={13} style={{ color: "var(--ui-text-4)" }} />
           </button>
 
           <button
@@ -622,9 +622,9 @@ export default function AnunciosPage() {
               width: 34,
               height: 34,
               borderRadius: 999,
-              border: "1px solid #E2E8F0",
-              background: "#FFFFFF",
-              color: "#475569",
+              border: "1px solid var(--ui-border)",
+              background: "var(--ui-surface)",
+              color: "var(--ui-text-3)",
               display: "grid",
               placeItems: "center",
               position: "relative",
@@ -641,7 +641,7 @@ export default function AnunciosPage() {
                 height: 7,
                 borderRadius: 999,
                 background: "#EF4444",
-                border: "1.5px solid #FFFFFF",
+                border: "1.5px solid var(--ui-surface)",
               }}
             />
           </button>
@@ -666,8 +666,8 @@ export default function AnunciosPage() {
           <div
             key={kpi.label}
             style={{
-              background: "#FFFFFF",
-              border: "1px solid #E2E8F0",
+              background: "var(--ui-surface)",
+              border: "1px solid var(--ui-border)",
               borderRadius: 16,
               padding: "20px 22px",
             }}
@@ -678,8 +678,8 @@ export default function AnunciosPage() {
                 style={{
                   fontSize: 12,
                   fontWeight: 600,
-                  color: "#64748B",
-                  borderBottom: "1px dashed #CBD5E1",
+                  color: "var(--ui-text-4)",
+                  borderBottom: "1px dashed var(--ui-border-strong)",
                   paddingBottom: 1,
                 }}
               >
@@ -690,7 +690,7 @@ export default function AnunciosPage() {
               style={{
                 fontSize: 26,
                 fontWeight: 800,
-                color: "#0F172A",
+                color: "var(--ui-text)",
                 letterSpacing: "-0.02em",
                 lineHeight: 1.15,
               }}
@@ -722,9 +722,9 @@ export default function AnunciosPage() {
               width: 36,
               height: 36,
               borderRadius: 999,
-              border: "1px solid #E2E8F0",
-              background: "#FFFFFF",
-              color: "#475569",
+              border: "1px solid var(--ui-border)",
+              background: "var(--ui-surface)",
+              color: "var(--ui-text-3)",
               display: "grid",
               placeItems: "center",
               cursor: "pointer",
@@ -743,7 +743,7 @@ export default function AnunciosPage() {
                 height: 36,
                 padding: "0 12px",
                 borderRadius: 999,
-                border: "1px solid #CBD5E1",
+                border: "1px solid var(--ui-border-strong)",
                 fontSize: 13,
                 outline: "none",
               }}
@@ -759,9 +759,9 @@ export default function AnunciosPage() {
               height: 34,
               padding: "0 14px",
               borderRadius: 999,
-              border: "1px solid #E2E8F0",
-              background: "#FFFFFF",
-              color: "#334155",
+              border: "1px solid var(--ui-border)",
+              background: "var(--ui-surface)",
+              color: "var(--ui-text-2)",
               fontSize: 12.5,
               fontWeight: 600,
               display: "inline-flex",
@@ -781,7 +781,7 @@ export default function AnunciosPage() {
             style={{
               display: "inline-flex",
               alignItems: "center",
-              background: "#F1F5F9",
+              background: "var(--ui-muted)",
               padding: 3,
               borderRadius: 10,
               gap: 2,
@@ -797,8 +797,8 @@ export default function AnunciosPage() {
                 height: 28,
                 borderRadius: 7,
                 border: "none",
-                background: viewMode === "cards" ? "#FFFFFF" : "transparent",
-                color: viewMode === "cards" ? "#6C77C1" : "#64748B",
+                background: viewMode === "cards" ? "var(--ui-surface)" : "transparent",
+                color: viewMode === "cards" ? "#6C77C1" : "var(--ui-text-4)",
                 display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
@@ -817,8 +817,8 @@ export default function AnunciosPage() {
                 height: 28,
                 borderRadius: 7,
                 border: "none",
-                background: viewMode === "table" ? "#FFFFFF" : "transparent",
-                color: viewMode === "table" ? "#6C77C1" : "#64748B",
+                background: viewMode === "table" ? "var(--ui-surface)" : "transparent",
+                color: viewMode === "table" ? "#6C77C1" : "var(--ui-text-4)",
                 display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
@@ -837,8 +837,8 @@ export default function AnunciosPage() {
                 height: 28,
                 borderRadius: 7,
                 border: "none",
-                background: viewMode === "funnels" ? "#FFFFFF" : "transparent",
-                color: viewMode === "funnels" ? "#6C77C1" : "#64748B",
+                background: viewMode === "funnels" ? "var(--ui-surface)" : "transparent",
+                color: viewMode === "funnels" ? "#6C77C1" : "var(--ui-text-4)",
                 display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
@@ -858,9 +858,9 @@ export default function AnunciosPage() {
               height: 38,
               padding: "0 14px",
               borderRadius: 999,
-              border: "1px solid #E2E8F0",
-              background: "#FFFFFF",
-              color: "#0F172A",
+              border: "1px solid var(--ui-border)",
+              background: "var(--ui-surface)",
+              color: "var(--ui-text)",
               fontSize: 13,
               fontWeight: 600,
               display: "inline-flex",
@@ -869,15 +869,15 @@ export default function AnunciosPage() {
               cursor: "pointer",
             }}
           >
-            <SlidersHorizontal size={14} style={{ color: "#475569" }} />
+            <SlidersHorizontal size={14} style={{ color: "var(--ui-text-3)" }} />
             <span>Métricas</span>
             <span
               style={{
                 width: 20,
                 height: 20,
                 borderRadius: 999,
-                background: "#F1F5F9",
-                color: "#475569",
+                background: "var(--ui-muted)",
+                color: "var(--ui-text-3)",
                 fontSize: 11.5,
                 fontWeight: 700,
                 display: "inline-grid",
@@ -903,8 +903,8 @@ export default function AnunciosPage() {
             <div
               key={ad.id}
               style={{
-                background: "#FFFFFF",
-                border: "1px solid #E2E8F0",
+                background: "var(--ui-surface)",
+                border: "1px solid var(--ui-border)",
                 borderRadius: 16,
                 overflow: "hidden",
                 display: "flex",
@@ -924,7 +924,7 @@ export default function AnunciosPage() {
                     width: 26,
                     height: 26,
                     borderRadius: 8,
-                    background: "#FFFFFF",
+                    background: "var(--ui-surface)",
                     display: "grid",
                     placeItems: "center",
                     boxShadow: "0 2px 6px rgba(0, 0, 0, 0.16)",
@@ -1017,10 +1017,10 @@ export default function AnunciosPage() {
                     gap: 10,
                     paddingBottom: 12,
                     marginBottom: 10,
-                    borderBottom: "1px solid #F1F5F9",
+                    borderBottom: "1px solid var(--ui-muted)",
                   }}
                 >
-                  <span style={{ fontSize: 11.5, color: "#64748B", fontWeight: 500 }}>
+                  <span style={{ fontSize: 11.5, color: "var(--ui-text-4)", fontWeight: 500 }}>
                     Click
                   </span>
                   <div
@@ -1028,7 +1028,7 @@ export default function AnunciosPage() {
                       flex: 1,
                       height: 6,
                       borderRadius: 999,
-                      background: "#E2E8F0",
+                      background: "var(--ui-border)",
                       overflow: "hidden",
                     }}
                   >
@@ -1058,8 +1058,8 @@ export default function AnunciosPage() {
                   >
                     <span
                       style={{
-                        color: "#64748B",
-                        borderBottom: "1px dashed #CBD5E1",
+                        color: "var(--ui-text-4)",
+                        borderBottom: "1px dashed var(--ui-border-strong)",
                       }}
                     >
                       Resultados
@@ -1069,7 +1069,7 @@ export default function AnunciosPage() {
                         background:
                           ad.resultadosBadgeColor === "green" ? "#DCFCE7" : "#ECEEF8",
                         color:
-                          ad.resultadosBadgeColor === "green" ? "#15803D" : "#5360A5",
+                          ad.resultadosBadgeColor === "green" ? "#15803D" : "var(--ui-accent-text)",
                         fontWeight: 700,
                         fontSize: 12,
                         padding: "1px 7px",
@@ -1090,13 +1090,13 @@ export default function AnunciosPage() {
                   >
                     <span
                       style={{
-                        color: "#64748B",
-                        borderBottom: "1px dashed #CBD5E1",
+                        color: "var(--ui-text-4)",
+                        borderBottom: "1px dashed var(--ui-border-strong)",
                       }}
                     >
                       Gasto
                     </span>
-                    <span style={{ fontWeight: 700, color: "#0F172A" }}>{ad.gasto}</span>
+                    <span style={{ fontWeight: 700, color: "var(--ui-text)" }}>{ad.gasto}</span>
                   </div>
 
                   {/* Row 3: Costo/Resultado */}
@@ -1109,13 +1109,13 @@ export default function AnunciosPage() {
                   >
                     <span
                       style={{
-                        color: "#64748B",
-                        borderBottom: "1px dashed #CBD5E1",
+                        color: "var(--ui-text-4)",
+                        borderBottom: "1px dashed var(--ui-border-strong)",
                       }}
                     >
                       Costo/Resultado
                     </span>
-                    <span style={{ fontWeight: 700, color: "#0F172A" }}>
+                    <span style={{ fontWeight: 700, color: "var(--ui-text)" }}>
                       {ad.costoResultado}
                     </span>
                   </div>
@@ -1130,13 +1130,13 @@ export default function AnunciosPage() {
                   >
                     <span
                       style={{
-                        color: "#64748B",
-                        borderBottom: "1px dashed #CBD5E1",
+                        color: "var(--ui-text-4)",
+                        borderBottom: "1px dashed var(--ui-border-strong)",
                       }}
                     >
                       Clicks
                     </span>
-                    <span style={{ fontWeight: 700, color: "#0F172A" }}>{ad.clicks}</span>
+                    <span style={{ fontWeight: 700, color: "var(--ui-text)" }}>{ad.clicks}</span>
                   </div>
 
                   {/* Row 5: % Campaña */}
@@ -1149,13 +1149,13 @@ export default function AnunciosPage() {
                   >
                     <span
                       style={{
-                        color: "#64748B",
-                        borderBottom: "1px dashed #CBD5E1",
+                        color: "var(--ui-text-4)",
+                        borderBottom: "1px dashed var(--ui-border-strong)",
                       }}
                     >
                       % Campaña
                     </span>
-                    <span style={{ fontWeight: 700, color: "#0F172A" }}>
+                    <span style={{ fontWeight: 700, color: "var(--ui-text)" }}>
                       {ad.pctCampana}
                     </span>
                   </div>
@@ -1170,45 +1170,45 @@ export default function AnunciosPage() {
       {(viewMode === "table" || viewMode === "funnels") && (
         <div
           style={{
-            background: "#FFFFFF",
-            border: "1px solid #E2E8F0",
+            background: "var(--ui-surface)",
+            border: "1px solid var(--ui-border)",
             borderRadius: 16,
             overflow: "hidden",
           }}
         >
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
             <thead>
-              <tr style={{ background: "#F8FAFC", borderBottom: "1px solid #E2E8F0" }}>
-                <th style={{ textAlign: "left", padding: "12px 16px", color: "#64748B" }}>
+              <tr style={{ background: "var(--ui-surface-2)", borderBottom: "1px solid var(--ui-border)" }}>
+                <th style={{ textAlign: "left", padding: "12px 16px", color: "var(--ui-text-4)" }}>
                   Anuncio
                 </th>
-                <th style={{ textAlign: "left", padding: "12px 16px", color: "#64748B" }}>
+                <th style={{ textAlign: "left", padding: "12px 16px", color: "var(--ui-text-4)" }}>
                   Estado
                 </th>
-                <th style={{ textAlign: "right", padding: "12px 16px", color: "#64748B" }}>
+                <th style={{ textAlign: "right", padding: "12px 16px", color: "var(--ui-text-4)" }}>
                   Click Score
                 </th>
-                <th style={{ textAlign: "right", padding: "12px 16px", color: "#64748B" }}>
+                <th style={{ textAlign: "right", padding: "12px 16px", color: "var(--ui-text-4)" }}>
                   Resultados
                 </th>
-                <th style={{ textAlign: "right", padding: "12px 16px", color: "#64748B" }}>
+                <th style={{ textAlign: "right", padding: "12px 16px", color: "var(--ui-text-4)" }}>
                   Gasto
                 </th>
-                <th style={{ textAlign: "right", padding: "12px 16px", color: "#64748B" }}>
+                <th style={{ textAlign: "right", padding: "12px 16px", color: "var(--ui-text-4)" }}>
                   Costo/Resultado
                 </th>
-                <th style={{ textAlign: "right", padding: "12px 16px", color: "#64748B" }}>
+                <th style={{ textAlign: "right", padding: "12px 16px", color: "var(--ui-text-4)" }}>
                   Clicks
                 </th>
-                <th style={{ textAlign: "right", padding: "12px 16px", color: "#64748B" }}>
+                <th style={{ textAlign: "right", padding: "12px 16px", color: "var(--ui-text-4)" }}>
                   % Campaña
                 </th>
               </tr>
             </thead>
             <tbody>
               {visibleAds.map((ad) => (
-                <tr key={ad.id} style={{ borderBottom: "1px solid #F1F5F9" }}>
-                  <td style={{ padding: "12px 16px", fontWeight: 600, color: "#0F172A" }}>
+                <tr key={ad.id} style={{ borderBottom: "1px solid var(--ui-muted)" }}>
+                  <td style={{ padding: "12px 16px", fontWeight: 600, color: "var(--ui-text)" }}>
                     {ad.title}
                   </td>
                   <td style={{ padding: "12px 16px" }}>
@@ -1276,7 +1276,7 @@ export default function AnunciosPage() {
             style={{
               width: "100%",
               maxWidth: 480,
-              background: "#FFFFFF",
+              background: "var(--ui-surface)",
               borderRadius: 18,
               padding: 24,
               boxShadow: "0 24px 48px rgba(15, 23, 42, 0.22)",
@@ -1295,7 +1295,7 @@ export default function AnunciosPage() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 6,
-                  background: "#F0F1F9",
+                  background: "var(--ui-accent-soft)",
                   color: "#6C77C1",
                   fontSize: 12,
                   fontWeight: 700,
@@ -1308,17 +1308,17 @@ export default function AnunciosPage() {
               <button
                 type="button"
                 onClick={() => setSelectedAd(null)}
-                style={{ background: "none", border: "none", cursor: "pointer", color: "#64748B" }}
+                style={{ background: "none", border: "none", cursor: "pointer", color: "var(--ui-text-4)" }}
               >
                 <X size={18} />
               </button>
             </div>
 
-            <h3 style={{ fontSize: 16, fontWeight: 800, color: "#0F172A", margin: "0 0 10px" }}>
+            <h3 style={{ fontSize: 16, fontWeight: 800, color: "var(--ui-text)", margin: "0 0 10px" }}>
               {selectedAd.title}
             </h3>
 
-            <p style={{ fontSize: 13.5, color: "#334155", lineHeight: 1.55, marginBottom: 16 }}>
+            <p style={{ fontSize: 13.5, color: "var(--ui-text-2)", lineHeight: 1.55, marginBottom: 16 }}>
               {selectedAd.aiInsight}
             </p>
 
@@ -1327,28 +1327,28 @@ export default function AnunciosPage() {
                 display: "grid",
                 gridTemplateColumns: "repeat(3, 1fr)",
                 gap: 10,
-                background: "#F8FAFC",
+                background: "var(--ui-surface-2)",
                 padding: 12,
                 borderRadius: 12,
-                border: "1px solid #E2E8F0",
+                border: "1px solid var(--ui-border)",
                 fontSize: 12,
               }}
             >
               <div>
-                <div style={{ color: "#64748B" }}>Click Score</div>
+                <div style={{ color: "var(--ui-text-4)" }}>Click Score</div>
                 <div style={{ fontWeight: 800, color: "#059669", fontSize: 15 }}>
                   {selectedAd.clickScore}/100
                 </div>
               </div>
               <div>
-                <div style={{ color: "#64748B" }}>Resultados</div>
-                <div style={{ fontWeight: 800, color: "#0F172A", fontSize: 15 }}>
+                <div style={{ color: "var(--ui-text-4)" }}>Resultados</div>
+                <div style={{ fontWeight: 800, color: "var(--ui-text)", fontSize: 15 }}>
                   {selectedAd.resultados}
                 </div>
               </div>
               <div>
-                <div style={{ color: "#64748B" }}>Costo/Res.</div>
-                <div style={{ fontWeight: 800, color: "#0F172A", fontSize: 15 }}>
+                <div style={{ color: "var(--ui-text-4)" }}>Costo/Res.</div>
+                <div style={{ fontWeight: 800, color: "var(--ui-text)", fontSize: 15 }}>
                   {selectedAd.costoResultado}
                 </div>
               </div>

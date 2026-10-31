@@ -52,14 +52,14 @@ export function MemberDrawer({ memberId, onClose }: { memberId: string; onClose:
       }}
       style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(15,23,42,0.4)", display: "flex", justifyContent: "flex-end" }}
     >
-      <aside role="dialog" aria-modal="true" aria-label={`Perfil de ${member.name}`} style={{ width: "100%", maxWidth: 440, height: "100%", overflowY: "auto", background: "#FFFFFF", padding: 22, display: "grid", gap: 18, alignContent: "start" }}>
+      <aside role="dialog" aria-modal="true" aria-label={`Perfil de ${member.name}`} style={{ width: "100%", maxWidth: 440, height: "100%", overflowY: "auto", background: "var(--ui-surface)", padding: 22, display: "grid", gap: 18, alignContent: "start" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <span style={{ width: 46, height: 46, borderRadius: 999, background: member.avatarColor || "#6C77C1", color: "#FFFFFF", display: "grid", placeItems: "center", fontWeight: 700 }}>{member.initials}</span>
           <div style={{ flex: 1, minWidth: 0 }}>
             <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{member.name}</h2>
-            <div style={{ fontSize: 12.5, color: "#64748B" }}>{member.role} · {member.email}</div>
+            <div style={{ fontSize: 12.5, color: "var(--ui-text-4)" }}>{member.role} · {member.email}</div>
           </div>
-          <button type="button" autoFocus aria-label="Cerrar perfil" onClick={onClose} style={{ border: 0, background: "transparent", color: "#64748B", cursor: "pointer", display: "grid" }}>
+          <button type="button" autoFocus aria-label="Cerrar perfil" onClick={onClose} style={{ border: 0, background: "transparent", color: "var(--ui-text-4)", cursor: "pointer", display: "grid" }}>
             <X size={18} />
           </button>
         </div>
@@ -70,8 +70,8 @@ export function MemberDrawer({ memberId, onClose }: { memberId: string; onClose:
             ["En curso", member.tasksInProgress],
             ["Publicados", member.postsPublished],
           ].map(([label, value]) => (
-            <div key={label} style={{ border: "1px solid #E2E8F0", borderRadius: 12, padding: 10 }}>
-              <div style={{ fontSize: 11.5, color: "#64748B" }}>{label}</div>
+            <div key={label} style={{ border: "1px solid var(--ui-border)", borderRadius: 12, padding: 10 }}>
+              <div style={{ fontSize: 11.5, color: "var(--ui-text-4)" }}>{label}</div>
               <div style={{ fontSize: 20, fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>{value}</div>
             </div>
           ))}
@@ -88,7 +88,7 @@ export function MemberDrawer({ memberId, onClose }: { memberId: string; onClose:
               />
             ))}
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11.5, color: "#64748B", marginTop: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11.5, color: "var(--ui-text-4)", marginTop: 8 }}>
             Menos
             {STEPS.map((c) => <span key={c} style={{ width: 11, height: 11, borderRadius: 3, background: c }} />)}
             Más · {total} actividades en {activeDays} días
@@ -99,7 +99,7 @@ export function MemberDrawer({ memberId, onClose }: { memberId: string; onClose:
           <h3 style={h3}>Marcas ({memberBrands.length})</h3>
           {memberBrands.length === 0 ? <p style={muted}>Sin marcas asignadas.</p> : (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-              {memberBrands.map((b) => <span key={b.id} style={{ fontSize: 12.5, fontWeight: 600, background: "#F1F5F9", borderRadius: 999, padding: "3px 10px" }}>{b.name}</span>)}
+              {memberBrands.map((b) => <span key={b.id} style={{ fontSize: 12.5, fontWeight: 600, background: "var(--ui-muted)", borderRadius: 999, padding: "3px 10px" }}>{b.name}</span>)}
             </div>
           )}
         </section>
@@ -111,7 +111,7 @@ export function MemberDrawer({ memberId, onClose }: { memberId: string; onClose:
               {open.slice(0, 8).map((t) => (
                 <li key={t.id} style={{ display: "flex", justifyContent: "space-between", gap: 10, fontSize: 13 }}>
                   <span style={{ minWidth: 0, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{t.title}</span>
-                  <span style={{ flexShrink: 0, fontSize: 12, color: t.dueDate < today ? "#B91C1C" : "#64748B" }}>{dueLabelFor(t.dueDate)}</span>
+                  <span style={{ flexShrink: 0, fontSize: 12, color: t.dueDate < today ? "#B91C1C" : "var(--ui-text-4)" }}>{dueLabelFor(t.dueDate)}</span>
                 </li>
               ))}
             </ul>
@@ -122,5 +122,5 @@ export function MemberDrawer({ memberId, onClose }: { memberId: string; onClose:
   );
 }
 
-const h3 = { fontSize: 13.5, fontWeight: 700, color: "#0F172A", margin: "0 0 8px" } as const;
-const muted = { fontSize: 12.5, color: "#64748B", margin: 0 } as const;
+const h3 = { fontSize: 13.5, fontWeight: 700, color: "var(--ui-text)", margin: "0 0 8px" } as const;
+const muted = { fontSize: 12.5, color: "var(--ui-text-4)", margin: 0 } as const;

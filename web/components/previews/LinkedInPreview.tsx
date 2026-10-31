@@ -430,7 +430,7 @@ export function LinkedInPreview({
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr 1fr",
+            gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
             padding: "4px 8px",
           }}
         >

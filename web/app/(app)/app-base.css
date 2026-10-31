@@ -1,29 +1,29 @@
 /* ==========================================================================
-   HENRY 1:1 SAAS DESIGN SYSTEM & ISOLATED THEME (.henry-app-root)
+   BASE DE LA APLICACIÓN (.hb-app-root)
    ========================================================================== */
 
-.henry-app-root {
-  /* Henry Core Palette & Legacy Variable Mapping */
-  --henry-bg: #FAFAFA;
-  --henry-surface: #FFFFFF;
-  --henry-border: #E2E8F0;
-  --henry-border-subtle: #F1F5F9;
-  --henry-border-card: #EDF2F7;
-  --henry-text: #0F172A;
-  --henry-text-secondary: #334155;
-  --henry-text-muted: #64748B;
-  --henry-text-subtle: #94A3B8;
-  --henry-indigo: #6C77C1;
-  --henry-indigo-hover: #5A65AF;
-  --henry-indigo-soft: #F0F1F9;
-  --henry-amber-bg: #F5F6FB;
-  --henry-amber-pill: #ECEEF8;
-  --henry-amber-border: #D9DCF0;
-  --henry-amber-text: #5360A5;
-  --henry-amber-accent: #6C77C1;
-  --henry-gold-avatar: #CAA052;
+.hb-app-root {
+  /* Paleta base y variables */
+  --hb-bg: #FAFAFA;
+  --hb-surface: #FFFFFF;
+  --hb-border: #E2E8F0;
+  --hb-border-subtle: #F1F5F9;
+  --hb-border-card: #EDF2F7;
+  --hb-text: #0F172A;
+  --hb-text-secondary: #334155;
+  --hb-text-muted: #64748B;
+  --hb-text-subtle: #94A3B8;
+  --hb-indigo: #6C77C1;
+  --hb-indigo-hover: #5A65AF;
+  --hb-indigo-soft: #F0F1F9;
+  --hb-amber-bg: #F5F6FB;
+  --hb-amber-pill: #ECEEF8;
+  --hb-amber-border: #D9DCF0;
+  --hb-amber-text: #5360A5;
+  --hb-amber-accent: #6C77C1;
+  --hb-gold-avatar: #CAA052;
 
-  /* Override landing page CSS variables inside .henry-app-root */
+  /* Override landing page CSS variables inside .hb-app-root */
   --ink: #0F172A;
   --ink-2: #334155;
   --ink-soft: #475569;
@@ -68,12 +68,12 @@
 }
 
 /* Isolate headings from landing page globals.css */
-.henry-app-root h1,
-.henry-app-root h2,
-.henry-app-root h3,
-.henry-app-root h4,
-.henry-app-root h5,
-.henry-app-root h6 {
+.hb-app-root h1,
+.hb-app-root h2,
+.hb-app-root h3,
+.hb-app-root h4,
+.hb-app-root h5,
+.hb-app-root h6 {
   font-family: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   letter-spacing: -0.02em;
   line-height: 1.25;
@@ -82,28 +82,28 @@
   margin: 0;
 }
 
-.henry-app-root h1 {
+.hb-app-root h1 {
   font-size: 28px;
   font-weight: 800;
 }
 
-.henry-app-root h2 {
+.hb-app-root h2 {
   font-size: 20px;
   font-weight: 700;
 }
 
-.henry-app-root h3 {
+.hb-app-root h3 {
   font-size: 16px;
   font-weight: 700;
 }
 
-.henry-app-root :focus-visible {
+.hb-app-root :focus-visible {
   outline: 2px solid rgba(91, 103, 202, 0.4);
   outline-offset: 1px;
   border-radius: 6px;
 }
 
-.henry-app-root ::selection {
+.hb-app-root ::selection {
   background: #ECEEF8;
   color: #0F172A;
 }
@@ -115,36 +115,36 @@ nextjs-portal,
   display: none !important;
 }
 
-html:has(.henry-app-root),
-body:has(.henry-app-root) {
+html:has(.hb-app-root),
+body:has(.hb-app-root) {
   background: #FAFAFA !important;
   color: #0F172A !important;
   scrollbar-width: none !important;
 }
 
-html:has(.henry-app-root)::-webkit-scrollbar,
-body:has(.henry-app-root)::-webkit-scrollbar {
+html:has(.hb-app-root)::-webkit-scrollbar,
+body:has(.hb-app-root)::-webkit-scrollbar {
   width: 0px !important;
   height: 0px !important;
   display: none !important;
 }
 
-.henry-app-root ::-webkit-scrollbar {
+.hb-app-root ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 
-.henry-app-root ::-webkit-scrollbar-track {
+.hb-app-root ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.henry-app-root ::-webkit-scrollbar-thumb {
+.hb-app-root ::-webkit-scrollbar-thumb {
   background: rgba(148, 163, 184, 0.35);
   border-radius: 9999px;
 }
 
-/* Decompiled Henry 3D Tactile Button System (module 70667) */
-.henry-app-root .hbtn {
+/* Botones táctiles */
+.hb-app-root .hbtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -159,25 +159,25 @@ body:has(.henry-app-root)::-webkit-scrollbar {
   user-select: none;
 }
 
-.henry-app-root .hbtn-secondary {
+.hb-app-root .hbtn-secondary {
   --hbtn-edge: #D4D4E4;
   background: #FFFFFF;
   color: #1A1A2E;
   border: 1px solid #D4D4E4;
 }
 
-.henry-app-root .hbtn-secondary:hover {
+.hb-app-root .hbtn-secondary:hover {
   background: #F8FAFC;
 }
 
-.henry-app-root .hbtn-henry {
+.hb-app-root .hbtn-hb {
   --hbtn-edge: #4C56A0;
   background: #FFFFFF;
   color: #1A1A2E;
   border: 1.5px solid #6C77C1;
 }
 
-.henry-app-root .hbtn-henry:hover {
+.hb-app-root .hbtn-hb:hover {
   background: #F5F6FB;
 }
 
@@ -186,7 +186,7 @@ body:has(.henry-app-root)::-webkit-scrollbar {
    FLOATING WHITE SIDEBAR (254px expanded / 64px collapsed)
    ========================================================================== */
 
-.henry-sidebar {
+.hb-sidebar {
   width: 254px;
   min-width: 254px;
   height: calc(100vh - 24px);
@@ -207,14 +207,14 @@ body:has(.henry-app-root)::-webkit-scrollbar {
   user-select: none;
 }
 
-.henry-sidebar.is-collapsed {
+.hb-sidebar.is-collapsed {
   width: 64px;
   min-width: 64px;
   padding: 16px 8px 14px;
   align-items: center;
 }
 
-.henry-sidebar-collapse-btn {
+.hb-sidebar-collapse-btn {
   position: absolute;
   top: 50%;
   right: -12px;
@@ -235,12 +235,12 @@ body:has(.henry-app-root)::-webkit-scrollbar {
   transition: color 140ms ease, border-color 140ms ease, transform 140ms ease;
 }
 
-.henry-sidebar-collapse-btn:hover {
+.hb-sidebar-collapse-btn:hover {
   color: #475569;
   border-color: #CBD5E1;
 }
 
-.henry-logo-serif {
+.hb-logo-serif {
   font-family: Georgia, var(--font-serif), "Times New Roman", serif;
   font-size: 23px;
   font-weight: 700;
@@ -251,7 +251,7 @@ body:has(.henry-app-root)::-webkit-scrollbar {
   display: inline-block;
 }
 
-.henry-section-label {
+.hb-section-label {
   font-size: 10px;
   font-weight: 700;
   color: #94A3B8;
@@ -260,7 +260,7 @@ body:has(.henry-app-root)::-webkit-scrollbar {
   padding: 12px 10px 6px;
 }
 
-.henry-nav-item {
+.hb-nav-item {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -277,19 +277,19 @@ body:has(.henry-app-root)::-webkit-scrollbar {
   line-height: 1.25;
 }
 
-.henry-nav-item:hover {
+.hb-nav-item:hover {
   background: #F8FAFC;
   color: #0F172A;
 }
 
-.henry-nav-item.active {
+.hb-nav-item.active {
   background: #F5F6FB;
   border: 1px solid #D9DCF0;
   color: #5360A5;
   font-weight: 600;
 }
 
-.henry-sidebar.is-collapsed .henry-nav-item {
+.hb-sidebar.is-collapsed .hb-nav-item {
   width: 38px;
   height: 38px;
   padding: 0;
@@ -297,7 +297,7 @@ body:has(.henry-app-root)::-webkit-scrollbar {
   border-radius: 10px;
 }
 
-.henry-icon-btn {
+.hb-icon-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -313,7 +313,7 @@ body:has(.henry-app-root)::-webkit-scrollbar {
   text-decoration: none;
 }
 
-.henry-icon-btn:hover {
+.hb-icon-btn:hover {
   color: #475569;
   background: #F8FAFC;
 }
@@ -322,7 +322,7 @@ body:has(.henry-app-root)::-webkit-scrollbar {
    MAIN WORKSPACE AREA & PAGE CONTAINER
    ========================================================================== */
 
-.henry-main,
+.hb-main,
 .saas-main {
   flex: 1;
   min-width: 0;
@@ -332,7 +332,7 @@ body:has(.henry-app-root)::-webkit-scrollbar {
   background: #FAFAFA;
 }
 
-.henry-page,
+.hb-page,
 .saas-page,
 .saas-content {
   flex: 1;
@@ -346,7 +346,7 @@ body:has(.henry-app-root)::-webkit-scrollbar {
    TOP PILL SEGMENTED BAR & QUICK ACTION CHIPS
    ========================================================================== */
 
-.henry-pill-tabs,
+.hb-pill-tabs,
 .saas-pill-nav,
 .saas-subnav {
   display: inline-flex;
@@ -358,7 +358,7 @@ body:has(.henry-app-root)::-webkit-scrollbar {
   border: 1px solid #E2E8F0;
 }
 
-.henry-pill-tab,
+.hb-pill-tab,
 .saas-pill,
 .saas-subnav-item {
   display: inline-flex;
@@ -377,13 +377,13 @@ body:has(.henry-app-root)::-webkit-scrollbar {
   white-space: nowrap;
 }
 
-.henry-pill-tab:hover,
+.hb-pill-tab:hover,
 .saas-pill:hover,
 .saas-subnav-item:hover {
   color: #0F172A;
 }
 
-.henry-pill-tab.active,
+.hb-pill-tab.active,
 .saas-pill.active,
 .saas-subnav-item.is-active {
   background: #FFFFFF;
@@ -396,7 +396,7 @@ body:has(.henry-app-root)::-webkit-scrollbar {
    CARDS, BENTO GRID & TABLES
    ========================================================================== */
 
-.henry-card,
+.hb-card,
 .saas-card {
   background: #FFFFFF;
   border: 1px solid #EDF2F7;
@@ -463,7 +463,7 @@ body:has(.henry-app-root)::-webkit-scrollbar {
 }
 
 /* ==========================================================================
-   BUTTONS (.saas-btn & .henry-btn)
+   BUTTONS (.saas-btn & .hb-btn)
    ========================================================================== */
 
 .saas-btn {
@@ -749,7 +749,7 @@ body:has(.henry-app-root)::-webkit-scrollbar {
 }
 
 @media (max-width: 768px) {
-  .henry-page,
+  .hb-page,
   .saas-page,
   .saas-content {
     padding: 14px 16px 80px;

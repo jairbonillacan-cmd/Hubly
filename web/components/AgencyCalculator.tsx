@@ -67,7 +67,7 @@ export interface AgencyCalculatorProps {
  * Componente interactivo AgencyCalculator
  *
  * Implementa de manera fidedigna:
- * 1. Calculadora de Horas de Henry (/calculadora)
+ * 1. Calculadora de horas
  * 2. Calculadora de Escalado de Precios por Volumen (/lp/pricing)
  * 3. Proyector de ROI y Nómina Recuperada para Agencias
  *
@@ -295,7 +295,7 @@ export function AgencyCalculator({
       </div>
 
       {/* ==================================================================== */}
-      {/* PESTAÑA 1: CALCULADORA DE HORAS AHORRADAS (Ruta /calculadora de Henry) */}
+      {/* PESTAÑA 1: CALCULADORA DE HORAS AHORRADAS */}
       {/* ==================================================================== */}
       {activeTab === "hours" && (
         <div className="space-y-8">
@@ -492,7 +492,7 @@ export function AgencyCalculator({
       )}
 
       {/* ==================================================================== */}
-      {/* PESTAÑA 2: PRECIOS POR VOLUMEN Y TRAMOS (Ruta /lp/pricing de Henry) */}
+      {/* PESTAÑA 2: PRECIOS POR VOLUMEN Y TRAMOS */}
       {/* ==================================================================== */}
       {activeTab === "pricing" && (
         <div className="space-y-8">

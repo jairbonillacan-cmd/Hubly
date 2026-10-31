@@ -250,21 +250,21 @@ export function WidgetConfigModal({
           width: "100%",
           maxWidth: 660,
           maxHeight: "90vh",
-          background: "#FFFFFF",
+          background: "var(--ui-surface)",
           borderRadius: 20,
-          border: "1px solid #E2E8F0",
+          border: "1px solid var(--ui-border)",
           boxShadow: "0 24px 60px rgba(15, 23, 42, 0.22)",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
-          color: "#0F172A",
+          color: "var(--ui-text)",
         }}
       >
         {/* Header */}
         <div
           style={{
             padding: "16px 22px",
-            borderBottom: "1px solid #F1F5F9",
+            borderBottom: "1px solid var(--ui-muted)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -277,7 +277,7 @@ export function WidgetConfigModal({
                 width: 36,
                 height: 36,
                 borderRadius: 10,
-                background: "#F0F1F9",
+                background: "var(--ui-accent-soft)",
                 color: "#6C77C1",
                 display: "grid",
                 placeItems: "center",
@@ -293,7 +293,7 @@ export function WidgetConfigModal({
                   margin: 0,
                   fontSize: 16,
                   fontWeight: 700,
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                 }}
               >
                 Configurar widgets del Dashboard
@@ -302,7 +302,7 @@ export function WidgetConfigModal({
                 style={{
                   margin: "2px 0 0",
                   fontSize: 12,
-                  color: "#64748B",
+                  color: "var(--ui-text-4)",
                 }}
               >
                 Activa, oculta, cambia el ancho o reordena los {sortedWidgets.length}{" "}
@@ -319,9 +319,9 @@ export function WidgetConfigModal({
               width: 32,
               height: 32,
               borderRadius: 9999,
-              border: "1px solid #E2E8F0",
-              background: "#F8FAFC",
-              color: "#64748B",
+              border: "1px solid var(--ui-border)",
+              background: "var(--ui-surface-2)",
+              color: "var(--ui-text-4)",
               display: "grid",
               placeItems: "center",
               cursor: "pointer",
@@ -347,7 +347,7 @@ export function WidgetConfigModal({
               style={{
                 padding: "9px 14px",
                 borderRadius: 10,
-                background: "#F0F1F9",
+                background: "var(--ui-accent-soft)",
                 border: "1px solid #D9DCF0",
                 color: "#4C56A0",
                 fontSize: 12.5,
@@ -376,7 +376,7 @@ export function WidgetConfigModal({
                   border: w.visible
                     ? "1px solid #CBD5E1"
                     : "1px dashed #CBD5E1",
-                  background: w.visible ? "#FFFFFF" : "#F8FAFC",
+                  background: w.visible ? "var(--ui-surface)" : "var(--ui-surface-2)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
@@ -407,7 +407,7 @@ export function WidgetConfigModal({
                       height: 24,
                       borderRadius: 9999,
                       border: "none",
-                      background: w.visible ? "#6C77C1" : "#CBD5E1",
+                      background: w.visible ? "#6C77C1" : "var(--ui-border-strong)",
                       padding: 2,
                       cursor: "pointer",
                       display: "flex",
@@ -422,7 +422,7 @@ export function WidgetConfigModal({
                         width: 20,
                         height: 20,
                         borderRadius: 9999,
-                        background: "#FFFFFF",
+                        background: "var(--ui-surface)",
                         boxShadow: "0 1px 3px rgba(15,23,42,0.2)",
                         display: "grid",
                         placeItems: "center",
@@ -449,7 +449,7 @@ export function WidgetConfigModal({
                         style={{
                           fontSize: 13.5,
                           fontWeight: 700,
-                          color: w.visible ? "#0F172A" : "#64748B",
+                          color: w.visible ? "var(--ui-text)" : "var(--ui-text-4)",
                         }}
                       >
                         {meta.title}
@@ -458,8 +458,8 @@ export function WidgetConfigModal({
                         style={{
                           padding: "1px 7px",
                           borderRadius: 9999,
-                          background: w.visible ? "#F0F1F9" : "#F1F5F9",
-                          color: w.visible ? "#6C77C1" : "#64748B",
+                          background: w.visible ? "var(--ui-accent-soft)" : "var(--ui-muted)",
+                          color: w.visible ? "#6C77C1" : "var(--ui-text-4)",
                           fontSize: 10.5,
                           fontWeight: 600,
                         }}
@@ -470,7 +470,7 @@ export function WidgetConfigModal({
                     <div
                       style={{
                         fontSize: 11.5,
-                        color: "#64748B",
+                        color: "var(--ui-text-4)",
                         marginTop: 2,
                         lineHeight: 1.35,
                       }}
@@ -495,7 +495,7 @@ export function WidgetConfigModal({
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
-                      background: "#F1F5F9",
+                      background: "var(--ui-muted)",
                       padding: 2,
                       borderRadius: 8,
                       gap: 2,
@@ -516,8 +516,8 @@ export function WidgetConfigModal({
                             padding: "4px 7px",
                             borderRadius: 6,
                             border: "none",
-                            background: isCurrent ? "#FFFFFF" : "transparent",
-                            color: isCurrent ? "#6C77C1" : "#64748B",
+                            background: isCurrent ? "var(--ui-surface)" : "transparent",
+                            color: isCurrent ? "#6C77C1" : "var(--ui-text-4)",
                             fontSize: 11,
                             fontWeight: 600,
                             cursor: "pointer",
@@ -542,9 +542,9 @@ export function WidgetConfigModal({
                         width: 28,
                         height: 28,
                         borderRadius: 8,
-                        border: "1px solid #E2E8F0",
-                        background: isFirst ? "#F8FAFC" : "#FFFFFF",
-                        color: isFirst ? "#CBD5E1" : "#475569",
+                        border: "1px solid var(--ui-border)",
+                        background: isFirst ? "var(--ui-surface-2)" : "var(--ui-surface)",
+                        color: isFirst ? "#CBD5E1" : "var(--ui-text-3)",
                         display: "grid",
                         placeItems: "center",
                         cursor: isFirst ? "not-allowed" : "pointer",
@@ -563,9 +563,9 @@ export function WidgetConfigModal({
                         width: 28,
                         height: 28,
                         borderRadius: 8,
-                        border: "1px solid #E2E8F0",
-                        background: isLast ? "#F8FAFC" : "#FFFFFF",
-                        color: isLast ? "#CBD5E1" : "#475569",
+                        border: "1px solid var(--ui-border)",
+                        background: isLast ? "var(--ui-surface-2)" : "var(--ui-surface)",
+                        color: isLast ? "#CBD5E1" : "var(--ui-text-3)",
                         display: "grid",
                         placeItems: "center",
                         cursor: isLast ? "not-allowed" : "pointer",
@@ -585,8 +585,8 @@ export function WidgetConfigModal({
         <div
           style={{
             padding: "14px 22px",
-            borderTop: "1px solid #F1F5F9",
-            background: "#F8FAFC",
+            borderTop: "1px solid var(--ui-muted)",
+            background: "var(--ui-surface-2)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -601,9 +601,9 @@ export function WidgetConfigModal({
               height: 36,
               padding: "0 13px",
               borderRadius: 10,
-              border: "1px solid #CBD5E1",
-              background: "#FFFFFF",
-              color: "#475569",
+              border: "1px solid var(--ui-border-strong)",
+              background: "var(--ui-surface)",
+              color: "var(--ui-text-3)",
               fontSize: 12.5,
               fontWeight: 600,
               cursor: "pointer",
@@ -623,7 +623,7 @@ export function WidgetConfigModal({
                 alignItems: "center",
                 gap: 4,
                 fontSize: 11.5,
-                color: "#64748B",
+                color: "var(--ui-text-4)",
                 marginRight: 4,
               }}
             >

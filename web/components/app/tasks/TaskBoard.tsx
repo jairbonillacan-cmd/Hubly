@@ -18,6 +18,7 @@ import {
   Table as TableIcon,
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { askConfirm, askText } from "@/components/app/AppDialogHost";
 import { addDays, dueLabelFor, localIsoDate } from "@/lib/date";
 import { useKanbanDrag } from "@/lib/use-kanban-drag";
 import { KanbanDropSlot } from "@/components/app/KanbanDropSlot";
@@ -159,8 +160,8 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
       height: 30,
       borderRadius: 8,
       border: "none",
-      background: active ? "#F0F1F9" : "transparent",
-      color: active ? "#6C77C1" : "#64748B",
+      background: active ? "var(--ui-accent-soft)" : "transparent",
+      color: active ? "#6C77C1" : "var(--ui-text-4)",
       display: "grid",
       placeItems: "center",
       cursor: "pointer",
@@ -183,8 +184,8 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
           height: 18,
           padding: 0,
           borderRadius: 999,
-          border: done ? "none" : "1.5px solid #CBD5E1",
-          background: done ? "#6C77C1" : "#FFFFFF",
+          border: done ? "none" : "1.5px solid var(--ui-border-strong)",
+          background: done ? "#6C77C1" : "var(--ui-surface)",
           color: "#FFFFFF",
           display: "grid",
           placeItems: "center",
@@ -204,7 +205,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
         style={{
           fontSize: 13.5,
           fontWeight: 500,
-          color: done ? "#94A3B8" : "#1E293B",
+          color: done ? "var(--ui-text-5)" : "var(--ui-text-1)",
           textDecoration: done ? "line-through" : "none",
           background: task.highlighted && !done ? "#ECEEF8" : "transparent",
           padding: task.highlighted ? "1px 5px" : 0,
@@ -223,7 +224,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
   const avatar = (task: AgencyTask) => (
     <span
       title={`Responsable: ${task.assigneeName || task.assignee}`}
-      style={{ width: 26, height: 26, flexShrink: 0, borderRadius: 999, background: "#E0E7FF", color: "#5360A5", fontSize: 11, fontWeight: 700, display: "grid", placeItems: "center" }}
+      style={{ width: 26, height: 26, flexShrink: 0, borderRadius: 999, background: "#E0E7FF", color: "var(--ui-accent-text)", fontSize: 11, fontWeight: 700, display: "grid", placeItems: "center" }}
     >
       {task.assigneeInitial || (task.assigneeName || "?").slice(0, 1)}
     </span>
@@ -259,8 +260,8 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                   padding: "5px 11px",
                   borderRadius: 8,
                   border: "none",
-                  background: active ? "#F0F1F9" : "transparent",
-                  color: active ? "#5360A5" : "#64748B",
+                  background: active ? "var(--ui-accent-soft)" : "transparent",
+                  color: active ? "var(--ui-accent-text)" : "var(--ui-text-4)",
                   fontWeight: active ? 600 : 500,
                   fontSize: 12.5,
                   cursor: "pointer",
@@ -274,7 +275,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
-          <label style={{ display: "inline-flex", alignItems: "center", gap: 6, border: "1px solid #E2E8F0", borderRadius: 8, padding: "0 8px", height: 30 }}>
+          <label style={{ display: "inline-flex", alignItems: "center", gap: 6, border: "1px solid var(--ui-border)", borderRadius: 8, padding: "0 8px", height: 30 }}>
             <Search size={13} color="#64748B" />
             <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar tarea" aria-label="Buscar tarea" style={{ border: 0, outline: 0, fontSize: 12.5, width: 110, background: "transparent" }} />
           </label>
@@ -300,7 +301,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
         </div>
 
         {popover && (
-          <div style={{ position: "absolute", top: "100%", right: 0, marginTop: 6, zIndex: 20, width: 220, background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 12, padding: 12, boxShadow: "0 12px 28px rgba(15,23,42,0.12)", display: "grid", gap: 8, fontSize: 13 }}>
+          <div style={{ position: "absolute", top: "100%", right: 0, marginTop: 6, zIndex: 20, width: 220, background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 12, padding: 12, boxShadow: "0 12px 28px rgba(15,23,42,0.12)", display: "grid", gap: 8, fontSize: 13 }}>
             {popover === "agrupar" && (
               <>
                 <strong style={{ fontSize: 12 }}>Agrupar las cards por</strong>
@@ -342,7 +343,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                   </select>
                 </label>
                 {filtersOn && (
-                  <button type="button" onClick={() => { setStatusFilter("todas"); setPersonFilter("todos"); }} style={{ border: 0, background: "transparent", color: "#5A65AF", fontWeight: 600, fontSize: 12.5, cursor: "pointer", textAlign: "left", padding: 0 }}>
+                  <button type="button" onClick={() => { setStatusFilter("todas"); setPersonFilter("todos"); }} style={{ border: 0, background: "transparent", color: "var(--ui-accent-text-2)", fontWeight: 600, fontSize: 12.5, cursor: "pointer", textAlign: "left", padding: 0 }}>
                     Quitar filtros
                   </button>
                 )}
@@ -357,11 +358,11 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
           {groups.map((group) => {
             const pending = group.items.filter((t) => normalizedStatus(t) !== "done").length;
             return (
-              <section key={group.key} style={{ background: "#FFFFFF", borderRadius: 16, border: "1px solid #E2E8F0", padding: "20px 22px 18px", position: "relative" }}>
+              <section key={group.key} style={{ background: "var(--ui-surface)", borderRadius: 16, border: "1px solid var(--ui-border)", padding: "20px 22px 18px", position: "relative" }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: 12, borderBottom: "2px solid #6C77C1" }}>
-                  <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "#0F172A" }}>{group.name}</h3>
+                  <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "var(--ui-text)" }}>{group.name}</h3>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ fontSize: 12, color: "#64748B" }}>{pending} pendientes</span>
+                    <span style={{ fontSize: 12, color: "var(--ui-text-4)" }}>{pending} pendientes</span>
                     {groupBy === "lista" && (
                       <button type="button" aria-label={`Opciones de ${group.name}`} aria-expanded={listMenu === group.key} onClick={() => setListMenu(listMenu === group.key ? null : group.key)} style={iconBtn(false)}>
                         <MoreHorizontal size={15} />
@@ -371,13 +372,13 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                 </div>
 
                 {listMenu === group.key && (
-                  <div style={{ position: "absolute", right: 22, top: 56, zIndex: 10, background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 10, boxShadow: "0 12px 28px rgba(15,23,42,0.12)", padding: 4, display: "grid" }}>
+                  <div style={{ position: "absolute", right: 22, top: 56, zIndex: 10, background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 10, boxShadow: "0 12px 28px rgba(15,23,42,0.12)", padding: 4, display: "grid" }}>
                     <button
                       type="button"
                       style={menuItem}
-                      onClick={() => {
+                      onClick={async () => {
                         setListMenu(null);
-                        const next = window.prompt("Nuevo nombre de la lista", group.name)?.trim();
+                        const next = await askText("Nuevo nombre de la lista", group.name);
                         if (next && next !== group.name && !listNames.includes(next)) renameTaskList(activeBrandId, group.name, next);
                       }}
                     >
@@ -386,10 +387,10 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                     <button
                       type="button"
                       style={{ ...menuItem, color: "#B91C1C" }}
-                      onClick={() => {
+                      onClick={async () => {
                         setListMenu(null);
                         const count = brandTasks.filter((t) => t.listName === group.name).length;
-                        if (window.confirm(`¿Eliminar «${group.name}» y sus ${count} tareas?`)) deleteTaskList(activeBrandId, group.name);
+                        if (await askConfirm(`¿Eliminar «${group.name}» y sus ${count} tareas?`)) deleteTaskList(activeBrandId, group.name);
                       }}
                     >
                       Eliminar lista
@@ -398,7 +399,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                 )}
 
                 <div style={{ display: "flex", flexDirection: "column", marginTop: 6 }}>
-                  {group.items.length === 0 && <p style={{ fontSize: 12.5, color: "#64748B", margin: "10px 0" }}>Sin tareas.</p>}
+                  {group.items.length === 0 && <p style={{ fontSize: 12.5, color: "var(--ui-text-4)", margin: "10px 0" }}>Sin tareas.</p>}
                   {group.items.map((task) => (
                     <div
                       key={task.id}
@@ -433,7 +434,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                     }}
                     style={{ marginTop: 8, paddingTop: 8, display: "flex", alignItems: "center", gap: 8 }}
                   >
-                    <Plus size={14} style={{ color: "#94A3B8", flexShrink: 0 }} />
+                    <Plus size={14} style={{ color: "var(--ui-text-5)", flexShrink: 0 }} />
                     <input
                       value={drafts[group.key] || ""}
                       onChange={(e) => setDrafts((prev) => ({ ...prev, [group.key]: e.target.value }))}
@@ -462,17 +463,17 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                   setNewListName("");
                   setCreatingList(false);
                 }}
-                style={{ borderRadius: 16, border: "1.5px dashed #6C77C1", minHeight: 200, padding: 24, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, background: "#F8FAFC" }}
+                style={{ borderRadius: 16, border: "1.5px dashed #6C77C1", minHeight: 200, padding: 24, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, background: "var(--ui-surface-2)" }}
               >
-                <label htmlFor="new-list-name" style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>Nombre de la nueva lista</label>
-                <input id="new-list-name" autoFocus value={newListName} onChange={(e) => setNewListName(e.target.value)} placeholder="Ej. Entregables de noviembre" style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid #CBD5E1", fontSize: 13.5, width: "100%", maxWidth: 280 }} />
+                <label htmlFor="new-list-name" style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>Nombre de la nueva lista</label>
+                <input id="new-list-name" autoFocus value={newListName} onChange={(e) => setNewListName(e.target.value)} placeholder="Ej. Entregables de noviembre" style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--ui-border-strong)", fontSize: 13.5, width: "100%", maxWidth: 280 }} />
                 <div style={{ display: "flex", gap: 8 }}>
-                  <button type="button" onClick={() => setCreatingList(false)} style={{ padding: "7px 14px", borderRadius: 8, border: "1px solid #E2E8F0", background: "#FFFFFF", color: "#475569", fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}>Cancelar</button>
+                  <button type="button" onClick={() => setCreatingList(false)} style={{ padding: "7px 14px", borderRadius: 8, border: "1px solid var(--ui-border)", background: "var(--ui-surface)", color: "var(--ui-text-3)", fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}>Cancelar</button>
                   <button type="submit" style={{ padding: "7px 16px", borderRadius: 8, border: "none", background: "#6C77C1", color: "#FFFFFF", fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}>Crear lista</button>
                 </div>
               </form>
             ) : (
-              <button type="button" onClick={() => setCreatingList(true)} style={{ borderRadius: 16, border: "1.5px dashed #CBD5E1", minHeight: 200, background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, color: "#5360A5", fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}>
+              <button type="button" onClick={() => setCreatingList(true)} style={{ borderRadius: 16, border: "1.5px dashed var(--ui-border-strong)", minHeight: 200, background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, color: "var(--ui-accent-text)", fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}>
                 <Plus size={15} /> Nueva lista
               </button>
             ))}
@@ -489,14 +490,14 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                 <div
                   key={col.key}
                   {...kanban.getColumnProps(col.key)}
-                  style={{ background: over ? "#F0F1F9" : "#F8FAFC", borderRadius: 14, border: `1px solid ${over ? "#6C77C1" : "#E2E8F0"}`, padding: 16, minHeight: 160, display: "flex", flexDirection: "column", gap: 10 }}
+                  style={{ background: over ? "var(--ui-accent-soft)" : "var(--ui-surface-2)", borderRadius: 14, border: `1px solid ${over ? "#6C77C1" : "var(--ui-border)"}`, padding: 16, minHeight: 160, display: "flex", flexDirection: "column", gap: 10 }}
                 >
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13.5, fontWeight: 700, color: "#0F172A" }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13.5, fontWeight: 700, color: "var(--ui-text)" }}>
                       <span style={{ width: 8, height: 8, borderRadius: 999, background: col.dot }} />
                       {col.title}
                     </span>
-                    <span style={{ fontSize: 11.5, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "#E2E8F0", color: "#475569" }}>{items.length}</span>
+                    <span style={{ fontSize: 11.5, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "var(--ui-border)", color: "var(--ui-text-3)" }}>{items.length}</span>
                   </div>
                   {items.map((task) => (
                     <React.Fragment key={task.id}>
@@ -504,10 +505,10 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                       <div
                         {...kanban.getCardProps(task.id)}
                         onClick={() => setOpenTaskId(task.id)}
-                        style={{ background: "#FFFFFF", borderRadius: 12, border: "1px solid #E2E8F0", padding: "12px 14px", cursor: kanban.drag?.id === task.id ? "grabbing" : "grab", opacity: kanban.drag?.id === task.id ? 0.35 : 1 }}
+                        style={{ background: "var(--ui-surface)", borderRadius: 12, border: "1px solid var(--ui-border)", padding: "12px 14px", cursor: kanban.drag?.id === task.id ? "grabbing" : "grab", opacity: kanban.drag?.id === task.id ? 0.35 : 1 }}
                       >
-                        <div style={{ fontSize: 11, color: "#64748B", marginBottom: 4 }}>{task.listName}</div>
-                        <div style={{ fontSize: 13.5, fontWeight: 600, color: col.key === "done" ? "#94A3B8" : "#0F172A", textDecoration: col.key === "done" ? "line-through" : "none", marginBottom: 10 }}>{task.title}</div>
+                        <div style={{ fontSize: 11, color: "var(--ui-text-4)", marginBottom: 4 }}>{task.listName}</div>
+                        <div style={{ fontSize: 13.5, fontWeight: 600, color: col.key === "done" ? "var(--ui-text-5)" : "var(--ui-text)", textDecoration: col.key === "done" ? "line-through" : "none", marginBottom: 10 }}>{task.title}</div>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                           {showAssignee ? avatar(task) : <span />}
                           {showDate && <span style={{ fontSize: 11.5, fontWeight: 600, color: dueColor(task) }}>{dueLabelFor(task.dueDate)}</span>}
@@ -524,10 +525,10 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
       )}
 
       {subView === "tabla" && (
-        <div style={{ borderRadius: 14, border: "1px solid #E2E8F0", overflowX: "auto", background: "#FFFFFF" }}>
+        <div style={{ borderRadius: 14, border: "1px solid var(--ui-border)", overflowX: "auto", background: "var(--ui-surface)" }}>
           <table style={{ width: "100%", minWidth: 560, borderCollapse: "collapse", fontSize: 13.5 }}>
             <thead>
-              <tr style={{ background: "#F8FAFC", borderBottom: "1px solid #E2E8F0", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#64748B", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              <tr style={{ background: "var(--ui-surface-2)", borderBottom: "1px solid var(--ui-border)", textAlign: "left", fontSize: 11, fontWeight: 700, color: "var(--ui-text-4)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                 <th style={{ padding: "12px 16px", width: 44 }}><span className="sr-only">Hecha</span></th>
                 <th style={{ padding: "12px 16px" }}>Tarea</th>
                 <th style={{ padding: "12px 16px" }}>Lista</th>
@@ -537,11 +538,11 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
             </thead>
             <tbody>
               {visible.map((task) => (
-                <tr key={task.id} onClick={() => setOpenTaskId(task.id)} style={{ borderBottom: "1px solid #F1F5F9", cursor: "pointer" }}>
+                <tr key={task.id} onClick={() => setOpenTaskId(task.id)} style={{ borderBottom: "1px solid var(--ui-muted)", cursor: "pointer" }}>
                   <td style={{ padding: "12px 16px" }}>{checkbox(task)}</td>
                   <td style={{ padding: "12px 16px" }}>{titleSpan(task)}</td>
-                  <td style={{ padding: "12px 16px", color: "#475569" }}>{task.listName}</td>
-                  {showAssignee && <td style={{ padding: "12px 16px", color: "#334155" }}>{task.assigneeName || task.assignee}</td>}
+                  <td style={{ padding: "12px 16px", color: "var(--ui-text-3)" }}>{task.listName}</td>
+                  {showAssignee && <td style={{ padding: "12px 16px", color: "var(--ui-text-2)" }}>{task.assigneeName || task.assignee}</td>}
                   {showDate && <td style={{ padding: "12px 16px", fontWeight: 600, color: dueColor(task) }}>{dueLabelFor(task.dueDate)}</td>}
                 </tr>
               ))}
@@ -560,7 +561,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
               label: task.title,
               title: `${task.title} · ${task.assigneeName || task.assignee}`,
               bg: status === "done" ? "#F1F5F9" : status === "in_progress" ? "#FEF3C7" : "#ECEEF8",
-              color: status === "done" ? "#475569" : status === "in_progress" ? "#92400E" : "#4C56A0",
+              color: status === "done" ? "var(--ui-text-3)" : status === "in_progress" ? "#92400E" : "#4C56A0",
               strike: status === "done",
             };
           })}
@@ -568,21 +569,21 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
           addLabel="Nueva tarea"
           onMove={(id, date) => updateTask(id, { dueDate: date, dueLabel: dueLabelFor(date), dueBucket: undefined })}
           onOpen={setOpenTaskId}
-          onAdd={(date) => {
-            const title = window.prompt("Nombre de la tarea")?.trim();
+          onAdd={async (date) => {
+            const title = await askText("Nombre de la tarea", "", "Crear tarea");
             if (title) createTask(title, listNames[0] || "General", date);
           }}
         />
       )}
 
       {subView === "timeline" && (
-        <div style={{ overflowX: "auto", border: "1px solid #E2E8F0", borderRadius: 14 }}>
+        <div style={{ overflowX: "auto", border: "1px solid var(--ui-border)", borderRadius: 14 }}>
           <div style={{ display: "grid", gridTemplateColumns: `150px repeat(${TIMELINE_DAYS}, minmax(44px, 1fr))`, minWidth: 150 + TIMELINE_DAYS * 44 }}>
             <div style={{ ...tlHead, position: "sticky", left: 0, zIndex: 3 }}>Lista</div>
             {timelineDays.map((d) => {
               const day = new Date(`${d}T12:00:00`);
               return (
-                <div key={d} style={{ ...tlHead, textAlign: "center", color: d === today ? "#FFFFFF" : "#64748B", background: d === today ? "#6C77C1" : "#F8FAFC", fontWeight: 700 }}>
+                <div key={d} style={{ ...tlHead, textAlign: "center", color: d === today ? "#FFFFFF" : "var(--ui-text-4)", background: d === today ? "#6C77C1" : "var(--ui-surface-2)", fontWeight: 700 }}>
                   {day.getDate()}
                   <div style={{ fontSize: 9.5, fontWeight: 600 }}>{day.toLocaleDateString("es-MX", { weekday: "short" })}</div>
                 </div>
@@ -590,14 +591,14 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
             })}
             {timelineRows.map((row) => (
               <React.Fragment key={row.name}>
-                <div style={{ position: "sticky", left: 0, zIndex: 2, background: "#FFFFFF", padding: "10px 12px", borderTop: "1px solid #E2E8F0", fontSize: 12.5, fontWeight: 700, color: "#0F172A" }}>
+                <div style={{ position: "sticky", left: 0, zIndex: 2, background: "var(--ui-surface)", padding: "10px 12px", borderTop: "1px solid var(--ui-border)", fontSize: 12.5, fontWeight: 700, color: "var(--ui-text)" }}>
                   {row.name}
                 </div>
                 {timelineDays.map((d) => (
                   <div
                     key={d}
                     {...timelineDrag.getColumnProps(d)}
-                    style={{ minHeight: 56, padding: 3, borderTop: "1px solid #E2E8F0", borderLeft: "1px solid #F1F5F9", background: timelineDrag.drag?.overCol === d ? "#F0F1F9" : "transparent", display: "flex", flexDirection: "column", gap: 3, minWidth: 0 }}
+                    style={{ minHeight: 56, padding: 3, borderTop: "1px solid var(--ui-border)", borderLeft: "1px solid var(--ui-muted)", background: timelineDrag.drag?.overCol === d ? "var(--ui-accent-soft)" : "transparent", display: "flex", flexDirection: "column", gap: 3, minWidth: 0 }}
                   >
                     {row.items.filter((t) => t.dueDate === d).map((task) => (
                       <div
@@ -606,7 +607,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                         onClick={() => setOpenTaskId(task.id)}
                         title={`${task.title} · ${dueLabelFor(task.dueDate)}`}
                         aria-label={task.title}
-                        style={{ height: 22, borderRadius: 6, background: normalizedStatus(task) === "done" ? "#CBD5E1" : "#6C77C1", color: "#FFFFFF", fontSize: 10.5, fontWeight: 600, padding: "3px 5px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", cursor: "grab", opacity: timelineDrag.drag?.id === task.id ? 0.35 : 1 }}
+                        style={{ height: 22, borderRadius: 6, background: normalizedStatus(task) === "done" ? "var(--ui-border-strong)" : "#6C77C1", color: "#FFFFFF", fontSize: 10.5, fontWeight: 600, padding: "3px 5px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", cursor: "grab", opacity: timelineDrag.drag?.id === task.id ? 0.35 : 1 }}
                       >
                         {task.title}
                       </div>
@@ -617,7 +618,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
             ))}
           </div>
           {visible.some((t) => !timelineDays.includes(t.dueDate)) && (
-            <p style={{ margin: 0, padding: "8px 12px", fontSize: 12, color: "#64748B", borderTop: "1px solid #E2E8F0" }}>
+            <p style={{ margin: 0, padding: "8px 12px", fontSize: 12, color: "var(--ui-text-4)", borderTop: "1px solid var(--ui-border)" }}>
               {visible.filter((t) => !timelineDays.includes(t.dueDate)).length} tareas tienen fecha fuera de estas 4 semanas.
             </p>
           )}
@@ -627,17 +628,17 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
       {subView === "proyectos" && (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 300px), 1fr))", gap: 16 }}>
           {projects.filter((p) => p.brandId === activeBrandId).length === 0 && (
-            <p style={{ fontSize: 13.5, color: "#64748B" }}>Esta marca aún no tiene proyectos.</p>
+            <p style={{ fontSize: 13.5, color: "var(--ui-text-4)" }}>Esta marca aún no tiene proyectos.</p>
           )}
           {projects.filter((p) => p.brandId === activeBrandId).map((p) => (
-            <div key={p.id} style={{ borderRadius: 14, border: "1px solid #E2E8F0", padding: 18, background: "#FFFFFF" }}>
+            <div key={p.id} style={{ borderRadius: 14, border: "1px solid var(--ui-border)", padding: 18, background: "var(--ui-surface)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "#F0F1F9", color: "#5360A5" }}>{p.status}</span>
-                <span style={{ fontSize: 11.5, color: "#64748B" }}>Entrega: {p.dueDate}</span>
+                <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "var(--ui-accent-soft)", color: "var(--ui-accent-text)" }}>{p.status}</span>
+                <span style={{ fontSize: 11.5, color: "var(--ui-text-4)" }}>Entrega: {p.dueDate}</span>
               </div>
-              <div style={{ fontSize: 14.5, fontWeight: 700, color: "#0F172A", marginBottom: 6 }}>{p.title}</div>
-              <div style={{ fontSize: 12.5, color: "#64748B", marginBottom: 12 }}>{p.description}</div>
-              <div style={{ height: 6, borderRadius: 999, background: "#F1F5F9", overflow: "hidden" }}>
+              <div style={{ fontSize: 14.5, fontWeight: 700, color: "var(--ui-text)", marginBottom: 6 }}>{p.title}</div>
+              <div style={{ fontSize: 12.5, color: "var(--ui-text-4)", marginBottom: 12 }}>{p.description}</div>
+              <div style={{ height: 6, borderRadius: 999, background: "var(--ui-muted)", overflow: "hidden" }}>
                 <div style={{ width: `${p.progress}%`, height: "100%", background: "#6C77C1" }} />
               </div>
             </div>
@@ -650,6 +651,6 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
   );
 }
 
-const select = { border: "1px solid #CBD5E1", borderRadius: 8, padding: "6px 8px", fontSize: 12.5, background: "#FFFFFF" } as const;
-const menuItem = { border: 0, background: "transparent", padding: "7px 12px", fontSize: 12.5, fontWeight: 600, textAlign: "left", cursor: "pointer", borderRadius: 7, color: "#334155" } as const;
-const tlHead = { padding: "6px 8px", fontSize: 11, fontWeight: 700, color: "#64748B", background: "#F8FAFC" } as const;
+const select = { border: "1px solid var(--ui-border-strong)", borderRadius: 8, padding: "6px 8px", fontSize: 12.5, background: "var(--ui-surface)" } as const;
+const menuItem = { border: 0, background: "transparent", padding: "7px 12px", fontSize: 12.5, fontWeight: 600, textAlign: "left", cursor: "pointer", borderRadius: 7, color: "var(--ui-text-2)" } as const;
+const tlHead = { padding: "6px 8px", fontSize: 11, fontWeight: 700, color: "var(--ui-text-4)", background: "var(--ui-surface-2)" } as const;

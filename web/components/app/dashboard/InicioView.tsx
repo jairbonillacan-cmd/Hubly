@@ -600,15 +600,15 @@ export function InicioView() {
             key="tareas"
             id="dashboard-tareas-widget"
             data-widget-id="tareas"
-            className="henry-widget"
+            className="hb-widget"
           >
-            <div className="henry-widget-head" style={{ flexWrap: "wrap", gap: 8 }}>
-              <div className="henry-widget-title">
-                <span className="henry-widget-icon-box">
+            <div className="hb-widget-head" style={{ flexWrap: "wrap", gap: 8 }}>
+              <div className="hb-widget-title">
+                <span className="hb-widget-icon-box">
                   <HublyClipboardIcon size={18} />
                 </span>
                 <span>Tareas</span>
-                <span className="henry-widget-badge">{tasksBreakdown.pendingCount}</span>
+                <span className="hb-widget-badge">{tasksBreakdown.pendingCount}</span>
               </div>
 
               <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
@@ -622,8 +622,8 @@ export function InicioView() {
                     padding: "3px 9px",
                     borderRadius: 999,
                     border: "1px solid rgba(226, 232, 240, 0.95)",
-                    background: filterByBrand ? "#F8FAFC" : "#F5F6FB",
-                    color: filterByBrand ? "#64748B" : "#5360A5",
+                    background: filterByBrand ? "var(--ui-surface-2)" : "#F5F6FB",
+                    color: filterByBrand ? "var(--ui-text-4)" : "var(--ui-accent-text)",
                     cursor: "pointer",
                   }}
                 >
@@ -644,8 +644,8 @@ export function InicioView() {
                     padding: "3px 8px",
                     borderRadius: 999,
                     border: "1px solid rgba(226, 232, 240, 0.95)",
-                    background: "#FFFFFF",
-                    color: "#475569",
+                    background: "var(--ui-surface)",
+                    color: "var(--ui-text-3)",
                     cursor: "pointer",
                   }}
                 >
@@ -660,8 +660,8 @@ export function InicioView() {
                 onSubmit={handleCreateQuickTask}
                 style={{
                   padding: "12px 20px",
-                  background: "#F8FAFC",
-                  borderBottom: "1px solid #F1F5F9",
+                  background: "var(--ui-surface-2)",
+                  borderBottom: "1px solid var(--ui-muted)",
                   display: "flex",
                   flexDirection: "column",
                   gap: 8,
@@ -678,9 +678,9 @@ export function InicioView() {
                     padding: "7px 11px",
                     fontSize: 12.5,
                     borderRadius: 8,
-                    border: "1px solid #CBD5E1",
-                    background: "#FFFFFF",
-                    color: "#0F172A",
+                    border: "1px solid var(--ui-border-strong)",
+                    background: "var(--ui-surface)",
+                    color: "var(--ui-text)",
                     outline: "none",
                   }}
                 />
@@ -702,9 +702,9 @@ export function InicioView() {
                         fontSize: 11.5,
                         padding: "4px 8px",
                         borderRadius: 6,
-                        border: "1px solid #CBD5E1",
-                        background: "#FFFFFF",
-                        color: "#334155",
+                        border: "1px solid var(--ui-border-strong)",
+                        background: "var(--ui-surface)",
+                        color: "var(--ui-text-2)",
                       }}
                     >
                       <option value="today">Para hoy</option>
@@ -720,9 +720,9 @@ export function InicioView() {
                         fontSize: 11.5,
                         padding: "4px 8px",
                         borderRadius: 6,
-                        border: "1px solid #CBD5E1",
-                        background: "#FFFFFF",
-                        color: "#334155",
+                        border: "1px solid var(--ui-border-strong)",
+                        background: "var(--ui-surface)",
+                        color: "var(--ui-text-2)",
                       }}
                     >
                       <option value="Alta">Prioridad Alta</option>
@@ -738,9 +738,9 @@ export function InicioView() {
                         fontSize: 11.5,
                         padding: "4px 10px",
                         borderRadius: 6,
-                        border: "1px solid #E2E8F0",
-                        background: "#FFFFFF",
-                        color: "#64748B",
+                        border: "1px solid var(--ui-border)",
+                        background: "var(--ui-surface)",
+                        color: "var(--ui-text-4)",
                         cursor: "pointer",
                       }}
                     >
@@ -766,16 +766,16 @@ export function InicioView() {
               </form>
             )}
 
-            <div className="henry-widget-body henry-widget-body--tall" style={{ padding: "16px 20px" }}>
+            <div className="hb-widget-body hb-widget-body--tall" style={{ padding: "16px 20px" }}>
               {visibleGroups.length === 0 ? (
-                <div className="henry-widget-empty" style={{ flex: 1 }}>
-                  <div className="henry-empty-illus">
+                <div className="hb-widget-empty" style={{ flex: 1 }}>
+                  <div className="hb-empty-illus">
                     <EmptyShieldCheckIllustration />
                   </div>
-                  <div className="henry-empty-title">
+                  <div className="hb-empty-title">
                     Todo al día en {filterByBrand ? activeBrand?.name || "esta marca" : "tu agencia"}
                   </div>
-                  <p className="henry-empty-desc">No tienes tareas pendientes en este filtro.</p>
+                  <p className="hb-empty-desc">No tienes tareas pendientes en este filtro.</p>
                 </div>
               ) : (
                 visibleGroups.map((group, groupIdx) => (
@@ -792,7 +792,7 @@ export function InicioView() {
                         fontWeight: 700,
                         letterSpacing: "0.08em",
                         textTransform: "uppercase",
-                        color: group.bucket === "overdue" ? "#EF4444" : "#94A3B8",
+                        color: group.bucket === "overdue" ? "#EF4444" : "var(--ui-text-5)",
                         marginBottom: 8,
                       }}
                     >
@@ -836,8 +836,8 @@ export function InicioView() {
                                   fontWeight: 600,
                                   padding: "2px 7px",
                                   borderRadius: 999,
-                                  background: "#F1F5F9",
-                                  color: "#475569",
+                                  background: "var(--ui-muted)",
+                                  color: "var(--ui-text-3)",
                                   flexShrink: 0,
                                 }}
                               >
@@ -857,7 +857,7 @@ export function InicioView() {
                   style={{
                     marginTop: 14,
                     paddingTop: 10,
-                    borderTop: "1px dashed #E2E8F0",
+                    borderTop: "1px dashed var(--ui-border)",
                   }}
                 >
                   <button
@@ -866,7 +866,7 @@ export function InicioView() {
                     style={{
                       fontSize: 11.5,
                       fontWeight: 600,
-                      color: "#64748B",
+                      color: "var(--ui-text-4)",
                       background: "transparent",
                       border: "none",
                       padding: 0,
@@ -935,7 +935,7 @@ export function InicioView() {
                             <span
                               style={{
                                 fontSize: 12.5,
-                                color: "#94A3B8",
+                                color: "var(--ui-text-5)",
                                 textDecoration: "line-through",
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
@@ -965,8 +965,8 @@ export function InicioView() {
                   )}
                 </div>
               )}
-              <div className="henry-widget-footer">
-                <Link href="/tareas" className="henry-widget-link">
+              <div className="hb-widget-footer">
+                <Link href="/tareas" className="hb-widget-link">
                   Mi Espacio →
                 </Link>
               </div>
@@ -980,15 +980,15 @@ export function InicioView() {
           <section
             key="libretas"
             data-widget-id="libretas"
-            className="henry-widget"
+            className="hb-widget"
           >
-            <div className="henry-widget-head">
-              <div className="henry-widget-title">
-                <span className="henry-widget-icon-box">
+            <div className="hb-widget-head">
+              <div className="hb-widget-title">
+                <span className="hb-widget-icon-box">
                   <HublyNotebookIcon size={18} />
                 </span>
                 <span>Libretas</span>
-                <span className="henry-widget-badge">{notebooks.length}</span>
+                <span className="hb-widget-badge">{notebooks.length}</span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <button
@@ -1007,8 +1007,8 @@ export function InicioView() {
                     padding: "3px 9px",
                     borderRadius: 999,
                     border: "1px solid rgba(226, 232, 240, 0.95)",
-                    background: "#FFFFFF",
-                    color: "#475569",
+                    background: "var(--ui-surface)",
+                    color: "var(--ui-text-3)",
                     cursor: "pointer",
                     display: "inline-flex",
                     alignItems: "center",
@@ -1021,7 +1021,7 @@ export function InicioView() {
               </div>
             </div>
 
-            <div className="henry-widget-body henry-widget-body--tall" style={{ padding: "18px 20px" }}>
+            <div className="hb-widget-body hb-widget-body--tall" style={{ padding: "18px 20px" }}>
               <div className="hubly-shelf">
                 {notebooks.map((nb) => (
                   <KraftNotebookCard
@@ -1040,8 +1040,8 @@ export function InicioView() {
                   />
                 ))}
               </div>
-              <div className="henry-widget-footer">
-                <Link href="/libretas" className="henry-widget-link">
+              <div className="hb-widget-footer">
+                <Link href="/libretas" className="hb-widget-link">
                   Ver libretas →
                 </Link>
               </div>
@@ -1055,33 +1055,33 @@ export function InicioView() {
           <section
             key="hoy"
             data-widget-id="hoy"
-            className="henry-widget"
+            className="hb-widget"
           >
-            <div className="henry-widget-head">
-              <div className="henry-widget-title">
-                <span className="henry-widget-icon-box">
+            <div className="hb-widget-head">
+              <div className="hb-widget-title">
+                <span className="hb-widget-icon-box">
                   <HublyCalendarIcon size={18} />
                 </span>
                 <span>Hoy</span>
                 {todayAndApprovals.todayCount > 0 && (
-                  <span className="henry-widget-badge">{todayAndApprovals.todayCount}</span>
+                  <span className="hb-widget-badge">{todayAndApprovals.todayCount}</span>
                 )}
               </div>
-              <Link href="/calendario" className="henry-widget-link">
+              <Link href="/calendario" className="hb-widget-link">
                 Calendario →
               </Link>
             </div>
 
             {todayAndApprovals.isEmptyToday ? (
-              <div className="henry-widget-body henry-widget-empty">
-                <div className="henry-empty-illus">
+              <div className="hb-widget-body hb-widget-empty">
+                <div className="hb-empty-illus">
                   <EmptyCalendarIllustration />
                 </div>
-                <div className="henry-empty-title">Sin eventos para hoy</div>
-                <p className="henry-empty-desc">Hoy no sale nada programado.</p>
+                <div className="hb-empty-title">Sin eventos para hoy</div>
+                <p className="hb-empty-desc">Hoy no sale nada programado.</p>
               </div>
             ) : (
-              <div className="henry-widget-body" style={{ padding: "14px 20px 18px" }}>
+              <div className="hb-widget-body" style={{ padding: "14px 20px 18px" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {todayAndApprovals.todayPosts.map((post) => {
                     const postBrand = brands.find((b) => b.id === post.brandId);
@@ -1096,8 +1096,8 @@ export function InicioView() {
                           gap: 12,
                           padding: "10px 12px",
                           borderRadius: 12,
-                          border: "1px solid #F1F5F9",
-                          background: "#F8FAFC",
+                          border: "1px solid var(--ui-muted)",
+                          background: "var(--ui-surface-2)",
                           cursor: "pointer",
                         }}
                       >
@@ -1106,7 +1106,7 @@ export function InicioView() {
                             style={{
                               fontSize: 13,
                               fontWeight: 600,
-                              color: "#0F172A",
+                              color: "var(--ui-text)",
                               overflow: "hidden",
                               textOverflow: "ellipsis",
                               whiteSpace: "nowrap",
@@ -1114,7 +1114,7 @@ export function InicioView() {
                           >
                             {post.title}
                           </div>
-                          <div style={{ fontSize: 11.5, color: "#64748B", marginTop: 2 }}>
+                          <div style={{ fontSize: 11.5, color: "var(--ui-text-4)", marginTop: 2 }}>
                             {post.scheduledTime} · {post.networks.join(", ")}
                             {postBrand ? ` · ${postBrand.name}` : ""}
                           </div>
@@ -1147,16 +1147,16 @@ export function InicioView() {
           <section
             key="notificaciones"
             data-widget-id="notificaciones"
-            className="henry-widget"
+            className="hb-widget"
           >
-            <div className="henry-widget-head">
-              <div className="henry-widget-title">
-                <span className="henry-widget-icon-box">
+            <div className="hb-widget-head">
+              <div className="hb-widget-title">
+                <span className="hb-widget-icon-box">
                   <HublyBellIcon size={18} />
                 </span>
                 <span>Notificaciones</span>
                 {unreadNotifications.length > 0 && (
-                  <span className="henry-widget-badge">{unreadNotifications.length}</span>
+                  <span className="hb-widget-badge">{unreadNotifications.length}</span>
                 )}
               </div>
               {unreadNotifications.length > 0 && (
@@ -1166,7 +1166,7 @@ export function InicioView() {
                   style={{
                     fontSize: 11.5,
                     fontWeight: 600,
-                    color: "#64748B",
+                    color: "var(--ui-text-4)",
                     background: "transparent",
                     border: "none",
                     cursor: "pointer",
@@ -1178,18 +1178,18 @@ export function InicioView() {
             </div>
 
             {unreadNotifications.length === 0 ? (
-              <div className="henry-widget-body henry-widget-empty">
-                <div className="henry-empty-illus">
+              <div className="hb-widget-body hb-widget-empty">
+                <div className="hb-empty-illus">
                   <EmptyBellIllustration />
                 </div>
-                <div className="henry-empty-title">Sin notificaciones nuevas</div>
-                <p className="henry-empty-desc">
+                <div className="hb-empty-title">Sin notificaciones nuevas</div>
+                <p className="hb-empty-desc">
                   Sin notificaciones — cuando algo necesite tu atención, aparece aquí como en la
                   campana.
                 </p>
               </div>
             ) : (
-              <div className="henry-widget-body" style={{ padding: "14px 20px 18px" }}>
+              <div className="hb-widget-body" style={{ padding: "14px 20px 18px" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {unreadNotifications.map((notif) => (
                     <div
@@ -1206,10 +1206,10 @@ export function InicioView() {
                       }}
                     >
                       <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: 12.5, fontWeight: 600, color: "#0F172A" }}>
+                        <div style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ui-text)" }}>
                           {notif.title}
                         </div>
-                        <div style={{ fontSize: 11.5, color: "#64748B", marginTop: 2 }}>
+                        <div style={{ fontSize: 11.5, color: "var(--ui-text-4)", marginTop: 2 }}>
                           {notif.body}
                         </div>
                       </div>
@@ -1219,8 +1219,8 @@ export function InicioView() {
                         style={{
                           fontSize: 11,
                           fontWeight: 600,
-                          color: "#5A65AF",
-                          background: "#FFFFFF",
+                          color: "var(--ui-accent-text-2)",
+                          background: "var(--ui-surface)",
                           border: "1px solid #D9DCF0",
                           borderRadius: 999,
                           padding: "2px 8px",
@@ -1243,33 +1243,33 @@ export function InicioView() {
         return (
           <section
             key="aprobaciones"
-            className="henry-widget"
+            className="hb-widget"
           >
-            <div className="henry-widget-head">
-              <div className="henry-widget-title">
-                <span className="henry-widget-icon-box">
+            <div className="hb-widget-head">
+              <div className="hb-widget-title">
+                <span className="hb-widget-icon-box">
                   <WidgetCheckCircleIcon />
                 </span>
                 <span>Aprobaciones</span>
                 {todayAndApprovals.approvalsCount > 0 && (
-                  <span className="henry-widget-badge">{todayAndApprovals.approvalsCount}</span>
+                  <span className="hb-widget-badge">{todayAndApprovals.approvalsCount}</span>
                 )}
               </div>
-              <Link href="/aprobaciones" className="henry-widget-link">
+              <Link href="/aprobaciones" className="hb-widget-link">
                 Ver todas →
               </Link>
             </div>
 
             {todayAndApprovals.isEmptyApprovals ? (
-              <div className="henry-widget-body henry-widget-empty">
-                <div className="henry-empty-illus">
+              <div className="hb-widget-body hb-widget-empty">
+                <div className="hb-empty-illus">
                   <EmptyShieldCheckIllustration />
                 </div>
-                <div className="henry-empty-title">Sin aprobaciones pendientes</div>
-                <p className="henry-empty-desc">Nada esperando aprobación ✓</p>
+                <div className="hb-empty-title">Sin aprobaciones pendientes</div>
+                <p className="hb-empty-desc">Nada esperando aprobación ✓</p>
               </div>
             ) : (
-              <div className="henry-widget-body" style={{ padding: "14px 20px 18px" }}>
+              <div className="hb-widget-body" style={{ padding: "14px 20px 18px" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {todayAndApprovals.approvalPosts.map((post) => {
                     const postBrand = brands.find((b) => b.id === post.brandId);
@@ -1283,8 +1283,8 @@ export function InicioView() {
                           gap: 10,
                           padding: "10px 12px",
                           borderRadius: 12,
-                          border: "1px solid #F1F5F9",
-                          background: "#F8FAFC",
+                          border: "1px solid var(--ui-muted)",
+                          background: "var(--ui-surface-2)",
                         }}
                       >
                         <div style={{ minWidth: 0 }}>
@@ -1292,7 +1292,7 @@ export function InicioView() {
                             style={{
                               fontSize: 13,
                               fontWeight: 600,
-                              color: "#0F172A",
+                              color: "var(--ui-text)",
                               overflow: "hidden",
                               textOverflow: "ellipsis",
                               whiteSpace: "nowrap",
@@ -1300,7 +1300,7 @@ export function InicioView() {
                           >
                             {post.title}
                           </div>
-                          <div style={{ fontSize: 11.5, color: "#64748B", marginTop: 2 }}>
+                          <div style={{ fontSize: 11.5, color: "var(--ui-text-4)", marginTop: 2 }}>
                             {postBrand?.name || "Marca"} · {post.scheduledDate} ({post.scheduledTime})
                           </div>
                         </div>
@@ -1349,20 +1349,20 @@ export function InicioView() {
         return (
           <section
             key="grafica_ads"
-            className="henry-widget"
+            className="hb-widget"
           >
-            <div className="henry-widget-head">
-              <div className="henry-widget-title">
-                <span className="henry-widget-icon-box">
+            <div className="hb-widget-head">
+              <div className="hb-widget-title">
+                <span className="hb-widget-icon-box">
                   <BarChart2 size={18} />
                 </span>
                 <span>Gráfica de Ads</span>
               </div>
-              <Link href="/salud" className="henry-widget-link">
+              <Link href="/salud" className="hb-widget-link">
                 Salud y Ads →
               </Link>
             </div>
-            <div className="henry-widget-body" style={{ padding: "16px 20px" }}>
+            <div className="hb-widget-body" style={{ padding: "16px 20px" }}>
               <div
                 style={{
                   display: "grid",
@@ -1374,14 +1374,14 @@ export function InicioView() {
                   style={{
                     padding: "12px 14px",
                     borderRadius: 12,
-                    background: "#F8FAFC",
-                    border: "1px solid #E2E8F0",
+                    background: "var(--ui-surface-2)",
+                    border: "1px solid var(--ui-border)",
                   }}
                 >
-                  <div style={{ fontSize: 11, color: "#64748B", fontWeight: 600 }}>
+                  <div style={{ fontSize: 11, color: "var(--ui-text-4)", fontWeight: 600 }}>
                     INVERSIÓN ACUMULADA
                   </div>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: "#0F172A", marginTop: 4 }}>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: "var(--ui-text)", marginTop: 4 }}>
                     {totalSpend.toLocaleString("es-MX")} MXN
                   </div>
                 </div>
@@ -1389,11 +1389,11 @@ export function InicioView() {
                   style={{
                     padding: "12px 14px",
                     borderRadius: 12,
-                    background: "#F8FAFC",
-                    border: "1px solid #E2E8F0",
+                    background: "var(--ui-surface-2)",
+                    border: "1px solid var(--ui-border)",
                   }}
                 >
-                  <div style={{ fontSize: 11, color: "#64748B", fontWeight: 600 }}>
+                  <div style={{ fontSize: 11, color: "var(--ui-text-4)", fontWeight: 600 }}>
                     CTR PROMEDIO
                   </div>
                   <div style={{ fontSize: 18, fontWeight: 700, color: "#059669", marginTop: 4 }}>
@@ -1411,21 +1411,21 @@ export function InicioView() {
         return (
           <section
             key="ads_activos"
-            className="henry-widget"
+            className="hb-widget"
           >
-            <div className="henry-widget-head">
-              <div className="henry-widget-title">
-                <span className="henry-widget-icon-box">
+            <div className="hb-widget-head">
+              <div className="hb-widget-title">
+                <span className="hb-widget-icon-box">
                   <Megaphone size={18} />
                 </span>
                 <span>Ads Activos</span>
-                <span className="henry-widget-badge">{activeCampaigns.length}</span>
+                <span className="hb-widget-badge">{activeCampaigns.length}</span>
               </div>
-              <Link href="/salud" className="henry-widget-link">
+              <Link href="/salud" className="hb-widget-link">
                 Ver campañas →
               </Link>
             </div>
-            <div className="henry-widget-body" style={{ padding: "14px 20px 18px" }}>
+            <div className="hb-widget-body" style={{ padding: "14px 20px 18px" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {activeCampaigns.map((camp) => (
                   <div
@@ -1437,8 +1437,8 @@ export function InicioView() {
                       gap: 10,
                       padding: "9px 12px",
                       borderRadius: 10,
-                      background: "#F8FAFC",
-                      border: "1px solid #E2E8F0",
+                      background: "var(--ui-surface-2)",
+                      border: "1px solid var(--ui-border)",
                     }}
                   >
                     <div style={{ minWidth: 0 }}>
@@ -1446,7 +1446,7 @@ export function InicioView() {
                         style={{
                           fontSize: 12.5,
                           fontWeight: 600,
-                          color: "#0F172A",
+                          color: "var(--ui-text)",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                           whiteSpace: "nowrap",
@@ -1454,7 +1454,7 @@ export function InicioView() {
                       >
                         {camp.name}
                       </div>
-                      <div style={{ fontSize: 11, color: "#64748B" }}>
+                      <div style={{ fontSize: 11, color: "var(--ui-text-4)" }}>
                         {camp.platform} · {camp.results} {camp.resultLabel}
                       </div>
                     </div>
@@ -1480,31 +1480,31 @@ export function InicioView() {
 
       case "proyectos_criticos": {
         return (
-          <section key="proyectos_criticos" data-widget-id="proyectos_criticos" className="henry-widget">
-            <div className="henry-widget-head">
-              <div className="henry-widget-title">
-                <span className="henry-widget-icon-box">
+          <section key="proyectos_criticos" data-widget-id="proyectos_criticos" className="hb-widget">
+            <div className="hb-widget-head">
+              <div className="hb-widget-title">
+                <span className="hb-widget-icon-box">
                   <HublyClipboardIcon size={18} />
                 </span>
                 <span>Proyectos críticos</span>
                 {criticalProjects.length > 0 && (
-                  <span className="henry-widget-badge">{criticalProjects.length}</span>
+                  <span className="hb-widget-badge">{criticalProjects.length}</span>
                 )}
               </div>
-              <Link href="/proyectos" className="henry-widget-link">
+              <Link href="/proyectos" className="hb-widget-link">
                 Ver proyectos →
               </Link>
             </div>
             {criticalProjects.length === 0 ? (
-              <div className="henry-widget-body henry-widget-empty">
-                <div className="henry-empty-illus">
+              <div className="hb-widget-body hb-widget-empty">
+                <div className="hb-empty-illus">
                   <EmptyShieldCheckIllustration />
                 </div>
-                <div className="henry-empty-title">Sin proyectos en riesgo</div>
-                <p className="henry-empty-desc">Todos tus proyectos abiertos van en orden.</p>
+                <div className="hb-empty-title">Sin proyectos en riesgo</div>
+                <p className="hb-empty-desc">Todos tus proyectos abiertos van en orden.</p>
               </div>
             ) : (
-              <div className="henry-widget-body" style={{ padding: "12px 14px" }}>
+              <div className="hb-widget-body" style={{ padding: "12px 14px" }}>
                 {criticalProjects.map((project) => (
                   <Link key={project.id} href="/proyectos" className="hubly-task-row" style={{ textDecoration: "none" }}>
                     <span style={{ minWidth: 0 }}>
@@ -1515,7 +1515,7 @@ export function InicioView() {
                         {brands.find((b) => b.id === project.brandId)?.name || "Marca"} · {project.status}
                       </span>
                     </span>
-                    <span className="henry-widget-badge">{project.progress}%</span>
+                    <span className="hb-widget-badge">{project.progress}%</span>
                   </Link>
                 ))}
               </div>
@@ -1763,7 +1763,7 @@ export function InicioView() {
                   height: 30,
                   borderRadius: 8,
                   border: "1px solid #D6BC94",
-                  background: "#FFFFFF",
+                  background: "var(--ui-surface)",
                   display: "inline-flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -1811,7 +1811,7 @@ export function InicioView() {
                       fontWeight: 600,
                       borderRadius: 10,
                       border: "1px solid #C8A97E",
-                      background: "#FFFFFF",
+                      background: "var(--ui-surface)",
                       color: "#2C1A0B",
                     }}
                   />
@@ -1837,7 +1837,7 @@ export function InicioView() {
                       fontSize: 13,
                       borderRadius: 10,
                       border: "1px solid #C8A97E",
-                      background: "#FFFFFF",
+                      background: "var(--ui-surface)",
                       color: "#2C1A0B",
                     }}
                   >
@@ -1889,7 +1889,7 @@ export function InicioView() {
                     fontWeight: 600,
                     borderRadius: 10,
                     border: "1px solid #C8A97E",
-                    background: "#FFFFFF",
+                    background: "var(--ui-surface)",
                     color: "#5C3A1B",
                     cursor: "pointer",
                   }}

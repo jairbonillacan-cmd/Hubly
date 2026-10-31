@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Plus, Trash2, X } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { askConfirm } from "@/components/app/AppDialogHost";
 import { useKanbanDrag } from "@/lib/use-kanban-drag";
 import { KanbanDropSlot } from "@/components/app/KanbanDropSlot";
 import type { Lead, LeadStage, Quote, QuoteItem, QuoteStatus } from "@/lib/types";
@@ -58,8 +59,8 @@ export default function CrmPage() {
     <div style={{ padding: "12px 0 48px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, color: "#0F172A", margin: 0 }}>CRM</h1>
-          <p style={{ fontSize: 13, color: "#64748B", margin: "2px 0 0" }}>Prospectos y cotizaciones de tu agencia.</p>
+          <h1 style={{ fontSize: 24, fontWeight: 700, color: "var(--ui-text)", margin: 0 }}>CRM</h1>
+          <p style={{ fontSize: 13, color: "var(--ui-text-4)", margin: "2px 0 0" }}>Prospectos y cotizaciones de tu agencia.</p>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           <button type="button" style={secondary} disabled={leads.length === 0} title={leads.length === 0 ? "Crea primero un prospecto" : undefined} onClick={() => setQuoteDraft({ leadId: leads[0]?.id })}>
@@ -71,25 +72,25 @@ export default function CrmPage() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12, marginBottom: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: 16 }}>
         {tiles.map((t) => (
           <div key={t.label} style={card}>
-            <div style={{ fontSize: 12, color: "#64748B" }}>{t.label}</div>
-            <div style={{ fontSize: 24, fontWeight: 700, color: "#0F172A", fontVariantNumeric: "tabular-nums" }}>{t.value}</div>
-            <div style={{ fontSize: 12, color: "#64748B" }}>{t.sub}</div>
+            <div style={{ fontSize: 12, color: "var(--ui-text-4)" }}>{t.label}</div>
+            <div style={{ fontSize: 24, fontWeight: 700, color: "var(--ui-text)", fontVariantNumeric: "tabular-nums" }}>{t.value}</div>
+            <div style={{ fontSize: 12, color: "var(--ui-text-4)" }}>{t.sub}</div>
           </div>
         ))}
       </div>
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 14 }}>
-        <div role="group" aria-label="Sección del CRM" style={{ display: "inline-flex", gap: 2, background: "#F1F5F9", padding: 3, borderRadius: 10 }}>
+        <div role="group" aria-label="Sección del CRM" style={{ display: "inline-flex", gap: 2, background: "var(--ui-muted)", padding: 3, borderRadius: 10 }}>
           {(["pipeline", "prospectos", "cotizaciones"] as const).map((t) => (
             <button
               key={t}
               type="button"
               aria-pressed={tab === t}
               onClick={() => setTab(t)}
-              style={{ border: 0, borderRadius: 8, padding: "6px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer", textTransform: "capitalize", background: tab === t ? "#FFFFFF" : "transparent", color: tab === t ? "#5360A5" : "#475569" }}
+              style={{ border: 0, borderRadius: 8, padding: "6px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer", textTransform: "capitalize", background: tab === t ? "var(--ui-surface)" : "transparent", color: tab === t ? "var(--ui-accent-text)" : "var(--ui-text-3)" }}
             >
               {t}
             </button>
@@ -107,27 +108,27 @@ export default function CrmPage() {
               const items = visible.filter((l) => l.stage === stage.key);
               const over = drag?.overCol === stage.key;
               return (
-                <div key={stage.key} {...getColumnProps(stage.key)} style={{ background: over ? "#F0F1F9" : "#F8FAFC", border: `1px solid ${over ? "#6C77C1" : "#E2E8F0"}`, borderRadius: 14, padding: 12, minHeight: 280, display: "flex", flexDirection: "column", gap: 8 }}>
+                <div key={stage.key} {...getColumnProps(stage.key)} style={{ background: over ? "var(--ui-accent-soft)" : "var(--ui-surface-2)", border: `1px solid ${over ? "#6C77C1" : "var(--ui-border)"}`, borderRadius: 14, padding: 12, minHeight: 280, display: "flex", flexDirection: "column", gap: 8 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 700, color: "#0F172A" }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 700, color: "var(--ui-text)" }}>
                       <span style={{ width: 8, height: 8, borderRadius: 999, background: stage.dot }} />
                       {stage.label}
                     </span>
-                    <span style={{ fontSize: 11.5, color: "#475569", fontWeight: 600 }}>{items.length}</span>
+                    <span style={{ fontSize: 11.5, color: "var(--ui-text-3)", fontWeight: 600 }}>{items.length}</span>
                   </div>
-                  <div style={{ fontSize: 11.5, color: "#64748B", fontVariantNumeric: "tabular-nums" }}>{money(items.reduce((s, l) => s + l.value, 0))}</div>
+                  <div style={{ fontSize: 11.5, color: "var(--ui-text-4)", fontVariantNumeric: "tabular-nums" }}>{money(items.reduce((s, l) => s + l.value, 0))}</div>
                   {items.map((lead) => (
                     <React.Fragment key={lead.id}>
                       {over && drag?.beforeId === lead.id && <KanbanDropSlot height={drag.height} />}
-                      <div {...getCardProps(lead.id)} onClick={() => setLeadDraft(lead)} style={{ background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 11, padding: "10px 12px", cursor: drag?.id === lead.id ? "grabbing" : "grab", opacity: drag?.id === lead.id ? 0.35 : 1 }}>
-                        <div style={{ fontSize: 13, fontWeight: 650, color: "#0F172A" }}>{lead.company || lead.name}</div>
-                        {lead.company && <div style={{ fontSize: 12, color: "#475569" }}>{lead.name}</div>}
-                        <div style={{ fontSize: 12, fontWeight: 600, color: "#5360A5", marginTop: 6, fontVariantNumeric: "tabular-nums" }}>{money(lead.value)}/mes</div>
+                      <div {...getCardProps(lead.id)} onClick={() => setLeadDraft(lead)} style={{ background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 11, padding: "10px 12px", cursor: drag?.id === lead.id ? "grabbing" : "grab", opacity: drag?.id === lead.id ? 0.35 : 1 }}>
+                        <div style={{ fontSize: 13, fontWeight: 650, color: "var(--ui-text)" }}>{lead.company || lead.name}</div>
+                        {lead.company && <div style={{ fontSize: 12, color: "var(--ui-text-3)" }}>{lead.name}</div>}
+                        <div style={{ fontSize: 12, fontWeight: 600, color: "var(--ui-accent-text)", marginTop: 6, fontVariantNumeric: "tabular-nums" }}>{money(lead.value)}/mes</div>
                       </div>
                     </React.Fragment>
                   ))}
                   {over && drag?.beforeId === null && <KanbanDropSlot height={drag.height} />}
-                  {items.length === 0 && !over && <p style={{ fontSize: 12, color: "#94A3B8", margin: "auto 0", textAlign: "center" }}>Arrastra aquí</p>}
+                  {items.length === 0 && !over && <p style={{ fontSize: 12, color: "var(--ui-text-5)", margin: "auto 0", textAlign: "center" }}>Arrastra aquí</p>}
                 </div>
               );
             })}
@@ -142,15 +143,15 @@ export default function CrmPage() {
           ) : (
             <table style={{ width: "100%", minWidth: 620, borderCollapse: "collapse", fontSize: 13 }}>
               <thead>
-                <tr style={{ textAlign: "left", color: "#64748B", fontSize: 12 }}>
+                <tr style={{ textAlign: "left", color: "var(--ui-text-4)", fontSize: 12 }}>
                   {["Empresa", "Contacto", "Origen", "Etapa", "Valor mensual"].map((h) => <th key={h} style={cell}>{h}</th>)}
                 </tr>
               </thead>
               <tbody>
                 {visible.map((l) => (
-                  <tr key={l.id} onClick={() => setLeadDraft(l)} style={{ borderTop: "1px solid #F1F5F9", cursor: "pointer" }}>
+                  <tr key={l.id} onClick={() => setLeadDraft(l)} style={{ borderTop: "1px solid var(--ui-muted)", cursor: "pointer" }}>
                     <td style={{ ...cell, fontWeight: 650 }}>{l.company || "—"}</td>
-                    <td style={cell}>{l.name}<div style={{ fontSize: 12, color: "#64748B" }}>{l.email}</div></td>
+                    <td style={cell}>{l.name}<div style={{ fontSize: 12, color: "var(--ui-text-4)" }}>{l.email}</div></td>
                     <td style={cell}>{l.source || "—"}</td>
                     <td style={cell}>{STAGES.find((s) => s.key === l.stage)?.label}</td>
                     <td style={{ ...cell, fontVariantNumeric: "tabular-nums" }}>{money(l.value)}</td>
@@ -169,13 +170,13 @@ export default function CrmPage() {
           ) : (
             <table style={{ width: "100%", minWidth: 620, borderCollapse: "collapse", fontSize: 13 }}>
               <thead>
-                <tr style={{ textAlign: "left", color: "#64748B", fontSize: 12 }}>
+                <tr style={{ textAlign: "left", color: "var(--ui-text-4)", fontSize: 12 }}>
                   {["Cotización", "Prospecto", "Estado", "Total", ""].map((h, i) => <th key={i} style={cell}>{h}</th>)}
                 </tr>
               </thead>
               <tbody>
                 {quotes.map((q) => (
-                  <tr key={q.id} onClick={() => setQuoteDraft(q)} style={{ borderTop: "1px solid #F1F5F9", cursor: "pointer" }}>
+                  <tr key={q.id} onClick={() => setQuoteDraft(q)} style={{ borderTop: "1px solid var(--ui-muted)", cursor: "pointer" }}>
                     <td style={{ ...cell, fontWeight: 650 }}>{q.title}</td>
                     <td style={cell}>{leadName(q.leadId)}</td>
                     <td style={cell}>{q.status}</td>
@@ -184,11 +185,11 @@ export default function CrmPage() {
                       <button
                         type="button"
                         aria-label={`Eliminar ${q.title}`}
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           e.stopPropagation();
-                          if (window.confirm(`¿Eliminar «${q.title}»?`)) deleteQuote(q.id);
+                          if (await askConfirm(`¿Eliminar «${q.title}»?`)) deleteQuote(q.id);
                         }}
-                        style={{ border: 0, background: "transparent", color: "#64748B", cursor: "pointer" }}
+                        style={{ border: 0, background: "transparent", color: "var(--ui-text-4)", cursor: "pointer" }}
                       >
                         <Trash2 size={14} />
                       </button>
@@ -233,10 +234,10 @@ function ModalShell({ label, onClose, onSubmit, children }: { label: string; onC
       }}
       style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(15,23,42,0.45)", display: "grid", placeItems: "center", padding: 16 }}
     >
-      <form role="dialog" aria-modal="true" aria-label={label} onSubmit={onSubmit} style={{ width: "100%", maxWidth: 560, maxHeight: "90vh", overflowY: "auto", background: "#FFFFFF", borderRadius: 16, padding: 20, display: "grid", gap: 12 }}>
+      <form role="dialog" aria-modal="true" aria-label={label} onSubmit={onSubmit} style={{ width: "100%", maxWidth: 560, maxHeight: "90vh", overflowY: "auto", background: "var(--ui-surface)", borderRadius: 16, padding: 20, display: "grid", gap: 12 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <h2 style={{ fontSize: 17, fontWeight: 700, margin: 0 }}>{label}</h2>
-          <button type="button" aria-label="Cerrar" onClick={onClose} style={{ border: 0, background: "transparent", cursor: "pointer", color: "#64748B", display: "grid" }}>
+          <button type="button" aria-label="Cerrar" onClick={onClose} style={{ border: 0, background: "transparent", cursor: "pointer", color: "var(--ui-text-4)", display: "grid" }}>
             <X size={18} />
           </button>
         </div>
@@ -290,8 +291,8 @@ function LeadModal({ draft, onClose, onQuote }: { draft: LeadDraft; onClose: () 
               <button
                 type="button"
                 style={danger}
-                onClick={() => {
-                  if (window.confirm("¿Eliminar este prospecto y sus cotizaciones?")) {
+                onClick={async () => {
+                  if (await askConfirm("¿Eliminar este prospecto y sus cotizaciones?")) {
                     deleteLead(draft.id!);
                     onClose();
                   }
@@ -351,7 +352,7 @@ function QuoteModal({ draft, leads, onClose }: { draft: Partial<Quote>; leads: L
             <input value={item.description} onChange={(e) => patch(item.id, { description: e.target.value })} placeholder="Concepto" aria-label="Concepto" style={field} />
             <input type="number" min="1" value={item.quantity} onChange={(e) => patch(item.id, { quantity: Math.max(1, Number(e.target.value) || 1) })} aria-label="Cantidad" style={field} />
             <input type="number" min="0" value={item.unitPrice} onChange={(e) => patch(item.id, { unitPrice: Math.max(0, Number(e.target.value) || 0) })} aria-label="Precio unitario" style={field} />
-            <button type="button" aria-label="Quitar concepto" disabled={items.length === 1} onClick={() => setItems((prev) => prev.filter((i) => i.id !== item.id))} style={{ border: 0, background: "transparent", color: "#64748B", cursor: "pointer", display: "grid", placeItems: "center" }}>
+            <button type="button" aria-label="Quitar concepto" disabled={items.length === 1} onClick={() => setItems((prev) => prev.filter((i) => i.id !== item.id))} style={{ border: 0, background: "transparent", color: "var(--ui-text-4)", cursor: "pointer", display: "grid", placeItems: "center" }}>
               <X size={14} />
             </button>
           </div>
@@ -368,12 +369,12 @@ function QuoteModal({ draft, leads, onClose }: { draft: Partial<Quote>; leads: L
   );
 }
 
-const card = { background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 16 } as const;
-const field = { width: "100%", border: "1px solid #CBD5E1", borderRadius: 9, padding: "8px 10px", fontSize: 13, fontFamily: "inherit", background: "#FFFFFF", minWidth: 0 } as const;
-const lab = { display: "grid", gap: 4, fontSize: 12, fontWeight: 600, color: "#475569" } as const;
+const card = { background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 14, padding: 16 } as const;
+const field = { width: "100%", border: "1px solid var(--ui-border-strong)", borderRadius: 9, padding: "8px 10px", fontSize: 13, fontFamily: "inherit", background: "var(--ui-surface)", minWidth: 0 } as const;
+const lab = { display: "grid", gap: 4, fontSize: 12, fontWeight: 600, color: "var(--ui-text-3)" } as const;
 const grid2 = { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 10 } as const;
 const cell = { padding: "10px 14px" } as const;
-const empty = { fontSize: 13.5, color: "#64748B", textAlign: "center", padding: 32, margin: 0 } as const;
+const empty = { fontSize: 13.5, color: "var(--ui-text-4)", textAlign: "center", padding: 32, margin: 0 } as const;
 const primary = { display: "inline-flex", alignItems: "center", gap: 6, border: 0, borderRadius: 9, background: "#6C77C1", color: "#FFFFFF", padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" } as const;
-const secondary = { display: "inline-flex", alignItems: "center", gap: 6, border: "1px solid #CBD5E1", borderRadius: 9, background: "#FFFFFF", color: "#334155", padding: "7px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;
+const secondary = { display: "inline-flex", alignItems: "center", gap: 6, border: "1px solid var(--ui-border-strong)", borderRadius: 9, background: "var(--ui-surface)", color: "var(--ui-text-2)", padding: "7px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;
 const danger = { border: "1px solid #FECACA", background: "#FEF2F2", color: "#B91C1C", borderRadius: 9, padding: "7px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;

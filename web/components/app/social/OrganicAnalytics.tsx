@@ -8,7 +8,7 @@ export function OrganicAnalytics({ posts }: { posts: SocialPost[] }) {
   const measured = posts.filter((p) => p.metrics);
   if (measured.length === 0) {
     return (
-      <p style={{ fontSize: 13.5, color: "#64748B", textAlign: "center", padding: 36, background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14 }}>
+      <p style={{ fontSize: 13.5, color: "var(--ui-text-4)", textAlign: "center", padding: 36, background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 14 }}>
         Sin datos todavía. Las métricas aparecerán cuando se conecten las cuentas de esta marca.
       </p>
     );
@@ -34,15 +34,15 @@ export function OrganicAnalytics({ posts }: { posts: SocialPost[] }) {
 
   return (
     <div style={{ display: "grid", gap: 16 }}>
-      <p role="note" style={{ margin: 0, fontSize: 12.5, fontWeight: 600, color: "#5360A5", background: "#ECEEF8", borderRadius: 10, padding: "8px 12px" }}>
+      <p role="note" style={{ margin: 0, fontSize: 12.5, fontWeight: 600, color: "var(--ui-accent-text)", background: "#ECEEF8", borderRadius: 10, padding: "8px 12px" }}>
         Datos de ejemplo: todavía no hay cuentas conectadas.
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12 }}>
         {tiles.map((t) => (
           <div key={t.label} style={card}>
-            <div style={{ fontSize: 12, color: "#64748B" }}>{t.label}</div>
-            <div style={{ fontSize: 26, fontWeight: 700, color: "#0F172A", fontVariantNumeric: "tabular-nums" }}>{fmt(t.value)}</div>
+            <div style={{ fontSize: 12, color: "var(--ui-text-4)" }}>{t.label}</div>
+            <div style={{ fontSize: 26, fontWeight: 700, color: "var(--ui-text)", fontVariantNumeric: "tabular-nums" }}>{fmt(t.value)}</div>
           </div>
         ))}
       </div>
@@ -51,9 +51,9 @@ export function OrganicAnalytics({ posts }: { posts: SocialPost[] }) {
         <h3 style={h3}>Alcance por red</h3>
         <div style={{ display: "grid", gap: 10 }}>
           {bars.map(([name, reach]) => (
-            <div key={name} title={`${name}: ${fmt(reach)} de alcance`} style={{ display: "grid", gridTemplateColumns: "84px minmax(0, 1fr) 64px", alignItems: "center", gap: 10, fontSize: 12.5, color: "#334155" }}>
+            <div key={name} title={`${name}: ${fmt(reach)} de alcance`} style={{ display: "grid", gridTemplateColumns: "84px minmax(0, 1fr) 64px", alignItems: "center", gap: 10, fontSize: 12.5, color: "var(--ui-text-2)" }}>
               <span>{name}</span>
-              <span style={{ height: 10, display: "block", background: "#F1F5F9", borderRadius: 4 }}>
+              <span style={{ height: 10, display: "block", background: "var(--ui-muted)", borderRadius: 4 }}>
                 <span style={{ display: "block", height: "100%", width: `${(reach / maxReach) * 100}%`, background: "#6C77C1", borderRadius: "0 4px 4px 0" }} />
               </span>
               <span style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{fmt(reach)}</span>
@@ -66,7 +66,7 @@ export function OrganicAnalytics({ posts }: { posts: SocialPost[] }) {
         <h3 style={h3}>Mejores publicaciones</h3>
         <table style={{ width: "100%", minWidth: 480, borderCollapse: "collapse", fontSize: 12.5 }}>
           <thead>
-            <tr style={{ textAlign: "left", color: "#64748B" }}>
+            <tr style={{ textAlign: "left", color: "var(--ui-text-4)" }}>
               <th style={cell}>Post</th>
               <th style={{ ...cell, textAlign: "right" }}>Alcance</th>
               <th style={{ ...cell, textAlign: "right" }}>Me gusta</th>
@@ -75,7 +75,7 @@ export function OrganicAnalytics({ posts }: { posts: SocialPost[] }) {
           </thead>
           <tbody>
             {top.map((p) => (
-              <tr key={p.id} style={{ borderTop: "1px solid #F1F5F9" }}>
+              <tr key={p.id} style={{ borderTop: "1px solid var(--ui-muted)" }}>
                 <td style={{ ...cell, fontWeight: 600 }}>{p.title}</td>
                 <td style={{ ...cell, textAlign: "right" }}>{fmt(p.metrics!.reach)}</td>
                 <td style={{ ...cell, textAlign: "right" }}>{fmt(p.metrics!.likes)}</td>
@@ -89,6 +89,6 @@ export function OrganicAnalytics({ posts }: { posts: SocialPost[] }) {
   );
 }
 
-const card = { background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 16 } as const;
-const h3 = { fontSize: 14, fontWeight: 700, color: "#0F172A", margin: "0 0 12px" } as const;
+const card = { background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 14, padding: 16 } as const;
+const h3 = { fontSize: 14, fontWeight: 700, color: "var(--ui-text)", margin: "0 0 12px" } as const;
 const cell = { padding: "8px 6px" } as const;

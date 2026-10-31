@@ -234,7 +234,7 @@ const FULL_39_ACHIEVEMENTS_CATALOG: CatalogAchievementItem[] = [
   { id: "swipe_addict", category: "Inteligencia", title: "Swipe Addict", description: "Completa 10 sesiones de swipe file", emoji: "👆", target: 10, xpReward: 70 },
   { id: "trend_spotter", category: "Inteligencia", title: "Cazador de Tendencias", description: "Detecta 10 tendencias para marcas", emoji: "🔮", target: 10, xpReward: 80 },
   // 9. Hubly AI (3)
-  { id: "henry_fan", category: "Hubly AI", title: "Fan de Hubly", description: "50 conversaciones estratégicas con IA", emoji: "🤖", target: 50, xpReward: 110 },
+  { id: "hubly_fan", category: "Hubly AI", title: "Fan de Hubly", description: "50 conversaciones estratégicas con IA", emoji: "🤖", target: 50, xpReward: 110 },
   { id: "agent_builder", category: "Hubly AI", title: "Constructor de Agentes", description: "Configura tu primer agente autónomo", emoji: "🧪", target: 1, xpReward: 95 },
   { id: "agent_power_user", category: "Hubly AI", title: "Power User de Agentes", description: "25 ejecuciones exitosas de agentes", emoji: "⚙️", target: 25, xpReward: 150 },
   // 10. Chat & Marca (4)
@@ -396,9 +396,9 @@ export function InviteTeamModal() {
           maxWidth: 520,
           maxHeight: "90vh",
           overflowY: "auto",
-          background: "#FFFFFF",
+          background: "var(--ui-surface)",
           borderRadius: 18,
-          border: "1px solid #E2E8F0",
+          border: "1px solid var(--ui-border)",
           boxShadow: "0 24px 48px rgba(15, 23, 42, 0.18)",
           padding: "22px 24px",
         }}
@@ -419,7 +419,7 @@ export function InviteTeamModal() {
                 width: 38,
                 height: 38,
                 borderRadius: 11,
-                background: "#F0F1F9",
+                background: "var(--ui-accent-soft)",
                 color: "#6C77C1",
                 display: "flex",
                 alignItems: "center",
@@ -436,7 +436,7 @@ export function InviteTeamModal() {
                   margin: 0,
                   fontSize: 16,
                   fontWeight: 700,
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                 }}
               >
                 Invitar miembro al equipo
@@ -445,7 +445,7 @@ export function InviteTeamModal() {
                 style={{
                   margin: "2px 0 0",
                   fontSize: 12.5,
-                  color: "#64748B",
+                  color: "var(--ui-text-4)",
                 }}
               >
                 Comparte acceso a marcas, tareas y reportes de la agencia
@@ -461,9 +461,9 @@ export function InviteTeamModal() {
               width: 30,
               height: 30,
               borderRadius: 8,
-              border: "1px solid #E2E8F0",
-              background: "#FFFFFF",
-              color: "#64748B",
+              border: "1px solid var(--ui-border)",
+              background: "var(--ui-surface)",
+              color: "var(--ui-text-4)",
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
@@ -484,7 +484,7 @@ export function InviteTeamModal() {
                   display: "block",
                   fontSize: 12,
                   fontWeight: 600,
-                  color: "#334155",
+                  color: "var(--ui-text-2)",
                   marginBottom: 5,
                 }}
               >
@@ -501,9 +501,9 @@ export function InviteTeamModal() {
                   height: 38,
                   padding: "0 12px",
                   borderRadius: 10,
-                  border: "1px solid #CBD5E1",
+                  border: "1px solid var(--ui-border-strong)",
                   fontSize: 13,
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                   outline: "none",
                 }}
               />
@@ -516,7 +516,7 @@ export function InviteTeamModal() {
                   display: "block",
                   fontSize: 12,
                   fontWeight: 600,
-                  color: "#334155",
+                  color: "var(--ui-text-2)",
                   marginBottom: 5,
                 }}
               >
@@ -537,9 +537,9 @@ export function InviteTeamModal() {
                   height: 38,
                   padding: "0 12px",
                   borderRadius: 10,
-                  border: "1px solid #CBD5E1",
+                  border: "1px solid var(--ui-border-strong)",
                   fontSize: 13,
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                   outline: "none",
                 }}
               />
@@ -554,7 +554,7 @@ export function InviteTeamModal() {
                   display: "block",
                   fontSize: 12,
                   fontWeight: 600,
-                  color: "#334155",
+                  color: "var(--ui-text-2)",
                   marginBottom: 5,
                 }}
               >
@@ -569,10 +569,10 @@ export function InviteTeamModal() {
                   height: 38,
                   padding: "0 12px",
                   borderRadius: 10,
-                  border: "1px solid #CBD5E1",
+                  border: "1px solid var(--ui-border-strong)",
                   fontSize: 13,
-                  color: "#0F172A",
-                  background: "#FFFFFF",
+                  color: "var(--ui-text)",
+                  background: "var(--ui-surface)",
                 }}
               >
                 {ROLE_OPTIONS.map((r) => (
@@ -589,7 +589,7 @@ export function InviteTeamModal() {
                   display: "block",
                   fontSize: 12,
                   fontWeight: 600,
-                  color: "#334155",
+                  color: "var(--ui-text-2)",
                   marginBottom: 6,
                 }}
               >
@@ -612,8 +612,8 @@ export function InviteTeamModal() {
                         border: selected
                           ? "1px solid #6C77C1"
                           : "1px solid #E2E8F0",
-                        background: selected ? "#F0F1F9" : "#F8FAFC",
-                        color: selected ? "#6C77C1" : "#475569",
+                        background: selected ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
+                        color: selected ? "#6C77C1" : "var(--ui-text-3)",
                         fontSize: 12,
                         fontWeight: 600,
                         cursor: "pointer",
@@ -693,14 +693,14 @@ export function InviteTeamModal() {
             style={{
               marginTop: 18,
               paddingTop: 16,
-              borderTop: "1px solid #E2E8F0",
+              borderTop: "1px solid var(--ui-border)",
             }}
           >
             <div
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: "#475569",
+                color: "var(--ui-text-3)",
                 marginBottom: 10,
                 display: "flex",
                 alignItems: "center",
@@ -725,8 +725,8 @@ export function InviteTeamModal() {
                     style={{
                       padding: "10px 12px",
                       borderRadius: 11,
-                      border: "1px solid #E2E8F0",
-                      background: isPending ? "#F8FAFC" : "#F0FDF4",
+                      border: "1px solid var(--ui-border)",
+                      background: isPending ? "var(--ui-surface-2)" : "#F0FDF4",
                       display: "flex",
                       flexWrap: "wrap",
                       alignItems: "center",
@@ -747,7 +747,7 @@ export function InviteTeamModal() {
                           style={{
                             fontSize: 13,
                             fontWeight: 700,
-                            color: "#0F172A",
+                            color: "var(--ui-text)",
                           }}
                         >
                           {inv.name}
@@ -759,7 +759,7 @@ export function InviteTeamModal() {
                             padding: "2px 7px",
                             borderRadius: 9999,
                             background: isPending ? "#ECEEF8" : "#DCFCE7",
-                            color: isPending ? "#5360A5" : "#15803D",
+                            color: isPending ? "var(--ui-accent-text)" : "#15803D",
                           }}
                         >
                           {inv.status}
@@ -768,7 +768,7 @@ export function InviteTeamModal() {
                       <div
                         style={{
                           fontSize: 11.5,
-                          color: "#64748B",
+                          color: "var(--ui-text-4)",
                           marginTop: 2,
                         }}
                       >
@@ -784,9 +784,9 @@ export function InviteTeamModal() {
                           height: 28,
                           padding: "0 9px",
                           borderRadius: 7,
-                          border: "1px solid #CBD5E1",
-                          background: "#FFFFFF",
-                          color: "#334155",
+                          border: "1px solid var(--ui-border-strong)",
+                          background: "var(--ui-surface)",
+                          color: "var(--ui-text-2)",
                           fontSize: 11.5,
                           fontWeight: 600,
                           display: "inline-flex",
@@ -1206,7 +1206,7 @@ export function EquipoView() {
             style={{
               fontSize: 18,
               fontWeight: 700,
-              color: "#0F172A",
+              color: "var(--ui-text)",
               margin: 0,
               letterSpacing: "-0.02em",
             }}
@@ -1223,7 +1223,7 @@ export function EquipoView() {
                 gap: 5,
                 padding: "3px 9px",
                 borderRadius: 9999,
-                background: "#F0F1F9",
+                background: "var(--ui-accent-soft)",
                 color: "#6C77C1",
                 fontSize: 11.5,
                 fontWeight: 600,
@@ -1267,7 +1267,7 @@ export function EquipoView() {
             aria-label="Periodo de métricas de equipo"
             style={{
               display: "inline-flex",
-              background: "#F1F5F9",
+              background: "var(--ui-muted)",
               padding: 3,
               borderRadius: 10,
               gap: 2,
@@ -1289,8 +1289,8 @@ export function EquipoView() {
                   className="hubly-seg-pill"
                   style={{
                     border: "none",
-                    background: active ? "#FFFFFF" : "transparent",
-                    color: active ? "#0F172A" : "#64748B",
+                    background: active ? "var(--ui-surface)" : "transparent",
+                    color: active ? "var(--ui-text)" : "var(--ui-text-4)",
                     fontWeight: active ? 600 : 500,
                     fontSize: 12,
                     padding: "5px 11px",
@@ -1323,7 +1323,7 @@ export function EquipoView() {
               style={{
                 position: "absolute",
                 left: 11,
-                color: "#94A3B8",
+                color: "var(--ui-text-5)",
                 pointerEvents: "none",
               }}
             />
@@ -1338,10 +1338,10 @@ export function EquipoView() {
                 width: "100%",
                 padding: "0 28px 0 32px",
                 borderRadius: 10,
-                border: "1px solid #E2E8F0",
-                background: "#FFFFFF",
+                border: "1px solid var(--ui-border)",
+                background: "var(--ui-surface)",
                 fontSize: 12.5,
-                color: "#0F172A",
+                color: "var(--ui-text)",
                 outline: "none",
                 fontFamily: "inherit",
               }}
@@ -1356,7 +1356,7 @@ export function EquipoView() {
                   right: 8,
                   border: "none",
                   background: "transparent",
-                  color: "#94A3B8",
+                  color: "var(--ui-text-5)",
                   cursor: "pointer",
                   padding: 2,
                   display: "inline-flex",
@@ -1408,9 +1408,9 @@ export function EquipoView() {
               fontSize: 12.5,
               padding: "0 12px",
               borderRadius: 10,
-              color: filtersOpen ? "#6C77C1" : "#475569",
-              borderColor: filtersOpen ? "#D9DCF0" : "#E2E8F0",
-              background: filtersOpen ? "#F0F1F9" : "#FFFFFF",
+              color: filtersOpen ? "#6C77C1" : "var(--ui-text-3)",
+              borderColor: filtersOpen ? "#D9DCF0" : "var(--ui-border)",
+              background: filtersOpen ? "var(--ui-accent-soft)" : "var(--ui-surface)",
             }}
           >
             <SlidersHorizontal size={13} />
@@ -1428,8 +1428,8 @@ export function EquipoView() {
                 right: 0,
                 width: 290,
                 maxWidth: "calc(100vw - 32px)",
-                background: "#FFFFFF",
-                border: "1px solid #E2E8F0",
+                background: "var(--ui-surface)",
+                border: "1px solid var(--ui-border)",
                 borderRadius: 14,
                 padding: 14,
                 zIndex: 50,
@@ -1440,7 +1440,7 @@ export function EquipoView() {
                 style={{
                   fontSize: 11.5,
                   fontWeight: 700,
-                  color: "#475569",
+                  color: "var(--ui-text-3)",
                   marginBottom: 8,
                   textTransform: "uppercase",
                   letterSpacing: "0.04em",
@@ -1462,8 +1462,8 @@ export function EquipoView() {
                     border: !showAllTeamScope
                       ? "1px solid #6C77C1"
                       : "1px solid #E2E8F0",
-                    background: !showAllTeamScope ? "#F0F1F9" : "#F8FAFC",
-                    color: !showAllTeamScope ? "#6C77C1" : "#475569",
+                    background: !showAllTeamScope ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
+                    color: !showAllTeamScope ? "#6C77C1" : "var(--ui-text-3)",
                     fontSize: 11.5,
                     fontWeight: 600,
                     cursor: "pointer",
@@ -1481,8 +1481,8 @@ export function EquipoView() {
                     border: showAllTeamScope
                       ? "1px solid #6C77C1"
                       : "1px solid #E2E8F0",
-                    background: showAllTeamScope ? "#F0F1F9" : "#F8FAFC",
-                    color: showAllTeamScope ? "#6C77C1" : "#475569",
+                    background: showAllTeamScope ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
+                    color: showAllTeamScope ? "#6C77C1" : "var(--ui-text-3)",
                     fontSize: 11.5,
                     fontWeight: 600,
                     cursor: "pointer",
@@ -1496,7 +1496,7 @@ export function EquipoView() {
                 style={{
                   fontSize: 11.5,
                   fontWeight: 700,
-                  color: "#475569",
+                  color: "var(--ui-text-3)",
                   marginBottom: 6,
                   textTransform: "uppercase",
                   letterSpacing: "0.04em",
@@ -1515,8 +1515,8 @@ export function EquipoView() {
                       brandFilterId === "all"
                         ? "1px solid #6C77C1"
                         : "1px solid #E2E8F0",
-                    background: brandFilterId === "all" ? "#F0F1F9" : "#FFFFFF",
-                    color: brandFilterId === "all" ? "#6C77C1" : "#475569",
+                    background: brandFilterId === "all" ? "var(--ui-accent-soft)" : "var(--ui-surface)",
+                    color: brandFilterId === "all" ? "#6C77C1" : "var(--ui-text-3)",
                     fontSize: 11.5,
                     fontWeight: 600,
                     cursor: "pointer",
@@ -1536,8 +1536,8 @@ export function EquipoView() {
                         brandFilterId === b.id
                           ? "1px solid #6C77C1"
                           : "1px solid #E2E8F0",
-                      background: brandFilterId === b.id ? "#F0F1F9" : "#FFFFFF",
-                      color: brandFilterId === b.id ? "#6C77C1" : "#475569",
+                      background: brandFilterId === b.id ? "var(--ui-accent-soft)" : "var(--ui-surface)",
+                      color: brandFilterId === b.id ? "#6C77C1" : "var(--ui-text-3)",
                       fontSize: 11.5,
                       fontWeight: 600,
                       cursor: "pointer",
@@ -1551,7 +1551,7 @@ export function EquipoView() {
               <div
                 style={{
                   paddingTop: 10,
-                  borderTop: "1px solid #F1F5F9",
+                  borderTop: "1px solid var(--ui-muted)",
                   display: "flex",
                   flexDirection: "column",
                   gap: 6,
@@ -1567,9 +1567,9 @@ export function EquipoView() {
                     width: "100%",
                     padding: "7px 10px",
                     borderRadius: 8,
-                    border: "1px solid #E2E8F0",
-                    background: "#F8FAFC",
-                    color: "#0F172A",
+                    border: "1px solid var(--ui-border)",
+                    background: "var(--ui-surface-2)",
+                    color: "var(--ui-text)",
                     fontSize: 11.5,
                     fontWeight: 600,
                     cursor: "pointer",
@@ -1591,9 +1591,9 @@ export function EquipoView() {
                     width: "100%",
                     padding: "7px 10px",
                     borderRadius: 8,
-                    border: "1px solid #E2E8F0",
-                    background: "#F8FAFC",
-                    color: "#0F172A",
+                    border: "1px solid var(--ui-border)",
+                    background: "var(--ui-surface-2)",
+                    color: "var(--ui-text)",
                     fontSize: 11.5,
                     fontWeight: 600,
                     cursor: "pointer",
@@ -1622,11 +1622,11 @@ export function EquipoView() {
             marginBottom: 18,
             padding: "8px 12px",
             borderRadius: 12,
-            background: "#F8FAFC",
-            border: "1px solid #E2E8F0",
+            background: "var(--ui-surface-2)",
+            border: "1px solid var(--ui-border)",
           }}
         >
-          <span style={{ fontSize: 11.5, fontWeight: 600, color: "#64748B" }}>
+          <span style={{ fontSize: 11.5, fontWeight: 600, color: "var(--ui-text-4)" }}>
             Miembros activos:
           </span>
           {productivity.ranking.map((m: EvaluatedTeamMember) => {
@@ -1645,8 +1645,8 @@ export function EquipoView() {
                   border: isSelected
                     ? "1px solid #6C77C1"
                     : "1px solid #E2E8F0",
-                  background: isSelected ? "#F0F1F9" : "#FFFFFF",
-                  color: isSelected ? "#6C77C1" : "#334155",
+                  background: isSelected ? "var(--ui-accent-soft)" : "var(--ui-surface)",
+                  color: isSelected ? "#6C77C1" : "var(--ui-text-2)",
                   fontSize: 12,
                   fontWeight: 600,
                   cursor: "pointer",
@@ -1670,7 +1670,7 @@ export function EquipoView() {
             padding: "14px 18px",
             borderRadius: 14,
             border: "1px solid #D9DCF0",
-            background: "#F0F1F9",
+            background: "var(--ui-accent-soft)",
             display: "flex",
             flexDirection: "column",
             gap: 10,
@@ -1715,7 +1715,7 @@ export function EquipoView() {
                 <div
                   key={inv.id}
                   style={{
-                    background: "#FFFFFF",
+                    background: "var(--ui-surface)",
                     borderRadius: 10,
                     padding: "10px 14px",
                     border: "1px solid #E0E7FF",
@@ -1728,10 +1728,10 @@ export function EquipoView() {
                 >
                   <div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: "#0F172A" }}>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "var(--ui-text)" }}>
                         {inv.name}
                       </span>
-                      <span style={{ fontSize: 12, color: "#64748B" }}>
+                      <span style={{ fontSize: 12, color: "var(--ui-text-4)" }}>
                         {inv.email}
                       </span>
                       <span
@@ -1740,8 +1740,8 @@ export function EquipoView() {
                           fontWeight: 600,
                           padding: "2px 8px",
                           borderRadius: 9999,
-                          background: "#F1F5F9",
-                          color: "#475569",
+                          background: "var(--ui-muted)",
+                          color: "var(--ui-text-3)",
                         }}
                       >
                         {inv.role}
@@ -1753,7 +1753,7 @@ export function EquipoView() {
                           padding: "2px 8px",
                           borderRadius: 9999,
                           background: isPending ? "#ECEEF8" : "#DCFCE7",
-                          color: isPending ? "#5360A5" : "#15803D",
+                          color: isPending ? "var(--ui-accent-text)" : "#15803D",
                         }}
                       >
                         {inv.status}
@@ -1769,9 +1769,9 @@ export function EquipoView() {
                         height: 28,
                         padding: "0 10px",
                         borderRadius: 7,
-                        border: "1px solid #CBD5E1",
-                        background: "#FFFFFF",
-                        color: "#334155",
+                        border: "1px solid var(--ui-border-strong)",
+                        background: "var(--ui-surface)",
+                        color: "var(--ui-text-2)",
                         fontSize: 11.5,
                         fontWeight: 600,
                         display: "inline-flex",
@@ -1855,7 +1855,7 @@ export function EquipoView() {
               width: 80,
               height: 80,
               borderRadius: 20,
-              background: "#F0F1F9",
+              background: "var(--ui-accent-soft)",
               color: "#6C77C1",
               fontSize: 28,
               fontWeight: 700,
@@ -1873,7 +1873,7 @@ export function EquipoView() {
               style={{
                 fontSize: 16,
                 fontWeight: 700,
-                color: "#0F172A",
+                color: "var(--ui-text)",
                 margin: 0,
                 lineHeight: 1.25,
                 display: "flex",
@@ -1883,13 +1883,13 @@ export function EquipoView() {
             >
               <span>{isPrimaryOwner ? profile.name : activeMemberMetrics.name}</span>
               {isPrimaryOwner && (
-                <span style={{ fontSize: 13, fontWeight: 500, color: "#64748B" }}>(tú)</span>
+                <span style={{ fontSize: 13, fontWeight: 500, color: "var(--ui-text-4)" }}>(tú)</span>
               )}
             </h3>
             <div
               style={{
                 fontSize: 13,
-                color: "#64748B",
+                color: "var(--ui-text-4)",
                 marginTop: 2,
               }}
             >
@@ -1898,7 +1898,7 @@ export function EquipoView() {
             <div
               style={{
                 fontSize: 12,
-                color: "#94A3B8",
+                color: "var(--ui-text-5)",
                 marginTop: 2,
               }}
             >
@@ -1918,7 +1918,7 @@ export function EquipoView() {
               fontSize: 12.5,
               padding: "6px 12px",
               borderRadius: 9,
-              color: "#475569",
+              color: "var(--ui-text-3)",
             }}
           >
             <Pencil size={12.5} />
@@ -1932,8 +1932,8 @@ export function EquipoView() {
                 top: "calc(100% + 8px)",
                 right: 0,
                 width: 250,
-                background: "#FFFFFF",
-                border: "1px solid #E2E8F0",
+                background: "var(--ui-surface)",
+                border: "1px solid var(--ui-border)",
                 borderRadius: 12,
                 padding: 12,
                 zIndex: 45,
@@ -1944,7 +1944,7 @@ export function EquipoView() {
                 style={{
                   fontSize: 12,
                   fontWeight: 700,
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                   marginBottom: 8,
                 }}
               >
@@ -1965,8 +1965,8 @@ export function EquipoView() {
                         padding: "6px 8px",
                         borderRadius: 8,
                         border: "none",
-                        background: isAssigned ? "#F0F1F9" : "transparent",
-                        color: isAssigned ? "#6C77C1" : "#334155",
+                        background: isAssigned ? "var(--ui-accent-soft)" : "transparent",
+                        color: isAssigned ? "#6C77C1" : "var(--ui-text-2)",
                         fontSize: 12.5,
                         fontWeight: isAssigned ? 600 : 500,
                         cursor: "pointer",
@@ -2006,7 +2006,7 @@ export function EquipoView() {
           ==================================================================== */}
       <div
         style={{
-          background: "#F8FAFC",
+          background: "var(--ui-surface-2)",
           borderRadius: 14,
           padding: "18px 24px",
           display: "flex",
@@ -2029,17 +2029,17 @@ export function EquipoView() {
             style={{
               fontSize: 10.5,
               fontWeight: 700,
-              color: "#94A3B8",
+              color: "var(--ui-text-5)",
               textTransform: "uppercase",
               letterSpacing: "0.06em",
             }}
           >
             TAREAS
           </span>
-          <span style={{ fontSize: 13.5, color: "#64748B" }}>
+          <span style={{ fontSize: 13.5, color: "var(--ui-text-4)" }}>
             <strong
               style={{
-                color: "#0F172A",
+                color: "var(--ui-text)",
                 fontWeight: 700,
                 fontSize: 18,
                 marginRight: 4,
@@ -2051,10 +2051,10 @@ export function EquipoView() {
             </strong>
             terminadas
           </span>
-          <span style={{ fontSize: 13.5, color: "#64748B" }}>
+          <span style={{ fontSize: 13.5, color: "var(--ui-text-4)" }}>
             <strong
               style={{
-                color: "#0F172A",
+                color: "var(--ui-text)",
                 fontWeight: 700,
                 fontSize: 15,
                 marginRight: 4,
@@ -2064,10 +2064,10 @@ export function EquipoView() {
             </strong>
             en curso
           </span>
-          <span style={{ fontSize: 13.5, color: "#64748B" }}>
+          <span style={{ fontSize: 13.5, color: "var(--ui-text-4)" }}>
             <strong
               style={{
-                color: "#64748B",
+                color: "var(--ui-text-4)",
                 fontWeight: 700,
                 fontSize: 15,
                 marginRight: 4,
@@ -2084,7 +2084,7 @@ export function EquipoView() {
           style={{
             width: 1,
             height: 22,
-            background: "#E2E8F0",
+            background: "var(--ui-border)",
             flexShrink: 0,
           }}
         />
@@ -2095,17 +2095,17 @@ export function EquipoView() {
             style={{
               fontSize: 10.5,
               fontWeight: 700,
-              color: "#94A3B8",
+              color: "var(--ui-text-5)",
               textTransform: "uppercase",
               letterSpacing: "0.06em",
             }}
           >
             POSTS
           </span>
-          <span style={{ fontSize: 13.5, color: "#64748B" }}>
+          <span style={{ fontSize: 13.5, color: "var(--ui-text-4)" }}>
             <strong
               style={{
-                color: "#0F172A",
+                color: "var(--ui-text)",
                 fontWeight: 700,
                 fontSize: 18,
                 marginRight: 4,
@@ -2124,7 +2124,7 @@ export function EquipoView() {
           style={{
             width: 1,
             height: 22,
-            background: "#E2E8F0",
+            background: "var(--ui-border)",
             flexShrink: 0,
           }}
         />
@@ -2135,15 +2135,15 @@ export function EquipoView() {
             style={{
               fontSize: 10.5,
               fontWeight: 700,
-              color: "#94A3B8",
+              color: "var(--ui-text-5)",
               textTransform: "uppercase",
               letterSpacing: "0.06em",
             }}
           >
             TIEMPO
           </span>
-          <span style={{ fontSize: 13.5, color: "#64748B" }}>
-            <strong style={{ color: "#0F172A", fontWeight: 700, fontSize: 14.5 }}>
+          <span style={{ fontSize: 13.5, color: "var(--ui-text-4)" }}>
+            <strong style={{ color: "var(--ui-text)", fontWeight: 700, fontSize: 14.5 }}>
               {activeMemberMetrics.activeTimeFormatted}
             </strong>{" "}
             activo
@@ -2178,7 +2178,7 @@ export function EquipoView() {
                 width: 48,
                 height: 48,
                 borderRadius: 14,
-                background: "#F0F1F9",
+                background: "var(--ui-accent-soft)",
                 color: "#6C77C1",
                 fontSize: 16,
                 fontWeight: 700,
@@ -2189,7 +2189,7 @@ export function EquipoView() {
             >
               {b.initials.slice(0, 1)}
             </div>
-            <span style={{ fontSize: 11.5, color: "#475569", fontWeight: 500 }}>
+            <span style={{ fontSize: 11.5, color: "var(--ui-text-3)", fontWeight: 500 }}>
               {b.name}
             </span>
           </div>
@@ -2202,7 +2202,7 @@ export function EquipoView() {
       <p
         style={{
           fontSize: 12.5,
-          color: "#64748B",
+          color: "var(--ui-text-4)",
           lineHeight: 1.6,
           maxWidth: 680,
           margin: "0 0 28px 0",
@@ -2210,9 +2210,9 @@ export function EquipoView() {
       >
         Los números salen solos del trabajo de cada quien: nadie prende un
         cronómetro. El{" "}
-        <strong style={{ color: "#334155" }}>ciclo típico</strong> es la
+        <strong style={{ color: "var(--ui-text-2)" }}>ciclo típico</strong> es la
         mediana desde que nace la tarea hasta que se cierra, y el{" "}
-        <strong style={{ color: "#334155" }}>tiempo activo</strong> son las
+        <strong style={{ color: "var(--ui-text-2)" }}>tiempo activo</strong> son las
         horas que pasó en curso o en revisión — es tiempo transcurrido, no
         horas trabajadas, y se registra desde el 10 de agosto.
       </p>
@@ -2222,8 +2222,8 @@ export function EquipoView() {
           ==================================================================== */}
       <div
         style={{
-          background: "#FFFFFF",
-          border: "1px solid #E2E8F0",
+          background: "var(--ui-surface)",
+          border: "1px solid var(--ui-border)",
           borderRadius: 16,
           padding: "18px 22px",
           display: "flex",
@@ -2240,7 +2240,7 @@ export function EquipoView() {
               width: 44,
               height: 44,
               borderRadius: 9999,
-              background: "#F0F1F9",
+              background: "var(--ui-accent-soft)",
               color: "#6C77C1",
               fontSize: 16,
               fontWeight: 700,
@@ -2257,7 +2257,7 @@ export function EquipoView() {
               style={{
                 fontSize: 18,
                 fontWeight: 700,
-                color: "#0F172A",
+                color: "var(--ui-text)",
                 lineHeight: 1.2,
               }}
             >
@@ -2268,7 +2268,7 @@ export function EquipoView() {
             <div
               style={{
                 fontSize: 12.5,
-                color: "#64748B",
+                color: "var(--ui-text-4)",
                 marginTop: 3,
                 display: "flex",
                 alignItems: "center",
@@ -2303,7 +2303,7 @@ export function EquipoView() {
               width: 150,
               height: 6,
               borderRadius: 9999,
-              background: "#F0F1F9",
+              background: "var(--ui-accent-soft)",
               marginTop: 6,
               marginLeft: "auto",
               overflow: "hidden",
@@ -2325,7 +2325,7 @@ export function EquipoView() {
               alignItems: "center",
               justifyContent: "space-between",
               fontSize: 10.5,
-              color: "#94A3B8",
+              color: "var(--ui-text-5)",
               marginTop: 4,
             }}
           >
@@ -2343,8 +2343,8 @@ export function EquipoView() {
           ==================================================================== */}
       <div
         style={{
-          background: "#FFFFFF",
-          border: "1px solid #E2E8F0",
+          background: "var(--ui-surface)",
+          border: "1px solid var(--ui-border)",
           borderRadius: 16,
           padding: "18px 22px",
           marginBottom: 16,
@@ -2362,19 +2362,19 @@ export function EquipoView() {
         >
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <TrendingUp size={15} style={{ color: "#6C77C1" }} />
-            <span style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
+            <span style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>
               Tu actividad
             </span>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontSize: 12, color: "#94A3B8", fontWeight: 600 }}>
+            <span style={{ fontSize: 12, color: "var(--ui-text-5)", fontWeight: 600 }}>
               {activeMemberMetrics.xp} pts
             </span>
             <div
               style={{
                 display: "inline-flex",
-                background: "#F1F5F9",
+                background: "var(--ui-muted)",
                 padding: 2,
                 borderRadius: 8,
               }}
@@ -2389,7 +2389,7 @@ export function EquipoView() {
                     style={{
                       border: "none",
                       background: active ? "#6C77C1" : "transparent",
-                      color: active ? "#FFFFFF" : "#64748B",
+                      color: active ? "#FFFFFF" : "var(--ui-text-4)",
                       fontSize: 11.5,
                       fontWeight: 600,
                       padding: "3px 10px",
@@ -2430,7 +2430,7 @@ export function EquipoView() {
                   style={{
                     fontSize: 12.5,
                     fontWeight: isToday ? 700 : 500,
-                    color: isToday ? "#6C77C1" : "#475569",
+                    color: isToday ? "#6C77C1" : "var(--ui-text-3)",
                   }}
                 >
                   {row.label}
@@ -2439,7 +2439,7 @@ export function EquipoView() {
                   style={{
                     height: 24,
                     borderRadius: 7,
-                    background: isToday ? "#F0F1F9" : "#F8FAFC",
+                    background: isToday ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
                     border: isToday ? "1px solid #E0E7FF" : "none",
                     overflow: "hidden",
                     position: "relative",
@@ -2463,7 +2463,7 @@ export function EquipoView() {
                 <span
                   style={{
                     fontSize: 11.5,
-                    color: row.points > 0 ? "#475569" : "#CBD5E1",
+                    color: row.points > 0 ? "var(--ui-text-3)" : "#CBD5E1",
                     fontWeight: row.points > 0 ? 600 : 400,
                     textAlign: "right",
                   }}
@@ -2490,8 +2490,8 @@ export function EquipoView() {
         {/* Left Card: Logros */}
         <div
           style={{
-            background: "#FFFFFF",
-            border: "1px solid #E2E8F0",
+            background: "var(--ui-surface)",
+            border: "1px solid var(--ui-border)",
             borderRadius: 16,
             padding: "18px 22px",
             display: "flex",
@@ -2509,11 +2509,11 @@ export function EquipoView() {
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Award size={15} style={{ color: "#6C77C1" }} />
-              <span style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
+              <span style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>
                 Logros
               </span>
             </div>
-            <span style={{ fontSize: 11.5, color: "#64748B", fontWeight: 600 }}>
+            <span style={{ fontSize: 11.5, color: "var(--ui-text-4)", fontWeight: 600 }}>
               {activeMemberMetrics.unlockedAchievementsCount}/
               {activeMemberMetrics.achievements.length} activos
             </span>
@@ -2539,7 +2539,7 @@ export function EquipoView() {
                     key={ach.id}
                     className={`hubly-achievement ${ach.unlocked ? "is-unlocked" : ""}`}
                     style={{
-                      background: ach.unlocked ? "#F5F3FF" : "#F8FAFC",
+                      background: ach.unlocked ? "#F5F3FF" : "var(--ui-surface-2)",
                       border: ach.unlocked
                         ? "1px solid #D9DCF0"
                         : "1px solid #F1F5F9",
@@ -2557,7 +2557,7 @@ export function EquipoView() {
                       style={{
                         fontSize: 12,
                         fontWeight: 700,
-                        color: ach.unlocked ? "#1E1B4B" : "#475569",
+                        color: ach.unlocked ? "#1E1B4B" : "var(--ui-text-3)",
                         marginTop: 8,
                       }}
                     >
@@ -2566,7 +2566,7 @@ export function EquipoView() {
                     <div
                       style={{
                         fontSize: 10.5,
-                        color: "#64748B",
+                        color: "var(--ui-text-4)",
                         marginTop: 2,
                         lineHeight: 1.3,
                       }}
@@ -2589,7 +2589,7 @@ export function EquipoView() {
                           width: "100%",
                           height: 4,
                           borderRadius: 9999,
-                          background: "#E2E8F0",
+                          background: "var(--ui-border)",
                           overflow: "hidden",
                         }}
                       >
@@ -2609,7 +2609,7 @@ export function EquipoView() {
                           alignItems: "center",
                           justifyContent: "space-between",
                           fontSize: 10,
-                          color: "#64748B",
+                          color: "var(--ui-text-4)",
                           fontWeight: 600,
                         }}
                       >
@@ -2634,7 +2634,7 @@ export function EquipoView() {
               padding: "8px",
               border: "none",
               background: "transparent",
-              color: "#64748B",
+              color: "var(--ui-text-4)",
               fontSize: 12,
               fontWeight: 600,
               cursor: "pointer",
@@ -2663,8 +2663,8 @@ export function EquipoView() {
         {/* Right Card: Ranking del Equipo */}
         <div
           style={{
-            background: "#FFFFFF",
-            border: "1px solid #E2E8F0",
+            background: "var(--ui-surface)",
+            border: "1px solid var(--ui-border)",
             borderRadius: 16,
             padding: "18px 22px",
             display: "flex",
@@ -2683,7 +2683,7 @@ export function EquipoView() {
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Users size={15} style={{ color: "#6366F1" }} />
-              <span style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>
+              <span style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>
                 Ranking del Equipo
               </span>
             </div>
@@ -2691,7 +2691,7 @@ export function EquipoView() {
             <div
               style={{
                 display: "inline-flex",
-                background: "#F1F5F9",
+                background: "var(--ui-muted)",
                 padding: 2,
                 borderRadius: 8,
               }}
@@ -2707,7 +2707,7 @@ export function EquipoView() {
                     style={{
                       border: "none",
                       background: active ? "#6C77C1" : "transparent",
-                      color: active ? "#FFFFFF" : "#64748B",
+                      color: active ? "#FFFFFF" : "var(--ui-text-4)",
                       fontSize: 11.5,
                       fontWeight: 600,
                       padding: "3px 10px",
@@ -2754,7 +2754,7 @@ export function EquipoView() {
                     }
                   }}
                   style={{
-                    background: isCurrentUser || isSelected ? "#F0F1F9" : "#F8FAFC",
+                    background: isCurrentUser || isSelected ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
                     border:
                       isCurrentUser || isSelected
                         ? "1px solid #E0E7FF"
@@ -2774,7 +2774,7 @@ export function EquipoView() {
                       e.stopPropagation();
                       setDrawerMemberId(member.id);
                     }}
-                    style={{ order: 1, alignSelf: "flex-end", border: 0, background: "transparent", color: "#5A65AF", fontSize: 12, fontWeight: 600, cursor: "pointer", padding: 0 }}
+                    style={{ order: 1, alignSelf: "flex-end", border: 0, background: "transparent", color: "var(--ui-accent-text-2)", fontSize: 12, fontWeight: 600, cursor: "pointer", padding: 0 }}
                   >
                     Ver perfil
                   </button>
@@ -2791,7 +2791,7 @@ export function EquipoView() {
                         style={{
                           fontSize: index < 3 ? 14 : 12,
                           fontWeight: 700,
-                          color: "#94A3B8",
+                          color: "var(--ui-text-5)",
                           width: 18,
                           textAlign: "center",
                           flexShrink: 0,
@@ -2804,8 +2804,8 @@ export function EquipoView() {
                           width: 30,
                           height: 30,
                           borderRadius: 9999,
-                          background: isCurrentUser ? "#D9DCF0" : "#E2E8F0",
-                          color: isCurrentUser ? "#6C77C1" : "#334155",
+                          background: isCurrentUser ? "#D9DCF0" : "var(--ui-border)",
+                          color: isCurrentUser ? "#6C77C1" : "var(--ui-text-2)",
                           fontSize: 12,
                           fontWeight: 700,
                           display: "flex",
@@ -2821,7 +2821,7 @@ export function EquipoView() {
                           style={{
                             fontSize: 13,
                             fontWeight: 700,
-                            color: "#0F172A",
+                            color: "var(--ui-text)",
                             whiteSpace: "nowrap",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
@@ -2840,7 +2840,7 @@ export function EquipoView() {
                             </span>
                           )}
                         </div>
-                        <div style={{ fontSize: 11, color: "#64748B" }}>
+                        <div style={{ fontSize: 11, color: "var(--ui-text-4)" }}>
                           {member.role} · {member.completedTasksCount} tareas ·{" "}
                           {member.publishedPostsCount} posts
                         </div>
@@ -2852,12 +2852,12 @@ export function EquipoView() {
                         style={{
                           fontSize: 13,
                           fontWeight: 700,
-                          color: isCurrentUser ? "#6C77C1" : "#0F172A",
+                          color: isCurrentUser ? "#6C77C1" : "var(--ui-text)",
                         }}
                       >
                         {member.displayPoints} pts
                       </span>
-                      <div style={{ fontSize: 10.5, color: "#94A3B8" }}>
+                      <div style={{ fontSize: 10.5, color: "var(--ui-text-5)" }}>
                         Nv.{member.level} · {member.efficiencyScore} efic.
                       </div>
                     </div>
@@ -2869,7 +2869,7 @@ export function EquipoView() {
                       width: "100%",
                       height: 4,
                       borderRadius: 9999,
-                      background: isCurrentUser ? "#E0E7FF" : "#E2E8F0",
+                      background: isCurrentUser ? "#E0E7FF" : "var(--ui-border)",
                       overflow: "hidden",
                     }}
                   >
@@ -2898,8 +2898,8 @@ export function EquipoView() {
       {showAll39Achievements && (
         <div
           style={{
-            background: "#FFFFFF",
-            border: "1px solid #E2E8F0",
+            background: "var(--ui-surface)",
+            border: "1px solid var(--ui-border)",
             borderRadius: 16,
             padding: "20px 22px",
             marginBottom: 16,
@@ -2916,10 +2916,10 @@ export function EquipoView() {
             }}
           >
             <div>
-              <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "#0F172A" }}>
+              <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "var(--ui-text)" }}>
                 Catálogo completo de logros (39)
               </h3>
-              <p style={{ margin: "2px 0 0", fontSize: 12, color: "#64748B" }}>
+              <p style={{ margin: "2px 0 0", fontSize: 12, color: "var(--ui-text-4)" }}>
                 Desbloqueados por actividad real en tareas, contenido, proyectos, CRM y Hubly AI
               </p>
             </div>
@@ -2964,9 +2964,9 @@ export function EquipoView() {
                   style={{
                     padding: "4px 10px",
                     borderRadius: 9999,
-                    border: active ? "1px solid #6C77C1" : "1px solid #E2E8F0",
-                    background: active ? "#F0F1F9" : "#F8FAFC",
-                    color: active ? "#6C77C1" : "#475569",
+                    border: active ? "1px solid #6C77C1" : "1px solid var(--ui-border)",
+                    background: active ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
+                    color: active ? "#6C77C1" : "var(--ui-text-3)",
                     fontSize: 11.5,
                     fontWeight: 600,
                     cursor: "pointer",
@@ -3000,7 +3000,7 @@ export function EquipoView() {
                     border: item.unlocked
                       ? "1px solid #D9DCF0"
                       : "1px solid #E2E8F0",
-                    background: item.unlocked ? "#F5F3FF" : "#F8FAFC",
+                    background: item.unlocked ? "#F5F3FF" : "var(--ui-surface-2)",
                     display: "flex",
                     flexDirection: "column",
                     gap: 6,
@@ -3021,17 +3021,17 @@ export function EquipoView() {
                         fontWeight: 700,
                         padding: "2px 7px",
                         borderRadius: 9999,
-                        background: item.unlocked ? "#DCFCE7" : "#E2E8F0",
-                        color: item.unlocked ? "#15803D" : "#475569",
+                        background: item.unlocked ? "#DCFCE7" : "var(--ui-border)",
+                        color: item.unlocked ? "#15803D" : "var(--ui-text-3)",
                       }}
                     >
                       +{item.xpReward} XP
                     </span>
                   </div>
-                  <div style={{ fontSize: 12.5, fontWeight: 700, color: "#0F172A" }}>
+                  <div style={{ fontSize: 12.5, fontWeight: 700, color: "var(--ui-text)" }}>
                     {item.title}
                   </div>
-                  <div style={{ fontSize: 11, color: "#64748B", lineHeight: 1.35 }}>
+                  <div style={{ fontSize: 11, color: "var(--ui-text-4)", lineHeight: 1.35 }}>
                     {item.description}
                   </div>
                   <div
@@ -3042,7 +3042,7 @@ export function EquipoView() {
                       alignItems: "center",
                       justifyContent: "space-between",
                       fontSize: 10.5,
-                      color: "#64748B",
+                      color: "var(--ui-text-4)",
                       fontWeight: 600,
                     }}
                   >
@@ -3063,8 +3063,8 @@ export function EquipoView() {
           ==================================================================== */}
       <div
         style={{
-          background: "#FFFFFF",
-          border: "1px solid #E2E8F0",
+          background: "var(--ui-surface)",
+          border: "1px solid var(--ui-border)",
           borderRadius: 14,
           overflow: "hidden",
         }}
@@ -3087,17 +3087,17 @@ export function EquipoView() {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: "#334155" }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: "var(--ui-text-2)" }}>
               Cómo funcionan los puntos
             </span>
-            <span style={{ fontSize: 12, color: "#94A3B8" }}>
+            <span style={{ fontSize: 12, color: "var(--ui-text-5)" }}>
               · Se miden por esfuerzo, no por clicks
             </span>
           </div>
           <ChevronDown
             size={15}
             style={{
-              color: "#94A3B8",
+              color: "var(--ui-text-5)",
               transform: pointsAccordionOpen ? "rotate(180deg)" : "none",
               transition: "transform 180ms ease",
               flexShrink: 0,
@@ -3109,7 +3109,7 @@ export function EquipoView() {
           <div
             style={{
               padding: "0 20px 20px",
-              borderTop: "1px solid #F1F5F9",
+              borderTop: "1px solid var(--ui-muted)",
               display: "flex",
               flexDirection: "column",
               gap: 16,
@@ -3147,7 +3147,7 @@ export function EquipoView() {
                       style={{
                         fontSize: 12.5,
                         fontWeight: 700,
-                        color: "#0F172A",
+                        color: "var(--ui-text)",
                       }}
                     >
                       {cat.title}
@@ -3166,7 +3166,7 @@ export function EquipoView() {
                     style={{
                       margin: 0,
                       fontSize: 11.5,
-                      color: "#475569",
+                      color: "var(--ui-text-3)",
                       lineHeight: 1.45,
                     }}
                   >
@@ -3186,11 +3186,11 @@ export function EquipoView() {
                 gap: 8,
                 padding: "10px 14px",
                 borderRadius: 10,
-                background: "#F8FAFC",
-                border: "1px solid #E2E8F0",
+                background: "var(--ui-surface-2)",
+                border: "1px solid var(--ui-border)",
               }}
             >
-              <span style={{ fontSize: 11.5, fontWeight: 700, color: "#475569" }}>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: "var(--ui-text-3)" }}>
                 Niveles de progresión:
               </span>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
@@ -3202,7 +3202,7 @@ export function EquipoView() {
                       alignItems: "center",
                       gap: 5,
                       fontSize: 11.5,
-                      color: "#334155",
+                      color: "var(--ui-text-2)",
                       fontWeight: 600,
                     }}
                   >

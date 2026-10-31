@@ -184,7 +184,7 @@ export default function ChatPage() {
         width: "100%",
         minHeight: "calc(100vh - 48px)",
         height: "calc(100vh - 48px)",
-        background: "#FFFFFF",
+        background: "var(--ui-surface)",
         borderRadius: 16,
         border: "1px solid #EEF2F6",
         overflow: "hidden",
@@ -197,7 +197,7 @@ export default function ChatPage() {
           width: 280,
           flexShrink: 0,
           borderRight: "1px solid #EEF2F6",
-          background: "#FFFFFF",
+          background: "var(--ui-surface)",
           display: "flex",
           flexDirection: "column",
           userSelect: "none",
@@ -225,7 +225,7 @@ export default function ChatPage() {
               boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
             }}
           >
-            <Search size={14} style={{ color: "#94A3B8", flexShrink: 0 }} />
+            <Search size={14} style={{ color: "var(--ui-text-5)", flexShrink: 0 }} />
             <input
               type="text"
               value={searchQuery}
@@ -236,7 +236,7 @@ export default function ChatPage() {
                 background: "transparent",
                 outline: "none",
                 fontSize: 13,
-                color: "#1E293B",
+                color: "var(--ui-text-1)",
                 width: "100%",
               }}
             />
@@ -274,7 +274,7 @@ export default function ChatPage() {
                 height: 10,
                 borderRadius: 999,
                 background: "#4ADE80",
-                border: "2px solid #FFFFFF",
+                border: "2px solid var(--ui-surface)",
               }}
             />
           </button>
@@ -293,7 +293,7 @@ export default function ChatPage() {
             style={{
               fontSize: 17,
               fontWeight: 700,
-              color: "#0F172A",
+              color: "var(--ui-text)",
               letterSpacing: "-0.02em",
             }}
           >
@@ -307,7 +307,7 @@ export default function ChatPage() {
               width: 28,
               height: 28,
               borderRadius: 8,
-              background: "#F0F1F9",
+              background: "var(--ui-accent-soft)",
               color: "#6C77C1",
               border: "none",
               display: "grid",
@@ -324,9 +324,9 @@ export default function ChatPage() {
           style={{
             padding: "4px 22px 14px",
             fontSize: 12,
-            color: "#94A3B8",
+            color: "var(--ui-text-5)",
             lineHeight: 1.45,
-            borderBottom: "1px solid #F1F5F9",
+            borderBottom: "1px solid var(--ui-muted)",
           }}
         >
           Todavía no hay canales con conversación.
@@ -365,7 +365,7 @@ export default function ChatPage() {
                   border: "none",
                   padding: 0,
                   cursor: "pointer",
-                  color: "#334155",
+                  color: "var(--ui-text-2)",
                   fontSize: 12.5,
                   fontWeight: 600,
                 }}
@@ -378,7 +378,7 @@ export default function ChatPage() {
                   />
                 </svg>
                 <span>Mensajes directos</span>
-                <span style={{ color: "#94A3B8", fontWeight: 500, fontSize: 12 }}>1</span>
+                <span style={{ color: "var(--ui-text-5)", fontWeight: 500, fontSize: 12 }}>1</span>
               </button>
 
               <button
@@ -388,7 +388,7 @@ export default function ChatPage() {
                 style={{
                   background: "transparent",
                   border: "none",
-                  color: "#94A3B8",
+                  color: "var(--ui-text-5)",
                   cursor: "pointer",
                   padding: 2,
                   display: "grid",
@@ -411,7 +411,7 @@ export default function ChatPage() {
                   padding: "7px 10px",
                   borderRadius: 10,
                   border: "none",
-                  background: selectedId === "dm-jair" ? "#F0F1F9" : "transparent",
+                  background: selectedId === "dm-jair" ? "var(--ui-accent-soft)" : "transparent",
                   cursor: "pointer",
                   textAlign: "left",
                   transition: "background 0.15s ease",
@@ -423,7 +423,7 @@ export default function ChatPage() {
                     height: 26,
                     borderRadius: 999,
                     background: "#ECEEF8",
-                    color: "#5360A5",
+                    color: "var(--ui-accent-text)",
                     fontSize: 11.5,
                     fontWeight: 700,
                     display: "grid",
@@ -442,12 +442,12 @@ export default function ChatPage() {
                       height: 8,
                       borderRadius: 999,
                       background: "#4ADE80",
-                      border: "1.5px solid #FFFFFF",
+                      border: "1.5px solid var(--ui-surface)",
                     }}
                   />
                 </span>
-                <span style={{ fontSize: 13, color: "#1E293B", fontWeight: 500 }}>
-                  Jair <span style={{ color: "#94A3B8", fontWeight: 400 }}>(tú)</span>
+                <span style={{ fontSize: 13, color: "var(--ui-text-1)", fontWeight: 500 }}>
+                  Jair <span style={{ color: "var(--ui-text-5)", fontWeight: 400 }}>(tú)</span>
                 </span>
               </button>
             )}
@@ -462,7 +462,7 @@ export default function ChatPage() {
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
-                  color: "#94A3B8",
+                  color: "var(--ui-text-5)",
                   padding: "2px 8px 6px",
                 }}
               >
@@ -480,7 +480,7 @@ export default function ChatPage() {
                   padding: "8px 10px",
                   borderRadius: 10,
                   border: "none",
-                  background: selectedId === "ch-general" ? "#F0F1F9" : "transparent",
+                  background: selectedId === "ch-general" ? "var(--ui-accent-soft)" : "transparent",
                   cursor: "pointer",
                   textAlign: "left",
                 }}
@@ -491,8 +491,8 @@ export default function ChatPage() {
                       width: 26,
                       height: 26,
                       borderRadius: 8,
-                      background: "#F1F5F9",
-                      color: "#475569",
+                      background: "var(--ui-muted)",
+                      color: "var(--ui-text-3)",
                       display: "grid",
                       placeItems: "center",
                       flexShrink: 0,
@@ -505,12 +505,12 @@ export default function ChatPage() {
                       style={{
                         fontSize: 13,
                         fontWeight: 600,
-                        color: selectedId === "ch-general" ? "#6C77C1" : "#1E293B",
+                        color: selectedId === "ch-general" ? "#6C77C1" : "var(--ui-text-1)",
                       }}
                     >
                       # General
                     </span>
-                    <span style={{ fontSize: 11, color: "#94A3B8" }}>Sin mensajes aún</span>
+                    <span style={{ fontSize: 11, color: "var(--ui-text-5)" }}>Sin mensajes aún</span>
                   </span>
                 </span>
               </button>
@@ -526,7 +526,7 @@ export default function ChatPage() {
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
-                  color: "#94A3B8",
+                  color: "var(--ui-text-5)",
                   padding: "2px 8px 6px",
                 }}
               >
@@ -549,7 +549,7 @@ export default function ChatPage() {
                   borderRadius: 10,
                   border: "none",
                   background:
-                    selectedId?.startsWith("ch-min") && !minExpanded ? "#F0F1F9" : "transparent",
+                    selectedId?.startsWith("ch-min") && !minExpanded ? "var(--ui-accent-soft)" : "transparent",
                   cursor: "pointer",
                   textAlign: "left",
                 }}
@@ -572,11 +572,11 @@ export default function ChatPage() {
                     M
                   </span>
                   <span style={{ display: "flex", flexDirection: "column" }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: "#1E293B" }}>Min</span>
-                    <span style={{ fontSize: 11, color: "#94A3B8" }}>3 canales</span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "var(--ui-text-1)" }}>Min</span>
+                    <span style={{ fontSize: 11, color: "var(--ui-text-5)" }}>3 canales</span>
                   </span>
                 </span>
-                <span style={{ color: "#94A3B8" }}>
+                <span style={{ color: "var(--ui-text-5)" }}>
                   {minExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                 </span>
               </button>
@@ -605,8 +605,8 @@ export default function ChatPage() {
                           padding: "6px 10px",
                           borderRadius: 8,
                           border: "none",
-                          background: isSubActive ? "#F0F1F9" : "transparent",
-                          color: isSubActive ? "#6C77C1" : "#475569",
+                          background: isSubActive ? "var(--ui-accent-soft)" : "transparent",
+                          color: isSubActive ? "#6C77C1" : "var(--ui-text-3)",
                           fontWeight: isSubActive ? 600 : 500,
                           fontSize: 12.5,
                           cursor: "pointer",
@@ -631,7 +631,7 @@ export default function ChatPage() {
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          background: "#FFFFFF",
+          background: "var(--ui-surface)",
           minWidth: 0,
         }}
       >
@@ -673,7 +673,7 @@ export default function ChatPage() {
               style={{
                 fontSize: 16,
                 fontWeight: 700,
-                color: "#1E293B",
+                color: "var(--ui-text-1)",
                 margin: "0 0 6px",
                 letterSpacing: "-0.01em",
               }}
@@ -684,7 +684,7 @@ export default function ChatPage() {
             <p
               style={{
                 fontSize: 13,
-                color: "#94A3B8",
+                color: "var(--ui-text-5)",
                 margin: 0,
                 maxWidth: 235,
                 lineHeight: 1.5,
@@ -725,10 +725,10 @@ export default function ChatPage() {
                   {activeMeta.badgeText}
                 </span>
                 <div>
-                  <div style={{ fontSize: 14.5, fontWeight: 700, color: "#0F172A" }}>
+                  <div style={{ fontSize: 14.5, fontWeight: 700, color: "var(--ui-text)" }}>
                     {activeMeta.title}
                   </div>
-                  <div style={{ fontSize: 12, color: "#94A3B8" }}>{activeMeta.subtitle}</div>
+                  <div style={{ fontSize: 12, color: "var(--ui-text-5)" }}>{activeMeta.subtitle}</div>
                 </div>
               </div>
 
@@ -738,9 +738,9 @@ export default function ChatPage() {
                 style={{
                   padding: "6px 12px",
                   borderRadius: 8,
-                  border: "1px solid #E2E8F0",
-                  background: "#FFFFFF",
-                  color: "#64748B",
+                  border: "1px solid var(--ui-border)",
+                  background: "var(--ui-surface)",
+                  color: "var(--ui-text-4)",
                   fontSize: 12,
                   fontWeight: 600,
                   cursor: "pointer",
@@ -776,7 +776,7 @@ export default function ChatPage() {
                       width: 44,
                       height: 44,
                       borderRadius: 12,
-                      background: "#F0F1F9",
+                      background: "var(--ui-accent-soft)",
                       color: "#6C77C1",
                       display: "grid",
                       placeItems: "center",
@@ -785,10 +785,10 @@ export default function ChatPage() {
                   >
                     <MessageSquarePlus size={20} />
                   </div>
-                  <div style={{ fontSize: 14.5, fontWeight: 700, color: "#0F172A", marginBottom: 4 }}>
+                  <div style={{ fontSize: 14.5, fontWeight: 700, color: "var(--ui-text)", marginBottom: 4 }}>
                     Comienza la conversación en {activeMeta.title}
                   </div>
-                  <div style={{ fontSize: 12.5, color: "#94A3B8", lineHeight: 1.5 }}>
+                  <div style={{ fontSize: 12.5, color: "var(--ui-text-5)", lineHeight: 1.5 }}>
                     Sin mensajes aún. Escribe el primer mensaje abajo para coordinar con tu equipo.
                   </div>
                 </div>
@@ -828,20 +828,20 @@ export default function ChatPage() {
                           marginBottom: 4,
                         }}
                       >
-                        <span style={{ fontSize: 13, fontWeight: 700, color: "#0F172A" }}>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: "var(--ui-text)" }}>
                           {m.sender}
                         </span>
-                        <span style={{ fontSize: 11, color: "#94A3B8" }}>{m.time}</span>
+                        <span style={{ fontSize: 11, color: "var(--ui-text-5)" }}>{m.time}</span>
                         <CheckCheck size={13} style={{ color: "#6C77C1" }} />
                       </div>
                       <div
                         style={{
                           padding: "10px 14px",
                           borderRadius: "4px 14px 14px 14px",
-                          background: "#FFFFFF",
-                          border: "1px solid #E2E8F0",
+                          background: "var(--ui-surface)",
+                          border: "1px solid var(--ui-border)",
                           fontSize: 13.5,
-                          color: "#1E293B",
+                          color: "var(--ui-text-1)",
                           lineHeight: 1.5,
                           boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
                         }}
@@ -860,7 +860,7 @@ export default function ChatPage() {
               style={{
                 padding: "14px 20px",
                 borderTop: "1px solid #EEF2F6",
-                background: "#FFFFFF",
+                background: "var(--ui-surface)",
                 display: "flex",
                 alignItems: "center",
                 gap: 10,
@@ -872,13 +872,13 @@ export default function ChatPage() {
                   display: "flex",
                   alignItems: "center",
                   gap: 10,
-                  background: "#F8FAFC",
-                  border: "1px solid #E2E8F0",
+                  background: "var(--ui-surface-2)",
+                  border: "1px solid var(--ui-border)",
                   borderRadius: 12,
                   padding: "9px 14px",
                 }}
               >
-                <Paperclip size={16} style={{ color: "#94A3B8", cursor: "pointer" }} />
+                <Paperclip size={16} style={{ color: "var(--ui-text-5)", cursor: "pointer" }} />
                 <input
                   type="text"
                   value={draft}
@@ -890,11 +890,11 @@ export default function ChatPage() {
                     background: "transparent",
                     outline: "none",
                     fontSize: 13.5,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                   }}
                 />
-                <AtSign size={16} style={{ color: "#94A3B8", cursor: "pointer" }} />
-                <Smile size={16} style={{ color: "#94A3B8", cursor: "pointer" }} />
+                <AtSign size={16} style={{ color: "var(--ui-text-5)", cursor: "pointer" }} />
+                <Smile size={16} style={{ color: "var(--ui-text-5)", cursor: "pointer" }} />
                 <Sparkles size={16} style={{ color: "#6C77C1", cursor: "pointer" }} />
               </div>
 

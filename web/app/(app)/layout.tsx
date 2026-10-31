@@ -22,7 +22,7 @@ import {
   User,
 } from "lucide-react";
 import "./hubly-saas.css";
-import "./henry-saas.css";
+import "./app-base.css";
 import "./dashboard-polish.css";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { useHublyTheme } from "@/lib/theme";
@@ -36,6 +36,7 @@ import { WidgetConfigModal } from "@/components/app/WidgetConfigModal";
 import { AutoSuggestionsModal } from "@/components/app/AutoSuggestionsModal";
 import { FloatingAIDrawer } from "@/components/app/FloatingAIDrawer";
 import { Handshake, Tags, Zap } from "lucide-react";
+import { AppDialogHost } from "@/components/app/AppDialogHost";
 import { DescubreHublyWidget } from "@/components/app/DescubreHublyWidget";
 import {
   HublyCatAvatar,
@@ -460,7 +461,7 @@ export default function SaaSAppLayout({
   const activeSidebarTab = isEffectiveCollapsed ? "inicio" : sidebarTab;
 
   return (
-    <div className="hubly-app-root henry-app-root">
+    <div className="hubly-app-root hb-app-root">
       <HublyRoughFilterDefs />
 
       {/* =====================================================================
@@ -475,8 +476,8 @@ export default function SaaSAppLayout({
           gap: 8,
           height: 54,
           padding: "0 12px",
-          background: "#FFFFFF",
-          borderBottom: "1px solid #E2E8F0",
+          background: "var(--ui-surface)",
+          borderBottom: "1px solid var(--ui-border)",
           position: "sticky",
           top: 0,
           zIndex: 45,
@@ -488,7 +489,7 @@ export default function SaaSAppLayout({
           <button
             type="button"
             onClick={() => setMobileDrawerOpen((prev) => !prev)}
-            className="hubly-icon-btn henry-icon-btn"
+            className="hubly-icon-btn hb-icon-btn"
             aria-label="Abrir menú de navegación"
             aria-expanded={mobileDrawerOpen}
             aria-controls="hubly-sidebar-nav"
@@ -496,9 +497,9 @@ export default function SaaSAppLayout({
               width: 34,
               height: 34,
               borderRadius: 9,
-              border: "1px solid #E2E8F0",
-              background: "#F8FAFC",
-              color: "#0F172A",
+              border: "1px solid var(--ui-border)",
+              background: "var(--ui-surface-2)",
+              color: "var(--ui-text)",
               flexShrink: 0,
             }}
           >
@@ -507,12 +508,12 @@ export default function SaaSAppLayout({
 
           <Link
             href={withQuery("/dashboard")}
-            className="hubly-logo-serif henry-logo-serif"
+            className="hubly-logo-serif hb-logo-serif"
             aria-label="Hubly Inicio"
             style={{
               fontSize: 20,
               fontWeight: 700,
-              color: "#0F172A",
+              color: "var(--ui-text)",
               textDecoration: "none",
               lineHeight: 1,
               flexShrink: 0,
@@ -546,9 +547,9 @@ export default function SaaSAppLayout({
                 height: 30,
                 padding: "0 9px",
                 borderRadius: 9999,
-                border: "1px solid #E2E8F0",
-                background: "#F8FAFC",
-                color: "#0F172A",
+                border: "1px solid var(--ui-border)",
+                background: "var(--ui-surface-2)",
+                color: "var(--ui-text)",
                 fontSize: 12,
                 fontWeight: 600,
                 cursor: "pointer",
@@ -590,7 +591,7 @@ export default function SaaSAppLayout({
           <button
             type="button"
             onClick={() => setAiDrawerOpen(true)}
-            className="hubly-icon-btn henry-icon-btn"
+            className="hubly-icon-btn hb-icon-btn"
             aria-label="Abrir asistente Hubly"
             title="Hubi"
             style={{ width: 32, height: 32 }}
@@ -601,7 +602,7 @@ export default function SaaSAppLayout({
           <button
             type="button"
             onClick={() => setCmdkOpen(true)}
-            className="hubly-icon-btn henry-icon-btn"
+            className="hubly-icon-btn hb-icon-btn"
             aria-label="Buscar (⌘K)"
             title="Buscar (⌘K)"
             style={{ width: 32, height: 32 }}
@@ -633,7 +634,7 @@ export default function SaaSAppLayout({
         ref={sidebarRef}
         id="hubly-sidebar-nav"
         aria-label="Navegación principal de Hubly"
-        className={`hubly-sidebar henry-sidebar ${
+        className={`hubly-sidebar hb-sidebar ${
           targetCollapsed ? "is-collapsed" : ""
         } ${sidebarMotion ? `is-animating is-${sidebarMotion}` : ""} ${mobileDrawerOpen ? "is-mobile-drawer-open" : ""}`.trim()}
         data-sidebar-tab={activeSidebarTab}
@@ -661,7 +662,7 @@ export default function SaaSAppLayout({
           <button
             type="button"
             onClick={handleToggleCollapse}
-            className="hubly-sidebar-collapse-btn henry-sidebar-collapse-btn"
+            className="hubly-sidebar-collapse-btn hb-sidebar-collapse-btn"
             aria-label={
               targetCollapsed
                 ? "Expandir barra lateral"
@@ -691,7 +692,7 @@ export default function SaaSAppLayout({
             >
               <Link
                 href={withQuery("/dashboard")}
-                className="hubly-logo-serif henry-logo-serif"
+                className="hubly-logo-serif hb-logo-serif"
                 aria-label="Hubly · Ir al Dashboard"
                 style={{
                   display: "inline-flex",
@@ -728,7 +729,7 @@ export default function SaaSAppLayout({
                 <button
                   type="button"
                   onClick={() => setMobileDrawerOpen(false)}
-                  className="hubly-icon-btn henry-icon-btn"
+                  className="hubly-icon-btn hb-icon-btn"
                   aria-label="Cerrar menú de navegación"
                 >
                   <X size={16} />
@@ -774,7 +775,7 @@ export default function SaaSAppLayout({
               <button
                 type="button"
                 onClick={() => setNotificationsOpen((prev) => !prev)}
-                className="hubly-icon-btn henry-icon-btn"
+                className="hubly-icon-btn hb-icon-btn"
                 aria-label={
                   unreadNotificationsCount > 0
                     ? `Notificaciones (${unreadNotificationsCount} sin leer)`
@@ -788,7 +789,7 @@ export default function SaaSAppLayout({
                 }
                 style={{ position: "relative" }}
               >
-                <Bell size={15} style={{ color: "#94A3B8" }} />
+                <Bell size={15} style={{ color: "var(--ui-text-5)" }} />
                 {unreadNotificationsCount > 0 && (
                   <span
                     data-testid="sidebar-notifications-badge"
@@ -824,8 +825,8 @@ export default function SaaSAppLayout({
                     top: "calc(100% + 6px)",
                     left: 0,
                     width: 280,
-                    background: "#FFFFFF",
-                    border: "1px solid #E2E8F0",
+                    background: "var(--ui-surface)",
+                    border: "1px solid var(--ui-border)",
                     borderRadius: 14,
                     padding: 10,
                     zIndex: 65,
@@ -845,7 +846,7 @@ export default function SaaSAppLayout({
                       style={{
                         fontSize: 12.5,
                         fontWeight: 700,
-                        color: "#0F172A",
+                        color: "var(--ui-text)",
                       }}
                     >
                       Notificaciones ({unreadNotificationsCount})
@@ -885,7 +886,7 @@ export default function SaaSAppLayout({
                           padding: "16px 8px",
                           textAlign: "center",
                           fontSize: 12,
-                          color: "#94A3B8",
+                          color: "var(--ui-text-5)",
                         }}
                       >
                         Todo al día en tu agencia
@@ -914,7 +915,7 @@ export default function SaaSAppLayout({
                               width: 7,
                               height: 7,
                               borderRadius: 9999,
-                              background: item.read ? "#CBD5E1" : "#6C77C1",
+                              background: item.read ? "var(--ui-border-strong)" : "#6C77C1",
                               marginTop: 5,
                               flexShrink: 0,
                             }}
@@ -925,7 +926,7 @@ export default function SaaSAppLayout({
                                 display: "block",
                                 fontSize: 12,
                                 fontWeight: item.read ? 500 : 600,
-                                color: "#1E293B",
+                                color: "var(--ui-text-1)",
                                 lineHeight: 1.3,
                               }}
                             >
@@ -935,7 +936,7 @@ export default function SaaSAppLayout({
                               style={{
                                 display: "block",
                                 fontSize: 11,
-                                color: "#64748B",
+                                color: "var(--ui-text-4)",
                                 marginTop: 2,
                                 lineHeight: 1.3,
                               }}
@@ -970,8 +971,8 @@ export default function SaaSAppLayout({
                 width: 32,
                 height: 32,
                 borderRadius: 8,
-                border: "1px solid #E2E8F0",
-                background: "#FFFFFF",
+                border: "1px solid var(--ui-border)",
+                background: "var(--ui-surface)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -984,7 +985,7 @@ export default function SaaSAppLayout({
             <button
               type="button"
               onClick={() => setNotificationsOpen((prev) => !prev)}
-              className="hubly-icon-btn henry-icon-btn"
+              className="hubly-icon-btn hb-icon-btn"
               aria-label={
                 unreadNotificationsCount > 0
                   ? `Notificaciones (${unreadNotificationsCount} sin leer)`
@@ -997,7 +998,7 @@ export default function SaaSAppLayout({
               }
               style={{ position: "relative" }}
             >
-              <Bell size={15} style={{ color: "#94A3B8" }} />
+              <Bell size={15} style={{ color: "var(--ui-text-5)" }} />
               {unreadNotificationsCount > 0 && (
                 <span
                   style={{
@@ -1017,7 +1018,7 @@ export default function SaaSAppLayout({
 
         {/* Section AGENCIA */}
         {!isEffectiveCollapsed && (
-          <div className="hubly-section-label henry-section-label">AGENCIA</div>
+          <div className="hubly-section-label hb-section-label">AGENCIA</div>
         )}
         <nav
           aria-label="Módulos de agencia"
@@ -1038,7 +1039,7 @@ export default function SaaSAppLayout({
                 href={withQuery(item.href)}
                 title={isEffectiveCollapsed ? item.label : undefined}
                 aria-current={active ? "page" : undefined}
-                className={`hubly-nav-item henry-nav-item ${
+                className={`hubly-nav-item hb-nav-item ${
                   active ? "active" : ""
                 }`.trim()}
                 style={{
@@ -1071,8 +1072,8 @@ export default function SaaSAppLayout({
                         height: 18,
                         padding: "0 6px",
                         borderRadius: 9999,
-                        background: active ? "#D9DCF0" : "#F1F5F9",
-                        color: active ? "#5360A5" : "#475569",
+                        background: active ? "#D9DCF0" : "var(--ui-muted)",
+                        color: active ? "var(--ui-accent-text)" : "var(--ui-text-3)",
                         fontSize: 11,
                         fontWeight: 700,
                         display: "inline-flex",
@@ -1110,7 +1111,7 @@ export default function SaaSAppLayout({
           style={{
             height: 1,
             width: isEffectiveCollapsed ? 28 : "calc(100% - 8px)",
-            background: "#F1F5F9",
+            background: "var(--ui-muted)",
             margin: isEffectiveCollapsed ? "12px auto" : "14px 4px 12px",
             flexShrink: 0,
           }}
@@ -1180,7 +1181,7 @@ export default function SaaSAppLayout({
                   style={{
                     fontSize: 13.5,
                     fontWeight: 600,
-                    color: "#1E293B",
+                    color: "var(--ui-text-1)",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
@@ -1189,7 +1190,7 @@ export default function SaaSAppLayout({
                   {activeBrand.name}
                 </span>
 
-                <ChevronDown size={12} style={{ color: "#94A3B8", flexShrink: 0 }} />
+                <ChevronDown size={12} style={{ color: "var(--ui-text-5)", flexShrink: 0 }} />
               </button>
 
               {/* Right: Dynamic User Initials Circle + Dashed + Button (Nueva marca) */}
@@ -1221,9 +1222,9 @@ export default function SaaSAppLayout({
                     width: 20,
                     height: 20,
                     borderRadius: 9999,
-                    border: "1px dashed #CBD5E1",
+                    border: "1px dashed var(--ui-border-strong)",
                     background: "transparent",
-                    color: "#94A3B8",
+                    color: "var(--ui-text-5)",
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1248,8 +1249,8 @@ export default function SaaSAppLayout({
                   top: "calc(100% + 2px)",
                   left: 4,
                   right: 4,
-                  background: "#FFFFFF",
-                  border: "1px solid #E2E8F0",
+                  background: "var(--ui-surface)",
+                  border: "1px solid var(--ui-border)",
                   borderRadius: 12,
                   padding: 6,
                   zIndex: 65,
@@ -1280,7 +1281,7 @@ export default function SaaSAppLayout({
                           borderRadius: 8,
                           border: "none",
                           background: isCurrent ? "#F5F6FB" : "transparent",
-                          color: isCurrent ? "#5360A5" : "#334155",
+                          color: isCurrent ? "var(--ui-accent-text)" : "var(--ui-text-2)",
                           cursor: "pointer",
                           textAlign: "left",
                           fontSize: 13,
@@ -1327,7 +1328,7 @@ export default function SaaSAppLayout({
                           </span>
                         </span>
                         {isCurrent && (
-                          <Check size={13} style={{ color: "#5A65AF", flexShrink: 0 }} />
+                          <Check size={13} style={{ color: "var(--ui-accent-text-2)", flexShrink: 0 }} />
                         )}
                       </button>
                     );
@@ -1344,7 +1345,7 @@ export default function SaaSAppLayout({
                     marginTop: 4,
                     padding: "7px 9px",
                     borderRadius: 8,
-                    border: "1px dashed #CBD5E1",
+                    border: "1px dashed var(--ui-border-strong)",
                     background: "transparent",
                     color: "#6C77C1",
                     fontSize: 12,
@@ -1384,7 +1385,7 @@ export default function SaaSAppLayout({
                 href={withQuery(item.href)}
                 title={isEffectiveCollapsed ? item.label : undefined}
                 aria-current={active ? "page" : undefined}
-                className={`hubly-nav-item henry-nav-item ${
+                className={`hubly-nav-item hb-nav-item ${
                   active ? "active" : ""
                 }`.trim()}
               >
@@ -1463,7 +1464,7 @@ export default function SaaSAppLayout({
               <button
                 type="button"
                 onClick={toggleTheme}
-                className="hubly-icon-btn henry-icon-btn"
+                className="hubly-icon-btn hb-icon-btn"
                 aria-label="Cambiar tema"
                 title={theme === "dark" ? "Modo claro" : "Modo oscuro"}
               >
@@ -1474,7 +1475,7 @@ export default function SaaSAppLayout({
               <button
                 type="button"
                 onClick={() => setAiDrawerOpen(true)}
-                className="hubly-icon-btn henry-icon-btn"
+                className="hubly-icon-btn hb-icon-btn"
                 aria-label="Soporte de Hubly"
                 title="Soporte"
               >
@@ -1501,7 +1502,7 @@ export default function SaaSAppLayout({
             <button
               type="button"
               onClick={() => setCmdkOpen(true)}
-              className="hubly-icon-btn henry-icon-btn"
+              className="hubly-icon-btn hb-icon-btn"
               aria-label="Buscar (⌘K)"
               title="Buscar (⌘K)"
             >
@@ -1528,7 +1529,7 @@ export default function SaaSAppLayout({
             <div
               style={{
                 height: 1,
-                background: "#F1F5F9",
+                background: "var(--ui-muted)",
                 margin: "0 2px 10px",
               }}
             />
@@ -1587,7 +1588,7 @@ export default function SaaSAppLayout({
                     style={{
                       fontSize: 13,
                       fontWeight: 600,
-                      color: "#0F172A",
+                      color: "var(--ui-text)",
                       lineHeight: 1.2,
                       overflow: "hidden",
                       textOverflow: "ellipsis",
@@ -1601,7 +1602,7 @@ export default function SaaSAppLayout({
                     style={{
                       fontSize: 11,
                       fontWeight: 400,
-                      color: "#94A3B8",
+                      color: "var(--ui-text-5)",
                       lineHeight: 1.2,
                       overflow: "hidden",
                       textOverflow: "ellipsis",
@@ -1617,7 +1618,7 @@ export default function SaaSAppLayout({
             {!isEffectiveCollapsed && (
               <Link
                 href={withQuery("/ajustes")}
-                className="hubly-icon-btn henry-icon-btn"
+                className="hubly-icon-btn hb-icon-btn"
                 aria-label="Ir a Ajustes"
                 title="Ajustes"
               >
@@ -1643,8 +1644,8 @@ export default function SaaSAppLayout({
                 bottom: "calc(100% + 10px)",
                 left: 0,
                 width: 276,
-                background: "#FFFFFF",
-                border: "1px solid #E2E8F0",
+                background: "var(--ui-surface)",
+                border: "1px solid var(--ui-border)",
                 borderRadius: 16,
                 padding: 14,
                 zIndex: 70,
@@ -1663,7 +1664,7 @@ export default function SaaSAppLayout({
                   style={{
                     fontSize: 12.5,
                     fontWeight: 700,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                     display: "inline-flex",
                     alignItems: "center",
                     gap: 6,
@@ -1675,7 +1676,7 @@ export default function SaaSAppLayout({
                 <button
                   type="button"
                   onClick={() => setProfileMenuOpen(false)}
-                  className="hubly-icon-btn henry-icon-btn"
+                  className="hubly-icon-btn hb-icon-btn"
                   aria-label="Cerrar menú de perfil"
                   style={{ width: 24, height: 24 }}
                 >
@@ -1693,7 +1694,7 @@ export default function SaaSAppLayout({
                       display: "block",
                       fontSize: 11,
                       fontWeight: 600,
-                      color: "#64748B",
+                      color: "var(--ui-text-4)",
                       marginBottom: 3,
                     }}
                   >
@@ -1715,7 +1716,7 @@ export default function SaaSAppLayout({
                       display: "block",
                       fontSize: 11,
                       fontWeight: 600,
-                      color: "#64748B",
+                      color: "var(--ui-text-4)",
                       marginBottom: 3,
                     }}
                   >
@@ -1739,7 +1740,7 @@ export default function SaaSAppLayout({
                       gap: 4,
                       fontSize: 11,
                       fontWeight: 600,
-                      color: "#64748B",
+                      color: "var(--ui-text-4)",
                       marginBottom: 3,
                     }}
                   >
@@ -1780,7 +1781,7 @@ export default function SaaSAppLayout({
               <div
                 style={{
                   height: 1,
-                  background: "#F1F5F9",
+                  background: "var(--ui-muted)",
                   margin: "12px 0 10px",
                 }}
               />
@@ -1790,7 +1791,7 @@ export default function SaaSAppLayout({
                   style={{
                     fontSize: 11,
                     fontWeight: 700,
-                    color: "#64748B",
+                    color: "var(--ui-text-4)",
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
                     marginBottom: 6,
@@ -1824,7 +1825,7 @@ export default function SaaSAppLayout({
                             ? "1px solid #D9DCF0"
                             : "1px solid transparent",
                           background: isCurrentWs ? "#F5F6FB" : "transparent",
-                          color: isCurrentWs ? "#5360A5" : "#334155",
+                          color: isCurrentWs ? "var(--ui-accent-text)" : "var(--ui-text-2)",
                           fontSize: 12,
                           fontWeight: isCurrentWs ? 600 : 500,
                           cursor: "pointer",
@@ -1833,7 +1834,7 @@ export default function SaaSAppLayout({
                       >
                         <span>{ws.label}</span>
                         {isCurrentWs && (
-                          <Check size={13} style={{ color: "#5A65AF" }} />
+                          <Check size={13} style={{ color: "var(--ui-accent-text-2)" }} />
                         )}
                       </button>
                     );
@@ -1848,8 +1849,8 @@ export default function SaaSAppLayout({
       {/* =====================================================================
           MAIN WORKSPACE CANVAS
          ===================================================================== */}
-      <div className="hubly-main henry-main">
-        <main className="hubly-page henry-page">
+      <div className="hubly-main hb-main">
+        <main className="hubly-page hb-page">
           <React.Suspense fallback={null}>{children}</React.Suspense>
         </main>
       </div>
@@ -1868,7 +1869,7 @@ export default function SaaSAppLayout({
           height: 60,
           background: "rgba(255, 255, 255, 0.96)",
           backdropFilter: "blur(12px)",
-          borderTop: "1px solid #E2E8F0",
+          borderTop: "1px solid var(--ui-border)",
           display: "grid",
           gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
           alignItems: "center",
@@ -1888,7 +1889,7 @@ export default function SaaSAppLayout({
             textDecoration: "none",
             fontSize: 10.5,
             fontWeight: isNavActive("/tareas") ? 700 : 500,
-            color: isNavActive("/tareas") ? "#5360A5" : "#64748B",
+            color: isNavActive("/tareas") ? "var(--ui-accent-text)" : "var(--ui-text-4)",
           }}
         >
           <NotebookIcon active={isNavActive("/tareas")} />
@@ -1907,7 +1908,7 @@ export default function SaaSAppLayout({
             textDecoration: "none",
             fontSize: 10.5,
             fontWeight: isNavActive("/parrillas") ? 700 : 500,
-            color: isNavActive("/parrillas") ? "#5360A5" : "#64748B",
+            color: isNavActive("/parrillas") ? "var(--ui-accent-text)" : "var(--ui-text-4)",
           }}
         >
           <HashBoldIcon active={isNavActive("/parrillas")} />
@@ -1928,7 +1929,7 @@ export default function SaaSAppLayout({
             background: "transparent",
             fontSize: 10.5,
             fontWeight: 700,
-            color: "#0F172A",
+            color: "var(--ui-text)",
             cursor: "pointer",
             padding: 0,
           }}
@@ -1963,7 +1964,7 @@ export default function SaaSAppLayout({
             textDecoration: "none",
             fontSize: 10.5,
             fontWeight: isNavActive("/anuncios") ? 700 : 500,
-            color: isNavActive("/anuncios") ? "#5360A5" : "#64748B",
+            color: isNavActive("/anuncios") ? "var(--ui-accent-text)" : "var(--ui-text-4)",
           }}
         >
           <BullseyeFilledIcon active={isNavActive("/anuncios")} />
@@ -1984,7 +1985,7 @@ export default function SaaSAppLayout({
             background: "transparent",
             fontSize: 10.5,
             fontWeight: 500,
-            color: "#64748B",
+            color: "var(--ui-text-4)",
             cursor: "pointer",
             padding: 0,
           }}
@@ -1998,6 +1999,7 @@ export default function SaaSAppLayout({
           SHARED SURFACES, DRAWERS & MODALS
          ===================================================================== */}
       <DescubreHublyWidgetSurface />
+      <AppDialogHost />
       <FloatingAIDrawer />
       <PostComposerModal />
       <NewBrandModal />

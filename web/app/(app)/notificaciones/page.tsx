@@ -33,10 +33,10 @@ export default function NotificacionesPage() {
         }}
       >
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, color: "#0F172A", margin: 0 }}>
+          <h1 style={{ fontSize: 24, fontWeight: 700, color: "var(--ui-text)", margin: 0 }}>
             Notificaciones
           </h1>
-          <p style={{ fontSize: 13, color: "#64748B", margin: "4px 0 0" }}>
+          <p style={{ fontSize: 13, color: "var(--ui-text-4)", margin: "4px 0 0" }}>
             {unread === 0 ? "Todo leído" : `${unread} sin leer`}
           </p>
         </div>
@@ -55,11 +55,11 @@ export default function NotificacionesPage() {
       {notifications.length === 0 ? (
         <div
           style={{
-            border: "1px dashed #E2E8F0",
+            border: "1px dashed var(--ui-border)",
             borderRadius: 16,
             padding: "40px 24px",
             textAlign: "center",
-            color: "#64748B",
+            color: "var(--ui-text-4)",
             fontSize: 13.5,
           }}
         >
@@ -74,20 +74,20 @@ export default function NotificacionesPage() {
               <li
                 key={n.id}
                 style={{
-                  background: n.read ? "#FFFFFF" : "#F0F1F9",
-                  border: "1px solid #E2E8F0",
+                  background: n.read ? "var(--ui-surface)" : "var(--ui-accent-soft)",
+                  border: "1px solid var(--ui-border)",
                   borderRadius: 14,
                   padding: "14px 16px",
                 }}
               >
-                <div style={{ fontSize: 11.5, color: "#64748B", marginBottom: 4 }}>
+                <div style={{ fontSize: 11.5, color: "var(--ui-text-4)", marginBottom: 4 }}>
                   {[KIND_LABEL[n.kind], brand?.name, n.createdAt].filter(Boolean).join(" · ")}
                 </div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>{n.title}</div>
-                <div style={{ fontSize: 13, color: "#475569", marginTop: 2 }}>{n.body}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>{n.title}</div>
+                <div style={{ fontSize: 13, color: "var(--ui-text-3)", marginTop: 2 }}>{n.body}</div>
                 <div style={{ display: "flex", gap: 14, marginTop: 8, fontSize: 12.5, fontWeight: 600 }}>
                   {n.actionUrl && (
-                    <Link href={n.actionUrl} onClick={() => markRead(n.id)} style={{ color: "#5A65AF" }}>
+                    <Link href={n.actionUrl} onClick={() => markRead(n.id)} style={{ color: "var(--ui-accent-text-2)" }}>
                       Abrir
                     </Link>
                   )}
@@ -95,7 +95,7 @@ export default function NotificacionesPage() {
                     <button
                       type="button"
                       onClick={() => markRead(n.id)}
-                      style={{ all: "unset", cursor: "pointer", color: "#5A65AF" }}
+                      style={{ all: "unset", cursor: "pointer", color: "var(--ui-accent-text-2)" }}
                     >
                       Marcar como leída
                     </button>

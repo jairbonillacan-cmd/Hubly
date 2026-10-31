@@ -38,32 +38,32 @@ export default function AutomatizacionesPage() {
   return (
     <div style={{ maxWidth: 860, margin: "0 auto", padding: "12px 0 48px", display: "grid", gap: 18 }}>
       <div>
-        <h1 style={{ fontSize: 24, fontWeight: 700, color: "#0F172A", margin: 0 }}>Automatizaciones</h1>
-        <p style={{ fontSize: 13, color: "#64748B", margin: "2px 0 0" }}>
+        <h1 style={{ fontSize: 24, fontWeight: 700, color: "var(--ui-text)", margin: 0 }}>Automatizaciones</h1>
+        <p style={{ fontSize: 13, color: "var(--ui-text-4)", margin: "2px 0 0" }}>
           Reglas que hacen el trabajo repetitivo. Por ahora se ejecutan cuando el cambio ocurre con la app abierta.
         </p>
       </div>
 
       <section style={{ display: "grid", gap: 10 }}>
         <h2 style={h2}>Tus reglas</h2>
-        {rules.length === 0 && <p style={{ ...card, fontSize: 13.5, color: "#64748B", textAlign: "center", margin: 0 }}>Aún no tienes reglas. Empieza con una plantilla.</p>}
+        {rules.length === 0 && <p style={{ ...card, fontSize: 13.5, color: "var(--ui-text-4)", textAlign: "center", margin: 0 }}>Aún no tienes reglas. Empieza con una plantilla.</p>}
         {rules.map((rule) => (
           <article key={rule.id} style={{ ...card, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
             <label style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}>
               <input type="checkbox" role="switch" checked={rule.enabled} onChange={() => toggleAutomation(rule.id)} aria-label={`Activar ${rule.name}`} style={{ width: 17, height: 17 }} />
             </label>
             <div style={{ flex: "1 1 240px", minWidth: 0 }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: "#0F172A" }}>{rule.name}</div>
-              <div style={{ fontSize: 12.5, color: "#475569" }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>{rule.name}</div>
+              <div style={{ fontSize: 12.5, color: "var(--ui-text-3)" }}>
                 {TRIGGERS[rule.trigger]} → {ACTIONS[rule.action].toLowerCase()}: {rule.text}
               </div>
-              <div style={{ fontSize: 12, color: "#64748B", marginTop: 2 }}>
+              <div style={{ fontSize: 12, color: "var(--ui-text-4)", marginTop: 2 }}>
                 {rule.runs === 0
                   ? "Sin ejecuciones"
                   : `${rule.runs} ejecuciones · última ${new Date(rule.lastRunAt || "").toLocaleString("es-MX", { dateStyle: "short", timeStyle: "short" })}`}
               </div>
             </div>
-            <button type="button" aria-label={`Eliminar ${rule.name}`} onClick={() => removeAutomation(rule.id)} style={{ border: 0, background: "transparent", color: "#64748B", cursor: "pointer", display: "grid", padding: 4 }}>
+            <button type="button" aria-label={`Eliminar ${rule.name}`} onClick={() => removeAutomation(rule.id)} style={{ border: 0, background: "transparent", color: "var(--ui-text-4)", cursor: "pointer", display: "grid", padding: 4 }}>
               <Trash2 size={15} />
             </button>
           </article>
@@ -77,7 +77,7 @@ export default function AutomatizacionesPage() {
             {available.map((t) => (
               <article key={t.name} style={{ ...card, display: "flex", flexDirection: "column", gap: 6 }}>
                 <strong style={{ fontSize: 13.5 }}>{t.name}</strong>
-                <span style={{ fontSize: 12.5, color: "#475569" }}>{TRIGGERS[t.trigger]} → {ACTIONS[t.action].toLowerCase()}</span>
+                <span style={{ fontSize: 12.5, color: "var(--ui-text-3)" }}>{TRIGGERS[t.trigger]} → {ACTIONS[t.action].toLowerCase()}</span>
                 <button type="button" onClick={() => addAutomation(t)} style={{ ...primary, marginTop: "auto", alignSelf: "flex-start" }}>Activar</button>
               </article>
             ))}
@@ -121,8 +121,8 @@ export default function AutomatizacionesPage() {
   );
 }
 
-const card = { background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 14, padding: 16 } as const;
-const h2 = { fontSize: 15, fontWeight: 700, color: "#0F172A", margin: 0 } as const;
-const field = { width: "100%", border: "1px solid #CBD5E1", borderRadius: 9, padding: "8px 10px", fontSize: 13, fontFamily: "inherit", background: "#FFFFFF", minWidth: 0 } as const;
-const lab = { display: "grid", gap: 4, fontSize: 12, fontWeight: 600, color: "#475569" } as const;
+const card = { background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 14, padding: 16 } as const;
+const h2 = { fontSize: 15, fontWeight: 700, color: "var(--ui-text)", margin: 0 } as const;
+const field = { width: "100%", border: "1px solid var(--ui-border-strong)", borderRadius: 9, padding: "8px 10px", fontSize: 13, fontFamily: "inherit", background: "var(--ui-surface)", minWidth: 0 } as const;
+const lab = { display: "grid", gap: 4, fontSize: 12, fontWeight: 600, color: "var(--ui-text-3)" } as const;
 const primary = { border: 0, borderRadius: 9, background: "#6C77C1", color: "#FFFFFF", padding: "7px 13px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;

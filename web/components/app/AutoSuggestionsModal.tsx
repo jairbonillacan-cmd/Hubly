@@ -147,7 +147,7 @@ function MetricCardIcon({ type }: { type: SuggestedMetricItem["icon"] }) {
     return <Globe size={15} style={{ color: "#38BDF8" }} />;
   }
   if (type === "mouse") {
-    return <MousePointerClick size={15} style={{ color: "#94A3B8" }} />;
+    return <MousePointerClick size={15} style={{ color: "var(--ui-text-5)" }} />;
   }
   if (type === "form") {
     return <FileText size={15} style={{ color: "#CB997E" }} />;
@@ -512,21 +512,21 @@ export function AutoSuggestionsModal({
           width: "100%",
           maxWidth: 680,
           maxHeight: "90vh",
-          background: "#FFFFFF",
+          background: "var(--ui-surface)",
           borderRadius: 20,
-          border: "1px solid #E2E8F0",
+          border: "1px solid var(--ui-border)",
           boxShadow: "0 24px 60px rgba(15, 23, 42, 0.22)",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
-          color: "#0F172A",
+          color: "var(--ui-text)",
         }}
       >
         {/* Header */}
         <div
           style={{
             padding: "18px 22px 14px",
-            borderBottom: "1px solid #F1F5F9",
+            borderBottom: "1px solid var(--ui-muted)",
             display: "flex",
             alignItems: "flex-start",
             justifyContent: "space-between",
@@ -539,7 +539,7 @@ export function AutoSuggestionsModal({
                 width: 36,
                 height: 36,
                 borderRadius: 10,
-                background: "#F0F1F9",
+                background: "var(--ui-accent-soft)",
                 color: "#6C77C1",
                 display: "grid",
                 placeItems: "center",
@@ -556,7 +556,7 @@ export function AutoSuggestionsModal({
                   margin: 0,
                   fontSize: 16.5,
                   fontWeight: 700,
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                   lineHeight: 1.25,
                 }}
               >
@@ -566,7 +566,7 @@ export function AutoSuggestionsModal({
                 style={{
                   margin: "3px 0 0",
                   fontSize: 12.5,
-                  color: "#64748B",
+                  color: "var(--ui-text-4)",
                   lineHeight: 1.4,
                 }}
               >
@@ -584,9 +584,9 @@ export function AutoSuggestionsModal({
               width: 32,
               height: 32,
               borderRadius: 9999,
-              border: "1px solid #E2E8F0",
-              background: "#F8FAFC",
-              color: "#64748B",
+              border: "1px solid var(--ui-border)",
+              background: "var(--ui-surface-2)",
+              color: "var(--ui-text-4)",
               display: "grid",
               placeItems: "center",
               cursor: "pointer",
@@ -601,8 +601,8 @@ export function AutoSuggestionsModal({
         <div
           style={{
             padding: "10px 22px",
-            background: "#F8FAFC",
-            borderBottom: "1px solid #F1F5F9",
+            background: "var(--ui-surface-2)",
+            borderBottom: "1px solid var(--ui-muted)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -613,7 +613,7 @@ export function AutoSuggestionsModal({
           <div
             style={{
               display: "inline-flex",
-              background: "#E2E8F0",
+              background: "var(--ui-border)",
               padding: 3,
               borderRadius: 10,
               gap: 2,
@@ -628,8 +628,8 @@ export function AutoSuggestionsModal({
                 borderRadius: 8,
                 border: "none",
                 background:
-                  activeView === "reglas" ? "#FFFFFF" : "transparent",
-                color: activeView === "reglas" ? "#6C77C1" : "#475569",
+                  activeView === "reglas" ? "var(--ui-surface)" : "transparent",
+                color: activeView === "reglas" ? "#6C77C1" : "var(--ui-text-3)",
                 fontSize: 12,
                 fontWeight: 700,
                 cursor: "pointer",
@@ -649,8 +649,8 @@ export function AutoSuggestionsModal({
                 borderRadius: 8,
                 border: "none",
                 background:
-                  activeView === "metricas" ? "#FFFFFF" : "transparent",
-                color: activeView === "metricas" ? "#6C77C1" : "#475569",
+                  activeView === "metricas" ? "var(--ui-surface)" : "transparent",
+                color: activeView === "metricas" ? "#6C77C1" : "var(--ui-text-3)",
                 fontSize: 12,
                 fontWeight: 700,
                 cursor: "pointer",
@@ -664,7 +664,7 @@ export function AutoSuggestionsModal({
             </button>
           </div>
 
-          <span style={{ fontSize: 11.5, color: "#64748B", fontWeight: 500 }}>
+          <span style={{ fontSize: 11.5, color: "var(--ui-text-4)", fontWeight: 500 }}>
             Motor de reglas local · Auditable
           </span>
         </div>
@@ -713,8 +713,8 @@ export function AutoSuggestionsModal({
                     style={{
                       padding: "14px 16px",
                       borderRadius: 14,
-                      border: "1px solid #CBD5E1",
-                      background: "#FFFFFF",
+                      border: "1px solid var(--ui-border-strong)",
+                      background: "var(--ui-surface)",
                       display: "flex",
                       flexDirection: "column",
                       gap: 10,
@@ -766,7 +766,7 @@ export function AutoSuggestionsModal({
                               style={{
                                 fontSize: 14,
                                 fontWeight: 700,
-                                color: "#0F172A",
+                                color: "var(--ui-text)",
                               }}
                             >
                               {rec.brandName}
@@ -775,8 +775,8 @@ export function AutoSuggestionsModal({
                               style={{
                                 padding: "2px 8px",
                                 borderRadius: 9999,
-                                background: "#F1F5F9",
-                                color: "#334155",
+                                background: "var(--ui-muted)",
+                                color: "var(--ui-text-2)",
                                 fontSize: 11,
                                 fontWeight: 700,
                               }}
@@ -787,16 +787,16 @@ export function AutoSuggestionsModal({
                           <div
                             style={{
                               fontSize: 11.5,
-                              color: "#64748B",
+                              color: "var(--ui-text-4)",
                               marginTop: 2,
                             }}
                           >
                             Compromiso actual:{" "}
-                            <strong style={{ color: "#0F172A" }}>
+                            <strong style={{ color: "var(--ui-text)" }}>
                               {rec.currentCommitted}/mes
                             </strong>{" "}
                             · Completado mes pasado:{" "}
-                            <strong style={{ color: "#0F172A" }}>
+                            <strong style={{ color: "var(--ui-text)" }}>
                               {rec.completedLastPeriod}
                             </strong>
                           </div>
@@ -812,7 +812,7 @@ export function AutoSuggestionsModal({
                           padding: "4px 10px",
                           borderRadius: 9999,
                           background: diffAbs >= 0 ? "#DCFCE7" : "#ECEEF8",
-                          color: diffAbs >= 0 ? "#15803D" : "#5360A5",
+                          color: diffAbs >= 0 ? "#15803D" : "var(--ui-accent-text)",
                           fontSize: 12,
                           fontWeight: 800,
                         }}
@@ -830,10 +830,10 @@ export function AutoSuggestionsModal({
                       style={{
                         padding: "9px 12px",
                         borderRadius: 10,
-                        background: "#F8FAFC",
-                        border: "1px solid #F1F5F9",
+                        background: "var(--ui-surface-2)",
+                        border: "1px solid var(--ui-muted)",
                         fontSize: 12,
-                        color: "#334155",
+                        color: "var(--ui-text-2)",
                         lineHeight: 1.45,
                       }}
                     >
@@ -841,7 +841,7 @@ export function AutoSuggestionsModal({
                       <div
                         style={{
                           fontSize: 11,
-                          color: "#64748B",
+                          color: "var(--ui-text-4)",
                           marginTop: 4,
                           fontWeight: 600,
                         }}
@@ -871,7 +871,7 @@ export function AutoSuggestionsModal({
                           style={{
                             fontSize: 12,
                             fontWeight: 600,
-                            color: "#475569",
+                            color: "var(--ui-text-3)",
                           }}
                         >
                           Nuevo compromiso sugerido:
@@ -882,8 +882,8 @@ export function AutoSuggestionsModal({
                             display: "inline-flex",
                             alignItems: "center",
                             gap: 6,
-                            background: "#F8FAFC",
-                            border: "1px solid #CBD5E1",
+                            background: "var(--ui-surface-2)",
+                            border: "1px solid var(--ui-border-strong)",
                             borderRadius: 9,
                             padding: "2px 6px",
                           }}
@@ -897,8 +897,8 @@ export function AutoSuggestionsModal({
                               height: 24,
                               borderRadius: 6,
                               border: "none",
-                              background: "#FFFFFF",
-                              color: "#334155",
+                              background: "var(--ui-surface)",
+                              color: "var(--ui-text-2)",
                               display: "grid",
                               placeItems: "center",
                               cursor: "pointer",
@@ -927,8 +927,8 @@ export function AutoSuggestionsModal({
                               height: 24,
                               borderRadius: 6,
                               border: "none",
-                              background: "#FFFFFF",
-                              color: "#334155",
+                              background: "var(--ui-surface)",
+                              color: "var(--ui-text-2)",
                               display: "grid",
                               placeItems: "center",
                               cursor: "pointer",
@@ -938,7 +938,7 @@ export function AutoSuggestionsModal({
                             <Plus size={12} />
                           </button>
                         </div>
-                        <span style={{ fontSize: 11.5, color: "#64748B" }}>
+                        <span style={{ fontSize: 11.5, color: "var(--ui-text-4)" }}>
                           / mes
                         </span>
                       </div>
@@ -957,9 +957,9 @@ export function AutoSuggestionsModal({
                             height: 32,
                             padding: "0 12px",
                             borderRadius: 8,
-                            border: "1px solid #E2E8F0",
-                            background: "#FFFFFF",
-                            color: "#64748B",
+                            border: "1px solid var(--ui-border)",
+                            background: "var(--ui-surface)",
+                            color: "var(--ui-text-4)",
                             fontSize: 12,
                             fontWeight: 600,
                             cursor: "pointer",
@@ -975,7 +975,7 @@ export function AutoSuggestionsModal({
                             padding: "0 14px",
                             borderRadius: 8,
                             border: "none",
-                            background: "#F0F1F9",
+                            background: "var(--ui-accent-soft)",
                             color: "#6C77C1",
                             fontSize: 12,
                             fontWeight: 700,
@@ -999,15 +999,15 @@ export function AutoSuggestionsModal({
                   padding: "28px 20px",
                   textAlign: "center",
                   borderRadius: 14,
-                  background: "#F8FAFC",
-                  border: "1px dashed #CBD5E1",
+                  background: "var(--ui-surface-2)",
+                  border: "1px dashed var(--ui-border-strong)",
                 }}
               >
                 <div
                   style={{
                     fontSize: 14,
                     fontWeight: 700,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                     marginBottom: 4,
                   }}
                 >
@@ -1016,7 +1016,7 @@ export function AutoSuggestionsModal({
                 <p
                   style={{
                     fontSize: 12.5,
-                    color: "#64748B",
+                    color: "var(--ui-text-4)",
                     margin: "0 0 12px",
                   }}
                 >
@@ -1030,7 +1030,7 @@ export function AutoSuggestionsModal({
                     padding: "7px 14px",
                     borderRadius: 9,
                     border: "1px solid #D9DCF0",
-                    background: "#F0F1F9",
+                    background: "var(--ui-accent-soft)",
                     color: "#6C77C1",
                     fontSize: 12,
                     fontWeight: 700,
@@ -1058,7 +1058,7 @@ export function AutoSuggestionsModal({
                     border: m.checked
                       ? "1px solid #D9DCF0"
                       : "1px solid #E2E8F0",
-                    background: m.checked ? "#F5F7FF" : "#FFFFFF",
+                    background: m.checked ? "#F5F7FF" : "var(--ui-surface)",
                     cursor: "pointer",
                   }}
                 >
@@ -1082,8 +1082,8 @@ export function AutoSuggestionsModal({
                         width: 18,
                         height: 18,
                         borderRadius: 5,
-                        border: m.checked ? "none" : "1.5px solid #CBD5E1",
-                        background: m.checked ? "#6C77C1" : "#FFFFFF",
+                        border: m.checked ? "none" : "1.5px solid var(--ui-border-strong)",
+                        background: m.checked ? "#6C77C1" : "var(--ui-surface)",
                         color: "#FFFFFF",
                         display: "grid",
                         placeItems: "center",
@@ -1101,12 +1101,12 @@ export function AutoSuggestionsModal({
                         style={{
                           fontSize: 13,
                           fontWeight: 700,
-                          color: "#0F172A",
+                          color: "var(--ui-text)",
                         }}
                       >
                         {m.title}
                       </div>
-                      <div style={{ fontSize: 11.5, color: "#64748B" }}>
+                      <div style={{ fontSize: 11.5, color: "var(--ui-text-4)" }}>
                         {m.subtitle}
                       </div>
                     </div>
@@ -1124,7 +1124,7 @@ export function AutoSuggestionsModal({
                       <span
                         style={{
                           fontSize: 11.5,
-                          color: "#64748B",
+                          color: "var(--ui-text-4)",
                           fontWeight: 600,
                         }}
                       >
@@ -1141,12 +1141,12 @@ export function AutoSuggestionsModal({
                           width: 66,
                           height: 30,
                           borderRadius: 8,
-                          border: "1px solid #CBD5E1",
-                          background: "#FFFFFF",
+                          border: "1px solid var(--ui-border-strong)",
+                          background: "var(--ui-surface)",
                           textAlign: "center",
                           fontSize: 12.5,
                           fontWeight: 700,
-                          color: "#0F172A",
+                          color: "var(--ui-text)",
                         }}
                       />
                     </div>
@@ -1161,8 +1161,8 @@ export function AutoSuggestionsModal({
         <div
           style={{
             padding: "14px 22px",
-            borderTop: "1px solid #F1F5F9",
-            background: "#F8FAFC",
+            borderTop: "1px solid var(--ui-muted)",
+            background: "var(--ui-surface-2)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -1170,9 +1170,9 @@ export function AutoSuggestionsModal({
             gap: 10,
           }}
         >
-          <span style={{ fontSize: 12, color: "#64748B" }}>
+          <span style={{ fontSize: 12, color: "var(--ui-text-4)" }}>
             Se guarda automáticamente en{" "}
-            <strong style={{ color: "#334155" }}>Salud de Cuentas</strong>
+            <strong style={{ color: "var(--ui-text-2)" }}>Salud de Cuentas</strong>
           </span>
 
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -1183,9 +1183,9 @@ export function AutoSuggestionsModal({
                 height: 36,
                 padding: "0 14px",
                 borderRadius: 10,
-                border: "1px solid #CBD5E1",
-                background: "#FFFFFF",
-                color: "#475569",
+                border: "1px solid var(--ui-border-strong)",
+                background: "var(--ui-surface)",
+                color: "var(--ui-text-3)",
                 fontSize: 12.5,
                 fontWeight: 600,
                 cursor: "pointer",

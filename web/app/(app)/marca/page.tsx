@@ -80,7 +80,7 @@ El problema que resuelve es encontrar proveedores de piezas naturales con estét
 
 const DEFAULT_CATEGORY = "minerales y cristales decorativos al mayoreo";
 
-function HenryCharacterAvatar({ size = 36 }: { size?: number }) {
+function HublyCharacterAvatar({ size = 36 }: { size?: number }) {
   return (
     <svg
       width={size}
@@ -224,7 +224,7 @@ export default function MarcaCorePage() {
         maxWidth: 1120,
         margin: "0 auto",
         padding: "8px 0 48px",
-        color: "#0F172A",
+        color: "var(--ui-text)",
       }}
     >
       {savedToast && (
@@ -254,10 +254,10 @@ export default function MarcaCorePage() {
       {/* Top Card: ¿Qué vende Min? */}
       <section
         style={{
-          border: "1px solid #E2E8F0",
+          border: "1px solid var(--ui-border)",
           borderRadius: 18,
           padding: 24,
-          background: "#FFFFFF",
+          background: "var(--ui-surface)",
           marginBottom: 28,
           boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
         }}
@@ -305,7 +305,7 @@ export default function MarcaCorePage() {
               style={{
                 fontSize: 16,
                 fontWeight: 700,
-                color: "#0F172A",
+                color: "var(--ui-text)",
                 margin: "0 0 2px 0",
                 lineHeight: 1.3,
               }}
@@ -315,7 +315,7 @@ export default function MarcaCorePage() {
             <p
               style={{
                 fontSize: 13,
-                color: "#64748B",
+                color: "var(--ui-text-4)",
                 margin: 0,
                 lineHeight: 1.4,
               }}
@@ -332,7 +332,7 @@ export default function MarcaCorePage() {
               display: "block",
               fontSize: 10.5,
               fontWeight: 700,
-              color: "#64748B",
+              color: "var(--ui-text-4)",
               letterSpacing: "0.06em",
               textTransform: "uppercase",
               marginBottom: 8,
@@ -350,11 +350,11 @@ export default function MarcaCorePage() {
               minHeight: 122,
               padding: "14px 16px",
               borderRadius: 12,
-              border: "1px solid #E2E8F0",
-              background: "#FFFFFF",
+              border: "1px solid var(--ui-border)",
+              background: "var(--ui-surface)",
               fontSize: 14,
               lineHeight: 1.6,
-              color: "#1E293B",
+              color: "var(--ui-text-1)",
               fontFamily: "inherit",
               resize: "vertical",
               outline: "none",
@@ -369,7 +369,7 @@ export default function MarcaCorePage() {
               display: "block",
               fontSize: 10.5,
               fontWeight: 700,
-              color: "#64748B",
+              color: "var(--ui-text-4)",
               letterSpacing: "0.06em",
               marginBottom: 8,
             }}
@@ -378,7 +378,7 @@ export default function MarcaCorePage() {
             <span
               style={{
                 fontWeight: 400,
-                color: "#94A3B8",
+                color: "var(--ui-text-5)",
                 letterSpacing: "normal",
                 fontSize: 11.5,
               }}
@@ -396,10 +396,10 @@ export default function MarcaCorePage() {
               height: 44,
               padding: "0 16px",
               borderRadius: 12,
-              border: "1px solid #E2E8F0",
-              background: "#FFFFFF",
+              border: "1px solid var(--ui-border)",
+              background: "var(--ui-surface)",
               fontSize: 14,
-              color: "#1E293B",
+              color: "var(--ui-text-1)",
               fontFamily: "inherit",
               outline: "none",
             }}
@@ -440,21 +440,21 @@ export default function MarcaCorePage() {
             type="button"
             onClick={handleReadWebsite}
             style={{
-              background: "#FFFFFF",
-              color: "#334155",
+              background: "var(--ui-surface)",
+              color: "var(--ui-text-2)",
               fontSize: 13.5,
               fontWeight: 600,
               height: 40,
               padding: "0 18px",
               borderRadius: 10,
-              border: "1px solid #E2E8F0",
+              border: "1px solid var(--ui-border)",
               cursor: "pointer",
               display: "inline-flex",
               alignItems: "center",
               gap: 8,
             }}
           >
-            <Globe size={15} style={{ color: "#475569" }} />
+            <Globe size={15} style={{ color: "var(--ui-text-3)" }} />
             <span>Léelo de mi sitio web</span>
           </button>
         </div>
@@ -473,13 +473,13 @@ export default function MarcaCorePage() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <HenryCharacterAvatar size={36} />
+          <HublyCharacterAvatar size={36} />
           <div>
             <h3
               style={{
                 fontSize: 20,
                 fontWeight: 800,
-                color: "#0F172A",
+                color: "var(--ui-text)",
                 margin: "0 0 2px 0",
                 letterSpacing: "-0.02em",
                 lineHeight: 1.25,
@@ -490,7 +490,7 @@ export default function MarcaCorePage() {
             <p
               style={{
                 fontSize: 13.5,
-                color: "#64748B",
+                color: "var(--ui-text-4)",
                 margin: 0,
                 lineHeight: 1.4,
               }}
@@ -505,21 +505,21 @@ export default function MarcaCorePage() {
             type="button"
             onClick={handleRegenerate}
             style={{
-              background: "#FFFFFF",
-              border: "1px solid #E2E8F0",
+              background: "var(--ui-surface)",
+              border: "1px solid var(--ui-border)",
               borderRadius: 12,
               height: 42,
               padding: "0 18px",
               fontSize: 13.5,
               fontWeight: 600,
-              color: "#334155",
+              color: "var(--ui-text-2)",
               display: "inline-flex",
               alignItems: "center",
               gap: 8,
               cursor: "pointer",
             }}
           >
-            <RefreshCw size={14} style={{ color: "#475569" }} />
+            <RefreshCw size={14} style={{ color: "var(--ui-text-3)" }} />
             <span>Volver a generar</span>
           </button>
 
@@ -534,7 +534,7 @@ export default function MarcaCorePage() {
               padding: "0 20px",
               fontSize: 13.5,
               fontWeight: 700,
-              color: "#0F172A",
+              color: "var(--ui-text)",
               display: "inline-flex",
               alignItems: "center",
               gap: 7,
@@ -555,10 +555,10 @@ export default function MarcaCorePage() {
             <article
               key={persona.id}
               style={{
-                border: "1px solid #E2E8F0",
+                border: "1px solid var(--ui-border)",
                 borderRadius: 18,
                 padding: 24,
-                background: "#FFFFFF",
+                background: "var(--ui-surface)",
                 boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
               }}
             >
@@ -610,7 +610,7 @@ export default function MarcaCorePage() {
                       style={{
                         fontSize: 18,
                         fontWeight: 800,
-                        color: "#0F172A",
+                        color: "var(--ui-text)",
                         margin: "0 0 8px 0",
                         lineHeight: 1.25,
                       }}
@@ -630,8 +630,8 @@ export default function MarcaCorePage() {
                         <span
                           key={pill}
                           style={{
-                            background: "#F1F5F9",
-                            color: "#334155",
+                            background: "var(--ui-muted)",
+                            color: "var(--ui-text-2)",
                             fontSize: 11.5,
                             fontWeight: 600,
                             padding: "3px 10px",
@@ -649,7 +649,7 @@ export default function MarcaCorePage() {
                   type="button"
                   onClick={() => setEditingId(isEditing ? null : persona.id)}
                   style={{
-                    background: "#F0F1F9",
+                    background: "var(--ui-accent-soft)",
                     color: "#6C77C1",
                     border: "none",
                     borderRadius: 999,
@@ -680,7 +680,7 @@ export default function MarcaCorePage() {
                     fontStyle: "italic",
                     fontSize: 15,
                     fontWeight: 500,
-                    color: "#1E293B",
+                    color: "var(--ui-text-1)",
                     lineHeight: 1.5,
                     marginBottom: 6,
                   }}
@@ -718,10 +718,10 @@ export default function MarcaCorePage() {
                     width: "100%",
                     padding: "10px 12px",
                     borderRadius: 10,
-                    border: "1px solid #CBD5E1",
+                    border: "1px solid var(--ui-border-strong)",
                     fontSize: 13.5,
                     lineHeight: 1.6,
-                    color: "#334155",
+                    color: "var(--ui-text-2)",
                     marginBottom: 18,
                     fontFamily: "inherit",
                   }}
@@ -731,7 +731,7 @@ export default function MarcaCorePage() {
                   style={{
                     fontSize: 13.5,
                     lineHeight: 1.65,
-                    color: "#334155",
+                    color: "var(--ui-text-2)",
                     margin: "0 0 18px 0",
                   }}
                 >
@@ -763,20 +763,20 @@ export default function MarcaCorePage() {
                       gap: 5,
                       fontSize: 10,
                       fontWeight: 800,
-                      color: "#5A65AF",
+                      color: "var(--ui-accent-text-2)",
                       letterSpacing: "0.06em",
                       textTransform: "uppercase",
                       marginBottom: 6,
                     }}
                   >
-                    <Zap size={12} style={{ color: "#5A65AF" }} />
+                    <Zap size={12} style={{ color: "var(--ui-accent-text-2)" }} />
                     <span>DOLOR PRINCIPAL</span>
                   </div>
                   <div
                     style={{
                       fontSize: 13.5,
                       fontWeight: 700,
-                      color: "#0F172A",
+                      color: "var(--ui-text)",
                       lineHeight: 1.45,
                       marginBottom: 8,
                     }}
@@ -823,8 +823,8 @@ export default function MarcaCorePage() {
                 {/* Right Box: META PRINCIPAL */}
                 <div
                   style={{
-                    background: "#F8FAFC",
-                    border: "1px solid #E2E8F0",
+                    background: "var(--ui-surface-2)",
+                    border: "1px solid var(--ui-border)",
                     borderRadius: 12,
                     padding: 14,
                   }}
@@ -849,7 +849,7 @@ export default function MarcaCorePage() {
                     style={{
                       fontSize: 13.5,
                       fontWeight: 700,
-                      color: "#0F172A",
+                      color: "var(--ui-text)",
                       lineHeight: 1.45,
                       marginBottom: 8,
                     }}
@@ -884,7 +884,7 @@ export default function MarcaCorePage() {
           onClick={handleAcceptAll}
           style={{
             background: "#6C77C1",
-            color: "#0F172A",
+            color: "var(--ui-text)",
             border: "none",
             borderRadius: 12,
             height: 44,

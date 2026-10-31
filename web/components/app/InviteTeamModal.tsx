@@ -354,21 +354,21 @@ export function InviteTeamModal({
           width: "100%",
           maxWidth: 620,
           maxHeight: "92vh",
-          background: "#FFFFFF",
+          background: "var(--ui-surface)",
           borderRadius: 20,
-          border: "1px solid #E2E8F0",
+          border: "1px solid var(--ui-border)",
           boxShadow: "0 24px 60px rgba(15, 23, 42, 0.22)",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
-          color: "#0F172A",
+          color: "var(--ui-text)",
         }}
       >
         {/* Header */}
         <div
           style={{
             padding: "16px 22px",
-            borderBottom: "1px solid #F1F5F9",
+            borderBottom: "1px solid var(--ui-muted)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -381,7 +381,7 @@ export function InviteTeamModal({
                 width: 36,
                 height: 36,
                 borderRadius: 10,
-                background: "#F0F1F9",
+                background: "var(--ui-accent-soft)",
                 color: "#6C77C1",
                 display: "grid",
                 placeItems: "center",
@@ -397,7 +397,7 @@ export function InviteTeamModal({
                   margin: 0,
                   fontSize: 16,
                   fontWeight: 700,
-                  color: "#0F172A",
+                  color: "var(--ui-text)",
                 }}
               >
                 Invitar miembro al equipo
@@ -406,7 +406,7 @@ export function InviteTeamModal({
                 style={{
                   margin: "2px 0 0",
                   fontSize: 12,
-                  color: "#64748B",
+                  color: "var(--ui-text-4)",
                 }}
               >
                 Asigna rol operativo y acceso por marca dentro de Hubly
@@ -422,9 +422,9 @@ export function InviteTeamModal({
               width: 32,
               height: 32,
               borderRadius: 9999,
-              border: "1px solid #E2E8F0",
-              background: "#F8FAFC",
-              color: "#64748B",
+              border: "1px solid var(--ui-border)",
+              background: "var(--ui-surface-2)",
+              color: "var(--ui-text-4)",
               display: "grid",
               placeItems: "center",
               cursor: "pointer",
@@ -461,7 +461,7 @@ export function InviteTeamModal({
           >
             <Info
               size={15}
-              style={{ color: "#5A65AF", flexShrink: 0, marginTop: 1 }}
+              style={{ color: "var(--ui-accent-text-2)", flexShrink: 0, marginTop: 1 }}
             />
             <div>
               <strong style={{ fontWeight: 700 }}>
@@ -480,7 +480,7 @@ export function InviteTeamModal({
               style={{
                 padding: 14,
                 borderRadius: 14,
-                background: "#F0F1F9",
+                background: "var(--ui-accent-soft)",
                 border: "1px solid #D9DCF0",
                 display: "flex",
                 flexDirection: "column",
@@ -532,7 +532,7 @@ export function InviteTeamModal({
                     padding: "2px 8px",
                     borderRadius: 9999,
                     background: "#ECEEF8",
-                    color: "#5360A5",
+                    color: "var(--ui-accent-text)",
                     fontSize: 11,
                     fontWeight: 700,
                   }}
@@ -546,7 +546,7 @@ export function InviteTeamModal({
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
-                  background: "#FFFFFF",
+                  background: "var(--ui-surface)",
                   padding: "7px 10px",
                   borderRadius: 10,
                   border: "1px solid #D9DCF0",
@@ -564,7 +564,7 @@ export function InviteTeamModal({
                     border: "none",
                     background: "transparent",
                     fontSize: 12,
-                    color: "#334155",
+                    color: "var(--ui-text-2)",
                     outline: "none",
                     fontFamily: "monospace",
                   }}
@@ -643,7 +643,7 @@ export function InviteTeamModal({
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
-                    color: "#475569",
+                    color: "var(--ui-text-3)",
                     marginBottom: 5,
                   }}
                 >
@@ -664,9 +664,9 @@ export function InviteTeamModal({
                     height: 38,
                     padding: "0 12px",
                     borderRadius: 10,
-                    border: "1px solid #CBD5E1",
+                    border: "1px solid var(--ui-border-strong)",
                     fontSize: 13,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                   }}
                 />
               </div>
@@ -680,7 +680,7 @@ export function InviteTeamModal({
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
-                    color: "#475569",
+                    color: "var(--ui-text-3)",
                     marginBottom: 5,
                   }}
                 >
@@ -697,9 +697,9 @@ export function InviteTeamModal({
                     height: 38,
                     padding: "0 12px",
                     borderRadius: 10,
-                    border: "1px solid #CBD5E1",
+                    border: "1px solid var(--ui-border-strong)",
                     fontSize: 13,
-                    color: "#0F172A",
+                    color: "var(--ui-text)",
                   }}
                 />
               </div>
@@ -717,7 +717,7 @@ export function InviteTeamModal({
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
-                  color: "#475569",
+                  color: "var(--ui-text-3)",
                   marginBottom: 5,
                 }}
               >
@@ -733,11 +733,11 @@ export function InviteTeamModal({
                   height: 38,
                   padding: "0 12px",
                   borderRadius: 10,
-                  border: "1px solid #CBD5E1",
+                  border: "1px solid var(--ui-border-strong)",
                   fontSize: 13,
                   fontWeight: 600,
-                  color: "#0F172A",
-                  background: "#FFFFFF",
+                  color: "var(--ui-text)",
+                  background: "var(--ui-surface)",
                 }}
               >
                 {ROLE_OPTIONS.map((opt) => (
@@ -764,7 +764,7 @@ export function InviteTeamModal({
                     fontWeight: 700,
                     textTransform: "uppercase",
                     letterSpacing: "0.05em",
-                    color: "#475569",
+                    color: "var(--ui-text-3)",
                   }}
                 >
                   Marcas asignadas ({selectedBrandIds.length} de {brands.length}
@@ -814,7 +814,7 @@ export function InviteTeamModal({
                         border: checked
                           ? "1px solid #6C77C1"
                           : "1px solid #E2E8F0",
-                        background: checked ? "#F0F1F9" : "#FFFFFF",
+                        background: checked ? "var(--ui-accent-soft)" : "var(--ui-surface)",
                         cursor: "pointer",
                         textAlign: "left",
                       }}
@@ -847,7 +847,7 @@ export function InviteTeamModal({
                           style={{
                             fontSize: 12.5,
                             fontWeight: 600,
-                            color: "#0F172A",
+                            color: "var(--ui-text)",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             whiteSpace: "nowrap",
@@ -865,7 +865,7 @@ export function InviteTeamModal({
                           border: checked
                             ? "none"
                             : "1.5px solid #CBD5E1",
-                          background: checked ? "#6C77C1" : "#FFFFFF",
+                          background: checked ? "#6C77C1" : "var(--ui-surface)",
                           color: "#FFFFFF",
                           display: "grid",
                           placeItems: "center",
@@ -885,7 +885,7 @@ export function InviteTeamModal({
           {pendingInvitations.length > 0 && (
             <div
               style={{
-                borderTop: "1px solid #F1F5F9",
+                borderTop: "1px solid var(--ui-muted)",
                 paddingTop: 12,
                 display: "flex",
                 flexDirection: "column",
@@ -898,7 +898,7 @@ export function InviteTeamModal({
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
-                  color: "#64748B",
+                  color: "var(--ui-text-4)",
                 }}
               >
                 Invitaciones locales pendientes ({pendingInvitations.length})
@@ -923,8 +923,8 @@ export function InviteTeamModal({
                       gap: 10,
                       padding: "8px 12px",
                       borderRadius: 10,
-                      background: "#F8FAFC",
-                      border: "1px solid #E2E8F0",
+                      background: "var(--ui-surface-2)",
+                      border: "1px solid var(--ui-border)",
                       fontSize: 12,
                     }}
                   >
@@ -932,14 +932,14 @@ export function InviteTeamModal({
                       <div
                         style={{
                           fontWeight: 600,
-                          color: "#0F172A",
+                          color: "var(--ui-text)",
                           display: "flex",
                           alignItems: "center",
                           gap: 6,
                         }}
                       >
                         <span>{inv.name}</span>
-                        <span style={{ color: "#64748B", fontWeight: 400 }}>
+                        <span style={{ color: "var(--ui-text-4)", fontWeight: 400 }}>
                           ({inv.email})
                         </span>
                         <span
@@ -947,7 +947,7 @@ export function InviteTeamModal({
                             padding: "1px 7px",
                             borderRadius: 9999,
                             background: "#ECEEF8",
-                            color: "#5360A5",
+                            color: "var(--ui-accent-text)",
                             fontSize: 10.5,
                             fontWeight: 700,
                           }}
@@ -955,7 +955,7 @@ export function InviteTeamModal({
                           {inv.status}
                         </span>
                       </div>
-                      <div style={{ fontSize: 11, color: "#64748B" }}>
+                      <div style={{ fontSize: 11, color: "var(--ui-text-4)" }}>
                         {inv.role} · {inv.brandIds.length} marca(s)
                       </div>
                     </div>
@@ -969,9 +969,9 @@ export function InviteTeamModal({
                         style={{
                           padding: "4px 9px",
                           borderRadius: 7,
-                          border: "1px solid #CBD5E1",
-                          background: "#FFFFFF",
-                          color: "#334155",
+                          border: "1px solid var(--ui-border-strong)",
+                          background: "var(--ui-surface)",
+                          color: "var(--ui-text-2)",
                           fontSize: 11,
                           fontWeight: 600,
                           cursor: "pointer",
@@ -1017,17 +1017,17 @@ export function InviteTeamModal({
         <div
           style={{
             padding: "14px 22px",
-            borderTop: "1px solid #F1F5F9",
-            background: "#F8FAFC",
+            borderTop: "1px solid var(--ui-muted)",
+            background: "var(--ui-surface-2)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             gap: 10,
           }}
         >
-          <span style={{ fontSize: 12, color: "#64748B" }}>
+          <span style={{ fontSize: 12, color: "var(--ui-text-4)" }}>
             Se reflejará de inmediato en{" "}
-            <strong style={{ color: "#334155" }}>Dashboard · Equipo</strong>
+            <strong style={{ color: "var(--ui-text-2)" }}>Dashboard · Equipo</strong>
           </span>
 
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -1038,9 +1038,9 @@ export function InviteTeamModal({
                 height: 36,
                 padding: "0 14px",
                 borderRadius: 10,
-                border: "1px solid #CBD5E1",
-                background: "#FFFFFF",
-                color: "#475569",
+                border: "1px solid var(--ui-border-strong)",
+                background: "var(--ui-surface)",
+                color: "var(--ui-text-3)",
                 fontSize: 12.5,
                 fontWeight: 600,
                 cursor: "pointer",

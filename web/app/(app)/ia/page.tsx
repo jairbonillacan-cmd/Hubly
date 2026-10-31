@@ -23,7 +23,7 @@ const SUGGESTION_PILLS = [
   "Escribe un copy para Instagram",
 ];
 
-function HenryIllustratedAvatar({ size = 40 }: { size?: number }) {
+function HublyIllustratedAvatar({ size = 40 }: { size?: number }) {
   return (
     <svg
       width={size}
@@ -133,13 +133,13 @@ export default function HublyAIPage() {
 
   if (!activeBrand) return null;
 
-  const handleAskHenry = (promptText: string) => {
+  const handleAskAssistant = (promptText: string) => {
     const clean = promptText.trim();
     if (!clean) return;
 
     const personaName = activeBrand.core.personas[0]?.name || "Fernanda Ríos";
     const item = {
-      id: `henry-msg-${Date.now()}`,
+      id: `hb-msg-${Date.now()}`,
       prompt: clean,
       replyTitle: `Propuesta para Min · ${clean}`,
       replyBody: `Basado en el Núcleo de Marca de Min y en el perfil de ${personaName}:\n\n• Gancho visual (primeros 3s): Muestra la pieza mineral con escala real en mano y luz natural sin filtros.\n• Copy sugerido: "Lo que ves en foto es exactamente la pieza que llega a tu tienda. Lotes mayoristas curados con medidas exactas."\n• CTA: Escríbenos por WhatsApp para recibir el catálogo mayorista de esta semana.`,
@@ -155,25 +155,25 @@ export default function HublyAIPage() {
         flexDirection: "column",
         minHeight: "calc(100vh - 110px)",
         justifyContent: "space-between",
-        color: "#0F172A",
+        color: "var(--ui-text)",
       }}
     >
-      {/* Top Header Bar matching 12-henry-ai-1440.png */}
+      {/* Top Header Bar matching 12-hb-ai-1440.png */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
           gap: 10,
           paddingBottom: 12,
-          borderBottom: "1px solid #F1F5F9",
+          borderBottom: "1px solid var(--ui-muted)",
           marginBottom: 24,
         }}
       >
-        <HenryIllustratedAvatar size={26} />
-        <span style={{ fontSize: 15, fontWeight: 700, color: "#0F172A" }}>Hubi</span>
+        <HublyIllustratedAvatar size={26} />
+        <span style={{ fontSize: 15, fontWeight: 700, color: "var(--ui-text)" }}>Hubi</span>
       </div>
 
-      {/* Centered Vertical Layout matching 12-henry-ai-1440.png & prompt specs */}
+      {/* Centered Vertical Layout matching 12-hb-ai-1440.png & prompt specs */}
       <div
         style={{
           flex: 1,
@@ -193,8 +193,8 @@ export default function HublyAIPage() {
             width: 64,
             height: 64,
             borderRadius: "50%",
-            background: "#FFFFFF",
-            border: "1px solid #F1F5F9",
+            background: "var(--ui-surface)",
+            border: "1px solid var(--ui-muted)",
             boxShadow: "0 6px 28px rgba(108, 119, 193, 0.25)",
             display: "flex",
             alignItems: "center",
@@ -202,14 +202,14 @@ export default function HublyAIPage() {
             marginBottom: 10,
           }}
         >
-          <HenryIllustratedAvatar size={42} />
+          <HublyIllustratedAvatar size={42} />
         </div>
 
         <div
           style={{
             fontSize: 14.5,
             fontWeight: 700,
-            color: "#0F172A",
+            color: "var(--ui-text)",
             marginBottom: 4,
           }}
         >
@@ -220,7 +220,7 @@ export default function HublyAIPage() {
           style={{
             fontSize: 22,
             fontWeight: 800,
-            color: "#0F172A",
+            color: "var(--ui-text)",
             margin: "0 0 6px 0",
             textAlign: "center",
             letterSpacing: "-0.02em",
@@ -232,7 +232,7 @@ export default function HublyAIPage() {
         <p
           style={{
             fontSize: 13.5,
-            color: "#475569",
+            color: "var(--ui-text-3)",
             margin: "0 0 4px 0",
             textAlign: "center",
             lineHeight: 1.5,
@@ -244,7 +244,7 @@ export default function HublyAIPage() {
         <p
           style={{
             fontSize: 13,
-            color: "#64748B",
+            color: "var(--ui-text-4)",
             margin: "0 0 20px 0",
             textAlign: "center",
           }}
@@ -252,11 +252,11 @@ export default function HublyAIPage() {
           Te falta conectar Min. Con eso te armo el reporte y la parrilla.
         </p>
 
-        {/* Action Cards from 12-henry-ai-1440.png */}
+        {/* Action Cards from 12-hb-ai-1440.png */}
         <div style={{ width: "100%", maxWidth: 480, display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
           <button
             type="button"
-            onClick={() => handleAskHenry("Conectar las redes de Min y diagnosticar cuenta")}
+            onClick={() => handleAskAssistant("Conectar las redes de Min y diagnosticar cuenta")}
             style={{
               width: "100%",
               height: 52,
@@ -268,33 +268,33 @@ export default function HublyAIPage() {
               alignItems: "center",
               justifyContent: "space-between",
               cursor: "pointer",
-              color: "#0F172A",
+              color: "var(--ui-text)",
               fontSize: 13.5,
               fontWeight: 600,
             }}
           >
             <span style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <Plug size={16} style={{ color: "#0F172A" }} />
+              <Plug size={16} style={{ color: "var(--ui-text)" }} />
               <span>Conectar las redes</span>
             </span>
-            <ChevronRight size={15} style={{ color: "#64748B" }} />
+            <ChevronRight size={15} style={{ color: "var(--ui-text-4)" }} />
           </button>
 
           <button
             type="button"
-            onClick={() => handleAskHenry("Traer mis diseños y programarlos en la parrilla")}
+            onClick={() => handleAskAssistant("Traer mis diseños y programarlos en la parrilla")}
             style={{
               width: "100%",
               height: 52,
               padding: "0 18px",
               borderRadius: 14,
-              background: "#F0F1F9",
+              background: "var(--ui-accent-soft)",
               border: "1px solid #E0E7FF",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
               cursor: "pointer",
-              color: "#0F172A",
+              color: "var(--ui-text)",
               fontSize: 13.5,
               fontWeight: 600,
             }}
@@ -303,14 +303,14 @@ export default function HublyAIPage() {
               <Calendar size={16} style={{ color: "#6C77C1" }} />
               <span>Traer mis diseños y programarlos</span>
             </span>
-            <ChevronRight size={15} style={{ color: "#64748B" }} />
+            <ChevronRight size={15} style={{ color: "var(--ui-text-4)" }} />
           </button>
 
           <div
             style={{
               fontSize: 10.5,
               fontWeight: 700,
-              color: "#94A3B8",
+              color: "var(--ui-text-5)",
               letterSpacing: "0.06em",
               textTransform: "uppercase",
               marginTop: 8,
@@ -323,7 +323,7 @@ export default function HublyAIPage() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
             <button
               type="button"
-              onClick={() => handleAskHenry("Invitar a mi equipo de agencia")}
+              onClick={() => handleAskAssistant("Invitar a mi equipo de agencia")}
               style={{
                 height: 46,
                 padding: "0 14px",
@@ -334,7 +334,7 @@ export default function HublyAIPage() {
                 alignItems: "center",
                 gap: 10,
                 cursor: "pointer",
-                color: "#0F172A",
+                color: "var(--ui-text)",
                 fontSize: 12.5,
                 fontWeight: 600,
               }}
@@ -345,7 +345,7 @@ export default function HublyAIPage() {
 
             <button
               type="button"
-              onClick={() => handleAskHenry("¿Qué hay pendiente hoy para Min?")}
+              onClick={() => handleAskAssistant("¿Qué hay pendiente hoy para Min?")}
               style={{
                 height: 46,
                 padding: "0 14px",
@@ -356,7 +356,7 @@ export default function HublyAIPage() {
                 alignItems: "center",
                 gap: 10,
                 cursor: "pointer",
-                color: "#0F172A",
+                color: "var(--ui-text)",
                 fontSize: 12.5,
                 fontWeight: 600,
               }}
@@ -383,15 +383,15 @@ export default function HublyAIPage() {
             <button
               key={pill}
               type="button"
-              onClick={() => handleAskHenry(pill)}
+              onClick={() => handleAskAssistant(pill)}
               style={{
-                background: "#FFFFFF",
-                border: "1px solid #E2E8F0",
+                background: "var(--ui-surface)",
+                border: "1px solid var(--ui-border)",
                 borderRadius: 999,
                 padding: "7px 14px",
                 fontSize: 12.5,
                 fontWeight: 600,
-                color: "#334155",
+                color: "var(--ui-text-2)",
                 cursor: "pointer",
                 boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
               }}
@@ -417,20 +417,20 @@ export default function HublyAIPage() {
               <div
                 key={m.id}
                 style={{
-                  border: "1px solid #E2E8F0",
+                  border: "1px solid var(--ui-border)",
                   borderRadius: 16,
                   padding: 16,
-                  background: "#FFFFFF",
+                  background: "var(--ui-surface)",
                   boxShadow: "0 2px 8px rgba(15, 23, 42, 0.04)",
                 }}
               >
-                <div style={{ fontSize: 13.5, fontWeight: 700, color: "#0F172A", marginBottom: 6 }}>
+                <div style={{ fontSize: 13.5, fontWeight: 700, color: "var(--ui-text)", marginBottom: 6 }}>
                   {m.replyTitle}
                 </div>
                 <p
                   style={{
                     fontSize: 13,
-                    color: "#334155",
+                    color: "var(--ui-text-2)",
                     whiteSpace: "pre-line",
                     lineHeight: 1.55,
                     margin: "0 0 12px 0",
@@ -493,11 +493,11 @@ export default function HublyAIPage() {
         )}
       </div>
 
-      {/* Bottom Prompt Box matching 12-henry-ai-1440.png */}
+      {/* Bottom Prompt Box matching 12-hb-ai-1440.png */}
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleAskHenry(input);
+          handleAskAssistant(input);
         }}
         style={{
           width: "100%",
@@ -505,7 +505,7 @@ export default function HublyAIPage() {
           margin: "0 auto",
           border: "1.5px solid #D9DCF0",
           borderRadius: 18,
-          background: "#FFFFFF",
+          background: "var(--ui-surface)",
           padding: "14px 16px 12px",
           boxShadow: "0 4px 20px rgba(108, 119, 193, 0.08)",
         }}
@@ -517,7 +517,7 @@ export default function HublyAIPage() {
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
-              handleAskHenry(input);
+              handleAskAssistant(input);
             }
           }}
           placeholder="Pregúntale a Hubi... (Mensaje...)"
@@ -527,7 +527,7 @@ export default function HublyAIPage() {
             outline: "none",
             resize: "none",
             fontSize: 14,
-            color: "#0F172A",
+            color: "var(--ui-text)",
             background: "transparent",
             fontFamily: "inherit",
             marginBottom: 10,
@@ -553,7 +553,7 @@ export default function HublyAIPage() {
                 borderRadius: 8,
                 border: "none",
                 background: "transparent",
-                color: "#64748B",
+                color: "var(--ui-text-4)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -566,14 +566,14 @@ export default function HublyAIPage() {
             <button
               type="button"
               title="Usar una plantilla"
-              onClick={() => handleAskHenry(SUGGESTION_PILLS[0])}
+              onClick={() => handleAskAssistant(SUGGESTION_PILLS[0])}
               style={{
                 width: 28,
                 height: 28,
                 borderRadius: 8,
                 border: "none",
                 background: "transparent",
-                color: "#64748B",
+                color: "var(--ui-text-4)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -588,8 +588,8 @@ export default function HublyAIPage() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 5,
-                background: "#F1F5F9",
-                color: "#475569",
+                background: "var(--ui-muted)",
+                color: "var(--ui-text-3)",
                 fontSize: 11.5,
                 fontWeight: 600,
                 padding: "4px 10px",
@@ -609,7 +609,7 @@ export default function HublyAIPage() {
               height: 30,
               borderRadius: "50%",
               border: "none",
-              background: input.trim() ? "#6C77C1" : "#CBD5E1",
+              background: input.trim() ? "#6C77C1" : "var(--ui-border-strong)",
               color: "#FFFFFF",
               display: "flex",
               alignItems: "center",

@@ -5,7 +5,6 @@ import { createSeedWorkspaceData } from "@/lib/seed-data";
 import {
   buildReferenceFixtureWorkspace,
   normalizeWorkspacePayload,
-  sanitizeHenryToHubly,
 } from "@/lib/workspace-repository";
 import type { HublyWorkspaceData } from "@/lib/types";
 
@@ -32,13 +31,13 @@ async function readWorkspaceDb(workspaceId: string): Promise<HublyWorkspaceData>
 
   try {
     const raw = await fs.readFile(filePath, "utf8");
-    const parsed = sanitizeHenryToHubly(JSON.parse(raw));
+    const parsed = JSON.parse(raw);
     return normalizeWorkspacePayload(parsed, safeId);
   } catch {
     if (safeId === "default") {
       try {
         const legacyRaw = await fs.readFile(LEGACY_DB_FILE, "utf8");
-        const legacyParsed = sanitizeHenryToHubly(JSON.parse(legacyRaw));
+        const legacyParsed = JSON.parse(legacyRaw);
         const migrated = normalizeWorkspacePayload(legacyParsed, safeId);
         await writeWorkspaceDb(safeId, migrated);
         return migrated;
@@ -59,7 +58,7 @@ async function writeWorkspaceDb(
 ): Promise<HublyWorkspaceData> {
   const safeId = sanitizeWorkspaceId(workspaceId);
   const filePath = getWorkspaceFilePath(safeId);
-  const normalized = normalizeWorkspacePayload(sanitizeHenryToHubly(data), safeId);
+  const normalized = normalizeWorkspacePayload(data, safeId);
 
   await fs.mkdir(WORKSPACES_DIR, { recursive: true });
   await fs.writeFile(filePath, JSON.stringify(normalized, null, 2), "utf8");

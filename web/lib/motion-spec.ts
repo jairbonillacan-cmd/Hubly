@@ -94,7 +94,7 @@ export interface MotionCurveDefinition {
 }
 
 export const MOTION_EASINGS = {
-  /** Core Henry & Material standard curve — .hbtn (90ms), Sidebar (200ms), Subnav (150ms/160ms), KraftNotebookCard (160ms), .hq-card-i (200ms) */
+  /** Core & Material standard curve — .hbtn (90ms), Sidebar (200ms), Subnav (150ms/160ms), KraftNotebookCard (160ms), .hq-card-i (200ms) */
   STANDARD: "cubic-bezier(0.4, 0, 0.2, 1)",
   /** Spring-like fast out curve — Modal card enter (180ms), AI Drawer enter (200ms), Descubre Widget enter (180ms), Dropdown open (120ms) */
   SPRING_OUT: "cubic-bezier(0.16, 1, 0.3, 1)",
@@ -206,18 +206,18 @@ export const MOTION_CLASSES = {
   HBTN: "hbtn",
   HBTN_PRIMARY: "hbtn hbtn-primary",
   HBTN_SECONDARY: "hbtn hbtn-secondary",
-  HBTN_HENRY: "hbtn hbtn-henry",
+  HBTN_HB: "hbtn hbtn-hb",
   HBTN_DANGER: "hbtn hbtn-danger",
   HBTN_GHOST: "hbtn hbtn-ghost",
   HBTN_LG: "hbtn-lg",
   HBTN_SM: "hbtn-sm",
   HBTN_XS: "hbtn-xs",
   HBTN_SPIN: "hbtn-spin",
-  SIDEBAR: "henry-sidebar",
-  SIDEBAR_COLLAPSED: "henry-sidebar is-collapsed",
-  SIDEBAR_COLLAPSE_BTN: "henry-sidebar-collapse-btn",
-  SUBNAV_BAR: "henry-pill-tabs",
-  SUBNAV_TAB: "henry-pill-tab",
+  SIDEBAR: "hb-sidebar",
+  SIDEBAR_COLLAPSED: "hb-sidebar is-collapsed",
+  SIDEBAR_COLLAPSE_BTN: "hb-sidebar-collapse-btn",
+  SUBNAV_BAR: "hb-pill-tabs",
+  SUBNAV_TAB: "hb-pill-tab",
   SUBNAV_PANEL_ENTER: "tablero-aparece",
   MODAL_BACKDROP: "saas-modal-backdrop",
   MODAL_CARD: "saas-modal",
@@ -230,7 +230,7 @@ export const MOTION_CLASSES = {
   HG_PRESS: "hg-press",
   HG_ROW: "hg-row",
   HG_VELO_ANCLADO: "hg-velo-anclado",
-  HG_HENRY_PIENSA: "hg-henry-piensa",
+  HG_HB_PIENSA: "hg-hb-piensa",
   HG_MSG_LLEGA: "hg-msg-llega",
   HG_MSG_SUBE: "hg-msg-sube",
   CM_TILE_IN: "cm-tile-in",
@@ -409,8 +409,8 @@ export const MOTION_SPEC: Readonly<Record<MotionSpecId, MotionInteractionSpec>> 
     id: "M2.sidebar-desktop",
     group: "M2",
     title: "Colapso y expansión del Sidebar en Escritorio y Tablet",
-    selector: ".henry-sidebar",
-    trigger: "Click en botón circular .henry-sidebar-collapse-btn (Colapsar / Expandir menú)",
+    selector: ".hb-sidebar",
+    trigger: "Click en botón circular .hb-sidebar-collapse-btn (Colapsar / Expandir menú)",
     animatedProperties: ["width", "min-width", "padding", "opacity"],
     transformOrigin: "0% 50%",
     enter: {
@@ -550,7 +550,7 @@ export const MOTION_SPEC: Readonly<Record<MotionSpecId, MotionInteractionSpec>> 
     id: "M3.subnav-pill",
     group: "M3",
     title: "Cambio de pestaña en Subnavegación (Inicio, Salud de Cuentas, Equipo) — Pill activo",
-    selector: ".henry-pill-tab",
+    selector: ".hb-pill-tab",
     trigger: "Click / Enter / Espacio en pestaña de subnavegación",
     animatedProperties: ["background-color", "color", "border-color", "box-shadow"],
     transformOrigin: "50% 50%",
@@ -771,8 +771,8 @@ export const MOTION_SPEC: Readonly<Record<MotionSpecId, MotionInteractionSpec>> 
     id: "M5.ai-drawer",
     group: "M5",
     title: "Panel lateral / Drawer flotante del Asistente Hubly (FloatingAIDrawer)",
-    selector: "[data-henry-panel]",
-    trigger: "Click en botón circular del avatar de Henry (56x56px) o botón X del panel",
+    selector: "[data-hb-panel]",
+    trigger: "Click en botón circular del avatar de Hubly (56x56px) o botón X del panel",
     animatedProperties: ["opacity", "transform"],
     transformOrigin: "100% 100%",
     enter: {
@@ -825,7 +825,7 @@ export const MOTION_SPEC: Readonly<Record<MotionSpecId, MotionInteractionSpec>> 
     reducedMotion: {
       durationMs: MOTION_DURATIONS.REDUCED_MOTION_MS,
       cssOverride: "transition-duration: 0.01ms !important; animation: none !important; transform: none !important;",
-      functionalAlternative: "Apertura y cierre inmediatos del panel; anillo .hg-henry-piensa estático (box-shadow: 0 0 0 2px #f9b431f2).",
+      functionalAlternative: "Apertura y cierre inmediatos del panel; anillo .hg-hb-piensa estático (box-shadow: 0 0 0 2px #f9b431f2).",
     },
   },
 
@@ -833,7 +833,7 @@ export const MOTION_SPEC: Readonly<Record<MotionSpecId, MotionInteractionSpec>> 
     id: "M5.ai-fab",
     group: "M5",
     title: "Botón Lanzador Circular del Asistente Hubly (FAB 56x56px)",
-    selector: "[data-henry-fab]",
+    selector: "[data-hb-fab]",
     trigger: "mouseenter / mouseleave / pointerdown",
     animatedProperties: ["transform", "box-shadow"],
     transformOrigin: "50% 50%",
@@ -865,7 +865,7 @@ export const MOTION_SPEC: Readonly<Record<MotionSpecId, MotionInteractionSpec>> 
     viewportVariants: {
       desktop1440: "Fijo 56x56px en right: 20px, bottom: 18px.",
       tablet768: "Fijo 56x56px en right: 20px, bottom: 18px.",
-      mobile375: "Se oculta automáticamente cuando hay una hoja modal abierta (body[data-visor] [data-henry-fab] { display: none !important }).",
+      mobile375: "Se oculta automáticamente cuando hay una hoja modal abierta (body[data-visor] [data-hb-fab] { display: none !important }).",
     },
     reducedMotion: {
       durationMs: MOTION_DURATIONS.REDUCED_MOTION_MS,
@@ -877,9 +877,9 @@ export const MOTION_SPEC: Readonly<Record<MotionSpecId, MotionInteractionSpec>> 
   "M5.descubre-widget": {
     id: "M5.descubre-widget",
     group: "M5",
-    title: "Widget flotante Descubre Hubly (DescubreHenryWidget)",
+    title: "Widget flotante Descubre Hubly (DescubreHublyWidget)",
     selector: "[data-mision-pildora]",
-    trigger: "Click en cabecera Descubre Henry (colapsar/expandir), check de tarea o botón cerrar X",
+    trigger: "Click en cabecera Descubre Hubly (colapsar/expandir), check de tarea o botón cerrar X",
     animatedProperties: ["opacity", "transform", "width"],
     transformOrigin: "100% 100%",
     enter: {

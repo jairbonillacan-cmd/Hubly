@@ -74,7 +74,7 @@ export function PendientesModal({ open, onClose, groups, onToggle }: PendientesM
           flexDirection: "column",
           overflow: "hidden",
           borderRadius: 22,
-          background: "#FFFFFF",
+          background: "var(--ui-surface)",
           boxShadow: "0 24px 60px rgba(15, 23, 42, 0.22)",
         }}
       >
@@ -97,7 +97,7 @@ export function PendientesModal({ open, onClose, groups, onToggle }: PendientesM
             </p>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span className="henry-widget-badge" style={{ height: 24, padding: "0 10px" }}>
+            <span className="hb-widget-badge" style={{ height: 24, padding: "0 10px" }}>
               {urgentCount} de {allCount}
             </span>
             <button ref={closeRef} type="button" className="hbtn hbtn-secondary hbtn-sm" onClick={onClose}>
