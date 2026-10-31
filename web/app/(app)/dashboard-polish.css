@@ -1987,7 +1987,7 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-import-source > button { justify-self: start; }
 .hubly-import-skip { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; font-size: 13px; }
 @media (max-width: 767.98px) {
-  .hubly-social-period h2 { font-size: 17px; }
+  .hubly-social-period h2 { font-size: 16px; }
   .hubly-social-tools { width: 100%; }
 }
 
@@ -2036,8 +2036,8 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-personas-list article { padding: 18px; border: 1px solid var(--ui-border); border-radius: 16px; background: var(--ui-surface); }
 .hubly-personas-list article[data-accepted] { border-color: var(--hb-accent); }
 .hubly-personas-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-.hubly-personas-head > span { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border-radius: 13px; background: var(--hb-accent); color: var(--on-accent); font-size: 14px; font-weight: 800; }
-.hubly-personas-head input { flex: 1 1 160px; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ui-text); font-size: 17px; font-weight: 800; }
+.hubly-personas-head > span { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px; background: var(--hb-accent); color: var(--on-accent); font-size: 14px; font-weight: 800; }
+.hubly-personas-head input { flex: 1 1 160px; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ui-text); font-size: 16px; font-weight: 800; }
 .hubly-personas-head button { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 10px; border: 1px solid var(--ui-border); border-radius: 999px; background: var(--ui-surface); color: var(--ui-text-2); font-size: 12px; font-weight: 600; cursor: pointer; }
 .hubly-personas-head button[aria-pressed="true"] { border-color: var(--hb-accent); background: rgb(var(--hb-accent-rgb) / 0.12); color: var(--hb-accent-text); }
 .hubly-personas-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
