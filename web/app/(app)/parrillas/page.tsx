@@ -909,7 +909,7 @@ export default function ParrillasPage() {
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
               <button
                 type="button"
-                onClick={() => approveAllBrandPosts(activeBrand?.id || "", profileName)}
+                onClick={() => approveAllBrandPosts(activeBrand?.id || "", profileName, "agency")}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -1444,7 +1444,7 @@ export default function ParrillasPage() {
               <span
                 style={{
                   background: "var(--hb-accent)",
-                  color: "var(--ui-text)",
+                  color: "var(--on-accent)",
                   fontSize: 12,
                   fontWeight: 700,
                   padding: "5px 12px",

@@ -110,6 +110,8 @@ export type AddTaskInput = Omit<
 
 export interface HublyStoreState extends HublyWorkspaceData {
   hydrated: boolean;
+  /** Rol en la agencia con backend real; null en el modo demo. */
+  role: string | null;
   isReferenceFixture: boolean;
   teamMembers: TeamMember[];
   dashboardWidgets: DashboardWidgetConfig[];
@@ -178,7 +180,7 @@ export interface HublyStoreState extends HublyWorkspaceData {
     authorName?: string,
     role?: "client" | "agency"
   ) => void;
-  approveAllBrandPosts: (brandId: string, authorName?: string) => void;
+  approveAllBrandPosts: (brandId: string, authorName?: string, role?: "client" | "agency") => void;
   movePost: (postId: string, scheduledDate: string) => void;
   recordPublication: (postId: string, publication: { url: string; date: string }) => void;
   setPostResults: (postId: string, metrics: NonNullable<SocialPost["metrics"]>) => void;
@@ -281,7 +283,7 @@ const STATUS_TO_LABEL: Record<PostStatus, PostStatusLabel> = {
   draft: "Borrador",
   pending: "En aprobación",
   changes: "Requiere cambios",
-  approved: "Programado",
+  approved: "Aprobado",
   scheduled: "Programado",
   published: "Publicado",
 };
@@ -413,6 +415,7 @@ function createActivityItem(
 export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   ...INITIAL_WORKSPACE_DATA,
   hydrated: false,
+  role: null,
   isReferenceFixture: false,
   teamMembers: INITIAL_WORKSPACE_DATA.team,
   dashboardWidgets: INITIAL_WORKSPACE_DATA.widgets.map((w) => ({
@@ -444,7 +447,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
         activeBrandId: brandId,
       };
     });
-    persistWorkspaceState(get());
+    if (get().role !== "viewer") persistWorkspaceState(get());
   },
 
   openComposer: (postId = null, defaultDate = null) =>
@@ -488,7 +491,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
           const saved = localStorage.getItem(`hubly:marca-activa:${loaded.agencyId}`);
           if (saved && loaded.data.brands.some((b) => b.id === saved)) activeBrandId = saved;
         } catch {}
-        set({ ...loaded.data, activeBrandId, activeNotebookId: null, hydrated: true });
+        set({ ...loaded.data, activeBrandId, activeNotebookId: null, hydrated: true, role: loaded.role });
       } else if (loaded.kind === "unauthenticated") {
         window.location.assign("/login");
       } else if (loaded.kind === "no_agency") {
@@ -1144,7 +1147,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
       });
 
       const event = createActivityItem(s, {
-        type: status === "published" ? "post_published" : "post_submitted",
+        type: status === "published" ? "post_published" : status === "approved" ? "post_approved" : "post_submitted",
         brandId: targetBrandId,
         durationMinutes: 15,
         metadata: { postId, status },
@@ -1345,42 +1348,36 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     get().openComposer(postId);
   },
 
-  approveAllBrandPosts: (brandId, authorName = "Cliente") => {
+  approveAllBrandPosts: (brandId, authorName = "Cliente", role = "client") => {
     const approvedIds = get()
       .posts.filter((p) => p.brandId === brandId && (p.status === "pending" || p.status === "changes"))
       .map((p) => p.id);
-    set((s) => {
-      const event = createActivityItem(s, {
-        type: "post_published",
-        brandId,
-        durationMinutes: 20,
-        metadata: { batchApprovedBy: authorName },
-      });
-
-      return {
-        posts: s.posts.map((p) => {
-          if (p.brandId !== brandId || (p.status !== "pending" && p.status !== "changes")) {
-            return p;
-          }
-          return {
+    if (approvedIds.length === 0) return;
+    const commentText = role === "client" ? "Aprobado en lote desde el enlace de revisión." : "Aprobado en lote por la agencia.";
+    set((s) => ({
+      posts: s.posts.map((p, index) => {
+        if (!approvedIds.includes(p.id)) return p;
+        return withPostLog(
+          {
             ...p,
             status: "approved",
-            statusLabel: "Programado",
+            statusLabel: "Aprobado",
             comments: [
               ...p.comments,
-              {
-                id: `c-${Date.now()}-${p.id}`,
-                author: authorName,
-                role: "client",
-                text: "Aprobado en lote desde el enlace de revisión.",
-                createdAt: "Ahora mismo",
-              },
+              { id: `c-${Date.now()}-${index}`, author: authorName, role, text: commentText, createdAt: "Ahora mismo" },
             ],
-          };
-        }),
-        activityEvents: [event, ...s.activityEvents],
-      };
-    });
+          },
+          "Aprobó el post en lote",
+          authorName
+        );
+      }),
+      activityEvents: [
+        ...approvedIds.map((postId) =>
+          createActivityItem(s, { type: "post_approved", brandId, durationMinutes: 5, metadata: { postId, status: "approved" } })
+        ),
+        ...s.activityEvents,
+      ],
+    }));
     for (const id of approvedIds) runAutomations(get, set, id, "approved");
     persistWorkspaceState(get());
   },
@@ -1960,3 +1957,36 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     pushWorkspaceToApi(currentWorkspaceId, freshData).catch(() => {});
   },
 }));
+
+// Un lector puede navegar, pero ninguna acción cambia datos: el servidor rechazaría el
+// guardado y la pantalla mostraría cambios que no existen.
+const VIEWER_ACTIONS = new Set<string>([
+  "setActiveBrand",
+  "openComposer",
+  "closeComposer",
+  "setCmdkOpen",
+  "setAiDrawerOpen",
+  "setNewBrandModalOpen",
+  "setInviteModalOpen",
+  "setWidgetConfigModalOpen",
+  "setAutoSuggestionsModalOpen",
+  "setEditWidgetsMode",
+  "setActiveNotebookId",
+  "syncFromServer",
+  "switchWorkspace",
+]);
+
+const guardedActions: Record<string, unknown> = {};
+for (const [name, action] of Object.entries(useHublyStore.getState())) {
+  if (typeof action !== "function" || VIEWER_ACTIONS.has(name)) continue;
+  guardedActions[name] = (...args: unknown[]) => {
+    if (useHublyStore.getState().role === "viewer") {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("hubly:save-state", { detail: "readonly" }));
+      }
+      return undefined;
+    }
+    return (action as (...a: unknown[]) => unknown)(...args);
+  };
+}
+useHublyStore.setState(guardedActions as Partial<HublyStoreState>);

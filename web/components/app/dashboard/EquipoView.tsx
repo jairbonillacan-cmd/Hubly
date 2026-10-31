@@ -1637,7 +1637,7 @@ export function EquipoView() {
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Mail size={15} color="var(--hb-accent)" />
-              <span style={{ fontSize: 13, fontWeight: 700, color: "#1E1B4B" }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: "var(--ui-text)" }}>
                 Invitaciones del equipo ({invitations.length})
               </span>
             </div>
@@ -1868,6 +1868,7 @@ export function EquipoView() {
               fontSize: 12.5,
               padding: "6px 12px",
               borderRadius: 9,
+              background: "transparent",
               color: "var(--ui-text-3)",
             }}
           >
@@ -2507,7 +2508,7 @@ export function EquipoView() {
                       style={{
                         fontSize: 12,
                         fontWeight: 700,
-                        color: ach.unlocked ? "#1E1B4B" : "var(--ui-text-3)",
+                        color: ach.unlocked ? "var(--ui-text)" : "var(--ui-text-3)",
                         marginTop: 8,
                       }}
                     >

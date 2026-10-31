@@ -360,7 +360,7 @@ export default function AjustesPage() {
                       padding: "0 18px",
                       borderRadius: 10,
                       border: "none",
-                      background: savedProfile ? "#10B981" : "#9CA3AF",
+                      background: savedProfile ? "#047857" : "var(--hb-accent)",
                       color: "#FFFFFF",
                       fontSize: 13,
                       fontWeight: 600,

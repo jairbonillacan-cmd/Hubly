@@ -520,13 +520,13 @@ function DemoInviteTeamModal({
                       style={{
                         fontSize: 13,
                         fontWeight: 700,
-                        color: "#1E1B4B",
+                        color: "var(--ui-text)",
                       }}
                     >
                       Invitación local creada para {createdInvitation.name} (
                       {createdInvitation.email})
                     </div>
-                    <div style={{ fontSize: 11.5, color: "#4338CA" }}>
+                    <div style={{ fontSize: 11.5, color: "var(--hb-accent-text)" }}>
                       Rol: <strong>{createdInvitation.role}</strong> · Estado:{" "}
                       <strong>Pendiente</strong> (guardada en este navegador)
                     </div>

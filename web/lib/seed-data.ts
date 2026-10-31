@@ -264,20 +264,43 @@ function resolveBaseDates(referenceFixture?: boolean): {
   };
 }
 
+/** Copia `value` moviendo solo las fechas que siguen idénticas al dato de ejemplo. */
+function rebaseUnchanged(value: unknown, seed: unknown, move: (text: string) => string): unknown {
+  if (typeof value === "string") return value === seed ? move(value) : value;
+  if (Array.isArray(value)) {
+    if (!Array.isArray(seed)) return value;
+    const hasId = (item: unknown): item is { id: unknown } => typeof item === "object" && item !== null && "id" in item;
+    return value.map((item, index) => {
+      const match = hasId(item) ? seed.find((s) => hasId(s) && s.id === item.id) : seed[index];
+      return match === undefined ? item : rebaseUnchanged(item, match, move);
+    });
+  }
+  if (typeof value === "object" && value !== null) {
+    if (typeof seed !== "object" || seed === null) return value;
+    const seedRecord = seed as Record<string, unknown>;
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [key, key in seedRecord ? rebaseUnchanged(item, seedRecord[key], move) : item])
+    );
+  }
+  return value;
+}
+
 /**
- * Repara un espacio guardado con el reloj de prueba de abril: conserva lo creado
- * por el usuario y mueve las fechas de ejemplo a hoy.
+ * Repara un espacio guardado con el reloj de prueba de abril. Solo mueve lo que sigue
+ * igual que en los datos de ejemplo: lo creado o editado por el usuario no se toca.
  */
 export function rebaseStaleFixture(data: HublyWorkspaceData): HublyWorkspaceData {
   if (data.testClock?.fixedIsoNow !== REFERENCE_FIXTURE_CLOCK) return data;
   const fixture = resolveBaseDates(true);
   const current = resolveBaseDates(false);
-  const text = JSON.stringify(data)
-    .replaceAll(fixture.todayIso, current.todayIso)
-    .replaceAll(fixture.tomorrowIso, current.tomorrowIso)
-    .replaceAll(fixture.inTwoDaysIso, current.inTwoDaysIso)
-    .replaceAll(fixture.twoDaysAgoIso, current.twoDaysAgoIso);
-  return { ...(JSON.parse(text) as HublyWorkspaceData), testClock: { fixedIsoNow: null } };
+  const move = (text: string) =>
+    text
+      .replaceAll(fixture.todayIso, current.todayIso)
+      .replaceAll(fixture.tomorrowIso, current.tomorrowIso)
+      .replaceAll(fixture.inTwoDaysIso, current.inTwoDaysIso)
+      .replaceAll(fixture.twoDaysAgoIso, current.twoDaysAgoIso);
+  const seed = createSeedWorkspaceData(data.workspaceId, { referenceFixture: true });
+  return { ...(rebaseUnchanged(data, seed, move) as HublyWorkspaceData), testClock: { fixedIsoNow: null } };
 }
 
 export function createSeedWorkspaceData(

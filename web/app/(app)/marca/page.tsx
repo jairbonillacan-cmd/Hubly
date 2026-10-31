@@ -432,7 +432,7 @@ export default function MarcaCorePage() {
               padding: "0 20px",
               fontSize: 13.5,
               fontWeight: 700,
-              color: "var(--ui-text)",
+              color: "var(--on-accent)",
               display: "inline-flex",
               alignItems: "center",
               gap: 7,
@@ -782,7 +782,7 @@ export default function MarcaCorePage() {
           onClick={handleAcceptAll}
           style={{
             background: "var(--hb-accent)",
-            color: "var(--ui-text)",
+            color: "var(--on-accent)",
             border: "none",
             borderRadius: 12,
             height: 44,

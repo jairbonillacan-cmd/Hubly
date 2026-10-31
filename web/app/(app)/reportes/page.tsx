@@ -455,7 +455,7 @@ function DemoReportesPage() {
             style={{
               padding: "24px 28px",
               borderRadius: 16,
-              background: "linear-gradient(135deg, #1E1B4B 0%, #4338CA 100%)",
+              background: "linear-gradient(135deg, #0F2539 0%, #16324F 100%)",
               color: "#FFFFFF",
               display: "flex",
               alignItems: "center",
@@ -476,14 +476,15 @@ function DemoReportesPage() {
                   marginBottom: 6,
                 }}
               >
-                Reporte Ejecutivo en 1 Clic · 23 oct - 30 oct
+                Reporte Ejecutivo · {new Date().toLocaleDateString("es-MX", { month: "long", year: "numeric" })}
               </div>
-              <h1 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 4px" }}>
+              <h1 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 4px", color: "#FFFFFF" }}>
                 {brandName} · Informe Mensual de Resultados
               </h1>
               <div style={{ fontSize: 13, color: "#DCEFF9" }}>
-                {activeBrand?.industry || "minerales y cristales decorativos al mayoreo"} · Redes
-                conectadas: Instagram, Facebook, TikTok, LinkedIn
+                {activeBrand?.industry || "Sin giro definido"} · {activeBrand?.connectedNetworks?.length
+                  ? `Redes: ${activeBrand.connectedNetworks.join(", ")}`
+                  : "Sin redes indicadas"}
               </div>
             </div>
 

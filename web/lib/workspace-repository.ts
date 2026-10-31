@@ -261,8 +261,9 @@ function normalizePost(post: Partial<SocialPost>): SocialPost {
       ? [post.network]
       : ["Instagram"];
   const status = post.status || "pending";
+  // «Programado» en un aprobado es la etiqueta antigua: aprobar no programa nada.
   const statusLabel =
-    post.statusLabel ||
+    (status === "approved" ? "Aprobado" : post.statusLabel) ||
     (status === "draft"
       ? "Borrador"
       : status === "pending"

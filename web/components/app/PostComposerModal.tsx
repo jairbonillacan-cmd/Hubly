@@ -118,7 +118,7 @@ const STATUS_OPTIONS: { value: PostStatus; label: PostStatusLabel; text: string 
   { value: "draft", label: "Borrador", text: "Borrador" },
   { value: "pending", label: "En aprobación", text: "Pendiente de revisión" },
   { value: "changes", label: "Requiere cambios", text: "Cambios solicitados" },
-  { value: "approved", label: "Programado", text: "Aprobado" },
+  { value: "approved", label: "Aprobado", text: "Aprobado" },
   { value: "scheduled", label: "Programado", text: "Programado" },
 ];
 
@@ -211,7 +211,7 @@ export function PostComposerModal({
     setTitle(editingPost?.title || "");
     setCaption(editingPost?.caption || "");
     setNetworks(editingPost?.networks?.length ? editingPost.networks : ["Instagram"]);
-    setStatus(editingPost?.status || "pending");
+    setStatus(editingPost?.status || "draft");
     setScheduledDate(editingPost?.scheduledDate || composerDefaultDate || localIsoDate());
     setScheduledTime(editingPost?.scheduledTime || "11:30");
     // Solo al abrir o cambiar de post: patchPost actualiza editingPost mientras se escribe.

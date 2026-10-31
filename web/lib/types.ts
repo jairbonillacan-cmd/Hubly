@@ -21,6 +21,7 @@ export type PostStatus =
 export type PostStatusLabel =
   | "Borrador"
   | "En aprobación"
+  | "Aprobado"
   | "Programado"
   | "Publicado"
   | "Requiere cambios";
@@ -441,6 +442,7 @@ export type ActivityEventType =
   | "task_started"
   | "post_published"
   | "post_submitted"
+  | "post_approved"
   | "notebook_updated"
   | "commitment_updated"
   | "session_active";

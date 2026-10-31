@@ -1224,7 +1224,8 @@ export function selectTeamProductivity(
       (e) => e.type === "task_completed"
     ).length;
     const eventPostPublishes = memberEvents.filter(
-      (e) => e.type === "post_published"
+      // Las aprobaciones en lote antiguas se registraron como publicación por error.
+      (e) => e.type === "post_published" && !e.metadata?.batchApprovedBy
     ).length;
     const eventDurationMinutes = memberEvents.reduce(
       (sum, e) => sum + (e.durationMinutes || 0),

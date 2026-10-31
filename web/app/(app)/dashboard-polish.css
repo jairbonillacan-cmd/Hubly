@@ -1294,6 +1294,7 @@ html.dark :is(.hubly-sidebar-brand, .hubly-sidebar-empty strong, .hubly-cal-toda
 html.dark :is(.hubly-cal-tabs, .hubly-cal-input, .hubly-hubi-composer, .hubly-composer-caption, .hubly-composer-meta, .hubly-composer-preview, .hubly-sidebar-empty i, .hubly-composer-networks button, .hubly-composer-sources button > span, .hubly-composer-phone-media) { background: #20303F; color: #DADAE2; }
 html.dark :is(.hubly-hubi-composer input, .hubly-cal-input, .hubly-composer-caption) { color: #FFFFFF; }
 html.dark .hubly-cal-tab[aria-selected="true"] { background: #2B3E50; box-shadow: none; color: #9AD4F1; }
+html.dark .hubly-cal-tab:not([aria-selected="true"]) { color: #A8B6C3; }
 html.dark :is(.hubly-cal-weekdays, .hubly-cal-brand-head, .hubly-cal-cell.is-outside) { background: #20303F; }
 html.dark :is(.hubly-dashboard-subnav-wrap, .hubly-cal-weekdays, .hubly-cal-cell, .hubly-cal-brand-head, .hubly-cal-brand-row, .hubly-cal-brand-cell, .hubly-hubi-head, .hubly-composer-head, .hubly-composer-meta, .hubly-composer-meta > *, .hubly-composer-tabs, .hubly-composer-preview, .hubly-composer-foot, .hubly-composer-caption, .hubly-composer-sources button, .hubly-sidebar-panel-head.is-chats, .hubly-sidebar-empty, .hubly-cal-row + .hubly-cal-row) { border-color: #2B3E50; }
 html.dark .hubly-dashboard-subnav-wrap .hubly-subnav.hubly-tablero-tabs { background: #20303F; }

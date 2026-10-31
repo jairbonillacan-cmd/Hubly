@@ -784,7 +784,7 @@ export function SaludCuentasView() {
                 borderRadius: 9,
                 border: "1px solid #BFE2F4",
                 background: "var(--ui-accent-soft)",
-                color: "#4338CA",
+                color: "var(--hb-accent-text)",
                 fontSize: 12,
                 fontWeight: 700,
                 cursor: "pointer",
@@ -1001,7 +1001,7 @@ export function SaludCuentasView() {
                 alignItems: "center",
                 gap: 8,
                 background: "var(--hb-accent)",
-                color: "#111827",
+                color: "var(--on-accent)",
                 border: "none",
                 borderRadius: 10,
                 padding: "10px 18px",
@@ -1440,7 +1440,7 @@ export function SaludCuentasView() {
               padding: "10px 14px",
             }}
           >
-            <div style={{ fontSize: 11, color: "#4338CA", fontWeight: 700 }}>
+            <div style={{ fontSize: 11, color: "var(--hb-accent-text)", fontWeight: 700 }}>
               Con pauta activa
             </div>
             <div
@@ -2514,7 +2514,7 @@ export function SaludCuentasView() {
                             borderRadius: 8,
                             padding: "4px 9px",
                             fontSize: 11,
-                            color: "#4338CA",
+                            color: "var(--hb-accent-text)",
                             fontWeight: 600,
                           }}
                         >

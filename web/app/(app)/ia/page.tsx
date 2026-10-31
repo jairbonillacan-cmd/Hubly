@@ -174,13 +174,13 @@ function DemoHublyAIPage() {
         <div style={{ width: "100%", maxWidth: 480, display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
           <button
             type="button"
-            onClick={() => handleAskAssistant("Conectar las redes de Min y diagnosticar cuenta")}
+            onClick={() => handleAskAssistant("Conectar las redes de la marca y diagnosticar la cuenta")}
             style={{
               width: "100%",
               height: 52,
               padding: "0 18px",
               borderRadius: 14,
-              background: "#FEF9E7",
+              background: "color-mix(in srgb, #F59E0B 12%, var(--ui-surface))",
               border: "1px solid #BFE2F4",
               display: "flex",
               alignItems: "center",
@@ -246,7 +246,7 @@ function DemoHublyAIPage() {
                 height: 46,
                 padding: "0 14px",
                 borderRadius: 14,
-                background: "#E8F7EE",
+                background: "color-mix(in srgb, #10B981 12%, var(--ui-surface))",
                 border: "1px solid #CBEAD7",
                 display: "flex",
                 alignItems: "center",
@@ -257,7 +257,7 @@ function DemoHublyAIPage() {
                 fontWeight: 600,
               }}
             >
-              <Users size={15} style={{ color: "#4338CA" }} />
+              <Users size={15} style={{ color: "var(--hb-accent-text)" }} />
               <span>Invitar a mi equipo</span>
             </button>
 
@@ -268,7 +268,7 @@ function DemoHublyAIPage() {
                 height: 46,
                 padding: "0 14px",
                 borderRadius: 14,
-                background: "#FDF2F2",
+                background: "color-mix(in srgb, #EF4444 10%, var(--ui-surface))",
                 border: "1px solid #F9DADA",
                 display: "flex",
                 alignItems: "center",

@@ -11,11 +11,13 @@ const SAVE_DELAY_MS = 500;
 let agencyId: string | null = null;
 let version = 0;
 let pending: HublyWorkspaceData | null = null;
+let conflicted: HublyWorkspaceData | null = null;
 let timer: ReturnType<typeof setTimeout> | undefined;
 let inFlight = false;
 let readOnly = false;
 let agencies: { id: string; name: string }[] = [];
 const AGENCY_KEY = "hubly:agencia-activa";
+const conflictKey = (id: string) => `hubly:conflicto:${id}`;
 
 export const liveAgencies = () => agencies;
 export function selectLiveAgency(id: string) {
@@ -32,10 +34,37 @@ function selectedAgency() {
 }
 
 export const currentAgencyId = () => agencyId;
-export const hasPendingSave = () => pending !== null || inFlight;
+export const hasPendingSave = () => pending !== null || inFlight || conflicted !== null;
 
 function emit(state: SaveState) {
   window.dispatchEvent(new CustomEvent<SaveState>("hubly:save-state", { detail: state }));
+}
+
+/** Copia de respaldo: el cambio rechazado sobrevive a una recarga hasta que la persona decida. */
+function keepConflict(data: HublyWorkspaceData) {
+  conflicted = data;
+  if (!agencyId) return;
+  try {
+    localStorage.setItem(conflictKey(agencyId), JSON.stringify(data));
+  } catch {}
+}
+
+function dropConflict() {
+  conflicted = null;
+  if (!agencyId) return;
+  try {
+    localStorage.removeItem(conflictKey(agencyId));
+  } catch {}
+}
+
+function restoreConflict() {
+  if (!agencyId) return;
+  try {
+    const saved = localStorage.getItem(conflictKey(agencyId));
+    if (!saved) return;
+    conflicted = JSON.parse(saved) as HublyWorkspaceData;
+    setTimeout(() => emit("conflict"), 0);
+  } catch {}
 }
 
 export async function loadLiveWorkspace(): Promise<LiveLoad> {
@@ -50,6 +79,7 @@ export async function loadLiveWorkspace(): Promise<LiveLoad> {
     agencyId = json.agencyId;
     version = json.version;
     readOnly = json.role === "viewer";
+    if (!readOnly && !conflicted) restoreConflict();
     return { kind: "ok", data: json.data, agencyId: json.agencyId, role: json.role };
   } catch {
     return { kind: "error" };
@@ -57,7 +87,7 @@ export async function loadLiveWorkspace(): Promise<LiveLoad> {
 }
 
 async function flush() {
-  if (inFlight || !pending || !agencyId) return;
+  if (inFlight || !pending || !agencyId || conflicted) return;
   const data = pending;
   pending = null;
   inFlight = true;
@@ -70,6 +100,7 @@ async function flush() {
     });
     inFlight = false;
     if (res.status === 409) {
+      keepConflict(pending ?? data);
       pending = null;
       emit("conflict");
       return;
@@ -95,6 +126,11 @@ export function queueLiveSave(data: HublyWorkspaceData) {
     emit("readonly");
     return;
   }
+  if (conflicted) {
+    keepConflict(data);
+    emit("conflict");
+    return;
+  }
   pending = data;
   clearTimeout(timer);
   timer = setTimeout(() => void flush(), SAVE_DELAY_MS);
@@ -102,4 +138,31 @@ export function queueLiveSave(data: HublyWorkspaceData) {
 
 export function retryLiveSave() {
   void flush();
+}
+
+/** La persona eligió conservar su versión: reemplaza a la del equipo, nunca de forma automática. */
+export async function keepMyVersion() {
+  const mine = conflicted;
+  if (!mine || !agencyId) return;
+  try {
+    const res = await fetch(`/api/workspace?agencyId=${encodeURIComponent(agencyId)}`, { cache: "no-store" });
+    if (!res.ok) {
+      emit("error");
+      return;
+    }
+    version = ((await res.json()) as { version: number }).version;
+  } catch {
+    emit("error");
+    return;
+  }
+  dropConflict();
+  pending = mine;
+  await flush();
+}
+
+/** La persona eligió la versión del equipo: descarta el respaldo; quien llama recarga los datos. */
+export function discardMyVersion() {
+  dropConflict();
+  pending = null;
+  emit("idle");
 }

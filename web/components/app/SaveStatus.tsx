@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useHublyStore } from "@/lib/store";
 import { backendEnabled } from "@/lib/supabase/config";
-import { hasPendingSave, retryLiveSave, type SaveState } from "@/lib/live-workspace";
+import { hasPendingSave, keepMyVersion, retryLiveSave, discardMyVersion, type SaveState } from "@/lib/live-workspace";
 
 const bannerButton = { border: "1px solid #FFFFFF", background: "transparent", color: "#FFFFFF", borderRadius: 7, padding: "2px 8px", cursor: "pointer", fontWeight: 600 } as const;
 
@@ -18,7 +18,6 @@ export function SaveStatus() {
     const onState = (e: Event) => {
       const next = (e as CustomEvent<SaveState>).detail;
       setState(next);
-      if (next === "conflict") void syncFromServer();
     };
     const onLeave = (e: BeforeUnloadEvent) => {
       if (hasPendingSave()) e.preventDefault();
@@ -29,7 +28,7 @@ export function SaveStatus() {
       window.removeEventListener("hubly:save-state", onState);
       window.removeEventListener("beforeunload", onLeave);
     };
-  }, [syncFromServer]);
+  }, []);
 
   if (!backendEnabled) return null;
   if (!hydrated) {
@@ -46,10 +45,28 @@ export function SaveStatus() {
         ? "No se pudo guardar tu último cambio."
         : state === "readonly"
           ? "Tienes acceso de solo lectura: este cambio no se guardará."
-          : "Otra persona guardó antes. Se cargó su versión; revisa tu último cambio."}
-      <button type="button" onClick={state === "error" ? retryLiveSave : () => setState("idle")} style={bannerButton}>
-        {state === "error" ? "Reintentar" : "Entendido"}
-      </button>
+          : "Otra persona guardó antes. Tu cambio sigue a salvo en este navegador; elige qué versión conservar."}
+      {state === "conflict" ? (
+        <>
+          <button
+            type="button"
+            onClick={() => {
+              discardMyVersion();
+              void syncFromServer();
+            }}
+            style={bannerButton}
+          >
+            Usar la del equipo
+          </button>
+          <button type="button" onClick={() => void keepMyVersion()} style={bannerButton}>
+            Reemplazar con la mía
+          </button>
+        </>
+      ) : (
+        <button type="button" onClick={state === "error" ? retryLiveSave : () => setState("idle")} style={bannerButton}>
+          {state === "error" ? "Reintentar" : "Entendido"}
+        </button>
+      )}
     </div>
   );
 }

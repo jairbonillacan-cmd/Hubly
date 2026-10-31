@@ -105,3 +105,83 @@ test("repara un espacio con el reloj de prueba sin perder lo creado", () => {
   assert.equal(fixed.tasks.find((t) => t.id === "propia")?.dueDate, "2026-12-24");
   assert.equal(rebaseStaleFixture(fixed), fixed);
 });
+
+test("la reparación de fechas respeta lo editado por el usuario", () => {
+  const stale = createSeedWorkspaceData("prueba", { referenceFixture: true });
+  const fixtureDate = "2026-04-19";
+  const seedTask = stale.tasks.find((t) => t.dueDate === fixtureDate);
+  const edited = stale.tasks.find((t) => t !== seedTask);
+  assert.ok(seedTask && edited);
+  edited.title = `Reunión del ${fixtureDate}`;
+  edited.dueDate = fixtureDate;
+  stale.tasks.push({ ...stale.tasks[0], id: "propia", title: `Cierre ${fixtureDate}`, dueDate: fixtureDate });
+  const fixed = rebaseStaleFixture(stale);
+  const moved = fixed.tasks.find((t) => t.id === seedTask.id);
+  assert.notEqual(moved?.dueDate, fixtureDate);
+  const own = fixed.tasks.find((t) => t.id === "propia");
+  assert.equal(own?.dueDate, fixtureDate);
+  assert.equal(own?.title, `Cierre ${fixtureDate}`);
+  assert.equal(fixed.tasks.find((t) => t.id === edited.id)?.title, `Reunión del ${fixtureDate}`);
+  assert.equal(rebaseStaleFixture(fixed), fixed);
+});
+
+test("aprobar no publica: ni evento de publicación ni etiqueta de programado", async () => {
+  const { useHublyStore } = await import("../lib/store");
+  const seed = createSeedWorkspaceData("prueba");
+  const brandId = seed.brands[0].id;
+  const post = { ...seed.posts[0], id: "aprobable", brandId, status: "pending" as const };
+  useHublyStore.setState({ ...seed, posts: [post], activityEvents: [], role: null });
+  useHublyStore.getState().approveAllBrandPosts(brandId, "Ana", "agency");
+  const state = useHublyStore.getState();
+  assert.equal(state.posts[0].status, "approved");
+  assert.equal(state.posts[0].statusLabel, "Aprobado");
+  assert.deepEqual(state.activityEvents.map((e) => e.type), ["post_approved"]);
+  assert.equal(state.activityEvents[0].metadata?.postId, "aprobable");
+  useHublyStore.getState().approveAllBrandPosts(brandId, "Ana", "agency");
+  assert.equal(useHublyStore.getState().activityEvents.length, 1);
+});
+
+test("un lector no cambia datos desde el store", async () => {
+  const { useHublyStore } = await import("../lib/store");
+  const seed = createSeedWorkspaceData("prueba");
+  useHublyStore.setState({ ...seed, role: "viewer" });
+  const before = useHublyStore.getState().tasks.length;
+  useHublyStore.getState().deleteTask(seed.tasks[0].id);
+  assert.equal(useHublyStore.getState().tasks.length, before);
+  useHublyStore.getState().openComposer();
+  assert.equal(useHublyStore.getState().composerOpen, true);
+  useHublyStore.setState({ role: null, composerOpen: false });
+});
+
+test("un 409 conserva el cambio hasta que la persona elige", async () => {
+  const live = await import("../lib/live-workspace");
+  const saved: unknown[] = [];
+  const responses = [
+    new Response(JSON.stringify({ data: {}, version: 1, agencyId: "a1", role: "editor" })),
+    new Response("{}", { status: 409 }),
+    new Response(JSON.stringify({ version: 5 })),
+    new Response(JSON.stringify({ version: 6 })),
+  ];
+  const store = new Map<string, string>();
+  Object.assign(globalThis, {
+    window: new EventTarget(),
+    CustomEvent: globalThis.CustomEvent,
+    localStorage: { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => store.set(k, v), removeItem: (k: string) => store.delete(k) },
+    fetch: async (_url: string, init?: RequestInit) => {
+      if (init?.body) saved.push(JSON.parse(String(init.body)));
+      return responses.shift();
+    },
+  });
+  await live.loadLiveWorkspace();
+  const mine = { agencyName: "mía" } as never;
+  live.queueLiveSave(mine);
+  await new Promise((r) => setTimeout(r, 560));
+  assert.equal(live.hasPendingSave(), true);
+  assert.ok(store.has("hubly:conflicto:a1"));
+  await live.keepMyVersion();
+  assert.equal(live.hasPendingSave(), false);
+  assert.equal(store.has("hubly:conflicto:a1"), false);
+  assert.deepEqual(saved.at(-1), { agencyId: "a1", version: 5, data: mine });
+  Reflect.deleteProperty(globalThis, "window");
+  Reflect.deleteProperty(globalThis, "localStorage");
+});
