@@ -2115,3 +2115,87 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
   .hubly-ajustes .hbtn-ic { min-width: 44px; }
 }
 html.dark .hubly-cal-types button[aria-checked="true"] { border-color: var(--hb-accent); background: rgb(var(--hb-accent-rgb) / 0.14); color: var(--hb-accent-text); }
+
+/* Salud de cuentas ---------------------------------------------------------- */
+.hubly-salud { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 1240px; min-width: 0; margin: 0 auto; padding-bottom: 36px; }
+.hubly-salud-head { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-top: 8px; }
+.hubly-salud-head .hubly-cal-title { color: var(--ui-text); font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+.hubly-salud-head .hubly-cal-subtitle { color: var(--ui-text-4); }
+.hubly-salud-head .hubly-cal-subtitle strong { color: var(--ui-text); font-variant-numeric: tabular-nums; }
+.hubly-salud-notice { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 1px solid var(--ui-sky-border); border-radius: 14px; background: rgb(var(--hb-accent-rgb) / 0.08); color: var(--hb-accent-text); }
+.hubly-salud-notice p { display: flex; flex: 1; flex-direction: column; gap: 2px; min-width: 0; margin: 0; color: var(--ui-text-3); font-size: 12.5px; }
+.hubly-salud-notice strong { color: var(--ui-text); font-size: 13px; font-weight: 600; }
+.hubly-salud-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.hubly-salud-spacer { flex: 1; }
+.hubly-salud-search { width: 260px; }
+.hubly-salud-sort { width: 210px; }
+.hubly-cal-tabs.is-text { max-width: 100%; overflow-x: auto; }
+.hubly-cal-tabs.is-text .hubly-cal-tab { flex-shrink: 0; padding: 0 10px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.hubly-cal-tabs.is-text .hubly-cal-tab span { max-width: none; margin: 0; opacity: 1; }
+.hubly-salud-filters { align-items: center; }
+.hubly-salud-count { margin-left: 4px; color: var(--ui-text-4); font-variant-numeric: tabular-nums; }
+.hubly-salud-section { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.hubly-salud-section-head { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; }
+.hubly-salud-section-head h2 { margin: 0; color: var(--ui-text); font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+.hubly-salud-section-head p { margin: 2px 0 0; color: var(--ui-text-4); font-size: 12.5px; }
+.hubly-salud-actions { display: flex; align-items: center; flex-wrap: wrap; flex-shrink: 0; gap: 8px; }
+.hubly-salud-actions.is-end { justify-content: flex-end; }
+.hubly-salud-list { overflow: hidden; border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-surface); }
+.hubly-salud-rec { display: flex; align-items: center; gap: 12px; padding: 10px 12px; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-salud-rec:hover { background: var(--ui-surface-2); }
+.hubly-salud-rec + .hubly-salud-rec, .hubly-salud-more { border-top: 1px solid var(--ui-border); }
+.hubly-salud-rec-text { flex: 1; min-width: 0; }
+.hubly-salud-rec .hubly-cal-row-title { color: var(--ui-text); }
+.hubly-salud-rec-brand, .hubly-salud-handle { color: var(--ui-text-4); font-size: 12px; font-weight: 400; }
+.hubly-salud :is(.hubly-cal-row-meta) { color: var(--ui-text-4); }
+.hubly-salud-clamp { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.hubly-salud-more { display: block; width: 100%; padding: 10px; border-width: 1px 0 0; border-style: solid; border-color: var(--ui-border); background: transparent; color: var(--hb-accent-text); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.hubly-salud-more:hover { background: var(--ui-surface-2); }
+.hubly-salud-item { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; }
+.hubly-salud-item + .hubly-salud-item { border-top: 1px solid var(--ui-border); }
+.hubly-salud-item-head { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.hubly-salud-item-text { flex: 1 1 220px; min-width: 0; }
+.hubly-salud-item .hubly-cal-row-title { color: var(--ui-text); font-size: 14px; }
+.hubly-salud-status { display: inline-flex; align-items: center; gap: 6px; color: var(--ui-text); font-size: 12.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hubly-salud-status::before { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--hb-accent); }
+.hubly-salud-status[data-tone="risk"]::before { background: var(--hubly-danger); }
+.hubly-salud-current { color: var(--ui-text-4); font-size: 12px; font-weight: 600; }
+.hubly-salud-total { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; color: var(--ui-text-3); font-size: 12.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hubly-salud-meter { height: 8px; overflow: hidden; border-radius: 999px; background: var(--ui-muted); }
+.hubly-salud-meter.is-thin { height: 5px; }
+.hubly-salud-meter i { display: block; height: 100%; border-radius: 999px; background: var(--hb-accent); }
+.hubly-salud-meter[data-tone="risk"] i { background: var(--hubly-danger); }
+.hubly-salud-deliverables { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.hubly-salud-deliverable { display: flex; flex-direction: column; gap: 6px; }
+.hubly-salud-deliverable > div:first-child { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; color: var(--ui-text-4); font-size: 12px; }
+.hubly-salud-deliverable strong { color: var(--ui-text); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.hubly-salud-metrics { margin: 0; color: var(--ui-text-3); font-size: 12px; }
+.hubly-salud-metrics span { margin-right: 8px; color: var(--ui-text-4); font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.hubly-salud-editor { display: flex; flex-direction: column; gap: 16px; padding: 16px; border: 1px solid var(--ui-border); border-radius: 12px; background: var(--ui-surface-2); }
+.hubly-salud-editor-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.hubly-salud-fieldset { display: flex; flex-direction: column; gap: 8px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.hubly-salud-fieldset legend { margin-bottom: 8px; padding: 0; color: var(--ui-text); font-size: 13px; font-weight: 600; }
+.hubly-salud-fieldset label, .hubly-salud-inline { display: flex; flex-direction: column; gap: 4px; color: var(--ui-text-4); font-size: 11.5px; }
+.hubly-salud-editor .hubly-cal-input { border-color: var(--ui-border-strong); background: var(--ui-surface); color: var(--ui-text); }
+.hubly-salud-paid { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 16px; }
+.hubly-salud-check { display: flex; align-items: center; gap: 8px; color: var(--ui-text); font-size: 13px; }
+.hubly-salud-check input { width: 16px; height: 16px; accent-color: var(--hb-accent); }
+.hubly-salud-metric-list { display: flex; flex-direction: column; margin: 0; padding: 0; overflow: hidden; border: 1px solid var(--ui-border); border-radius: 10px; list-style: none; }
+.hubly-salud-metric-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 10px; color: var(--ui-text); font-size: 12.5px; }
+.hubly-salud-metric-list li + li { border-top: 1px solid var(--ui-border); }
+.hubly-salud-add { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr) 90px minmax(0, 1fr) auto; align-items: center; gap: 8px; }
+.hubly-salud :is(.hbtn, .hubly-cal-pill, .hubly-cal-tab, .hubly-cal-input, .hubly-salud-more):focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
+@media (max-width: 767.98px) {
+  .hubly-salud-search, .hubly-salud-sort { width: 100%; }
+  .hubly-salud-spacer { display: none; }
+  .hubly-salud-deliverables, .hubly-salud-editor-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hubly-salud-add { grid-template-columns: minmax(0, 1fr); }
+  .hubly-salud-notice { flex-wrap: wrap; }
+  .hubly-salud-actions { flex-shrink: 1; max-width: 100%; }
+  .hubly-salud-item-head .hubly-salud-actions, .hubly-salud-section-head .hubly-salud-actions { flex: 1 1 100%; }
+  .hubly-salud-notice .hbtn { flex: 1 1 100%; }
+  .hubly-salud-rec { flex-wrap: wrap; }
+  .hubly-salud-rec .hubly-salud-actions { flex: 1 1 100%; justify-content: flex-end; }
+  .hubly-salud :is(.hbtn, .hubly-cal-pill, .hubly-cal-tab, .hubly-cal-input, .hubly-salud-more) { min-height: 44px; }
+  .hubly-salud-check input { width: 20px; height: 20px; }
+}
