@@ -56,3 +56,100 @@ Las políticas y funciones SQL se probaron en PGlite con un esquema `storage` m�
 ## Estabilidad de las pruebas de navegador
 
 Las últimas dos corridas completas dieron 58 de 58, sin cambios de código entre ellas. Una corrida anterior, justo después de editar `ia/page.tsx` con el servidor de desarrollo encendido, dio 56 aprobadas y no se registró cuáles fallaron. Puede ser una recompilación durante la prueba, pero no está confirmado.
+
+## Traspaso de la sesión del 31 de octubre (tarde): dónde quedó el trabajo
+
+Objetivo de la sesión: continuar el diseño UX/UI en `paridad-henry`, en diez puntos. **No está terminado.** Avance:
+
+| # | Punto | Estado |
+|---|---|---|
+| 0 | Revisar `git status`, sesiones y docs | Hecho. Ajustes ya estaba commiteado (`4d25385`) y ninguna sesión de Hubly seguía activa. |
+| 1 | Salud de Cuentas | **Hecho y commiteado** (`ce50097`). |
+| — | Revisar Ajustes | Visto en 1440 claro/oscuro y 390: sin defectos claros que corregir. |
+| 2 | Clasificar controles dudosos | Parcial, ver abajo. |
+| 3 | Auditoría de ventanas abiertas | Script reescrito. La matriz **no** se actualizó: falta una corrida limpia. |
+| 4 | Estados de interacción | Script nuevo `audit:estados` escrito, **sin ejecutar**. |
+| 5 | Comparación visual con Henry (8 escenas) | **Sin ejecutar.** El script de capturas se perdió (estaba en el scratchpad de la sesión). |
+| 6 | Móvil, 21 rutas a 390 px | Sin empezar (solo Salud de Cuentas y Ajustes revisados). |
+| 7 | `/anuncios` e `/ia` | Propuesta lista, **sin aplicar**. |
+| 8 | Limpieza de `web/.data/media` y prueba de Excel | Sin empezar. |
+| 9 | Verificación completa y matriz final | Sin empezar. Las cinco verificaciones no se corrieron al final; solo `salud-cuentas.spec.ts` y `tsc` se corrieron tras el punto 1. |
+
+### 1. Salud de Cuentas (hecho)
+
+`web/components/app/dashboard/SaludCuentasView.tsx` se rehízo con la plantilla A (agenda): un `h1` «Salud de cuentas» con subtítulo y salud promedio; una sola barra con periodo, búsqueda y orden; filtros con contador; sugerencias y cuentas como filas dentro de un contenedor, sin tarjetas de métricas ni colores fijos; editor de compromisos en línea con los mismos `data-testid`. Estilos `hubly-salud-*` al final de `web/app/(app)/dashboard-polish.css`, solo con tokens. Pruebas nuevas en `web/e2e/salud-cuentas.spec.ts` (3 pasan). Se vio en 1440 claro, 1440 oscuro y 390; en móvil se corrigió un desbordamiento de los botones de acción **sin volver a capturar**.
+
+Decisiones tomadas, por si quieres revertirlas:
+- Se quitó el periodo **«Custom»**: no permitía elegir fechas y su etiqueta decía «acumulado trimestral». Sigue en el tipo `CommitmentPeriod`.
+- Las sugerencias muestran 4 y «Ver N más».
+- Se quitaron las tarjetas KPI de colores y el chip de sugerencia dentro de cada cuenta (duplicaba la lista).
+- Nuevo botón «Activar» por cuenta (antes solo se podía hacer pulsando el avatar).
+
+Comparación con Henry (observado en vivo con REA, solo navegación): su pantalla tiene pestañas Inicio/Cuentas/Equipo, periodos 7 días/30 días/Esta semana/Este mes/Custom, búsqueda «Buscar marca…», Filtros, Archivar, un aviso «Declara qué medir en tus marcas» con «Empezar», y un modal «Sugerencias automáticas» por marca con metas editables. Evidencia: `ev_cda51080805f6c1f9ad1b5de96d929ea17396933a81b1de3aee448ccbfedf005` (navegación), `ev_16e4b3c2b5963ff05133e3d364c6f682dd22cffb531bd6b6d014198f3a572a0a` (modal abierto), `ev_09352ae4674bfab126ba748e6ecf6dd0a9170a09513f1e3da4f2eac828d3c278` (pantalla sin modal). La cuenta de Henry solo tenía una marca sin compromisos, así que no se vio su lista de cuentas con datos. No se copió código.
+
+### 2. Controles dudosos
+
+- **«Archivar» en `/marcas`:** correcto. El timeout de la auditoría era por estado contaminado: la tienda demo vive en `localStorage` y un clic anterior («Por usuario») ocultaba el botón. Un clic suelto funciona.
+- **«Enviar mensaje a Hubi» en `/ia`:** mismo diagnóstico, funciona. Pendiente: ponerle `disabled` cuando el campo está vacío, para que el estado sea real.
+- **`Crear regla`, `Crear actividad`, `Guardar` en Nuevo prospecto:** correctos, formularios con campos obligatorios vacíos.
+- **«Exportar PDF», «Nuevo», «Reporte Ejecutivo Imprimible» en `/reportes`:** correctos (llaman a `window.print()` o muestran una hoja que ya estaba abierta). Hay que confirmarlo con la nueva auditoría.
+- **Pestañas ya seleccionadas** (Cards, Lista, Pipeline, Filas, Este mes, Todas…): correctas, no cambian nada.
+- **«Subir» en `/archivos`:** correcto, abre el selector del sistema.
+- **KPIs de `/anuncios`** (Gasto Total, Visitas al perfil, Costo por visita, CTR): **botón muerto**, son `span role="button"` sin acción. Quitar el `role`.
+- **«Cerrar menú de perfil» en el sidebar:** defecto real, el botón de colapsar lo tapaba. **Corregido**: el popover pasó de 276 a 236 px en `web/app/(app)/layout.tsx`. Falta verificarlo con la auditoría.
+- **«Mi vista» y «Todo el equipo» en `/dashboard/equipo`:** sin `aria-pressed`. **Corregido** en `EquipoView.tsx`.
+- **«Mover … hacia arriba» en Configurar widgets del Dashboard:** timeout; sin diagnosticar (¿deshabilitado o tapado?).
+
+### 3. Auditoría de ventanas abiertas
+
+`web/e2e/auditoria-controles.mjs` se reescribió. Ahora, además de la página: recorre el sidebar y el botón de Hubi, y por cada menú, modal o panel que abre un control, recorre los controles de dentro (una ronda). Detecta qué cambió (URL, ventana, estado, tema, selector de archivos, impresión, portapapeles, intento de guardar) y distingue «ya activo». El editor (compositor) se abre pero no se recorre: lo cubre `compositor.spec.ts`. La salida lleva una columna «Ventana». Una corrida completa tarda unos 13 min con 4 en paralelo.
+
+La primera corrida dio 718 controles (315 en páginas, 403 en ventanas), pero **no sirve como matriz** y por eso no se commiteó: (a) el estado de `localStorage` contaminaba a los controles siguientes, (b) «mueve el foco» contaba como respuesta y ocultaba botones muertos. Ambos ya se corrigieron en el script (limpia el almacenamiento antes de cada control y quita la señal de foco), pero **no se volvió a correr**. Hallazgos de esa corrida que sí parecen reales: los de la lista del punto 2 y que las ventanas de las tarjetas de bienvenida del Dashboard («TU PRIMER POST», etc.) no se reabren al repetir el recorrido (puede ser del script).
+
+**Siguiente paso:** `npm run audit:controles` desde `web/` con `localhost:3000` encendido; revisar los «sin efecto visible», «no se pudo pulsar» y «no reproducible», corregir lo que sea botón muerto y volver a correr. `docs/MATRIZ-CONTROLES.md` sigue siendo la versión vieja (221 controles, sin ventanas); se sobrescribe al correr la auditoría.
+
+### 4. Estados de interacción
+
+`web/e2e/auditoria-estados.mjs` (`npm run audit:estados`) recorre cada ruta con Tab en claro y oscuro y avisa de controles sin indicador de foco. No se ha ejecutado. Hover, deshabilitado, carga y error siguen sin revisar de forma sistemática.
+
+`npm run check:ui` **ya fallaba antes de esta sesión**, desde el rediseño de Ajustes (`4d25385`): `dashboard-polish.css` tiene tamaños de texto fuera de escala (17 hallazgos, permitidos 15) y un radio de más (7 contra 6) en las reglas `hubly-personas-*` y vecinas, y `BuyerPersonas.tsx` y `ProjectEditModal.tsx` importan `lucide-react`. Mis cambios no añaden hallazgos. Hay que corregirlo antes de entregar; no se ejecutó `--update`.
+
+### 5. Comparación visual con Henry
+
+Las ocho escenas de `docs/referencias/henry-2026-10-31/` son: 01 compositor cargando un archivo con Facebook seleccionado, 02 selector Content Manager, 03 formatos y vista previa, 04 calendario Kanban, 05 calendario Tabla, 06 calendario Semana, 07 menú del calendario, 08 compositor con Pinterest. Para capturarlas en Hubly: abrir `/parrillas?tab=calendario` (botón «datos de ejemplo»), cambiar de vista con `getByRole("tab")`, abrir el editor con `window.__hubly.getState().openComposer()` (como `compositor.spec.ts`) y bloquear las escrituras a `/api/`. Falta capturar escritorio y móvil, claro y oscuro, sidebar abierto y retraído, y movimiento reducido, y mirar las imágenes.
+
+### 7. `/anuncios` e `/ia` (propuesta, sin aplicar)
+
+Hoy ambas parecen funciones terminadas:
+- `/anuncios` muestra «Gasto Total $2,231.21», «Visitas al perfil 268», «CTR 5.40%», anuncios con gasto y «Click Score» y un «Diagnóstico Creativo Hubi». Son cifras fijas del código (`SAMPLE_ADS`), de otra marca y sin una etiqueta clara.
+- `/ia` responde con un texto fijo de «piezas minerales» para cualquier marca, y «Programar en parrilla» **crea un post real** con ese texto.
+
+Propuesta:
+1. `/anuncios`: aviso arriba (`role="note"`): «Datos de ejemplo. Aún no hay una cuenta publicitaria conectada: estas cifras y anuncios no son de tu marca.» Una etiqueta «Ejemplo» en cada KPI y anuncio. El modal pasa a «Ejemplo de diagnóstico» con la nota «Hubi todavía no analiza anuncios». «Analizar» pasa a «Ver ejemplo». Quitar el `role="button"` de los KPIs.
+2. `/ia`: aviso permanente «Hubi todavía no responde con IA. Las respuestas son ejemplos de formato». Las respuestas se titulan «Ejemplo de formato» y usan solo datos reales de la marca (nombre, personas, pilares), sin gancho ni copy inventado. Quitar «Programar en parrilla». Las tarjetas «Conectar las redes», «Traer mis diseños», «Invitar a mi equipo» y «¿Qué hay pendiente?» pasan a ser enlaces reales (`/parrillas`, `/archivos`, `/ajustes?tab=equipo`, `/tareas`) en lugar de respuestas falsas. Enviar deshabilitado con el campo vacío. Verificar los ids de `?tab=` de `/parrillas` antes de enlazar.
+
+No hay métricas ni mensajes de éxito inventados en la propuesta. Con backend (`backendEnabled`) ambas ya muestran `LiveUnavailable`.
+
+### 8. Limpieza y prueba de Excel
+
+Sin empezar. En `web/.data/media/` están `a.png`, `b.png`, `06-calendario-semana.png` y `prueba-*.png` (ids vistos en `/archivos`: `36805afd…`, `84f2543b…`, `511aeb92…`, `8c414a1f…`); **no** se debe borrar `WhatsApp Image 2026-10-27 at 09.57.42.jpeg`. Se borran desde `/archivos` o editando `.data/media/index.json`. Falta hacer que `archivos.spec.ts` limpie lo que sube y buscar por qué la prueba de Excel de `calendario.spec.ts` falló una vez (hipótesis sin confirmar: recompilación del servidor de desarrollo durante la corrida).
+
+## Cosas que conviene saber
+
+- **Las pruebas de Playwright escriben en los datos demo.** El espacio de demo se guarda en el servidor (`.data/workspaces/workspace-default.json`) mediante `POST /api/workspace`. Mis primeras corridas de `salud-cuentas.spec.ts` descartaron una sugerencia y cambiaron las publicaciones de Clínica Norte (14/6 → 10/10) en los datos reales. **Se restauraron a mano** (publicaciones 14/6 y sugerencias descartadas vacías, en `workspace-default.json` y `hubly-db.json`). La prueba ahora bloquea los `POST` a `/api/workspace` y deja el archivo intacto. Las demás pruebas (`compositor`, `calendario`, `listas`) no se revisaron con este criterio.
+- **`npx playwright test` borra `web/e2e/.salida/`** (es su `outputDir`). No guardes ahí capturas ni scripts propios.
+- `web/.data/` está ignorado por Git: los datos demo no viajan con el repositorio. En casa se parte de la semilla.
+- REA: `capture_browser_scenario` pide `browser: {mode:"connect", cdp_endpoint, target_id}`, `start_url: {url}` y `actions` con `action` y `step_id` (por ejemplo `wait_for_timeout` con `duration_ms`, `click` con `locator: {kind:"role", role, name}`). Con `capture: {at_end:["screenshot","accessibility"]}` el resultado trae la imagen en base64 y es muy largo. Puertos CDP 9224 a 9227; `list_browser_targets` pide `cdp_endpoint`.
+- En Git Bash, una ruta que empieza con `/` (como `/dashboard`) pasada como argumento se convierte en ruta de Windows. Usa PowerShell para esos comandos.
+
+## Para seguir en casa
+
+1. `git fetch && git checkout paridad-henry && git pull`, luego `cd web && npm install && npm run dev`.
+2. Aplicar la propuesta del punto 7 (`web/app/(app)/ia/page.tsx`, `web/app/(app)/anuncios/page.tsx`).
+3. Correr `npm run audit:controles`, corregir botones muertos y volver a correrla; commitear la matriz.
+4. Correr `npm run audit:estados` y corregir `check:ui` (punto 4).
+5. Capturar las ocho escenas y las 21 rutas a 390 px, mirar las imágenes y corregir.
+6. Limpiar `.data/media` y arreglar la prueba de Excel.
+7. `npx tsc --noEmit`, `npm run build`, `npm test`, `npm run test:db`, `npx playwright test`, y actualizar este documento.
+
+Decisiones que necesito: (a) si aceptas quitar «Custom» del periodo; (b) si en `/ia` prefieres enlaces reales o respuestas de ejemplo en las cuatro tarjetas de acción; (c) si `/anuncios` debe ocultarse por completo mientras no haya cuentas conectadas, en lugar de mostrar datos de ejemplo.

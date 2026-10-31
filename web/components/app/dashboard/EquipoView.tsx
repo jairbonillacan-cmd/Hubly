@@ -1401,6 +1401,7 @@ export function EquipoView() {
               <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
                 <button
                   type="button"
+                  aria-pressed={!showAllTeamScope}
                   onClick={() => {
                     setShowAllTeamScope(false);
                     setSelectedMemberId(currentMemberId);
@@ -1423,6 +1424,7 @@ export function EquipoView() {
                 </button>
                 <button
                   type="button"
+                  aria-pressed={showAllTeamScope}
                   onClick={() => setShowAllTeamScope(true)}
                   style={{
                     flex: 1,

@@ -10,7 +10,8 @@
     "test:db": "node tests/db-permisos.test.mjs",
     "dev:live": "node tests/dev-live.mjs",
     "audit:controles": "node e2e/auditoria-controles.mjs",
-    "test": "tsx --test \"tests/**/*.test.ts\" \"components/**/*.test.ts\" \"lib/**/*.test.ts\""
+    "test": "tsx --test \"tests/**/*.test.ts\" \"components/**/*.test.ts\" \"lib/**/*.test.ts\"",
+    "audit:estados": "node e2e/auditoria-estados.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.3.0",

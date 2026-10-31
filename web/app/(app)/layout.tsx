@@ -1601,7 +1601,7 @@ export default function SaaSAppLayout({
                 position: "absolute",
                 bottom: "calc(100% + 10px)",
                 left: 0,
-                width: 276,
+                width: 236,
                 background: "var(--ui-surface)",
                 border: "1px solid var(--ui-border)",
                 borderRadius: 16,
