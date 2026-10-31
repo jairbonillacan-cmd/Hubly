@@ -18,3 +18,16 @@ export function notebookPlainText(content: string): string {
     .replace(/\s+/g, " ")
     .trim();
 }
+
+const decodeEntities = (s: string) =>
+  s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&");
+
+/** Pendientes sin marcar de las listas de tareas de una nota. */
+export function notebookTasks(content: string): string[] {
+  const out: string[] = [];
+  for (const m of content.matchAll(/<li\b[^>]*data-checked="false"[^>]*>([\s\S]*?)<\/li>/g)) {
+    const text = decodeEntities(m[1].replace(/<label[\s\S]*?<\/label>/, "").replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
+    if (text) out.push(text);
+  }
+  return out;
+}

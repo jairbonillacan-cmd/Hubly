@@ -38,6 +38,7 @@ import { FloatingAIDrawer } from "@/components/app/FloatingAIDrawer";
 import { Handshake, Tags, Zap } from "lucide-react";
 import { AppDialogHost } from "@/components/app/AppDialogHost";
 import { SaveStatus } from "@/components/app/SaveStatus";
+import { backendEnabled } from "@/lib/supabase/config";
 import { DescubreHublyWidget } from "@/components/app/DescubreHublyWidget";
 import {
   HublyCatAvatar,
@@ -95,6 +96,8 @@ export default function SaaSAppLayout({
 
   // Store selectors (100% reactive, zero hardcoded user or brand literals)
   const syncFromServer = useHublyStore((s) => s.syncFromServer);
+  // Con cuentas reales nada se monta sobre los datos de ejemplo iniciales.
+  const appHydrated = useHublyStore((s) => s.hydrated);
   const workspaceId = useHublyStore((s) => s.workspaceId);
   const isReferenceFixture = useHublyStore((s) => s.isReferenceFixture);
   const switchWorkspace = useHublyStore((s) => s.switchWorkspace);
@@ -1852,7 +1855,7 @@ export default function SaaSAppLayout({
          ===================================================================== */}
       <div className="hubly-main hb-main">
         <main className="hubly-page hb-page">
-          <React.Suspense fallback={null}>{children}</React.Suspense>
+          <React.Suspense fallback={null}>{!backendEnabled || appHydrated ? children : null}</React.Suspense>
         </main>
       </div>
 

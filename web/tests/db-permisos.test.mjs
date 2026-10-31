@@ -4,12 +4,13 @@ const db = new PGlite();
 await db.exec(`
   create role anon nologin; create role authenticated nologin;
   create schema auth;
-  create table auth.users (id uuid primary key, email text, email_confirmed_at timestamptz);
+  create table auth.users (id uuid primary key, email text, email_confirmed_at timestamptz, raw_user_meta_data jsonb default '{}');
   create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('test.uid', true), '')::uuid $$;
   grant usage on schema auth, public to anon, authenticated;
   grant execute on function auth.uid() to anon, authenticated;
 `);
-await db.exec(fs.readFileSync(new URL("../../supabase/migrations/0001_agencias_y_espacios.sql", import.meta.url), "utf8"));
+const dir = new URL("../../supabase/migrations/", import.meta.url);
+for (const f of fs.readdirSync(dir).sort()) await db.exec(fs.readFileSync(new URL(f, dir), "utf8"));
 const [A, B, C, D] = ["a", "b", "c", "d"].map((c) => `${c.repeat(8)}-${c.repeat(4)}-4${c.repeat(3)}-8${c.repeat(3)}-${c.repeat(12)}`);
 await db.query(`insert into auth.users values ($1,'a@x.com',now()),($2,'b@x.com',now()),($3,'c@x.com',null),($4,'d@x.com',now())`, [A, B, C, D]);
 async function as(uid, role, sql, params = []) {
@@ -81,5 +82,28 @@ ok("revocado no abre", (await as(null, "anon", `select public.get_share_portal($
 ok("revocado no decide", (await as(null, "anon", `select public.submit_share_decision($1,'p1','approved',null,'X') r`, [tok]))[0].r === false);
 await db.query(`update public.share_links set revoked_at=null, expires_at=now()-interval '1 day'`);
 ok("caducado no abre", (await as(null, "anon", `select public.get_share_portal($1) p`, [tok]))[0].p === null);
+// Miembros e historial (0002)
+ok("miembro lista el equipo", (await as(D, "authenticated", `select * from public.list_members($1)`, [ag])).length === 2);
+await errs("ajeno no lista el equipo", () => as(B, "authenticated", `select * from public.list_members($1)`, [ag]), "forbidden");
+await errs("anon no lista el equipo", () => as(null, "anon", `select * from public.list_members($1)`, [ag]), "permission");
+await errs("lector no cambia roles", () => as(D, "authenticated", `select public.update_member_role($1,$2,'owner')`, [ag, D]), "forbidden");
+await errs("no degradar último dueño", () => as(A, "authenticated", `select public.update_member_role($1,$2,'viewer')`, [ag, A]), "last_owner");
+await as(A, "authenticated", `select public.update_member_role($1,$2,'editor')`, [ag, D]);
+ok("dueño cambia rol", (await as(D, "authenticated", `select public.member_role($1) r`, [ag]))[0].r === "editor");
+const inv3 = (await as(A, "authenticated", `select public.create_invitation($1,'b@x.com','viewer') t`, [ag]))[0].t;
+ok("vista previa sin sesión", (await as(null, "anon", `select public.invitation_preview($1) p`, [inv3]))[0].p.agency === "Agencia A");
+ok("vista previa token malo", (await as(null, "anon", `select public.invitation_preview('zzz') p`))[0].p === null);
+const iid = (await as(A, "authenticated", `select id from public.agency_invitations where email='b@x.com'`))[0].id;
+await as(D, "authenticated", `select public.revoke_invitation($1)`, [iid]);
+ok("editor no revoca invitación", (await as(null, "anon", `select public.invitation_preview($1) p`, [inv3]))[0].p !== null);
+await as(A, "authenticated", `select public.revoke_invitation($1)`, [iid]);
+await errs("invitación revocada no sirve", () => as(B, "authenticated", `select public.accept_invitation($1)`, [inv3]), "invalid_invitation");
+const tok2 = (await as(A, "authenticated", `select public.create_share_link($1,'b1') t`, [ag]))[0].t;
+await db.query(`update public.agency_workspaces set data = jsonb_set(data,'{posts,0,status}','"pending"') where agency_id=$1`, [ag]);
+ok("decisión con actividad", (await as(null, "anon", `select public.submit_share_decision($1,'p1','changes','Cambia la foto','Ana') r`, [tok2]))[0].r === true);
+const p1b = (await db.query(`select data from public.agency_workspaces where agency_id=$1`, [ag])).rows[0].data.posts.find((p) => p.id === "p1");
+ok("actividad registra firma sin cuenta", p1b.activity[0].author.includes("Ana") && p1b.activity[0].author.includes("sin cuenta") && p1b.status === "changes");
+ok("otra agencia intacta", (await db.query(`select version from public.agency_workspaces where agency_id=$1`, [agB])).rows[0].version === 1);
+
 console.log(`\n${pass} ok, ${fail} fallos`);
 process.exit(fail ? 1 : 0);

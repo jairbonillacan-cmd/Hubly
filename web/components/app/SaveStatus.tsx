@@ -39,10 +39,14 @@ export function SaveStatus() {
       </div>
     );
   }
-  if (state !== "error" && state !== "conflict") return null;
+  if (state !== "error" && state !== "conflict" && state !== "readonly") return null;
   return (
     <div role="alert" style={{ position: "fixed", top: 12, left: "50%", transform: "translateX(-50%)", zIndex: 250, maxWidth: "calc(100vw - 32px)", background: "#B91C1C", color: "#FFFFFF", borderRadius: 10, padding: "8px 14px", fontSize: 13, fontWeight: 600, display: "flex", gap: 10, alignItems: "center" }}>
-      {state === "error" ? "No se pudo guardar tu último cambio." : "Otra persona guardó antes. Se cargó su versión; revisa tu último cambio."}
+      {state === "error"
+        ? "No se pudo guardar tu último cambio."
+        : state === "readonly"
+          ? "Tienes acceso de solo lectura: este cambio no se guardará."
+          : "Otra persona guardó antes. Se cargó su versión; revisa tu último cambio."}
       <button type="button" onClick={state === "error" ? retryLiveSave : () => setState("idle")} style={bannerButton}>
         {state === "error" ? "Reintentar" : "Entendido"}
       </button>

@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test:db": "node tests/db-permisos.test.mjs"
+    "test:db": "node tests/db-permisos.test.mjs",
+    "dev:live": "node tests/dev-live.mjs",
+    "test": "tsx --test tests/unit.test.ts components/AgencyCalculator.test.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -30,6 +32,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }

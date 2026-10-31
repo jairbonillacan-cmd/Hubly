@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { localIsoDate } from "@/lib/date";
 import { useKanbanDrag } from "@/lib/use-kanban-drag";
@@ -39,6 +39,7 @@ export function MonthDragCalendar({
   onMove,
   onOpen,
   onAdd,
+  renderTop,
 }: {
   entries: CalendarEntry[];
   hint: string;
@@ -46,6 +47,7 @@ export function MonthDragCalendar({
   onMove: (id: string, date: string) => void;
   onOpen: (id: string) => void;
   onAdd: (date: string) => void;
+  renderTop?: (year: number, month: number) => React.ReactNode;
 }) {
   const [view, setView] = useState(() => initialMonth(entries));
   const cells = useMemo(() => monthCells(view.year, view.month), [view]);
@@ -77,6 +79,7 @@ export function MonthDragCalendar({
         <span style={{ fontSize: 12, color: "var(--ui-text-4)", marginLeft: "auto" }}>{hint}</span>
       </div>
 
+      {renderTop?.(view.year, view.month)}
       <div style={{ overflowX: "auto" }}>
         <div style={{ minWidth: 720, border: "1px solid var(--ui-border)", borderRadius: 14, overflow: "hidden", background: "var(--ui-border)" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(7, minmax(0, 1fr))", gap: 1 }}>

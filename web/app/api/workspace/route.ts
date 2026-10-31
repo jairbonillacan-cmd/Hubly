@@ -86,6 +86,7 @@ async function liveGet() {
   const { data: membership } = await supabase
     .from("agency_members")
     .select("agency_id, role, agencies(name)")
+    .eq("user_id", auth.user.id)
     .order("created_at")
     .limit(1)
     .maybeSingle();
@@ -100,6 +101,7 @@ async function liveGet() {
 
   const agency = membership.agencies as unknown as { name: string } | null;
   const data = normalizeWorkspacePayload(row.data as Partial<HublyWorkspaceData>, membership.agency_id, { live: true });
+  // El perfil es de cada persona: nunca se toma del documento compartido.
   const name = (auth.user.user_metadata?.name as string) || auth.user.email || "";
   data.agencyName = agency?.name || data.agencyName;
   data.agency = { ...data.agency, id: membership.agency_id, name: data.agencyName };
@@ -107,9 +109,39 @@ async function liveGet() {
     ...data.profile,
     id: auth.user.id,
     email: auth.user.email || "",
-    name: (row.data as Partial<HublyWorkspaceData>)?.profile?.name || name,
-    avatarInitial: ((row.data as Partial<HublyWorkspaceData>)?.profile?.name || name).slice(0, 1).toUpperCase(),
+    name,
+    avatarInitial: name.slice(0, 1).toUpperCase(),
   };
+  const { data: members } = await supabase.rpc("list_members", { target_agency: membership.agency_id });
+  const ROLE_LABEL: Record<string, string> = { owner: "Dueño", admin: "Administración", editor: "Edición", viewer: "Solo lectura" };
+  data.team = ((members ?? []) as { user_id: string; role: string; email: string; name: string }[]).map((m) => {
+    const saved = data.team.find((t) => t.email === m.email);
+    const memberName = m.user_id === auth.user!.id ? data.profile.name : m.name || saved?.name || m.email;
+    const initials = memberName.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+    return {
+      ...(saved ?? {
+        brandIds: data.brands.map((b) => b.id),
+        brandsCount: data.brands.length,
+        avatarColor: "#6C77C1",
+        tasksCompleted: 0,
+        tasksInProgress: 0,
+        postsPublished: 0,
+        activeTimeLabel: "—",
+        points: 0,
+      }),
+      id: m.user_id,
+      name: memberName,
+      email: m.email,
+      role: ROLE_LABEL[m.role] || m.role,
+      status: "Activo" as const,
+      initials,
+      avatarInitial: initials.charAt(0),
+      baseActiveMinutes: saved?.baseActiveMinutes ?? 0,
+    };
+  });
+  if (!(row.data as Partial<HublyWorkspaceData>)?.agency) {
+    Object.assign(data.agency, { plan: "", activeDays: 0, activeStreak: 0, bestStreak: 0, xp: 0, level: 1 });
+  }
   return NextResponse.json(
     { data, version: row.version, agencyId: membership.agency_id, role: membership.role },
     { headers: { "Cache-Control": "no-store" } }
@@ -131,7 +163,8 @@ async function livePost(request: Request) {
   const supabase = await createSupabaseServer();
   const { data, error } = await supabase.rpc("save_workspace", {
     target_agency: body.agencyId,
-    new_data: body.data,
+    // Lo personal no se guarda en el documento de la agencia.
+    new_data: { ...body.data, profile: undefined, activeBrandId: undefined },
     expected_version: body.version,
   });
   if (error) {

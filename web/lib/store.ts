@@ -11,7 +11,7 @@ import { selectAccountRecommendations } from "./domain-selectors";
 import { localIsoDate } from "./date";
 import { moveInList } from "./use-kanban-drag";
 import { backendEnabled } from "./supabase/config";
-import { loadLiveWorkspace, queueLiveSave } from "./live-workspace";
+import { currentAgencyId, loadLiveWorkspace, queueLiveSave } from "./live-workspace";
 import {
   buildReferenceFixtureWorkspace,
   clearWorkspaceStorage,
@@ -426,6 +426,11 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   activeNotebookId: null,
 
   setActiveBrand: (brandId) => {
+    if (backendEnabled) {
+      try {
+        localStorage.setItem(`hubly:marca-activa:${currentAgencyId()}`, brandId);
+      } catch {}
+    }
     set((s) => {
       const exists = s.brands.some((b) => b.id === brandId);
       if (!exists) return s;
@@ -466,7 +471,13 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     if (backendEnabled) {
       const loaded = await loadLiveWorkspace();
       if (loaded.kind === "ok") {
-        set({ ...loaded.data, activeNotebookId: null, hydrated: true });
+        // La marca activa es de cada persona, no de la agencia.
+        let activeBrandId = loaded.data.activeBrandId;
+        try {
+          const saved = localStorage.getItem(`hubly:marca-activa:${loaded.agencyId}`);
+          if (saved && loaded.data.brands.some((b) => b.id === saved)) activeBrandId = saved;
+        } catch {}
+        set({ ...loaded.data, activeBrandId, activeNotebookId: null, hydrated: true });
       } else if (loaded.kind === "unauthenticated") {
         window.location.assign("/login");
       } else if (loaded.kind === "no_agency") {
@@ -571,6 +582,12 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   },
 
   updateProfile: (patch) => {
+    if (backendEnabled && patch.name) {
+      const name = patch.name;
+      void import("./supabase/browser").then(({ createSupabaseBrowser }) =>
+        createSupabaseBrowser().auth.updateUser({ data: { name } })
+      );
+    }
     set((s) => {
       const nextName = patch.name ?? s.profile.name;
       const nextRole = patch.role ?? s.profile.role;

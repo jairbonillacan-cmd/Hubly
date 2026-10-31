@@ -2,10 +2,11 @@
 
 import { useHublyStore } from "@/lib/store";
 import { MonthDragCalendar } from "@/components/app/MonthDragCalendar";
-import type { SocialPost } from "@/lib/types";
+import type { BrandWorkspace, SocialPost } from "@/lib/types";
+import { MonthlyQuota } from "./MonthlyQuota";
 import { STATUS_META } from "./status-meta";
 
-export function PostMonthCalendar({ posts }: { posts: SocialPost[] }) {
+export function PostMonthCalendar({ posts, brand }: { posts: SocialPost[]; brand?: BrandWorkspace }) {
   const movePost = useHublyStore((s) => s.movePost);
   const openComposer = useHublyStore((s) => s.openComposer);
 
@@ -22,6 +23,7 @@ export function PostMonthCalendar({ posts }: { posts: SocialPost[] }) {
       }))}
       hint="Arrastra un post para cambiarlo de día"
       addLabel="Nuevo post"
+      renderTop={brand ? (year, month) => <MonthlyQuota brand={brand} posts={posts} year={year} month={month} /> : undefined}
       onMove={movePost}
       onOpen={(id) => openComposer(id)}
       onAdd={(date) => openComposer(null, date)}

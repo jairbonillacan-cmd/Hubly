@@ -181,7 +181,10 @@ export default function CrmPage() {
                     <td style={cell}>{leadName(q.leadId)}</td>
                     <td style={cell}>{q.status}</td>
                     <td style={{ ...cell, fontVariantNumeric: "tabular-nums" }}>{money(quoteTotal(q))}</td>
-                    <td style={{ ...cell, textAlign: "right" }}>
+                    <td style={{ ...cell, textAlign: "right", whiteSpace: "nowrap" }}>
+                      <a href={`/cotizacion/${q.id}`} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ui-accent-text-2)", marginRight: 10 }}>
+                        PDF
+                      </a>
                       <button
                         type="button"
                         aria-label={`Eliminar ${q.title}`}

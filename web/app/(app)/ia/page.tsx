@@ -15,6 +15,8 @@ import {
   Pin,
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { LiveUnavailable } from "@/components/app/LiveUnavailable";
+import { backendEnabled } from "@/lib/supabase/config";
 
 const SUGGESTION_PILLS = [
   "Dame ideas de contenido para esta semana",
@@ -114,6 +116,11 @@ function HublyIllustratedAvatar({ size = 40 }: { size?: number }) {
 }
 
 export default function HublyAIPage() {
+  if (backendEnabled) return <LiveUnavailable title="Asistente de Hubly" text="El asistente con IA todavía no está conectado. Estará aquí cuando se integre el modelo." />;
+  return <DemoHublyAIPage />;
+}
+
+function DemoHublyAIPage() {
   const brands = useHublyStore((s) => s.brands);
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
   const savePost = useHublyStore((s) => s.savePost);

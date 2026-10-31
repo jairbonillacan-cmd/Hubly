@@ -33,6 +33,7 @@ import { currentAgencyId } from "@/lib/live-workspace";
 import { Cover } from "@/components/Cover";
 import { STATUS_META } from "@/components/app/social/status-meta";
 import { PostMonthCalendar } from "@/components/app/social/PostMonthCalendar";
+import { FeedSimulator } from "@/components/app/social/FeedSimulator";
 import { IdeasBoard } from "@/components/app/social/IdeasBoard";
 import { ProductionBoard } from "@/components/app/social/ProductionBoard";
 import { PostInbox } from "@/components/app/social/PostInbox";
@@ -57,7 +58,8 @@ export default function ParrillasPage() {
 
   const [activeTab, setActiveTab] = useState<SocialSubTab>("calendario");
   const [showDemoData, setShowDemoData] = useState(false);
-  const [calendarMode, setCalendarMode] = useState<"mes" | "tarjetas">("mes");
+  const [calendarMode, setCalendarMode] = useState<"mes" | "feed" | "tarjetas">("mes");
+  const profileName = useHublyStore((s) => s.profile?.name) || "Equipo";
   const composerOpen = useHublyStore((s) => s.composerOpen);
   const [moreNetworksOpen, setMoreNetworksOpen] = useState(false);
   const [importModalOpen, setImportModalOpen] = useState(false);
@@ -93,11 +95,9 @@ export default function ParrillasPage() {
     brands[0];
 
   const brandName =
-    activeBrand?.name && activeBrand.name !== "Café Bruma" ? activeBrand.name : "Min";
+    activeBrand?.name || "";
   const brandHandle =
-    activeBrand?.bioLink?.handle && activeBrand.bioLink.handle !== "cafebruma"
-      ? activeBrand.bioLink.handle
-      : "min";
+    activeBrand?.bioLink?.handle || activeBrand?.slug || "";
   const shareToken = activeBrand?.shareToken || "min-nov";
   const brandPosts = posts.filter((p) => p.brandId === activeBrand?.id);
 
@@ -1179,7 +1179,7 @@ export default function ParrillasPage() {
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
               <button
                 type="button"
-                onClick={() => approveAllBrandPosts(activeBrand?.id || "brand-min", "Jair (Agencia)")}
+                onClick={() => approveAllBrandPosts(activeBrand?.id || "", profileName)}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -1243,7 +1243,7 @@ export default function ParrillasPage() {
           </div>
 
           <div role="group" aria-label="Vista de la parrilla" style={{ display: "inline-flex", gap: 2, background: "var(--ui-muted)", padding: 3, borderRadius: 10, marginBottom: 14 }}>
-            {(["mes", "tarjetas"] as const).map((m) => (
+            {(["mes", "feed", "tarjetas"] as const).map((m) => (
               <button
                 key={m}
                 type="button"
@@ -1260,12 +1260,13 @@ export default function ParrillasPage() {
                   color: calendarMode === m ? "var(--ui-accent-text)" : "var(--ui-text-3)",
                 }}
               >
-                {m === "mes" ? "Mes" : "Tarjetas"}
+                {m === "mes" ? "Mes" : m === "feed" ? "Feed" : "Tarjetas"}
               </button>
             ))}
           </div>
 
-          {calendarMode === "mes" && <PostMonthCalendar posts={brandPosts} />}
+          {calendarMode === "mes" && <PostMonthCalendar posts={brandPosts} brand={activeBrand} />}
+          {calendarMode === "feed" && <FeedSimulator posts={brandPosts} />}
 
           {calendarMode === "tarjetas" && <div
             style={{
@@ -1375,7 +1376,7 @@ export default function ParrillasPage() {
                       <button
                         type="button"
                         onClick={() =>
-                          updatePostStatus(post.id, "approved", "Aprobado en parrilla.", "Jair", "agency")
+                          updatePostStatus(post.id, "approved", "Aprobado en parrilla.", profileName, "agency")
                         }
                         style={{
                           flex: 1,
@@ -1400,7 +1401,7 @@ export default function ParrillasPage() {
                       <button
                         type="button"
                         onClick={() =>
-                          updatePostStatus(post.id, "changes", undefined, "Jair", "agency")
+                          updatePostStatus(post.id, "changes", undefined, profileName, "agency")
                         }
                         style={{
                           padding: "7px 10px",

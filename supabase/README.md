@@ -3,7 +3,7 @@
 Sin estas claves, Hubly corre en modo demo: datos locales y sin cuentas.
 
 1. Crea un proyecto en [supabase.com](https://supabase.com).
-2. En **SQL Editor**, pega y ejecuta `migrations/0001_agencias_y_espacios.sql`.
+2. En **SQL Editor**, ejecuta en orden los archivos de `migrations/`.
 3. En **Project Settings > API**, copia la URL y la clave publicable a `web/.env.local`:
 
    ```bash
@@ -17,10 +17,18 @@ Sin estas claves, Hubly corre en modo demo: datos locales y sin cuentas.
 5. Para entrar con Google, activa el proveedor en **Authentication > Providers** con tus credenciales de Google.
 6. Reinicia `npm run dev` en `web/`. Registrarse lleva al onboarding, que crea la agencia.
 
-## Probar los permisos
+## Probar sin un proyecto de Supabase
 
-No requiere Supabase: corre el esquema en un Postgres local dentro de Node.
+Corre el esquema en un Postgres local dentro de Node:
 
 ```bash
 npm --prefix web run test:db
 ```
+
+Para usar la app en modo real contra un Supabase simulado, en http://localhost:3200:
+
+```bash
+npm --prefix web run dev:live
+```
+
+El simulado no firma tokens ni envía correos, así que no sustituye probar con un proyecto real.

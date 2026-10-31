@@ -205,7 +205,7 @@ export default function MarcaCorePage() {
   const handleReadWebsite = () => {
     setWhatTheySell(DEFAULT_ABOUT_TEXT);
     setCategory(DEFAULT_CATEGORY);
-    showToast("Señales leídas desde el sitio web de Min");
+    showToast(`Señales leídas desde el sitio web de ${activeBrand?.name || "la marca"}`);
   };
 
   const handleRegenerate = () => {
@@ -251,7 +251,7 @@ export default function MarcaCorePage() {
         </div>
       )}
 
-      {/* Top Card: ¿Qué vende Min? */}
+      {/* Top Card: ¿Qué vende {activeBrand?.name || "esta marca"}? */}
       <section
         style={{
           border: "1px solid var(--ui-border)",
@@ -310,7 +310,7 @@ export default function MarcaCorePage() {
                 lineHeight: 1.3,
               }}
             >
-              ¿Qué vende Min?
+              ¿Qué vende {activeBrand?.name || "esta marca"}?
             </h3>
             <p
               style={{

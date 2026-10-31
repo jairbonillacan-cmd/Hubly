@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { MemberDrawer } from "@/components/app/dashboard/MemberDrawer";
+import { LiveInviteRedirect } from "@/components/app/LiveUnavailable";
+import { backendEnabled } from "@/lib/supabase/config";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import {
   selectGreetingAndDate,
@@ -298,6 +300,10 @@ const ROLE_OPTIONS: string[] = [
    ========================================================================== */
 
 export function InviteTeamModal() {
+  return backendEnabled ? <LiveInviteRedirect /> : <DemoInviteTeamModal />;
+}
+
+function DemoInviteTeamModal() {
   const inviteModalOpen = useHublyStore((s) => s.inviteModalOpen);
   const setInviteModalOpen = useHublyStore((s) => s.setInviteModalOpen);
   const inviteTeamMember = useHublyStore((s) => s.inviteTeamMember);
@@ -880,8 +886,9 @@ export function EquipoView() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activityRange, setActivityRange] = useState<"Semana" | "Mes">("Semana");
   const [rankingRange, setRankingRange] = useState<"Hoy" | "Semana" | "Mes">("Semana");
-  const [selectedMemberId, setSelectedMemberId] = useState<string>("tm-1");
+  const [selectedMemberId, setSelectedMemberId] = useState<string>(() => useHublyStore.getState().team.find((m) => m.email === useHublyStore.getState().profile?.email)?.id ?? "tm-1");
   const [drawerMemberId, setDrawerMemberId] = useState<string | null>(null);
+  const currentMemberId = useHublyStore((s) => s.team.find((m) => m.email === s.profile?.email)?.id ?? "tm-1");
   const [showAllTeamScope, setShowAllTeamScope] = useState<boolean>(false);
 
   // Interactive popovers / drawers / accordions
@@ -982,7 +989,7 @@ export function EquipoView() {
     [syncedTeam, activeMemberMetrics.id]
   );
 
-  const isPrimaryOwner = activeMemberMetrics.id === "tm-1";
+  const isPrimaryOwner = activeMemberMetrics.id === currentMemberId;
 
   // Assigned brands for the currently inspected member:
   // By default on initial load, Jair displays `1 marca` (`Min`) matching 03-dashboard-equipo-1440.png,
@@ -1453,7 +1460,7 @@ export function EquipoView() {
                   type="button"
                   onClick={() => {
                     setShowAllTeamScope(false);
-                    setSelectedMemberId("tm-1");
+                    setSelectedMemberId(currentMemberId);
                   }}
                   style={{
                     flex: 1,
@@ -1653,7 +1660,7 @@ export function EquipoView() {
                 }}
               >
                 <span>{m.name}</span>
-                {m.id === "tm-1" && (
+                {m.id === currentMemberId && (
                   <span style={{ fontSize: 10.5, opacity: 0.75 }}>(tú)</span>
                 )}
               </button>
@@ -2726,7 +2733,7 @@ export function EquipoView() {
           {/* Ranking Rows */}
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {rankingRows.map((member, index) => {
-              const isCurrentUser = member.id === "tm-1";
+              const isCurrentUser = member.id === currentMemberId;
               const isSelected = member.id === activeMemberMetrics.id;
               const barWidthPct = Math.max(
                 8,

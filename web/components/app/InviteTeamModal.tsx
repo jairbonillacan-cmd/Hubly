@@ -12,6 +12,8 @@ import {
   X,
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { LiveInviteRedirect } from "@/components/app/LiveUnavailable";
+import { backendEnabled } from "@/lib/supabase/config";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import type { TeamInvitation } from "@/lib/types";
 
@@ -82,7 +84,11 @@ function getFocusableElements(container: HTMLElement | null): HTMLElement[] {
   );
 }
 
-export function InviteTeamModal({
+export function InviteTeamModal(props: InviteTeamModalProps = {}) {
+  return backendEnabled ? <LiveInviteRedirect open={props.open} /> : <DemoInviteTeamModal {...props} />;
+}
+
+function DemoInviteTeamModal({
   open: openProp,
   onClose: onCloseProp,
   defaultRole = "Content Manager",

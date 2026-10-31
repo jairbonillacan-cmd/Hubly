@@ -16,6 +16,7 @@ import {
   CheckCheck,
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { backendEnabled } from "@/lib/supabase/config";
 
 interface LocalThreadMessage {
   id: string;
@@ -69,13 +70,15 @@ export default function ChatPage() {
   // Default to null so initial render matches 04-chat-1440.png 1:1 ("Selecciona una conversacion")
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const myName = useHublyStore((st) => st.profile?.name) || "Equipo";
+  const brandLabel = useHublyStore((st) => st.brands.find((b) => b.id === st.activeBrandId)?.name) || "Marca";
   const [dmOpen, setDmOpen] = useState(true);
   const [minExpanded, setMinExpanded] = useState(false);
   const [draft, setDraft] = useState("");
-  const [localMessages, setLocalMessages] = useState<LocalThreadMessage[]>(INITIAL_LOCAL_MESSAGES);
+  const [localMessages, setLocalMessages] = useState<LocalThreadMessage[]>(backendEnabled ? [] : INITIAL_LOCAL_MESSAGES);
 
   const minSubChannels = [
-    { id: "ch-min", name: "general", subtitle: "Canal principal · Min" },
+    { id: "ch-min", name: "general", subtitle: `Canal principal · ${brandLabel}` },
     { id: "ch-min-contenido", name: "contenido", subtitle: "Parrillas y entregables" },
     { id: "ch-min-aprobaciones", name: "aprobaciones", subtitle: "Feedback de cliente" },
   ];
@@ -95,7 +98,7 @@ export default function ChatPage() {
     if (selectedId === "dm-jair") {
       return {
         id: "dm-jair",
-        title: "Jair (tú)",
+        title: `${myName} (tú)`,
         subtitle: "Espacio personal · Notas, borradores y recordatorios",
         badgeText: "J",
         badgeBg: "#ECEEF8",
@@ -106,7 +109,7 @@ export default function ChatPage() {
       const sub = minSubChannels.find((c) => c.id === selectedId) || minSubChannels[0];
       return {
         id: selectedId,
-        title: `Min · # ${sub.name}`,
+        title: `${brandLabel} · # ${sub.name}`,
         subtitle: sub.subtitle,
         badgeText: "M",
         badgeBg: "#6C77C1",
@@ -153,14 +156,14 @@ export default function ChatPage() {
 
     const isStoreChannel = channels.some((c) => c.id === selectedId);
     if (isStoreChannel) {
-      sendChatMessage(selectedId, draft.trim(), "Jair", "JA");
+      sendChatMessage(selectedId, draft.trim(), myName, myName.slice(0, 2).toUpperCase());
     } else {
       setLocalMessages((prev) => [
         ...prev,
         {
           id: `local-${Date.now()}`,
           targetId: selectedId,
-          sender: "Jair",
+          sender: myName,
           senderInitials: "JA",
           senderBg: "#ECEEF8",
           senderColor: "#5360A5",
@@ -175,7 +178,7 @@ export default function ChatPage() {
   const q = searchQuery.trim().toLowerCase();
   const showGeneral = !q || "general agencia".includes(q);
   const showMin = !q || "min marcas general contenido aprobaciones".includes(q);
-  const showJair = !q || "jair tu mensajes directos".includes(q);
+  const showJair = !q || `${myName} tu mensajes directos`.toLowerCase().includes(q);
 
   return (
     <div
@@ -447,7 +450,7 @@ export default function ChatPage() {
                   />
                 </span>
                 <span style={{ fontSize: 13, color: "var(--ui-text-1)", fontWeight: 500 }}>
-                  Jair <span style={{ color: "var(--ui-text-5)", fontWeight: 400 }}>(tú)</span>
+                  {myName} <span style={{ color: "var(--ui-text-5)", fontWeight: 400 }}>(tú)</span>
                 </span>
               </button>
             )}
@@ -572,7 +575,7 @@ export default function ChatPage() {
                     M
                   </span>
                   <span style={{ display: "flex", flexDirection: "column" }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: "var(--ui-text-1)" }}>Min</span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "var(--ui-text-1)" }}>{brandLabel}</span>
                     <span style={{ fontSize: 11, color: "var(--ui-text-5)" }}>3 canales</span>
                   </span>
                 </span>

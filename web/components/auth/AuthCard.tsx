@@ -29,6 +29,7 @@ export function AuthCard({ mode }: { mode: Mode }) {
   const [busy, setBusy] = useState(false);
 
   const nextPath = () => safeNextPath(new URLSearchParams(window.location.search).get("next"));
+  const afterRegister = () => safeNextPath(new URLSearchParams(window.location.search).get("next"), "/onboarding");
   const callback = (next: string) => `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`;
 
   const submit = async (e: React.FormEvent) => {
@@ -46,10 +47,10 @@ export function AuthCard({ mode }: { mode: Mode }) {
         const { data, error: err } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { name: name.trim() }, emailRedirectTo: callback("/onboarding") },
+          options: { data: { name: name.trim() }, emailRedirectTo: callback(afterRegister()) },
         });
         if (err) throw new Error("No se pudo crear la cuenta. Revisa el correo y usa una contraseña más larga.");
-        if (data.session) window.location.assign("/onboarding");
+        if (data.session) window.location.assign(afterRegister());
         else setNotice("Te enviamos un correo para confirmar tu cuenta.");
       } else if (mode === "recover") {
         await supabase.auth.resetPasswordForEmail(email, { redirectTo: callback("/nueva-clave") });
@@ -70,7 +71,7 @@ export function AuthCard({ mode }: { mode: Mode }) {
     setError(null);
     const { error: err } = await createSupabaseBrowser().auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: callback(mode === "register" ? "/onboarding" : nextPath()) },
+      options: { redirectTo: callback(mode === "register" ? afterRegister() : nextPath()) },
     });
     if (err) setError("Google no está disponible en este momento.");
   };
@@ -112,7 +113,15 @@ export function AuthCard({ mode }: { mode: Mode }) {
         <p style={{ fontSize: 13, color: "#475569", margin: "14px 0 0", display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
           {mode === "login" && (
             <>
-              <Link href="/register">Crear cuenta</Link>
+              <a
+                href="/register"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.assign(`/register${window.location.search}`);
+                }}
+              >
+                Crear cuenta
+              </a>
               <Link href="/recuperar">Olvidé mi contraseña</Link>
             </>
           )}

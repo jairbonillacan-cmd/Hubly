@@ -13,7 +13,12 @@ export async function POST(request: Request) {
   if (!clean) return NextResponse.json({ error: "name_required" }, { status: 400 });
 
   // Repetir el envío no debe crear otra agencia.
-  const { data: existing } = await supabase.from("agency_members").select("agency_id").limit(1).maybeSingle();
+  const { data: existing } = await supabase
+    .from("agency_members")
+    .select("agency_id")
+    .eq("user_id", auth.user.id)
+    .limit(1)
+    .maybeSingle();
   if (existing) return NextResponse.json({ agencyId: existing.agency_id });
 
   const { data, error } = await supabase.rpc("create_agency", { agency_name: clean });

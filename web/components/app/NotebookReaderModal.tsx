@@ -15,7 +15,8 @@ import { useHublyStore } from "@/lib/store";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import { NotebookEditor } from "@/components/app/NotebookEditor";
-import { notebookPlainText } from "@/lib/notebook-content";
+import { notebookPlainText, notebookTasks } from "@/lib/notebook-content";
+import { dueLabelFor, localIsoDate } from "@/lib/date";
 
 export interface NotebookReaderModalProps {
   open?: boolean;
@@ -128,6 +129,7 @@ export function NotebookReaderModal({
   const [accentColor, setAccentColor] = useState("#C59B6D");
   const [content, setContent] = useState("");
   const [savedNotice, setSavedNotice] = useState(false);
+  const [taskNotice, setTaskNotice] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleClose = () => {
@@ -291,6 +293,27 @@ export function NotebookReaderModal({
     setSavedNotice(true);
     setErrorMsg(null);
     window.setTimeout(() => setSavedNotice(false), 2400);
+  };
+
+  const sendPendingToTasks = () => {
+    const state = useHublyStore.getState();
+    const existing = new Set(state.tasks.filter((t) => t.brandId === brandId).map((t) => t.title));
+    const fresh = notebookTasks(content).filter((t) => !existing.has(t));
+    const today = localIsoDate();
+    for (const title of fresh) {
+      state.addTask({
+        brandId,
+        title,
+        dueLabel: dueLabelFor(today),
+        dueDate: today,
+        assignee: state.profile?.name || "Equipo",
+        listName: "Libretas",
+        status: "todo",
+        priority: "media",
+      });
+    }
+    setTaskNotice(fresh.length === 0 ? "No hay pendientes nuevos." : `${fresh.length} enviados a Tareas.`);
+    window.setTimeout(() => setTaskNotice(null), 2400);
   };
 
   const handleDeleteCurrent = () => {
@@ -876,6 +899,15 @@ export function NotebookReaderModal({
               <span>Abrir en Mi Espacio</span>
               <ExternalLink size={12} />
             </Link>
+
+            <button
+              type="button"
+              onClick={sendPendingToTasks}
+              style={{ padding: "5px 10px", borderRadius: 8, border: "1px solid #C59B6D", background: "#FAF5EC", color: "#3A2210", fontSize: 11.5, fontWeight: 600, cursor: "pointer" }}
+            >
+              Enviar pendientes a Tareas
+            </button>
+            {taskNotice && <span role="status" style={{ fontSize: 11.5, fontWeight: 600, color: "#3A2210" }}>{taskNotice}</span>}
 
             {!isCreatingNew && currentNotebook && notebooks.length > 1 && (
               <button

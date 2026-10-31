@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   User,
   Shield,
@@ -22,6 +22,7 @@ import {
   X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { AccessPanel } from "@/components/app/AccessPanel";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseBrowser } from "@/lib/supabase/browser";
 import { useHublyStore } from "@/lib/store";
@@ -54,13 +55,20 @@ export default function AjustesPage() {
     brands[0];
 
   const [activeTab, setActiveTab] = useState<SettingsTabId>("mi-perfil");
-  const [fullName, setFullName] = useState(profile?.name || "Jair");
+  useEffect(() => {
+    const tab = new URLSearchParams(window.location.search).get("tab");
+    if (tab === "equipo") setActiveTab("equipo");
+  }, []);
+  useEffect(() => {
+    if (profile?.name) setFullName(profile.name);
+  }, [profile?.name]);
+  const [fullName, setFullName] = useState(profile?.name || "");
   const [savedProfile, setSavedProfile] = useState(false);
   const { theme, setTheme } = useHublyTheme();
   const themeMode = theme === "dark" ? "oscuro" : "claro";
   const setThemeMode = (mode: "claro" | "oscuro") => setTheme(mode === "oscuro" ? "dark" : "light");
   const [brandNameInput, setBrandNameInput] = useState(
-    activeBrand?.name && activeBrand.name !== "Café Bruma" ? activeBrand.name : "Min"
+    activeBrand?.name || ""
   );
   const [brandCategory, setBrandCategory] = useState(
     "minerales y cristales decorativos al mayoreo"
@@ -272,7 +280,7 @@ export default function AjustesPage() {
                     {fullName}
                   </div>
                   <div style={{ fontSize: 12.5, color: "var(--ui-text-5)", margin: "2px 0 6px" }}>
-                    hola@agencia.demo
+                    {profile?.email}
                   </div>
                   <div style={{ marginBottom: 8 }}>
                     <span
@@ -399,7 +407,7 @@ export default function AjustesPage() {
                   }}
                 >
                   <Mail size={15} style={{ color: "var(--ui-text-5)" }} />
-                  <span>hola@agencia.demo</span>
+                  <span>{profile?.email}</span>
                 </div>
                 <div style={{ fontSize: 11.5, color: "var(--ui-text-5)", marginTop: 6 }}>
                   El correo no se puede cambiar desde aquí
@@ -748,7 +756,8 @@ export default function AjustesPage() {
                 workspace de {brandNameInput}.
               </p>
 
-              {activeTab === "equipo" && (
+              {activeTab === "equipo" && backendEnabled && <AccessPanel />}
+              {activeTab === "equipo" && !backendEnabled && (
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {team.map((m) => (
                     <div

@@ -1,5 +1,8 @@
 "use client";
 
+import { LiveUnavailable } from "@/components/app/LiveUnavailable";
+import { backendEnabled } from "@/lib/supabase/config";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import {
@@ -448,6 +451,11 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
 }
 
 export default function AnunciosPage() {
+  if (backendEnabled) return <LiveUnavailable title="Anuncios" text="Las métricas de anuncios aparecerán cuando conectes las cuentas publicitarias de esta marca." />;
+  return <DemoAnunciosPage />;
+}
+
+function DemoAnunciosPage() {
   const [activeSubNav, setActiveSubNav] = useState<"tableros" | "anuncios" | "ideas" | "reportes">(
     "anuncios"
   );

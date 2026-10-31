@@ -14,6 +14,7 @@ import type {
   TeamMember,
   WorkspaceProfile,
 } from "./types";
+import { backendEnabled } from "./supabase/config";
 
 /* ========================================================================== */
 /* 1. SALUDO Y FECHA DINÁMICOS POR ZONA HORARIA                               */
@@ -1186,9 +1187,10 @@ export function selectTeamProductivity(
   const query = searchQuery.trim().toLowerCase();
 
   const evaluated: EvaluatedTeamMember[] = members.map((member, idx) => {
+    // Las cifras iniciales de la demo no aplican a cuentas reales.
     const isPrimaryUser =
-      member.id === "tm-1" ||
-      member.name.toLowerCase().startsWith("jair");
+      !backendEnabled &&
+      (member.id === "tm-1" || member.name.toLowerCase().startsWith("jair"));
 
     const memberFirstName = member.name.split(" ")[0].toLowerCase();
 

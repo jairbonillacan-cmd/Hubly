@@ -1,5 +1,8 @@
 "use client";
 
+import { LiveUnavailable } from "@/components/app/LiveUnavailable";
+import { backendEnabled } from "@/lib/supabase/config";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import {
@@ -19,6 +22,11 @@ import { useHublyStore } from "@/lib/store";
 import { Cover } from "@/components/Cover";
 
 export default function ReportesPage() {
+  if (backendEnabled) return <LiveUnavailable title="Reportes" text="Los reportes aparecerán cuando conectes las cuentas de esta marca." />;
+  return <DemoReportesPage />;
+}
+
+function DemoReportesPage() {
   const brands = useHublyStore((s) => s.brands);
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
   const posts = useHublyStore((s) => s.posts);
@@ -29,7 +37,7 @@ export default function ReportesPage() {
     brands[0];
 
   const brandName =
-    activeBrand?.name && activeBrand.name !== "Café Bruma" ? activeBrand.name : "Min";
+    activeBrand?.name || "";
 
   const [execSummary, setExecSummary] = useState(
     "Durante el periodo del 23 al 30 de octubre consolidamos el posicionamiento mayorista de Min (Mineralia USA) en Instagram y Meta Ads, logrando 268 visitas calificadas al perfil con un CTR promedio de 5.40% y un costo por visita de $8.33 USD."
