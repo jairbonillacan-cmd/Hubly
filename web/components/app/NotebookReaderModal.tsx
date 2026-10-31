@@ -551,6 +551,7 @@ export function NotebookReaderModal({
               return (
                 <button
                   key={nb.id}
+                  aria-pressed={selected}
                   type="button"
                   onClick={() => {
                     setIsCreatingNew(false);
@@ -817,6 +818,8 @@ export function NotebookReaderModal({
                       key={c.id}
                       type="button"
                       onClick={() => setAccentColor(c.bg)}
+                      aria-pressed={active}
+                      aria-label={c.label}
                       style={{
                         padding: "4px 10px",
                         borderRadius: 9999,

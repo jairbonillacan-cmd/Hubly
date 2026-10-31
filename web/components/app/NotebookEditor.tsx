@@ -46,6 +46,9 @@ export function NotebookEditor({
     }),
   });
 
+  const canUndo = editor?.can().undo() ?? false;
+  const canRedo = editor?.can().redo() ?? false;
+
   const tools = [
     { label: "Negrita", Icon: Bold, on: active?.bold, run: () => editor?.chain().focus().toggleBold().run() },
     { label: "Cursiva", Icon: Italic, on: active?.italic, run: () => editor?.chain().focus().toggleItalic().run() },
@@ -53,15 +56,15 @@ export function NotebookEditor({
     { label: "Lista", Icon: List, on: active?.bullet, run: () => editor?.chain().focus().toggleBulletList().run() },
     { label: "Lista numerada", Icon: ListOrdered, on: active?.ordered, run: () => editor?.chain().focus().toggleOrderedList().run() },
     { label: "Lista de tareas", Icon: CheckSquare, on: active?.task, run: () => editor?.chain().focus().toggleTaskList().run() },
-    { label: "Deshacer", Icon: Undo2, on: false, run: () => editor?.chain().focus().undo().run() },
-    { label: "Rehacer", Icon: Redo2, on: false, run: () => editor?.chain().focus().redo().run() },
+    { label: "Deshacer", Icon: Undo2, on: false, disabled: !canUndo, run: () => editor?.chain().focus().undo().run() },
+    { label: "Rehacer", Icon: Redo2, on: false, disabled: !canRedo, run: () => editor?.chain().focus().redo().run() },
   ];
 
   return (
     <div className="hubly-note-shell">
       <div className="hubly-note-toolbar" role="toolbar" aria-label="Formato de la nota">
-        {tools.map(({ label, Icon, on, run }) => (
-          <button key={label} type="button" title={label} aria-label={label} aria-pressed={Boolean(on)} onClick={run}>
+        {tools.map(({ label, Icon, on, disabled, run }) => (
+          <button key={label} type="button" title={label} aria-label={label} aria-pressed={Boolean(on)} disabled={Boolean(disabled)} onClick={run}>
             <Icon size={14} />
           </button>
         ))}
