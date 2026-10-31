@@ -641,6 +641,7 @@ export function NewBrandModal({
                     key={preset}
                     type="button"
                     onClick={() => setIndustry(preset)}
+                    aria-pressed={active}
                     style={{
                       padding: "4px 10px",
                       borderRadius: 9999,
@@ -683,6 +684,7 @@ export function NewBrandModal({
                       key={swatch}
                       type="button"
                       onClick={() => setColor(swatch)}
+                      aria-pressed={active}
                       aria-label={`Seleccionar color ${swatch}`}
                       style={{
                         width: 28,
@@ -906,7 +908,7 @@ export function NewBrandModal({
                     marginBottom: 5,
                   }}
                 >
-                  Tono de voz (Núcleo de Marca)
+                  Tono de voz (Núcleo de marca)
                 </label>
                 <input
                   id="new-brand-tone"

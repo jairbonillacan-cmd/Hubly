@@ -309,7 +309,7 @@ export default function SaaSAppLayout({
       },
       {
         href: "/tareas",
-        label: "Mi Espacio",
+        label: "Mi espacio",
         icon: NotebookIcon,
         badge: pendingTasksCount > 0 ? pendingTasksCount : undefined,
       },
@@ -343,7 +343,7 @@ export default function SaaSAppLayout({
 
   const brandNav = useMemo(
     () => [
-      { href: "/marca", label: "Núcleo de Marca", icon: BrainFilledIcon },
+      { href: "/marca", label: "Núcleo de marca", icon: BrainFilledIcon },
       {
         href: "/archivos",
         label: "Content Manager",
@@ -612,8 +612,8 @@ export default function SaaSAppLayout({
             type="button"
             onClick={() => setCmdkOpen(true)}
             className="hubly-icon-btn hb-icon-btn"
-            aria-label="Buscar (⌘K)"
-            title="Buscar (⌘K)"
+            aria-label="Buscar"
+            title="Buscar"
             style={{ width: 32, height: 32 }}
           >
             <Search size={15} />
@@ -645,7 +645,7 @@ export default function SaaSAppLayout({
         aria-label="Navegación principal de Hubly"
         className={`hubly-sidebar hb-sidebar ${
           targetCollapsed ? "is-collapsed" : ""
-        } ${sidebarMotion ? `is-animating is-${sidebarMotion}` : ""} ${mobileDrawerOpen ? "is-mobile-drawer-open" : ""}`.trim()}
+        } ${sidebarMotion ? `is-animating is-${sidebarMotion}` : ""} ${mobileDrawerOpen ? "is-mobile-drawer-open" : ""} ${profileMenuOpen ? "has-profile-popover" : ""}`.trim()}
         data-sidebar-tab={activeSidebarTab}
         style={{
           transition:
@@ -1481,8 +1481,8 @@ export default function SaaSAppLayout({
               type="button"
               onClick={() => setCmdkOpen(true)}
               className="hubly-icon-btn hb-icon-btn"
-              aria-label="Buscar (⌘K)"
-              title="Buscar (⌘K)"
+              aria-label="Buscar"
+              title="Buscar"
             >
               <Search size={18} />
             </button>
@@ -1814,7 +1814,7 @@ export default function SaaSAppLayout({
       </div>
 
       {/* =====================================================================
-          MOBILE BOTTOM TABBAR (< 768px): Mi Espacio, Social, Hubi, Ads, Más
+          MOBILE BOTTOM TABBAR (< 768px): Mi espacio, Social, Hubi, Ads, Más
          ===================================================================== */}
       <nav
         aria-label="Barra de navegación inferior móvil"
@@ -1851,7 +1851,7 @@ export default function SaaSAppLayout({
           }}
         >
           <NotebookIcon active={isNavActive("/tareas")} />
-          <span>Mi Espacio</span>
+          <span>Mi espacio</span>
         </Link>
 
         <Link

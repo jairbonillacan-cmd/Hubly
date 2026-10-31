@@ -653,7 +653,7 @@ export function InicioView() {
                         fontWeight: 700,
                         letterSpacing: "0.08em",
                         textTransform: "uppercase",
-                        color: group.bucket === "overdue" ? "#EF4444" : "var(--ui-text-5)",
+                        color: group.bucket === "overdue" ? "#EF4444" : "var(--ui-text-4)",
                         marginBottom: 8,
                       }}
                     >
@@ -796,7 +796,7 @@ export function InicioView() {
                             <span
                               style={{
                                 fontSize: 12.5,
-                                color: "var(--ui-text-5)",
+                                color: "var(--ui-text-4)",
                                 textDecoration: "line-through",
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
@@ -828,7 +828,7 @@ export function InicioView() {
               )}
               <div className="hb-widget-footer">
                 <Link href="/tareas" className="hb-widget-link">
-                  Mi Espacio →
+                  Mi espacio →
                 </Link>
               </div>
             </div>
@@ -1609,7 +1609,7 @@ export function InicioView() {
                     NUEVA LIBRETA KRAFT
                   </span>
                   <h3 style={{ fontSize: 16, fontWeight: 800, color: "#2C1A0B", margin: 0 }}>
-                    Crear nota en Mi Espacio
+                    Crear nota en Mi espacio
                   </h3>
                 </div>
               </div>

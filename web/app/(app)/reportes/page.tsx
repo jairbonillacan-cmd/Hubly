@@ -239,6 +239,8 @@ function DemoReportesPage() {
               type="button"
               onClick={() => setShowPrintableSheet(false)}
               title="Vista vacía Hubi"
+              aria-label="Vista vacía Hubi"
+              aria-pressed={!showPrintableSheet}
               style={{
                 width: 28,
                 height: 26,
@@ -258,6 +260,8 @@ function DemoReportesPage() {
               type="button"
               onClick={() => setShowPrintableSheet(true)}
               title="Reporte Ejecutivo Imprimible"
+              aria-label="Reporte Ejecutivo Imprimible"
+              aria-pressed={showPrintableSheet}
               style={{
                 width: 28,
                 height: 26,
@@ -299,7 +303,7 @@ function DemoReportesPage() {
           <button
             type="button"
             onClick={() => {
-              setExecSummary("");
+              setExecSummary((prev) => (prev ? "" : "Resumen del periodo:"));
               setShowPrintableSheet(true);
             }}
             style={{
@@ -362,7 +366,7 @@ function DemoReportesPage() {
         <button
           type="button"
           onClick={() => {
-              setExecSummary("");
+              setExecSummary((prev) => (prev ? "" : "Resumen del periodo:"));
               setShowPrintableSheet(true);
             }}
           style={{

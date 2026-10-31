@@ -3,6 +3,12 @@ import { expect, test } from "@playwright/test";
 const SUFIJO = Date.now();
 
 test("Proyectos: crear, editar, filtrar, fijar, archivar y eliminar", async ({ page }) => {
+  // El guardado va por POST /api/workspace: se intercepta para que las pruebas no alteren los datos demo guardados.
+  await page.route("**/api/workspace**", (route) =>
+    route.request().method() === "GET"
+      ? route.continue()
+      : route.fulfill({ status: 200, contentType: "application/json", body: "{\"ok\":true}" })
+  );
   const titulo = `E2E proyecto ${SUFIJO}`;
   await page.goto("/proyectos");
   await page.waitForLoadState("networkidle");
@@ -42,6 +48,7 @@ test("Proyectos: crear, editar, filtrar, fijar, archivar y eliminar", async ({ p
 });
 
 test("Núcleo de Marca guarda lo de cada marca, sin textos de otra", async ({ page }) => {
+  // Sin bloqueo de /api/workspace a propósito: esta prueba comprueba que el dato sobrevive a una recarga (persistencia real en el servidor).
   await page.goto("/marca");
   await page.waitForLoadState("networkidle");
   // Lo que se ve es lo guardado en la marca activa, no un texto fijo.
@@ -76,6 +83,12 @@ test("Núcleo de Marca guarda lo de cada marca, sin textos de otra", async ({ pa
 });
 
 test("Kanban como en Henry: agregar estatus y tarjeta compacta", async ({ page }) => {
+  // El guardado va por POST /api/workspace: se intercepta para que las pruebas no alteren los datos demo guardados.
+  await page.route("**/api/workspace**", (route) =>
+    route.request().method() === "GET"
+      ? route.continue()
+      : route.fulfill({ status: 200, contentType: "application/json", body: "{\"ok\":true}" })
+  );
   await page.goto("/parrillas?tab=calendario");
   await page.waitForLoadState("networkidle");
   const ver = page.getByRole("button", { name: /datos de ejemplo/i });

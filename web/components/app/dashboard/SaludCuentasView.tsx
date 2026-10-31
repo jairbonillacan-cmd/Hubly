@@ -349,7 +349,7 @@ export function SaludCuentasView() {
       : `${summary.totalAccounts} ${summary.totalAccounts === 1 ? "cuenta" : "cuentas"} · ${periodLabel}`;
 
   return (
-    <div className="hubly-salud" data-testid="salud-cuentas-view">
+    <div className="hubly-salud hubly-touch" data-testid="salud-cuentas-view">
       <header className="hubly-salud-head">
         <div>
           <h1 className="hubly-cal-title">Salud de cuentas</h1>

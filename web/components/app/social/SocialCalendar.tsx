@@ -1,7 +1,22 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowDown, ArrowUp, BarChart3, CalendarDays, ChevronLeft, ChevronRight, Filter, LayoutGrid, MoreHorizontal, Play, Plus, Upload, X } from "lucide-react";
+import {
+  HublyArrowDownIcon as ArrowDown,
+  HublyArrowUpIcon as ArrowUp,
+  HublyBentoIcon as LayoutGrid,
+  HublyCalendarIcon as CalendarDays,
+  HublyChartIcon as BarChart3,
+  HublyChevronLeftIcon as ChevronLeft,
+  HublyChevronRightIcon as ChevronRight,
+  HublyCloseIcon as X,
+  HublyFilterIcon as Filter,
+  HublyImageIcon,
+  HublyMoreIcon as MoreHorizontal,
+  HublyPlayIcon as Play,
+  HublyPlusIcon as Plus,
+  HublyUploadIcon as Upload,
+} from "@/components/app/icons/DuotoneIcons";
 import { useHublyStore } from "@/lib/store";
 import { askText } from "@/components/app/AppDialogHost";
 import { Cover } from "@/components/Cover";
@@ -73,7 +88,7 @@ function Dots({ post }: { post: SocialPost }) {
 
 function PublicationBadge({ post, today }: { post: SocialPost; today: string }) {
   const { label, tone } = publicationLabel(post, today);
-  return <span className="hubly-social-badge" data-tone={tone}>{label}</span>;
+  return <span className="hubly-social-badge" data-tone={tone} title={label}>{label}</span>;
 }
 
 export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorkspace; posts: SocialPost[]; onCopyLink: () => void }) {
@@ -213,7 +228,7 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
     <article key={post.id} className="hubly-social-kcard" data-dragging={dragId === post.id || undefined} {...cardDrag(post)}>
       <button type="button" className="hubly-social-kcard-open" onClick={() => openComposer(post.id)}>
         <span className="hubly-social-kcard-top">
-          <span className="hubly-social-kcard-thumb">{postThumbnail(post) ? <Thumb post={post} /> : <small>Sin diseño</small>}</span>
+          <span className="hubly-social-kcard-thumb">{postThumbnail(post) ? <Thumb post={post} /> : <HublyImageIcon size={18} title="Sin diseño" />}</span>
           <span>
             <strong style={post.color ? { color: post.color } : undefined}>{post.title && post.title !== "Sin título" ? post.title : post.caption.trim() || "Sin copy todavía"}</strong>
             <small>{post.scheduledDate ? `${post.scheduledDate.slice(8)}/${post.scheduledDate.slice(5, 7)}${post.scheduledTime ? ` · ${post.scheduledTime}` : ""}` : "Sin fecha"}</small>
@@ -517,7 +532,7 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
           </div>
           <div className="hubly-social-iconset">
             <button type="button" aria-label={`Filtros${activeFilters ? ` (${activeFilters} activos)` : ""}`} aria-expanded={filterOpen} data-active={activeFilters > 0 || undefined} onClick={() => { setFilterOpen(!filterOpen); setMenuOpen(false); }}>
-              <Filter size={16} />
+              <Filter size={20} />
             </button>
             <button type="button" aria-label="Más opciones" aria-expanded={menuOpen} onClick={() => { setMenuOpen(!menuOpen); setFilterOpen(false); }}>
               <MoreHorizontal size={17} />

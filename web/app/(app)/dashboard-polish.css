@@ -107,7 +107,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
   padding: 4px;
   border: none;
   border-radius: 14px;
-  background: #F1F1F6;
+  background: var(--ui-muted);
   max-width: 100%;
   overflow-x: auto;
   scrollbar-width: none;
@@ -123,7 +123,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
   border-radius: 10px;
   background: transparent;
   box-shadow: none;
-  color: #64748B;
+  color: var(--ui-text-3);
   font-size: 13px;
   font-weight: 600;
   line-height: 1;
@@ -147,7 +147,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
 /* 4. Hero operativo --------------------------------------------------------- */
 
 .hubly-hero { margin-bottom: 8px; }
-.hubly-hero-eyebrow { margin: 0 0 8px; color: #6B7886; font-size: 13px; font-weight: 600; }
+.hubly-hero-eyebrow { margin: 0 0 8px; color: var(--ui-text-4); font-size: 13px; font-weight: 600; }
 .hubly-hero-title {
   display: flex;
   align-items: center;
@@ -161,7 +161,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
   line-height: 1.15;
 }
 .hubly-weather { display: inline-flex; animation: hubly-weather 460ms cubic-bezier(0.22, 1, 0.36, 1) both; }
-.hubly-hero-date { margin: 6px 0 0; color: #6B7886; font-size: 13.5px; }
+.hubly-hero-date { margin: 6px 0 0; color: var(--ui-text-4); font-size: 13.5px; }
 .hubly-hero-pending { margin: 12px 0 20px; color: #42505E; font-size: 14px; }
 .hubly-pending-pill {
   display: inline-flex;
@@ -186,7 +186,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
 
 .hubly-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .hubly-hero-actions .hbtn { height: 36px; }
-.hubly-hero-actions .hbtn svg { width: 17px; height: 17px; color: #6B7886; }
+.hubly-hero-actions .hbtn svg { width: 17px; height: 17px; color: var(--ui-text-4); }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn.hbtn-gold { --hbtn-edge: #5BA9D2; border-color: var(--ui-sky); color: #111C27; }
 :is(.hubly-app-root, .hb-app-root) .hbtn.hbtn-gold:hover:not(:disabled) { background: var(--ui-sky-soft); border-color: var(--ui-sky); }
@@ -303,7 +303,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
   background: #F1F9FD;
 }
 .hb-empty-title { color: #111C27; font-size: 13.5px; font-weight: 700; }
-.hb-empty-desc { max-width: 280px; margin: 0; color: #6B7886; font-size: 12.5px; line-height: 1.45; }
+.hb-empty-desc { max-width: 280px; margin: 0; color: var(--ui-text-4); font-size: 12.5px; line-height: 1.45; }
 
 /* Tarea: fila + check */
 .hubly-task-row {
@@ -403,7 +403,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
   border-radius: 8px;
   background: #FFFFFF;
   box-shadow: 0 2.5px 0 #D6DFE7;
-  color: #6B7886;
+  color: var(--ui-text-4);
   cursor: pointer;
   transition:
     transform 90ms cubic-bezier(0.4, 0, 0.2, 1),
@@ -552,7 +552,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   min-width: 60px;
   padding: 14px 8px 10px;
 }
-.hubly-sidebar :is(.hubly-section-label, .hb-section-label) { padding: 10px 10px 4px; font-size: 10px; color: #6B7886; }
+.hubly-sidebar :is(.hubly-section-label, .hb-section-label) { padding: 10px 10px 4px; font-size: 10px; color: var(--ui-text-4); }
 .hubly-app-root.hb-app-root .hubly-sidebar :is(.hubly-nav-item, .hb-nav-item) {
   gap: 9px;
   min-height: 32px;
@@ -610,7 +610,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
 }
 .hubly-cal-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 20px 0 10px; }
 .hubly-cal-title { margin: 0; font-size: 22px; font-weight: 700; line-height: 1.2; }
-.hubly-cal-subtitle { margin: 2px 0 0; color: #6B7886; font-size: 12.5px; }
+.hubly-cal-subtitle { margin: 2px 0 0; color: var(--ui-text-4); font-size: 12.5px; }
 .hubly-cal-reveal {
   display: flex;
   align-items: center;
@@ -619,7 +619,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   border: 1px solid #D6DFE7;
   border-radius: 10px;
   background: #FFFFFF;
-  color: #6B7886;
+  color: var(--ui-text-4);
   cursor: pointer;
   transition: background-color 150ms cubic-bezier(0.25, 0.1, 0.25, 1);
 }
@@ -649,7 +649,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #6B7886;
+  color: var(--ui-text-4);
   cursor: pointer;
   transition: background-color 150ms cubic-bezier(0.25, 0.1, 0.25, 1), color 150ms cubic-bezier(0.25, 0.1, 0.25, 1);
 }
@@ -679,7 +679,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #6B7886;
+  color: var(--ui-text-4);
   cursor: pointer;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -705,7 +705,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   box-shadow: 0 8px 24px rgba(26, 26, 46, 0.08);
 }
 .hubly-cal-filters h3 { margin: 0; font-size: 13px; font-weight: 700; }
-.hubly-cal-filter-label { margin-bottom: 6px; color: #6B7886; font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.hubly-cal-filter-label { margin-bottom: 6px; color: var(--ui-text-4); font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
 .hubly-cal-input {
   width: 100%;
   height: 34px;
@@ -764,7 +764,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   border: 1px solid #E3E9EF;
   border-radius: 12px;
   background: #FFFFFF;
-  color: #6B7886;
+  color: var(--ui-text-4);
   text-align: center;
 }
 .hubly-cal-date span { display: block; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
@@ -774,7 +774,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
 .hubly-cal-day-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; padding: 0 2px; font-size: 13px; font-weight: 600; }
 .hubly-cal-day-head .is-today { color: var(--hb-accent-text); }
 .hubly-cal-day-head em { padding: 1px 6px; border-radius: 999px; background: rgb(var(--hb-accent-rgb) / 0.08); color: var(--hb-accent-text); font-size: 11px; font-style: normal; font-weight: 700; text-transform: uppercase; }
-.hubly-cal-day-head small { color: #6B7886; font-size: 11px; font-weight: 400; }
+.hubly-cal-day-head small { color: var(--ui-text-4); font-size: 11px; font-weight: 400; }
 .hubly-cal-rows { overflow: hidden; border: 1px solid #E3E9EF; border-radius: 14px; background: #FFFFFF; }
 .hubly-cal-row { display: flex; align-items: center; gap: 12px; padding: 8px 12px; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
 .hubly-cal-row + .hubly-cal-row { border-top: 1px solid rgba(232, 232, 240, 0.6); }
@@ -782,15 +782,15 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
 .hubly-cal-row:hover { background: rgba(248, 248, 250, 0.7); }
 .hubly-cal-row-icon { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; }
 .hubly-cal-row-title { font-size: 13px; font-weight: 600; line-height: 1.35; }
-.hubly-cal-row-meta { display: flex; gap: 6px; margin-top: 2px; color: #6B7886; font-size: 11px; }
-.hubly-cal-row-time { flex-shrink: 0; color: #6B7886; font-size: 11px; font-variant-numeric: tabular-nums; }
-.hubly-cal-empty { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 72px 16px; color: #6B7886; font-size: 12.5px; text-align: center; }
+.hubly-cal-row-meta { display: flex; gap: 6px; margin-top: 2px; color: var(--ui-text-4); font-size: 11px; }
+.hubly-cal-row-time { flex-shrink: 0; color: var(--ui-text-4); font-size: 11px; font-variant-numeric: tabular-nums; }
+.hubly-cal-empty { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 72px 16px; color: var(--ui-text-4); font-size: 12.5px; text-align: center; }
 .hubly-cal-empty strong { color: #111C27; font-size: 14px; }
 
 .hubly-cal-month { overflow: hidden; border: 1px solid #E3E9EF; border-radius: 16px; background: #FFFFFF; box-shadow: 0 1px 4px rgb(var(--hb-accent-rgb) / 0.06); }
 .hubly-cal-weekdays, .hubly-cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .hubly-cal-weekdays { border-bottom: 1px solid #E3E9EF; background: rgba(248, 248, 250, 0.5); }
-.hubly-cal-weekdays div { padding: 10px 4px; color: #6B7886; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-align: center; text-transform: uppercase; }
+.hubly-cal-weekdays div { padding: 10px 4px; color: var(--ui-text-4); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-align: center; text-transform: uppercase; }
 .hubly-cal-cell {
   min-height: 136px;
   padding: 6px;
@@ -815,7 +815,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   border: 1px solid #E3E9EF;
   border-radius: 6px;
   background: #FFFFFF;
-  color: #6B7886;
+  color: var(--ui-text-4);
   cursor: pointer;
   opacity: 0;
   transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -840,19 +840,19 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
 }
 .hubly-cal-chip-time { flex-shrink: 0; font-weight: 500; opacity: 0.8; font-variant-numeric: tabular-nums; }
 .hubly-cal-chip-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.hubly-cal-more { padding: 0 6px; color: #6B7886; font-size: 10.5px; font-weight: 600; }
+.hubly-cal-more { padding: 0 6px; color: var(--ui-text-4); font-size: 10.5px; font-weight: 600; }
 
 .hubly-cal-brands { overflow-x: auto; }
 .hubly-cal-brand-grid { display: grid; grid-template-columns: 150px repeat(7, minmax(112px, 1fr)); min-width: 934px; }
 .hubly-cal-brand-head { border-bottom: 1px solid #E3E9EF; background: rgba(248, 248, 250, 0.5); }
-.hubly-cal-brand-head div { padding: 10px; color: #6B7886; font-size: 11px; font-weight: 600; text-align: center; }
+.hubly-cal-brand-head div { padding: 10px; color: var(--ui-text-4); font-size: 11px; font-weight: 600; text-align: center; }
 .hubly-cal-brand-head div:first-child { text-align: left; }
 .hubly-cal-brand-head .is-today { color: var(--hb-accent-text); }
 .hubly-cal-brand-row { border-bottom: 1px solid rgba(232, 232, 240, 0.5); }
 .hubly-cal-brand-name { display: flex; align-items: center; gap: 8px; padding: 10px; font-size: 12.5px; font-weight: 600; }
 .hubly-cal-brand-cell { display: flex; flex-direction: column; gap: 4px; min-height: 72px; padding: 6px; border-left: 1px solid rgba(232, 232, 240, 0.5); cursor: pointer; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
 .hubly-cal-brand-cell:hover { background: rgb(var(--hb-accent-rgb) / 0.024); }
-.hubly-cal-more-brands { width: 100%; min-width: 934px; padding: 10px; border: none; background: transparent; color: #6B7886; font-size: 12px; font-weight: 600; text-align: left; cursor: pointer; }
+.hubly-cal-more-brands { width: 100%; min-width: 934px; padding: 10px; border: none; background: transparent; color: var(--ui-text-4); font-size: 12px; font-weight: 600; text-align: left; cursor: pointer; }
 .hubly-cal-more-brands:hover { color: var(--hb-accent-text); }
 
 .hubly-cal-overlay {
@@ -984,7 +984,7 @@ html.theme-switching, html.theme-switching *, html.theme-switching ::before, htm
 }
 .hubly-sidebar :is(.hubly-section-label, .hb-section-label) {
   padding: 12px 12px 8px;
-  color: #6B7886;
+  color: var(--ui-text-4);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -1036,10 +1036,10 @@ html.dark .hubly-app-root [style*="rgba(226, 232, 240"] { border-color: #3A5064 
   cursor: pointer;
 }
 .hubly-sidebar-brand i { flex-shrink: 0; width: 18px; height: 18px; border-radius: 5px; }
-.hubly-sidebar-brand svg { color: #6B7886; }
+.hubly-sidebar-brand svg { color: var(--ui-text-4); }
 .hubly-sidebar-panel { display: flex; flex-direction: column; flex: 1; min-height: 0; animation: hubly-fade-in 150ms ease both; }
 .hubly-sidebar-panel-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 8px 10px; }
-.hubly-sidebar-panel-head span { color: #6B7886; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+.hubly-sidebar-panel-head span { color: var(--ui-text-4); font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
 .hubly-sidebar-panel-head.is-chats { margin: 0 -12px 12px; padding: 12px 20px; border-bottom: 1px solid #E3E9EF; }
 .hubly-sidebar-panel-head.is-chats span { color: #111C27; font-size: 13px; letter-spacing: 0; text-transform: none; }
 .hubly-sidebar-panel-head button { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: none; border-radius: 7px; background: transparent; color: var(--hb-accent-text); cursor: pointer; }
@@ -1059,7 +1059,7 @@ html.dark .hubly-app-root [style*="rgba(226, 232, 240"] { border-color: #3A5064 
 }
 .hubly-sidebar-empty:hover { border-color: var(--hb-accent); }
 .hubly-sidebar-empty strong { color: #42505E; font-size: 12px; font-weight: 600; }
-.hubly-sidebar-empty small { color: #6B7886; font-size: 11px; }
+.hubly-sidebar-empty small { color: var(--ui-text-4); font-size: 11px; }
 .hubly-sidebar-empty.is-large { gap: 6px; padding: 28px 18px; }
 .hubly-sidebar-empty.is-large strong { font-size: 13.5px; }
 .hubly-sidebar-empty.is-large small { font-size: 12.5px; line-height: 1.4; }
@@ -1115,7 +1115,7 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 .hubly-hubi-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid #E3E9EF; }
 .hubly-hubi-head > div { display: flex; align-items: center; gap: 8px; }
 .hubly-hubi-head h2 { margin: 0; font-size: 14px; font-weight: 600; }
-.hubly-hubi-head button { display: grid; place-items: center; padding: 6px; border: none; border-radius: 8px; background: transparent; color: #6B7886; cursor: pointer; transition: background-color 150ms ease, color 150ms ease; }
+.hubly-hubi-head button { display: grid; place-items: center; padding: 6px; border: none; border-radius: 8px; background: transparent; color: var(--ui-text-4); cursor: pointer; transition: background-color 150ms ease, color 150ms ease; }
 .hubly-hubi-head button:hover { background: #F5F8FB; color: #111C27; }
 .hubly-hubi-intro { display: flex; flex-direction: column; gap: 8px; padding: 4px; text-align: center; }
 .hubly-hubi-avatar { position: relative; width: 48px; height: 48px; margin: 0 auto 2px; border-radius: 50%; }
@@ -1124,7 +1124,7 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 @keyframes hubly-hubi-pulse { 50% { opacity: 0.45; } }
 .hubly-hubi-intro > strong { font-size: 14px; font-weight: 600; letter-spacing: -0.02em; }
 .hubly-hubi-intro p { margin: 4px 4px 10px; font-size: 14px; line-height: 1.6; letter-spacing: -0.005em; }
-.hubly-hubi-intro > small { padding: 8px 4px 2px; color: #6B7886; font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-align: left; text-transform: uppercase; }
+.hubly-hubi-intro > small { padding: 8px 4px 2px; color: var(--ui-text-4); font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-align: left; text-transform: uppercase; }
 .hubly-hubi-action {
   display: flex;
   align-items: center;
@@ -1169,8 +1169,8 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 .hubly-hubi-composer:focus-within { border-color: var(--hb-accent); box-shadow: 0 0 0 3px rgb(var(--hb-accent-rgb) / 0.12); }
 .hubly-hubi-composer input { width: 100%; border: none; outline: none; background: transparent; color: #111C27; font-size: 14px; }
 .hubly-hubi-composer > div { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
-.hubly-hubi-composer span { flex: 1; color: #6B7886; font-size: 11px; }
-.hubly-hubi-composer button { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: none; border-radius: 50%; background: transparent; color: #6B7886; cursor: pointer; }
+.hubly-hubi-composer span { flex: 1; color: var(--ui-text-4); font-size: 11px; }
+.hubly-hubi-composer button { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: none; border-radius: 50%; background: transparent; color: var(--ui-text-4); cursor: pointer; }
 .hubly-hubi-composer button[type="submit"] { background: var(--hb-accent); color: #FFFFFF; transition: opacity 150ms ease; }
 .hubly-hubi-composer button:disabled { cursor: not-allowed; opacity: 0.45; }
 
@@ -1178,17 +1178,17 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 .hubly-cal-modal { max-width: 480px; max-height: calc(100dvh - 32px); padding: 24px 24px 18px; border-radius: 24px; }
 .hubly-cal-modal-head h2 { display: flex; align-items: center; gap: 10px; font-size: 18px; }
 .hubly-cal-modal-head h2 i { width: 12px; height: 12px; border-radius: 3px; }
-.hubly-cal-modal-close { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: none; border-radius: 8px; background: transparent; color: #6B7886; cursor: pointer; }
+.hubly-cal-modal-close { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: none; border-radius: 8px; background: transparent; color: var(--ui-text-4); cursor: pointer; }
 .hubly-cal-modal-close:hover { background: #F5F8FB; color: #111C27; }
 .hubly-cal-modal-scroll { display: flex; flex-direction: column; gap: 16px; min-height: 0; margin: 0 -4px; padding: 4px; overflow-y: auto; }
 .hubly-cal-field { display: flex; flex-direction: column; gap: 8px; }
-.hubly-cal-field > span { color: #6B7886; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
-.hubly-cal-field > small { color: #6B7886; font-size: 11.5px; }
+.hubly-cal-field > span { color: var(--ui-text-4); font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+.hubly-cal-field > small { color: var(--ui-text-4); font-size: 11.5px; }
 .hubly-cal-line { width: 100%; height: 40px; padding: 0 13px; border: 1px solid #D6DFE7; border-radius: 10px; outline: none; background: #FFFFFF; color: #111C27; font-size: 13.5px; transition: border-color 150ms ease, box-shadow 150ms ease; }
 .hubly-cal-line::placeholder { color: #C3CFDA; }
 .hubly-cal-line:focus { border-color: var(--hb-accent); box-shadow: 0 0 0 3px rgb(var(--hb-accent-rgb) / 0.12); }
 .hubly-cal-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.hubly-cal-types button { display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border: 1px solid #D6DFE7; border-radius: 10px; background: #FFFFFF; color: #6B7886; font-size: 12px; font-weight: 600; cursor: pointer; transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease; }
+.hubly-cal-types button { display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border: 1px solid #D6DFE7; border-radius: 10px; background: #FFFFFF; color: var(--ui-text-4); font-size: 12px; font-weight: 600; cursor: pointer; transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease; }
 .hubly-cal-types button[aria-checked="true"] { border-color: var(--hb-accent); background: rgb(var(--hb-accent-rgb) / 0.08); color: var(--hb-accent-text); }
 .hubly-cal-durations { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
 .hubly-cal-durations button { height: 24px; padding: 0 8px; border: 1px solid #D6DFE7; border-radius: 999px; background: #FFFFFF; color: #42505E; font-size: 11px; font-weight: 600; cursor: pointer; }
@@ -1204,23 +1204,23 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 /* Formulario de post */
 .hubly-composer-overlay { position: fixed; inset: 0; z-index: var(--layer-composer); display: flex; align-items: center; justify-content: center; padding: 24px 24px 24px var(--composer-left, 92px); pointer-events: none; transition: padding-left 220ms var(--ease-out); }
 .hubly-composer-overlay > .hubly-composer, .hubly-composer-overlay > .hubly-picker-scrim { pointer-events: auto; }
-.hubly-composer { display: flex; flex-direction: column; width: 100%; max-width: 1100px; height: min(756px, calc(100dvh - 48px)); overflow: hidden; border-radius: 22px; background: #FFFFFF; color: #111C27; box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22); }
+.hubly-composer { display: flex; flex-direction: column; width: 100%; max-width: 1100px; height: min(756px, calc(100dvh - 48px)); overflow: hidden; border: 1px solid var(--ui-border); border-radius: 22px; background: var(--ui-surface); color: var(--ui-text); box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22); }
 .hubly-composer-head { display: flex; align-items: flex-start; gap: 16px; padding: 20px 24px 14px; border-bottom: 1px solid #E3E9EF; }
 .hubly-composer-title { width: 100%; padding: 0; border: none; outline: none; background: transparent; color: #111C27; font-size: 21px; font-weight: 700; }
-.hubly-composer-title::placeholder { color: #C3CFDA; }
-.hubly-composer-badges { display: flex; gap: 6px; margin-top: 6px; }
-.hubly-composer-badges :is(span, em) { padding: 2px 8px; border-radius: 999px; font-size: 10.5px; font-style: normal; font-weight: 600; }
-.hubly-composer-badges span { background: #F1F1F6; color: #6B7886; }
+.hubly-composer-title::placeholder { color: var(--ui-text-4); }
+.hubly-composer-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+.hubly-composer-badges :is(span, em) { padding: 2px 8px; border-radius: 999px; font-size: 10.5px; font-style: normal; font-weight: 600; white-space: nowrap; }
+.hubly-composer-badges span { background: var(--ui-muted); color: var(--ui-text-4); }
 .hubly-composer-badges em { background: rgb(var(--hb-accent-rgb) / 0.1); color: var(--hb-accent-text); }
 .hubly-composer-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; padding: 9px 24px; border-bottom: 1px solid #E3E9EF; background: #FAFAFC; }
-.hubly-composer-meta > :is(button, label) { display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 10px; border: none; border-right: 1px solid #E3E9EF; background: transparent; color: #6B7886; font-size: 12.5px; cursor: pointer; }
+.hubly-composer-meta > :is(button, label) { display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 10px; border: none; border-right: 1px solid #E3E9EF; background: transparent; color: var(--ui-text-4); font-size: 12.5px; cursor: pointer; }
 .hubly-composer-meta > :last-child { border-right: none; }
 .hubly-composer-meta button:disabled { cursor: default; }
 .hubly-composer-meta button[aria-pressed="true"] { color: var(--hb-accent-text); }
 .hubly-composer-meta label i { width: 8px; height: 8px; border-radius: 50%; background: var(--hb-accent); }
 .hubly-composer-meta select { border: none; outline: none; background: transparent; color: #111C27; font: inherit; cursor: pointer; }
 .hubly-composer-tabs { display: flex; gap: 8px; padding: 0 20px; overflow-x: auto; border-bottom: 1px solid #E3E9EF; }
-.hubly-composer-tabs button { display: inline-flex; align-items: center; gap: 7px; height: 46px; padding: 0 12px; border: none; border-bottom: 2px solid transparent; background: transparent; color: #6B7886; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: color 150ms ease, border-color 150ms ease; }
+.hubly-composer-tabs button { display: inline-flex; align-items: center; gap: 7px; height: 46px; padding: 0 12px; border: none; border-bottom: 2px solid transparent; background: transparent; color: var(--ui-text-4); font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: color 150ms ease, border-color 150ms ease; }
 .hubly-composer-tabs button:hover { color: #42505E; }
 .hubly-composer-tabs button[aria-current] { border-bottom-color: var(--hb-accent); color: var(--hb-accent-text); }
 .hubly-composer-body { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0; }
@@ -1231,7 +1231,7 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 .hubly-composer-banner strong { font-size: 13.5px; font-weight: 600; }
 .hubly-composer-banner span { margin-top: 2px; color: #42505E; font-size: 12px; }
 .hubly-composer-networks { display: flex; flex-wrap: wrap; gap: 6px; }
-.hubly-composer-networks button { display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 1px solid transparent; border-radius: 50%; background: #F1F1F6; color: #6B7886; font-size: 14px; font-weight: 800; cursor: pointer; transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease; }
+.hubly-composer-networks button { display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 1px solid transparent; border-radius: 50%; background: #F1F1F6; color: var(--ui-text-4); font-size: 14px; font-weight: 800; cursor: pointer; transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease; }
 .hubly-composer-networks button:hover { color: #42505E; }
 .hubly-composer-networks button[aria-pressed="true"] { border-color: var(--hb-accent); background: rgb(var(--hb-accent-rgb) / 0.12); color: var(--hb-accent-text); }
 .hubly-composer-sources { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
@@ -1240,17 +1240,17 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 .hubly-composer-sources button:disabled { cursor: not-allowed; opacity: 0.6; }
 .hubly-composer-sources strong { font-size: 12.5px; font-weight: 500; line-height: 1.3; }
 .hubly-composer-sources b { color: var(--hb-accent-text); font-weight: 600; }
-.hubly-composer-sources small { display: block; color: #6B7886; font-size: 10.5px; }
+.hubly-composer-sources small { display: block; color: var(--ui-text-4); font-size: 10.5px; }
 .hubly-composer-chip { align-self: flex-start; padding: 5px 12px; border-radius: 999px; background: rgb(var(--hb-accent-rgb) / 0.18); color: var(--hb-accent-text); font-size: 12px; font-weight: 600; }
 .hubly-composer-caption { width: 100%; min-height: 130px; padding: 14px; border: 1px solid #E3E9EF; border-radius: 12px; outline: none; background: #F5F8FB; color: #111C27; font-size: 13.5px; line-height: 1.5; resize: vertical; transition: border-color 150ms ease; }
 .hubly-composer-caption:focus { border-color: var(--hb-accent); }
 .hubly-composer-schedule { display: flex; gap: 10px; }
-.hubly-composer-schedule label { flex: 1; color: #6B7886; font-size: 11px; font-weight: 600; }
+.hubly-composer-schedule label { flex: 1; color: var(--ui-text-4); font-size: 11px; font-weight: 600; }
 .hubly-composer-schedule input { margin-top: 4px; }
 .hubly-composer-todos { display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
 .hubly-composer-todos label { display: flex; align-items: center; gap: 8px; }
 .hubly-composer-preview { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 16px 24px; overflow-y: auto; border-left: 1px solid #E3E9EF; background: #FAFAFC; }
-.hubly-composer-preview > small { color: #C3CFDA; font-size: 11px; font-weight: 600; }
+.hubly-composer-preview > small { color: var(--ui-text-4); font-size: 11px; font-weight: 600; }
 .hubly-composer-network-pill { align-self: flex-start; padding: 4px 11px; border-radius: 999px; background: var(--hb-accent); color: #FFFFFF; font-size: 12px; font-weight: 600; }
 .hubly-composer-phone { position: relative; flex-shrink: 0; width: 196px; height: 412px; padding: 30px 0 12px; overflow: hidden; border: 3px solid #111C27; border-radius: 30px; background: #FFFFFF; color: #111C27; font-size: 9px; box-shadow: 0 18px 32px -20px rgba(26, 26, 46, 0.5); }
 .hubly-composer-notch { position: absolute; top: 7px; left: 50%; width: 54px; height: 14px; border-radius: 999px; background: #111C27; transform: translateX(-50%); }
@@ -1259,7 +1259,7 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 .hubly-composer-phone-user i { width: 20px; height: 20px; border: 1.5px solid var(--hb-accent); border-radius: 50%; }
 .hubly-composer-phone-media { display: grid; place-items: center; height: 232px; overflow: hidden; background: #F1F1F6; }
 .hubly-composer-phone-media img { width: 100%; height: 100%; object-fit: cover; }
-.hubly-composer-phone-media span { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #6B7886; }
+.hubly-composer-phone-media span { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--ui-text-4); }
 .hubly-composer-phone p { margin: 8px 10px 0; line-height: 1.35; overflow-wrap: anywhere; }
 .hubly-composer-foot { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 14px 24px; border-top: 1px solid #E3E9EF; }
 .hubly-composer-foot span { flex: 1; color: #DC2626; font-size: 12px; }
@@ -1877,8 +1877,11 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .np-gb-coupon { margin: 6px 12px; padding: 8px; border: 1.5px dashed #5F6368; border-radius: 8px; font-size: 13px; text-align: center; }
 .np-gb-cta { display: block; margin: 8px 12px 0; padding: 9px; border-radius: 999px; background: #1A73E8; color: #FFFFFF; font-size: 14px; font-weight: 600; text-align: center; }
 .hubly-composer-tabs { position: relative; }
+.hubly-composer-tabs-scroll { display: contents; }
 @media (max-width: 860px) {
-  .hubly-composer-mobile-preview { display: inline-flex !important; position: sticky; right: 0; flex-shrink: 0; background: var(--ui-surface) !important; box-shadow: -12px 0 12px -8px rgb(8 15 24 / 0.15); color: var(--hb-accent-text) !important; }
+  .hubly-composer-tabs { overflow: visible; }
+  .hubly-composer-tabs-scroll { display: flex; flex: 1; gap: 8px; min-width: 0; overflow-x: auto; }
+  .hubly-composer-mobile-preview { display: inline-flex !important; flex-shrink: 0; border-left: 1px solid var(--ui-border) !important; background: var(--ui-surface) !important; color: var(--hb-accent-text) !important; }
   .hubly-composer-foot small { display: none; }
   .hubly-phone-host { min-height: 560px; }
 }
@@ -1931,7 +1934,7 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-social-badge[data-tone="info"] { background: rgb(var(--hb-accent-rgb) / 0.14); color: var(--hb-accent-text); }
 .hubly-social-badge[data-tone="ok"] { background: color-mix(in srgb, #10B981 18%, var(--ui-surface)); color: var(--ui-text-1); }
 .hubly-social-badge[data-tone="danger"] { background: color-mix(in srgb, #EF4444 16%, var(--ui-surface)); color: var(--ui-text-1); }
-.hubly-social-week { display: grid; grid-template-columns: repeat(7, minmax(170px, 1fr)); gap: 10px; min-width: 1190px; }
+.hubly-social-week { display: grid; grid-template-columns: repeat(7, minmax(140px, 1fr)); gap: 10px; min-width: 1000px; }
 .hubly-social-week-col { display: flex; flex-direction: column; gap: 8px; min-height: 420px; padding: 10px; border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-surface); }
 .hubly-social-week-col[data-today] { border-color: var(--hb-accent); }
 .hubly-social-week-col header { display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; font-weight: 700; color: var(--ui-text-2); }
@@ -1967,13 +1970,13 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-social-cell { max-width: 170px; height: 30px; padding: 0 6px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: var(--ui-text-1); font: inherit; font-size: 12.5px; }
 .hubly-social-cell:hover:not(:disabled), .hubly-social-cell:focus { border-color: var(--ui-border-strong); }
 .hubly-social-kanban-head label { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--ui-text-2); }
-.hubly-social-kanban-head .hubly-social-cell { border-color: var(--ui-border); }
+.hubly-social-kanban-head .hubly-social-cell { max-width: none; border-color: var(--ui-border); }
 .hubly-social-kanban { display: flex; gap: 10px; align-items: flex-start; padding-bottom: 6px; }
 .hubly-social-column { display: flex; flex-direction: column; flex-shrink: 0; gap: 8px; width: 272px; padding: 10px; border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-surface); }
 .hubly-social-column[data-locked] { opacity: 0.55; }
 .hubly-social-column header { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: var(--ui-text-1); }
 .hubly-social-column header i { width: 9px; height: 9px; border-radius: 50%; }
-.hubly-social-column header b { margin-left: auto; font-size: 12px; color: var(--ui-text-3); }
+.hubly-social-column header b { font-size: 12px; font-weight: 600; color: var(--ui-text-4); font-variant-numeric: tabular-nums; }
 .hubly-social-column > div { display: flex; flex-direction: column; gap: 8px; }
 .hubly-social-kanban-item { display: flex; flex-direction: column; gap: 3px; }
 .hubly-social-kanban-item .hubly-social-cell { max-width: none; width: 100%; height: 26px; color: var(--ui-text-3); font-size: 11.5px; }
@@ -1987,7 +1990,7 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-import-source > button { justify-self: start; }
 .hubly-import-skip { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; font-size: 13px; }
 @media (max-width: 767.98px) {
-  .hubly-social-period h2 { font-size: 17px; }
+  .hubly-social-period h2 { font-size: 16px; }
   .hubly-social-tools { width: 100%; }
 }
 
@@ -2007,7 +2010,7 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-social-kcard-top small { display: block; margin-top: 3px; font-size: 11.5px; color: var(--ui-text-3); }
 .hubly-social-kcard-thumb { position: relative; display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 50px; border-radius: 6px; background: var(--ui-muted); overflow: hidden; text-align: center; }
 .hubly-social-kcard-thumb img, .hubly-social-kcard-thumb video { width: 100%; height: 100%; object-fit: cover; }
-.hubly-social-kcard-thumb small { margin: 0; font-size: 8.5px; line-height: 1.1; }
+.hubly-social-kcard-thumb { color: var(--ui-text-4); }
 .hubly-social-kcard-open em { font-size: 11px; font-style: normal; font-weight: 600; color: var(--hb-accent-text); }
 .hubly-social-kanban-item { position: relative; }
 .hubly-social-kanban-item > .hubly-social-cell { position: absolute; top: 4px; right: 4px; width: 22px !important; height: 22px !important; padding: 0; border-radius: 6px; opacity: 0; color: var(--ui-text-1); cursor: pointer; background: var(--ui-muted); }
@@ -2036,8 +2039,8 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-personas-list article { padding: 18px; border: 1px solid var(--ui-border); border-radius: 16px; background: var(--ui-surface); }
 .hubly-personas-list article[data-accepted] { border-color: var(--hb-accent); }
 .hubly-personas-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-.hubly-personas-head > span { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border-radius: 13px; background: var(--hb-accent); color: var(--on-accent); font-size: 14px; font-weight: 800; }
-.hubly-personas-head input { flex: 1 1 160px; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ui-text); font-size: 17px; font-weight: 800; }
+.hubly-personas-head > span { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px; background: var(--hb-accent); color: var(--on-accent); font-size: 14px; font-weight: 800; }
+.hubly-personas-head input { flex: 1 1 160px; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ui-text); font-size: 16px; font-weight: 800; }
 .hubly-personas-head button { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 10px; border: 1px solid var(--ui-border); border-radius: 999px; background: var(--ui-surface); color: var(--ui-text-2); font-size: 12px; font-weight: 600; cursor: pointer; }
 .hubly-personas-head button[aria-pressed="true"] { border-color: var(--hb-accent); background: rgb(var(--hb-accent-rgb) / 0.12); color: var(--hb-accent-text); }
 .hubly-personas-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
@@ -2249,7 +2252,7 @@ html.dark .hubly-cal-types button[aria-checked="true"] { border-color: var(--hb-
   .hubly-command-option { padding: 12px 16px; }
   .hubly-command-label, .hubly-command-description { white-space: normal; overflow-wrap: anywhere; }
   .hubly-command-meta { max-width: 64px; }
-  .hubly-command-shortcut, .hubly-command-hints { display: none; }
+  .hubly-command .hubly-command-shortcut, .hubly-command-hints { display: none; }
   .hubly-command-touch-hint { display: block; }
   .hubly-command-footer { gap: 8px; padding: 8px 16px; padding-bottom: max(8px, env(safe-area-inset-bottom)); }
   .hubly-command-close, .hubly-command-search .hubly-cal-modal-close { min-width: 44px; min-height: 44px; }
@@ -2262,3 +2265,56 @@ html.dark .hubly-cal-types button[aria-checked="true"] { border-color: var(--hb-
   .hubly-command-option { transition: none; }
   .hubly-sheet.hubly-command { animation: none; }
 }
+
+/* Editor de post: formato visible y selector de resultados como interruptor */
+.hubly-composer-formats { display: flex; flex-direction: column; gap: 6px; }
+.hubly-composer-formatrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.hubly-composer-formatrow > span { margin-right: 4px; color: var(--ui-text-3); font-size: 12.5px; font-weight: 600; }
+.hubly-composer-formats .hubly-composer-hint { margin: 0; }
+.hubly-social-menuitem input[role="switch"] { appearance: none; position: relative; flex-shrink: 0; width: 36px; height: 20px; margin: 0; border-radius: 999px; background: var(--ui-border-strong); cursor: pointer; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-social-menuitem input[role="switch"]::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--ui-surface); transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-social-menuitem input[role="switch"]:checked { background: var(--hb-accent); }
+.hubly-social-menuitem input[role="switch"]:checked::after { transform: translateX(16px); }
+.hubly-social-menuitem input[role="switch"]:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .hubly-social-menuitem input[role="switch"], .hubly-social-menuitem input[role="switch"]::after { transition: none; }
+}
+.hubly-social-card-row .hubly-social-badge { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+
+/* 20. Rutas de parrillas y anuncios: dos columnas que apilan en móvil -------- */
+.hubly-parrillas-cols { display: grid; grid-template-columns: minmax(0, 480px) minmax(0, 560px); gap: 48px; align-items: start; justify-content: space-between; }
+.hubly-parrillas-builder { display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 32px; min-height: 680px; }
+@media (max-width: 767.98px) {
+  .hubly-parrillas-cols { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .hubly-parrillas-builder { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+}
+
+/* 21. Móvil: objetivos táctiles de 44px y espacio para el aviso flotante ------- */
+.hubly-sidebar.has-profile-popover .hubly-sidebar-collapse-btn.hb-sidebar-collapse-btn { z-index: 1; }
+@media (max-width: 767.98px) {
+  .hubly-mobile-topbar :is(button, a) { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+  .hubly-mobile-tabbar > * { align-self: stretch; }
+  html:has(.hubly-sidebar.is-mobile-drawer-open) [data-mision-pildora] { display: none; }
+  html:has([data-mision-pildora]) .hubly-main.hb-main { padding-bottom: 56px; }
+
+  .hubly-sidebar.is-mobile-drawer-open :is(a, button, [role="button"]) { min-height: 44px; }
+  .hubly-app-root.hb-app-root .hubly-sidebar.is-mobile-drawer-open :is(.hubly-nav-item, .hb-nav-item) { min-height: 44px; }
+  .hubly-sidebar.is-mobile-drawer-open :is(.hubly-icon-btn, .hubly-sidebar-tab, button:has(> svg:only-child)) { min-width: 44px; }
+  .hubly-composer :is(button, [role="button"], [role="tab"], select, textarea, input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"])) { min-height: 44px; }
+  .hubly-composer :is(.hubly-cal-icon, .hubly-composer-networks button, .hubly-composer-toolbar button, button:has(> svg:only-child)) { min-width: 44px; }
+  :is(.hubly-main, .hubly-touch, .hubly-cal, .hubly-dashboard-subnav-wrap) :is(button, [role="button"], [role="tab"], [role="checkbox"], [role="switch"], [role="radio"], select, summary, textarea, input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"])) { min-height: 44px; }
+  :is(.hubly-main, .hubly-touch, .hubly-cal, .hubly-dashboard-subnav-wrap) :is(a[href], .hubly-subnav-tab) { display: inline-flex; align-items: center; min-height: 44px; }
+  :is(.hubly-main, .hubly-touch, .hubly-cal, .hubly-dashboard-subnav-wrap) :is(.hubly-icon-btn, .hubly-cal-icon, .hubly-cal-reveal, .hubly-cal-tab, .hubly-seg-pill, button:has(> svg:only-child)) { min-width: 44px; }
+  .hubly-main button[aria-label^="Tu cuenta"] { min-width: 44px; flex-shrink: 0; }
+  .hubly-main label:has(> input[type="checkbox"]) { display: inline-flex; align-items: center; min-height: 44px; }
+  /* La casilla de tarea conserva su circulo: el area de 44px va en un pseudoelemento. */
+  .hubly-main button[role="checkbox"][aria-label^="Completar "] { position: relative; min-height: 0; }
+  .hubly-main button[role="checkbox"][aria-label^="Completar "]::after { content: ""; position: absolute; inset: -13px; }
+}
+.hubly-pill-scroll > * { flex-shrink: 0; white-space: nowrap; }
+.hubly-cal-pill[aria-pressed="true"],
+html.dark .hubly-cal-pill[aria-pressed="true"] { border-color: var(--hb-accent); background: rgb(var(--hb-accent-rgb) / 0.14); color: var(--hb-accent-text); font-weight: 600; box-shadow: inset 0 0 0 1px var(--hb-accent); }
+.hubly-cal-tab { color: var(--ui-text-3); }
+.hubly-cal-tab[aria-selected="true"] { color: var(--hb-accent-text); }
+.hubly-cal-date.is-today span { color: var(--on-accent); }
+.hubly-cal-pill[aria-pressed="true"] .hubly-salud-count { color: var(--hb-accent-text); }
