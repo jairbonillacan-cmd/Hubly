@@ -1,15 +1,19 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { Plus, Trash2, X } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { askConfirm } from "@/components/app/AppDialogHost";
 import { useKanbanDrag } from "@/lib/use-kanban-drag";
 import { KanbanDropSlot } from "@/components/app/KanbanDropSlot";
 import type { Lead, LeadStage, Quote, QuoteItem, QuoteStatus } from "@/lib/types";
+import {
+  HublyCloseIcon as X,
+  HublyPlusIcon as Plus,
+  HublyTrashIcon as Trash2,
+} from "@/components/app/icons/DuotoneIcons";
 
 const STAGES: { key: LeadStage; label: string; dot: string }[] = [
-  { key: "nuevo", label: "Nuevo", dot: "#6C77C1" },
+  { key: "nuevo", label: "Nuevo", dot: "var(--hb-accent)" },
   { key: "contactado", label: "Contactado", dot: "#0EA5E9" },
   { key: "propuesta", label: "Propuesta", dot: "#D97706" },
   { key: "ganado", label: "Ganado", dot: "#10B981" },
@@ -108,7 +112,7 @@ export default function CrmPage() {
               const items = visible.filter((l) => l.stage === stage.key);
               const over = drag?.overCol === stage.key;
               return (
-                <div key={stage.key} {...getColumnProps(stage.key)} style={{ background: over ? "var(--ui-accent-soft)" : "var(--ui-surface-2)", border: `1px solid ${over ? "#6C77C1" : "var(--ui-border)"}`, borderRadius: 14, padding: 12, minHeight: 280, display: "flex", flexDirection: "column", gap: 8 }}>
+                <div key={stage.key} {...getColumnProps(stage.key)} style={{ background: over ? "var(--ui-accent-soft)" : "var(--ui-surface-2)", border: `1px solid ${over ? "var(--hb-accent)" : "var(--ui-border)"}`, borderRadius: 14, padding: 12, minHeight: 280, display: "flex", flexDirection: "column", gap: 8 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 700, color: "var(--ui-text)" }}>
                       <span style={{ width: 8, height: 8, borderRadius: 999, background: stage.dot }} />
@@ -378,6 +382,6 @@ const lab = { display: "grid", gap: 4, fontSize: 12, fontWeight: 600, color: "va
 const grid2 = { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 10 } as const;
 const cell = { padding: "10px 14px" } as const;
 const empty = { fontSize: 13.5, color: "var(--ui-text-4)", textAlign: "center", padding: 32, margin: 0 } as const;
-const primary = { display: "inline-flex", alignItems: "center", gap: 6, border: 0, borderRadius: 9, background: "#6C77C1", color: "#FFFFFF", padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" } as const;
+const primary = { display: "inline-flex", alignItems: "center", gap: 6, border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" } as const;
 const secondary = { display: "inline-flex", alignItems: "center", gap: 6, border: "1px solid var(--ui-border-strong)", borderRadius: 9, background: "var(--ui-surface)", color: "var(--ui-text-2)", padding: "7px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;
 const danger = { border: "1px solid #FECACA", background: "#FEF2F2", color: "#B91C1C", borderRadius: 9, padding: "7px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;

@@ -31,7 +31,7 @@ function ReporteView() {
     <main style={page}>
       <style>{`@media print { .no-print { display: none !important; } }`}</style>
       <div className="no-print" style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
-        <button type="button" onClick={() => window.print()} style={{ border: 0, borderRadius: 9, background: "#6C77C1", color: "#FFFFFF", padding: "9px 16px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
+        <button type="button" onClick={() => window.print()} style={{ border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "9px 16px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
           Imprimir o guardar PDF
         </button>
       </div>

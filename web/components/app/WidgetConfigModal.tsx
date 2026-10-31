@@ -1,20 +1,20 @@
 "use client";
 
 import React, { useEffect, useId, useRef, useState } from "react";
-import {
-  ArrowDown,
-  ArrowUp,
-  Check,
-  Columns,
-  Eye,
-  EyeOff,
-  LayoutGrid,
-  RotateCcw,
-  X,
-} from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import type { DashboardWidgetId } from "@/lib/types";
+import {
+  HublyArrowDownIcon as ArrowDown,
+  HublyArrowUpIcon as ArrowUp,
+  HublyBentoIcon as LayoutGrid,
+  HublyCheckIcon as Check,
+  HublyCloseIcon as X,
+  HublyEyeIcon as Eye,
+  HublyEyeOffIcon as EyeOff,
+  HublyKanbanIcon as Columns,
+  HublyRefreshIcon as RotateCcw,
+} from "@/components/app/icons/DuotoneIcons";
 
 export interface WidgetConfigModalProps {
   open?: boolean;
@@ -278,7 +278,7 @@ export function WidgetConfigModal({
                 height: 36,
                 borderRadius: 10,
                 background: "var(--ui-accent-soft)",
-                color: "#6C77C1",
+                color: "var(--hb-accent-text)",
                 display: "grid",
                 placeItems: "center",
                 flexShrink: 0,
@@ -348,8 +348,8 @@ export function WidgetConfigModal({
                 padding: "9px 14px",
                 borderRadius: 10,
                 background: "var(--ui-accent-soft)",
-                border: "1px solid #D9DCF0",
-                color: "#4C56A0",
+                border: "1px solid #BFE2F4",
+                color: "var(--hb-accent-edge)",
                 fontSize: 12.5,
                 fontWeight: 600,
               }}
@@ -407,7 +407,7 @@ export function WidgetConfigModal({
                       height: 24,
                       borderRadius: 9999,
                       border: "none",
-                      background: w.visible ? "#6C77C1" : "var(--ui-border-strong)",
+                      background: w.visible ? "var(--hb-accent)" : "var(--ui-border-strong)",
                       padding: 2,
                       cursor: "pointer",
                       display: "flex",
@@ -429,7 +429,7 @@ export function WidgetConfigModal({
                       }}
                     >
                       {w.visible ? (
-                        <Eye size={11} color="#6C77C1" />
+                        <Eye size={11} color="var(--hb-accent)" />
                       ) : (
                         <EyeOff size={11} color="#94A3B8" />
                       )}
@@ -459,7 +459,7 @@ export function WidgetConfigModal({
                           padding: "1px 7px",
                           borderRadius: 9999,
                           background: w.visible ? "var(--ui-accent-soft)" : "var(--ui-muted)",
-                          color: w.visible ? "#6C77C1" : "var(--ui-text-4)",
+                          color: w.visible ? "var(--hb-accent-text)" : "var(--ui-text-4)",
                           fontSize: 10.5,
                           fontWeight: 600,
                         }}
@@ -517,7 +517,7 @@ export function WidgetConfigModal({
                             borderRadius: 6,
                             border: "none",
                             background: isCurrent ? "var(--ui-surface)" : "transparent",
-                            color: isCurrent ? "#6C77C1" : "var(--ui-text-4)",
+                            color: isCurrent ? "var(--hb-accent-text)" : "var(--ui-text-4)",
                             fontSize: 11,
                             fontWeight: 600,
                             cursor: "pointer",
@@ -638,7 +638,7 @@ export function WidgetConfigModal({
                 padding: "0 18px",
                 borderRadius: 10,
                 border: "none",
-                background: "#6C77C1",
+                background: "var(--hb-accent)",
                 color: "#FFFFFF",
                 fontSize: 12.5,
                 fontWeight: 600,
@@ -646,7 +646,7 @@ export function WidgetConfigModal({
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 6,
-                boxShadow: "0 2px 6px rgba(91, 103, 202, 0.28)",
+                boxShadow: "0 2px 6px rgb(var(--hb-accent-rgb) / 0.28)",
               }}
             >
               <Check size={14} />

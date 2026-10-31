@@ -121,7 +121,7 @@ async function liveGet(requestedAgency: string | null) {
       ...(saved ?? {
         brandIds: data.brands.map((b) => b.id),
         brandsCount: data.brands.length,
-        avatarColor: "#6C77C1",
+        avatarColor: "#16324F",
         tasksCompleted: 0,
         tasksInProgress: 0,
         postsPublished: 0,

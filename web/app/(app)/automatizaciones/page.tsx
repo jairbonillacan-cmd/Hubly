@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Trash2 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import type { AutomationAction, AutomationRule, AutomationTrigger } from "@/lib/types";
+import {
+  HublyTrashIcon as Trash2,
+} from "@/components/app/icons/DuotoneIcons";
 
 const TRIGGERS: Record<AutomationTrigger, string> = {
   post_pending: "Un post se envía a revisión",
@@ -125,4 +127,4 @@ const card = { background: "var(--ui-surface)", border: "1px solid var(--ui-bord
 const h2 = { fontSize: 15, fontWeight: 700, color: "var(--ui-text)", margin: 0 } as const;
 const field = { width: "100%", border: "1px solid var(--ui-border-strong)", borderRadius: 9, padding: "8px 10px", fontSize: 13, fontFamily: "inherit", background: "var(--ui-surface)", minWidth: 0 } as const;
 const lab = { display: "grid", gap: 4, fontSize: 12, fontWeight: 600, color: "var(--ui-text-3)" } as const;
-const primary = { border: 0, borderRadius: 9, background: "#6C77C1", color: "#FFFFFF", padding: "7px 13px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;
+const primary = { border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "7px 13px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;

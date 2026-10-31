@@ -27,7 +27,7 @@ function HublyCatMedallion({
   const badgeColor =
     accentColor ||
     (variant === "report"
-      ? "#6C77C1"
+      ? "var(--hb-accent)"
       : variant === "space"
         ? "#0A7A55"
         : variant === "brand"
@@ -171,7 +171,7 @@ export function KraftNotebookCard({
             right: 12,
             width: 8,
             height: 16,
-            background: accentColor || "#5A65AF",
+            background: accentColor || "var(--hb-accent-hover)",
             borderRadius: "0 0 3px 3px",
             boxShadow: "0 1px 2px rgba(44, 26, 11, 0.25)",
             pointerEvents: "none",

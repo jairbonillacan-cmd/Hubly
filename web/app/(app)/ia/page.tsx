@@ -1,22 +1,23 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Paperclip,
-  FileText,
-  TrendingUp,
-  ArrowUp,
-  ChevronRight,
-  Check,
-  PlusCircle,
-  Plug,
-  Calendar,
-  Users,
-  Pin,
-} from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import { LiveUnavailable } from "@/components/app/LiveUnavailable";
 import { backendEnabled } from "@/lib/supabase/config";
+import {
+  HublyArrowUpIcon as ArrowUp,
+  HublyCalendarIcon as Calendar,
+  HublyCheckIcon as Check,
+  HublyChevronRightIcon as ChevronRight,
+  HublyDocumentIcon as FileText,
+  HublyPaperclipIcon as Paperclip,
+  HublyPeopleIcon as Users,
+  HublyPinIcon as Pin,
+  HublyPlugIcon as Plug,
+  HublyPlusCircleIcon as PlusCircle,
+  HublyPulseIcon as TrendingUp,
+} from "@/components/app/icons/DuotoneIcons";
 
 const SUGGESTION_PILLS = [
   "Dame ideas de contenido para esta semana",
@@ -24,96 +25,6 @@ const SUGGESTION_PILLS = [
   "Ayúdame a armar una estrategia de anuncios",
   "Escribe un copy para Instagram",
 ];
-
-function HublyIllustratedAvatar({ size = 40 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={Math.round(size * 1.1)}
-      viewBox="0 0 44 48"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Hair */}
-      <path
-        d="M13 13C13 8.5 16.8 5.2 22 5.2C27.2 5.2 31 8.5 31 13.5C31 15 30.5 16.5 30 17.5H14C13.5 16 13 14.5 13 13Z"
-        fill="#0F172A"
-      />
-      {/* Ears */}
-      <path
-        d="M14 19.5C12.3 19.5 11.4 20.6 11.4 22C11.4 23.4 12.3 24.4 14 24.4"
-        fill="#FFFFFF"
-        stroke="#0F172A"
-        strokeWidth="1.6"
-      />
-      <path
-        d="M30 19.5C31.7 19.5 32.6 20.6 32.6 22C32.6 23.4 31.7 24.4 30 24.4"
-        fill="#FFFFFF"
-        stroke="#0F172A"
-        strokeWidth="1.6"
-      />
-      {/* Head */}
-      <rect
-        x="14"
-        y="11.5"
-        width="16"
-        height="18.5"
-        rx="7"
-        fill="#FFFFFF"
-        stroke="#0F172A"
-        strokeWidth="1.7"
-      />
-      {/* Bangs */}
-      <path
-        d="M14.2 15C16.2 12.6 19.5 11.6 23 11.8C26 12 28.4 13.2 29.8 15"
-        stroke="#0F172A"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-      />
-      {/* Glasses */}
-      <rect
-        x="15.8"
-        y="17.2"
-        width="5.4"
-        height="4"
-        rx="1"
-        fill="#FFFFFF"
-        stroke="#0F172A"
-        strokeWidth="1.5"
-      />
-      <rect
-        x="22.8"
-        y="17.2"
-        width="5.4"
-        height="4"
-        rx="1"
-        fill="#FFFFFF"
-        stroke="#0F172A"
-        strokeWidth="1.5"
-      />
-      <line x1="21.2" y1="19" x2="22.8" y2="19" stroke="#0F172A" strokeWidth="1.5" />
-      {/* Smile */}
-      <path
-        d="M19.2 24.8C20.4 25.8 23.6 25.8 24.8 24.8"
-        stroke="#0F172A"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      {/* Neck */}
-      <path d="M19.5 30V33.5H24.5V30" fill="#FFFFFF" stroke="#0F172A" strokeWidth="1.5" />
-      {/* Shirt & Shoulders */}
-      <path
-        d="M10.5 44C11.4 37 15.5 33.5 22 33.5C28.5 33.5 32.6 37 33.5 44H10.5Z"
-        fill="#FFFFFF"
-        stroke="#0F172A"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path d="M18.5 33.5L22 38.5L25.5 33.5" stroke="#0F172A" strokeWidth="1.4" strokeLinejoin="round" />
-      <path d="M22 38.5V44" stroke="#0F172A" strokeWidth="1.4" />
-    </svg>
-  );
-}
 
 export default function HublyAIPage() {
   if (backendEnabled) return <LiveUnavailable title="Asistente de Hubly" text="El asistente con IA todavía no está conectado. Estará aquí cuando se integre el modelo." />;
@@ -176,7 +87,7 @@ function DemoHublyAIPage() {
           marginBottom: 24,
         }}
       >
-        <HublyIllustratedAvatar size={26} />
+        <HublyCatAvatar size={26} />
         <span style={{ fontSize: 15, fontWeight: 700, color: "var(--ui-text)" }}>Hubi</span>
       </div>
 
@@ -202,14 +113,14 @@ function DemoHublyAIPage() {
             borderRadius: "50%",
             background: "var(--ui-surface)",
             border: "1px solid var(--ui-muted)",
-            boxShadow: "0 6px 28px rgba(108, 119, 193, 0.25)",
+            boxShadow: "0 6px 28px rgb(var(--hb-accent-rgb) / 0.25)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             marginBottom: 10,
           }}
         >
-          <HublyIllustratedAvatar size={42} />
+          <HublyCatAvatar size={42} />
         </div>
 
         <div
@@ -270,7 +181,7 @@ function DemoHublyAIPage() {
               padding: "0 18px",
               borderRadius: 14,
               background: "#FEF9E7",
-              border: "1px solid #D9DCF0",
+              border: "1px solid #BFE2F4",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -296,7 +207,7 @@ function DemoHublyAIPage() {
               padding: "0 18px",
               borderRadius: 14,
               background: "var(--ui-accent-soft)",
-              border: "1px solid #E0E7FF",
+              border: "1px solid #DCEFF9",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -307,7 +218,7 @@ function DemoHublyAIPage() {
             }}
           >
             <span style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <Calendar size={16} style={{ color: "#6C77C1" }} />
+              <Calendar size={16} style={{ color: "var(--hb-accent-text)" }} />
               <span>Traer mis diseños y programarlos</span>
             </span>
             <ChevronRight size={15} style={{ color: "var(--ui-text-4)" }} />
@@ -469,7 +380,7 @@ function DemoHublyAIPage() {
                     );
                   }}
                   style={{
-                    background: m.addedToGrid ? "#DCFCE7" : "#6C77C1",
+                    background: m.addedToGrid ? "#DCFCE7" : "var(--hb-accent)",
                     color: m.addedToGrid ? "#15803D" : "#FFFFFF",
                     border: "none",
                     borderRadius: 9,
@@ -510,11 +421,11 @@ function DemoHublyAIPage() {
           width: "100%",
           maxWidth: 1080,
           margin: "0 auto",
-          border: "1.5px solid #D9DCF0",
+          border: "1.5px solid #BFE2F4",
           borderRadius: 18,
           background: "var(--ui-surface)",
           padding: "14px 16px 12px",
-          boxShadow: "0 4px 20px rgba(108, 119, 193, 0.08)",
+          boxShadow: "0 4px 20px rgb(var(--hb-accent-rgb) / 0.08)",
         }}
       >
         <textarea
@@ -616,7 +527,7 @@ function DemoHublyAIPage() {
               height: 30,
               borderRadius: "50%",
               border: "none",
-              background: input.trim() ? "#6C77C1" : "var(--ui-border-strong)",
+              background: input.trim() ? "var(--hb-accent)" : "var(--ui-border-strong)",
               color: "#FFFFFF",
               display: "flex",
               alignItems: "center",

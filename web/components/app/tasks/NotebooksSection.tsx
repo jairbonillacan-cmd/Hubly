@@ -1,9 +1,11 @@
 "use client";
 
-import { Plus } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { openNotebookModal } from "@/components/app/NotebookReaderModal";
 import { notebookPlainText } from "@/lib/notebook-content";
+import {
+  HublyPlusIcon as Plus,
+} from "@/components/app/icons/DuotoneIcons";
 
 export function useCreateNotebook() {
   const addNotebook = useHublyStore((s) => s.addNotebook);
@@ -36,7 +38,7 @@ export function NotebooksSection() {
           <h2 style={{ fontSize: 17, fontWeight: 700, color: "var(--ui-text)", margin: "0 0 3px" }}>Libretas de {brandName}</h2>
           <p style={{ fontSize: 12.5, color: "var(--ui-text-4)", margin: 0 }}>Minutas, ideas y listas de pendientes. Se guardan mientras escribes.</p>
         </div>
-        <button type="button" onClick={createNotebook} style={{ padding: "8px 14px", borderRadius: 10, border: "none", background: "#6C77C1", color: "#FFFFFF", fontSize: 13, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+        <button type="button" onClick={createNotebook} style={{ padding: "8px 14px", borderRadius: 10, border: "none", background: "var(--hb-accent)", color: "#FFFFFF", fontSize: 13, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
           <Plus size={14} /> Nueva libreta
         </button>
       </div>
@@ -64,8 +66,8 @@ export function NotebooksSection() {
             }}
           >
             <span aria-hidden="true" style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 12, background: "rgba(0,0,0,0.22)", borderRadius: "6px 0 0 6px" }} />
-            <span style={{ display: "block", width: "100%", background: "#F5F6FB", borderRadius: 10, padding: "12px 14px", border: "1px solid rgba(0,0,0,0.08)" }}>
-              <span style={{ display: "block", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#4C56A0", marginBottom: 4 }}>{nb.category}</span>
+            <span style={{ display: "block", width: "100%", background: "#F1F9FD", borderRadius: 10, padding: "12px 14px", border: "1px solid rgba(0,0,0,0.08)" }}>
+              <span style={{ display: "block", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--hb-accent-edge)", marginBottom: 4 }}>{nb.category}</span>
               <span style={{ display: "block", fontSize: 14, fontWeight: 700, color: "var(--ui-text-1)", lineHeight: 1.3 }}>{nb.title}</span>
             </span>
             <span style={{ display: "block", width: "100%" }}>

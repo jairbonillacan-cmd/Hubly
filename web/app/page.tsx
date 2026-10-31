@@ -1,14 +1,13 @@
 /*
  * THESIS: una landing de producto clara que se atreve a mostrar el flujo real (aprobar una publicación) en vez de prometerlo; rechaza logos y cifras inventadas.
- * OWN-WORLD: verde agencia, tinta verde oscura, amarillo marcador y coral; Bricolage Grotesque y Figtree; ventanas de app redondeadas con portadas dibujadas.
+ * OWN-WORLD: marino de la app, tinta y marcador celeste sobre blanco; Bricolage Grotesque y Figtree; ventanas de app redondeadas con portadas dibujadas.
  * STORY: el visitante reconoce su caos, ve cómo se ordena, entiende que es abierto y en desarrollo, y se une a la lista.
  * FIRST VIEWPORT: titular centrado grande, subtítulo, formulario de lista de espera y enlace a GitHub, con la demo asomando debajo.
  * FORM: dirección fijada por el usuario (landing de SaaS familiar); seed 72ca80b9.
  * FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance.
  */
-import Image from "next/image";
 import Link from "next/link";
-import hublyLogo from "@/public/brand/hubly-logo.webp";
+import { HublyBrandLogo } from "@/components/brand/HublyBrandLogo";
 import { Cover, type CoverKind } from "@/components/Cover";
 import { HeroDemo } from "@/components/HeroDemo";
 import { RoleTabs } from "@/components/RoleTabs";
@@ -107,9 +106,10 @@ const REPORT = [
 
 const ROADMAP = [
   { state: "done", title: "Repositorio, licencia y esta página" },
-  { state: "next", title: "Calendario y publicación programada" },
-  { state: "later", title: "Parrillas y aprobación por enlace" },
-  { state: "later", title: "Reportes y panel de anuncios" },
+  { state: "done", title: "Demo con parrillas, aprobación por enlace y reportes" },
+  { state: "next", title: "Cuentas reales, agencias y equipos" },
+  { state: "later", title: "Publicación programada en cada red" },
+  { state: "later", title: "Panel de anuncios conectado" },
   { state: "later", title: "Asistente con la voz de cada marca" },
 ];
 
@@ -123,7 +123,7 @@ const FAQ = [
   {
     question: "¿Ya puedo usar Hubly?",
     answer:
-      "Todavía no. El proyecto está empezando y la app aún no existe. Únete a la lista o sigue el repositorio para enterarte cuando haya algo que probar.",
+      "Ya puedes probar la demo con datos de ejemplo. Las cuentas reales y la publicación automática todavía no están listas: únete a la lista o sigue el repositorio para enterarte.",
   },
   {
     question: "¿Cuánto va a costar?",
@@ -157,10 +157,10 @@ const FAQ = [
   },
 ];
 
-function Logo({ preload = false }: { preload?: boolean }) {
+function Logo({ height = 42 }: { height?: number }) {
   return (
     <a href="#inicio" className="logo" aria-label="Hubly, inicio">
-      <Image src={hublyLogo} alt="Hubly" sizes="154px" preload={preload} />
+      <HublyBrandLogo on="light" height={height} />
     </a>
   );
 }
@@ -181,7 +181,7 @@ export default function Home() {
     <>
       <header className="nav">
         <div className="nav-inner">
-          <Logo preload />
+          <Logo />
           <nav aria-label="Principal">
             <a href="#como-funciona">Cómo funciona</a>
             <a href="#funciones">Funciones</a>
@@ -197,7 +197,7 @@ export default function Home() {
               <span>Entrar</span>
             </Link>
             <Link href="/dashboard" className="button button--primary button--small">
-              Abrir app demo
+              Probar la demo
             </Link>
           </div>
         </div>
@@ -206,27 +206,23 @@ export default function Home() {
       <main id="inicio">
         <section className="hero">
           <p className="hero-status">
-            <span aria-hidden="true" /> Workspace Multi-Marca · Demo interactiva disponible
+            <span aria-hidden="true" /> Código abierto · Demo con datos de ejemplo
           </p>
           <h1>
             Todas las marcas de tu agencia, en <mark>un solo lugar</mark>
           </h1>
           <p className="hero-lead">
-            Programa publicaciones, arma parrillas, consigue aprobaciones sin login y entrega reportes en 1 clic sin saltar entre diez herramientas.
+            Planea el mes, arma parrillas, consigue aprobaciones con un enlace y entrega reportes sin saltar entre diez herramientas.
           </p>
           <div className="hero-actions" id="lista">
             <WaitlistForm />
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
-              <Link href="/dashboard" className="button button--primary button--small">
-                Entrar al SaaS Demo →
+            <div className="hero-links">
+              <Link href="/dashboard" className="hero-github">
+                Probar la demo
               </Link>
               <Link href="/share/cafe-bruma-nov" className="hero-github">
-                Ver Portal de Cliente (Sin Login)
+                Ver lo que recibe tu cliente
               </Link>
-              <a href={REPO_URL} className="hero-github">
-                <GitHubIcon />
-                Seguir en GitHub
-              </a>
             </div>
           </div>
           <HeroDemo />
@@ -241,7 +237,7 @@ export default function Home() {
               <li key={line}>{line}</li>
             ))}
           </ul>
-          <p className="chaos-close">Hubly quiere juntar todo eso en una sola pantalla.</p>
+          <p className="chaos-close">Hubly junta todo eso en una sola pantalla.</p>
         </section>
 
         <section className="steps" id="como-funciona">
@@ -260,14 +256,14 @@ export default function Home() {
           </ol>
         </section>
 
-        <section className="features" id="funciones" aria-label="Funciones previstas">
+        <section className="features" id="funciones" aria-label="Funciones">
           <article className="feature">
             <div className="feature-text">
               <h2>La parrilla se arma sola</h2>
               <p>
                 Ordena las publicaciones por día y compártelas con un enlace o en PDF. Sin copiar y pegar en una presentación cada mes.
               </p>
-              <p className="planned">Función prevista</p>
+              <p className="planned planned--live">Disponible en la demo</p>
             </div>
             <div className="feature-visual feature-visual--yellow">
               <div className="grid-sheet">
@@ -290,7 +286,7 @@ export default function Home() {
               <p>
                 Sin cuenta y sin contraseña. Comenta o aprueba cada publicación, y tu equipo ve la respuesta en el mismo calendario.
               </p>
-              <p className="planned">Función prevista</p>
+              <p className="planned planned--live">Disponible en la demo</p>
             </div>
             <div className="feature-visual feature-visual--lilac">
               <div className="thread">
@@ -318,7 +314,7 @@ export default function Home() {
               <p>
                 Reúne los datos de las redes y los anuncios de cada cliente en un reporte mensual, sin pasar la tarde en una hoja de cálculo.
               </p>
-              <p className="planned">Función prevista</p>
+              <p className="planned planned--live">Disponible en la demo</p>
             </div>
             <div className="feature-visual feature-visual--coral">
               <div className="report">
@@ -460,7 +456,7 @@ export default function Home() {
 
         <section className="roadmap" aria-labelledby="roadmap-title">
           <h2 id="roadmap-title">Dónde estamos</h2>
-          <p>Preferimos decirlo claro: esto apenas empieza. El orden puede cambiar según lo que nos cuenten las agencias.</p>
+          <p>Preferimos decirlo claro: la demo ya se puede recorrer, pero todavía no sirve para trabajar con clientes reales. El orden puede cambiar según lo que nos cuenten las agencias.</p>
           <ol>
             {ROADMAP.map((item) => (
               <li key={item.title} className={`roadmap-${item.state}`}>
@@ -507,7 +503,7 @@ export default function Home() {
 
       <footer className="footer">
         <div className="footer-brand">
-          <Logo />
+          <Logo height={52} />
           <p>Código abierto bajo licencia AGPL-3.0</p>
         </div>
         <nav aria-label="Producto">

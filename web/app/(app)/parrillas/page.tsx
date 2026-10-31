@@ -2,31 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  Calendar,
-  Sparkles,
-  MessageCircle,
-  BarChart2,
-  LayoutGrid,
-  Presentation,
-  Link2,
-  Play,
-  Volume2,
-  VolumeX,
-  CheckCircle2,
-  MessageSquareWarning,
-  Edit3,
-  Plus,
-  ExternalLink,
-  Copy,
-  Check,
-  Home,
-  List,
-  Globe,
-  ChevronDown,
-  X,
-  ArrowLeft,
-} from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { backendEnabled } from "@/lib/supabase/config";
 import { currentAgencyId } from "@/lib/live-workspace";
@@ -37,8 +12,34 @@ import { FeedSimulator } from "@/components/app/social/FeedSimulator";
 import { MonthlyReport } from "@/components/app/reports/MonthlyReport";
 import { IdeasBoard } from "@/components/app/social/IdeasBoard";
 import { ProductionBoard } from "@/components/app/social/ProductionBoard";
+import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import { PostInbox } from "@/components/app/social/PostInbox";
 import { OrganicAnalytics } from "@/components/app/social/OrganicAnalytics";
+import {
+  HublyArrowLeftIcon as ArrowLeft,
+  HublyBentoIcon,
+  HublyBentoIcon as LayoutGrid,
+  HublyCalendarIcon,
+  HublyCalendarIcon as Calendar,
+  HublyChartIcon,
+  HublyChatIcon,
+  HublyChatIcon as MessageCircle,
+  HublyChatIcon as MessageSquareWarning,
+  HublyCheckCircleIcon as CheckCircle2,
+  HublyCheckIcon as Check,
+  HublyChevronDownIcon as ChevronDown,
+  HublyCloseIcon as X,
+  HublyCopyIcon as Copy,
+  HublyExternalIcon as ExternalLink,
+  HublyGlobeIcon as Globe,
+  HublyHomeIcon as Home,
+  HublyLinkIcon,
+  HublyPencilIcon as Edit3,
+  HublyPlusIcon as Plus,
+  HublyPresentationIcon,
+  HublyRowsIcon as List,
+  HublySparkIcon,
+} from "@/components/app/icons/DuotoneIcons";
 
 type SocialSubTab =
   | "calendario"
@@ -48,6 +49,13 @@ type SocialSubTab =
   | "tableros"
   | "reportes"
   | "links";
+
+const REPORT_PEEK = [
+  { label: "Instagram", value: 84 },
+  { label: "TikTok", value: 62 },
+  { label: "Facebook", value: 37 },
+  { label: "LinkedIn", value: 21 },
+];
 
 export default function ParrillasPage() {
   const brands = useHublyStore((s) => s.brands);
@@ -65,8 +73,6 @@ export default function ParrillasPage() {
   const [moreNetworksOpen, setMoreNetworksOpen] = useState(false);
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [accountsModalOpen, setAccountsModalOpen] = useState(false);
-  const [videoPlaying, setVideoPlaying] = useState(false);
-  const [videoMuted, setVideoMuted] = useState(true);
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedBio, setCopiedBio] = useState(false);
   const [linksSubTab, setLinksSubTab] = useState<"contenido" | "diseno" | "numeros">("contenido");
@@ -155,36 +161,19 @@ export default function ParrillasPage() {
     {
       id: "calendario",
       label: "Calendario",
-      icon: (
-        <span
-          style={{
-            width: 16,
-            height: 16,
-            borderRadius: 4,
-            background: "#6C77C1",
-            color: "#fff",
-            display: "inline-grid",
-            placeItems: "center",
-            fontSize: 10,
-            fontWeight: 800,
-          }}
-        >
-          17
-        </span>
-      ),
+      icon: <HublyCalendarIcon size={18} />,
     },
-    { id: "ideas", label: "Ideas", icon: <Sparkles size={14} /> },
-    { id: "mensajes", label: "Mensajes", icon: <MessageCircle size={14} /> },
-    { id: "analytics", label: "Analytics", icon: <BarChart2 size={14} /> },
-    { id: "tableros", label: "Tableros", icon: <LayoutGrid size={14} /> },
-    { id: "reportes", label: "Reportes", icon: <Presentation size={14} /> },
-    { id: "links", label: "Links", icon: <Link2 size={14} /> },
+    { id: "ideas", label: "Ideas", icon: <HublySparkIcon size={18} /> },
+    { id: "mensajes", label: "Mensajes", icon: <HublyChatIcon size={18} /> },
+    { id: "analytics", label: "Analytics", icon: <HublyChartIcon size={18} /> },
+    { id: "tableros", label: "Tableros", icon: <HublyBentoIcon size={18} /> },
+    { id: "reportes", label: "Reportes", icon: <HublyPresentationIcon size={18} /> },
+    { id: "links", label: "Links", icon: <HublyLinkIcon size={18} /> },
   ];
 
   return (
     <div
       style={{
-        fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
         color: "var(--ui-text)",
         minHeight: "calc(100vh - 64px)",
         position: "relative",
@@ -222,6 +211,7 @@ export default function ParrillasPage() {
                 key={item.id}
                 type="button"
                 aria-label={item.label}
+                aria-current={isActive ? "page" : undefined}
                 onClick={() => setActiveTab(item.id)}
                 style={{
                   display: "inline-flex",
@@ -231,7 +221,7 @@ export default function ParrillasPage() {
                   borderRadius: 999,
                   border: "none",
                   background: isActive ? "var(--ui-surface)" : "transparent",
-                  color: isActive ? "#6C77C1" : "var(--ui-text-3)",
+                  color: isActive ? "var(--hb-accent-text)" : "var(--ui-text-3)",
                   fontWeight: isActive ? 600 : 500,
                   fontSize: 13,
                   cursor: "pointer",
@@ -264,7 +254,7 @@ export default function ParrillasPage() {
             cursor: "pointer",
           }}
         >
-          <Link2 size={14} style={{ color: "var(--ui-text-4)" }} />
+          <HublyLinkIcon size={18} />
           <span>Cuentas</span>
         </button>
       </div>
@@ -288,7 +278,7 @@ export default function ParrillasPage() {
                   width: 24,
                   height: 24,
                   borderRadius: 999,
-                  background: "#6C77C1",
+                  background: "var(--hb-accent)",
                   color: "#FFFFFF",
                   fontSize: 12,
                   fontWeight: 700,
@@ -374,7 +364,7 @@ export default function ParrillasPage() {
               type="button"
               onClick={() => setImportModalOpen(true)}
               style={{
-                background: "#6C77C1",
+                background: "var(--hb-accent)",
                 color: "#FFFFFF",
                 border: "none",
                 borderRadius: 10,
@@ -428,7 +418,7 @@ export default function ParrillasPage() {
                       width: 22,
                       height: 22,
                       borderRadius: 999,
-                      background: "#6C77C1",
+                      background: "var(--hb-accent)",
                       color: "#FFFFFF",
                       fontSize: 11.5,
                       fontWeight: 700,
@@ -440,7 +430,7 @@ export default function ParrillasPage() {
                     1
                   </span>
                   <span style={{ fontWeight: 700, color: "var(--ui-text)" }}>Conecta una red</span>
-                  <span style={{ color: "#6C77C1", fontSize: 12.5, fontWeight: 600 }}>
+                  <span style={{ color: "var(--hb-accent-text)", fontSize: 12.5, fontWeight: 600 }}>
                     ← estás aquí
                   </span>
                 </div>
@@ -451,7 +441,7 @@ export default function ParrillasPage() {
                       width: 22,
                       height: 22,
                       borderRadius: 999,
-                      background: "#ECEEF8",
+                      background: "#E6F4FB",
                       color: "var(--ui-accent-text-2)",
                       fontSize: 11.5,
                       fontWeight: 700,
@@ -618,7 +608,7 @@ export default function ParrillasPage() {
                   background: "transparent",
                   border: "none",
                   padding: "6px 0",
-                  color: "#6C77C1",
+                  color: "var(--hb-accent-text)",
                   fontSize: 13,
                   fontWeight: 600,
                   cursor: "pointer",
@@ -687,49 +677,14 @@ export default function ParrillasPage() {
                     flexShrink: 0,
                   }}
                 >
-                  <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
-                    <path
-                      d="M9 12c0-4.5 3-7 7-7s7 2.5 7 7v2H9v-2z"
-                      fill="#0F172A"
-                    />
-                    <rect
-                      x="10"
-                      y="11"
-                      width="12"
-                      height="13"
-                      rx="6"
-                      fill="#FFFFFF"
-                      stroke="#0F172A"
-                      strokeWidth="1.8"
-                    />
-                    <rect
-                      x="11.5"
-                      y="14"
-                      width="3.8"
-                      height="2.8"
-                      rx="0.8"
-                      stroke="#0F172A"
-                      strokeWidth="1.4"
-                    />
-                    <rect
-                      x="16.7"
-                      y="14"
-                      width="3.8"
-                      height="2.8"
-                      rx="0.8"
-                      stroke="#0F172A"
-                      strokeWidth="1.4"
-                    />
-                    <line x1="15.3" y1="15.2" x2="16.7" y2="15.2" stroke="#0F172A" strokeWidth="1.4" />
-                    <path d="M14 20c1.2.8 2.8.8 4 0" stroke="#0F172A" strokeWidth="1.4" strokeLinecap="round" />
-                  </svg>
+                  <HublyCatAvatar size={26} />
                 </div>
                 <div style={{ fontSize: 12.5, lineHeight: 1.5, color: "var(--ui-text-3)" }}>
                   <strong style={{ color: "var(--ui-text)", fontWeight: 700 }}>
-                    Conectar es 100% seguro.
+                    La conexión directa todavía no está lista.
                   </strong>{" "}
-                  Hubly es una app aprobada por cada plataforma: entras con su login oficial, tu
-                  contraseña nunca pasa por aquí y desconectas en un clic cuando quieras.
+                  Por ahora preparas, apruebas y publicas a mano. Cuando llegue, entrarás con el login
+                  oficial de cada red y tu contraseña nunca pasará por aquí.
                 </div>
               </div>
 
@@ -791,7 +746,7 @@ export default function ParrillasPage() {
                   borderRadius: 12,
                   border: "1px solid var(--ui-border-strong)",
                   background: "var(--ui-surface)",
-                  color: "#6C77C1",
+                  color: "var(--hb-accent-text)",
                   fontSize: 13.5,
                   fontWeight: 600,
                   display: "flex",
@@ -805,232 +760,26 @@ export default function ParrillasPage() {
               </button>
             </div>
 
-            {/* Right Column: MARIANA · 13 S Video Card + CTA Card */}
+            {/* Right Column: vista previa del reporte + CTA Card */}
             <div>
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  letterSpacing: "0.06em",
-                  color: "var(--ui-text-4)",
-                  textTransform: "uppercase",
-                  marginBottom: 8,
-                }}
-              >
-                MARIANA · 13 S
-              </div>
+              <figure className="hubly-report-peek">
+                <figcaption>
+                  <strong>Tu reporte del mes</strong>
+                  <span>Datos de ejemplo</span>
+                </figcaption>
+                <ul>
+                  {REPORT_PEEK.map((row) => (
+                    <li key={row.label}>
+                      <span>{row.label}</span>
+                      <i style={{ width: `${row.value}%` }} />
+                      <b>{row.value} mil</b>
+                    </li>
+                  ))}
+                </ul>
+                <p>Alcance por red, listo para mandarle al cliente.</p>
+              </figure>
 
-              {/* 16:9 Video Preview Card */}
-              <div
-                onClick={() => setVideoPlaying(!videoPlaying)}
-                aria-label="Ver el video"
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") setVideoPlaying(!videoPlaying);
-                }}
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  aspectRatio: "16 / 9",
-                  borderRadius: 16,
-                  overflow: "hidden",
-                  background: "#B57C2A",
-                  cursor: "pointer",
-                  boxShadow: "0 4px 20px rgba(15, 23, 42, 0.08)",
-                }}
-              >
-                {/* Studio Background & Mariana Illustration matching 10-social-media-calendario-1440.png */}
-                <svg
-                  viewBox="0 0 550 310"
-                  width="100%"
-                  height="100%"
-                  preserveAspectRatio="xMidYMid slice"
-                  style={{ display: "block" }}
-                >
-                  {/* Warm mustard studio wall */}
-                  <rect width="550" height="310" fill="#B87D24" />
-                  <rect x="440" y="0" width="110" height="310" fill="#9E681A" />
-                  {/* White board edge on far left */}
-                  <rect x="0" y="0" width="58" height="310" fill="#E2E8F0" />
-                  <rect x="0" y="75" width="44" height="100" rx="4" fill="#F8FAFC" stroke="#CBD5E1" strokeWidth="2" />
-
-                  {/* Wooden Bookshelf Frame */}
-                  <rect x="60" y="0" width="12" height="310" fill="#4A3219" />
-                  <rect x="255" y="0" width="10" height="310" fill="#4A3219" />
-                  <rect x="425" y="0" width="12" height="310" fill="#4A3219" />
-                  <rect x="520" y="0" width="10" height="310" fill="#3B2611" />
-
-                  {/* Shelf 1 (Top) */}
-                  <rect x="60" y="58" width="375" height="10" fill="#3E2813" />
-                  {/* Soccer balls & basketball on top shelf */}
-                  <circle cx="102" cy="36" r="20" fill="#F8FAFC" stroke="#1E293B" strokeWidth="2" />
-                  <circle cx="102" cy="36" r="7" fill="#EF4444" />
-                  <circle cx="225" cy="34" r="22" fill="#F8FAFC" stroke="#1E293B" strokeWidth="2" />
-                  <path d="M212 24 L225 34 L238 24" stroke="#16A34A" strokeWidth="4" fill="none" />
-                  <circle cx="305" cy="38" r="16" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="2" />
-                  <circle cx="385" cy="36" r="20" fill="#EA580C" stroke="#7C2D12" strokeWidth="2" />
-                  <rect x="398" y="42" width="45" height="14" fill="#FACC15" />
-
-                  {/* Shelf 2 (Middle) */}
-                  <rect x="60" y="165" width="375" height="10" fill="#3E2813" />
-                  {/* Stack of books + Blue Vintage Model Car on left */}
-                  <rect x="92" y="148" width="115" height="8" fill="#1E293B" />
-                  <rect x="96" y="139" width="108" height="9" fill="#EAB308" />
-                  <rect x="100" y="130" width="100" height="9" fill="#F8FAFC" />
-                  {/* Blue classic toy car */}
-                  <path
-                    d="M110 130 L122 114 L162 114 L176 130 Z"
-                    fill="#38BDF8"
-                  />
-                  <rect x="102" y="123" width="84" height="9" rx="4" fill="#0284C7" />
-                  <circle cx="120" cy="131" r="6" fill="#0F172A" stroke="#E2E8F0" strokeWidth="2" />
-                  <circle cx="168" cy="131" r="6" fill="#0F172A" stroke="#E2E8F0" strokeWidth="2" />
-
-                  {/* Stack of books on right shelf */}
-                  <rect x="335" y="150" width="82" height="14" fill="#7F1D1D" />
-                  <rect x="340" y="138" width="74" height="12" fill="#F8FAFC" />
-                  <rect x="344" y="126" width="68" height="12" fill="#1E3A8A" />
-
-                  {/* Shelf 3 (Bottom) */}
-                  <rect x="60" y="275" width="375" height="10" fill="#3E2813" />
-                  {/* Vintage brown leather chest */}
-                  <rect x="85" y="218" width="96" height="57" rx="4" fill="#5C3A21" stroke="#3B2313" strokeWidth="2" />
-                  <rect x="125" y="238" width="16" height="12" rx="2" fill="#5A65AF" />
-
-                  {/* Mariana (Center Presenter) */}
-                  {/* Long dark brown hair back */}
-                  <path
-                    d="M225 92 C215 150 212 220 218 280 L345 280 C348 220 345 150 335 92 Z"
-                    fill="#2A1B12"
-                  />
-                  {/* Light grey t-shirt shoulders & torso */}
-                  <path
-                    d="M175 310 C182 238 215 212 280 212 C345 212 378 238 385 310 Z"
-                    fill="#CBD5E1"
-                  />
-                  {/* Neck */}
-                  <rect x="262" y="168" width="36" height="52" rx="14" fill="#E5B899" />
-                  {/* Face */}
-                  <ellipse cx="280" cy="122" rx="42" ry="52" fill="#ECC3A5" />
-                  {/* Hair front parting */}
-                  <path
-                    d="M238 115 C242 75 268 66 282 68 C302 66 322 80 324 125 C318 98 302 82 282 82 C260 82 245 96 238 115 Z"
-                    fill="#23150E"
-                  />
-                  {/* Eyebrows & Eyes */}
-                  <path d="M254 106 Q264 101 272 105" stroke="#2A1B12" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-                  <path d="M288 105 Q296 101 306 106" stroke="#2A1B12" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-                  <ellipse cx="263" cy="115" rx="5" ry="3.5" fill="#1E1B18" />
-                  <ellipse cx="297" cy="115" rx="5" ry="3.5" fill="#1E1B18" />
-                  {/* Warm smile */}
-                  <path
-                    d="M266 146 Q280 156 294 146"
-                    stroke="#B95846"
-                    strokeWidth="3"
-                    fill="#FFFFFF"
-                    strokeLinecap="round"
-                  />
-                  {/* Black wireless lapel mic on collar */}
-                  <rect
-                    x="232"
-                    y="216"
-                    width="22"
-                    height="24"
-                    rx="5"
-                    transform="rotate(-18 232 216)"
-                    fill="#1E293B"
-                    stroke="#475569"
-                    strokeWidth="1.5"
-                  />
-                  {/* Presenter gesturing hands */}
-                  <ellipse cx="285" cy="282" rx="26" ry="20" fill="#E5B899" />
-                </svg>
-
-                {/* Top-left 13 s pill */}
-                <span
-                  style={{
-                    position: "absolute",
-                    top: 12,
-                    left: 12,
-                    background: "rgba(255, 255, 255, 0.94)",
-                    color: "var(--ui-text)",
-                    fontSize: 11.5,
-                    fontWeight: 700,
-                    padding: "4px 10px",
-                    borderRadius: 999,
-                    boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
-                  }}
-                >
-                  {videoPlaying ? "Reproduciendo · 13 s" : "13 s"}
-                </span>
-
-                {/* Center Yellow Play Button (56x56px, #6C77C1) */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    display: "grid",
-                    placeItems: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 56,
-                      height: 56,
-                      borderRadius: 999,
-                      background: "#6C77C1",
-                      display: "grid",
-                      placeItems: "center",
-                      boxShadow: "0 8px 24px rgba(0, 0, 0, 0.25)",
-                      transform: videoPlaying ? "scale(0.92)" : "scale(1)",
-                      transition: "transform 0.15s ease",
-                    }}
-                  >
-                    <Play size={22} fill="#0F172A" color="#0F172A" style={{ marginLeft: 2 }} />
-                  </div>
-                </div>
-
-                {/* Bottom-right Mute Button */}
-                <button
-                  type="button"
-                  aria-label="Silenciar"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setVideoMuted(!videoMuted);
-                  }}
-                  style={{
-                    position: "absolute",
-                    right: 12,
-                    bottom: 12,
-                    width: 30,
-                    height: 30,
-                    borderRadius: 999,
-                    background: "rgba(255, 255, 255, 0.92)",
-                    border: "none",
-                    display: "grid",
-                    placeItems: "center",
-                    cursor: "pointer",
-                    color: "var(--ui-text)",
-                    boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-                  }}
-                >
-                  {videoMuted ? <Volume2 size={15} /> : <VolumeX size={15} />}
-                </button>
-              </div>
-
-              {/* Caption below video */}
-              <div
-                style={{
-                  fontSize: 12.5,
-                  color: "var(--ui-text-3)",
-                  margin: "10px 0 18px",
-                }}
-              >
-                Tu reporte, listo para presentar.
-              </div>
-
-              {/* Bottom Card: ¿Te dejo lista Min? */}
+              {/* Bottom Card */}
               <div
                 style={{
                   background: "var(--ui-surface-2)",
@@ -1042,28 +791,7 @@ export default function ParrillasPage() {
                   gap: 14,
                 }}
               >
-                {/* Mariana circular avatar */}
-                <div
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 999,
-                    background: "#B87D24",
-                    overflow: "hidden",
-                    flexShrink: 0,
-                    display: "grid",
-                    placeItems: "center",
-                    border: "2px solid var(--ui-surface)",
-                    boxShadow: "0 2px 6px rgba(15,23,42,0.1)",
-                  }}
-                >
-                  <svg viewBox="0 0 44 44" width="44" height="44">
-                    <rect width="44" height="44" fill="#B87D24" />
-                    <path d="M10 44 C12 32 16 28 22 28 C28 28 32 32 34 44 Z" fill="#CBD5E1" />
-                    <circle cx="22" cy="18" r="9" fill="#ECC3A5" />
-                    <path d="M13 18 C13 10 18 8 22 8 C26 8 31 10 31 18 C29 13 26 11 22 11 C18 11 15 13 13 18 Z" fill="#23150E" />
-                  </svg>
-                </div>
+                <HublyCatAvatar size={44} />
 
                 <div style={{ flex: 1 }}>
                   <div
@@ -1074,7 +802,7 @@ export default function ParrillasPage() {
                       marginBottom: 2,
                     }}
                   >
-                    ¿Te dejo lista {brandName}?
+                    ¿Quieres ver {brandName} armada?
                   </div>
                   <div
                     style={{
@@ -1083,14 +811,14 @@ export default function ParrillasPage() {
                       marginBottom: 12,
                     }}
                   >
-                    En 15 minutos sales con tu reporte armado.
+                    Recorre la parrilla y el reporte con datos de ejemplo, sin conectar nada.
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
                     <button
                       type="button"
                       onClick={() => setShowDemoData(true)}
                       style={{
-                        background: "#6C77C1",
+                        background: "var(--hb-accent)",
                         color: "#FFFFFF",
                         border: "none",
                         borderRadius: 10,
@@ -1100,7 +828,7 @@ export default function ParrillasPage() {
                         cursor: "pointer",
                       }}
                     >
-                      Que me lo deje listo
+                      Probar con datos de ejemplo
                     </button>
                     <a
                       href="/chat"
@@ -1119,7 +847,7 @@ export default function ParrillasPage() {
                         alignItems: "center",
                       }}
                     >
-                      Escribirle por WhatsApp
+                      Abrir el chat
                     </a>
                   </div>
                 </div>
@@ -1231,7 +959,7 @@ export default function ParrillasPage() {
                   padding: "8px 14px",
                   borderRadius: 10,
                   border: "none",
-                  background: "#6C77C1",
+                  background: "var(--hb-accent)",
                   color: "#FFFFFF",
                   fontSize: 12.5,
                   fontWeight: 600,
@@ -1385,7 +1113,7 @@ export default function ParrillasPage() {
                           padding: "7px 10px",
                           borderRadius: 8,
                           border: "none",
-                          background: "#6C77C1",
+                          background: "var(--hb-accent)",
                           color: "#FFFFFF",
                           fontSize: 12,
                           fontWeight: 600,
@@ -1473,7 +1201,7 @@ export default function ParrillasPage() {
                 borderRadius: 10,
                 border: "none",
                 background: "var(--ui-accent-soft)",
-                color: "#6C77C1",
+                color: "var(--hb-accent-text)",
                 display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
@@ -1558,7 +1286,7 @@ export default function ParrillasPage() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 6,
-                  background: "#6C77C1",
+                  background: "var(--hb-accent)",
                   color: "#FFFFFF",
                   borderRadius: 10,
                   padding: "8px 16px",
@@ -1590,13 +1318,13 @@ export default function ParrillasPage() {
                 height: 72,
                 borderRadius: 999,
                 background: "#DBEAFE",
-                color: "#6C77C1",
+                color: "var(--hb-accent-text)",
                 display: "grid",
                 placeItems: "center",
                 marginBottom: 18,
               }}
             >
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#6C77C1" strokeWidth="1.8">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--hb-accent)" strokeWidth="1.8">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                 <polyline points="14 2 14 8 20 8" />
                 <line x1="8" y1="17" x2="8" y2="13" />
@@ -1631,7 +1359,7 @@ export default function ParrillasPage() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 8,
-                background: "#6C77C1",
+                background: "var(--hb-accent)",
                 color: "#FFFFFF",
                 borderRadius: 12,
                 padding: "11px 22px",
@@ -1695,7 +1423,7 @@ export default function ParrillasPage() {
                 <span style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>
                   hubly.app/@{brandHandle}
                 </span>
-                <span style={{ fontSize: 12.5, fontWeight: 600, color: "#6C77C1" }}>
+                <span style={{ fontSize: 12.5, fontWeight: 600, color: "var(--hb-accent-text)" }}>
                   {copiedBio ? "¡Copiado!" : "Copiar"}
                 </span>
               </button>
@@ -1715,7 +1443,7 @@ export default function ParrillasPage() {
 
               <span
                 style={{
-                  background: "#6C77C1",
+                  background: "var(--hb-accent)",
                   color: "var(--ui-text)",
                   fontSize: 12,
                   fontWeight: 700,
@@ -1779,8 +1507,8 @@ export default function ParrillasPage() {
                       style={{
                         background: "transparent",
                         border: "none",
-                        borderBottom: active ? "2px solid #6C77C1" : "2px solid transparent",
-                        color: active ? "#6C77C1" : "var(--ui-text-4)",
+                        borderBottom: active ? "2px solid var(--hb-accent)" : "2px solid transparent",
+                        color: active ? "var(--hb-accent-text)" : "var(--ui-text-4)",
                         fontWeight: active ? 600 : 500,
                         fontSize: 13.5,
                         padding: "8px 0 12px",
@@ -1813,7 +1541,7 @@ export default function ParrillasPage() {
                     style={{
                       background: "transparent",
                       border: "none",
-                      color: "#6C77C1",
+                      color: "var(--hb-accent-text)",
                       fontSize: 13,
                       fontWeight: 600,
                       cursor: "pointer",
@@ -1907,7 +1635,7 @@ export default function ParrillasPage() {
                         height: 22,
                         borderRadius: 999,
                         border: "none",
-                        background: siguenosEnabled ? "#6C77C1" : "var(--ui-border-strong)",
+                        background: siguenosEnabled ? "var(--hb-accent)" : "var(--ui-border-strong)",
                         position: "relative",
                         cursor: "pointer",
                         transition: "background 0.15s ease",
@@ -1999,7 +1727,7 @@ export default function ParrillasPage() {
                             border: "none",
                             padding: 0,
                             marginTop: 2,
-                            color: "#6C77C1",
+                            color: "var(--hb-accent-text)",
                             fontSize: 12.5,
                             fontWeight: 600,
                             cursor: "pointer",
@@ -2039,7 +1767,7 @@ export default function ParrillasPage() {
                         height: 22,
                         borderRadius: 999,
                         border: "none",
-                        background: whatsappEnabled ? "#6C77C1" : "var(--ui-border-strong)",
+                        background: whatsappEnabled ? "var(--hb-accent)" : "var(--ui-border-strong)",
                         position: "relative",
                         cursor: "pointer",
                         transition: "background 0.15s ease",
@@ -2114,7 +1842,7 @@ export default function ParrillasPage() {
                       width: 38,
                       height: 38,
                       borderRadius: 10,
-                      background: "#6C77C1",
+                      background: "var(--hb-accent)",
                       color: "#FFFFFF",
                       display: "grid",
                       placeItems: "center",
@@ -2247,7 +1975,7 @@ export default function ParrillasPage() {
                   padding: "8px 16px",
                   borderRadius: 10,
                   border: "none",
-                  background: "#6C77C1",
+                  background: "var(--hb-accent)",
                   color: "#FFFFFF",
                   fontSize: 13,
                   fontWeight: 600,
@@ -2332,7 +2060,7 @@ export default function ParrillasPage() {
                       padding: "5px 12px",
                       borderRadius: 8,
                       border: "none",
-                      background: "#6C77C1",
+                      background: "var(--hb-accent)",
                       color: "#FFFFFF",
                       fontSize: 12,
                       fontWeight: 600,

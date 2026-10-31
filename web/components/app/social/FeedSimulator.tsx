@@ -45,7 +45,7 @@ export function FeedSimulator({ posts }: { posts: SocialPost[] }) {
           <div
             key={post.id}
             {...getColumnProps(post.id)}
-            style={{ aspectRatio: "4 / 5", overflow: "hidden", outline: drag?.overCol === post.id && drag.id !== post.id ? "3px solid #6C77C1" : undefined, outlineOffset: -3 }}
+            style={{ aspectRatio: "4 / 5", overflow: "hidden", outline: drag?.overCol === post.id && drag.id !== post.id ? "3px solid var(--hb-accent)" : undefined, outlineOffset: -3 }}
           >
             <div
               {...getCardProps(post.id)}

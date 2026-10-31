@@ -2,7 +2,6 @@
 
 import React from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Check, ChevronDown, ChevronUp, Sparkles, X } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { selectOnboardingStatus } from "@/lib/domain-selectors";
 import type { OnboardingProgress } from "@/lib/types";
@@ -11,6 +10,13 @@ import { InviteTeamModal } from "@/components/app/InviteTeamModal";
 import { NotebookReaderModal } from "@/components/app/NotebookReaderModal";
 import { WidgetConfigModal } from "@/components/app/WidgetConfigModal";
 import { AutoSuggestionsModal } from "@/components/app/AutoSuggestionsModal";
+import {
+  HublyCheckIcon as Check,
+  HublyChevronDownIcon as ChevronDown,
+  HublyChevronUpIcon as ChevronUp,
+  HublyCloseIcon as X,
+  HublySparkIcon as Sparkles,
+} from "@/components/app/icons/DuotoneIcons";
 
 export function DescubreHublyWidget() {
   const router = useRouter();
@@ -165,7 +171,7 @@ export function DescubreHublyWidget() {
                     padding: "2px 7px",
                     borderRadius: 9999,
                     background: "var(--ui-accent-soft)",
-                    color: "#6C77C1",
+                    color: "var(--hb-accent-text)",
                     fontSize: 11,
                     fontWeight: 700,
                   }}
@@ -206,7 +212,7 @@ export function DescubreHublyWidget() {
                 <div
                   style={{ display: "flex", alignItems: "center", gap: 7 }}
                 >
-                  <Sparkles size={13} style={{ color: "#6C77C1" }} />
+                  <Sparkles size={13} style={{ color: "var(--hb-accent-text)" }} />
                   <span
                     style={{
                       fontSize: 13,
@@ -284,7 +290,7 @@ export function DescubreHublyWidget() {
                     height: "100%",
                     width: `${status.progressPercent}%`,
                     borderRadius: 9999,
-                    background: "#6C77C1",
+                    background: "var(--hb-accent)",
                     transition: "width 0.25s ease",
                   }}
                 />
@@ -335,7 +341,7 @@ export function DescubreHublyWidget() {
                               ? "none"
                               : "1.5px solid #CBD5E1",
                             background: step.completed
-                              ? "#6C77C1"
+                              ? "var(--hb-accent)"
                               : "transparent",
                             color: "#FFFFFF",
                             display: "inline-flex",
@@ -382,7 +388,7 @@ export function DescubreHublyWidget() {
                           borderRadius: 6,
                           border: "1px solid var(--ui-border)",
                           background: "var(--ui-surface-2)",
-                          color: "#6C77C1",
+                          color: "var(--hb-accent-text)",
                           fontSize: 10.5,
                           fontWeight: 700,
                           cursor: "pointer",

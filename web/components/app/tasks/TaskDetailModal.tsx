@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { askConfirm } from "@/components/app/AppDialogHost";
 import { dueLabelFor } from "@/lib/date";
 import type { AgencyTask } from "@/lib/types";
 import { normalizedStatus } from "./task-utils";
+import {
+  HublyCloseIcon as X,
+} from "@/components/app/icons/DuotoneIcons";
 
 export function TaskDetailModal({
   task,
@@ -133,7 +135,7 @@ export function TaskDetailModal({
           >
             Eliminar
           </button>
-          <button type="submit" style={{ border: 0, background: "#6C77C1", color: "#FFFFFF", borderRadius: 9, padding: "8px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+          <button type="submit" style={{ border: 0, background: "var(--hb-accent)", color: "#FFFFFF", borderRadius: 9, padding: "8px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
             Guardar
           </button>
         </div>

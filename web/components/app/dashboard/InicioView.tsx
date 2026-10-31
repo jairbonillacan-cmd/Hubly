@@ -3,17 +3,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  Hash,
-  Plus,
-  RotateCcw,
-  Search,
-  Trash2,
-  X,
-} from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { NotebookEditor } from "@/components/app/NotebookEditor";
 import {
@@ -30,92 +19,32 @@ import type {
 import { KraftNotebookCard } from "@/components/app/KraftNotebookCard";
 import { PendientesModal } from "@/components/app/dashboard/PendientesModal";
 import { useModalPresence } from "@/lib/use-modal-presence";
+import { HublyCatAvatar, HublySunWeatherIcon, HublyClipboardIcon, HublyNotebookIcon, HublyCalendarIcon, HublyBellIcon } from "@/components/app/icons/HublyIcons";
 import {
-  HublyCatAvatar,
-  HublySunWeatherIcon,
-  HublyClipboardIcon,
-  HublyNotebookIcon,
-  HublyCalendarIcon,
-  HublyBellIcon,
-  BarChart2,
-  Megaphone,
-} from "@/components/app/icons/HublyIcons";
+  HublyArrowLeftIcon as ArrowLeft,
+  HublyArrowRightIcon as ArrowRight,
+  HublyBellIcon as DuoBellIcon,
+  HublyCalendarIcon as DuoCalendarIcon,
+  HublyChartIcon as BarChart2,
+  HublyCheckCircleIcon,
+  HublyCheckIcon as Check,
+  HublyCloseIcon as X,
+  HublyHashIcon,
+  HublyHashIcon as Hash,
+  HublyMegaphoneIcon as Megaphone,
+  HublyMoonIcon,
+  HublyPeopleIcon,
+  HublyPlusIcon as Plus,
+  HublyRefreshIcon as RotateCcw,
+  HublySearchIcon,
+  HublySearchIcon as Search,
+  HublyTagIcon,
+  HublyTrashIcon as Trash2,
+} from "@/components/app/icons/DuotoneIcons";
 
 /* ==========================================================================
    ICONOS E ILUSTRACIONES DE ESTADOS VACÍOS Y WIDGETS DE INICIO
    ========================================================================== */
-
-function QuickBuildingIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <rect
-        x="2.5"
-        y="2"
-        width="11"
-        height="12"
-        rx="2"
-        stroke="#64748B"
-        strokeWidth="1.4"
-      />
-      <path
-        d="M5.5 5.5H7M9 5.5H10.5M5.5 8.5H7M9 8.5H10.5M6.5 14V11.2H9.5V14"
-        stroke="#64748B"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function QuickUsersGroupIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <circle cx="6" cy="5.5" r="2.2" stroke="#64748B" strokeWidth="1.4" />
-      <path
-        d="M2.2 13C2.2 10.9 3.9 9.5 6 9.5C8.1 9.5 9.8 10.9 9.8 13"
-        stroke="#64748B"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
-      <circle cx="11.2" cy="6" r="1.7" stroke="#64748B" strokeWidth="1.3" />
-      <path
-        d="M10.5 12.8C10.8 11.3 12 10.3 13.6 10.5"
-        stroke="#64748B"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function WidgetCheckCircleIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <circle cx="8" cy="8" r="6.2" fill="#FFF1F2" stroke="#F43F5E" strokeWidth="1.4" />
-      <path
-        d="M5.5 8.2L7.2 9.9L10.7 6.3"
-        stroke="#E11D48"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function MoonWeatherIcon() {
-  return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <path
-        d="M25.5 19.6A10.6 10.6 0 0 1 12.4 6.5a10.6 10.6 0 1 0 13.1 13.1Z"
-        fill="#9099D3"
-        stroke="#5A65AF"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 function notebookStamp(index: number, updatedAt: string) {
   const date = new Date(updatedAt);
@@ -123,74 +52,6 @@ function notebookStamp(index: number, updatedAt: string) {
   if (Number.isNaN(date.getTime())) return number;
   const month = date.toLocaleDateString("es-MX", { month: "short" }).replace(".", "").toUpperCase();
   return `${number} · ${month} ${String(date.getFullYear()).slice(-2)}`;
-}
-
-function EmptyCalendarIllustration() {
-  return (
-    <svg width="26" height="26" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-      <rect
-        x="4"
-        y="6"
-        width="20"
-        height="18"
-        rx="4"
-        fill="#FFFFFF"
-        stroke="#5A65AF"
-        strokeWidth="1.6"
-      />
-      <path d="M4 11H24" stroke="#5A65AF" strokeWidth="1.5" />
-      <path
-        d="M9 4V7.5M19 4V7.5"
-        stroke="#5A65AF"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <circle cx="10" cy="15.5" r="1.2" fill="#6C77C1" />
-      <circle cx="14" cy="15.5" r="1.2" fill="#6C77C1" />
-      <circle cx="18" cy="15.5" r="1.2" fill="#6C77C1" />
-    </svg>
-  );
-}
-
-function EmptyBellIllustration() {
-  return (
-    <svg width="26" height="26" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-      <path
-        d="M14 5C10.1 5 7 8.1 7 12V16.5L5.2 19.2C4.8 19.8 5.2 20.6 6 20.6H22C22.8 20.6 23.2 19.8 22.8 19.2L21 16.5V12C21 8.1 17.9 5 14 5Z"
-        fill="#F5F6FB"
-        stroke="#5A65AF"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M11.5 21C11.9 22.4 12.8 23.2 14 23.2C15.2 23.2 16.1 22.4 16.5 21"
-        stroke="#5A65AF"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function EmptyShieldCheckIllustration() {
-  return (
-    <svg width="26" height="26" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-      <path
-        d="M14 4.5L21.5 7.5V13.8C21.5 18.6 18.3 22.3 14 23.8C9.7 22.3 6.5 18.6 6.5 13.8V7.5L14 4.5Z"
-        fill="#F5F6FB"
-        stroke="#5A65AF"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M10.8 14.2L13 16.4L17.5 11.8"
-        stroke="#059669"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
 }
 
 /* ==========================================================================
@@ -622,7 +483,7 @@ export function InicioView() {
                     padding: "3px 9px",
                     borderRadius: 999,
                     border: "1px solid rgba(226, 232, 240, 0.95)",
-                    background: filterByBrand ? "var(--ui-surface-2)" : "#F5F6FB",
+                    background: filterByBrand ? "var(--ui-surface-2)" : "#F1F9FD",
                     color: filterByBrand ? "var(--ui-text-4)" : "var(--ui-accent-text)",
                     cursor: "pointer",
                   }}
@@ -770,7 +631,7 @@ export function InicioView() {
               {visibleGroups.length === 0 ? (
                 <div className="hb-widget-empty" style={{ flex: 1 }}>
                   <div className="hb-empty-illus">
-                    <EmptyShieldCheckIllustration />
+                    <HublyCheckCircleIcon size={26} />
                   </div>
                   <div className="hb-empty-title">
                     Todo al día en {filterByBrand ? activeBrand?.name || "esta marca" : "tu agencia"}
@@ -1075,7 +936,7 @@ export function InicioView() {
             {todayAndApprovals.isEmptyToday ? (
               <div className="hb-widget-body hb-widget-empty">
                 <div className="hb-empty-illus">
-                  <EmptyCalendarIllustration />
+                  <DuoCalendarIcon size={26} />
                 </div>
                 <div className="hb-empty-title">Sin eventos para hoy</div>
                 <p className="hb-empty-desc">Hoy no sale nada programado.</p>
@@ -1180,7 +1041,7 @@ export function InicioView() {
             {unreadNotifications.length === 0 ? (
               <div className="hb-widget-body hb-widget-empty">
                 <div className="hb-empty-illus">
-                  <EmptyBellIllustration />
+                  <DuoBellIcon size={26} />
                 </div>
                 <div className="hb-empty-title">Sin notificaciones nuevas</div>
                 <p className="hb-empty-desc">
@@ -1201,8 +1062,8 @@ export function InicioView() {
                         gap: 10,
                         padding: "10px 12px",
                         borderRadius: 12,
-                        background: "#F5F6FB",
-                        border: "1px solid #ECEEF8",
+                        background: "#F1F9FD",
+                        border: "1px solid #E6F4FB",
                       }}
                     >
                       <div style={{ minWidth: 0 }}>
@@ -1221,7 +1082,7 @@ export function InicioView() {
                           fontWeight: 600,
                           color: "var(--ui-accent-text-2)",
                           background: "var(--ui-surface)",
-                          border: "1px solid #D9DCF0",
+                          border: "1px solid #BFE2F4",
                           borderRadius: 999,
                           padding: "2px 8px",
                           cursor: "pointer",
@@ -1248,14 +1109,14 @@ export function InicioView() {
             <div className="hb-widget-head">
               <div className="hb-widget-title">
                 <span className="hb-widget-icon-box">
-                  <WidgetCheckCircleIcon />
+                  <HublyCheckCircleIcon size={18} />
                 </span>
                 <span>Aprobaciones</span>
                 {todayAndApprovals.approvalsCount > 0 && (
                   <span className="hb-widget-badge">{todayAndApprovals.approvalsCount}</span>
                 )}
               </div>
-              <Link href="/aprobaciones" className="hb-widget-link">
+              <Link href="/parrillas" className="hb-widget-link">
                 Ver todas →
               </Link>
             </div>
@@ -1263,7 +1124,7 @@ export function InicioView() {
             {todayAndApprovals.isEmptyApprovals ? (
               <div className="hb-widget-body hb-widget-empty">
                 <div className="hb-empty-illus">
-                  <EmptyShieldCheckIllustration />
+                  <HublyCheckCircleIcon size={26} />
                 </div>
                 <div className="hb-empty-title">Sin aprobaciones pendientes</div>
                 <p className="hb-empty-desc">Nada esperando aprobación ✓</p>
@@ -1498,7 +1359,7 @@ export function InicioView() {
             {criticalProjects.length === 0 ? (
               <div className="hb-widget-body hb-widget-empty">
                 <div className="hb-empty-illus">
-                  <EmptyShieldCheckIllustration />
+                  <HublyCheckCircleIcon size={26} />
                 </div>
                 <div className="hb-empty-title">Sin proyectos en riesgo</div>
                 <p className="hb-empty-desc">Todos tus proyectos abiertos van en orden.</p>
@@ -1511,7 +1372,7 @@ export function InicioView() {
                       <span className="hubly-task-title" style={{ display: "block", fontWeight: 600 }}>
                         {project.title}
                       </span>
-                      <span style={{ fontSize: 11.5, color: "#8A8AAA" }}>
+                      <span style={{ fontSize: 11.5, color: "#6B7886" }}>
                         {brands.find((b) => b.id === project.brandId)?.name || "Marca"} · {project.status}
                       </span>
                     </span>
@@ -1538,7 +1399,7 @@ export function InicioView() {
             {greetingInfo.greetingPrefix}, {greetingInfo.userName}
           </span>
           <span className="hubly-weather" key={greetingInfo.period}>
-            {greetingInfo.period === "night" ? <MoonWeatherIcon /> : <HublySunWeatherIcon size={32} />}
+            {greetingInfo.period === "night" ? <HublyMoonIcon size={32} /> : <HublySunWeatherIcon size={32} />}
           </span>
         </h1>
         <p data-testid="dashboard-greeting-subtitle" className="hubly-hero-date">
@@ -1565,19 +1426,19 @@ export function InicioView() {
         </p>
         <div className="hubly-hero-actions">
           <button type="button" onClick={handleOpenNewPost} className="hbtn hbtn-secondary">
-            <Hash />
+            <HublyHashIcon size={18} />
             <span>Nuevo post</span>
           </button>
           <button type="button" onClick={handleOpenNewBrand} className="hbtn hbtn-secondary">
-            <QuickBuildingIcon />
+            <HublyTagIcon size={18} />
             <span>Nueva marca</span>
           </button>
           <button type="button" onClick={handleOpenInviteTeam} className="hbtn hbtn-secondary">
-            <QuickUsersGroupIcon />
+            <HublyPeopleIcon size={18} />
             <span>Invitar equipo</span>
           </button>
           <button type="button" onClick={handleOpenSearch} className="hbtn hbtn-gold" title="Buscar (Ctrl+K)">
-            <Search />
+            <HublySearchIcon size={18} />
             <span>Buscar</span>
           </button>
         </div>

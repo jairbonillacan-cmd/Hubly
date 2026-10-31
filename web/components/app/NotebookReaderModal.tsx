@@ -2,21 +2,21 @@
 
 import React, { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
-import {
-  BookOpen,
-  Check,
-  ExternalLink,
-  Plus,
-  Save,
-  Trash2,
-  X,
-} from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import { NotebookEditor } from "@/components/app/NotebookEditor";
 import { notebookPlainText, notebookTasks } from "@/lib/notebook-content";
 import { dueLabelFor, localIsoDate } from "@/lib/date";
+import {
+  HublyCheckIcon as Check,
+  HublyCloseIcon as X,
+  HublyExternalIcon as ExternalLink,
+  HublyNotebookIcon as BookOpen,
+  HublyPlusIcon as Plus,
+  HublySaveIcon as Save,
+  HublyTrashIcon as Trash2,
+} from "@/components/app/icons/DuotoneIcons";
 
 export interface NotebookReaderModalProps {
   open?: boolean;

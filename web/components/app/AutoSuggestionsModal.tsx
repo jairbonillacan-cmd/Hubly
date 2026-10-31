@@ -1,18 +1,6 @@
 "use client";
 
 import React, { useEffect, useId, useRef, useState } from "react";
-import {
-  Check,
-  FileText,
-  Globe,
-  MessageCircle,
-  Minus,
-  MousePointerClick,
-  Plus,
-  Sparkles,
-  TrendingUp,
-  X,
-} from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { selectAccountRecommendations } from "@/lib/domain-selectors";
@@ -21,6 +9,18 @@ import type {
   AccountRecommendation,
   RecommendationMetricKey,
 } from "@/lib/types";
+import {
+  HublyChatIcon as MessageCircle,
+  HublyCheckIcon as Check,
+  HublyCloseIcon as X,
+  HublyDocumentIcon as FileText,
+  HublyGlobeIcon as Globe,
+  HublyMinusIcon as Minus,
+  HublyPlusIcon as Plus,
+  HublyPulseIcon as TrendingUp,
+  HublySparkIcon as Sparkles,
+  HublyTargetIcon as MousePointerClick,
+} from "@/components/app/icons/DuotoneIcons";
 
 export interface SuggestedMetricItem {
   id: string;
@@ -540,7 +540,7 @@ export function AutoSuggestionsModal({
                 height: 36,
                 borderRadius: 10,
                 background: "var(--ui-accent-soft)",
-                color: "#6C77C1",
+                color: "var(--hb-accent-text)",
                 display: "grid",
                 placeItems: "center",
                 flexShrink: 0,
@@ -629,7 +629,7 @@ export function AutoSuggestionsModal({
                 border: "none",
                 background:
                   activeView === "reglas" ? "var(--ui-surface)" : "transparent",
-                color: activeView === "reglas" ? "#6C77C1" : "var(--ui-text-3)",
+                color: activeView === "reglas" ? "var(--hb-accent)" : "var(--ui-text-3)",
                 fontSize: 12,
                 fontWeight: 700,
                 cursor: "pointer",
@@ -650,7 +650,7 @@ export function AutoSuggestionsModal({
                 border: "none",
                 background:
                   activeView === "metricas" ? "var(--ui-surface)" : "transparent",
-                color: activeView === "metricas" ? "#6C77C1" : "var(--ui-text-3)",
+                color: activeView === "metricas" ? "var(--hb-accent)" : "var(--ui-text-3)",
                 fontSize: 12,
                 fontWeight: 700,
                 cursor: "pointer",
@@ -811,7 +811,7 @@ export function AutoSuggestionsModal({
                           gap: 4,
                           padding: "4px 10px",
                           borderRadius: 9999,
-                          background: diffAbs >= 0 ? "#DCFCE7" : "#ECEEF8",
+                          background: diffAbs >= 0 ? "#DCFCE7" : "#E6F4FB",
                           color: diffAbs >= 0 ? "#15803D" : "var(--ui-accent-text)",
                           fontSize: 12,
                           fontWeight: 800,
@@ -913,7 +913,7 @@ export function AutoSuggestionsModal({
                               textAlign: "center",
                               fontSize: 13.5,
                               fontWeight: 800,
-                              color: "#6C77C1",
+                              color: "var(--hb-accent-text)",
                             }}
                           >
                             {effectiveVal}
@@ -976,7 +976,7 @@ export function AutoSuggestionsModal({
                             borderRadius: 8,
                             border: "none",
                             background: "var(--ui-accent-soft)",
-                            color: "#6C77C1",
+                            color: "var(--hb-accent-text)",
                             fontSize: 12,
                             fontWeight: 700,
                             cursor: "pointer",
@@ -1029,9 +1029,9 @@ export function AutoSuggestionsModal({
                   style={{
                     padding: "7px 14px",
                     borderRadius: 9,
-                    border: "1px solid #D9DCF0",
+                    border: "1px solid #BFE2F4",
                     background: "var(--ui-accent-soft)",
-                    color: "#6C77C1",
+                    color: "var(--hb-accent-text)",
                     fontSize: 12,
                     fontWeight: 700,
                     cursor: "pointer",
@@ -1056,7 +1056,7 @@ export function AutoSuggestionsModal({
                     padding: "11px 14px",
                     borderRadius: 12,
                     border: m.checked
-                      ? "1px solid #D9DCF0"
+                      ? "1px solid #BFE2F4"
                       : "1px solid #E2E8F0",
                     background: m.checked ? "#F5F7FF" : "var(--ui-surface)",
                     cursor: "pointer",
@@ -1083,7 +1083,7 @@ export function AutoSuggestionsModal({
                         height: 18,
                         borderRadius: 5,
                         border: m.checked ? "none" : "1.5px solid var(--ui-border-strong)",
-                        background: m.checked ? "#6C77C1" : "var(--ui-surface)",
+                        background: m.checked ? "var(--hb-accent)" : "var(--ui-surface)",
                         color: "#FFFFFF",
                         display: "grid",
                         placeItems: "center",
@@ -1202,7 +1202,7 @@ export function AutoSuggestionsModal({
                 padding: "0 16px",
                 borderRadius: 10,
                 border: "none",
-                background: "#6C77C1",
+                background: "var(--hb-accent)",
                 color: "#FFFFFF",
                 fontSize: 12.5,
                 fontWeight: 600,
@@ -1210,7 +1210,7 @@ export function AutoSuggestionsModal({
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 6,
-                boxShadow: "0 2px 6px rgba(91, 103, 202, 0.28)",
+                boxShadow: "0 2px 6px rgb(var(--hb-accent-rgb) / 0.28)",
               }}
             >
               <Sparkles size={13} />

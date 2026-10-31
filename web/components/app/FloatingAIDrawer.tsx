@@ -1,19 +1,6 @@
 "use client";
 
 import React, { useEffect, useId, useRef, useState } from "react";
-import {
-  ArrowUp,
-  BarChart3,
-  CalendarDays,
-  CheckCircle2,
-  ChevronRight,
-  Maximize2,
-  Paperclip,
-  Plug,
-  Trash2,
-  Users,
-  X,
-} from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import {
@@ -23,6 +10,19 @@ import {
   selectTodayPostsAndApprovals,
 } from "@/lib/domain-selectors";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
+import {
+  HublyArrowUpIcon as ArrowUp,
+  HublyCalendarIcon as CalendarDays,
+  HublyChartIcon as BarChart3,
+  HublyCheckCircleIcon as CheckCircle2,
+  HublyChevronRightIcon as ChevronRight,
+  HublyCloseIcon as X,
+  HublyExpandIcon as Maximize2,
+  HublyPaperclipIcon as Paperclip,
+  HublyPeopleIcon as Users,
+  HublyPlugIcon as Plug,
+  HublyTrashIcon as Trash2,
+} from "@/components/app/icons/DuotoneIcons";
 
 export function HublyAvatarIllustration({ size = 34 }: { size?: number }) {
   return <HublyCatAvatar size={size} />;
@@ -478,7 +478,7 @@ export function FloatingAIDrawer() {
                               ? "14px 14px 4px 14px"
                               : "14px 14px 14px 4px",
                           background:
-                            turn.role === "user" ? "#6C77C1" : "var(--ui-surface-2)",
+                            turn.role === "user" ? "var(--hb-accent)" : "var(--ui-surface-2)",
                           border:
                             turn.role === "user"
                               ? "none"
@@ -509,9 +509,9 @@ export function FloatingAIDrawer() {
                             style={{
                               padding: "5px 11px",
                               borderRadius: 8,
-                              border: "1px solid #D9DCF0",
+                              border: "1px solid #BFE2F4",
                               background: "var(--ui-accent-soft)",
-                              color: "#6C77C1",
+                              color: "var(--hb-accent-text)",
                               fontSize: 11.5,
                               fontWeight: 700,
                               cursor: "pointer",

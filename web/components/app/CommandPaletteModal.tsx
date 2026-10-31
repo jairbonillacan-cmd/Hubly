@@ -2,27 +2,27 @@
 
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  BookOpen,
-  Building2,
-  Calendar,
-  CheckSquare,
-  CornerDownLeft,
-  FileText,
-  LayoutGrid,
-  Megaphone,
-  MessageSquare,
-  Plus,
-  Search,
-  Settings,
-  Sparkles,
-  UserPlus,
-  Users,
-} from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { openNotebookModal } from "@/components/app/NotebookReaderModal";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
+import {
+  HublyBentoIcon as LayoutGrid,
+  HublyBuildingIcon as Building2,
+  HublyCalendarIcon as Calendar,
+  HublyChatIcon as MessageSquare,
+  HublyClipboardIcon as CheckSquare,
+  HublyDocumentIcon as FileText,
+  HublyEnterIcon as CornerDownLeft,
+  HublyMegaphoneIcon as Megaphone,
+  HublyNotebookIcon as BookOpen,
+  HublyPeopleIcon as Users,
+  HublyPersonIcon as UserPlus,
+  HublyPlusIcon as Plus,
+  HublySearchIcon as Search,
+  HublySettingsIcon as Settings,
+  HublySparkIcon as Sparkles,
+} from "@/components/app/icons/DuotoneIcons";
 
 export interface CommandPaletteModalProps {
   open?: boolean;
@@ -123,7 +123,7 @@ export function CommandPaletteModal({
         label: "Crear o programar publicación",
         sublabel: "Abre el compositor de posts, Reels y Stories",
         badge: "Acción",
-        icon: <Plus size={14} style={{ color: "#6C77C1" }} />,
+        icon: <Plus size={14} style={{ color: "var(--hb-accent-text)" }} />,
         action: () => {
           handleClose();
           window.requestAnimationFrame(() => openComposer(null));
@@ -135,7 +135,7 @@ export function CommandPaletteModal({
         label: "Crear nueva marca / cuenta de cliente",
         sublabel: "Configura identidad y compromisos mensuales",
         badge: "Acción",
-        icon: <Building2 size={14} style={{ color: "#6C77C1" }} />,
+        icon: <Building2 size={14} style={{ color: "var(--hb-accent-text)" }} />,
         action: () => {
           handleClose();
           window.requestAnimationFrame(() => setNewBrandModalOpen(true));
@@ -147,7 +147,7 @@ export function CommandPaletteModal({
         label: "Invitar miembro al equipo",
         sublabel: "Genera invitación local con rol y marcas asignadas",
         badge: "Equipo",
-        icon: <UserPlus size={14} style={{ color: "#6C77C1" }} />,
+        icon: <UserPlus size={14} style={{ color: "var(--hb-accent-text)" }} />,
         action: () => {
           handleClose();
           window.requestAnimationFrame(() => setInviteModalOpen(true));
@@ -159,7 +159,7 @@ export function CommandPaletteModal({
         label: "Revisar sugerencias automáticas de metas",
         sublabel: "Motor de reglas sobre el cumplimiento del último mes",
         badge: "Salud",
-        icon: <Sparkles size={14} style={{ color: "#6C77C1" }} />,
+        icon: <Sparkles size={14} style={{ color: "var(--hb-accent-text)" }} />,
         action: () => {
           handleClose();
           window.requestAnimationFrame(() => setAutoSuggestionsModalOpen(true));
@@ -171,7 +171,7 @@ export function CommandPaletteModal({
         label: "Configurar widgets del Dashboard",
         sublabel: "Mostrar, ocultar, cambiar columna o reordenar widgets",
         badge: "Dashboard",
-        icon: <LayoutGrid size={14} style={{ color: "#6C77C1" }} />,
+        icon: <LayoutGrid size={14} style={{ color: "var(--hb-accent-text)" }} />,
         action: () => {
           handleClose();
           window.requestAnimationFrame(() => setWidgetConfigModalOpen(true));
@@ -197,7 +197,7 @@ export function CommandPaletteModal({
         group: "Navegación",
         label: "Dashboard · Inicio",
         sublabel: "Resumen operativo, tareas, libretas y aprobaciones",
-        icon: <LayoutGrid size={14} style={{ color: "#6C77C1" }} />,
+        icon: <LayoutGrid size={14} style={{ color: "var(--hb-accent-text)" }} />,
         action: () => {
           handleClose();
           router.push("/dashboard");
@@ -208,7 +208,7 @@ export function CommandPaletteModal({
         group: "Navegación",
         label: "Dashboard · Salud de Cuentas",
         sublabel: "Cumplimiento de entregas, presupuesto y estado de pauta",
-        icon: <Sparkles size={14} style={{ color: "#6C77C1" }} />,
+        icon: <Sparkles size={14} style={{ color: "var(--hb-accent-text)" }} />,
         action: () => {
           handleClose();
           router.push("/dashboard?tab=cuentas");
@@ -219,7 +219,7 @@ export function CommandPaletteModal({
         group: "Navegación",
         label: "Dashboard · Equipo",
         sublabel: "Carga operativa, actividad semanal e invitaciones",
-        icon: <Users size={14} style={{ color: "#6C77C1" }} />,
+        icon: <Users size={14} style={{ color: "var(--hb-accent-text)" }} />,
         action: () => {
           handleClose();
           router.push("/dashboard?tab=equipo");
@@ -230,7 +230,7 @@ export function CommandPaletteModal({
         group: "Navegación",
         label: "Mi Espacio (Tareas y Libretas Kraft)",
         sublabel: "Gestión de entregables y notas de estrategia",
-        icon: <CheckSquare size={14} style={{ color: "#6C77C1" }} />,
+        icon: <CheckSquare size={14} style={{ color: "var(--hb-accent-text)" }} />,
         action: () => {
           handleClose();
           router.push("/tareas");
@@ -241,7 +241,7 @@ export function CommandPaletteModal({
         group: "Navegación",
         label: "Calendario Editorial",
         sublabel: "Planeación mensual de publicaciones",
-        icon: <Calendar size={14} style={{ color: "#6C77C1" }} />,
+        icon: <Calendar size={14} style={{ color: "var(--hb-accent-text)" }} />,
         action: () => {
           handleClose();
           router.push("/calendario");
@@ -358,7 +358,7 @@ export function CommandPaletteModal({
         label: p.title,
         sublabel: `${b?.name || "Marca"} · ${p.network || p.networks?.[0] || "Instagram"} (${p.format}) · ${p.scheduledDate}`,
         badge: p.statusLabel || p.status,
-        icon: <FileText size={14} style={{ color: "#6C77C1" }} />,
+        icon: <FileText size={14} style={{ color: "var(--hb-accent-text)" }} />,
         action: () => {
           handleClose();
           window.requestAnimationFrame(() => openComposer(p.id));
@@ -385,7 +385,7 @@ export function CommandPaletteModal({
       label: m.name,
       sublabel: `${m.role} · ${m.email}`,
       badge: m.status,
-      icon: <Users size={14} style={{ color: "#6C77C1" }} />,
+      icon: <Users size={14} style={{ color: "var(--hb-accent-text)" }} />,
       action: () => {
         handleClose();
         router.push("/dashboard?tab=equipo");
@@ -766,7 +766,7 @@ export function CommandPaletteModal({
                               padding: "2px 7px",
                               borderRadius: 9999,
                               background: "var(--ui-accent-soft)",
-                              color: "#6C77C1",
+                              color: "var(--hb-accent-text)",
                             }}
                           >
                             {item.badge}

@@ -2,26 +2,26 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Camera,
-  CalendarPlus,
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  Filter,
-  Hash,
-  LayoutGrid,
-  ListChecks,
-  Plus,
-  Presentation,
-  Rows3,
-  Tag,
-  X,
-} from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { backendEnabled } from "@/lib/supabase/config";
 import { selectGreetingAndDate } from "@/lib/domain-selectors";
 import { useModalPresence } from "@/lib/use-modal-presence";
+import {
+  HublyBentoIcon as LayoutGrid,
+  HublyCalendarIcon as CalendarPlus,
+  HublyCameraIcon as Camera,
+  HublyCheckIcon as Check,
+  HublyChevronLeftIcon as ChevronLeft,
+  HublyChevronRightIcon as ChevronRight,
+  HublyClipboardIcon as ListChecks,
+  HublyCloseIcon as X,
+  HublyFilterIcon as Filter,
+  HublyHashIcon as Hash,
+  HublyPlusIcon as Plus,
+  HublyPresentationIcon as Presentation,
+  HublyRowsIcon as Rows3,
+  HublyTagIcon as Tag,
+} from "@/components/app/icons/DuotoneIcons";
 
 type CalendarView = "lista" | "mes" | "marca";
 type EntryKind = "post" | "tarea" | "actividad";
@@ -60,7 +60,7 @@ const NETWORKS = ["Instagram", "Facebook", "TikTok", "LinkedIn", "YouTube", "X",
 const FORMATS = ["Imagen", "Video", "Carrusel", "Reel", "Story", "Solo texto"];
 
 const KIND_STYLE: Record<EntryKind, { color: string; bg: string; Icon: typeof Hash }> = {
-  post: { color: "#6C77C1", bg: "rgba(108, 119, 193, 0.11)", Icon: Hash },
+  post: { color: "var(--hb-accent-text)", bg: "rgb(var(--hb-accent-rgb) / 0.11)", Icon: Hash },
   tarea: { color: "#6A6A8C", bg: "#F1F1F6", Icon: ListChecks },
   actividad: { color: "#A97FC4", bg: "rgba(201, 166, 224, 0.14)", Icon: Camera },
 };
@@ -471,7 +471,7 @@ export default function CalendarioPage() {
                         <span className="hubly-cal-checkbox">
                           {brandFilter.includes(brand.id) && <Check size={11} />}
                         </span>
-                        <span className="hubly-cal-brand-dot" style={{ background: brand.color || "#6C77C1" }}>
+                        <span className="hubly-cal-brand-dot" style={{ background: brand.color || "var(--hb-accent)" }}>
                           {brand.name.charAt(0)}
                         </span>
                         <span>{brand.name}</span>
@@ -648,7 +648,7 @@ export default function CalendarioPage() {
             {visibleBrands.map((brand) => (
               <div key={brand.id} className="hubly-cal-brand-grid hubly-cal-brand-row">
                 <div className="hubly-cal-brand-name">
-                  <span className="hubly-cal-brand-dot" style={{ background: brand.color || "#6C77C1" }}>
+                  <span className="hubly-cal-brand-dot" style={{ background: brand.color || "var(--hb-accent)" }}>
                     {brand.name.charAt(0)}
                   </span>
                   <span>{brand.name}</span>

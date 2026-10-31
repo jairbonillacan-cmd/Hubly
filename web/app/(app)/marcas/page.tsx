@@ -2,9 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Archive, ArchiveRestore, Plus, Search } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import type { BrandWorkspace } from "@/lib/types";
+import {
+  HublyArchiveIcon as Archive,
+  HublyArchiveIcon as ArchiveRestore,
+  HublyPlusIcon as Plus,
+  HublySearchIcon as Search,
+} from "@/components/app/icons/DuotoneIcons";
 
 type View = "cards" | "tabla" | "usuario";
 
@@ -93,7 +98,7 @@ export default function MarcasPage() {
       {view === "cards" && visible.length > 0 && (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))", gap: 14 }}>
           {visible.map((b) => (
-            <div key={b.id} role="button" tabIndex={0} onClick={() => open(b)} onKeyDown={(e) => { if (e.key === "Enter" && e.target === e.currentTarget) open(b); }} style={{ cursor: "pointer", background: "var(--ui-surface)", border: `1px solid ${b.id === activeBrandId ? "#6C77C1" : "var(--ui-border)"}`, borderRadius: 14, padding: 16 }}>
+            <div key={b.id} role="button" tabIndex={0} onClick={() => open(b)} onKeyDown={(e) => { if (e.key === "Enter" && e.target === e.currentTarget) open(b); }} style={{ cursor: "pointer", background: "var(--ui-surface)", border: `1px solid ${b.id === activeBrandId ? "var(--hb-accent)" : "var(--ui-border)"}`, borderRadius: 14, padding: 16 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
                 {badge(b)}
                 <span style={{ minWidth: 0, flex: 1 }}>
@@ -143,7 +148,7 @@ export default function MarcasPage() {
             return (
               <section key={m.id} style={{ background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 14, padding: 14 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-                  <span style={{ width: 30, height: 30, borderRadius: 999, background: m.avatarColor || "#6C77C1", color: "#FFFFFF", display: "grid", placeItems: "center", fontSize: 11.5, fontWeight: 700 }}>{m.initials}</span>
+                  <span style={{ width: 30, height: 30, borderRadius: 999, background: m.avatarColor || "var(--hb-accent)", color: "#FFFFFF", display: "grid", placeItems: "center", fontSize: 11.5, fontWeight: 700 }}>{m.initials}</span>
                   <strong style={{ fontSize: 14 }}>{m.name}</strong>
                   <span style={{ fontSize: 12, color: "var(--ui-text-4)" }}>{m.role} · {mine.length} marcas</span>
                 </div>

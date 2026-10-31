@@ -18,37 +18,37 @@
   --hubly-surface-secondary: #F8FAFC;
   --hubly-surface-tertiary: #F9FAFB;
   --hubly-surface-muted: #F1F5F9;
-  --hubly-surface-amber: #F5F6FB;
-  --hubly-surface-amber-pill: #ECEEF8;
-  --hubly-surface-indigo: #F0F1F9;
-  --hubly-surface-indigo-strong: #E0E7FF;
+  --hubly-surface-amber: #F1F9FD;
+  --hubly-surface-amber-pill: #E6F4FB;
+  --hubly-surface-indigo: #EAF6FC;
+  --hubly-surface-indigo-strong: #DCEFF9;
 
   /* Primary Accents (Indigo & Warm Amber) */
-  --primary: #6C77C1;
-  --primary-dark: #5360A5;
-  --primary-bg-35: rgba(108, 119, 193, 0.35);
-  --primary-bg-12: rgba(108, 119, 193, 0.12);
-  --primary-bg-06: rgba(108, 119, 193, 0.06);
-  --tinta-primary: #6C77C1;
+  --primary: var(--hb-accent);
+  --primary-dark: var(--hb-accent-text);
+  --primary-bg-35: rgb(var(--hb-accent-rgb) / 0.35);
+  --primary-bg-12: rgb(var(--hb-accent-rgb) / 0.12);
+  --primary-bg-06: rgb(var(--hb-accent-rgb) / 0.06);
+  --tinta-primary: var(--hb-accent);
   --hg-elegido: #5B4FCF;
-  --hubly-indigo: #6C77C1;
-  --hubly-indigo-hover: #5A65AF;
-  --hubly-indigo-vibrant: #6366F1;
-  --hubly-indigo-soft: #F0F1F9;
-  --hubly-indigo-tint: #E0E7FF;
+  --hubly-indigo: var(--hb-accent);
+  --hubly-indigo-hover: var(--hb-accent-hover);
+  --hubly-indigo-vibrant: #16324F;
+  --hubly-indigo-soft: #EAF6FC;
+  --hubly-indigo-tint: #DCEFF9;
 
-  --accent: #6C77C1;
+  --accent: var(--hb-accent);
   --accent-dark: #CF9529;
-  --accent-bg-35: rgba(108, 119, 193, 0.35);
-  --accent-bg-12: rgba(108, 119, 193, 0.12);
-  --accent-bg-06: rgba(108, 119, 193, 0.06);
-  --hubly-amber: #6C77C1;
-  --hubly-amber-warm: #6C77C1;
-  --hubly-amber-deep: #5A65AF;
-  --hubly-amber-text: #5360A5;
-  --hubly-amber-bg: #F5F6FB;
-  --hubly-amber-pill: #ECEEF8;
-  --hubly-amber-border: #D9DCF0;
+  --accent-bg-35: rgb(var(--hb-accent-rgb) / 0.35);
+  --accent-bg-12: rgb(var(--hb-accent-rgb) / 0.12);
+  --accent-bg-06: rgb(var(--hb-accent-rgb) / 0.06);
+  --hubly-amber: var(--hb-accent);
+  --hubly-amber-warm: var(--hb-accent);
+  --hubly-amber-deep: var(--hb-accent-hover);
+  --hubly-amber-text: var(--hb-accent-text);
+  --hubly-amber-bg: #F1F9FD;
+  --hubly-amber-pill: #E6F4FB;
+  --hubly-amber-border: #BFE2F4;
 
   /* Text Hierarchy */
   --text-primary: #1E293B;
@@ -70,10 +70,10 @@
   --hubly-success-bg: #ECFDF5;
   --hubly-success-text: #059669;
 
-  --warning: #6C77C1;
-  --hubly-warning: #6C77C1;
-  --hubly-warning-bg: #F5F6FB;
-  --hubly-warning-text: #5A65AF;
+  --warning: var(--hb-accent);
+  --hubly-warning: var(--hb-accent);
+  --hubly-warning-bg: #F1F9FD;
+  --hubly-warning-text: var(--hb-accent-hover);
 
   --error: #EF4444;
   --tinta-error: #DC2626;
@@ -100,11 +100,11 @@
   --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.05);
   --shadow-lg: 0 8px 32px rgba(15, 23, 42, 0.10), 0 2px 8px rgba(15, 23, 42, 0.06);
   --shadow-xl: 0 24px 64px rgba(15, 23, 42, 0.14), 0 8px 24px rgba(15, 23, 42, 0.08);
-  --shadow-hb: 0 8px 24px rgba(108, 119, 193, 0.35), 0 2px 8px rgba(108, 119, 193, 0.20);
-  --shadow-primary: 0 8px 24px rgba(108, 119, 193, 0.30), 0 2px 8px rgba(108, 119, 193, 0.15);
+  --shadow-hb: 0 8px 24px rgb(var(--hb-accent-rgb) / 0.35), 0 2px 8px rgb(var(--hb-accent-rgb) / 0.20);
+  --shadow-primary: 0 8px 24px rgb(var(--hb-accent-rgb) / 0.30), 0 2px 8px rgb(var(--hb-accent-rgb) / 0.15);
 
   /* Typography Families */
-  --hubly-font-sans: "Geist", "Inter", var(--font-jakarta), "Plus Jakarta Sans", "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --hubly-font-sans: var(--font-bricolage), "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --hubly-font-serif: "Instrument Serif", "Playfair Display", Georgia, var(--font-serif), "Young Serif", "Fraunces", Cambria, "Times New Roman", serif;
   --hubly-font-mono: "Geist Mono", "JetBrains Mono", var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
@@ -126,14 +126,14 @@
   --hb-text-secondary: #334155;
   --hb-text-muted: #64748B;
   --hb-text-subtle: #94A3B8;
-  --hb-indigo: #6C77C1;
-  --hb-indigo-hover: #5A65AF;
-  --hb-indigo-soft: #F0F1F9;
-  --hb-amber-bg: #F5F6FB;
-  --hb-amber-pill: #ECEEF8;
-  --hb-amber-border: #D9DCF0;
-  --hb-amber-text: #5360A5;
-  --hb-amber-accent: #6C77C1;
+  --hb-indigo: var(--hb-accent);
+  --hb-indigo-hover: var(--hb-accent-hover);
+  --hb-indigo-soft: #EAF6FC;
+  --hb-amber-bg: #F1F9FD;
+  --hb-amber-pill: #E6F4FB;
+  --hb-amber-border: #BFE2F4;
+  --hb-amber-text: var(--hb-accent-text);
+  --hb-amber-accent: var(--hb-accent);
   --hb-gold-avatar: #CAA052;
 
   /* Neutralize Landing Page CSS Variables Inside SaaS Root */
@@ -149,24 +149,24 @@
   --cream-3: #E2E8F0;
   --line: #E2E8F0;
   --line-strong: #CBD5E1;
-  --forest: #6C77C1;
-  --forest-soft: #F0F1F9;
-  --green: #6C77C1;
-  --green-deep: #5A65AF;
-  --green-pale: #F0F1F9;
-  --amber: #6C77C1;
-  --yellow: #6C77C1;
-  --yellow-pale: #ECEEF8;
+  --forest: var(--hb-accent);
+  --forest-soft: #EAF6FC;
+  --green: var(--hb-accent);
+  --green-deep: var(--hb-accent-hover);
+  --green-pale: #EAF6FC;
+  --amber: var(--hb-accent);
+  --yellow: var(--hb-accent);
+  --yellow-pale: #E6F4FB;
   --coral: #EF4444;
   --coral-deep: #DC2626;
   --coral-pale: #FEF2F2;
   --coral-soft: #FEF2F2;
-  --lilac: #E0E7FF;
-  --lilac-pale: #F0F1F9;
+  --lilac: #DCEFF9;
+  --lilac-pale: #EAF6FC;
   --display: var(--hubly-font-sans);
   --font-display: var(--hubly-font-sans);
   --font-body: var(--hubly-font-sans);
-  --shadow-card: 0 1px 2px rgba(26, 26, 46, 0.04), 0 12px 30px -20px rgba(108, 119, 193, 0.22);
+  --shadow-card: 0 1px 2px rgba(26, 26, 46, 0.04), 0 12px 30px -20px rgb(var(--hb-accent-rgb) / 0.22);
   --shadow-window: 0 24px 60px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.06);
 
   /* Root Shell Box & Typography Defaults */
@@ -240,7 +240,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) ::selection {
-  background: #ECEEF8;
+  background: #E6F4FB;
   color: #0F172A;
 }
 
@@ -250,7 +250,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 :is(.hubly-app-root, .hb-app-root) :focus-visible,
 :is(.hubly-app-root, .hb-app-root) .hubly-focus-ring:focus-visible {
-  outline: 2px solid #6C77C1 !important;
+  outline: 2px solid var(--hb-accent) !important;
   outline-offset: 2px !important;
 }
 
@@ -387,7 +387,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn:focus-visible {
-  outline: 2px solid #6C77C1 !important;
+  outline: 2px solid var(--hb-accent) !important;
   outline-offset: 2px !important;
 }
 
@@ -399,10 +399,10 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 :is(.hubly-app-root, .hb-app-root) .hbtn.is-selected,
 :is(.hubly-app-root, .hb-app-root) .hbtn[aria-pressed="true"] {
-  --hbtn-edge: #4C56A0;
-  background: #F0F1F9;
-  color: #6C77C1;
-  border-color: #6C77C1;
+  --hbtn-edge: var(--hb-accent-edge);
+  background: #EAF6FC;
+  color: var(--hb-accent-text);
+  border-color: var(--hb-accent);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn:disabled,
@@ -478,44 +478,44 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 /* 1. Indigo / Primary (.hbtn-indigo, .hbtn-primary) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-indigo,
 :is(.hubly-app-root, .hb-app-root) .hbtn-primary {
-  --hbtn-edge: #4C56A0;
-  background: #6C77C1;
+  --hbtn-edge: var(--hb-accent-edge);
+  background: var(--hb-accent);
   color: #FFFFFF;
-  border: 1px solid #5A65AF;
+  border: 1px solid var(--hb-accent-hover);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-indigo:hover:not(:disabled):not([aria-disabled="true"]),
 :is(.hubly-app-root, .hb-app-root) .hbtn-primary:hover:not(:disabled):not([aria-disabled="true"]) {
-  background: #5A65AF;
-  border-color: #4C56A0;
+  background: var(--hb-accent-hover);
+  border-color: var(--hb-accent-edge);
   color: #FFFFFF;
 }
 
 /* 2. Amber (.hbtn-amber, .hbtn-hb) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-amber,
 :is(.hubly-app-root, .hb-app-root) .hbtn-hb {
-  --hbtn-edge: #4C56A0;
+  --hbtn-edge: var(--hb-accent-edge);
   background: #FFFFFF;
   color: #0F172A;
-  border: 1.5px solid #6C77C1;
+  border: 1.5px solid var(--hb-accent);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-amber:hover:not(:disabled):not([aria-disabled="true"]),
 :is(.hubly-app-root, .hb-app-root) .hbtn-hb:hover:not(:disabled):not([aria-disabled="true"]) {
-  background: #F5F6FB;
-  border-color: #5A65AF;
+  background: #F1F9FD;
+  border-color: var(--hb-accent-hover);
   color: #0F172A;
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-amber-solid {
-  --hbtn-edge: #4C56A0;
-  background: #6C77C1;
+  --hbtn-edge: var(--hb-accent-edge);
+  background: var(--hb-accent);
   color: #4A3200;
-  border: 1px solid #6C77C1;
+  border: 1px solid var(--hb-accent);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-amber-solid:hover:not(:disabled):not([aria-disabled="true"]) {
-  background: #5A65AF;
+  background: var(--hb-accent-hover);
   color: #4A3200;
 }
 
@@ -524,7 +524,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   --hbtn-edge: #C9C9DC;
   background: #FFFFFF;
   color: #334155;
-  border: 1px solid #D4D4E4;
+  border: 1px solid #D6DFE7;
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-secondary:hover:not(:disabled):not([aria-disabled="true"]) {
@@ -610,13 +610,13 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-ghost-primary {
-  color: #6C77C1;
+  color: var(--hb-accent-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-ghost-primary:hover:not(:disabled):not([aria-disabled="true"]) {
-  background: #F0F1F9;
+  background: #EAF6FC;
   border-color: transparent;
-  color: #5A65AF;
+  color: var(--hb-accent-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-ghost-danger {
@@ -670,7 +670,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   border-radius: 16px;
   box-shadow:
     0 1px 2px rgba(26, 26, 46, 0.04),
-    0 12px 30px -20px rgba(108, 119, 193, 0.22);
+    0 12px 30px -20px rgb(var(--hb-accent-rgb) / 0.22);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hq-card-i {
@@ -684,7 +684,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   border-color: #CBD5E1;
   box-shadow:
     0 2px 4px rgba(26, 26, 46, 0.05),
-    0 20px 44px -22px rgba(108, 119, 193, 0.32);
+    0 20px 44px -22px rgb(var(--hb-accent-rgb) / 0.32);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hq-inset {
@@ -697,7 +697,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   border-radius: 20px;
   box-shadow:
     0 1px 2px rgba(26, 26, 46, 0.05),
-    0 10px 28px -14px rgba(108, 119, 193, 0.30);
+    0 10px 28px -14px rgb(var(--hb-accent-rgb) / 0.30);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hq-soft-i {
@@ -709,13 +709,13 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 :is(.hubly-app-root, .hb-app-root) .hq-soft-i:hover {
   box-shadow:
     0 2px 4px rgba(26, 26, 46, 0.06),
-    0 18px 40px -16px rgba(108, 119, 193, 0.42);
+    0 18px 40px -16px rgb(var(--hb-accent-rgb) / 0.42);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hq-soft-on {
   box-shadow:
-    0 0 0 2px #6C77C1,
-    0 10px 28px -14px rgba(108, 119, 193, 0.40);
+    0 0 0 2px var(--hb-accent),
+    0 10px 28px -14px rgb(var(--hb-accent-rgb) / 0.40);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hq-pop {
@@ -858,9 +858,9 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-nav-item, .hb-nav-item):is(.active, .is-selected, [aria-current="page"]) {
-  background: #F5F6FB;
-  border: 1px solid #D9DCF0;
-  color: #5360A5;
+  background: #F1F9FD;
+  border: 1px solid #BFE2F4;
+  color: var(--hb-accent-text);
   font-weight: 600;
 }
 
@@ -1012,17 +1012,17 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   transform: translateY(1px);
 }
 
-/* Active Pill Contract: Warm Amber #6C77C1 with white text & subtle shadow, plus segmented white/indigo support */
+/* Active Pill Contract: Warm Amber var(--hb-accent) with white text & subtle shadow, plus segmented white/indigo support */
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav-tab.is-amber-active, .hubly-subnav-tab[data-variant="amber"]:is(.active, .is-active, [aria-selected="true"])) {
-  background: #6C77C1;
+  background: var(--hb-accent);
   color: #FFFFFF;
-  border-color: #6C77C1;
+  border-color: var(--hb-accent);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav-tab, .hb-pill-tab, .saas-pill, .saas-subnav-item):is(.active, .is-active, [aria-selected="true"]) {
   background: #FFFFFF;
-  color: #6C77C1;
+  color: var(--hb-accent-text);
   border-color: rgba(226, 232, 240, 0.85);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
@@ -1042,7 +1042,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   border-radius: 16px;
   box-shadow:
     0 1px 2px rgba(26, 26, 46, 0.04),
-    0 12px 30px -20px rgba(108, 119, 193, 0.22);
+    0 12px 30px -20px rgb(var(--hb-accent-rgb) / 0.22);
   padding: 20px;
 }
 
@@ -1054,8 +1054,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-card-amber) {
-  background: #F5F6FB;
-  border: 1px solid #D9DCF0;
+  background: #F1F9FD;
+  border: 1px solid #BFE2F4;
   border-radius: 16px;
   padding: 16px 20px;
 }
@@ -1121,9 +1121,9 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .hubly-filter-pill:is(.active, .is-selected, [aria-pressed="true"]) {
-  background: #F5F6FB;
-  color: #5360A5;
-  border-color: #D9DCF0;
+  background: #F1F9FD;
+  color: var(--hb-accent-text);
+  border-color: #BFE2F4;
 }
 
 :is(.hubly-app-root, .hb-app-root) .hubly-filter-pill:disabled {
@@ -1159,8 +1159,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 :is(.hubly-app-root, .hb-app-root) .hubly-notebook-card:is(.is-selected, [aria-selected="true"]) {
   box-shadow:
-    0 0 0 2.5px #6C77C1,
-    0 10px 24px rgba(108, 119, 193, 0.25);
+    0 0 0 2.5px var(--hb-accent),
+    0 10px 24px rgb(var(--hb-accent-rgb) / 0.25);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hubly-notebook-card:is(:disabled, [aria-disabled="true"]) {
@@ -1222,15 +1222,15 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-primary {
-  background: #6C77C1;
+  background: var(--hb-accent);
   color: #FFFFFF;
-  border-color: #6C77C1;
-  box-shadow: 0 1px 2px rgba(91, 103, 202, 0.25);
+  border-color: var(--hb-accent);
+  box-shadow: 0 1px 2px rgb(var(--hb-accent-rgb) / 0.25);
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-primary:hover:not(:disabled) {
-  background: #5A65AF;
-  border-color: #5A65AF;
+  background: var(--hb-accent-hover);
+  border-color: var(--hb-accent-hover);
   color: #FFFFFF;
 }
 
@@ -1260,13 +1260,13 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 :is(.hubly-app-root, .hb-app-root) :is(.saas-btn-amber, .saas-btn-yellow) {
   background: #FFFFFF;
   color: #0F172A;
-  border: 1.5px solid #6C77C1;
-  box-shadow: 0 1px 3px rgba(108, 119, 193, 0.12);
+  border: 1.5px solid var(--hb-accent);
+  box-shadow: 0 1px 3px rgb(var(--hb-accent-rgb) / 0.12);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.saas-btn-amber, .saas-btn-yellow):hover:not(:disabled) {
-  background: #F5F6FB;
-  border-color: #5A65AF;
+  background: #F1F9FD;
+  border-color: var(--hb-accent-hover);
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-ink {
@@ -1309,8 +1309,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-badge-indigo, .saas-badge-forest, .saas-status-approved, .saas-status-scheduled, .saas-status-published) {
-  background: #F0F1F9;
-  color: #6C77C1;
+  background: #EAF6FC;
+  color: var(--hb-accent-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-badge-success) {
@@ -1319,8 +1319,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-badge-amber, .saas-badge-amber, .saas-status-pending) {
-  background: #ECEEF8;
-  color: #5360A5;
+  background: #E6F4FB;
+  color: var(--hb-accent-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-badge-danger, .saas-badge-coral, .saas-status-changes) {
@@ -1363,8 +1363,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-input, .saas-input, .hubly-select, .saas-select, .hubly-textarea, .saas-textarea):focus {
-  border-color: #6C77C1;
-  box-shadow: 0 0 0 3px rgba(91, 103, 202, 0.12);
+  border-color: var(--hb-accent);
+  box-shadow: 0 0 0 3px rgb(var(--hb-accent-rgb) / 0.12);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-input, .saas-input, .hubly-select, .saas-select, .hubly-textarea, .saas-textarea):disabled {
@@ -1395,8 +1395,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .hubly-checkbox:hover:not(:disabled) {
-  border-color: #6C77C1;
-  background: #F0F1F9;
+  border-color: var(--hb-accent);
+  background: #EAF6FC;
 }
 
 :is(.hubly-app-root, .hb-app-root) .hubly-checkbox:active:not(:disabled) {
@@ -1404,8 +1404,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .hubly-checkbox:is(:checked, .is-checked, [aria-checked="true"]) {
-  background: #6C77C1;
-  border-color: #6C77C1;
+  background: var(--hb-accent);
+  border-color: var(--hb-accent);
   color: #FFFFFF;
 }
 
@@ -1474,7 +1474,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-table, .saas-table) tbody tr:is(.is-selected, [aria-selected="true"]) td {
-  background: #F0F1F9;
+  background: #EAF6FC;
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-table, .saas-table) tbody tr:is(.is-disabled, [aria-disabled="true"]) td {

@@ -3,15 +3,6 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import {
-  CheckCircle2,
-  MessageSquareWarning,
-  Sparkles,
-  ArrowLeft,
-  Send,
-  Calendar,
-  ShieldCheck,
-} from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { backendEnabled } from "@/lib/supabase/config";
 import type { BrandWorkspace, SocialPost } from "@/lib/types";
@@ -22,6 +13,15 @@ import {
   POST_PREVIEW_CONFIG,
   socialPostToPreview,
 } from "@/components/previews/from-social-post";
+import {
+  HublyArrowLeftIcon as ArrowLeft,
+  HublyCalendarIcon as Calendar,
+  HublyChatIcon as MessageSquareWarning,
+  HublyCheckCircleIcon as CheckCircle2,
+  HublySendIcon as Send,
+  HublyShieldIcon as ShieldCheck,
+  HublySparkIcon as Sparkles,
+} from "@/components/app/icons/DuotoneIcons";
 
 function ClientSharePortalInner() {
   const params = useParams<{ token: string }>();

@@ -4,7 +4,6 @@ import {
   Figtree,
   Instrument_Serif,
   JetBrains_Mono,
-  Plus_Jakarta_Sans,
   Young_Serif,
 } from "next/font/google";
 import "./globals.css";
@@ -19,7 +18,7 @@ const wordmark = Young_Serif({
 const display = Bricolage_Grotesque({
   axes: ["opsz", "wdth"],
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-bricolage",
 });
 
 const body = Figtree({
@@ -39,12 +38,6 @@ const mono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-jakarta",
-});
-
 export const metadata: Metadata = {
   title: "Hubly: todas las marcas de tu agencia, en un solo lugar",
   description:
@@ -59,7 +52,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${display.variable} ${body.variable} ${serif.variable} ${mono.variable} ${jakarta.variable} ${wordmark.variable}`}
+      className={`${display.variable} ${body.variable} ${serif.variable} ${mono.variable} ${wordmark.variable}`}
       suppressHydrationWarning
     >
       <head>

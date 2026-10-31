@@ -92,7 +92,7 @@ export function AppDialogHost() {
           <button
             ref={confirmRef}
             type="submit"
-            style={{ border: 0, background: request.kind === "confirm" && request.danger ? "#B91C1C" : "#6C77C1", color: "#FFFFFF", borderRadius: 9, padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+            style={{ border: 0, background: request.kind === "confirm" && request.danger ? "#B91C1C" : "var(--hb-accent)", color: "#FFFFFF", borderRadius: 9, padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
           >
             {request.confirmLabel}
           </button>

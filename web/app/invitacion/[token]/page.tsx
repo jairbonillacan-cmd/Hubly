@@ -36,7 +36,7 @@ function InvitacionView() {
 
   const next = encodeURIComponent(`/invitacion/${token}`);
   return (
-    <main style={{ minHeight: "100vh", background: "#F5F6FB", display: "grid", placeItems: "center", padding: 16 }}>
+    <main style={{ minHeight: "100vh", background: "#F1F9FD", display: "grid", placeItems: "center", padding: 16 }}>
       <div style={{ width: "100%", maxWidth: 440, background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 18, padding: 24, color: "#0F172A", display: "grid", gap: 12 }}>
         {state === "loading" && <p style={{ margin: 0 }}>Cargando invitación…</p>}
         {state === "invalid" && (
@@ -58,7 +58,7 @@ function InvitacionView() {
           <>
             <h1 style={title}>Te invitaron a {invite.agency}</h1>
             <p style={text}>Para {invite.email}, con acceso de {ROLE_LABEL[invite.role] || invite.role}.</p>
-            <button type="button" onClick={accept} style={{ border: 0, borderRadius: 9, background: "#6C77C1", color: "#FFFFFF", padding: "10px 16px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
+            <button type="button" onClick={accept} style={{ border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "10px 16px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
               Aceptar invitación
             </button>
           </>

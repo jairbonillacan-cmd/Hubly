@@ -1,9 +1,16 @@
 "use client";
 
 import React, { useEffect, useId, useRef, useState } from "react";
-import { Building2, Check, Minus, Plus, Sparkles, X } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { useModalPresence } from "@/lib/use-modal-presence";
+import {
+  HublyBuildingIcon as Building2,
+  HublyCheckIcon as Check,
+  HublyCloseIcon as X,
+  HublyMinusIcon as Minus,
+  HublyPlusIcon as Plus,
+  HublySparkIcon as Sparkles,
+} from "@/components/app/icons/DuotoneIcons";
 
 export interface NewBrandModalProps {
   open?: boolean;
@@ -12,7 +19,7 @@ export interface NewBrandModalProps {
 }
 
 const COLOR_SWATCHES = [
-  "#6C77C1",
+  "#16324F",
   "#C87A51",
   "#2E5E4E",
   "#5B50D6",
@@ -638,10 +645,10 @@ export function NewBrandModal({
                       padding: "4px 10px",
                       borderRadius: 9999,
                       border: active
-                        ? "1px solid #D9DCF0"
+                        ? "1px solid #BFE2F4"
                         : "1px solid #E2E8F0",
                       background: active ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
-                      color: active ? "#6C77C1" : "var(--ui-text-3)",
+                      color: active ? "var(--hb-accent-text)" : "var(--ui-text-3)",
                       fontSize: 11.5,
                       fontWeight: 600,
                       cursor: "pointer",
@@ -941,7 +948,7 @@ export function NewBrandModal({
                 color: "var(--ui-text-4)",
               }}
             >
-              <Sparkles size={13} style={{ color: "#6C77C1" }} />
+              <Sparkles size={13} style={{ color: "var(--hb-accent-text)" }} />
               <span>
                 Crea automáticamente su libro de marca y enlace compartido
               </span>
@@ -973,7 +980,7 @@ export function NewBrandModal({
                   padding: "0 16px",
                   borderRadius: 10,
                   border: "none",
-                  background: "#6C77C1",
+                  background: "var(--hb-accent)",
                   color: "#FFFFFF",
                   fontSize: 12.5,
                   fontWeight: 600,
@@ -981,7 +988,7 @@ export function NewBrandModal({
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 6,
-                  boxShadow: "0 2px 6px rgba(91, 103, 202, 0.28)",
+                  boxShadow: "0 2px 6px rgb(var(--hb-accent-rgb) / 0.28)",
                 }}
               >
                 <Building2 size={14} />

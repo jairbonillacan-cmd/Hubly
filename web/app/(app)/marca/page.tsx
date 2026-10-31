@@ -1,8 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { Globe, RefreshCw, Check, Pencil, Zap, Target } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
+import {
+  HublyBoltIcon as Zap,
+  HublyCheckIcon as Check,
+  HublyGlobeIcon as Globe,
+  HublyPencilIcon as Pencil,
+  HublyRefreshIcon as RefreshCw,
+  HublySparkIcon,
+  HublyTargetIcon as Target,
+} from "@/components/app/icons/DuotoneIcons";
 
 interface DetailedPersona {
   id: string;
@@ -80,102 +89,6 @@ El problema que resuelve es encontrar proveedores de piezas naturales con estét
 
 const DEFAULT_CATEGORY = "minerales y cristales decorativos al mayoreo";
 
-function HublyCharacterAvatar({ size = 36 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={Math.round(size * 1.15)}
-      viewBox="0 0 40 46"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ flexShrink: 0 }}
-    >
-      {/* Hair */}
-      <path
-        d="M11 14C11 8.5 15 5 20.5 5C26 5 29.5 8.5 29.5 14C29.5 11.5 27 9.5 23.5 9.5C19 9.5 16 11 13 13.5L11 14Z"
-        fill="#0F172A"
-      />
-      <path
-        d="M12 11C12 7.5 15.8 4.5 20.5 4.5C25.5 4.5 29 7.2 29 11.5C29 13 28.5 15 28 16H12.5C12 14.5 12 12.5 12 11Z"
-        fill="#0F172A"
-      />
-      {/* Head / Face */}
-      <rect
-        x="12.5"
-        y="10.5"
-        width="15"
-        height="17"
-        rx="6.5"
-        fill="#FFFFFF"
-        stroke="#0F172A"
-        strokeWidth="1.6"
-      />
-      {/* Ears */}
-      <path
-        d="M12.5 17.5C11 17.5 10.2 18.5 10.2 19.8C10.2 21.1 11 22 12.5 22"
-        fill="#FFFFFF"
-        stroke="#0F172A"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M27.5 17.5C29 17.5 29.8 18.5 29.8 19.8C29.8 21.1 29 22 27.5 22"
-        fill="#FFFFFF"
-        stroke="#0F172A"
-        strokeWidth="1.5"
-      />
-      {/* Hair bangs */}
-      <path
-        d="M12.5 13.5C14.5 11.5 17.5 10.5 21 10.8C24 11 26.2 12.2 27.5 13.8"
-        stroke="#0F172A"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      {/* Glasses */}
-      <rect
-        x="14.2"
-        y="15.5"
-        width="5"
-        height="3.8"
-        rx="1"
-        fill="#FFFFFF"
-        stroke="#0F172A"
-        strokeWidth="1.4"
-      />
-      <rect
-        x="20.8"
-        y="15.5"
-        width="5"
-        height="3.8"
-        rx="1"
-        fill="#FFFFFF"
-        stroke="#0F172A"
-        strokeWidth="1.4"
-      />
-      <line x1="19.2" y1="17.2" x2="20.8" y2="17.2" stroke="#0F172A" strokeWidth="1.4" />
-      {/* Smile */}
-      <path
-        d="M17.5 22.5C18.5 23.4 21.5 23.4 22.5 22.5"
-        stroke="#0F172A"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
-      {/* Neck & Collar */}
-      <path d="M17.5 27.5V30.5H22.5V27.5" fill="#FFFFFF" stroke="#0F172A" strokeWidth="1.4" />
-      {/* Shoulders / Shirt */}
-      <path
-        d="M9.5 41C10.2 34.5 14 31 20 31C26 31 29.8 34.5 30.5 41H9.5Z"
-        fill="#FFFFFF"
-        stroke="#0F172A"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-      {/* Tie / Lapel detail */}
-      <path d="M17 31L20 35.5L23 31" stroke="#0F172A" strokeWidth="1.3" strokeLinejoin="round" />
-      <path d="M20 35.5V41" stroke="#0F172A" strokeWidth="1.3" />
-    </svg>
-  );
-}
-
 export default function MarcaCorePage() {
   const brands = useHublyStore((s) => s.brands);
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
@@ -246,7 +159,7 @@ export default function MarcaCorePage() {
             gap: 8,
           }}
         >
-          <Check size={15} style={{ color: "#6C77C1" }} />
+          <Check size={15} style={{ color: "var(--hb-accent-text)" }} />
           <span>{savedToast}</span>
         </div>
       )}
@@ -276,29 +189,14 @@ export default function MarcaCorePage() {
               width: 40,
               height: 40,
               borderRadius: "50%",
-              background: "#ECEEF8",
+              background: "#E6F4FB",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               flexShrink: 0,
             }}
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11 3L13.2 8.8L19 11L13.2 13.2L11 19L8.8 13.2L3 11L8.8 8.8L11 3Z"
-                fill="#5A65AF"
-              />
-              <path
-                d="M18.5 3.5L19.3 5.7L21.5 6.5L19.3 7.3L18.5 9.5L17.7 7.3L15.5 6.5L17.7 5.7L18.5 3.5Z"
-                fill="#6C77C1"
-              />
-            </svg>
+            <HublySparkIcon size={20} />
           </div>
           <div>
             <h3
@@ -419,7 +317,7 @@ export default function MarcaCorePage() {
             type="button"
             onClick={() => handleSaveBrand()}
             style={{
-              background: "#6C77C1",
+              background: "var(--hb-accent)",
               color: "#FFFFFF",
               fontSize: 13.5,
               fontWeight: 700,
@@ -473,7 +371,7 @@ export default function MarcaCorePage() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <HublyCharacterAvatar size={36} />
+          <HublyCatAvatar size={36} />
           <div>
             <h3
               style={{
@@ -527,7 +425,7 @@ export default function MarcaCorePage() {
             type="button"
             onClick={handleAcceptAll}
             style={{
-              background: "#6C77C1",
+              background: "var(--hb-accent)",
               border: "none",
               borderRadius: 12,
               height: 40,
@@ -578,7 +476,7 @@ export default function MarcaCorePage() {
                       width: 56,
                       height: 56,
                       borderRadius: 16,
-                      background: "#6366F1",
+                      background: "#16324F",
                       color: "#FFFFFF",
                       fontSize: 17,
                       fontWeight: 800,
@@ -650,7 +548,7 @@ export default function MarcaCorePage() {
                   onClick={() => setEditingId(isEditing ? null : persona.id)}
                   style={{
                     background: "var(--ui-accent-soft)",
-                    color: "#6C77C1",
+                    color: "var(--hb-accent-text)",
                     border: "none",
                     borderRadius: 999,
                     padding: "6px 14px",
@@ -670,7 +568,7 @@ export default function MarcaCorePage() {
               {/* Blockquote with yellow left border */}
               <blockquote
                 style={{
-                  borderLeft: "3px solid #6C77C1",
+                  borderLeft: "3px solid var(--hb-accent)",
                   paddingLeft: 14,
                   margin: "0 0 16px 0",
                 }}
@@ -750,8 +648,8 @@ export default function MarcaCorePage() {
                 {/* Left Box: DOLOR PRINCIPAL */}
                 <div
                   style={{
-                    background: "#F5F6FB",
-                    border: "1px solid #D9DCF0",
+                    background: "#F1F9FD",
+                    border: "1px solid #BFE2F4",
                     borderRadius: 12,
                     padding: 14,
                   }}
@@ -836,13 +734,13 @@ export default function MarcaCorePage() {
                       gap: 5,
                       fontSize: 10,
                       fontWeight: 800,
-                      color: "#6366F1",
+                      color: "#16324F",
                       letterSpacing: "0.06em",
                       textTransform: "uppercase",
                       marginBottom: 6,
                     }}
                   >
-                    <Target size={12} style={{ color: "#6366F1" }} />
+                    <Target size={12} style={{ color: "#16324F" }} />
                     <span>META PRINCIPAL</span>
                   </div>
                   <div
@@ -883,7 +781,7 @@ export default function MarcaCorePage() {
           type="button"
           onClick={handleAcceptAll}
           style={{
-            background: "#6C77C1",
+            background: "var(--hb-accent)",
             color: "var(--ui-text)",
             border: "none",
             borderRadius: 12,

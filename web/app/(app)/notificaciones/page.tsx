@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, CheckCheck } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import type { WorkspaceNotification } from "@/lib/types";
+import {
+  HublyBellIcon as Bell,
+  HublyCheckIcon as CheckCheck,
+} from "@/components/app/icons/DuotoneIcons";
 
 const KIND_LABEL: Record<WorkspaceNotification["kind"], string> = {
   aprobacion: "Aprobación",

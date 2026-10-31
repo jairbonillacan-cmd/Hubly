@@ -1,3 +1,4 @@
+import { addDays, localIsoDate } from "./date";
 import type {
   ActivityEvent,
   AgencyInfo,
@@ -116,7 +117,7 @@ export const DEFAULT_NOTEBOOKS: NotebookItem[] = [
     content:
       "Guía paso a paso para programar el primer post de tu cliente sin fricción:\n1. Define el pilar del Núcleo de Marca.\n2. Redacta el copy con la voz oficial de la cuenta.\n3. Comparte la liga pública de revisión sin contraseñas para que tu cliente apruebe desde su celular.",
     bgGradient: "linear-gradient(180deg, #D9B78A 0%, #C79F6E 100%)",
-    accentColor: "#6C77C1",
+    accentColor: "#16324F",
     updatedAt: "2026-10-26T10:00:00-06:00",
     updatedBy: "Jair",
     isPinned: true,
@@ -164,7 +165,7 @@ export const DEFAULT_NOTEBOOKS: NotebookItem[] = [
     content:
       "Cada marca tiene su propio cerebro estratégico:\n• Extrae señales reales desde el sitio web del cliente.\n• Valida las 3 Buyer Personas con dolores y metas verificables.\n• Usa esas reglas de voz en cada copy de parrilla y anuncios.",
     bgGradient: "linear-gradient(180deg, #D9B78A 0%, #C79F6E 100%)",
-    accentColor: "#6366F1",
+    accentColor: "#16324F",
     updatedAt: "2026-10-26T17:15:00-06:00",
     updatedBy: "Jair",
     isPinned: false,
@@ -254,12 +255,29 @@ function resolveBaseDates(referenceFixture?: boolean): {
       twoDaysAgoIso: "2026-04-17",
     };
   }
+  const todayIso = localIsoDate();
   return {
-    todayIso: "2026-10-30",
-    tomorrowIso: "2026-10-31",
-    inTwoDaysIso: "2026-11-01",
-    twoDaysAgoIso: "2026-10-28",
+    todayIso,
+    tomorrowIso: addDays(todayIso, 1),
+    inTwoDaysIso: addDays(todayIso, 2),
+    twoDaysAgoIso: addDays(todayIso, -2),
   };
+}
+
+/**
+ * Repara un espacio guardado con el reloj de prueba de abril: conserva lo creado
+ * por el usuario y mueve las fechas de ejemplo a hoy.
+ */
+export function rebaseStaleFixture(data: HublyWorkspaceData): HublyWorkspaceData {
+  if (data.testClock?.fixedIsoNow !== REFERENCE_FIXTURE_CLOCK) return data;
+  const fixture = resolveBaseDates(true);
+  const current = resolveBaseDates(false);
+  const text = JSON.stringify(data)
+    .replaceAll(fixture.todayIso, current.todayIso)
+    .replaceAll(fixture.tomorrowIso, current.tomorrowIso)
+    .replaceAll(fixture.inTwoDaysIso, current.inTwoDaysIso)
+    .replaceAll(fixture.twoDaysAgoIso, current.twoDaysAgoIso);
+  return { ...(JSON.parse(text) as HublyWorkspaceData), testClock: { fixedIsoNow: null } };
 }
 
 export function createSeedWorkspaceData(
@@ -289,7 +307,7 @@ export function createSeedWorkspaceData(
         initial: "C",
         color: "#ff5a3c",
         avatarBg: "#FFF1EE",
-        avatarColor: "#4C56A0",
+        avatarColor: "#0B1C2E",
         industry: "Cafetería de especialidad y tostador",
         city: "Ciudad de México",
         connectedNetworks: ["Instagram", "TikTok", "Facebook", "LinkedIn"],
@@ -1390,7 +1408,7 @@ export function createSeedWorkspaceData(
         name: "Lucía Ramírez",
         initials: "LR",
         avatarInitial: "LR",
-        avatarColor: "#6C77C1",
+        avatarColor: "#16324F",
         role: "Diseño y Dirección de Arte",
         email: "lucia@agencia.demo",
         status: "Activo",

@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Trash2 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import type { ContentIdea } from "@/lib/types";
+import {
+  HublyArrowRightIcon as ArrowRight,
+  HublyTrashIcon as Trash2,
+} from "@/components/app/icons/DuotoneIcons";
 
 const NO_IDEAS: ContentIdea[] = [];
 
@@ -104,7 +107,7 @@ const primary = {
   gap: 6,
   border: "none",
   borderRadius: 8,
-  background: "#6C77C1",
+  background: "var(--hb-accent)",
   color: "#FFFFFF",
   fontSize: 12.5,
   fontWeight: 600,

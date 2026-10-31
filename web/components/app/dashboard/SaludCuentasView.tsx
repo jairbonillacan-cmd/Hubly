@@ -169,10 +169,10 @@ function getStatusStyles(status: BrandHealthStatus) {
   return {
     label: "En progreso",
     color: "var(--ui-accent-text-2)",
-    dot: "#6C77C1",
-    bg: "#F5F6FB",
-    border: "#D9DCF0",
-    barColor: "#6C77C1",
+    dot: "var(--hb-accent)",
+    bg: "#F1F9FD",
+    border: "#BFE2F4",
+    barColor: "var(--hb-accent)",
   };
 }
 
@@ -190,15 +190,15 @@ function getPriorityStyles(priority?: "alta" | "media" | "baja" | "Alta" | "Medi
     return {
       label: "Prioridad media",
       color: "var(--ui-accent-text-2)",
-      bg: "#F5F6FB",
-      border: "#D9DCF0",
+      bg: "#F1F9FD",
+      border: "#BFE2F4",
     };
   }
   return {
     label: "Oportunidad",
-    color: "#6C77C1",
-    bg: "#F0F1F9",
-    border: "#D9DCF0",
+    color: "var(--hb-accent-text)",
+    bg: "#EAF6FC",
+    border: "#BFE2F4",
   };
 }
 
@@ -587,7 +587,7 @@ export function SaludCuentasView() {
       id: "con_pauta",
       label: "Con pauta",
       count: summary.withPaidAdsCount,
-      dotColor: "#6C77C1",
+      dotColor: "var(--hb-accent)",
     },
     {
       id: "sin_pauta",
@@ -681,10 +681,10 @@ export function SaludCuentasView() {
         aria-label="Configuración inicial y sugerencias automáticas de cuentas"
         style={{
           background: "var(--ui-surface)",
-          border: "1.5px solid #D9DCF0",
+          border: "1.5px solid #BFE2F4",
           borderRadius: 18,
           padding: "clamp(16px, 2.5vw, 26px)",
-          boxShadow: "0 6px 24px rgba(108, 119, 193, 0.08)",
+          boxShadow: "0 6px 24px rgb(var(--hb-accent-rgb) / 0.08)",
           position: "relative",
           minWidth: 0,
         }}
@@ -713,9 +713,9 @@ export function SaludCuentasView() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 6,
-                background: "#ECEEF8",
+                background: "#E6F4FB",
                 color: "var(--ui-accent-text)",
-                border: "1px solid #D9DCF0",
+                border: "1px solid #BFE2F4",
                 borderRadius: 999,
                 padding: "4px 12px",
                 fontSize: 11,
@@ -732,8 +732,8 @@ export function SaludCuentasView() {
                 alignItems: "center",
                 gap: 6,
                 background: "var(--ui-accent-soft)",
-                color: "#6C77C1",
-                border: "1px solid #D9DCF0",
+                color: "var(--hb-accent-text)",
+                border: "1px solid #BFE2F4",
                 borderRadius: 999,
                 padding: "4px 11px",
                 fontSize: 11,
@@ -782,7 +782,7 @@ export function SaludCuentasView() {
                 gap: 6,
                 padding: "7px 13px",
                 borderRadius: 9,
-                border: "1px solid #D9DCF0",
+                border: "1px solid #BFE2F4",
                 background: "var(--ui-accent-soft)",
                 color: "#4338CA",
                 fontSize: 12,
@@ -793,7 +793,7 @@ export function SaludCuentasView() {
               <span>Revisar sugerencias</span>
               <span
                 style={{
-                  background: "#6C77C1",
+                  background: "var(--hb-accent)",
                   color: "#FFFFFF",
                   borderRadius: 999,
                   padding: "1px 7px",
@@ -846,7 +846,7 @@ export function SaludCuentasView() {
           <div
             style={{
               background: "var(--ui-surface)",
-              border: "1px solid #E8E8F0",
+              border: "1px solid #E3E9EF",
               borderRadius: 12,
               padding: "12px 14px",
               marginBottom: 18,
@@ -901,7 +901,7 @@ export function SaludCuentasView() {
                   style={{
                     fontSize: 11,
                     color: featuredPreviewAccount.hasPaidAds
-                      ? "#5A65AF"
+                      ? "var(--hb-accent-hover)"
                       : "#6B7280",
                     fontWeight: 500,
                     display: "flex",
@@ -945,9 +945,9 @@ export function SaludCuentasView() {
                 <span
                   key={metric.id}
                   style={{
-                    background: "#F5F6FB",
+                    background: "#F1F9FD",
                     color: "var(--ui-accent-text)",
-                    border: "1px solid #D9DCF0",
+                    border: "1px solid #BFE2F4",
                     borderRadius: 7,
                     padding: "4px 9px",
                     fontSize: 11,
@@ -1000,7 +1000,7 @@ export function SaludCuentasView() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 8,
-                background: "#6C77C1",
+                background: "var(--hb-accent)",
                 color: "#111827",
                 border: "none",
                 borderRadius: 10,
@@ -1008,7 +1008,7 @@ export function SaludCuentasView() {
                 fontSize: 13,
                 fontWeight: 800,
                 cursor: "pointer",
-                boxShadow: "0 4px 12px rgba(108, 119, 193, 0.3)",
+                boxShadow: "0 4px 12px rgb(var(--hb-accent-rgb) / 0.3)",
               }}
             >
               <span>Empezar →</span>
@@ -1079,7 +1079,7 @@ export function SaludCuentasView() {
                   summary.averageHealthScore >= 85
                     ? "#059669"
                     : summary.averageHealthScore >= 60
-                    ? "#5A65AF"
+                    ? "var(--hb-accent-hover)"
                     : "#DC2626",
                 fontSize: 14,
                 fontWeight: 800,
@@ -1281,7 +1281,7 @@ export function SaludCuentasView() {
                           borderRadius: 8,
                           border: "none",
                           background: active ? "var(--ui-accent-soft)" : "transparent",
-                          color: active ? "#6C77C1" : "#111827",
+                          color: active ? "var(--hb-accent-text)" : "#111827",
                           cursor: "pointer",
                           textAlign: "left",
                         }}
@@ -1292,7 +1292,7 @@ export function SaludCuentasView() {
                         <span
                           style={{
                             fontSize: 10,
-                            color: active ? "#6366F1" : "#9CA3AF",
+                            color: active ? "#16324F" : "#9CA3AF",
                           }}
                         >
                           {opt.badgeText}
@@ -1315,12 +1315,12 @@ export function SaludCuentasView() {
                 padding: "7px 13px",
                 borderRadius: 9,
                 border: "none",
-                background: "#6C77C1",
+                background: "var(--hb-accent)",
                 color: "#FFFFFF",
                 fontSize: 12,
                 fontWeight: 700,
                 cursor: "pointer",
-                boxShadow: "0 2px 8px rgba(91, 103, 202, 0.25)",
+                boxShadow: "0 2px 8px rgb(var(--hb-accent-rgb) / 0.25)",
               }}
             >
               <span>+ Nueva marca</span>
@@ -1386,8 +1386,8 @@ export function SaludCuentasView() {
 
           <div
             style={{
-              background: "#F5F6FB",
-              border: "1px solid #D9DCF0",
+              background: "#F1F9FD",
+              border: "1px solid #BFE2F4",
               borderRadius: 12,
               padding: "10px 14px",
             }}
@@ -1435,7 +1435,7 @@ export function SaludCuentasView() {
           <div
             style={{
               background: "var(--ui-accent-soft)",
-              border: "1px solid #D9DCF0",
+              border: "1px solid #BFE2F4",
               borderRadius: 12,
               padding: "10px 14px",
             }}
@@ -1448,7 +1448,7 @@ export function SaludCuentasView() {
               style={{
                 fontSize: 20,
                 fontWeight: 800,
-                color: "#6C77C1",
+                color: "var(--hb-accent-text)",
                 marginTop: 2,
               }}
             >
@@ -1497,9 +1497,9 @@ export function SaludCuentasView() {
                     padding: "6px 12px",
                     borderRadius: 999,
                     border: isActive
-                      ? "1.5px solid #6C77C1"
+                      ? "1.5px solid var(--hb-accent)"
                       : "1px solid #E5E7EB",
-                    background: isActive ? "#6C77C1" : "var(--ui-surface)",
+                    background: isActive ? "var(--hb-accent)" : "var(--ui-surface)",
                     color: isActive ? "#FFFFFF" : "#374151",
                     fontSize: 12,
                     fontWeight: isActive ? 700 : 600,
@@ -1666,7 +1666,7 @@ export function SaludCuentasView() {
                           borderRadius: 8,
                           border: "none",
                           background: active ? "var(--ui-accent-soft)" : "transparent",
-                          color: active ? "#6C77C1" : "#111827",
+                          color: active ? "var(--hb-accent-text)" : "#111827",
                           fontSize: 12,
                           fontWeight: active ? 700 : 500,
                           cursor: "pointer",
@@ -1690,10 +1690,10 @@ export function SaludCuentasView() {
           data-testid="rule-recommendations-panel"
           style={{
             background: "var(--ui-surface)",
-            border: "1px solid #E0E7FF",
+            border: "1px solid #DCEFF9",
             borderRadius: 16,
             padding: "16px 18px",
-            boxShadow: "0 2px 10px rgba(91, 103, 202, 0.05)",
+            boxShadow: "0 2px 10px rgb(var(--hb-accent-rgb) / 0.05)",
             display: "flex",
             flexDirection: "column",
             gap: 12,
@@ -1745,7 +1745,7 @@ export function SaludCuentasView() {
                   padding: "6px 12px",
                   borderRadius: 8,
                   border: "none",
-                  background: "#6C77C1",
+                  background: "var(--hb-accent)",
                   color: "#FFFFFF",
                   fontSize: 11,
                   fontWeight: 700,
@@ -1895,7 +1895,7 @@ export function SaludCuentasView() {
                       style={{
                         fontSize: 11,
                         fontWeight: 700,
-                        color: "#6C77C1",
+                        color: "var(--hb-accent-text)",
                       }}
                     >
                       Meta: {rec.currentCommitted} → {rec.recommendedCommitted}{" "}
@@ -1931,7 +1931,7 @@ export function SaludCuentasView() {
                           padding: "4px 10px",
                           borderRadius: 7,
                           border: "none",
-                          background: "#6C77C1",
+                          background: "var(--hb-accent)",
                           color: "#FFFFFF",
                           fontSize: 11,
                           fontWeight: 700,
@@ -2010,7 +2010,7 @@ export function SaludCuentasView() {
               padding: "8px 16px",
               borderRadius: 9,
               border: "none",
-              background: "#6C77C1",
+              background: "var(--hb-accent)",
               color: "#FFFFFF",
               fontSize: 12,
               fontWeight: 700,
@@ -2047,7 +2047,7 @@ export function SaludCuentasView() {
                 style={{
                   background: "var(--ui-surface)",
                   border: isCurrentActiveBrand
-                    ? "1.5px solid #6C77C1"
+                    ? "1.5px solid var(--hb-accent)"
                     : "1px solid #EAECEF",
                   borderRadius: 16,
                   padding: "clamp(14px, 2vw, 20px)",
@@ -2149,7 +2149,7 @@ export function SaludCuentasView() {
                             style={{
                               fontSize: 10,
                               fontWeight: 700,
-                              color: "#6C77C1",
+                              color: "var(--hb-accent-text)",
                               background: "var(--ui-accent-soft)",
                               borderRadius: 999,
                               padding: "2px 8px",
@@ -2178,8 +2178,8 @@ export function SaludCuentasView() {
                               alignItems: "center",
                               gap: 5,
                               color: "var(--ui-accent-text)",
-                              background: "#F5F6FB",
-                              border: "1px solid #D9DCF0",
+                              background: "#F1F9FD",
+                              border: "1px solid #BFE2F4",
                               borderRadius: 7,
                               padding: "2px 8px",
                               fontSize: 11,
@@ -2273,10 +2273,10 @@ export function SaludCuentasView() {
                         padding: "6px 12px",
                         borderRadius: 9,
                         border: isEditing
-                          ? "1.5px solid #6C77C1"
+                          ? "1.5px solid var(--hb-accent)"
                           : "1px solid #E5E7EB",
                         background: isEditing ? "var(--ui-accent-soft)" : "var(--ui-surface)",
-                        color: isEditing ? "#6C77C1" : "#374151",
+                        color: isEditing ? "var(--hb-accent-text)" : "#374151",
                         fontSize: 12,
                         fontWeight: 700,
                         cursor: "pointer",
@@ -2365,7 +2365,7 @@ export function SaludCuentasView() {
                       deliv.percent >= 85
                         ? "#10B981"
                         : deliv.percent >= 60
-                        ? "#6C77C1"
+                        ? "var(--hb-accent)"
                         : "#EF4444";
                     return (
                       <div
@@ -2474,9 +2474,9 @@ export function SaludCuentasView() {
                         <span
                           key={metric.id}
                           style={{
-                            background: "#F5F6FB",
+                            background: "#F1F9FD",
                             color: "var(--ui-accent-text)",
-                            border: "1px solid #D9DCF0",
+                            border: "1px solid #BFE2F4",
                             borderRadius: 7,
                             padding: "3px 9px",
                             fontSize: 11,
@@ -2510,7 +2510,7 @@ export function SaludCuentasView() {
                             alignItems: "center",
                             gap: 6,
                             background: "var(--ui-accent-soft)",
-                            border: "1px solid #D9DCF0",
+                            border: "1px solid #BFE2F4",
                             borderRadius: 8,
                             padding: "4px 9px",
                             fontSize: 11,
@@ -2523,7 +2523,7 @@ export function SaludCuentasView() {
                             type="button"
                             onClick={() => handleApplySingleRecommendation(rec)}
                             style={{
-                              background: "#6C77C1",
+                              background: "var(--hb-accent)",
                               color: "#FFFFFF",
                               border: "none",
                               borderRadius: 5,
@@ -2550,7 +2550,7 @@ export function SaludCuentasView() {
                       padding: "16px",
                       borderRadius: 12,
                       background: "#F9FAFB",
-                      border: "1.5px solid #D9DCF0",
+                      border: "1.5px solid #BFE2F4",
                       display: "flex",
                       flexDirection: "column",
                       gap: 14,
@@ -3116,9 +3116,9 @@ export function SaludCuentasView() {
                               display: "inline-flex",
                               alignItems: "center",
                               gap: 6,
-                              background: "#F5F6FB",
+                              background: "#F1F9FD",
                               color: "var(--ui-accent-text)",
-                              border: "1px solid #D9DCF0",
+                              border: "1px solid #BFE2F4",
                               borderRadius: 7,
                               padding: "4px 9px",
                               fontSize: 11,
@@ -3294,12 +3294,12 @@ export function SaludCuentasView() {
                           padding: "7px 16px",
                           borderRadius: 8,
                           border: "none",
-                          background: "#6C77C1",
+                          background: "var(--hb-accent)",
                           color: "#FFFFFF",
                           fontSize: 12,
                           fontWeight: 700,
                           cursor: "pointer",
-                          boxShadow: "0 2px 8px rgba(91, 103, 202, 0.25)",
+                          boxShadow: "0 2px 8px rgb(var(--hb-accent-rgb) / 0.25)",
                         }}
                       >
                         Guardar compromisos

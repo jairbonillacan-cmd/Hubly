@@ -5,21 +5,23 @@ import { backendEnabled } from "@/lib/supabase/config";
 
 import React, { useState } from "react";
 import Link from "next/link";
-import {
-  Sparkles,
-  MessageCircle,
-  BarChart2,
-  LayoutGrid,
-  Presentation,
-  Link2,
-  Home,
-  List,
-  Plus,
-  Printer,
-  TrendingUp,
-} from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { Cover } from "@/components/Cover";
+import {
+  HublyBentoIcon as LayoutGrid,
+  HublyCalendarIcon,
+  HublyChartIcon as BarChart2,
+  HublyChatIcon as MessageCircle,
+  HublyHomeIcon as Home,
+  HublyLinkIcon as Link2,
+  HublyPlusIcon as Plus,
+  HublyPresentationIcon,
+  HublyPresentationIcon as Presentation,
+  HublyPrinterIcon as Printer,
+  HublyPulseIcon as TrendingUp,
+  HublyRowsIcon as List,
+  HublySparkIcon as Sparkles,
+} from "@/components/app/icons/DuotoneIcons";
 
 export default function ReportesPage() {
   if (backendEnabled) return <LiveReportes />;
@@ -49,7 +51,6 @@ function DemoReportesPage() {
   return (
     <div
       style={{
-        fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
         color: "var(--ui-text)",
         minHeight: "calc(100vh - 64px)",
         paddingBottom: 60,
@@ -93,21 +94,7 @@ function DemoReportesPage() {
               textDecoration: "none",
             }}
           >
-            <span
-              style={{
-                width: 16,
-                height: 16,
-                borderRadius: 4,
-                background: "#94A3B8",
-                color: "#fff",
-                display: "inline-grid",
-                placeItems: "center",
-                fontSize: 10,
-                fontWeight: 800,
-              }}
-            >
-              17
-            </span>
+            <HublyCalendarIcon size={18} />
             <span>Calendario</span>
           </Link>
 
@@ -196,14 +183,14 @@ function DemoReportesPage() {
               borderRadius: 999,
               border: "none",
               background: "var(--ui-surface)",
-              color: "#6C77C1",
+              color: "var(--hb-accent-text)",
               fontWeight: 600,
               fontSize: 13,
               cursor: "pointer",
               boxShadow: "0 1px 2px rgba(15, 23, 42, 0.06)",
             }}
           >
-            <Presentation size={14} style={{ color: "#6C77C1" }} />
+            <Presentation size={14} style={{ color: "var(--hb-accent-text)" }} />
             <span>Reportes</span>
           </button>
 
@@ -269,7 +256,7 @@ function DemoReportesPage() {
             borderRadius: 10,
             border: "none",
             background: "var(--ui-accent-soft)",
-            color: "#6C77C1",
+            color: "var(--hb-accent-text)",
             display: "grid",
             placeItems: "center",
             cursor: "pointer",
@@ -377,7 +364,7 @@ function DemoReportesPage() {
               display: "inline-flex",
               alignItems: "center",
               gap: 6,
-              background: "#6C77C1",
+              background: "var(--hb-accent)",
               color: "#FFFFFF",
               border: "none",
               borderRadius: 10,
@@ -414,26 +401,13 @@ function DemoReportesPage() {
             height: 68,
             borderRadius: 999,
             background: "#DBEAFE",
-            color: "#6C77C1",
+            color: "var(--hb-accent-text)",
             display: "grid",
             placeItems: "center",
             marginBottom: 16,
           }}
         >
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#6C77C1"
-            strokeWidth="1.8"
-          >
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-            <polyline points="14 2 14 8 20 8" />
-            <line x1="8" y1="17" x2="8" y2="13" />
-            <line x1="12" y1="17" x2="12" y2="11" />
-            <line x1="16" y1="17" x2="16" y2="15" />
-          </svg>
+          <HublyPresentationIcon size={28} />
         </div>
 
         <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--ui-text)", margin: "0 0 6px" }}>
@@ -450,7 +424,7 @@ function DemoReportesPage() {
             display: "inline-flex",
             alignItems: "center",
             gap: 8,
-            background: "#6C77C1",
+            background: "var(--hb-accent)",
             color: "#FFFFFF",
             border: "none",
             borderRadius: 12,
@@ -498,7 +472,7 @@ function DemoReportesPage() {
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
-                  color: "#D9DCF0",
+                  color: "#BFE2F4",
                   marginBottom: 6,
                 }}
               >
@@ -507,7 +481,7 @@ function DemoReportesPage() {
               <h1 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 4px" }}>
                 {brandName} · Informe Mensual de Resultados
               </h1>
-              <div style={{ fontSize: 13, color: "#E0E7FF" }}>
+              <div style={{ fontSize: 13, color: "#DCEFF9" }}>
                 {activeBrand?.industry || "minerales y cristales decorativos al mayoreo"} · Redes
                 conectadas: Instagram, Facebook, TikTok, LinkedIn
               </div>
@@ -522,7 +496,7 @@ function DemoReportesPage() {
                 textAlign: "right",
               }}
             >
-              <div style={{ fontSize: 11, color: "#E0E7FF" }}>Click Score Promedio</div>
+              <div style={{ fontSize: 11, color: "#DCEFF9" }}>Click Score Promedio</div>
               <div style={{ fontSize: 26, fontWeight: 800, color: "#6EE7B7" }}>100 / 100</div>
             </div>
           </div>
@@ -643,7 +617,7 @@ function DemoReportesPage() {
                         justifyContent: "space-between",
                         fontSize: 12,
                         fontWeight: 700,
-                        color: "#6C77C1",
+                        color: "var(--hb-accent-text)",
                       }}
                     >
                       <span>Alcance: {(post.metrics?.reach || 11400).toLocaleString()}</span>

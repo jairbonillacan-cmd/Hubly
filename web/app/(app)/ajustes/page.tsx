@@ -1,32 +1,32 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  User,
-  Shield,
-  Bell,
-  Puzzle,
-  Users,
-  UserCheck,
-  Building2,
-  CreditCard,
-  BarChart2,
-  Gift,
-  LogOut,
-  Camera,
-  Pencil,
-  Mail,
-  Lock,
-  RotateCcw,
-  Check,
-  X,
-} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { AccessPanel } from "@/components/app/AccessPanel";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseBrowser } from "@/lib/supabase/browser";
 import { useHublyStore } from "@/lib/store";
 import { useHublyTheme } from "@/lib/theme";
+import {
+  HublyBellIcon as Bell,
+  HublyBuildingIcon as Building2,
+  HublyCameraIcon as Camera,
+  HublyCardIcon as CreditCard,
+  HublyChartIcon as BarChart2,
+  HublyCheckIcon as Check,
+  HublyCloseIcon as X,
+  HublyGiftIcon as Gift,
+  HublyLayersIcon as Puzzle,
+  HublyLockIcon as Lock,
+  HublyLogOutIcon as LogOut,
+  HublyMailIcon as Mail,
+  HublyPencilIcon as Pencil,
+  HublyPeopleIcon as Users,
+  HublyPersonIcon as User,
+  HublyPersonIcon as UserCheck,
+  HublyRefreshIcon as RotateCcw,
+  HublyShieldIcon as Shield,
+} from "@/components/app/icons/DuotoneIcons";
 
 type SettingsTabId =
   | "mi-perfil"
@@ -105,7 +105,6 @@ export default function AjustesPage() {
   return (
     <div
       style={{
-        fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
         color: "var(--ui-text)",
         minHeight: "calc(100vh - 64px)",
         position: "relative",
@@ -154,8 +153,8 @@ export default function AjustesPage() {
                     height: 36,
                     padding: "0 12px",
                     borderRadius: 8,
-                    border: isActive ? "1px solid rgba(108, 119, 193, 0.2)" : "1px solid transparent",
-                    background: isActive ? "rgba(108, 119, 193, 0.1)" : "transparent",
+                    border: isActive ? "1px solid rgb(var(--hb-accent-rgb) / 0.2)" : "1px solid transparent",
+                    background: isActive ? "rgb(var(--hb-accent-rgb) / 0.1)" : "transparent",
                     color: isActive ? "var(--ui-accent-text-2)" : "var(--ui-text-3)",
                     fontWeight: isActive ? 600 : 500,
                     fontSize: 13,
@@ -262,7 +261,7 @@ export default function AjustesPage() {
                     height: 64,
                     borderRadius: 999,
                     border: "none",
-                    background: "#6C77C1",
+                    background: "var(--hb-accent)",
                     color: "#FFFFFF",
                     fontSize: 20,
                     fontWeight: 700,
@@ -309,7 +308,7 @@ export default function AjustesPage() {
                       background: "transparent",
                       border: "none",
                       padding: 0,
-                      color: "#6C77C1",
+                      color: "var(--hb-accent-text)",
                       fontSize: 12,
                       fontWeight: 600,
                       cursor: "pointer",
@@ -559,7 +558,7 @@ export default function AjustesPage() {
                     width: 44,
                     height: 44,
                     borderRadius: 12,
-                    background: "#6C77C1",
+                    background: "var(--hb-accent)",
                     color: "#FFFFFF",
                     fontSize: 16,
                     fontWeight: 800,
@@ -783,7 +782,7 @@ export default function AjustesPage() {
                           padding: "3px 10px",
                           borderRadius: 999,
                           background: "var(--ui-accent-soft)",
-                          color: "#6C77C1",
+                          color: "var(--hb-accent-text)",
                           fontSize: 11.5,
                           fontWeight: 700,
                         }}

@@ -1,10 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { BookOpen, Folder, Plus, Sparkles } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { TaskBoard } from "@/components/app/tasks/TaskBoard";
 import { NotebooksSection, useCreateNotebook } from "@/components/app/tasks/NotebooksSection";
+import {
+  HublyFolderIcon,
+  HublyNotebookIcon,
+  HublyPlusIcon as Plus,
+  HublySparkIcon as Sparkles,
+} from "@/components/app/icons/DuotoneIcons";
 
 export default function TareasPage() {
   const allAssets = useHublyStore((s) => s.assets);
@@ -28,7 +33,6 @@ export default function TareasPage() {
         background: "var(--ui-surface)",
         borderRadius: 16,
         padding: "12px 0 40px",
-        fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       {/* ROW 1: Top Segmented Pill Bar + Right Actions (matching 05-todos-mi-espacio-1440.png) */}
@@ -64,7 +68,7 @@ export default function TareasPage() {
               borderRadius: 9,
               border: "none",
               background: topSection === "listas" ? "var(--ui-surface)" : "transparent",
-              color: topSection === "listas" ? "#6C77C1" : "var(--ui-text-4)",
+              color: topSection === "listas" ? "var(--hb-accent)" : "var(--ui-text-4)",
               fontWeight: 600,
               fontSize: 13.5,
               boxShadow:
@@ -79,7 +83,7 @@ export default function TareasPage() {
                 height: 16,
                 borderRadius: 4,
                 background: "#9099D3",
-                color: "#4C56A0",
+                color: "var(--hb-accent-edge)",
                 fontSize: 10,
                 display: "grid",
                 placeItems: "center",
@@ -102,7 +106,7 @@ export default function TareasPage() {
               borderRadius: 9,
               border: "none",
               background: topSection === "libretas" ? "var(--ui-surface)" : "transparent",
-              color: topSection === "libretas" ? "#6C77C1" : "var(--ui-text-4)",
+              color: topSection === "libretas" ? "var(--hb-accent)" : "var(--ui-text-4)",
               fontWeight: 600,
               fontSize: 13.5,
               boxShadow:
@@ -110,7 +114,7 @@ export default function TareasPage() {
               cursor: "pointer",
             }}
           >
-            <BookOpen size={14} style={{ color: "var(--ui-text-5)" }} />
+            <span className={topSection === "libretas" ? "hubly-hi-on" : undefined} style={{ display: "inline-flex" }}><HublyNotebookIcon size={18} /></span>
             <span>Libretas</span>
           </button>
 
@@ -125,7 +129,7 @@ export default function TareasPage() {
               borderRadius: 9,
               border: "none",
               background: topSection === "contenido" ? "var(--ui-surface)" : "transparent",
-              color: topSection === "contenido" ? "#6C77C1" : "var(--ui-text-4)",
+              color: topSection === "contenido" ? "var(--hb-accent)" : "var(--ui-text-4)",
               fontWeight: 600,
               fontSize: 13.5,
               boxShadow:
@@ -133,7 +137,7 @@ export default function TareasPage() {
               cursor: "pointer",
             }}
           >
-            <Folder size={14} style={{ color: "var(--ui-text-5)" }} />
+            <span className={topSection === "contenido" ? "hubly-hi-on" : undefined} style={{ display: "inline-flex" }}><HublyFolderIcon size={18} /></span>
             <span>Contenido</span>
           </button>
         </div>
@@ -158,7 +162,7 @@ export default function TareasPage() {
               borderRadius: 10,
               border: "1px solid var(--ui-border)",
               background: "var(--ui-surface)",
-              color: "#6C77C1",
+              color: "var(--hb-accent-text)",
               display: "grid",
               placeItems: "center",
               cursor: "pointer",
@@ -209,7 +213,7 @@ export default function TareasPage() {
                     padding: "2px 8px",
                     borderRadius: 999,
                     background: "var(--ui-accent-soft)",
-                    color: "#6C77C1",
+                    color: "var(--hb-accent-text)",
                     textTransform: "uppercase",
                   }}
                 >
@@ -234,7 +238,7 @@ export default function TareasPage() {
                       gap: 3,
                     }}
                   >
-                    <Sparkles size={10} style={{ color: "#6C77C1" }} />
+                    <Sparkles size={10} style={{ color: "var(--hb-accent-text)" }} />
                     {tag}
                   </span>
                 ))}

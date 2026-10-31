@@ -1,21 +1,21 @@
 "use client";
 
 import React, { useEffect, useId, useRef, useState } from "react";
-import {
-  Check,
-  Copy,
-  Info,
-  Link2,
-  Shield,
-  Trash2,
-  UserPlus,
-  X,
-} from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { LiveInviteRedirect } from "@/components/app/LiveUnavailable";
 import { backendEnabled } from "@/lib/supabase/config";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import type { TeamInvitation } from "@/lib/types";
+import {
+  HublyCheckIcon as Check,
+  HublyCloseIcon as X,
+  HublyCopyIcon as Copy,
+  HublyInfoIcon as Info,
+  HublyLinkIcon as Link2,
+  HublyPersonIcon as UserPlus,
+  HublyShieldIcon as Shield,
+  HublyTrashIcon as Trash2,
+} from "@/components/app/icons/DuotoneIcons";
 
 export type TeamMemberRole =
   | "Admin"
@@ -388,7 +388,7 @@ function DemoInviteTeamModal({
                 height: 36,
                 borderRadius: 10,
                 background: "var(--ui-accent-soft)",
-                color: "#6C77C1",
+                color: "var(--hb-accent-text)",
                 display: "grid",
                 placeItems: "center",
                 flexShrink: 0,
@@ -455,14 +455,14 @@ function DemoInviteTeamModal({
             style={{
               padding: "10px 14px",
               borderRadius: 12,
-              background: "#F5F6FB",
-              border: "1px solid #D9DCF0",
+              background: "#F1F9FD",
+              border: "1px solid #BFE2F4",
               display: "flex",
               alignItems: "flex-start",
               gap: 10,
               fontSize: 12,
               lineHeight: 1.45,
-              color: "#4C56A0",
+              color: "var(--hb-accent-edge)",
             }}
           >
             <Info
@@ -487,7 +487,7 @@ function DemoInviteTeamModal({
                 padding: 14,
                 borderRadius: 14,
                 background: "var(--ui-accent-soft)",
-                border: "1px solid #D9DCF0",
+                border: "1px solid #BFE2F4",
                 display: "flex",
                 flexDirection: "column",
                 gap: 10,
@@ -507,7 +507,7 @@ function DemoInviteTeamModal({
                       width: 24,
                       height: 24,
                       borderRadius: 9999,
-                      background: "#6C77C1",
+                      background: "var(--hb-accent)",
                       color: "#FFFFFF",
                       display: "grid",
                       placeItems: "center",
@@ -537,7 +537,7 @@ function DemoInviteTeamModal({
                   style={{
                     padding: "2px 8px",
                     borderRadius: 9999,
-                    background: "#ECEEF8",
+                    background: "#E6F4FB",
                     color: "var(--ui-accent-text)",
                     fontSize: 11,
                     fontWeight: 700,
@@ -555,10 +555,10 @@ function DemoInviteTeamModal({
                   background: "var(--ui-surface)",
                   padding: "7px 10px",
                   borderRadius: 10,
-                  border: "1px solid #D9DCF0",
+                  border: "1px solid #BFE2F4",
                 }}
               >
-                <Link2 size={14} style={{ color: "#6C77C1", flexShrink: 0 }} />
+                <Link2 size={14} style={{ color: "var(--hb-accent-text)", flexShrink: 0 }} />
                 <input
                   type="text"
                   readOnly
@@ -583,7 +583,7 @@ function DemoInviteTeamModal({
                     borderRadius: 8,
                     border: "none",
                     background:
-                      copiedId === createdInvitation.id ? "#16A34A" : "#6C77C1",
+                      copiedId === createdInvitation.id ? "#16A34A" : "var(--hb-accent)",
                     color: "#FFFFFF",
                     fontSize: 11.5,
                     fontWeight: 600,
@@ -782,7 +782,7 @@ function DemoInviteTeamModal({
                   style={{
                     border: "none",
                     background: "transparent",
-                    color: "#6C77C1",
+                    color: "var(--hb-accent-text)",
                     fontSize: 11.5,
                     fontWeight: 600,
                     cursor: "pointer",
@@ -818,7 +818,7 @@ function DemoInviteTeamModal({
                         padding: "8px 10px",
                         borderRadius: 10,
                         border: checked
-                          ? "1px solid #6C77C1"
+                          ? "1px solid var(--hb-accent)"
                           : "1px solid #E2E8F0",
                         background: checked ? "var(--ui-accent-soft)" : "var(--ui-surface)",
                         cursor: "pointer",
@@ -871,7 +871,7 @@ function DemoInviteTeamModal({
                           border: checked
                             ? "none"
                             : "1.5px solid #CBD5E1",
-                          background: checked ? "#6C77C1" : "var(--ui-surface)",
+                          background: checked ? "var(--hb-accent)" : "var(--ui-surface)",
                           color: "#FFFFFF",
                           display: "grid",
                           placeItems: "center",
@@ -952,7 +952,7 @@ function DemoInviteTeamModal({
                           style={{
                             padding: "1px 7px",
                             borderRadius: 9999,
-                            background: "#ECEEF8",
+                            background: "#E6F4FB",
                             color: "var(--ui-accent-text)",
                             fontSize: 10.5,
                             fontWeight: 700,
@@ -1063,7 +1063,7 @@ function DemoInviteTeamModal({
                 padding: "0 16px",
                 borderRadius: 10,
                 border: "none",
-                background: "#6C77C1",
+                background: "var(--hb-accent)",
                 color: "#FFFFFF",
                 fontSize: 12.5,
                 fontWeight: 600,
@@ -1071,7 +1071,7 @@ function DemoInviteTeamModal({
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 6,
-                boxShadow: "0 2px 6px rgba(91, 103, 202, 0.28)",
+                boxShadow: "0 2px 6px rgb(var(--hb-accent-rgb) / 0.28)",
               }}
             >
               <UserPlus size={14} />

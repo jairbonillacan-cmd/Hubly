@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles } from "lucide-react";
 import { localIsoDate } from "@/lib/date";
 import { useHublyStore } from "@/lib/store";
 import type { BrandWorkspace, PostFormat, SocialNetwork, SocialPost } from "@/lib/types";
+import {
+  HublySparkIcon as Sparkles,
+} from "@/components/app/icons/DuotoneIcons";
 
 const FIELDS = [
   ["reach", "Alcance"],

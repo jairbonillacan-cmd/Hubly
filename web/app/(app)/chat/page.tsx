@@ -1,22 +1,22 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import {
-  Search,
-  Plus,
-  Hash,
-  ChevronDown,
-  ChevronRight,
-  Send,
-  Paperclip,
-  Smile,
-  AtSign,
-  MessageSquarePlus,
-  Sparkles,
-  CheckCheck,
-} from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { backendEnabled } from "@/lib/supabase/config";
+import {
+  HublyAtIcon as AtSign,
+  HublyChatIcon as MessageSquarePlus,
+  HublyCheckIcon as CheckCheck,
+  HublyChevronDownIcon as ChevronDown,
+  HublyChevronRightIcon as ChevronRight,
+  HublyHashIcon as Hash,
+  HublyPaperclipIcon as Paperclip,
+  HublyPlusIcon as Plus,
+  HublySearchIcon as Search,
+  HublySendIcon as Send,
+  HublySmileIcon as Smile,
+  HublySparkIcon as Sparkles,
+} from "@/components/app/icons/DuotoneIcons";
 
 interface LocalThreadMessage {
   id: string;
@@ -35,8 +35,8 @@ const INITIAL_LOCAL_MESSAGES: LocalThreadMessage[] = [
     targetId: "ch-min",
     sender: "Diego Morales",
     senderInitials: "DM",
-    senderBg: "#F0F1F9",
-    senderColor: "#6C77C1",
+    senderBg: "#EAF6FC",
+    senderColor: "var(--hb-accent)",
     text: "Subimos los 3 cortes del taller en Guadalajara y la parrilla de noviembre para revisión.",
     time: "10:42",
   },
@@ -45,8 +45,8 @@ const INITIAL_LOCAL_MESSAGES: LocalThreadMessage[] = [
     targetId: "ch-min",
     sender: "Jair",
     senderInitials: "JA",
-    senderBg: "#ECEEF8",
-    senderColor: "#4C56A0",
+    senderBg: "#E6F4FB",
+    senderColor: "var(--hb-accent-edge)",
     text: "Excelente, en cuanto Raúl apruebe el carrusel Goodyear welt programamos toda la semana.",
     time: "11:05",
   },
@@ -55,8 +55,8 @@ const INITIAL_LOCAL_MESSAGES: LocalThreadMessage[] = [
     targetId: "dm-jair",
     sender: "Jair (tú)",
     senderInitials: "J",
-    senderBg: "#ECEEF8",
-    senderColor: "#5360A5",
+    senderBg: "#E6F4FB",
+    senderColor: "var(--hb-accent-text)",
     text: "Notas rápidas: conectar las redes de Min y mandar el primer reporte mensual este viernes.",
     time: "09:15",
   },
@@ -101,8 +101,8 @@ export default function ChatPage() {
         title: `${myName} (tú)`,
         subtitle: "Espacio personal · Notas, borradores y recordatorios",
         badgeText: "J",
-        badgeBg: "#ECEEF8",
-        badgeColor: "#5360A5",
+        badgeBg: "#E6F4FB",
+        badgeColor: "var(--hb-accent-text)",
       };
     }
     if (selectedId.startsWith("ch-min")) {
@@ -112,7 +112,7 @@ export default function ChatPage() {
         title: `${brandLabel} · # ${sub.name}`,
         subtitle: sub.subtitle,
         badgeText: "M",
-        badgeBg: "#6C77C1",
+        badgeBg: "var(--hb-accent)",
         badgeColor: "#FFFFFF",
       };
     }
@@ -123,8 +123,8 @@ export default function ChatPage() {
         title: found.name,
         subtitle: found.type === "brand" ? "Canal de marca" : "Mensaje directo",
         badgeText: found.type === "brand" ? "#" : found.name.slice(0, 1).toUpperCase(),
-        badgeBg: "#F0F1F9",
-        badgeColor: "#6C77C1",
+        badgeBg: "#EAF6FC",
+        badgeColor: "var(--hb-accent)",
       };
     }
     return null;
@@ -139,8 +139,8 @@ export default function ChatPage() {
         targetId: m.channelId,
         sender: m.sender,
         senderInitials: m.senderInitials,
-        senderBg: "#F0F1F9",
-        senderColor: "#6C77C1",
+        senderBg: "#EAF6FC",
+        senderColor: "var(--hb-accent)",
         text: m.text,
         time: m.time,
       }));
@@ -165,8 +165,8 @@ export default function ChatPage() {
           targetId: selectedId,
           sender: myName,
           senderInitials: "JA",
-          senderBg: "#ECEEF8",
-          senderColor: "#5360A5",
+          senderBg: "#E6F4FB",
+          senderColor: "var(--hb-accent-text)",
           text: draft.trim(),
           time,
         },
@@ -191,7 +191,6 @@ export default function ChatPage() {
         borderRadius: 16,
         border: "1px solid #EEF2F6",
         overflow: "hidden",
-        fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       {/* Left Sidebar Panel (280px matching 04-chat-1440.png) */}
@@ -311,7 +310,7 @@ export default function ChatPage() {
               height: 28,
               borderRadius: 8,
               background: "var(--ui-accent-soft)",
-              color: "#6C77C1",
+              color: "var(--hb-accent-text)",
               border: "none",
               display: "grid",
               placeItems: "center",
@@ -374,12 +373,7 @@ export default function ChatPage() {
                 }}
               >
                 {/* Speech bubbles mini icon */}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M12 3C7.03 3 3 6.58 3 11c0 1.85.71 3.55 1.89 4.91L4 20l4.38-1.46c1.12.3 2.34.46 3.62.46 4.97 0 9-3.58 9-8s-4.03-8-9-8z"
-                    fill="#94A3B8"
-                  />
-                </svg>
+                <MessageSquarePlus size={18} />
                 <span>Mensajes directos</span>
                 <span style={{ color: "var(--ui-text-5)", fontWeight: 500, fontSize: 12 }}>1</span>
               </button>
@@ -425,7 +419,7 @@ export default function ChatPage() {
                     width: 26,
                     height: 26,
                     borderRadius: 999,
-                    background: "#ECEEF8",
+                    background: "#E6F4FB",
                     color: "var(--ui-accent-text)",
                     fontSize: 11.5,
                     fontWeight: 700,
@@ -508,7 +502,7 @@ export default function ChatPage() {
                       style={{
                         fontSize: 13,
                         fontWeight: 600,
-                        color: selectedId === "ch-general" ? "#6C77C1" : "var(--ui-text-1)",
+                        color: selectedId === "ch-general" ? "var(--hb-accent)" : "var(--ui-text-1)",
                       }}
                     >
                       # General
@@ -563,7 +557,7 @@ export default function ChatPage() {
                       width: 26,
                       height: 26,
                       borderRadius: 7,
-                      background: "#6C77C1",
+                      background: "var(--hb-accent)",
                       color: "#FFFFFF",
                       fontSize: 11.5,
                       fontWeight: 700,
@@ -609,7 +603,7 @@ export default function ChatPage() {
                           borderRadius: 8,
                           border: "none",
                           background: isSubActive ? "var(--ui-accent-soft)" : "transparent",
-                          color: isSubActive ? "#6C77C1" : "var(--ui-text-3)",
+                          color: isSubActive ? "var(--hb-accent-text)" : "var(--ui-text-3)",
                           fontWeight: isSubActive ? 600 : 500,
                           fontSize: 12.5,
                           cursor: "pointer",
@@ -653,23 +647,7 @@ export default function ChatPage() {
           >
             {/* Overlapping Speech Bubbles Illustration matching 04-chat-1440.png */}
             <div style={{ marginBottom: 14 }}>
-              <svg width="52" height="48" viewBox="0 0 52 48" fill="none">
-                {/* Back speech bubble */}
-                <path
-                  d="M22 6C12.06 6 4 12.72 4 21c0 3.48 1.42 6.68 3.8 9.22L6 38l8.1-2.74C16.54 35.74 19.2 36 22 36c9.94 0 18-6.72 18-15S31.94 6 22 6z"
-                  fill="#94A3B8"
-                />
-                {/* Front speech bubble with 3 dots */}
-                <path
-                  d="M31 16c-8.28 0-15 5.6-15 12.5 0 6.9 6.72 12.5 15 12.5 2.34 0 4.55-.45 6.52-1.24L44 42l-1.5-6.48C44.48 33.4 46 30.62 46 28.5 46 21.6 39.28 16 31 16z"
-                  fill="#AEB7C4"
-                  stroke="#FFFFFF"
-                  strokeWidth="2"
-                />
-                <circle cx="26" cy="28.5" r="1.7" fill="#FFFFFF" />
-                <circle cx="31" cy="28.5" r="1.7" fill="#FFFFFF" />
-                <circle cx="36" cy="28.5" r="1.7" fill="#FFFFFF" />
-              </svg>
+              <MessageSquarePlus size={48} />
             </div>
 
             <h2
@@ -780,7 +758,7 @@ export default function ChatPage() {
                       height: 44,
                       borderRadius: 12,
                       background: "var(--ui-accent-soft)",
-                      color: "#6C77C1",
+                      color: "var(--hb-accent-text)",
                       display: "grid",
                       placeItems: "center",
                       margin: "0 auto 12px",
@@ -835,7 +813,7 @@ export default function ChatPage() {
                           {m.sender}
                         </span>
                         <span style={{ fontSize: 11, color: "var(--ui-text-5)" }}>{m.time}</span>
-                        <CheckCheck size={13} style={{ color: "#6C77C1" }} />
+                        <CheckCheck size={13} style={{ color: "var(--hb-accent-text)" }} />
                       </div>
                       <div
                         style={{
@@ -898,7 +876,7 @@ export default function ChatPage() {
                 />
                 <AtSign size={16} style={{ color: "var(--ui-text-5)", cursor: "pointer" }} />
                 <Smile size={16} style={{ color: "var(--ui-text-5)", cursor: "pointer" }} />
-                <Sparkles size={16} style={{ color: "#6C77C1", cursor: "pointer" }} />
+                <Sparkles size={16} style={{ color: "var(--hb-accent-text)", cursor: "pointer" }} />
               </div>
 
               <button
@@ -907,7 +885,7 @@ export default function ChatPage() {
                   padding: "10px 16px",
                   borderRadius: 10,
                   border: "none",
-                  background: "#6C77C1",
+                  background: "var(--hb-accent)",
                   color: "#FFFFFF",
                   fontSize: 13,
                   fontWeight: 600,

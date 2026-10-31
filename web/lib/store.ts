@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import {
   createSeedWorkspaceData,
+  rebaseStaleFixture,
   DEFAULT_WIDGETS_CONFIG,
   INITIAL_WORKSPACE_DATA,
   REFERENCE_FIXTURE_CLOCK,
@@ -321,6 +322,7 @@ function extractWorkspaceData(state: HublyStoreState): HublyWorkspaceData {
 
 function persistWorkspaceState(state: HublyStoreState): void {
   if (typeof window === "undefined") return;
+  if (isReferenceFixtureUrl()) return;
   if (backendEnabled) {
     queueLiveSave(extractWorkspaceData(state));
     return;
@@ -508,20 +510,24 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
       if (urlClock) {
         fixtureData.testClock = { fixedIsoNow: urlClock };
       }
-      saveWorkspaceToStorage(resolvedWorkspaceId, fixtureData);
+      // Los datos de prueba viven solo en esta visita: no pisan el espacio demo guardado.
       set({
         ...fixtureData,
         activeNotebookId: null,
         hydrated: true,
       });
-      pushWorkspaceToApi(resolvedWorkspaceId, fixtureData).catch(() => {});
       return;
     }
 
     const hadLocalV3 = hasStoredWorkspaceInV3(resolvedWorkspaceId);
-    const localData =
-      loadWorkspaceFromStorage(resolvedWorkspaceId) ||
-      createSeedWorkspaceData(resolvedWorkspaceId);
+    const storedData = loadWorkspaceFromStorage(resolvedWorkspaceId);
+    const localData = storedData
+      ? rebaseStaleFixture(storedData)
+      : createSeedWorkspaceData(resolvedWorkspaceId);
+    if (storedData && localData !== storedData) {
+      saveWorkspaceToStorage(resolvedWorkspaceId, localData);
+      pushWorkspaceToApi(resolvedWorkspaceId, localData).catch(() => {});
+    }
 
     if (urlClock) {
       localData.testClock = { fixedIsoNow: urlClock };
@@ -536,9 +542,8 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     if (!hadLocalV3) {
       const serverData = await fetchWorkspaceFromApi(resolvedWorkspaceId);
       if (serverData && Array.isArray(serverData.brands) && serverData.brands.length > 0) {
-        const normalizedServer = normalizeWorkspacePayload(
-          serverData,
-          resolvedWorkspaceId
+        const normalizedServer = rebaseStaleFixture(
+          normalizeWorkspacePayload(serverData, resolvedWorkspaceId)
         );
         if (urlClock) {
           normalizedServer.testClock = { fixedIsoNow: urlClock };
@@ -558,8 +563,10 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
 
   switchWorkspace: async (workspaceId) => {
     const cleanId = workspaceId.trim() || "default";
-    const loaded =
-      loadWorkspaceFromStorage(cleanId) || createSeedWorkspaceData(cleanId);
+    const storedWorkspace = loadWorkspaceFromStorage(cleanId);
+    const loaded = storedWorkspace
+      ? rebaseStaleFixture(storedWorkspace)
+      : createSeedWorkspaceData(cleanId);
     set({
       ...loaded,
       workspaceId: cleanId,

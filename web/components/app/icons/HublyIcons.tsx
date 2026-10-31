@@ -1,6 +1,24 @@
 "use client";
 
 import React, { useState } from "react";
+import {
+  HublyHomeIcon,
+  HublyBentoIcon,
+  HublyChatIcon,
+  HublyNotebookIcon,
+  HublyCalendarIcon,
+  HublyBrainIcon,
+  HublyFolderIcon,
+  HublyLayersIcon,
+  HublyHashIcon,
+  HublyTargetIcon,
+  HublyClipboardIcon,
+  HublyMemoIcon,
+  HublyBellIcon,
+  HublySunWeatherIcon,
+  HublyPeopleIcon,
+  HublyPulseIcon,
+} from "./DuotoneIcons";
 
 /* ==========================================================================
    TYPES & INTERFACES
@@ -38,21 +56,6 @@ export interface HublyCatAvatarProps {
   /** Accessible label / title */
   title?: string;
   alt?: string;
-}
-
-export interface HublyLogoWordmarkProps {
-  /** Collapsed sidebar state (`h.` / cat mark) vs expanded (`hubly.` wordmark) */
-  collapsed?: boolean;
-  /** Visual mode: "default" (vector mark + display wordmark), "image" (/brand/hubly-logo.webp), "cat" (cat avatar + wordmark) */
-  variant?: "default" | "image" | "cat";
-  /** Size preset */
-  size?: "sm" | "md" | "lg";
-  /** Show HublyCatAvatar when collapsed instead of `h.` monogram */
-  showCatWhenCollapsed?: boolean;
-  /** Show characteristic dot at the end of wordmark */
-  showDot?: boolean;
-  className?: string;
-  style?: React.CSSProperties;
 }
 
 export interface KraftNotebookShapeSvgProps extends React.SVGProps<SVGSVGElement> {
@@ -160,10 +163,10 @@ export function KraftNotebookShapeSvg({
     variant === "report"
       ? { cover: "#A97E4E", spine: "#7D5830", tab: "#0A7A55", stamp: "#FFD23F" }
       : variant === "space"
-        ? { cover: "#B48B5B", spine: "#866036", tab: "#6C77C1", stamp: "#FBF3E4" }
+        ? { cover: "#B48B5B", spine: "#866036", tab: "var(--hb-accent)", stamp: "#FBF3E4" }
         : variant === "brand"
           ? { cover: "#9E7446", spine: "#704D27", tab: "#FFD23F", stamp: "#0A7A55" }
-          : { cover: "#B99260", spine: "#8C653A", tab: "#6C77C1", stamp: "#FBF3E4" };
+          : { cover: "#B99260", spine: "#8C653A", tab: "var(--hb-accent)", stamp: "#FBF3E4" };
 
   return (
     <svg
@@ -278,11 +281,11 @@ export function KraftNotebookShapeSvg({
    ========================================================================== */
 
 /**
- * Exact 1:1 inline SVG reconstruction of `output/branding/hubly-gato-v2.png` (`/brand/hubly-gato.png`).
- * - Forest green body, head, left ear, and curled tail (`#0a7a55`)
- * - Golden yellow right ear (`#ffd23f`)
- * - Deep pine vertical oval eyes and cute `w` cat mouth (`#10291f`)
- * - Slightly lighter green front paws (`#0d8a61`) with `#086646` center division
+ * Native SVG fallback for Hubi, using the approved navy / sky-blue brand palette.
+ * - Navy body, head, left ear, and curled tail (`#16324F`)
+ * - Sky-blue right ear (`#7CC8EE`)
+ * - Pale sky-blue vertical oval eyes and cute `w` cat mouth (`#DCEFF9`)
+ * - Light navy front paws (`#24496E`) with `#16324F` center division
  */
 export function HublyCatInlineSvg({
   size = 28,
@@ -312,58 +315,58 @@ export function HublyCatInlineSvg({
       {/* Soft warm-white circular backdrop */}
       <circle cx="60" cy="60" r="58" fill="#FFFFFF" />
 
-      {/* Curled right tail in forest green (#0a7a55) */}
+      {/* Curled right tail in navy (#16324F) */}
       <path
         d="M78 93C94 93 103 82 103 70C103 61 97 56 91 58C86 59.5 85 65.5 89 68.5C92 70.8 91 76.5 85 79.5C81 81.5 76 82 73 82"
-        stroke="#0A7A55"
+        stroke="#16324F"
         strokeWidth="11"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
 
-      {/* Torso / sitting body in forest green (#0a7a55) */}
+      {/* Torso / sitting body in navy (#16324F) */}
       <path
         d="M35 66C33 78 33 93 39 98C44 102 72 102 77 98C83 93 83 78 81 66C79 56 37 56 35 66Z"
-        fill="#0A7A55"
+        fill="#16324F"
       />
 
-      {/* Left ear in forest green (#0a7a55) */}
+      {/* Left ear in navy (#16324F) */}
       <path
         d="M27 44L25 19C24.8 15.8 28.2 14 30.8 16L48 29Z"
-        fill="#0A7A55"
+        fill="#16324F"
       />
 
-      {/* Right ear in golden yellow (#ffd23f) */}
+      {/* Right ear in brand sky blue (#7CC8EE) */}
       <path
         d="M68 29L85.2 16C87.8 14 91.2 15.8 91 19L89 44Z"
-        fill="#FFD23F"
+        fill="#7CC8EE"
       />
 
-      {/* Rounded head in forest green (#0a7a55) */}
-      <ellipse cx="58" cy="46" rx="33" ry="26" fill="#0A7A55" />
+      {/* Rounded head in navy (#16324F) */}
+      <ellipse cx="58" cy="46" rx="33" ry="26" fill="#16324F" />
 
-      {/* Eyes in deep pine (#10291f) */}
-      <ellipse cx="45.5" cy="45.5" rx="4.2" ry="5.6" fill="#10291F" />
-      <ellipse cx="70.5" cy="45.5" rx="4.2" ry="5.6" fill="#10291F" />
+      {/* Eyes in pale sky blue (#DCEFF9) */}
+      <ellipse cx="45.5" cy="45.5" rx="4.2" ry="5.6" fill="#DCEFF9" />
+      <ellipse cx="70.5" cy="45.5" rx="4.2" ry="5.6" fill="#DCEFF9" />
 
-      {/* Cute rounded 'w' mouth in deep pine (#10291f) */}
+      {/* Cute rounded 'w' mouth in pale sky blue (#DCEFF9) */}
       <path
         d="M51 54.5C52.5 57.8 56.2 57.8 58 54.8C59.8 57.8 63.5 57.8 65 54.5"
-        stroke="#10291F"
+        stroke="#DCEFF9"
         strokeWidth="3.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
 
-      {/* Front paws in slightly lighter emerald (#0d8a61) with subtle division */}
-      <rect x="42" y="84" width="15" height="17" rx="7.5" fill="#0D8A61" />
-      <rect x="59" y="84" width="15" height="17" rx="7.5" fill="#0D8A61" />
+      {/* Front paws in light navy (#24496E) with subtle division */}
+      <rect x="42" y="84" width="15" height="17" rx="7.5" fill="#24496E" />
+      <rect x="59" y="84" width="15" height="17" rx="7.5" fill="#24496E" />
       <line
         x1="58"
         y1="86"
         x2="58"
         y2="99"
-        stroke="#086646"
+        stroke="#16324F"
         strokeWidth="2"
         strokeLinecap="round"
       />
@@ -410,14 +413,14 @@ export function HublyCatAvatar({
 
   return (
     <span
-      className={`relative inline-flex items-center justify-center flex-shrink-0 select-none ${className}`.trim()}
+      className={`hubly-cat-avatar relative inline-flex items-center justify-center flex-shrink-0 select-none ${className}`.trim()}
       style={{
         width: size,
         height: size,
         borderRadius,
         background: "#FFFFFF",
-        border: bordered ? "1.5px solid rgba(10, 122, 85, 0.22)" : undefined,
-        boxShadow: bordered ? "0 1px 3px rgba(16, 41, 31, 0.08)" : undefined,
+        border: bordered ? "1.5px solid rgba(22, 50, 79, 0.16)" : undefined,
+        boxShadow: bordered ? "0 1px 3px rgba(17, 28, 39, 0.08)" : undefined,
         overflow: status ? "visible" : "hidden",
         ...style,
       }}
@@ -438,7 +441,7 @@ export function HublyCatAvatar({
           <HublyCatInlineSvg size={size} rough={rough} title={title ?? alt} />
         ) : (
           <img
-            src="/brand/hubly-gato.png"
+            src="/brand/hubly-gato.png?v=marino-celeste"
             alt={alt}
             width={size}
             height={size}
@@ -468,183 +471,6 @@ export function HublyCatAvatar({
           }}
         />
       ) : null}
-    </span>
-  );
-}
-
-/**
- * Hubly 2x2 Organic Petal Isotype (matches `/brand/hubly-logo.webp` left icon mark).
- * 3 forest green (`#0a7a55`) organic petals + 1 golden yellow (`#ffd23f`) top-right squircle.
- */
-export function HublyPetalMarkSvg({
-  size = 24,
-  className = "",
-  style,
-}: {
-  size?: number;
-  className?: string;
-  style?: React.CSSProperties;
-}) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 40 40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={`inline-block flex-shrink-0 ${className}`.trim()}
-      style={style}
-      aria-hidden="true"
-    >
-      {/* Top-left forest green petal */}
-      <path
-        d="M5 12C5 7.58172 8.58172 4 13 4H15C17.2091 4 19 5.79086 19 8V15C19 17.2091 17.2091 19 15 19H8C5.79086 19 5 16.4183 5 12Z"
-        fill="#0A7A55"
-      />
-      {/* Top-right golden yellow larger squircle */}
-      <rect x="21" y="3" width="16" height="16" rx="5.5" fill="#FFD23F" />
-      {/* Bottom-left forest green petal */}
-      <path
-        d="M5 25C5 22.7909 6.79086 21 9 21H15C17.2091 21 19 22.7909 19 25V32C19 34.2091 17.2091 36 15 36H13C8.58172 36 5 32.4183 5 28V25Z"
-        fill="#0A7A55"
-      />
-      {/* Bottom-right forest green petal */}
-      <path
-        d="M21 25C21 22.7909 22.7909 21 25 21H31C33.2091 21 35 22.7909 35 25V28C35 32.4183 31.4183 36 27 36H25C22.7909 36 21 34.2091 21 32V25Z"
-        fill="#0A7A55"
-      />
-    </svg>
-  );
-}
-
-/**
- * Hubly Logo & Wordmark component for Expanded (`hubly` / `/brand/hubly-logo.webp`)
- * and Collapsed (`h.` or `HublyCatAvatar`) Sidebar states.
- */
-export function HublyLogoWordmark({
-  collapsed = false,
-  variant = "default",
-  size = "md",
-  showCatWhenCollapsed = false,
-  showDot = true,
-  className = "",
-  style,
-}: HublyLogoWordmarkProps) {
-  const [logoImgError, setLogoImgError] = useState(false);
-
-  const dimensions =
-    size === "sm"
-      ? { height: 22, fontSize: 19, iconSize: 22, catSize: 28 }
-      : size === "lg"
-        ? { height: 32, fontSize: 26, iconSize: 30, catSize: 36 }
-        : { height: 26, fontSize: 22, iconSize: 25, catSize: 32 };
-
-  if (collapsed) {
-    if (showCatWhenCollapsed || variant === "cat") {
-      return (
-        <span
-          className={`inline-flex items-center justify-center ${className}`.trim()}
-          style={style}
-        >
-          <HublyCatAvatar size={dimensions.catSize} rounded="xl" />
-        </span>
-      );
-    }
-
-    return (
-      <span
-        className={`inline-flex items-baseline justify-center select-none ${className}`.trim()}
-        style={{
-          fontFamily:
-            "var(--font-fraunces), var(--font-young-serif), var(--font-bricolage), Georgia, serif",
-          fontWeight: 800,
-          fontSize: dimensions.fontSize + 2,
-          lineHeight: 1,
-          letterSpacing: "-0.04em",
-          color: "var(--tinta-primary, #0C2E1F)",
-          ...style,
-        }}
-        aria-label="hubly"
-      >
-        <span>h</span>
-        <span
-          style={{
-            display: "inline-block",
-            width: 6,
-            height: 6,
-            borderRadius: "9999px",
-            backgroundColor: "#0A7A55",
-            boxShadow: "0 0 0 1.5px #FFD23F",
-            marginLeft: 1.5,
-            transform: "translateY(-1px)",
-          }}
-        />
-      </span>
-    );
-  }
-
-  if (variant === "image" && !logoImgError) {
-    return (
-      <span
-        className={`inline-flex items-center gap-2 select-none ${className}`.trim()}
-        style={style}
-      >
-        <img
-          src="/brand/hubly-logo.webp"
-          alt="hubly"
-          height={dimensions.height}
-          onError={() => setLogoImgError(true)}
-          style={{
-            height: dimensions.height,
-            width: "auto",
-            objectFit: "contain",
-            display: "block",
-          }}
-        />
-      </span>
-    );
-  }
-
-  return (
-    <span
-      className={`inline-flex items-center gap-2 select-none ${className}`.trim()}
-      style={style}
-      aria-label="hubly"
-    >
-      {variant === "cat" ? (
-        <HublyCatAvatar size={dimensions.iconSize + 3} rounded="lg" />
-      ) : (
-        <HublyPetalMarkSvg size={dimensions.iconSize} />
-      )}
-      <span
-        style={{
-          fontFamily:
-            "var(--font-bricolage), var(--font-fraunces), -apple-system, BlinkMacSystemFont, sans-serif",
-          fontWeight: 800,
-          fontSize: dimensions.fontSize,
-          lineHeight: 1,
-          letterSpacing: "-0.035em",
-          color: "var(--tinta-primary, #0C2E1F)",
-          display: "inline-flex",
-          alignItems: "baseline",
-        }}
-      >
-        <span>hubly</span>
-        {showDot ? (
-          <span
-            style={{
-              display: "inline-block",
-              width: 5.5,
-              height: 5.5,
-              borderRadius: "9999px",
-              backgroundColor: "#FFD23F",
-              border: "1.5px solid #0A7A55",
-              marginLeft: 1.5,
-              transform: "translateY(-1px)",
-            }}
-          />
-        ) : null}
-      </span>
     </span>
   );
 }
@@ -688,7 +514,7 @@ function IconSvg({
 }
 
 /**
- * 1. HublyAvatarIcon / HublyAvatarIcon (28x28 illustrated vector icon of the Hubly cat `#0a7a55` + `#ffd23f`)
+ * 1. HublyAvatarIcon / HublyAvatarIcon (28x28 illustrated vector icon of the Hubly cat `#16324F` + `#7CC8EE`)
  */
 export function HublyAvatarIcon(props: HublyIconProps) {
   return (
@@ -696,31 +522,31 @@ export function HublyAvatarIcon(props: HublyIconProps) {
       {/* Tail */}
       <path
         d="M19.5 22.5C22.8 22.5 24.8 19.8 24.8 16.8C24.8 14.8 23.4 13.8 22 14.2C20.8 14.6 20.6 16 21.5 16.8"
-        stroke="#0A7A55"
+        stroke="#16324F"
         strokeWidth="2.4"
         strokeLinecap="round"
       />
       {/* Sitting Body */}
       <path
         d="M8.5 15.8C8 18.8 8 22.2 9.5 23.5C11 24.5 17 24.5 18.5 23.5C20 22.2 20 18.8 19.5 15.8Z"
-        fill="#0A7A55"
-        stroke={INK}
+        fill="#16324F"
+        stroke="#111C27"
         strokeWidth="1.4"
         strokeLinejoin="round"
       />
-      {/* Left Ear (Forest Green #0A7A55) */}
+      {/* Left Ear (Navy #16324F) */}
       <path
         d="M6.5 11.2L6 4.5C6 3.8 6.8 3.4 7.4 3.9L11.8 7.4Z"
-        fill="#0A7A55"
-        stroke={INK}
+        fill="#16324F"
+        stroke="#111C27"
         strokeWidth="1.4"
         strokeLinejoin="round"
       />
-      {/* Right Ear (Golden Yellow #FFD23F) */}
+      {/* Right Ear (Brand Sky Blue #7CC8EE) */}
       <path
         d="M16.2 7.4L20.6 3.9C21.2 3.4 22 3.8 22 4.5L21.5 11.2Z"
-        fill="#FFD23F"
-        stroke={INK}
+        fill="#7CC8EE"
+        stroke="#111C27"
         strokeWidth="1.4"
         strokeLinejoin="round"
       />
@@ -730,30 +556,30 @@ export function HublyAvatarIcon(props: HublyIconProps) {
         cy="11.4"
         rx="8"
         ry="6.4"
-        fill="#0A7A55"
-        stroke={INK}
+        fill="#16324F"
+        stroke="#111C27"
         strokeWidth="1.4"
       />
-      {/* Eyes (#10291F) */}
-      <ellipse cx="11" cy="11.2" rx="1.15" ry="1.5" fill="#10291F" />
-      <ellipse cx="17" cy="11.2" rx="1.15" ry="1.5" fill="#10291F" />
+      {/* Eyes (#DCEFF9) */}
+      <ellipse cx="11" cy="11.2" rx="1.15" ry="1.5" fill="#DCEFF9" />
+      <ellipse cx="17" cy="11.2" rx="1.15" ry="1.5" fill="#DCEFF9" />
       {/* Cute 'w' mouth */}
       <path
         d="M12.2 13.5C12.7 14.4 13.5 14.4 14 13.6C14.5 14.4 15.3 14.4 15.8 13.5"
-        stroke="#10291F"
+        stroke="#DCEFF9"
         strokeWidth="1.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* Front paws (#0D8A61) */}
+      {/* Front paws (#24496E) */}
       <rect
         x="10.2"
         y="20"
         width="3.8"
         height="4.2"
         rx="1.9"
-        fill="#0D8A61"
-        stroke={INK}
+        fill="#24496E"
+        stroke="#111C27"
         strokeWidth="1.1"
       />
       <rect
@@ -762,8 +588,8 @@ export function HublyAvatarIcon(props: HublyIconProps) {
         width="3.8"
         height="4.2"
         rx="1.9"
-        fill="#0D8A61"
-        stroke={INK}
+        fill="#24496E"
+        stroke="#111C27"
         strokeWidth="1.1"
       />
     </IconSvg>
@@ -806,753 +632,22 @@ export function LegacyOrangeTabbyAvatarIcon(props: HublyIconProps) {
   );
 }
 
-/**
- * 2. Home / Inicio
- */
-export function HublyHomeIcon(props: HublyIconProps) {
-  return (
-    <IconSvg {...props}>
-      <ellipse cx="14" cy="24.5" rx="9" ry="1.1" fill={INK} opacity="0.12" />
-      <rect
-        x="18.2"
-        y="5.5"
-        width="2.8"
-        height="5.5"
-        rx="0.5"
-        fill="#D66853"
-        stroke={INK}
-        strokeWidth="1.5"
-      />
-      <path
-        d="M5.5 13 L14 6 L22.5 13 V23 Q22.5 24 21.5 24 H6.5 Q5.5 24 5.5 23 Z"
-        fill="#FBF6EA"
-        stroke={INK}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path d="M6.3 13.5 H21.7 V15 H6.3 Z" fill="#EDE4CE" opacity="0.7" />
-      <path
-        d="M3.2 13.8 L14 4.8 L24.8 13.8 L23.2 15.6 L14 8 L4.8 15.6 Z"
-        fill="#E2725B"
-        stroke={INK}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M11.5 24 V17.8 Q11.5 16 14 16 Q16.5 16 16.5 17.8 V24 Z"
-        fill="#6C77C1"
-        stroke={INK}
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-      <circle cx="15.2" cy="20.2" r="0.6" fill={INK} />
-      <circle
-        cx="14"
-        cy="11.5"
-        r="1.6"
-        fill="#FFF5D6"
-        stroke={INK}
-        strokeWidth="1.3"
-      />
-    </IconSvg>
-  );
-}
-
-/**
- * 3. Dashboard / Bento Grid
- */
-export function HublyBentoIcon(props: HublyIconProps) {
-  return (
-    <IconSvg {...props}>
-      <rect
-        x="4"
-        y="4.5"
-        width="9"
-        height="19"
-        rx="2.4"
-        fill="#6C77C1"
-        stroke={INK}
-        strokeWidth="1.6"
-      />
-      <path
-        d="M6 7 H10"
-        stroke="#FFF5D6"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        opacity="0.85"
-      />
-      <rect
-        x="15.2"
-        y="4.5"
-        width="8.8"
-        height="8.5"
-        rx="2.2"
-        fill="#8FA6CB"
-        stroke={INK}
-        strokeWidth="1.6"
-      />
-      <circle cx="19.6" cy="8.8" r="1.8" fill="#FBF6EA" opacity="0.85" />
-      <rect
-        x="15.2"
-        y="15"
-        width="8.8"
-        height="8.5"
-        rx="2.2"
-        fill="#E8A598"
-        stroke={INK}
-        strokeWidth="1.6"
-      />
-      <path
-        d="M17.5 20.5 L19.2 18.5 L20.6 19.8 L22 17.5"
-        stroke={INK}
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </IconSvg>
-  );
-}
-
-/**
- * 4. Chat / Speech Bubbles
- */
-export function HublyChatIcon(props: HublyIconProps) {
-  return (
-    <IconSvg {...props}>
-      <path
-        d="M11 6.5 H22 Q24.5 6.5 24.5 9 V15.5 Q24.5 18 22 18 H20 L21.2 21 L17.2 18 H11 Q8.5 18 8.5 15.5 V9 Q8.5 6.5 11 6.5 Z"
-        fill="#6C77C1"
-        stroke={INK}
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M6 9.5 H17.5 Q20 9.5 20 12 V18.5 Q20 21 17.5 21 H10.5 L6.2 24 L7.2 21 H6 Q3.5 21 3.5 18.5 V12 Q3.5 9.5 6 9.5 Z"
-        fill="#FBF6EA"
-        stroke={INK}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <circle cx="8.5" cy="15.3" r="1.2" fill={INK} />
-      <circle cx="11.8" cy="15.3" r="1.2" fill={INK} />
-      <circle cx="15.1" cy="15.3" r="1.2" fill={INK} />
-    </IconSvg>
-  );
-}
-
-/**
- * 5. Mi Espacio / Notebook
- */
-export function HublyNotebookIcon(props: HublyIconProps) {
-  return (
-    <IconSvg {...props}>
-      <g transform="rotate(-3 14 14)">
-        <path
-          d="M19 4.5 V10 L17.5 8.8 L16 10 V4.5 Z"
-          fill="#E2725B"
-          stroke={INK}
-          strokeWidth="1.3"
-          strokeLinejoin="round"
-        />
-        <rect
-          x="6"
-          y="4.5"
-          width="16"
-          height="19.5"
-          rx="2.2"
-          fill="#D89A5B"
-          stroke={INK}
-          strokeWidth="1.6"
-        />
-        <path
-          d="M8.2 4.5 H6.8 Q6 4.5 6 5.5 V23 Q6 24 6.8 24 H8.2 Z"
-          fill="#8E5B32"
-          stroke={INK}
-          strokeWidth="1.4"
-        />
-        <rect
-          x="10.5"
-          y="9"
-          width="8.5"
-          height="5"
-          rx="1"
-          fill="#FBF6EA"
-          stroke={INK}
-          strokeWidth="1.3"
-        />
-        <line
-          x1="12"
-          y1="11.5"
-          x2="17.5"
-          y2="11.5"
-          stroke={INK}
-          strokeWidth="1.2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M20.5 2.5 L21.8 4 L19.2 4.5 Z"
-          fill="#6C77C1"
-          opacity="0.9"
-        />
-      </g>
-    </IconSvg>
-  );
-}
-
-/**
- * 6. Calendario / Tear-off Calendar
- */
-export function HublyCalendarIcon(props: HublyIconProps) {
-  return (
-    <IconSvg {...props}>
-      <rect
-        x="4.2"
-        y="6"
-        width="19.6"
-        height="18"
-        rx="2.6"
-        fill="#FBF6EA"
-        stroke={INK}
-        strokeWidth="1.6"
-      />
-      <path
-        d="M4.2 8.6 Q4.2 6 6.8 6 H21.2 Q23.8 6 23.8 8.6 V11.5 H4.2 Z"
-        fill="#E2725B"
-        stroke={INK}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <rect
-        x="8.2"
-        y="3.8"
-        width="2.2"
-        height="4.4"
-        rx="1.1"
-        fill="#D6D1C4"
-        stroke={INK}
-        strokeWidth="1.4"
-      />
-      <rect
-        x="17.6"
-        y="3.8"
-        width="2.2"
-        height="4.4"
-        rx="1.1"
-        fill="#D6D1C4"
-        stroke={INK}
-        strokeWidth="1.4"
-      />
-      <circle cx="9" cy="15" r="1" fill={INK} opacity="0.55" />
-      <circle cx="14" cy="15" r="1" fill={INK} opacity="0.55" />
-      <circle
-        cx="19"
-        cy="15"
-        r="1.8"
-        fill="#6C77C1"
-        stroke={INK}
-        strokeWidth="1.2"
-      />
-      <circle cx="9" cy="19.5" r="1" fill={INK} opacity="0.55" />
-      <circle cx="14" cy="19.5" r="1" fill={INK} opacity="0.55" />
-      <circle cx="19" cy="19.5" r="1" fill={INK} opacity="0.55" />
-    </IconSvg>
-  );
-}
-
-/**
- * 7. Núcleo de Marca / Brain
- */
-export function HublyBrainIcon(props: HublyIconProps) {
-  return (
-    <IconSvg {...props}>
-      <path
-        d="M13.6 7 C10 6 7 8 7.2 11 C5 11.6 4.2 14.2 5.8 16 C4.8 18.2 6.5 20.8 9.2 20.6 C10.2 22.2 13.6 22 13.6 19.8 Z"
-        fill="#F2A7B5"
-        stroke={INK}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14.4 7 C18 6 21 8 20.8 11 C23 11.6 23.8 14.2 22.2 16 C23.2 18.2 21.5 20.8 18.8 20.6 C17.8 22.2 14.4 22 14.4 19.8 Z"
-        fill="#F7BAC6"
-        stroke={INK}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <line
-        x1="14"
-        y1="6.8"
-        x2="14"
-        y2="20.8"
-        stroke={INK}
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M9.5 11.2 Q11.5 12.2 11.2 14"
-        stroke={INK}
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M8.5 16.5 Q10.8 16 11.5 17.8"
-        stroke={INK}
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M18.5 11.2 Q16.5 12.2 16.8 14"
-        stroke={INK}
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M19.5 16.5 Q17.2 16 16.5 17.8"
-        stroke={INK}
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M22.5 4 L23 5.5 L24.5 6 L23 6.5 L22.5 8 L22 6.5 L20.5 6 L22 5.5 Z"
-        fill="#6C77C1"
-        stroke={INK}
-        strokeWidth="0.9"
-        strokeLinejoin="round"
-      />
-    </IconSvg>
-  );
-}
-
-/**
- * 8. Content Manager / Manila Folder
- */
-export function HublyFolderIcon(props: HublyIconProps) {
-  return (
-    <IconSvg {...props}>
-      <path
-        d="M4 8 Q4 6.2 5.8 6.2 H11 L13 8.5 H22.2 Q24 8.5 24 10.2 V21 Q24 22.5 22.2 22.5 H5.8 Q4 22.5 4 21 Z"
-        fill="#DF9A2B"
-        stroke={INK}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <rect
-        x="7"
-        y="7.5"
-        width="10.5"
-        height="8"
-        rx="1.2"
-        transform="rotate(-4 12 11)"
-        fill="#FBF6EA"
-        stroke={INK}
-        strokeWidth="1.3"
-      />
-      <rect
-        x="11.5"
-        y="8"
-        width="10"
-        height="8"
-        rx="1.2"
-        transform="rotate(5 16 12)"
-        fill="#DCE8F5"
-        stroke={INK}
-        strokeWidth="1.3"
-      />
-      <path
-        d="M3.6 12.5 Q3.6 11 5.2 11 H22.8 Q24.4 11 24.2 12.5 L23.4 21.2 Q23.2 22.5 21.8 22.5 H6.2 Q4.8 22.5 4.6 21.2 Z"
-        fill="#6C77C1"
-        stroke={INK}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <line
-        x1="8.5"
-        y1="19.5"
-        x2="14.5"
-        y2="19.5"
-        stroke="#FFF5D6"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        opacity="0.85"
-      />
-    </IconSvg>
-  );
-}
-
-/**
- * 9. Proyectos / Stacked Diamond Layers
- */
-export function HublyLayersIcon(props: HublyIconProps) {
-  return (
-    <IconSvg {...props}>
-      <path
-        d="M14 14.5 L24 19 L14 23.5 L4 19 Z"
-        fill="#8FA6CB"
-        stroke={INK}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14 9.5 L24 14 L14 18.5 L4 14 Z"
-        fill="#E8A598"
-        stroke={INK}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14 4.5 L24 9 L14 13.5 L4 9 Z"
-        fill="#6C77C1"
-        stroke={INK}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9.5 8.5 L14 6.5 L18.5 8.5"
-        stroke="#FFF5D6"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        fill="none"
-        opacity="0.85"
-      />
-    </IconSvg>
-  );
-}
-
-/**
- * 10. Social Media / Tactile 3D Hashtag (#)
- */
-export function HublyHashIcon(props: HublyIconProps) {
-  return (
-    <IconSvg {...props}>
-      <g transform="rotate(-4 14 14)">
-        <rect
-          x="4.5"
-          y="9"
-          width="19"
-          height="3.2"
-          rx="1.5"
-          fill="#8FA6CB"
-          stroke={INK}
-          strokeWidth="1.5"
-        />
-        <rect
-          x="4.5"
-          y="15.8"
-          width="19"
-          height="3.2"
-          rx="1.5"
-          fill="#8FA6CB"
-          stroke={INK}
-          strokeWidth="1.5"
-        />
-        <rect
-          x="8.8"
-          y="4.5"
-          width="3.2"
-          height="19"
-          rx="1.5"
-          transform="skewX(-8)"
-          fill="#6C77C1"
-          stroke={INK}
-          strokeWidth="1.5"
-        />
-        <rect
-          x="16.2"
-          y="4.5"
-          width="3.2"
-          height="19"
-          rx="1.5"
-          transform="skewX(-8)"
-          fill="#6C77C1"
-          stroke={INK}
-          strokeWidth="1.5"
-        />
-      </g>
-    </IconSvg>
-  );
-}
-
-/**
- * 11. Ads / Bullseye Target with Dart
- */
-export function HublyTargetIcon(props: HublyIconProps) {
-  return (
-    <IconSvg {...props}>
-      <circle
-        cx="13.2"
-        cy="14.8"
-        r="9.2"
-        fill="#E2725B"
-        stroke={INK}
-        strokeWidth="1.6"
-      />
-      <circle
-        cx="13.2"
-        cy="14.8"
-        r="6"
-        fill="#FBF6EA"
-        stroke={INK}
-        strokeWidth="1.5"
-      />
-      <circle
-        cx="13.2"
-        cy="14.8"
-        r="2.8"
-        fill="#6C77C1"
-        stroke={INK}
-        strokeWidth="1.4"
-      />
-      <line
-        x1="13.5"
-        y1="14.5"
-        x2="22.5"
-        y2="5.5"
-        stroke={INK}
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M20.5 7.5 L21.2 4.2 L24.2 3.8 L23.5 6.8 Z"
-        fill="#7EB77F"
-        stroke={INK}
-        strokeWidth="1.3"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M20.5 7.5 L23.8 6.8 L24.2 3.8 L21.2 4.5 Z"
-        fill="#5E9C60"
-        stroke={INK}
-        strokeWidth="1.3"
-        strokeLinejoin="round"
-      />
-    </IconSvg>
-  );
-}
-
-/**
- * 12. Clipboard / Primeros Pasos
- */
-export function HublyClipboardIcon(props: HublyIconProps) {
-  return (
-    <IconSvg {...props}>
-      <rect
-        x="5"
-        y="5.5"
-        width="18"
-        height="19.5"
-        rx="2.6"
-        fill="#C98A4B"
-        stroke={INK}
-        strokeWidth="1.6"
-      />
-      <rect
-        x="7.2"
-        y="8"
-        width="13.6"
-        height="14.8"
-        rx="1.2"
-        fill="#FBF6EA"
-        stroke={INK}
-        strokeWidth="1.4"
-      />
-      <rect
-        x="10"
-        y="3.5"
-        width="8"
-        height="4"
-        rx="1.4"
-        fill="#D6D1C4"
-        stroke={INK}
-        strokeWidth="1.5"
-      />
-      <path
-        d="M9.5 12.5 L11 14 L13.5 11.2"
-        stroke="#4E9A51"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <line
-        x1="15.2"
-        y1="12.8"
-        x2="18.8"
-        y2="12.8"
-        stroke={INK}
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M9.5 17.5 L11 19 L13.5 16.2"
-        stroke="#6C77C1"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <line
-        x1="15.2"
-        y1="17.8"
-        x2="18.8"
-        y2="17.8"
-        stroke={INK}
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
-    </IconSvg>
-  );
-}
-
-/**
- * 13. Memo / Pinned Note
- */
-export function HublyMemoIcon(props: HublyIconProps) {
-  return (
-    <IconSvg {...props}>
-      <g transform="rotate(-3 14 15)">
-        <path
-          d="M5.5 6.5 H22.5 V18.5 L18 23 H5.5 Z"
-          fill="#FFE885"
-          stroke={INK}
-          strokeWidth="1.6"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M18 23 V18.5 H22.5 Z"
-          fill="#E8C547"
-          stroke={INK}
-          strokeWidth="1.4"
-          strokeLinejoin="round"
-        />
-        <line
-          x1="8.8"
-          y1="12"
-          x2="19.2"
-          y2="12"
-          stroke={INK}
-          strokeWidth="1.4"
-          strokeLinecap="round"
-          opacity="0.75"
-        />
-        <line
-          x1="8.8"
-          y1="15.8"
-          x2="16.5"
-          y2="15.8"
-          stroke={INK}
-          strokeWidth="1.4"
-          strokeLinecap="round"
-          opacity="0.75"
-        />
-      </g>
-      <line
-        x1="14"
-        y1="6.5"
-        x2="14"
-        y2="9.2"
-        stroke={INK}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <circle
-        cx="14"
-        cy="5.2"
-        r="2.4"
-        fill="#E25B45"
-        stroke={INK}
-        strokeWidth="1.4"
-      />
-      <circle cx="13.3" cy="4.5" r="0.6" fill="#FFD2C9" />
-    </IconSvg>
-  );
-}
-
-/**
- * 14. Bell / Brass Notification Bell
- */
-export function HublyBellIcon(props: HublyIconProps) {
-  return (
-    <IconSvg {...props}>
-      <path
-        d="M5 7.5 Q3.2 10 4.2 13"
-        stroke="#6C77C1"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M23 7.5 Q24.8 10 23.8 13"
-        stroke="#6C77C1"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <circle
-        cx="14"
-        cy="5"
-        r="1.6"
-        fill="#6C77C1"
-        stroke={INK}
-        strokeWidth="1.4"
-      />
-      <circle
-        cx="14"
-        cy="22.2"
-        r="2.4"
-        fill="#DF9A2B"
-        stroke={INK}
-        strokeWidth="1.5"
-      />
-      <path
-        d="M14 6.2 C9.5 6.2 7.5 9.5 7.5 14.2 C7.5 17 5.5 18.8 5 19.8 H23 C22.5 18.8 20.5 17 20.5 14.2 C20.5 9.5 18.5 6.2 14 6.2 Z"
-        fill="#6C77C1"
-        stroke={INK}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M10.2 9.5 Q10.8 8 12.5 7.8"
-        stroke="#FFF5D6"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        fill="none"
-      />
-    </IconSvg>
-  );
-}
-
-/**
- * 15. Sun + Cloud Weather Icon (Greeting banner)
- */
-export function HublySunWeatherIcon(props: HublyIconProps) {
-  return (
-    <IconSvg {...props}>
-      <g stroke="#6C77C1" strokeWidth="1.7" strokeLinecap="round">
-        <line x1="10.5" y1="3.2" x2="10.5" y2="5" />
-        <line x1="4.8" y1="5.5" x2="6.2" y2="6.8" />
-        <line x1="16.2" y1="5.5" x2="14.8" y2="6.8" />
-        <line x1="2.8" y1="11.2" x2="4.6" y2="11.2" />
-      </g>
-      <circle
-        cx="10.8"
-        cy="11.5"
-        r="5.2"
-        fill="#9099D3"
-        stroke={INK}
-        strokeWidth="1.5"
-      />
-      <path
-        d="M10.5 21.5 H21.2 C23.2 21.5 24.6 20.1 24.6 18.2 C24.6 16.5 23.3 15.1 21.6 15 C21.1 12.4 18.8 10.6 16.1 10.6 C13.5 10.6 11.4 12.2 10.7 14.6 C8.7 14.8 7.2 16.4 7.2 18.2 C7.2 20.1 8.7 21.5 10.5 21.5 Z"
-        fill="#FBF6EA"
-        stroke={INK}
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-    </IconSvg>
-  );
-}
+export {
+  HublyHomeIcon,
+  HublyBentoIcon,
+  HublyChatIcon,
+  HublyNotebookIcon,
+  HublyCalendarIcon,
+  HublyBrainIcon,
+  HublyFolderIcon,
+  HublyLayersIcon,
+  HublyHashIcon,
+  HublyTargetIcon,
+  HublyClipboardIcon,
+  HublyMemoIcon,
+  HublyBellIcon,
+  HublySunWeatherIcon,
+};
 
 export const HUBLY_ICONS = {
   avatar: HublyAvatarIcon,
@@ -1943,6 +1038,6 @@ export const FolderFilledIcon = HublyFolderIcon;
 export const LayersFilledIcon = HublyLayersIcon;
 export const HashBoldIcon = HublyHashIcon;
 export const BullseyeFilledIcon = HublyTargetIcon;
-export const PulseNavIcon = TrendingUp;
-export const TeamNavIcon = Users;
+export const PulseNavIcon = HublyPulseIcon;
+export const TeamNavIcon = HublyPeopleIcon;
 

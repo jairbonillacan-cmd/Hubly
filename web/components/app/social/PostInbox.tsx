@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Send } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import type { SocialPost } from "@/lib/types";
+import {
+  HublySendIcon as Send,
+} from "@/components/app/icons/DuotoneIcons";
 
 export function PostInbox({ posts }: { posts: SocialPost[] }) {
   const addPostComment = useHublyStore((s) => s.addPostComment);
@@ -40,7 +42,7 @@ export function PostInbox({ posts }: { posts: SocialPost[] }) {
                       cursor: "pointer",
                       font: "inherit",
                       background: selected?.id === t.id ? "var(--ui-accent-soft)" : "var(--ui-surface)",
-                      border: `1px solid ${selected?.id === t.id ? "#6C77C1" : "var(--ui-border)"}`,
+                      border: `1px solid ${selected?.id === t.id ? "var(--hb-accent)" : "var(--ui-border)"}`,
                       borderRadius: 12,
                       padding: "10px 12px",
                     }}
@@ -63,7 +65,7 @@ export function PostInbox({ posts }: { posts: SocialPost[] }) {
                 </button>
               </div>
               {selected.comments.map((c) => (
-                <div key={c.id} style={{ alignSelf: c.role === "agency" ? "flex-end" : "flex-start", maxWidth: "85%", background: c.role === "agency" ? "#ECEEF8" : "var(--ui-muted)", borderRadius: 12, padding: "8px 11px", fontSize: 12.5 }}>
+                <div key={c.id} style={{ alignSelf: c.role === "agency" ? "flex-end" : "flex-start", maxWidth: "85%", background: c.role === "agency" ? "#E6F4FB" : "var(--ui-muted)", borderRadius: 12, padding: "8px 11px", fontSize: 12.5 }}>
                   <div style={{ fontWeight: 700, marginBottom: 2 }}>{c.author}</div>
                   {c.text}
                 </div>
@@ -83,7 +85,7 @@ export function PostInbox({ posts }: { posts: SocialPost[] }) {
                   aria-label="Responder comentario"
                   style={{ flex: 1, minWidth: 0, border: "1px solid var(--ui-border-strong)", borderRadius: 9, padding: "8px 11px", fontSize: 13 }}
                 />
-                <button type="submit" aria-label="Enviar respuesta" style={{ border: "none", borderRadius: 9, background: "#6C77C1", color: "#FFFFFF", padding: "0 12px", cursor: "pointer", display: "grid", placeItems: "center" }}>
+                <button type="submit" aria-label="Enviar respuesta" style={{ border: "none", borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "0 12px", cursor: "pointer", display: "grid", placeItems: "center" }}>
                   <Send size={14} />
                 </button>
               </form>

@@ -13,14 +13,14 @@
   --hb-text-secondary: #334155;
   --hb-text-muted: #64748B;
   --hb-text-subtle: #94A3B8;
-  --hb-indigo: #6C77C1;
-  --hb-indigo-hover: #5A65AF;
-  --hb-indigo-soft: #F0F1F9;
-  --hb-amber-bg: #F5F6FB;
-  --hb-amber-pill: #ECEEF8;
-  --hb-amber-border: #D9DCF0;
-  --hb-amber-text: #5360A5;
-  --hb-amber-accent: #6C77C1;
+  --hb-indigo: var(--hb-accent);
+  --hb-indigo-hover: var(--hb-accent-hover);
+  --hb-indigo-soft: #EAF6FC;
+  --hb-amber-bg: #F1F9FD;
+  --hb-amber-pill: #E6F4FB;
+  --hb-amber-border: #BFE2F4;
+  --hb-amber-text: var(--hb-accent-text);
+  --hb-amber-accent: var(--hb-accent);
   --hb-gold-avatar: #CAA052;
 
   /* Override landing page CSS variables inside .hb-app-root */
@@ -36,27 +36,27 @@
   --cream-3: #E2E8F0;
   --line: #E2E8F0;
   --line-strong: #CBD5E1;
-  --forest: #6C77C1;
-  --forest-soft: #F0F1F9;
-  --green: #6C77C1;
-  --green-deep: #5A65AF;
-  --green-pale: #F0F1F9;
-  --amber: #6C77C1;
-  --yellow: #6C77C1;
-  --yellow-pale: #ECEEF8;
+  --forest: var(--hb-accent);
+  --forest-soft: #EAF6FC;
+  --green: var(--hb-accent);
+  --green-deep: var(--hb-accent-hover);
+  --green-pale: #EAF6FC;
+  --amber: var(--hb-accent);
+  --yellow: var(--hb-accent);
+  --yellow-pale: #E6F4FB;
   --coral: #EF4444;
   --coral-deep: #DC2626;
   --coral-pale: #FEE2E2;
   --coral-soft: #FEE2E2;
-  --lilac: #E0E7FF;
-  --lilac-pale: #F0F1F9;
-  --display: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-display: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-body: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --lilac: #DCEFF9;
+  --lilac-pale: #EAF6FC;
+  --display: var(--font-bricolage), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: var(--font-bricolage), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body: var(--font-bricolage), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.03), 0 1px 2px rgba(15, 23, 42, 0.02);
   --shadow-window: 0 24px 60px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.06);
 
-  font-family: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-bricolage), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 14px;
   line-height: 1.5;
   color: #0F172A;
@@ -74,7 +74,7 @@
 .hb-app-root h4,
 .hb-app-root h5,
 .hb-app-root h6 {
-  font-family: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-bricolage), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   letter-spacing: -0.02em;
   line-height: 1.25;
   color: #0F172A;
@@ -98,13 +98,13 @@
 }
 
 .hb-app-root :focus-visible {
-  outline: 2px solid rgba(91, 103, 202, 0.4);
+  outline: 2px solid rgb(var(--hb-accent-rgb) / 0.4);
   outline-offset: 1px;
   border-radius: 6px;
 }
 
 .hb-app-root ::selection {
-  background: #ECEEF8;
+  background: #E6F4FB;
   color: #0F172A;
 }
 
@@ -160,10 +160,10 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .hb-app-root .hbtn-secondary {
-  --hbtn-edge: #D4D4E4;
+  --hbtn-edge: #D6DFE7;
   background: #FFFFFF;
-  color: #1A1A2E;
-  border: 1px solid #D4D4E4;
+  color: #111C27;
+  border: 1px solid #D6DFE7;
 }
 
 .hb-app-root .hbtn-secondary:hover {
@@ -171,14 +171,14 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .hb-app-root .hbtn-hb {
-  --hbtn-edge: #4C56A0;
+  --hbtn-edge: var(--hb-accent-edge);
   background: #FFFFFF;
-  color: #1A1A2E;
-  border: 1.5px solid #6C77C1;
+  color: #111C27;
+  border: 1.5px solid var(--hb-accent);
 }
 
 .hb-app-root .hbtn-hb:hover {
-  background: #F5F6FB;
+  background: #F1F9FD;
 }
 
 
@@ -283,9 +283,9 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .hb-nav-item.active {
-  background: #F5F6FB;
-  border: 1px solid #D9DCF0;
-  color: #5360A5;
+  background: #F1F9FD;
+  border: 1px solid #BFE2F4;
+  color: var(--hb-accent-text);
   font-weight: 600;
 }
 
@@ -387,7 +387,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 .saas-pill.active,
 .saas-subnav-item.is-active {
   background: #FFFFFF;
-  color: #6C77C1;
+  color: var(--hb-accent-text);
   border-color: rgba(226, 232, 240, 0.8);
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
 }
@@ -436,7 +436,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
    ========================================================================== */
 
 .saas-heading-xl {
-  font-family: var(--font-jakarta), sans-serif;
+  font-family: var(--font-bricolage), sans-serif;
   font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.025em;
@@ -445,7 +445,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .saas-heading-lg {
-  font-family: var(--font-jakarta), sans-serif;
+  font-family: var(--font-bricolage), sans-serif;
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -454,7 +454,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .saas-heading-md {
-  font-family: var(--font-jakarta), sans-serif;
+  font-family: var(--font-bricolage), sans-serif;
   font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -474,7 +474,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   height: 36px;
   padding: 0 14px;
   border-radius: 10px;
-  font-family: var(--font-jakarta), sans-serif;
+  font-family: var(--font-bricolage), sans-serif;
   font-size: 13px;
   font-weight: 600;
   color: #334155;
@@ -505,15 +505,15 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .saas-btn-primary {
-  background: #6C77C1;
+  background: var(--hb-accent);
   color: #FFFFFF;
-  border-color: #6C77C1;
-  box-shadow: 0 1px 2px rgba(91, 103, 202, 0.25);
+  border-color: var(--hb-accent);
+  box-shadow: 0 1px 2px rgb(var(--hb-accent-rgb) / 0.25);
 }
 
 .saas-btn-primary:hover:not(:disabled) {
-  background: #5A65AF;
-  border-color: #5A65AF;
+  background: var(--hb-accent-hover);
+  border-color: var(--hb-accent-hover);
   color: #FFFFFF;
 }
 
@@ -544,14 +544,14 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 .saas-btn-yellow {
   background: #FFFFFF;
   color: #0F172A;
-  border: 1.5px solid #6C77C1;
-  box-shadow: 0 1px 3px rgba(108, 119, 193, 0.12);
+  border: 1.5px solid var(--hb-accent);
+  box-shadow: 0 1px 3px rgb(var(--hb-accent-rgb) / 0.12);
 }
 
 .saas-btn-amber:hover:not(:disabled),
 .saas-btn-yellow:hover:not(:disabled) {
-  background: #F5F6FB;
-  border-color: #5A65AF;
+  background: #F1F9FD;
+  border-color: var(--hb-accent-hover);
 }
 
 .saas-btn-ink {
@@ -592,14 +592,14 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 .saas-status-approved,
 .saas-status-scheduled,
 .saas-status-published {
-  background: #F0F1F9;
-  color: #6C77C1;
+  background: #EAF6FC;
+  color: var(--hb-accent-text);
 }
 
 .saas-badge-amber,
 .saas-status-pending {
-  background: #ECEEF8;
-  color: #5360A5;
+  background: #E6F4FB;
+  color: var(--hb-accent-text);
 }
 
 .saas-badge-coral,
@@ -626,7 +626,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   border: 1px solid #E2E8F0;
   background: #FFFFFF;
   color: #0F172A;
-  font-family: var(--font-jakarta), sans-serif;
+  font-family: var(--font-bricolage), sans-serif;
   font-size: 13.5px;
   padding: 8px 12px;
   outline: none;
@@ -641,8 +641,8 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 .saas-input:focus,
 .saas-select:focus,
 .saas-textarea:focus {
-  border-color: #6C77C1;
-  box-shadow: 0 0 0 3px rgba(91, 103, 202, 0.12);
+  border-color: var(--hb-accent);
+  box-shadow: 0 0 0 3px rgb(var(--hb-accent-rgb) / 0.12);
 }
 
 /* ==========================================================================

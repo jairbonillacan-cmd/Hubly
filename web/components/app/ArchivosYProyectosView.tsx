@@ -2,25 +2,25 @@
 
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import {
-  Search,
-  Sparkles,
-  Upload,
-  PlusCircle,
-  Plus,
-  ChevronDown,
-  Folder,
-  Pin,
-  Archive,
-  Trash2,
-  Check,
-  Layers,
-} from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { Cover } from "@/components/Cover";
 import { KanbanDropSlot } from "@/components/app/KanbanDropSlot";
 import { useKanbanDrag } from "@/lib/use-kanban-drag";
 import type { BrandProject } from "@/lib/types";
+import {
+  HublyArchiveIcon as Archive,
+  HublyCheckIcon as Check,
+  HublyChevronDownIcon as ChevronDown,
+  HublyFolderIcon as Folder,
+  HublyLayersIcon as Layers,
+  HublyPinIcon as Pin,
+  HublyPlusCircleIcon as PlusCircle,
+  HublyPlusIcon as Plus,
+  HublySearchIcon as Search,
+  HublySparkIcon as Sparkles,
+  HublyTrashIcon as Trash2,
+  HublyUploadIcon as Upload,
+} from "@/components/app/icons/DuotoneIcons";
 
 const PROJECT_COLUMNS = ["En curso", "Revisión", "Completado"] as const;
 
@@ -36,8 +36,8 @@ function GoldenCloudUploadIllustration() {
       {/* Cloud body with warm gold fill and brown-gold outline matching 08-content-manager-1440.png */}
       <path
         d="M21 49H48.5C54.8513 49 60 43.8513 60 37.5C60 31.6524 55.6317 26.8235 49.9806 26.0942C48.8768 19.2367 42.9317 14 35.75 14C27.781 14 21.3182 20.4318 21.2505 28.3849C15.4793 29.1525 11 34.088 11 40C11 44.9706 15.0294 49 20 49H21Z"
-        fill="#D9DCF0"
-        stroke="#5360A5"
+        fill="#BFE2F4"
+        stroke="var(--hb-accent-text)"
         strokeWidth="2.4"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -45,14 +45,14 @@ function GoldenCloudUploadIllustration() {
       {/* Inner shading */}
       <path
         d="M22 46H47.5C52.4706 46 56.5 41.9706 56.5 37C56.5 32.5 53.1 28.8 48.7 28.2"
-        stroke="#6C77C1"
+        stroke="var(--hb-accent)"
         strokeWidth="2"
         strokeLinecap="round"
       />
       {/* Upward Arrow */}
       <path
         d="M35.5 39V23M35.5 23L29.5 29M35.5 23L41.5 29"
-        stroke="#5360A5"
+        stroke="var(--hb-accent-text)"
         strokeWidth="2.6"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -209,7 +209,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
             gap: 8,
           }}
         >
-          <Check size={15} style={{ color: "#6C77C1" }} />
+          <Check size={15} style={{ color: "var(--hb-accent-text)" }} />
           <span>{toast}</span>
         </div>
       )}
@@ -286,7 +286,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 style={{
                   background: "var(--ui-accent-soft)",
                   border: "none",
-                  color: "#6C77C1",
+                  color: "var(--hb-accent-text)",
                   fontSize: 13,
                   fontWeight: 600,
                   padding: "6px 12px",
@@ -306,7 +306,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 onClick={handleCreateDocument}
                 aria-label="Crear"
                 style={{
-                  background: "#6C77C1",
+                  background: "var(--hb-accent)",
                   border: "none",
                   color: "#FFFFFF",
                   fontSize: 13,
@@ -321,7 +321,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
             </div>
           </div>
 
-          {/* Sub-nav Pill Row: (Archivos active | Carpetas) + right button #6C77C1 Subir contenido */}
+          {/* Sub-nav Pill Row: (Archivos active | Carpetas) + right button var(--hb-accent) Subir contenido */}
           <div
             style={{
               display: "flex",
@@ -427,7 +427,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 style={{
-                  background: "#6C77C1",
+                  background: "var(--hb-accent)",
                   color: "#FFFFFF",
                   border: "none",
                   borderRadius: 9,
@@ -525,7 +525,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                   type="button"
                   onClick={handleUploadDemoAsset}
                   style={{
-                    background: "#6C77C1",
+                    background: "var(--hb-accent)",
                     color: "#FFFFFF",
                     border: "none",
                     borderRadius: 10,
@@ -605,7 +605,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                         width: 40,
                         height: 40,
                         borderRadius: 10,
-                        background: "#ECEEF8",
+                        background: "#E6F4FB",
                         color: "var(--ui-accent-text-2)",
                         display: "flex",
                         alignItems: "center",
@@ -671,7 +671,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       </span>
                       <span
                         style={{
-                          background: asset.usedInPosts === 0 ? "#ECEEF8" : "#DCFCE7",
+                          background: asset.usedInPosts === 0 ? "#E6F4FB" : "#DCFCE7",
                           color: asset.usedInPosts === 0 ? "var(--ui-accent-text)" : "#15803D",
                           fontSize: 11,
                           fontWeight: 700,
@@ -797,7 +797,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
               )}
             </div>
 
-            {/* Right: View Pills (Filas | Kanban | Tabla) + Search + #6C77C1 + Nuevo proyecto */}
+            {/* Right: View Pills (Filas | Kanban | Tabla) + Search + var(--hb-accent) + Nuevo proyecto */}
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div
                 style={{
@@ -846,7 +846,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 title="Nuevo proyecto"
                 onClick={() => setNewProjectModal(true)}
                 style={{
-                  background: "#6C77C1",
+                  background: "var(--hb-accent)",
                   color: "#FFFFFF",
                   border: "none",
                   borderRadius: 999,
@@ -891,7 +891,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                         height: 44,
                         borderRadius: 12,
                         background: "var(--ui-accent-soft)",
-                        color: "#6C77C1",
+                        color: "var(--hb-accent-text)",
                         fontSize: 16,
                         fontWeight: 700,
                         display: "flex",
@@ -940,7 +940,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                         style={{
                           width: `${proj.progress}%`,
                           height: "100%",
-                          background: "#6C77C1",
+                          background: "var(--hb-accent)",
                         }}
                       />
                     </div>
@@ -980,7 +980,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                   {...projectDrag.getColumnProps(col)}
                   style={{
                     background: projectDrag.drag?.overCol === col ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
-                    border: `1px solid ${projectDrag.drag?.overCol === col ? "#6C77C1" : "var(--ui-border)"}`,
+                    border: `1px solid ${projectDrag.drag?.overCol === col ? "var(--hb-accent)" : "var(--ui-border)"}`,
                     borderRadius: 16,
                     padding: 16,
                     minHeight: 160,
@@ -1104,7 +1104,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 height: 44,
                 borderRadius: 12,
                 background: "var(--ui-accent-soft)",
-                color: "#6C77C1",
+                color: "var(--hb-accent-text)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -1123,7 +1123,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
               type="button"
               onClick={() => setNewProjectModal(true)}
               style={{
-                background: "#6C77C1",
+                background: "var(--hb-accent)",
                 color: "#FFFFFF",
                 border: "none",
                 borderRadius: 10,
@@ -1248,7 +1248,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                   <button
                     type="submit"
                     style={{
-                      background: "#6C77C1",
+                      background: "var(--hb-accent)",
                       color: "#FFFFFF",
                       border: "none",
                       borderRadius: 10,

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, type ChangeEvent } from "react";
-import { Check, ArrowRight, Minus, Plus, Sparkles, Clock, TrendingUp } from "lucide-react";
 
 import {
   type Currency,
@@ -15,6 +14,15 @@ import {
   calculateVolumePricing,
   formatCurrency,
 } from "../lib/calculator";
+import {
+  HublyArrowRightIcon as ArrowRight,
+  HublyCheckIcon as Check,
+  HublyClockIcon as Clock,
+  HublyMinusIcon as Minus,
+  HublyPlusIcon as Plus,
+  HublyPulseIcon as TrendingUp,
+  HublySparkIcon as Sparkles,
+} from "@/components/app/icons/DuotoneIcons";
 
 export type {
   Currency,

@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { X } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { addDays, dueLabelFor, localIsoDate } from "@/lib/date";
+import {
+  HublyCloseIcon as X,
+} from "@/components/app/icons/DuotoneIcons";
 
 const HEATMAP_DAYS = 49;
-const STEPS = ["#F1F5F9", "#D9DCF0", "#9099D3", "#6C77C1", "#4C56A0"];
+const STEPS = ["#F1F5F9", "#BFE2F4", "#9099D3", "var(--hb-accent)", "var(--hb-accent-edge)"];
 const stepFor = (count: number) => (count === 0 ? 0 : count === 1 ? 1 : count <= 3 ? 2 : count <= 6 ? 3 : 4);
 
 export function MemberDrawer({ memberId, onClose }: { memberId: string; onClose: () => void }) {
@@ -54,7 +56,7 @@ export function MemberDrawer({ memberId, onClose }: { memberId: string; onClose:
     >
       <aside role="dialog" aria-modal="true" aria-label={`Perfil de ${member.name}`} style={{ width: "100%", maxWidth: 440, height: "100%", overflowY: "auto", background: "var(--ui-surface)", padding: 22, display: "grid", gap: 18, alignContent: "start" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ width: 46, height: 46, borderRadius: 999, background: member.avatarColor || "#6C77C1", color: "#FFFFFF", display: "grid", placeItems: "center", fontWeight: 700 }}>{member.initials}</span>
+          <span style={{ width: 46, height: 46, borderRadius: 999, background: member.avatarColor || "var(--hb-accent)", color: "#FFFFFF", display: "grid", placeItems: "center", fontWeight: 700 }}>{member.initials}</span>
           <div style={{ flex: 1, minWidth: 0 }}>
             <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{member.name}</h2>
             <div style={{ fontSize: 12.5, color: "var(--ui-text-4)" }}>{member.role} · {member.email}</div>

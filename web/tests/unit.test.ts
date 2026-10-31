@@ -1,3 +1,4 @@
+import { createSeedWorkspaceData, rebaseStaleFixture } from "../lib/seed-data";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { addDays, dueLabelFor, localIsoDate } from "../lib/date";
@@ -93,4 +94,14 @@ test("el prompt de IA incluye la voz de la marca y limita lo que recibe", () => 
   assert.match(p, /evita: barato/);
   assert.match(p, /No inventes/);
   assert.ok(buildCaptionSystemPrompt({ name: "x".repeat(5000) }).length < 1000);
+});
+
+test("repara un espacio con el reloj de prueba sin perder lo creado", () => {
+  const stale = createSeedWorkspaceData("prueba", { referenceFixture: true });
+  stale.tasks.push({ ...stale.tasks[0], id: "propia", title: "dsa", dueDate: "2026-12-24" });
+  const fixed = rebaseStaleFixture(stale);
+  assert.equal(fixed.testClock?.fixedIsoNow, null);
+  assert.ok(!JSON.stringify(fixed.tasks).includes("2026-04-19"));
+  assert.equal(fixed.tasks.find((t) => t.id === "propia")?.dueDate, "2026-12-24");
+  assert.equal(rebaseStaleFixture(fixed), fixed);
 });

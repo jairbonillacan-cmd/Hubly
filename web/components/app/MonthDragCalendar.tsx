@@ -1,9 +1,13 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { localIsoDate } from "@/lib/date";
 import { useKanbanDrag } from "@/lib/use-kanban-drag";
+import {
+  HublyChevronLeftIcon as ChevronLeft,
+  HublyChevronRightIcon as ChevronRight,
+  HublyPlusIcon as Plus,
+} from "@/components/app/icons/DuotoneIcons";
 
 const WEEKDAYS = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
 
@@ -106,7 +110,7 @@ export function MonthDragCalendar({
                     gap: 4,
                     minWidth: 0,
                     background: drag?.overCol === key ? "var(--ui-accent-soft)" : inMonth ? "var(--ui-surface)" : "#FAFBFC",
-                    boxShadow: drag?.overCol === key ? "inset 0 0 0 1.5px #6C77C1" : undefined,
+                    boxShadow: drag?.overCol === key ? "inset 0 0 0 1.5px var(--hb-accent)" : undefined,
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -115,7 +119,7 @@ export function MonthDragCalendar({
                         fontSize: 12,
                         fontWeight: key === today ? 800 : 600,
                         color: key === today ? "#FFFFFF" : inMonth ? "var(--ui-text-2)" : "var(--ui-text-5)",
-                        background: key === today ? "#6C77C1" : "transparent",
+                        background: key === today ? "var(--hb-accent)" : "transparent",
                         minWidth: 22,
                         height: 22,
                         borderRadius: 999,

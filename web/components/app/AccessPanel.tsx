@@ -186,6 +186,6 @@ const list = { listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8
 const row = { display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", border: "1px solid var(--ui-border)", borderRadius: 12, padding: "10px 12px" } as const;
 const muted = { fontSize: 12, color: "var(--ui-text-4)" } as const;
 const field = { border: "1px solid var(--ui-border-strong)", borderRadius: 9, padding: "7px 9px", fontSize: 13, background: "var(--ui-surface)", minWidth: 0 } as const;
-const primary = { border: 0, borderRadius: 9, background: "#6C77C1", color: "#FFFFFF", padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" } as const;
+const primary = { border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" } as const;
 const danger = { border: "1px solid #FECACA", background: "#FEF2F2", color: "#B91C1C", borderRadius: 8, padding: "5px 10px", fontSize: 12, fontWeight: 600, cursor: "pointer" } as const;
 const linkBtn = { border: 0, background: "transparent", color: "var(--ui-accent-text-2)", fontWeight: 600, cursor: "pointer", padding: 0 } as const;

@@ -4,8 +4,14 @@ import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TaskItem } from "@tiptap/extension-task-item";
 import { TaskList } from "@tiptap/extension-task-list";
-import { Bold, CheckSquare, Heading2, Italic, List, ListOrdered, Redo2, Undo2 } from "lucide-react";
+import { Bold, Heading2, Italic, ListOrdered } from "lucide-react";
 import { notebookToHtml } from "@/lib/notebook-content";
+import {
+  HublyClipboardIcon as CheckSquare,
+  HublyRedoIcon as Redo2,
+  HublyRowsIcon as List,
+  HublyUndoIcon as Undo2,
+} from "@/components/app/icons/DuotoneIcons";
 
 export function NotebookEditor({
   initialContent,

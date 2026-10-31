@@ -3,9 +3,11 @@
 import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
-import { Check } from "lucide-react";
 import type { selectTasksBreakdown } from "@/lib/domain-selectors";
 import { useModalPresence } from "@/lib/use-modal-presence";
+import {
+  HublyCheckIcon as Check,
+} from "@/components/app/icons/DuotoneIcons";
 
 type TaskGroup = ReturnType<typeof selectTasksBreakdown>["groups"][number];
 
@@ -89,10 +91,10 @@ export function PendientesModal({ open, onClose, groups, onToggle }: PendientesM
           }}
         >
           <div>
-            <h2 id="pendientes-title" style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#1A1A2E" }}>
+            <h2 id="pendientes-title" style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#111C27" }}>
               Lo que te toca
             </h2>
-            <p style={{ margin: "4px 0 0", fontSize: 12.5, color: "#8A8AAA" }}>
+            <p style={{ margin: "4px 0 0", fontSize: 12.5, color: "#6B7886" }}>
               {urgentCount} para hoy
             </p>
           </div>
@@ -108,7 +110,7 @@ export function PendientesModal({ open, onClose, groups, onToggle }: PendientesM
 
         <div style={{ padding: "16px 24px", overflowY: "auto" }}>
           {urgentGroups.length === 0 ? (
-            <p style={{ margin: 0, padding: "14px 0", textAlign: "center", fontSize: 13, color: "#8A8AAA" }}>
+            <p style={{ margin: 0, padding: "14px 0", textAlign: "center", fontSize: 13, color: "#6B7886" }}>
               Nada vencido ni para hoy.
             </p>
           ) : (
@@ -121,7 +123,7 @@ export function PendientesModal({ open, onClose, groups, onToggle }: PendientesM
                     fontWeight: 700,
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
-                    color: group.bucket === "overdue" ? "#DC2626" : "#6C77C1",
+                    color: group.bucket === "overdue" ? "#DC2626" : "var(--hb-accent)",
                   }}
                 >
                   {group.label}
@@ -167,7 +169,7 @@ export function PendientesModal({ open, onClose, groups, onToggle }: PendientesM
             borderTop: "1px solid #F1F1F6",
           }}
         >
-          <span style={{ fontSize: 12, color: "#8A8AAA" }}>
+          <span style={{ fontSize: 12, color: "#6B7886" }}>
             Vencidas y de hoy. Lo demás vive en Mi Espacio.
           </span>
           <Link href="/tareas" className="hbtn hbtn-secondary hbtn-sm" onClick={onClose}>

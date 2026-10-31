@@ -56,7 +56,7 @@ export function ProductionBoard({ posts }: { posts: SocialPost[] }) {
       {...(droppable ? getColumnProps(status) : {})}
       style={{
         background: drag?.overCol === status ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
-        border: `1px solid ${drag?.overCol === status ? "#6C77C1" : "var(--ui-border)"}`,
+        border: `1px solid ${drag?.overCol === status ? "var(--hb-accent)" : "var(--ui-border)"}`,
         borderRadius: 14,
         padding: 12,
         minHeight: 200,

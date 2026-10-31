@@ -6,21 +6,21 @@ import { backendEnabled } from "@/lib/supabase/config";
 import React, { useState } from "react";
 import Link from "next/link";
 import {
-  Gauge,
-  Megaphone,
-  Sparkles,
-  Presentation,
-  Calendar,
-  ChevronDown,
-  Settings,
-  Search,
-  SlidersHorizontal,
-  LayoutGrid,
-  Table2,
-  GitBranch,
-  X,
-  CheckCircle2,
-} from "lucide-react";
+  HublyBentoIcon as LayoutGrid,
+  HublyCalendarIcon as Calendar,
+  HublyCheckCircleIcon as CheckCircle2,
+  HublyChevronDownIcon as ChevronDown,
+  HublyCloseIcon as X,
+  HublyMegaphoneIcon as Megaphone,
+  HublyPresentationIcon as Presentation,
+  HublyPulseIcon as Gauge,
+  HublySearchIcon as Search,
+  HublySettingsIcon as Settings,
+  HublySlidersIcon as SlidersHorizontal,
+  HublySparkIcon as Sparkles,
+  HublyTableIcon as Table2,
+  HublyTimelineIcon as GitBranch,
+} from "@/components/app/icons/DuotoneIcons";
 
 interface SampleAdCard {
   id: string;
@@ -185,9 +185,9 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
         <polygon points="165,175 230,132 280,175" fill="#172554" />
         <rect x="25" y="175" width="160" height="45" fill="#292524" />
         {/* Warm interior lights */}
-        <rect x="50" y="185" width="25" height="22" fill="#6C77C1" opacity="0.75" />
+        <rect x="50" y="185" width="25" height="22" fill="var(--hb-accent)" opacity="0.75" />
         <rect x="95" y="185" width="30" height="22" fill="#9099D3" opacity="0.75" />
-        <rect x="140" y="185" width="25" height="22" fill="#6C77C1" opacity="0.75" />
+        <rect x="140" y="185" width="25" height="22" fill="var(--hb-accent)" opacity="0.75" />
 
         {/* Green lawn & gravel path */}
         <rect x="0" y="218" width="280" height="122" fill="#3F5E2A" />
@@ -415,7 +415,7 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
         x="140"
         y="28"
         textAnchor="middle"
-        fill="#6C77C1"
+        fill="var(--hb-accent)"
         fontSize="9.5"
         fontWeight="800"
         letterSpacing="2.5"
@@ -474,7 +474,6 @@ function DemoAnunciosPage() {
   return (
     <div
       style={{
-        fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
         color: "var(--ui-text)",
         minHeight: "calc(100vh - 64px)",
         position: "relative",
@@ -516,7 +515,7 @@ function DemoAnunciosPage() {
               borderRadius: 999,
               border: "none",
               background: activeSubNav === "tableros" ? "var(--ui-surface)" : "transparent",
-              color: activeSubNav === "tableros" ? "#6C77C1" : "var(--ui-text-3)",
+              color: activeSubNav === "tableros" ? "var(--hb-accent)" : "var(--ui-text-3)",
               fontWeight: activeSubNav === "tableros" ? 600 : 500,
               fontSize: 13,
               cursor: "pointer",
@@ -539,7 +538,7 @@ function DemoAnunciosPage() {
               borderRadius: 999,
               border: "none",
               background: activeSubNav === "anuncios" ? "var(--ui-surface)" : "transparent",
-              color: activeSubNav === "anuncios" ? "#6C77C1" : "var(--ui-text-3)",
+              color: activeSubNav === "anuncios" ? "var(--hb-accent)" : "var(--ui-text-3)",
               fontWeight: activeSubNav === "anuncios" ? 600 : 500,
               fontSize: 13,
               cursor: "pointer",
@@ -547,7 +546,7 @@ function DemoAnunciosPage() {
                 activeSubNav === "anuncios" ? "0 1px 2px rgba(15, 23, 42, 0.06)" : "none",
             }}
           >
-            <Megaphone size={14} style={{ color: "#6C77C1" }} />
+            <Megaphone size={14} style={{ color: "var(--hb-accent-text)" }} />
             <span>Anuncios</span>
           </button>
 
@@ -562,7 +561,7 @@ function DemoAnunciosPage() {
               borderRadius: 999,
               border: "none",
               background: activeSubNav === "ideas" ? "var(--ui-surface)" : "transparent",
-              color: activeSubNav === "ideas" ? "#6C77C1" : "var(--ui-text-3)",
+              color: activeSubNav === "ideas" ? "var(--hb-accent)" : "var(--ui-text-3)",
               fontWeight: activeSubNav === "ideas" ? 600 : 500,
               fontSize: 13,
               cursor: "pointer",
@@ -806,7 +805,7 @@ function DemoAnunciosPage() {
                 borderRadius: 7,
                 border: "none",
                 background: viewMode === "cards" ? "var(--ui-surface)" : "transparent",
-                color: viewMode === "cards" ? "#6C77C1" : "var(--ui-text-4)",
+                color: viewMode === "cards" ? "var(--hb-accent)" : "var(--ui-text-4)",
                 display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
@@ -826,7 +825,7 @@ function DemoAnunciosPage() {
                 borderRadius: 7,
                 border: "none",
                 background: viewMode === "table" ? "var(--ui-surface)" : "transparent",
-                color: viewMode === "table" ? "#6C77C1" : "var(--ui-text-4)",
+                color: viewMode === "table" ? "var(--hb-accent)" : "var(--ui-text-4)",
                 display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
@@ -846,7 +845,7 @@ function DemoAnunciosPage() {
                 borderRadius: 7,
                 border: "none",
                 background: viewMode === "funnels" ? "var(--ui-surface)" : "transparent",
-                color: viewMode === "funnels" ? "#6C77C1" : "var(--ui-text-4)",
+                color: viewMode === "funnels" ? "var(--hb-accent)" : "var(--ui-text-4)",
                 display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
@@ -999,7 +998,7 @@ function DemoAnunciosPage() {
                     type="button"
                     onClick={() => setSelectedAd(ad)}
                     style={{
-                      background: "#6366F1",
+                      background: "#16324F",
                       color: "#FFFFFF",
                       border: "none",
                       borderRadius: 8,
@@ -1075,7 +1074,7 @@ function DemoAnunciosPage() {
                     <span
                       style={{
                         background:
-                          ad.resultadosBadgeColor === "green" ? "#DCFCE7" : "#ECEEF8",
+                          ad.resultadosBadgeColor === "green" ? "#DCFCE7" : "#E6F4FB",
                         color:
                           ad.resultadosBadgeColor === "green" ? "#15803D" : "var(--ui-accent-text)",
                         fontWeight: 700,
@@ -1304,7 +1303,7 @@ function DemoAnunciosPage() {
                   alignItems: "center",
                   gap: 6,
                   background: "var(--ui-accent-soft)",
-                  color: "#6C77C1",
+                  color: "var(--hb-accent-text)",
                   fontSize: 12,
                   fontWeight: 700,
                   padding: "4px 10px",
