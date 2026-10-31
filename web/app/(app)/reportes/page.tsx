@@ -176,6 +176,9 @@ export default function ReportesPage() {
           </Link>
 
           <button
+            disabled
+            data-planned
+            title="Función prevista"
             type="button"
             style={{
               display: "inline-flex",
@@ -248,6 +251,9 @@ export default function ReportesPage() {
         }}
       >
         <button
+          disabled
+          data-planned
+          title="Función prevista"
           type="button"
           style={{
             width: 38,
@@ -266,6 +272,9 @@ export default function ReportesPage() {
 
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <button
+            disabled
+            data-planned
+            title="Función prevista"
             type="button"
             style={{
               display: "inline-flex",

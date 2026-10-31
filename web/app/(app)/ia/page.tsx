@@ -543,6 +543,8 @@ export default function HublyAIPage() {
         >
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <button
+              disabled
+              data-planned
               type="button"
               title="Adjuntar"
               style={{

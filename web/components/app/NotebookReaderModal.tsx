@@ -14,6 +14,8 @@ import {
 import { useHublyStore } from "@/lib/store";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
+import { NotebookEditor } from "@/components/app/NotebookEditor";
+import { notebookPlainText } from "@/lib/notebook-content";
 
 export interface NotebookReaderModalProps {
   open?: boolean;
@@ -69,6 +71,7 @@ export function NotebookReaderModal({
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const titleInputRef = useRef<HTMLInputElement | null>(null);
+  const autosaveRef = useRef<number | undefined>(undefined);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
   const [suppressedAsFallback, setSuppressedAsFallback] = useState(false);
@@ -128,6 +131,9 @@ export function NotebookReaderModal({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleClose = () => {
+    if (!isCreatingNew && currentNotebook && title.trim() && title.trim() !== currentNotebook.title) {
+      updateNotebook(currentNotebook.id, { title: title.trim() });
+    }
     setErrorMsg(null);
     setSavedNotice(false);
     setIsCreatingNew(false);
@@ -162,7 +168,9 @@ export function NotebookReaderModal({
       setAccentColor(currentNotebook.accentColor || "#C59B6D");
       setContent(currentNotebook.content);
     }
-  }, [isOpen, isCreatingNew, currentNotebook, activeBrandId, brands]);
+    // Solo al abrir o cambiar de libreta: el autoguardado actualiza currentNotebook.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, isCreatingNew, currentNotebook?.id]);
 
   // Focus trap, Escape key, Initial focus & Scroll lock
   useEffect(() => {
@@ -244,7 +252,8 @@ export function NotebookReaderModal({
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     const cleanTitle = title.trim();
-    const cleanContent = content.trim();
+    window.clearTimeout(autosaveRef.current);
+    const cleanContent = notebookPlainText(content) ? content.trim() : "";
 
     if (!cleanTitle) {
       setErrorMsg("Escribe un título para esta libreta Kraft.");
@@ -560,7 +569,8 @@ export function NotebookReaderModal({
                     {nb.title}
                   </span>
                   <span style={{ fontSize: 10.5, color: "#785A3C" }}>
-                    Actualizado: {nb.updatedAt}
+                    Actualizado:{" "}
+                    {new Date(nb.updatedAt).toLocaleDateString("es-MX", { day: "numeric", month: "short" })}
                   </span>
                 </button>
               );
@@ -806,8 +816,7 @@ export function NotebookReaderModal({
 
             {/* Lined Kraft Content Area */}
             <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-              <label
-                htmlFor="nb-content-textarea"
+              <span
                 style={{
                   display: "block",
                   fontSize: 10.5,
@@ -819,29 +828,18 @@ export function NotebookReaderModal({
                 }}
               >
                 Contenido y notas operativas *
-              </label>
-              <textarea
-                id="nb-content-textarea"
-                rows={8}
-                value={content}
-                onChange={(e) => {
-                  setContent(e.target.value);
+              </span>
+              <NotebookEditor
+                key={isCreatingNew ? "nueva" : currentNotebook?.id || "vacia"}
+                initialContent={isCreatingNew ? "" : currentNotebook?.content || ""}
+                onChange={(html) => {
+                  setContent(html);
                   if (errorMsg) setErrorMsg(null);
-                }}
-                placeholder="Escribe acuerdos con el cliente, pilares de contenido, aprendizajes de campaña o checklists..."
-                style={{
-                  width: "100%",
-                  flex: 1,
-                  minHeight: 170,
-                  padding: "12px 14px",
-                  borderRadius: 12,
-                  border: "1px solid #D6C2A5",
-                  background: "#F5F6FB",
-                  fontSize: 13.5,
-                  lineHeight: 1.65,
-                  color: "#2C1A0B",
-                  fontFamily: "inherit",
-                  resize: "vertical",
+                  if (!isCreatingNew && currentNotebook) {
+                    const id = currentNotebook.id;
+                    window.clearTimeout(autosaveRef.current);
+                    autosaveRef.current = window.setTimeout(() => updateNotebook(id, { content: html }), 500);
+                  }
                 }}
               />
             </div>
@@ -863,7 +861,7 @@ export function NotebookReaderModal({
         >
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <Link
-              href="/tareas"
+              href="/tareas?seccion=libretas"
               onClick={handleClose}
               style={{
                 display: "inline-flex",

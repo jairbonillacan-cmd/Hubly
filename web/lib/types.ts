@@ -272,6 +272,12 @@ export interface AgencyTask {
   tags: string[];
 }
 
+export interface TaskListDef {
+  id: string;
+  brandId: string;
+  name: string;
+}
+
 export type TaskItem = AgencyTask;
 export type Task = AgencyTask;
 
@@ -515,6 +521,7 @@ export interface HublyWorkspaceData {
   posts: SocialPost[];
   ideas?: ContentIdea[];
   tasks: AgencyTask[];
+  taskLists?: TaskListDef[];
   notebooks: NotebookItem[];
   assets: MediaAsset[];
   projects: BrandProject[];

@@ -754,6 +754,9 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
               </button>
 
               <button
+                disabled
+                data-planned
+                title="Función prevista"
                 type="button"
                 style={{
                   border: "none",

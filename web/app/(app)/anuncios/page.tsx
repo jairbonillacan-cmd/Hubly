@@ -588,6 +588,9 @@ export default function AnunciosPage() {
         {/* Right Date Picker Pill + Settings Icon with Red Notification Dot */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <button
+            disabled
+            data-planned
+            title="Función prevista"
             type="button"
             style={{
               display: "inline-flex",
@@ -610,6 +613,8 @@ export default function AnunciosPage() {
           </button>
 
           <button
+            disabled
+            data-planned
             type="button"
             aria-label="Conexión y sincronización con Meta"
             title="Los datos de Meta podrían estar desactualizados"
@@ -746,6 +751,8 @@ export default function AnunciosPage() {
           )}
 
           <button
+            disabled
+            data-planned
             type="button"
             title="Filtros y orden"
             style={{
@@ -843,6 +850,9 @@ export default function AnunciosPage() {
           </div>
 
           <button
+            disabled
+            data-planned
+            title="Función prevista"
             type="button"
             style={{
               height: 38,

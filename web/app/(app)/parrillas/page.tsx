@@ -1435,6 +1435,9 @@ export default function ParrillasPage() {
             }}
           >
             <button
+              disabled
+              data-planned
+              title="Función prevista"
               type="button"
               style={{
                 width: 38,
@@ -1453,6 +1456,9 @@ export default function ParrillasPage() {
 
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <button
+                disabled
+                data-planned
+                title="Función prevista"
                 type="button"
                 style={{
                   display: "inline-flex",
@@ -1480,6 +1486,9 @@ export default function ParrillasPage() {
                 }}
               >
                 <button
+                  disabled
+                  data-planned
+                  title="Función prevista"
                   type="button"
                   style={{
                     width: 28,
@@ -1496,6 +1505,9 @@ export default function ParrillasPage() {
                   <LayoutGrid size={14} />
                 </button>
                 <button
+                  disabled
+                  data-planned
+                  title="Función prevista"
                   type="button"
                   style={{
                     width: 28,
@@ -1783,6 +1795,9 @@ export default function ParrillasPage() {
                   </button>
                 ))}
                 <button
+                  disabled
+                  data-planned
+                  title="Función prevista"
                   type="button"
                   style={{
                     background: "transparent",
@@ -1837,6 +1852,9 @@ export default function ParrillasPage() {
 
                   <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                     <button
+                      disabled
+                      data-planned
+                      title="Función prevista"
                       type="button"
                       style={{
                         background: "transparent",
@@ -1966,6 +1984,9 @@ export default function ParrillasPage() {
 
                   <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                     <button
+                      disabled
+                      data-planned
+                      title="Función prevista"
                       type="button"
                       style={{
                         background: "transparent",

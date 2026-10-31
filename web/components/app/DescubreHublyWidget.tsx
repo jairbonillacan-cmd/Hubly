@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Check, ChevronDown, ChevronUp, Sparkles, X } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
 import { selectOnboardingStatus } from "@/lib/domain-selectors";
@@ -25,6 +25,15 @@ export function DescubreHublyWidget() {
   const toggleOnboardingStep = useHublyStore((s) => s.toggleOnboardingStep);
   const setOnboardingMinimized = useHublyStore((s) => s.setOnboardingMinimized);
   const setOnboardingDismissed = useHublyStore((s) => s.setOnboardingDismissed);
+  // Fuera del dashboard empieza plegado para no tapar calendarios y tableros.
+  const pathname = usePathname();
+  const [expandedHere, setExpandedHere] = React.useState(false);
+  const onDashboard = pathname === "/dashboard";
+  const minimized = onDashboard ? onboarding.minimized : !expandedHere;
+  const setMinimized = (next: boolean) => {
+    if (onDashboard) setOnboardingMinimized(next);
+    else setExpandedHere(!next);
+  };
   const setNewBrandModalOpen = useHublyStore((s) => s.setNewBrandModalOpen);
   const openComposer = useHublyStore((s) => s.openComposer);
   const setInviteModalOpen = useHublyStore((s) => s.setInviteModalOpen);
@@ -118,11 +127,11 @@ export function DescubreHublyWidget() {
             position: "fixed",
             right: 22,
             bottom: 66,
-            width: onboarding.minimized ? "auto" : 272,
+            width: minimized ? "auto" : 272,
             background: "#FFFFFF",
-            borderRadius: onboarding.minimized ? 9999 : 16,
+            borderRadius: minimized ? 9999 : 16,
             border: "1px solid #E2E8F0",
-            padding: onboarding.minimized ? "7px 14px" : "14px 16px 14px",
+            padding: minimized ? "7px 14px" : "14px 16px 14px",
             zIndex: 68,
             boxShadow:
               "0 10px 28px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(15, 23, 42, 0.03)",
@@ -130,11 +139,11 @@ export function DescubreHublyWidget() {
             transition: "all 0.18s ease",
           }}
         >
-          {onboarding.minimized ? (
+          {minimized ? (
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <button
                 type="button"
-                onClick={() => setOnboardingMinimized(false)}
+                onClick={() => setMinimized(false)}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -223,7 +232,7 @@ export function DescubreHublyWidget() {
                   </span>
                   <button
                     type="button"
-                    onClick={() => setOnboardingMinimized(true)}
+                    onClick={() => setMinimized(true)}
                     aria-label="Minimizar Descubre Hubly"
                     title="Minimizar"
                     style={{

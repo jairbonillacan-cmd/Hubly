@@ -426,6 +426,7 @@ export function normalizeWorkspacePayload(
     posts,
     ideas: Array.isArray(sanitized.ideas) ? sanitized.ideas : [],
     tasks,
+    taskLists: Array.isArray(sanitized.taskLists) ? sanitized.taskLists : [],
     notebooks:
       Array.isArray(sanitized.notebooks) && sanitized.notebooks.length > 0
         ? sanitized.notebooks

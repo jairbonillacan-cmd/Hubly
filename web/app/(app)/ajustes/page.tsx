@@ -21,6 +21,7 @@ import {
   Check,
   X,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useHublyStore } from "@/lib/store";
 import { useHublyTheme } from "@/lib/theme";
 
@@ -37,6 +38,7 @@ type SettingsTabId =
   | "recomienda";
 
 export default function AjustesPage() {
+  const router = useRouter();
   const brands = useHublyStore((s) => s.brands);
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
   const team = useHublyStore((s) => s.team);
@@ -174,6 +176,7 @@ export default function AjustesPage() {
 
           <button
             type="button"
+            onClick={() => router.push("/")}
             style={{
               width: "100%",
               height: 36,
@@ -233,6 +236,8 @@ export default function AjustesPage() {
                 }}
               >
                 <button
+                  disabled
+                  data-planned
                   type="button"
                   title="Agregar foto de perfil"
                   style={{
@@ -276,6 +281,9 @@ export default function AjustesPage() {
                     </span>
                   </div>
                   <button
+                    disabled
+                    data-planned
+                    title="Función prevista"
                     type="button"
                     style={{
                       display: "inline-flex",
@@ -412,6 +420,9 @@ export default function AjustesPage() {
                   CONTRASEÑA
                 </span>
                 <button
+                  disabled
+                  data-planned
+                  title="Función prevista"
                   type="button"
                   style={{
                     height: 38,

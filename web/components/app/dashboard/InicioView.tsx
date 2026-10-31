@@ -15,6 +15,7 @@ import {
   X,
 } from "lucide-react";
 import { useHublyStore } from "@/lib/store";
+import { NotebookEditor } from "@/components/app/NotebookEditor";
 import {
   selectGreetingAndDate,
   selectTasksBreakdown,
@@ -1861,22 +1862,10 @@ export function InicioView() {
                 >
                   Contenido y notas
                 </label>
-                <textarea
-                  rows={6}
-                  value={nbContent}
-                  onChange={(e) => setNbContent(e.target.value)}
-                  placeholder="Escribe aquí los pasos, guías o acuerdos de la libreta..."
-                  style={{
-                    width: "100%",
-                    padding: "10px 12px",
-                    fontSize: 13,
-                    lineHeight: 1.55,
-                    borderRadius: 12,
-                    border: "1px solid #C8A97E",
-                    background: "#FFFFFF",
-                    color: "#2C1A0B",
-                    resize: "vertical",
-                  }}
+                <NotebookEditor
+                  key={activeNotebook?.id || "nueva"}
+                  initialContent={activeNotebook?.content || ""}
+                  onChange={setNbContent}
                 />
               </div>
 
