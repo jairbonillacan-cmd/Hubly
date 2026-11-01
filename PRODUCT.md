@@ -28,7 +28,7 @@ La aplicación cuenta hoy con: cuentas, agencias, marcas e invitaciones con perm
 
 ## Brand Commitments
 
-Nombre: Hubly. Idioma de la landing y la aplicación: español. Tono: directo y cercano. La identidad y la marca son propias. Con el permiso registrado en el [ADR 0001](docs/adr/0001-paridad-con-henry.md) se replican diseño y funciones de Henry; nada de otros productos.
+Nombre: Hubly. Idioma de la landing y la aplicación: español. Tono: directo y cercano. La identidad y la marca son propias. Hubly es la migración de Henry para otro mercado, hecha por parte de su equipo ([ADR 0001](docs/adr/0001-paridad-con-henry.md)): se replican diseño y funciones de Henry; nada de otros productos.
 
 ## Evidence on Hand
 

@@ -25,7 +25,6 @@ Revisado el 1 de noviembre de 2026 sobre el reporte de auditoría externo.
 
 | ID | P | Hallazgo | Evidencia | Etapa |
 |---|---|---|---|---|
-| H-01 | P0 | Capturas de Henry en un repositorio público (el dueño acepta dejarlas, 1 nov 2026); falta el permiso escrito | `docs/referencias`, `docs/archivo/planes-agentes/capturas-A`, ADR 0001 | 0 |
 | H-02 | P0 | Licencia a largo plazo sin decidir antes de tomar código de Postiz | `LICENSE`, ADR 0002 y 0003 | 1 |
 | D-01 | P1 | Casi todo vive en un documento JSONB con tope de 8 MB | `agency_workspaces`, `HublyWorkspaceData`, `app/api/workspace/route.ts` | 2 |
 | D-02 | P1 | Sin permisos por marca: `brandIds` no aparece en ninguna migración | `supabase/migrations` | 2 |
@@ -48,6 +47,5 @@ Revisado el 1 de noviembre de 2026 sobre el reporte de auditoría externo.
 **Sin validar:** el coste real de los re-renders en `layout.tsx` (no se midió) y las condiciones de carrera entre personas (no se reprodujeron).
 
 ## Pendiente del dueño (etapa 0)
-- Guardar el permiso de Henry por escrito.
 - Crear el proyecto Supabase de desarrollo y aplicar `0008`, `0009` y `0010`.
 - Confirmar la protección de `main` y la limpieza de ramas y worktrees.

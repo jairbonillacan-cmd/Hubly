@@ -1,9 +1,9 @@
 # ADR 0001: Paridad con Henry
 
-Estado: aceptada, 1 de noviembre de 2026. **Pendiente: guardar el permiso por escrito.**
+Estado: aceptada, 1 de noviembre de 2026.
 
 ## Decisión
-El dueño del proyecto indica que hay permiso de Henry para replicar su diseño y funciones. Se replican con código propio y buenas prácticas.
+Hubly lo hace parte del equipo de Henry, como migración del producto para otro mercado, y por eso replica su diseño y funciones. No hace falta un permiso escrito aparte. Se replican con código propio y buenas prácticas.
 
 ## Reglas
 - El comportamiento observado se convierte en una especificación; no se pega código de bundles.
@@ -11,5 +11,3 @@ El dueño del proyecto indica que hay permiso de Henry para replicar su diseño 
 - La paridad se prioriza por el uso real de la agencia, después del ciclo principal.
 - Ninguna pantalla se da por terminada si solo se parece: necesita backend real o la etiqueta «Función prevista».
 
-## Riesgo
-El alcance del permiso (diseño, marca, capturas en un repositorio público, uso comercial) no consta en este repositorio. El dueño decidió el 1 de noviembre de 2026 dejar las capturas en el repositorio público, y acepta ese riesgo.
