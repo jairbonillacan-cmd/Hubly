@@ -120,6 +120,7 @@ export interface HublyStoreState extends HublyWorkspaceData {
   editingPostId: string | null;
   cmdkOpen: boolean;
   aiDrawerOpen: boolean;
+  aiDrawerPrompt: string | null;
   newBrandModalOpen: boolean;
   inviteModalOpen: boolean;
   widgetConfigModalOpen: boolean;
@@ -139,6 +140,7 @@ export interface HublyStoreState extends HublyWorkspaceData {
   closeComposer: () => void;
   setCmdkOpen: (open: boolean) => void;
   setAiDrawerOpen: (open: boolean) => void;
+  setAiDrawerPrompt: (prompt: string | null) => void;
   setNewBrandModalOpen: (open: boolean) => void;
   setInviteModalOpen: (open: boolean) => void;
   setWidgetConfigModalOpen: (open: boolean) => void;
@@ -444,6 +446,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   composerPending: null,
   cmdkOpen: false,
   aiDrawerOpen: false,
+  aiDrawerPrompt: null,
   newBrandModalOpen: false,
   inviteModalOpen: false,
   widgetConfigModalOpen: false,
@@ -498,6 +501,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   },
   setCmdkOpen: (open) => set({ cmdkOpen: open }),
   setAiDrawerOpen: (open) => set({ aiDrawerOpen: open }),
+  setAiDrawerPrompt: (prompt) => set({ aiDrawerPrompt: prompt }),
   setNewBrandModalOpen: (open) => set({ newBrandModalOpen: open }),
   setInviteModalOpen: (open) => set({ inviteModalOpen: open }),
   setWidgetConfigModalOpen: (open) => set({ widgetConfigModalOpen: open }),
@@ -2058,6 +2062,7 @@ const VIEWER_ACTIONS = new Set<string>([
   "resolveComposerPending",
   "setCmdkOpen",
   "setAiDrawerOpen",
+  "setAiDrawerPrompt",
   "setNewBrandModalOpen",
   "setInviteModalOpen",
   "setWidgetConfigModalOpen",
