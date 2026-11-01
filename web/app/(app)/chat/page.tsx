@@ -84,13 +84,26 @@ export default function ChatPage() {
     { id: "ch-min-aprobaciones", name: "aprobaciones", subtitle: "Feedback de cliente" },
   ];
 
+  const generalMessages = useMemo(() => {
+    const fromLocal = localMessages.filter((m) => m.targetId === "ch-general");
+    const fromStore = storeMessages
+      .filter((m) => m.channelId === "ch-general")
+      .map((m) => ({ id: m.id, sender: m.sender, text: m.text }));
+    return [...fromLocal, ...fromStore];
+  }, [localMessages, storeMessages]);
+
+  const lastGeneralMessage = generalMessages[generalMessages.length - 1] ?? null;
+
   const activeMeta = useMemo(() => {
     if (!selectedId) return null;
     if (selectedId === "ch-general") {
       return {
         id: "ch-general",
         title: "# General",
-        subtitle: "Canal general de la agencia · Sin mensajes aún",
+        subtitle:
+          generalMessages.length === 0
+            ? "Canal general de la agencia · Sin mensajes aún"
+            : `Canal general de la agencia · ${generalMessages.length === 1 ? "1 mensaje" : `${generalMessages.length} mensajes`}`,
         badgeText: "#",
         badgeBg: "#F1F5F9",
         badgeColor: "#475569",
@@ -129,7 +142,7 @@ export default function ChatPage() {
       };
     }
     return null;
-  }, [selectedId, channels]);
+  }, [selectedId, channels, generalMessages.length, myName, brandLabel]);
 
   const threadMessages = useMemo(() => {
     if (!selectedId) return [];
@@ -320,7 +333,9 @@ export default function ChatPage() {
             borderBottom: "1px solid var(--ui-muted)",
           }}
         >
-          Todavía no hay canales con conversación.
+          {generalMessages.length === 0
+            ? "Todavía no hay canales con conversación."
+            : "Canales y conversaciones activas del equipo."}
         </div>
 
         {/* Scrollable Navigation Sections */}
@@ -496,7 +511,19 @@ export default function ChatPage() {
                     >
                       # General
                     </span>
-                    <span style={{ fontSize: 11, color: "var(--ui-text-5)" }}>Sin mensajes aún</span>
+                    <span
+                      style={{
+                        fontSize: 11,
+                        color: "var(--ui-text-5)",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {lastGeneralMessage
+                        ? `${lastGeneralMessage.sender}: ${lastGeneralMessage.text}`
+                        : "Sin mensajes aún"}
+                    </span>
                   </span>
                 </span>
               </button>
