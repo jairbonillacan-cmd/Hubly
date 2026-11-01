@@ -360,4 +360,3 @@ export function InviteTeamModal() {
   );
 }
 
-export default InviteTeamModal;

@@ -31,14 +31,12 @@ import {
   HublyCheckIcon as Check,
   HublyCloseIcon as X,
   HublyHashIcon,
-  HublyHashIcon as Hash,
   HublyMegaphoneIcon as Megaphone,
   HublyMoonIcon,
   HublyPeopleIcon,
   HublyPlusIcon as Plus,
   HublyRefreshIcon as RotateCcw,
   HublySearchIcon,
-  HublySearchIcon as Search,
   HublyTagIcon,
   HublyTrashIcon as Trash2,
 } from "@/components/app/icons/DuotoneIcons";
@@ -103,9 +101,7 @@ export function InicioView() {
     markAllNotificationsRead,
     updatePostStatus,
     updateNotebook,
-    addNotebook,
-    inviteTeamMember,
-  } = store;
+    addNotebook,  } = store;
 
   // Filtro de tareas: por defecto true (marca activa = "Mi marca" -> 2 pendientes en seed)
   const [filterByBrand, setFilterByBrand] = useState<boolean>(true);
@@ -116,10 +112,6 @@ export function InicioView() {
   const [newTaskPriority, setNewTaskPriority] = useState<TaskPriority>("Media");
 
   // Estado local del modal Invitar equipo
-  const [inviteName, setInviteName] = useState<string>("");
-  const [inviteEmail, setInviteEmail] = useState<string>("");
-  const [inviteRole, setInviteRole] = useState<string>("Creador de Contenido");
-  const [inviteFeedback, setInviteFeedback] = useState<string | null>(null);
 
   // Estado local del modal Lector/Editor de Libretas Kraft
   const [isCreatingNotebook, setIsCreatingNotebook] = useState<boolean>(false);
@@ -127,7 +119,6 @@ export function InicioView() {
   const [nbSubtitle, setNbSubtitle] = useState<string>("");
   const [nbCategory, setNbCategory] = useState<string>("Guía");
   const [nbContent, setNbContent] = useState<string>("");
-  const [nbSaveToast, setNbSaveToast] = useState<boolean>(false);
 
   const [pendientesOpen, setPendientesOpen] = useState<boolean>(false);
   const [dragId, setDragId] = useState<DashboardWidgetId | null>(null);
@@ -351,7 +342,6 @@ export function InicioView() {
   };
 
   const handleOpenInviteTeam = () => {
-    setInviteFeedback(null);
     setInviteModalOpen(true);
   };
 
@@ -393,29 +383,6 @@ export function InicioView() {
     setShowQuickTaskForm(false);
   };
 
-  const handleSendInvite = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cleanEmail = inviteEmail.trim();
-    if (!cleanEmail) return;
-    const derivedName =
-      inviteName.trim() ||
-      cleanEmail
-        .split("@")[0]
-        .replace(/[._-]+/g, " ")
-        .replace(/\b\w/g, (l) => l.toUpperCase());
-    inviteTeamMember({
-      name: derivedName,
-      email: cleanEmail,
-      role: inviteRole,
-    });
-    setInviteFeedback(`Invitación enviada a ${cleanEmail}`);
-    setInviteName("");
-    setInviteEmail("");
-    setTimeout(() => {
-      setInviteModalOpen(false);
-      setInviteFeedback(null);
-    }, 900);
-  };
 
   const handleSaveNotebook = (e: React.FormEvent) => {
     e.preventDefault();
@@ -440,8 +407,6 @@ export function InicioView() {
       category: nbCategory,
       content: nbContent,
     });
-    setNbSaveToast(true);
-    setTimeout(() => setNbSaveToast(false), 1600);
   };
 
   /* ========================================================================
@@ -1781,4 +1746,3 @@ export function InicioView() {
   );
 }
 
-export default InicioView;

@@ -10,9 +10,9 @@ import {
   TeamNavIcon,
 } from "@/components/app/icons/HublyIcons";
 
-export type DashboardTabKey = "inicio" | "cuentas" | "salud-cuentas" | "equipo";
+type DashboardTabKey = "inicio" | "cuentas" | "salud-cuentas" | "equipo";
 
-export interface DashboardSubNavProps {
+interface DashboardSubNavProps {
   /** Optional explicit active tab override; otherwise derived automatically from `usePathname()`. */
   activeTab?: DashboardTabKey;
   /** Optional callback invoked when a tab is clicked (in addition to route navigation). */
@@ -237,4 +237,3 @@ export function DashboardSubNav({
   );
 }
 
-export default DashboardSubNav;

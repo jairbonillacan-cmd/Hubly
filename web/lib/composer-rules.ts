@@ -59,7 +59,7 @@ export interface StoryRepeat {
   endDate?: string;
 }
 
-export const MAX_REPEATS = 12;
+const MAX_REPEATS = 12;
 
 /** Fechas siguientes de una story que se repite, sin contar la primera. */
 export function repeatDates(repeat: StoryRepeat, start: string): string[] {
@@ -73,7 +73,7 @@ export function repeatDates(repeat: StoryRepeat, start: string): string[] {
   return dates;
 }
 
-export interface BestHour {
+interface BestHour {
   day: number;
   dayName: string;
   hour: number;

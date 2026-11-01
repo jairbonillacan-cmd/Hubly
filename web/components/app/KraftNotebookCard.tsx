@@ -3,9 +3,9 @@
 import React from "react";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 
-export type KraftNotebookVariant = "post" | "report" | "space" | "brand";
+type KraftNotebookVariant = "post" | "report" | "space" | "brand";
 
-export interface KraftNotebookCardProps {
+interface KraftNotebookCardProps {
   title: string;
   stamp: string;
   variant?: KraftNotebookVariant;

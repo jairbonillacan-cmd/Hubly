@@ -1,7 +1,6 @@
-import { addDays } from "./date";
 import type { PostFormat, PostStatus, SocialNetwork, SocialPost } from "./types";
 
-export const CALENDAR_TIME_ZONE = "America/Mexico_City";
+const CALENDAR_TIME_ZONE = "America/Mexico_City";
 export type CalendarView = "mes" | "semana" | "tabla" | "kanban";
 
 /** Hoy en la zona de la agencia, sin depender de la zona del navegador. */
@@ -121,4 +120,3 @@ export const DEFAULT_WORKFLOW = [
 export const PUBLICATION_COLUMNS: PostStatus[] = ["draft", "pending", "changes", "approved", "scheduled", "published"];
 export const FORMAT_COLUMNS: PostFormat[] = ["Imagen", "Carrusel", "Reel / Video", "Story", "Texto"];
 
-export const shiftDate = addDays;

@@ -97,7 +97,7 @@ function parseNetworks(value: string): { networks: SocialNetwork[]; unknown: str
   return { networks, unknown };
 }
 
-export interface ImportRow {
+interface ImportRow {
   row: number;
   title: string;
   caption: string;

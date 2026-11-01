@@ -3,10 +3,10 @@ import type { CoverKind } from "../Cover";
 
 export type SocialPlatform = "instagram" | "tiktok" | "facebook" | "linkedin" | "youtube" | "x";
 
-export type InstagramPostFormat = "feed" | "reel" | "carousel";
-export type TikTokPostFormat = "video";
-export type FacebookPostFormat = "feed" | "reel" | "link";
-export type LinkedInPostFormat = "feed" | "carousel" | "article";
+type InstagramPostFormat = "feed" | "reel" | "carousel";
+type TikTokPostFormat = "video";
+type FacebookPostFormat = "feed" | "reel" | "link";
+type LinkedInPostFormat = "feed" | "carousel" | "article";
 
 export type PostFormat =
   | InstagramPostFormat

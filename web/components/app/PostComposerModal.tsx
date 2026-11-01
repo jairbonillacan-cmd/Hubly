@@ -2,7 +2,6 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useHublyStore } from "@/lib/store";
-import { backendEnabled } from "@/lib/supabase/config";
 import { currentAgencyId } from "@/lib/live-workspace";
 import { askConfirm, askText } from "@/components/app/AppDialogHost";
 import { CaptionAssistant, ManualResults } from "@/components/app/social/ComposerExtras";
@@ -68,7 +67,7 @@ import {
   HublyUploadIcon,
 } from "@/components/app/icons/DuotoneIcons";
 
-export interface PostComposerModalProps {
+interface PostComposerModalProps {
   open?: boolean;
   onClose?: () => void;
   initialPostId?: string | null;
@@ -1532,4 +1531,3 @@ function NetworkSettings({
   );
 }
 
-export default PostComposerModal;

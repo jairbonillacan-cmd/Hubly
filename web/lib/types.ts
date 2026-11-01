@@ -358,8 +358,6 @@ export interface BrandWorkspace {
   };
 }
 
-export type BrandAccount = BrandWorkspace;
-export type Brand = BrandWorkspace;
 
 export type TaskDueBucket = "overdue" | "today" | "tomorrow" | "upcoming";
 export type TaskPriority = "Alta" | "Media" | "Baja" | "alta" | "media" | "baja";
@@ -405,7 +403,6 @@ export interface TaskListDef {
 }
 
 export type TaskItem = AgencyTask;
-export type Task = AgencyTask;
 
 export interface NotebookItem {
   id: string;
@@ -423,7 +420,6 @@ export interface NotebookItem {
   isPinned: boolean;
 }
 
-export type NotebookNote = NotebookItem;
 
 export interface MediaAsset {
   id: string;

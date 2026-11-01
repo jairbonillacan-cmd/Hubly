@@ -32,7 +32,7 @@ export function messageTime(m: Pick<ChatMessage, "createdAt" | "time">): string 
 }
 
 /** Día (YYYY-MM-DD) al que pertenece un mensaje; sin marca de tiempo cuenta como hoy. */
-export function messageDay(m: Pick<ChatMessage, "createdAt">, today: string = localIsoDate()): string {
+function messageDay(m: Pick<ChatMessage, "createdAt">, today: string = localIsoDate()): string {
   return m.createdAt ? localIsoDate(new Date(m.createdAt)) : today;
 }
 
@@ -50,7 +50,7 @@ function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-export interface ChatDayGroup {
+interface ChatDayGroup {
   day: string;
   label: string;
   messages: ChatMessage[];
@@ -152,7 +152,7 @@ function at(base: Date, days: number, hour: number): Date {
   return d;
 }
 
-export interface TimeChoice {
+interface TimeChoice {
   label: string;
   at: number;
 }
@@ -188,7 +188,7 @@ export function insertMention(text: string, caret: number, name: string): { text
   return { text: before + text.slice(caret), caret: before.length };
 }
 
-export type MessageSegment = { kind: "text" | "mention" | "link"; value: string };
+type MessageSegment = { kind: "text" | "mention" | "link"; value: string };
 
 /** Separa menciones de personas conocidas y enlaces web; todo lo demás queda como texto. */
 export function messageSegments(text: string, names: string[]): MessageSegment[] {

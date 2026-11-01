@@ -23,7 +23,7 @@ const ERRORS: Record<string, string> = {
   failed: "No pudimos crear la invitación. Revisa tu conexión e inténtalo otra vez.",
 };
 
-export type InviteResult = { link: string } | { error: string };
+type InviteResult = { link: string } | { error: string };
 
 export const canInvite = () => !backendEnabled || ["owner", "admin"].includes(currentRole() ?? "");
 

@@ -25,7 +25,7 @@ import type {
 
 const FILAS_MAX = 5;
 
-export const METRIC_LABELS: Record<DashboardMetricId, string> = {
+const METRIC_LABELS: Record<DashboardMetricId, string> = {
   publicados: "Posts publicados",
   programados: "Posts programados",
   aprobaciones: "Aprobaciones pendientes",
@@ -65,7 +65,7 @@ export function selectCriticalProjects(projects: BrandProject[]) {
     .slice(0, 5);
 }
 
-export function useHoyIso() {
+function useHoyIso() {
   const fixedIsoNow = useHublyStore((s) => s.testClock?.fixedIsoNow);
   const timezone = useHublyStore((s) => s.profile?.timezone);
   return resolveDateInTimezone(fixedIsoNow, timezone).isoDate;

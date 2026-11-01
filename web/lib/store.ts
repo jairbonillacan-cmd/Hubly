@@ -71,9 +71,9 @@ import type {
   WorkspaceProfile,
 } from "./types";
 
-export type CommitmentPeriodKey = "mes_actual" | "mes_anterior" | "trimestre";
+type CommitmentPeriodKey = "mes_actual" | "mes_anterior" | "trimestre";
 
-export type OnboardingStepKey =
+type OnboardingStepKey =
   | "redes"
   | "post"
   | "aprueba"
@@ -83,7 +83,7 @@ export type OnboardingStepKey =
   | "taskCreatedOrCompleted"
   | "teamCheckedOrInvited";
 
-export type AddBrandInput = {
+type AddBrandInput = {
   name: string;
   initials?: string;
   initial?: string;
@@ -101,7 +101,7 @@ export type AddBrandInput = {
   whatTheySell?: string;
 };
 
-export type AddTaskInput = Omit<
+type AddTaskInput = Omit<
   AgencyTask,
   | "id"
   | "completed"
@@ -119,7 +119,7 @@ export type AddTaskInput = Omit<
   dueBucket?: AgencyTask["dueBucket"];
 };
 
-export interface HublyStoreState extends HublyWorkspaceData {
+interface HublyStoreState extends HublyWorkspaceData {
   hydrated: boolean;
   /** Rol en la agencia con backend real; null en el modo demo. */
   role: string | null;

@@ -5,9 +5,6 @@ import Link from "next/link";
 import { useHublyStore } from "@/lib/store";
 import { backendEnabled } from "@/lib/supabase/config";
 import { currentAgencyId } from "@/lib/live-workspace";
-import { Cover } from "@/components/Cover";
-import { STATUS_META } from "@/components/app/social/status-meta";
-import { PostMonthCalendar } from "@/components/app/social/PostMonthCalendar";
 import { SocialCalendar } from "@/components/app/social/SocialCalendar";
 import { ImportMonthModal } from "@/components/app/social/CalendarModals";
 import { MonthlyReport } from "@/components/app/reports/MonthlyReport";
@@ -17,28 +14,16 @@ import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import { PostInbox } from "@/components/app/social/PostInbox";
 import { OrganicAnalytics } from "@/components/app/social/OrganicAnalytics";
 import {
-  HublyArrowLeftIcon as ArrowLeft,
   HublyBentoIcon,
-  HublyBentoIcon as LayoutGrid,
   HublyCalendarIcon,
-  HublyCalendarIcon as Calendar,
   HublyChartIcon,
   HublyChatIcon,
   HublyChatIcon as MessageCircle,
-  HublyChatIcon as MessageSquareWarning,
-  HublyCheckCircleIcon as CheckCircle2,
-  HublyCheckIcon as Check,
-  HublyChevronDownIcon as ChevronDown,
   HublyCloseIcon as X,
-  HublyCopyIcon as Copy,
-  HublyExternalIcon as ExternalLink,
   HublyGlobeIcon as Globe,
-  HublyHomeIcon as Home,
   HublyLinkIcon,
-  HublyPencilIcon as Edit3,
   HublyPlusIcon as Plus,
   HublyPresentationIcon,
-  HublyRowsIcon as List,
   HublySparkIcon,
 } from "@/components/app/icons/DuotoneIcons";
 
@@ -62,14 +47,9 @@ export default function ParrillasPage() {
   const brands = useHublyStore((s) => s.brands);
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
   const posts = useHublyStore((s) => s.posts);
-  const openComposer = useHublyStore((s) => s.openComposer);
-  const updatePostStatus = useHublyStore((s) => s.updatePostStatus);
-  const approveAllBrandPosts = useHublyStore((s) => s.approveAllBrandPosts);
 
   const [activeTab, setActiveTab] = useState<SocialSubTab>("calendario");
-  const [showDemoData, setShowDemoData] = useState(backendEnabled);
-  const profileName = useHublyStore((s) => s.profile?.name) || "Equipo";
-  const composerOpen = useHublyStore((s) => s.composerOpen);
+  const [showDemoData, setShowDemoData] = useState(backendEnabled);  const composerOpen = useHublyStore((s) => s.composerOpen);
   const [moreNetworksOpen, setMoreNetworksOpen] = useState(false);
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [accountsModalOpen, setAccountsModalOpen] = useState(false);
@@ -80,7 +60,6 @@ export default function ParrillasPage() {
   const [whatsappEnabled, setWhatsappEnabled] = useState(false);
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [editingWhatsapp, setEditingWhatsapp] = useState(false);
-  const [descubreOpen, setDescubreOpen] = useState(true);
   const [connectingNet, setConnectingNet] = useState<string | null>(null);
 
   useEffect(() => {

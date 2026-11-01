@@ -11,7 +11,7 @@ import {
 
 const WEEKDAYS = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
 
-export interface CalendarEntry {
+interface CalendarEntry {
   id: string;
   date: string;
   label: string;

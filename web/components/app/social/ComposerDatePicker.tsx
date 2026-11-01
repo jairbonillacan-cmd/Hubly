@@ -17,14 +17,14 @@ const pad = (n: number) => String(n).padStart(2, "0");
 const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
 /** Las seis semanas que muestra un mes, empezando en lunes. */
-export function monthGrid(year: number, month: number): string[] {
+function monthGrid(year: number, month: number): string[] {
   const first = new Date(year, month, 1, 12);
   const start = addDays(localIsoDate(first), -((first.getDay() + 6) % 7));
   return Array.from({ length: 42 }, (_, i) => addDays(start, i));
 }
 
 /** Suma minutos a una hora HH:mm dando la vuelta al día. */
-export function shiftTime(time: string, minutes: number): string {
+function shiftTime(time: string, minutes: number): string {
   const [h, m] = (time || DEFAULT_TIME).split(":").map(Number);
   const total = (h * 60 + m + minutes + 1440) % 1440;
   return `${pad(Math.floor(total / 60))}:${pad(total % 60)}`;

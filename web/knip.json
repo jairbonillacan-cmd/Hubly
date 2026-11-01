@@ -1,0 +1,14 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "tests/*.mjs",
+    "e2e/*.mjs",
+    "scripts/*.mjs"
+  ],
+  "project": [
+    "**/*.{ts,tsx,mjs}"
+  ],
+  "ignoreDependencies": [
+    "tailwindcss"
+  ]
+}

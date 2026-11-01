@@ -32,7 +32,7 @@ import {
   HublySparkIcon as Sparkles,
 } from "@/components/app/icons/DuotoneIcons";
 
-export interface CommandPaletteModalProps {
+interface CommandPaletteModalProps {
   open?: boolean;
   onClose?: () => void;
 }
@@ -668,4 +668,3 @@ export function CommandPaletteModal({
   );
 }
 
-export default CommandPaletteModal;

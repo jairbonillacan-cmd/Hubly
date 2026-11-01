@@ -8,17 +8,12 @@ import Link from "next/link";
 import { useLayer } from "@/lib/use-layer";
 import {
   HublyBentoIcon as LayoutGrid,
-  HublyCalendarIcon as Calendar,
-  HublyCheckCircleIcon as CheckCircle2,
-  HublyChevronDownIcon as ChevronDown,
   HublyCloseIcon as X,
   HublyInfoIcon as Info,
   HublyMegaphoneIcon as Megaphone,
   HublyPresentationIcon as Presentation,
   HublyPulseIcon as Gauge,
   HublySearchIcon as Search,
-  HublySettingsIcon as Settings,
-  HublySlidersIcon as SlidersHorizontal,
   HublySparkIcon as Sparkles,
   HublyTableIcon as Table2,
   HublyTimelineIcon as GitBranch,
@@ -492,7 +487,6 @@ function DemoAnunciosPage() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAd, setSelectedAd] = useState<SampleAdCard | null>(null);
-  const [descubreOpen, setDescubreOpen] = useState(true);
   useLayer(selectedAd !== null, () => setSelectedAd(null));
 
   const visibleAds = SAMPLE_ADS.filter((ad) =>

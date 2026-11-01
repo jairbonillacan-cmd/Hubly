@@ -8,7 +8,7 @@ import { FacebookPreview } from "./FacebookPreview";
 import { LinkedInPreview } from "./LinkedInPreview";
 import { PlatformBadgeIcon } from "./SocialIcons";
 
-export type SocialPreviewProps = {
+type SocialPreviewProps = {
   post: PreviewPost;
   config?: PreviewConfig;
   allowPlatformSwitch?: boolean;

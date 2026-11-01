@@ -20,7 +20,7 @@ const bannerButton = { border: "1px solid #FFFFFF", background: "transparent", c
 const ICONOS_BASE = [HublyCalendarIcon, HublyHashIcon, HublyImageIcon, HublyChatIcon, HublyBellIcon, HublyChartIcon, HublyClipboardIcon];
 const ICONOS_CARGA = [...ICONOS_BASE, ...ICONOS_BASE];
 
-export function HubiCargando() {
+function HubiCargando() {
   return (
     <div role="status" className="hubly-carga">
       <div className="hubly-carga-lluvia" aria-hidden="true">

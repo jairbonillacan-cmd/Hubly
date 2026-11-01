@@ -246,7 +246,7 @@ export const DEFAULT_ONBOARDING: OnboardingProgress = {
   manualOverrides: {},
 };
 
-export const DEFAULT_ACTIVITY_EVENTS: ActivityEvent[] = [
+const DEFAULT_ACTIVITY_EVENTS: ActivityEvent[] = [
   {
     id: "evt-1",
     memberId: "tm-1",
@@ -303,7 +303,7 @@ export const DEFAULT_ACTIVITY_EVENTS: ActivityEvent[] = [
   },
 ];
 
-export const DEFAULT_NOTIFICATIONS: WorkspaceNotification[] = [];
+const DEFAULT_NOTIFICATIONS: WorkspaceNotification[] = [];
 
 function resolveBaseDates(referenceFixture?: boolean): {
   todayIso: string;
