@@ -1,9 +1,8 @@
 "use client";
 
+import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useId, useRef, useState } from "react";
 import { useHublyStore } from "@/lib/store";
-import { useLayer } from "@/lib/use-layer";
-import { useModalPresence } from "@/lib/use-modal-presence";
 import type { DashboardWidgetId } from "@/lib/types";
 import { WidgetPreview } from "@/components/app/dashboard/WidgetPreview";
 import { HublyCheckIcon as Check, HublyPlusIcon as Plus } from "@/components/app/icons/DuotoneIcons";
@@ -62,7 +61,6 @@ const CATALOGO: Array<{
 
 export function WidgetConfigModal({ open, onClose }: WidgetConfigModalProps) {
   const titleId = useId();
-  const dialogRef = useRef<HTMLDivElement | null>(null);
   const doneRef = useRef<HTMLButtonElement | null>(null);
 
   const widgets = useHublyStore((s) => s.widgets);
@@ -76,14 +74,9 @@ export function WidgetConfigModal({ open, onClose }: WidgetConfigModalProps) {
     onClose();
   };
 
-  useLayer(open, handleClose);
-
   useEffect(() => {
     if (open) doneRef.current?.focus();
   }, [open]);
-
-  const presence = useModalPresence(open);
-  if (!presence.mounted) return null;
 
   const visibleIds = new Set(widgets.filter((w) => w.visible).map((w) => w.id));
 
@@ -105,89 +98,56 @@ export function WidgetConfigModal({ open, onClose }: WidgetConfigModalProps) {
     setWidgetVisibility(id, true);
   };
 
-  const handleTrapTab = (e: React.KeyboardEvent) => {
-    if (e.key !== "Tab") return;
-    const focusables = Array.from(
-      dialogRef.current?.querySelectorAll<HTMLElement>("[data-wgal-foco]") ?? []
-    );
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last?.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first?.focus();
-    }
-  };
-
   return (
-    <div
-      className="hubly-overlay hubly-cal-overlay"
-      data-state={presence.state}
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) handleClose();
-      }}
-    >
-      <div
-        ref={dialogRef}
-        className="hubly-sheet hubly-cal-modal hubly-wgal"
-        data-state={presence.state}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        onKeyDown={handleTrapTab}
-      >
-        <div className="hubly-wgal-head">
-          <div>
-            <h2 id={titleId}>Widgets</h2>
-            <p>Toca uno para agregarlo a Inicio o quitarlo. Para acomodarlos o cambiar su ancho, usa Editar.</p>
-          </div>
-          <button ref={doneRef} type="button" data-wgal-foco className="hbtn hbtn-primary hbtn-sm" onClick={handleClose}>
-            Listo
-          </button>
+    <Modal open={open} onClose={handleClose} labelledBy={titleId} className="hubly-sheet hubly-cal-modal hubly-wgal">
+      <div className="hubly-wgal-head">
+        <div>
+          <h2 id={titleId}>Widgets</h2>
+          <p>Toca uno para agregarlo a Inicio o quitarlo. Para acomodarlos o cambiar su ancho, usa Editar.</p>
         </div>
-
-        {notice && <div className="hubly-wgal-aviso" role="status">{notice}</div>}
-
-        <div className="hubly-wgal-scroll">
-          {CATALOGO.map(({ grupo, items }) => (
-            <section key={grupo}>
-              <h3 className="hubly-wgal-rotulo">{grupo}</h3>
-              <div className="hubly-wgal-grid">
-                {items.map((item) => {
-                  const placed = visibleIds.has(item.id);
-                  return (
-                    <div key={item.id} className={`hubly-wgal-card ${placed ? "is-placed" : ""}`}>
-                      <div className="hubly-wgal-preview" aria-hidden="true" inert>
-                        <div className="hubly-wgal-zoom">
-                          <WidgetPreview id={item.id} />
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        data-wgal-foco
-                        className="hubly-wgal-toggle"
-                        aria-pressed={placed}
-                        title={placed ? "Quitar de Inicio" : "Agregar a Inicio"}
-                        onClick={() => handleToggle(item.id)}
-                      >
-                        <span className="hubly-wgal-nombre">{item.title}</span>
-                        <span className="hubly-wgal-estado">
-                          {placed ? <Check size={14} /> : <Plus size={14} />}
-                          {placed ? "Agregado" : "Agregar"}
-                        </span>
-                        <span className="hubly-wgal-desc">{item.description}</span>
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          ))}
-        </div>
+        <button ref={doneRef} type="button" className="hbtn hbtn-primary hbtn-sm" onClick={handleClose}>
+          Listo
+        </button>
       </div>
-    </div>
+
+      {notice && <div className="hubly-wgal-aviso" role="status">{notice}</div>}
+
+      <div className="hubly-wgal-scroll">
+        {CATALOGO.map(({ grupo, items }) => (
+          <section key={grupo}>
+            <h3 className="hubly-wgal-rotulo">{grupo}</h3>
+            <div className="hubly-wgal-grid">
+              {items.map((item) => {
+                const placed = visibleIds.has(item.id);
+                return (
+                  <div key={item.id} className={`hubly-wgal-card ${placed ? "is-placed" : ""}`}>
+                    <div className="hubly-wgal-preview" aria-hidden="true" inert>
+                      <div className="hubly-wgal-zoom">
+                        <WidgetPreview id={item.id} />
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      className="hubly-wgal-toggle"
+                      aria-pressed={placed}
+                      title={placed ? "Quitar de Inicio" : "Agregar a Inicio"}
+                      onClick={() => handleToggle(item.id)}
+                    >
+                      <span className="hubly-wgal-nombre">{item.title}</span>
+                      <span className="hubly-wgal-estado">
+                        {placed ? <Check size={14} /> : <Plus size={14} />}
+                        {placed ? "Agregado" : "Agregar"}
+                      </span>
+                      <span className="hubly-wgal-desc">{item.description}</span>
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        ))}
+      </div>
+    </Modal>
   );
 }
 

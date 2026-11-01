@@ -1,11 +1,10 @@
 "use client";
 
+import { Modal } from "@/components/app/ui/Modal";
 import { useRef, useState } from "react";
 import { HublyCameraIcon, HublyMinusIcon, HublyPlusIcon, HublyCloseIcon } from "@/components/app/icons/DuotoneIcons";
 import { backendEnabled } from "@/lib/supabase/config";
 import { useHublyStore } from "@/lib/store";
-import { useLayer } from "@/lib/use-layer";
-import { useModalPresence } from "@/lib/use-modal-presence";
 import { AjustesModal } from "./Panel";
 
 const STAGE = 280;
@@ -133,22 +132,17 @@ function Reencuadre({ src, busy, error, onCancel, onSave }: { src: string; busy:
 }
 
 function Visor({ open, src, canAdjust, onClose, onAdjust, onChange, onRemove }: { open: boolean; src: string; canAdjust: boolean; onClose: () => void; onAdjust: () => void; onChange: () => void; onRemove: () => void }) {
-  const presence = useModalPresence(open);
-  useLayer(open, onClose);
-  if (!presence.mounted) return null;
   return (
-    <div className="hubly-overlay hubly-cal-overlay" data-state={presence.state} onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="hubly-ajustes-viewer" role="dialog" aria-modal="true" aria-label="Foto de perfil">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={src} alt="Foto de perfil" />
-        <div className="hubly-ajustes-viewer-actions">
-          {canAdjust && <button type="button" className="hbtn hbtn-secondary" onClick={onAdjust}>Ajustar encuadre</button>}
-          <button type="button" className="hbtn hbtn-primary" onClick={onChange}>Cambiar foto</button>
-          <button type="button" className="hbtn hbtn-secondary" onClick={onRemove}>Quitar foto</button>
-          <button type="button" className="hbtn hbtn-ghost hbtn-ic" aria-label="Cerrar" onClick={onClose}><HublyCloseIcon size={15} /></button>
-        </div>
+    <Modal open={open} onClose={onClose} label="Foto de perfil" className="hubly-ajustes-viewer">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt="Foto de perfil" />
+      <div className="hubly-ajustes-viewer-actions">
+        {canAdjust && <button type="button" className="hbtn hbtn-secondary" onClick={onAdjust}>Ajustar encuadre</button>}
+        <button type="button" className="hbtn hbtn-primary" onClick={onChange}>Cambiar foto</button>
+        <button type="button" className="hbtn hbtn-secondary" onClick={onRemove}>Quitar foto</button>
+        <button type="button" className="hbtn hbtn-ghost hbtn-ic" aria-label="Cerrar" onClick={onClose}><HublyCloseIcon size={15} /></button>
       </div>
-    </div>
+    </Modal>
   );
 }
 

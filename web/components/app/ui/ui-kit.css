@@ -1,3 +1,9 @@
 /* Clases propias de components/app/ui. */
 .hubly-page-head-text { min-width: 0; }
 .hubly-page-head-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+
+/* Variantes de Modal */
+.hubly-task-modal { display: grid; gap: 12px; max-height: 90vh; padding: 20px; overflow-y: auto; }
+.hubly-pendientes-modal { display: flex; flex-direction: column; gap: 0; max-width: 560px; max-height: 86vh; padding: 0; overflow: hidden; }
+.hubly-member-overlay { position: fixed; inset: 0; z-index: 110; display: flex; justify-content: flex-end; background: rgb(var(--hb-accent-rgb) / 0.32); }
+.hubly-member-drawer { display: grid; align-content: start; gap: 18px; width: 100%; max-width: 440px; height: 100%; padding: 22px; overflow-y: auto; background: var(--ui-surface); }

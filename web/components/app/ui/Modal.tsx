@@ -1,4 +1,5 @@
 "use client";
+import "./ui-kit.css";
 
 import { useRef, type FormEventHandler, type ReactNode } from "react";
 import { useFocusTrap } from "@/lib/use-focus-trap";
@@ -8,11 +9,15 @@ import { useModalPresence } from "@/lib/use-modal-presence";
 interface ModalProps {
   open: boolean;
   onClose: () => void;
-  label: string;
+  /** Nombre accesible: texto directo, o el id del título visible. */
+  label?: string;
+  labelledBy?: string;
   children: ReactNode;
   /** Clases de la ventana y del velo. Por defecto, la receta §9.9 de la guía. */
   className?: string;
   overlayClassName?: string;
+  /** Variante ancha de `.hubly-social-modal`. */
+  wide?: boolean;
   /** Con `onSubmit` la ventana es un formulario. */
   onSubmit?: FormEventHandler<HTMLFormElement>;
 }
@@ -22,9 +27,11 @@ export function Modal({
   open,
   onClose,
   label,
+  labelledBy,
   children,
   className = "hubly-sheet hubly-cal-modal",
   overlayClassName = "hubly-overlay hubly-cal-overlay",
+  wide,
   onSubmit,
 }: ModalProps) {
   const presence = useModalPresence(open);
@@ -33,7 +40,15 @@ export function Modal({
   useFocusTrap(surface, open);
   if (!presence.mounted) return null;
 
-  const dialog = { className, "data-state": presence.state, role: "dialog", "aria-modal": true, "aria-label": label };
+  const dialog = {
+    className,
+    "data-state": presence.state,
+    "data-wide": wide || undefined,
+    role: "dialog",
+    "aria-modal": true,
+    "aria-label": label,
+    "aria-labelledby": labelledBy,
+  };
   return (
     <div
       className={overlayClassName}

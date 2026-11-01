@@ -1,31 +1,28 @@
 "use client";
 
+import { Modal } from "@/components/app/ui/Modal";
 import { useMemo, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { HublyUploadIcon } from "@/components/app/icons/DuotoneIcons";
 import { useHublyStore } from "@/lib/store";
-import { useLayer } from "@/lib/use-layer";
 import { inPeriod, periodLabel } from "@/lib/calendar-views";
 import { guessMapping, IMPORT_FIELDS, parseDelimited, reviewRows, type ColumnMapping, type ImportFieldId } from "@/lib/post-import";
 import type { BrandWorkspace, SocialPost } from "@/lib/types";
 import { FeedSimulator } from "./FeedSimulator";
 
 function ModalShell({ title, subtitle, onClose, children, footer, wide }: { title: string; subtitle?: string; onClose: () => void; children: React.ReactNode; footer?: React.ReactNode; wide?: boolean }) {
-  useLayer(true, onClose);
   return (
-    <div className="hubly-picker-scrim" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="hubly-picker hubly-social-modal" data-wide={wide || undefined} role="dialog" aria-modal="true" aria-label={title}>
-        <header className="hubly-picker-head">
-          <div>
-            <h2>{title}</h2>
-            {subtitle && <p>{subtitle}</p>}
-          </div>
-          <button type="button" aria-label="Cerrar" autoFocus onClick={onClose}><X size={18} /></button>
-        </header>
-        <div className="hubly-social-modal-body">{children}</div>
-        {footer && <footer className="hubly-picker-foot">{footer}</footer>}
-      </div>
-    </div>
+    <Modal open onClose={onClose} label={title} overlayClassName="hubly-picker-scrim" className="hubly-picker hubly-social-modal" wide={wide}>
+      <header className="hubly-picker-head">
+        <div>
+          <h2>{title}</h2>
+          {subtitle && <p>{subtitle}</p>}
+        </div>
+        <button type="button" aria-label="Cerrar" autoFocus onClick={onClose}><X size={18} /></button>
+      </header>
+      <div className="hubly-social-modal-body">{children}</div>
+      {footer && <footer className="hubly-picker-foot">{footer}</footer>}
+    </Modal>
   );
 }
 

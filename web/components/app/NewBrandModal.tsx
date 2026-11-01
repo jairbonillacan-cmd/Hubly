@@ -1,5 +1,6 @@
 "use client";
 
+import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { InviteLinkRow } from "@/components/app/InviteTeamModal";
@@ -19,9 +20,6 @@ import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import { alreadyMember, canInvite, DEFAULT_INVITE_ROLE, EMAIL_REGEX, inviteByEmail } from "@/lib/invitaciones";
 import { useHublyStore } from "@/lib/store";
 import type { SocialNetwork } from "@/lib/types";
-import { useFocusTrap } from "@/lib/use-focus-trap";
-import { useLayer } from "@/lib/use-layer";
-import { useModalPresence } from "@/lib/use-modal-presence";
 
 const STEPS = [
   { label: "Marca", icon: HublyBuildingIcon },
@@ -194,7 +192,6 @@ export function NewBrandModal() {
   const updateTeamMember = useHublyStore((s) => s.updateTeamMember);
 
   const titleId = useId();
-  const dialogRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const [step, setStep] = useState(0);
   const [brandId, setBrandId] = useState<string | null>(null);
@@ -208,9 +205,6 @@ export function NewBrandModal() {
   const [sellError, setSellError] = useState<string | null>(null);
 
   const close = () => setOpen(false);
-  const presence = useModalPresence(open);
-  useLayer(open, close);
-  useFocusTrap(dialogRef, open);
 
   useEffect(() => {
     if (!open) return;
@@ -231,9 +225,7 @@ export function NewBrandModal() {
   // Cada paso empieza en su primer control, también con teclado o lector de pantalla.
   useEffect(() => {
     if (open) panelRef.current?.querySelector<HTMLElement>("input, textarea, button")?.focus();
-  }, [open, step, presence.mounted]);
-
-  if (!presence.mounted) return null;
+  }, [open, step]);
 
   const createBrand = (e: React.FormEvent) => {
     e.preventDefault();
@@ -294,142 +286,134 @@ export function NewBrandModal() {
   );
 
   return (
-    <div
-      className="hubly-overlay hubly-cal-overlay"
-      data-state={presence.state}
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) close();
-      }}
-    >
-      <div ref={dialogRef} className="hubly-sheet hubly-cal-modal hubly-touch hubly-wizard" data-state={presence.state} role="dialog" aria-modal="true" aria-labelledby={titleId}>
-        <div className="hubly-cal-modal-head">
-          <div className="hubly-wizard-title">
-            <h2 id={titleId}>Nueva marca</h2>
-            <p title={step > 0 ? name : undefined}>{step > 0 ? name : "Configúrala en 4 pasos"}</p>
-          </div>
-          <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar" onClick={close}>
-            <HublyCloseIcon size={14} />
-          </button>
+    <Modal open={open} onClose={close} labelledBy={titleId} className="hubly-sheet hubly-cal-modal hubly-touch hubly-wizard">
+      <div className="hubly-cal-modal-head">
+        <div className="hubly-wizard-title">
+          <h2 id={titleId}>Nueva marca</h2>
+          <p title={step > 0 ? name : undefined}>{step > 0 ? name : "Configúrala en 4 pasos"}</p>
         </div>
+        <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar" onClick={close}>
+          <HublyCloseIcon size={14} />
+        </button>
+      </div>
 
-        <Stepper step={step} />
+      <Stepper step={step} />
 
-        {step === 0 && (
-          <form className="hubly-wizard-form" onSubmit={createBrand} noValidate>
-            <div ref={panelRef} className="hubly-cal-modal-scroll">
-              <label className="hubly-cal-field">
-                <span>Nombre de la marca</span>
+      {step === 0 && (
+        <form className="hubly-wizard-form" onSubmit={createBrand} noValidate>
+          <div ref={panelRef} className="hubly-cal-modal-scroll">
+            <label className="hubly-cal-field">
+              <span>Nombre de la marca</span>
+              <input
+                className="hubly-cal-line"
+                value={name}
+                placeholder="Ej. Café Bruma"
+                aria-required="true"
+                aria-invalid={Boolean(nameError)}
+                aria-describedby={nameError ? `${titleId}-nombre` : undefined}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setNameError(null);
+                }}
+              />
+              {nameError && <small id={`${titleId}-nombre`} className="hubly-invite-error" role="alert">{nameError}</small>}
+            </label>
+            <label className="hubly-cal-field">
+              <span>Sitio web (opcional)</span>
+              <span className="hubly-wizard-input">
+                <HublyGlobeIcon size={17} />
                 <input
                   className="hubly-cal-line"
-                  value={name}
-                  placeholder="Ej. Café Bruma"
-                  aria-required="true"
-                  aria-invalid={Boolean(nameError)}
-                  aria-describedby={nameError ? `${titleId}-nombre` : undefined}
+                  inputMode="url"
+                  value={website}
+                  placeholder="cafebruma.mx"
+                  aria-invalid={Boolean(websiteError)}
+                  aria-describedby={websiteError ? `${titleId}-web` : undefined}
                   onChange={(e) => {
-                    setName(e.target.value);
-                    setNameError(null);
+                    setWebsite(e.target.value);
+                    setWebsiteError(null);
                   }}
                 />
-                {nameError && <small id={`${titleId}-nombre`} className="hubly-invite-error" role="alert">{nameError}</small>}
-              </label>
-              <label className="hubly-cal-field">
-                <span>Sitio web (opcional)</span>
-                <span className="hubly-wizard-input">
-                  <HublyGlobeIcon size={17} />
-                  <input
-                    className="hubly-cal-line"
-                    inputMode="url"
-                    value={website}
-                    placeholder="cafebruma.mx"
-                    aria-invalid={Boolean(websiteError)}
-                    aria-describedby={websiteError ? `${titleId}-web` : undefined}
-                    onChange={(e) => {
-                      setWebsite(e.target.value);
-                      setWebsiteError(null);
-                    }}
-                  />
-                </span>
-                {websiteError ? (
-                  <small id={`${titleId}-web`} className="hubly-invite-error" role="alert">{websiteError}</small>
-                ) : (
-                  <small>Se guarda en el Núcleo de Marca.</small>
-                )}
-              </label>
-            </div>
-            <div className="hubly-cal-modal-actions">
-              <button type="button" className="hbtn hbtn-ghost" onClick={close}>Cancelar</button>
-              <button type="submit" className="hbtn hbtn-primary" disabled={!name.trim()}>
-                Crear marca <HublyChevronRightIcon size={15} />
-              </button>
-            </div>
-          </form>
-        )}
+              </span>
+              {websiteError ? (
+                <small id={`${titleId}-web`} className="hubly-invite-error" role="alert">{websiteError}</small>
+              ) : (
+                <small>Se guarda en el Núcleo de Marca.</small>
+              )}
+            </label>
+          </div>
+          <div className="hubly-cal-modal-actions">
+            <button type="button" className="hbtn hbtn-ghost" onClick={close}>Cancelar</button>
+            <button type="submit" className="hbtn hbtn-primary" disabled={!name.trim()}>
+              Crear marca <HublyChevronRightIcon size={15} />
+            </button>
+          </div>
+        </form>
+      )}
 
-        {step === 1 && (
-          <>
-            <div ref={panelRef} className="hubly-cal-modal-scroll">
-              <MembersStep brandId={brandId as string} selected={memberIds} onToggle={toggleMember} />
-            </div>
-            <div className="hubly-cal-modal-actions">
-              {skip}
-              <button type="button" className="hbtn hbtn-primary" onClick={saveMembers}>
-                Continuar <HublyChevronRightIcon size={15} />
-              </button>
-            </div>
-          </>
-        )}
+      {step === 1 && (
+        <>
+          <div ref={panelRef} className="hubly-cal-modal-scroll">
+            <MembersStep brandId={brandId as string} selected={memberIds} onToggle={toggleMember} />
+          </div>
+          <div className="hubly-cal-modal-actions">
+            {skip}
+            <button type="button" className="hbtn hbtn-primary" onClick={saveMembers}>
+              Continuar <HublyChevronRightIcon size={15} />
+            </button>
+          </div>
+        </>
+      )}
 
-        {step === 2 && (
-          <>
-            <div ref={panelRef} className="hubly-cal-modal-scroll">
-              <NetworksStep networks={networks} onToggle={toggleNetwork} />
-            </div>
-            <div className="hubly-cal-modal-actions">
-              {back}
-              {skip}
-              <button type="button" className="hbtn hbtn-primary" onClick={saveNetworks}>
-                Continuar <HublyChevronRightIcon size={15} />
-              </button>
-            </div>
-          </>
-        )}
+      {step === 2 && (
+        <>
+          <div ref={panelRef} className="hubly-cal-modal-scroll">
+            <NetworksStep networks={networks} onToggle={toggleNetwork} />
+          </div>
+          <div className="hubly-cal-modal-actions">
+            {back}
+            {skip}
+            <button type="button" className="hbtn hbtn-primary" onClick={saveNetworks}>
+              Continuar <HublyChevronRightIcon size={15} />
+            </button>
+          </div>
+        </>
+      )}
 
-        {step === 3 && (
-          <form className="hubly-wizard-form" onSubmit={finish} noValidate>
-            <div ref={panelRef} className="hubly-cal-modal-scroll">
-              <section className="hubly-wizard-section">
-                <h3>Completa el Núcleo de Marca</h3>
-                <p>Hubi usa este contexto al redactar captions para la marca. Después sigues en su Núcleo con el tono y los compradores.</p>
-              </section>
-              <label className="hubly-cal-field">
-                <span>Qué vende y a quién</span>
-                <textarea
-                  className="hubly-cal-line hubly-wizard-textarea"
-                  rows={3}
-                  value={whatTheySell}
-                  placeholder="Ej. Café de especialidad para oficinas de la colonia Roma"
-                  aria-invalid={Boolean(sellError)}
-                  aria-describedby={sellError ? `${titleId}-vende` : undefined}
-                  onChange={(e) => {
-                    setWhatTheySell(e.target.value);
-                    setSellError(null);
-                  }}
-                />
-                {sellError && <small id={`${titleId}-vende`} className="hubly-invite-error" role="alert">{sellError}</small>}
-              </label>
-            </div>
-            <div className="hubly-cal-modal-actions">
-              {back}
-              {skip}
-              <button type="submit" className="hbtn hbtn-primary">
-                <HublySparkIcon size={17} /> Abrir Núcleo
-              </button>
-            </div>
-          </form>
-        )}
-      </div>
-    </div>
+      {step === 3 && (
+        <form className="hubly-wizard-form" onSubmit={finish} noValidate>
+          <div ref={panelRef} className="hubly-cal-modal-scroll">
+            <section className="hubly-wizard-section">
+              <h3>Completa el Núcleo de Marca</h3>
+              <p>Hubi usa este contexto al redactar captions para la marca. Después sigues en su Núcleo con el tono y los compradores.</p>
+            </section>
+            <label className="hubly-cal-field">
+              <span>Qué vende y a quién</span>
+              <textarea
+                className="hubly-cal-line hubly-wizard-textarea"
+                rows={3}
+                value={whatTheySell}
+                placeholder="Ej. Café de especialidad para oficinas de la colonia Roma"
+                aria-invalid={Boolean(sellError)}
+                aria-describedby={sellError ? `${titleId}-vende` : undefined}
+                onChange={(e) => {
+                  setWhatTheySell(e.target.value);
+                  setSellError(null);
+                }}
+              />
+              {sellError && <small id={`${titleId}-vende`} className="hubly-invite-error" role="alert">{sellError}</small>}
+            </label>
+          </div>
+          <div className="hubly-cal-modal-actions">
+            {back}
+            {skip}
+            <button type="submit" className="hbtn hbtn-primary">
+              <HublySparkIcon size={17} /> Abrir Núcleo
+            </button>
+          </div>
+        </form>
+      )}
+    </Modal>
   );
 }
 

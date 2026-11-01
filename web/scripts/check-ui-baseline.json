@@ -205,14 +205,11 @@
   },
   "components/app/dashboard/MemberDrawer.tsx": {
     "color-fijo": 4,
-    "radio": 2,
-    "rgb-fijo": 1
+    "radio": 2
   },
   "components/app/dashboard/PendientesModal.tsx": {
     "color-fijo": 7,
-    "hbtn-directo": 2,
-    "radio": 1,
-    "rgb-fijo": 2
+    "hbtn-directo": 2
   },
   "components/app/dashboard/SaludCuentasView.tsx": {
     "hbtn-directo": 16
@@ -279,7 +276,6 @@
     "tamano-fuente": 2
   },
   "components/app/tasks/TaskDetailModal.tsx": {
-    "color-fijo": 3,
-    "rgb-fijo": 1
+    "color-fijo": 3
   }
 }
