@@ -369,7 +369,9 @@ export function MediaLibrary({ brandId, selectable = false, accept, maxSelection
               </div>
             ) : null}
             <p className="hubly-media-hint">
-              Imágenes hasta {MAX_IMAGE_BYTES / (1024 * 1024)} MB y videos hasta {MAX_VIDEO_BYTES / (1024 * 1024)} MB. También puedes arrastrarlos aquí.
+              {!accept || accept.includes("pdf") || accept.includes("doc")
+                ? `Imágenes y documentos hasta ${MAX_IMAGE_BYTES / (1024 * 1024)} MB y videos hasta ${MAX_VIDEO_BYTES / (1024 * 1024)} MB. También puedes arrastrarlos aquí.`
+                : `Imágenes hasta ${MAX_IMAGE_BYTES / (1024 * 1024)} MB y videos hasta ${MAX_VIDEO_BYTES / (1024 * 1024)} MB. También puedes arrastrarlos aquí.`}
             </p>
           </>
         )}

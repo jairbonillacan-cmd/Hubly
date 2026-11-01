@@ -216,11 +216,16 @@ test("Post v2: el medio heredado se convierte una vez y los campos nuevos sobrev
 });
 
 test("los límites de archivos se aplican por tipo", async () => {
-  const { mediaRejection, mp4UsesHevc, MAX_VIDEO_BYTES, MAX_IMAGE_BYTES } = await import("../lib/media");
+  const { mediaRejection, mp4UsesHevc, MAX_VIDEO_BYTES, MAX_IMAGE_BYTES, MAX_DOCUMENT_BYTES } = await import("../lib/media");
+  assert.equal(MAX_IMAGE_BYTES, 20 * 1024 * 1024);
+  assert.equal(MAX_DOCUMENT_BYTES, 20 * 1024 * 1024);
+  assert.equal(MAX_VIDEO_BYTES, 100 * 1024 * 1024);
   assert.equal(mediaRejection("image/png", MAX_IMAGE_BYTES), null);
-  assert.ok(mediaRejection("image/png", MAX_IMAGE_BYTES + 1));
+  assert.equal(mediaRejection("image/png", MAX_IMAGE_BYTES + 1), "Supera el límite de 20 MB para imagen.");
+  assert.equal(mediaRejection("application/pdf", MAX_DOCUMENT_BYTES), null);
+  assert.equal(mediaRejection("application/pdf", MAX_DOCUMENT_BYTES + 1), "Supera el límite de 20 MB para documento.");
   assert.equal(mediaRejection("video/mp4", MAX_VIDEO_BYTES), null);
-  assert.ok(mediaRejection("video/mp4", MAX_VIDEO_BYTES + 1));
+  assert.equal(mediaRejection("video/mp4", MAX_VIDEO_BYTES + 1), "Supera el límite de 100 MB para video.");
   assert.ok(mediaRejection("application/x-msdownload", 10));
   assert.ok(mediaRejection("image/svg+xml", 10));
   assert.equal(mp4UsesHevc(new TextEncoder().encode("moov....stsd........hvc1")), true);

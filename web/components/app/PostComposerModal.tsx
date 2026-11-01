@@ -710,6 +710,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                   <div className="hubly-composer-sources">
                     <button
                       type="button"
+                      title="Imágenes hasta 20 MB y videos hasta 100 MB"
                       disabled={locked || media.length + uploads.length >= MAX_MEDIA_PER_POST}
                       onClick={() => fileRef.current?.click()}
                       onDragOver={(e) => e.preventDefault()}
