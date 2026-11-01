@@ -29,6 +29,26 @@ export const NETWORKS: NetworkSpec[] = [
 
 export const networkSpec = (id: SocialNetwork): NetworkSpec => NETWORKS.find((n) => n.id === id) ?? NETWORKS[0];
 
+/** Cómo llama cada red a un mismo formato: una imagen en TikTok son «Fotos», un video en Instagram es «Reel». */
+export function networkFormatLabel(network: SocialNetwork, format: PostFormat): string {
+  const video = format === "Reel / Video";
+  if (network === "Instagram" || network === "Facebook") {
+    if (format === "Story") return "Story";
+    if (video) return network === "Instagram" ? "Reel" : "Video";
+    if (format === "Carrusel") return "Carrusel";
+    return format === "Texto" ? "Solo texto" : "Post";
+  }
+  if (network === "TikTok") return format === "Story" ? "No publica Stories" : video ? "Video" : "Fotos";
+  if (network === "YouTube") return "Short";
+  if (network === "Google Business") {
+    if (video || format === "Story") return "No acepta video";
+    return format === "Texto" ? "Solo texto" : format === "Carrusel" ? "Primera imagen" : "Post";
+  }
+  if (format === "Texto") return "Solo texto";
+  if (video) return "Video";
+  return format === "Carrusel" && networkSpec(network).formats.includes("Carrusel") ? "Carrusel" : "Post";
+}
+
 export const countHashtags = (text: string) => (text.match(/#[\wáéíóúñÁÉÍÓÚÑ]+/g) ?? []).length;
 
 export type CaptionLevel = "ok" | "near" | "over";
@@ -88,6 +108,10 @@ export function networkIssues(input: {
     }
     if (network === "Google Business" && videos > 0) add("No admite videos: usa imágenes.");
     if (network === "Reddit" && !settings?.title?.trim()) add("Necesita un título.");
+    if (network === "TikTok" && settings?.commercial) {
+      if (!settings.brandOrganic && !settings.brandContent) add("Indica si tu contenido te promociona a ti, a un tercero o a ambos.");
+      if (settings.brandContent && settings.tiktokPrivacy === "SELF_ONLY") add("La visibilidad del contenido de marca no puede ser privada.");
+    }
   }
   return issues;
 }

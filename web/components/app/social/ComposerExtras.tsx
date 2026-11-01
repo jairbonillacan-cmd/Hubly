@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { localIsoDate } from "@/lib/date";
 import { safeLinkHref } from "@/lib/supabase/config";
 import { useHublyStore } from "@/lib/store";
@@ -97,32 +97,39 @@ export function ManualResults({ post }: { post: SocialPost }) {
   );
 }
 
+/** Redacta con un clic a partir de lo que ya hay en el post. Nunca pisa un texto sin preguntar. */
 export function CaptionAssistant({
   brand,
   network,
   format,
+  title,
+  context,
+  current,
+  disabled,
+  counter,
   onUse,
 }: {
   brand?: BrandWorkspace;
   network: SocialNetwork;
   format: PostFormat;
+  title: string;
+  /** De qué trata el video: manda sobre lo demás. */
+  context?: string;
+  current: string;
+  disabled?: boolean;
+  counter: React.ReactNode;
   onUse: (caption: string) => void;
 }) {
-  const [open, setOpen] = useState(false);
-  const [brief, setBrief] = useState("");
   const [busy, setBusy] = useState(false);
   const [draft, setDraft] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  if (!open) {
-    return (
-      <button type="button" onClick={() => setOpen(true)} className="hbtn hbtn-ghost hbtn-sm" style={{ justifySelf: "start", display: "inline-flex", alignItems: "center", gap: 6 }}>
-        <Sparkles size={14} /> Redactar con IA
-      </button>
-    );
-  }
-
   const generate = async () => {
+    const brief =
+      context?.trim() ||
+      current.trim() ||
+      title.trim() ||
+      `Escribe un caption para un post de ${format} en ${network}${brand ? ` de la marca ${brand.name}` : ""}.`;
     setBusy(true);
     setError(null);
     setDraft(null);
@@ -145,46 +152,37 @@ export function CaptionAssistant({
         }),
       });
       const json = (await res.json().catch(() => ({}))) as { caption?: string; error?: string };
-      if (json.caption) setDraft(json.caption);
-      else setError(AI_ERRORS[json.error || ""] || "No se pudo redactar. Inténtalo de nuevo.");
+      if (json.caption) {
+        if (current.trim()) setDraft(json.caption);
+        else onUse(json.caption);
+      } else setError(AI_ERRORS[json.error || ""] || "No pudimos generar el caption. Inténtalo otra vez.");
     } catch {
-      setError("No se pudo redactar. Revisa tu conexión.");
+      setError("No pudimos generar el caption. Revisa tu conexión e inténtalo otra vez.");
     } finally {
       setBusy(false);
     }
   };
 
   return (
-    <div style={box}>
-      <label style={{ display: "grid", gap: 4, fontSize: 12.5, fontWeight: 600, color: "var(--ui-text-3)" }}>
-        ¿Qué quieres comunicar?
-        <textarea rows={2} maxLength={2000} value={brief} onChange={(e) => setBrief(e.target.value)} placeholder="Ej. Abrimos sucursal nueva el sábado" style={{ ...field, resize: "vertical" }} />
-      </label>
-      <div style={{ display: "flex", gap: 8 }}>
-        <button type="button" disabled={busy || !brief.trim()} onClick={generate} className="hbtn hbtn-secondary hbtn-sm">{busy ? "Redactando…" : "Redactar"}</button>
-        <button type="button" onClick={() => setOpen(false)} className="hbtn hbtn-ghost hbtn-sm">Cerrar</button>
+    <>
+      <div className="hubly-composer-genrow">
+        <button type="button" disabled={busy || disabled} onClick={generate} className="hbtn hbtn-gold hbtn-sm">
+          <Sparkles size={15} /> {busy ? "Generando…" : "Generar caption"}
+        </button>
+        {counter}
       </div>
-      {error && <p role="alert" style={{ color: "#B91C1C", fontSize: 13, margin: 0 }}>{error}</p>}
+      {error && <p role="alert" className="hubly-composer-generror">{error}</p>}
       {draft && (
-        <>
-          <p style={{ margin: 0, fontSize: 13, whiteSpace: "pre-line", color: "var(--ui-text-1)" }}>{draft}</p>
+        <div className="hubly-composer-gendraft">
+          <p>{draft}</p>
           <div>
-            <button
-              type="button"
-              className="hbtn hbtn-primary hbtn-sm"
-              onClick={() => {
-                onUse(draft);
-                setDraft(null);
-                setOpen(false);
-              }}
-            >
-              Usar este texto
-            </button>
+            <button type="button" className="hbtn hbtn-secondary hbtn-sm" onClick={() => { onUse(draft); setDraft(null); }}>Reemplazar mi texto</button>
+            <button type="button" className="hbtn hbtn-ghost hbtn-sm" onClick={() => setDraft(null)}>Descartar</button>
           </div>
-          <small style={{ color: "var(--ui-text-4)" }}>Generado con IA: revísalo antes de publicar.</small>
-        </>
+          <small>Generado con IA: revísalo antes de publicar.</small>
+        </div>
       )}
-    </div>
+    </>
   );
 }
 
