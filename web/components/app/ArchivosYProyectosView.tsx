@@ -36,7 +36,7 @@ function GoldenCloudUploadIllustration() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Cloud body with warm gold fill and brown-gold outline matching 08-content-manager-1440.png */}
+      {/* Cloud body with warm gold fill and brown-gold outline */}
       <path
         d="M21 49H48.5C54.8513 49 60 43.8513 60 37.5C60 31.6524 55.6317 26.8235 49.9806 26.0942C48.8768 19.2367 42.9317 14 35.75 14C27.781 14 21.3182 20.4318 21.2505 28.3849C15.4793 29.1525 11 34.088 11 40C11 44.9706 15.0294 49 20 49H21Z"
         fill="#BFE2F4"
@@ -185,7 +185,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
         </div>
       )}
 
-      {/* ==================== CONTENT MANAGER MODE (08-content-manager-1440.png) ==================== */}
+      {/* ==================== CONTENT MANAGER MODE ==================== */}
       {mode === "content" && (
         <>
           <div className="hubly-media-page-head">
@@ -214,7 +214,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
 
       {mode === "proyectos" && (
         <div>
-          {/* Top Header Bar matching 09-projects-1440.png */}
+          {/* Top Header Bar */}
           <div
             style={{
               display: "flex",

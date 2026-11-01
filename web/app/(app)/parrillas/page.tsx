@@ -260,7 +260,7 @@ export default function ParrillasPage() {
         </button>
       </div>
 
-      {/* TAB 1: CALENDARIO (10-social-media-calendario-1440.png) */}
+      {/* TAB 1: CALENDARIO */}
       {activeTab === "calendario" && !showDemoData && (
         <div>
           {/* 1 - 2 - 3 Stepper Row */}
@@ -857,7 +857,7 @@ export default function ParrillasPage() {
         </div>
       )}
 
-      {/* TAB 6: REPORTES (10b-social-media-reportes-1440.png) */}
+      {/* TAB 6: REPORTES */}
       {activeTab === "reportes" && backendEnabled && <MonthlyReport brand={activeBrand} posts={brandPosts} />}
       {activeTab === "reportes" && !backendEnabled && (
         <div>
@@ -911,7 +911,7 @@ export default function ParrillasPage() {
             </div>
           </div>
 
-          {/* Center Empty State matching 10b-social-media-reportes-1440.png */}
+          {/* Center Empty State */}
           <div
             style={{
               display: "flex",
@@ -985,7 +985,7 @@ export default function ParrillasPage() {
         </div>
       )}
 
-      {/* TAB 7: LINKS (?tab=liga -> 14-social-media-aprobacion-liga-1440.png) */}
+      {/* TAB 7: LINKS */}
       {activeTab === "links" && (
         <div>
           {/* Top Bar under sub-nav */}

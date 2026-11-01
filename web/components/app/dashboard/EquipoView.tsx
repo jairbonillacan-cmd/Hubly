@@ -34,7 +34,7 @@ import {
 } from "@/components/app/icons/DuotoneIcons";
 
 /* ==========================================================================
-   ILLUSTRATED SVG STICKERS & ACHIEVEMENT BADGES (Módulos 98919, 22918, 51903)
+   ILLUSTRATED SVG STICKERS & ACHIEVEMENT BADGES
    ========================================================================== */
 
 export function AchievementBadgeSvg({
@@ -114,7 +114,7 @@ export function AchievementBadgeSvg({
 }
 
 /* ==========================================================================
-   MASTER CATALOG OF 39 ACHIEVEMENTS (Módulo 22918 en 6614-bf40d3989a3e7090.js)
+   MASTER CATALOG OF 39 ACHIEVEMENTS
    ========================================================================== */
 
 interface CatalogAchievementItem {
@@ -935,7 +935,7 @@ export function EquipoView() {
   const isPrimaryOwner = activeMemberMetrics.id === currentMemberId;
 
   // Assigned brands for the currently inspected member:
-  // By default on initial load, Jair displays `1 marca` (`Min`) matching 03-dashboard-equipo-1440.png,
+  // By default on initial load, Jair displays `1 marca` (`Min`),
   // and reflects any brand toggles made in `Editar marcas`.
   const assignedBrands = useMemo(() => {
     if (isPrimaryOwner && !hasCustomizedOwnerBrands) {
@@ -948,7 +948,7 @@ export function EquipoView() {
   }, [isPrimaryOwner, hasCustomizedOwnerBrands, selectedRawMember, brands]);
 
   // Dynamic person count in header:
-  // Starts at 1 persona (owner focus matching 03-dashboard-equipo-1440.png),
+  // Starts at 1 persona (owner focus),
   // and immediately increments if demo invitations are accepted (`team.length > 4`) or if `showAllTeamScope` is toggled.
   const acceptedExtraMembersCount = Math.max(0, syncedTeam.length - 4);
   const displayedPersonCount = showAllTeamScope
@@ -2856,7 +2856,7 @@ export function EquipoView() {
       </div>
 
       {/* ====================================================================
-          8B. EXPANDABLE FULL 39 ACHIEVEMENTS CATALOG (Módulo 22918)
+          8B. EXPANDABLE FULL 39 ACHIEVEMENTS CATALOG
           ==================================================================== */}
       {showAll39Achievements && (
         <div

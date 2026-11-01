@@ -511,7 +511,7 @@ function DemoAnunciosPage() {
         paddingBottom: 60,
       }}
     >
-      {/* Top Sub-Navigation Bar matching 11-analytics-ads-1440.png */}
+      {/* Top Sub-Navigation Bar */}
       <div
         style={{
           display: "flex",
@@ -615,7 +615,7 @@ function DemoAnunciosPage() {
         <span>Datos de ejemplo. Aún no hay una cuenta publicitaria conectada: estas cifras y anuncios no son de tu marca.</span>
       </div>
 
-      {/* 4 KPI Cards Row (1:1 with 11-analytics-ads-1440.png) */}
+      {/* 4 KPI Cards Row */}
       <div
         style={{
           display: "grid",
@@ -801,7 +801,7 @@ function DemoAnunciosPage() {
         </div>
       </div>
 
-      {/* VIEW 1: 4-COLUMN AD CREATIVES GRID (1:1 with 11-analytics-ads-1440.png) */}
+      {/* VIEW 1: 4-COLUMN AD CREATIVES GRID */}
       {viewMode === "cards" && (
         <div
           style={{

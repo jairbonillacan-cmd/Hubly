@@ -20,7 +20,7 @@ Hubly reúne en un solo lugar el trabajo repetitivo de una agencia en redes soci
 
 ## Positioning
 
-Es de código abierto: la agencia puede alojarlo en su propia infraestructura, conservar sus datos y adaptarlo. No se menciona ningún competidor por nombre en materiales públicos.
+Es un SaaS que aloja y opera el propio equipo de Hubly. La primera usuaria es su propia agencia. El código sigue público bajo AGPL-3.0 mientras no se decida otra cosa ([ADR 0002](docs/adr/0002-saas-y-licencia.md)). No se menciona ningún competidor por nombre en materiales públicos.
 
 ## Capabilities and Constraints
 
@@ -28,7 +28,7 @@ La aplicación cuenta hoy con: cuentas, agencias, marcas e invitaciones con perm
 
 ## Brand Commitments
 
-Nombre: Hubly. Idioma de la landing y la aplicación: español. Tono: directo y cercano. La identidad, los textos y el diseño son propios; ningún contenido se copia de otros productos.
+Nombre: Hubly. Idioma de la landing y la aplicación: español. Tono: directo y cercano. La identidad y la marca son propias. Con el permiso registrado en el [ADR 0001](docs/adr/0001-paridad-con-henry.md) se replican diseño y funciones de Henry; nada de otros productos.
 
 ## Evidence on Hand
 
