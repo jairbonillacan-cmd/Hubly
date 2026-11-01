@@ -16,7 +16,6 @@
   "components/app/chat/ChatMessageRow.tsx": 488,
   "components/app/CommandPaletteModal.tsx": 661,
   "components/app/dashboard/ExtraWidgets.tsx": 522,
-  "components/app/dashboard/InicioView.tsx": 1726,
   "components/app/dashboard/SaludCuentasView.tsx": 852,
   "components/app/dashboard/team/EquipoCabecera.tsx": 448,
   "components/app/dashboard/team/EquipoLogrosRanking.tsx": 440,

@@ -143,12 +143,6 @@
   "components/app/SaveStatus.tsx": {
     "color-fijo": 2
   },
-  "components/app/dashboard/InicioView.tsx": {
-    "color-fijo": 28,
-    "exclamacion": 1,
-    "radio": 1,
-    "rgb-fijo": 4
-  },
   "components/app/dashboard/MemberDrawer.tsx": {
     "color-fijo": 4,
     "radio": 2
@@ -156,6 +150,28 @@
   "components/app/dashboard/PendientesModal.tsx": {
     "color-fijo": 1,
     "hbtn-directo": 1
+  },
+  "components/app/dashboard/inicio/InicioContenido.tsx": {
+    "color-fijo": 18,
+    "exclamacion": 1,
+    "radio": 1,
+    "rgb-fijo": 1
+  },
+  "components/app/dashboard/inicio/WidgetAprobaciones.tsx": {
+    "color-fijo": 2
+  },
+  "components/app/dashboard/inicio/WidgetLibretas.tsx": {
+    "rgb-fijo": 1
+  },
+  "components/app/dashboard/inicio/WidgetNotificaciones.tsx": {
+    "color-fijo": 1
+  },
+  "components/app/dashboard/inicio/WidgetTareas.tsx": {
+    "color-fijo": 6,
+    "rgb-fijo": 2
+  },
+  "components/app/dashboard/inicio/useInicioView.tsx": {
+    "color-fijo": 1
   },
   "components/app/dashboard/team/EquipoCabecera.tsx": {
     "color-fijo": 4,
