@@ -252,7 +252,7 @@ test.describe("Buscador en móvil", () => {
 
 // Cada entrada de «Páginas» debe llevar a su pantalla, sin pasar por la redirección antigua /dashboard?tab=.
 const DESTINOS: Array<{ titulo: string; ruta: string; marca: (page: Page) => Locator }> = [
-  { titulo: "Dashboard · Inicio", ruta: "/dashboard", marca: (p) => p.getByRole("heading", { level: 1, name: /^Buenas/ }) },
+  { titulo: "Dashboard · Inicio", ruta: "/dashboard", marca: (p) => p.getByRole("heading", { level: 1, name: /^Buen(os|as) / }) },
   { titulo: "Dashboard · Salud de cuentas", ruta: "/dashboard/salud-cuentas", marca: (p) => p.getByRole("heading", { level: 1, name: "Salud de cuentas" }) },
   { titulo: "Dashboard · Equipo", ruta: "/dashboard/equipo", marca: (p) => p.getByRole("heading", { level: 2, name: /^Equipo/ }) },
   { titulo: "Mi espacio · Tareas y libretas", ruta: "/tareas", marca: (p) => p.locator("main").getByText("Libretas", { exact: true }).first() },
