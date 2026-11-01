@@ -7,7 +7,7 @@
     "tamano-fuente": 1
   },
   "app/(app)/app-base.css": {
-    "color-fijo": 123,
+    "color-fijo": 62,
     "rgb-fijo": 10,
     "tamano-fuente": 1,
     "transition-all": 1
@@ -26,14 +26,14 @@
     "tamano-fuente": 3
   },
   "app/(app)/dashboard-polish.css": {
-    "color-fijo": 282,
+    "color-fijo": 229,
     "degradado": 3,
     "radio": 5,
     "rgb-fijo": 89,
     "tamano-fuente": 11
   },
   "app/(app)/hubly-saas.css": {
-    "color-fijo": 268,
+    "color-fijo": 150,
     "radio": 1,
     "rgb-fijo": 34,
     "tamano-fuente": 5

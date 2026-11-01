@@ -59,7 +59,7 @@
   font-family: var(--font-bricolage), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 14px;
   line-height: 1.5;
-  color: #0F172A;
+  color: var(--ui-text);
   background: #FAFAFA;
   min-height: 100dvh;
   display: flex;
@@ -77,7 +77,7 @@
   font-family: var(--font-bricolage), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   letter-spacing: -0.02em;
   line-height: 1.25;
-  color: #0F172A;
+  color: var(--ui-text);
   text-wrap: normal;
   margin: 0;
 }
@@ -105,7 +105,7 @@
 
 .hb-app-root ::selection {
   background: #E6F4FB;
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 /* Hide Next.js dev indicator overlay & override landing dark-green scrollbar when in SaaS app */
@@ -118,7 +118,7 @@ nextjs-portal,
 html:has(.hb-app-root),
 body:has(.hb-app-root) {
   background: #FAFAFA !important;
-  color: #0F172A !important;
+  color: var(--ui-text) !important;
   scrollbar-width: none !important;
 }
 
@@ -161,18 +161,18 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 
 .hb-app-root .hbtn-secondary {
   --hbtn-edge: #D6DFE7;
-  background: #FFFFFF;
+  background: var(--ui-surface);
   color: #111C27;
   border: 1px solid #D6DFE7;
 }
 
 .hb-app-root .hbtn-secondary:hover {
-  background: #F8FAFC;
+  background: var(--ui-surface-2);
 }
 
 .hb-app-root .hbtn-hb {
   --hbtn-edge: var(--hb-accent-edge);
-  background: #FFFFFF;
+  background: var(--ui-surface);
   color: #111C27;
   border: 1.5px solid var(--hb-accent);
 }
@@ -193,7 +193,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   margin: 12px 0 12px 12px;
   position: sticky;
   top: 12px;
-  background: #FFFFFF;
+  background: var(--ui-surface);
   border-radius: 20px;
   border: 1px solid #F1F5F9;
   box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
@@ -222,10 +222,10 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   width: 24px;
   height: 24px;
   border-radius: 9999px;
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
-  color: #94A3B8;
+  color: var(--ui-text-5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -236,15 +236,15 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .hb-sidebar-collapse-btn:hover {
-  color: #475569;
-  border-color: #CBD5E1;
+  color: var(--ui-text-3);
+  border-color: var(--ui-border-strong);
 }
 
 .hb-logo-serif {
   font-family: Georgia, var(--font-serif), "Times New Roman", serif;
   font-size: 23px;
   font-weight: 700;
-  color: #0F172A;
+  color: var(--ui-text);
   letter-spacing: -0.03em;
   line-height: 1;
   text-decoration: none;
@@ -254,7 +254,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 .hb-section-label {
   font-size: 10px;
   font-weight: 700;
-  color: #94A3B8;
+  color: var(--ui-text-5);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 12px 10px 6px;
@@ -268,7 +268,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   border-radius: 10px;
   font-size: 13.5px;
   font-weight: 500;
-  color: #475569;
+  color: var(--ui-text-3);
   border: 1px solid transparent;
   background: transparent;
   text-decoration: none;
@@ -278,8 +278,8 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .hb-nav-item:hover {
-  background: #F8FAFC;
-  color: #0F172A;
+  background: var(--ui-surface-2);
+  color: var(--ui-text);
 }
 
 .hb-nav-item.active {
@@ -306,7 +306,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   border-radius: 8px;
   border: none;
   background: transparent;
-  color: #94A3B8;
+  color: var(--ui-text-5);
   cursor: pointer;
   padding: 0;
   transition: color 120ms ease, background 120ms ease;
@@ -314,8 +314,8 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .hb-icon-btn:hover {
-  color: #475569;
-  background: #F8FAFC;
+  color: var(--ui-text-3);
+  background: var(--ui-surface-2);
 }
 
 /* ==========================================================================
@@ -354,8 +354,8 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   gap: 2px;
   padding: 4px;
   border-radius: 14px;
-  background: #F1F5F9;
-  border: 1px solid #E2E8F0;
+  background: var(--ui-muted);
+  border: 1px solid var(--ui-border);
 }
 
 .hb-pill-tab,
@@ -368,7 +368,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
-  color: #64748B;
+  color: var(--ui-text-4);
   background: transparent;
   border: 1px solid transparent;
   cursor: pointer;
@@ -380,13 +380,13 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 .hb-pill-tab:hover,
 .saas-pill:hover,
 .saas-subnav-item:hover {
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 .hb-pill-tab.active,
 .saas-pill.active,
 .saas-subnav-item.is-active {
-  background: #FFFFFF;
+  background: var(--ui-surface);
   color: var(--hb-accent-text);
   border-color: rgba(226, 232, 240, 0.8);
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
@@ -398,7 +398,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 
 .hb-card,
 .saas-card {
-  background: #FFFFFF;
+  background: var(--ui-surface);
   border: 1px solid #EDF2F7;
   border-radius: 16px;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
@@ -406,8 +406,8 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .saas-card-warm {
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-border);
   border-radius: 16px;
   padding: 20px;
 }
@@ -441,7 +441,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   font-weight: 800;
   letter-spacing: -0.025em;
   line-height: 1.2;
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 .saas-heading-lg {
@@ -450,7 +450,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.25;
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 .saas-heading-md {
@@ -459,7 +459,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1.3;
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 /* ==========================================================================
@@ -477,9 +477,9 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   font-family: var(--font-bricolage), sans-serif;
   font-size: 13px;
   font-weight: 600;
-  color: #334155;
-  background: #FFFFFF;
-  border: 1px solid #CBD5E1;
+  color: var(--ui-text-2);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border-strong);
   cursor: pointer;
   text-decoration: none;
   white-space: nowrap;
@@ -487,9 +487,9 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .saas-btn:hover:not(:disabled) {
-  background: #F8FAFC;
+  background: var(--ui-surface-2);
   border-color: #94A3B8;
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 .saas-btn:disabled {
@@ -506,7 +506,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 
 .saas-btn-primary {
   background: var(--hb-accent);
-  color: #FFFFFF;
+  color: var(--on-accent);
   border-color: var(--hb-accent);
   box-shadow: 0 1px 2px rgb(var(--hb-accent-rgb) / 0.25);
 }
@@ -514,7 +514,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 .saas-btn-primary:hover:not(:disabled) {
   background: var(--hb-accent-hover);
   border-color: var(--hb-accent-hover);
-  color: #FFFFFF;
+  color: var(--on-accent);
 }
 
 .saas-btn-secondary {
@@ -530,20 +530,20 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 
 .saas-btn-ghost {
   background: transparent;
-  color: #64748B;
+  color: var(--ui-text-4);
   border-color: transparent;
 }
 
 .saas-btn-ghost:hover:not(:disabled) {
-  background: #F1F5F9;
-  color: #0F172A;
+  background: var(--ui-muted);
+  color: var(--ui-text);
   border-color: transparent;
 }
 
 .saas-btn-amber,
 .saas-btn-yellow {
-  background: #FFFFFF;
-  color: #0F172A;
+  background: var(--ui-surface);
+  color: var(--ui-text);
   border: 1.5px solid var(--hb-accent);
   box-shadow: 0 1px 3px rgb(var(--hb-accent-rgb) / 0.12);
 }
@@ -556,18 +556,18 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 
 .saas-btn-ink {
   background: #0F172A;
-  color: #FFFFFF;
+  color: var(--on-accent);
   border-color: #0F172A;
 }
 
 .saas-btn-ink:hover:not(:disabled) {
   background: #1E293B;
-  color: #FFFFFF;
+  color: var(--on-accent);
 }
 
 .saas-btn-coral {
   background: #EF4444;
-  color: #FFFFFF;
+  color: var(--on-accent);
   border-color: #EF4444;
 }
 
@@ -610,8 +610,8 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 
 .saas-badge-neutral,
 .saas-status-draft {
-  background: #F1F5F9;
-  color: #64748B;
+  background: var(--ui-muted);
+  color: var(--ui-text-4);
 }
 
 /* ==========================================================================
@@ -623,9 +623,9 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 .saas-textarea {
   width: 100%;
   border-radius: 10px;
-  border: 1px solid #E2E8F0;
-  background: #FFFFFF;
-  color: #0F172A;
+  border: 1px solid var(--ui-border);
+  background: var(--ui-surface);
+  color: var(--ui-text);
   font-family: var(--font-bricolage), sans-serif;
   font-size: 13.5px;
   padding: 8px 12px;
@@ -635,7 +635,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 
 .saas-input::placeholder,
 .saas-textarea::placeholder {
-  color: #94A3B8;
+  color: var(--ui-text-5);
 }
 
 .saas-input:focus,
@@ -654,13 +654,13 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 1px;
   background: #E2E8F0;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--ui-border);
   border-radius: 14px;
   overflow: hidden;
 }
 
 .saas-cal-cell {
-  background: #FFFFFF;
+  background: var(--ui-surface);
   min-height: 112px;
   padding: 8px;
   display: flex;
@@ -680,7 +680,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #94A3B8;
+  color: var(--ui-text-5);
   padding: 10px 14px;
   border-bottom: 1px solid #F1F5F9;
 }
@@ -688,12 +688,12 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 .saas-table td {
   padding: 12px 14px;
   border-bottom: 1px solid #F1F5F9;
-  color: #334155;
+  color: var(--ui-text-2);
   vertical-align: middle;
 }
 
 .saas-table tr:hover td {
-  background: #F8FAFC;
+  background: var(--ui-surface-2);
 }
 
 /* ==========================================================================
@@ -713,15 +713,15 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .saas-modal {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
   border-radius: 20px;
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18), 0 4px 12px rgba(15, 23, 42, 0.06);
   width: min(100%, 720px);
   max-height: 90dvh;
   overflow-y: auto;
   padding: 24px;
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 /* ==========================================================================
