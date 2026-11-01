@@ -485,7 +485,7 @@ function DemoReportesPage() {
                   style={{
                     fontSize: 11.5,
                     fontWeight: 600,
-                    color: "#059669",
+                    color: "var(--tinta-exito)",
                     display: "inline-flex",
                     alignItems: "center",
                     gap: 4,
