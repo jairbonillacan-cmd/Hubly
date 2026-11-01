@@ -11,37 +11,26 @@ import { useHublyTheme } from "@/lib/theme";
 import { useHublyStore } from "@/lib/store";
 import { useHubiChats } from "@/lib/hubi-chats";
 import { useLayer } from "@/lib/use-layer";
-import { PostComposerModal } from "@/components/app/PostComposerModal";
-import { NewBrandModal } from "@/components/app/NewBrandModal";
-import { CommandPaletteModal } from "@/components/app/CommandPaletteModal";
-import { InviteTeamModal } from "@/components/app/InviteTeamModal";
-import { NotebookReaderModal } from "@/components/app/NotebookReaderModal";
-import { WidgetConfigModal } from "@/components/app/WidgetConfigModal";
-import { AutoSuggestionsModal } from "@/components/app/AutoSuggestionsModal";
-import { FloatingAIDrawer } from "@/components/app/FloatingAIDrawer";
 import { HubiChatList } from "@/components/app/HubiChatList";
-import { AppDialogHost } from "@/components/app/AppDialogHost";
-import { ChatQueueRunner } from "@/components/app/chat/ChatQueueRunner";
-import { SaveStatus } from "@/components/app/SaveStatus";
 import { backendEnabled } from "@/lib/supabase/config";
 import type { HublyAgent } from "@/lib/types";
-import { DescubreHublyWidget } from "@/components/app/DescubreHublyWidget";
 import { HublyCatAvatar, HublyRoughFilterDefs, BentoIcon, ChatBubbleIcon, HublyHomeIcon, NotebookIcon, CalendarFilledIcon, BrainFilledIcon, FolderFilledIcon, LayersFilledIcon, HashBoldIcon, BullseyeFilledIcon } from "@/components/app/icons/HublyIcons";
 import { HublyBrandLogo } from "@/components/brand/HublyBrandLogo";
+import { AppSurfaces } from "@/components/app/shell/AppSurfaces";
+import { MobileTabbar } from "@/components/app/shell/MobileTabbar";
+import { MobileTopbar } from "@/components/app/shell/MobileTopbar";
+import { NotificationsPopover } from "@/components/app/shell/NotificationsPopover";
+import { ProfilePopover } from "@/components/app/shell/ProfilePopover";
 import {
   HublyBellIcon as Bell,
   HublyBoltIcon,
-  HublyBuildingIcon as Building2,
   HublyCheckIcon as Check,
   HublyChevronDownIcon as ChevronDown,
   HublyChevronLeftIcon as ChevronLeft,
   HublyCloseIcon as X,
-  HublyGlobeIcon as Globe,
   HublyHeadsetIcon,
-  HublyMenuIcon as Menu,
   HublyMoonIcon as Moon,
   HublyPeopleIcon,
-  HublyPersonIcon as User,
   HublyPlusIcon as Plus,
   HublySearchIcon as Search,
   HublySettingsIcon as Settings,
@@ -50,33 +39,10 @@ import {
   HublyBuildingIcon,
 } from "@/components/app/icons/DuotoneIcons";
 
-// Flexible wrappers so shared modals work seamlessly whether they read state from
-// useHublyStore internally or accept explicit open/onClose props.
-const NotebookReaderModalSurface =
-  NotebookReaderModal as unknown as React.ComponentType<Record<string, unknown>>;
-const WidgetConfigModalSurface =
-  WidgetConfigModal as unknown as React.ComponentType<Record<string, unknown>>;
-const AutoSuggestionsModalSurface =
-  AutoSuggestionsModal as unknown as React.ComponentType<Record<string, unknown>>;
 
-const DescubreHublyWidgetSurface =
-  DescubreHublyWidget as unknown as React.ComponentType<Record<string, unknown>>;
-
-const TIMEZONE_OPTIONS = [
-  { value: "America/Mexico_City", label: "Ciudad de México (GMT-6)" },
-  { value: "America/Bogota", label: "Bogotá / Lima (GMT-5)" },
-  { value: "America/Santiago", label: "Santiago (GMT-4)" },
-  { value: "America/Argentina/Buenos_Aires", label: "Buenos Aires (GMT-3)" },
-  { value: "Europe/Madrid", label: "Madrid (GMT+1)" },
-  { value: "UTC", label: "UTC" },
-];
 
 const NO_AGENTS: HublyAgent[] = [];
 
-const DEMO_WORKSPACES = [
-  { id: "default", label: "Mi Agencia (Principal)", badge: "Principal" },
-  { id: "workspace-b", label: "Agencia Norte (Workspace B)", badge: "Demo B" },
-];
 
 export default function SaaSAppLayout({
   children,
@@ -90,12 +56,9 @@ export default function SaaSAppLayout({
   const syncFromServer = useHublyStore((s) => s.syncFromServer);
   // Con cuentas reales nada se monta sobre los datos de ejemplo iniciales.
   const appHydrated = useHublyStore((s) => s.hydrated);
-  const workspaceId = useHublyStore((s) => s.workspaceId);
   const isReferenceFixture = useHublyStore((s) => s.isReferenceFixture);
-  const switchWorkspace = useHublyStore((s) => s.switchWorkspace);
 
   const profile = useHublyStore((s) => s.profile);
-  const updateProfile = useHublyStore((s) => s.updateProfile);
 
   const brands = useHublyStore((s) => s.brands);
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
@@ -103,14 +66,7 @@ export default function SaaSAppLayout({
 
   const tasks = useHublyStore((s) => s.tasks);
   const notifications = useHublyStore((s) => s.notifications);
-  const markNotificationRead = useHublyStore((s) => s.markNotificationRead);
-  const markAllNotificationsRead = useHublyStore(
-    (s) => s.markAllNotificationsRead
-  );
 
-  const notebooks = useHublyStore((s) => s.notebooks);
-  const activeNotebookId = useHublyStore((s) => s.activeNotebookId);
-  const setActiveNotebookId = useHublyStore((s) => s.setActiveNotebookId);
 
   const setCmdkOpen = useHublyStore((s) => s.setCmdkOpen);
   const setNewBrandModalOpen = useHublyStore((s) => s.setNewBrandModalOpen);
@@ -120,16 +76,6 @@ export default function SaaSAppLayout({
   const agents = useHublyStore((s) => s.agents) ?? NO_AGENTS;
   const addAgent = useHublyStore((s) => s.addAgent);
   const setInviteModalOpen = useHublyStore((s) => s.setInviteModalOpen);
-  const widgetConfigModalOpen = useHublyStore((s) => s.widgetConfigModalOpen);
-  const setWidgetConfigModalOpen = useHublyStore(
-    (s) => s.setWidgetConfigModalOpen
-  );
-  const autoSuggestionsModalOpen = useHublyStore(
-    (s) => s.autoSuggestionsModalOpen
-  );
-  const setAutoSuggestionsModalOpen = useHublyStore(
-    (s) => s.setAutoSuggestionsModalOpen
-  );
 
   // Shell layout & popover states
   const [collapsed, setCollapsed] = useState(false);
@@ -144,11 +90,6 @@ export default function SaaSAppLayout({
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
-  // Editable profile draft inside the quick profile popover
-  const [draftName, setDraftName] = useState(profile.name);
-  const [draftRole, setDraftRole] = useState(profile.role);
-  const [draftTimezone, setDraftTimezone] = useState(profile.timezone);
-  const [profileSavedToast, setProfileSavedToast] = useState(false);
 
   const brandDropdownRef = useRef<HTMLDivElement | null>(null);
   const notificationsRef = useRef<HTMLDivElement | null>(null);
@@ -166,12 +107,6 @@ export default function SaaSAppLayout({
     }
   }, [syncFromServer]);
 
-  // Keep profile draft fields in sync when store profile changes
-  useEffect(() => {
-    setDraftName(profile.name);
-    setDraftRole(profile.role);
-    setDraftTimezone(profile.timezone);
-  }, [profile.name, profile.role, profile.timezone]);
 
   // Responsive sidebar adaptation (768x1024 auto-collapses to 68px rail unless user manually toggled;
   // <768px uses mobile topbar + slide-over drawer)
@@ -278,10 +213,6 @@ export default function SaaSAppLayout({
     [notifications]
   );
 
-  const activeNotebook = useMemo(
-    () => notebooks.find((n) => n.id === activeNotebookId) || null,
-    [notebooks, activeNotebookId]
-  );
 
   // Preserve ?fixture= on internal navigation links. La agencia activa no va en la
   // URL: vive en el navegador, y así las rutas quedan limpias.
@@ -386,26 +317,6 @@ export default function SaaSAppLayout({
     return pathname === cleanHref || pathname.startsWith(`${cleanHref}/`);
   };
 
-  const handleSaveProfile = (event: React.FormEvent) => {
-    event.preventDefault();
-    const trimmedName = draftName.trim() || profile.name;
-    const trimmedRole = draftRole.trim() || profile.role;
-    const computedInitials = trimmedName
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((part) => part[0]?.toUpperCase() ?? "")
-      .join("");
-
-    updateProfile({
-      name: trimmedName,
-      role: trimmedRole,
-      timezone: draftTimezone,
-      avatarInitial: computedInitials || profile.avatarInitial || "HU",
-    });
-    setProfileSavedToast(true);
-    window.setTimeout(() => setProfileSavedToast(false), 1800);
-  };
 
   // El editor retrae el sidebar al abrirse; después manda lo que la persona elija.
   const [composerSidebarOpen, setComposerSidebarOpen] = useState(false);
@@ -486,150 +397,12 @@ export default function SaaSAppLayout({
       {/* =====================================================================
           MOBILE TOP BAR (< 768px): Hamburger + Hubly Logo + Compact Brand + Actions
          ===================================================================== */}
-      <header
-        className="hubly-mobile-topbar"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 8,
-          height: 54,
-          padding: "0 12px",
-          background: "var(--ui-surface)",
-          borderBottom: "1px solid var(--ui-border)",
-          position: "sticky",
-          top: 0,
-          zIndex: 45,
-          width: "100%",
-          boxSizing: "border-box",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
-          <button
-            type="button"
-            onClick={() => setMobileDrawerOpen((prev) => !prev)}
-            className="hubly-icon-btn hb-icon-btn"
-            aria-label="Abrir menú de navegación"
-            aria-expanded={mobileDrawerOpen}
-            aria-controls="hubly-sidebar-nav"
-            style={{
-              width: 34,
-              height: 34,
-              borderRadius: 9,
-              border: "1px solid var(--ui-border)",
-              background: "var(--ui-surface-2)",
-              color: "var(--ui-text)",
-              flexShrink: 0,
-            }}
-          >
-            {mobileDrawerOpen ? <X size={17} /> : <Menu size={17} />}
-          </button>
-
-          <Link
-            href={withQuery("/dashboard")}
-            className="hubly-logo-serif hb-logo-serif"
-            aria-label="Hubly Inicio"
-            style={{
-              fontSize: 20,
-              fontWeight: 700,
-              color: "var(--ui-text)",
-              textDecoration: "none",
-              lineHeight: 1,
-              flexShrink: 0,
-            }}
-          >
-            <HublyBrandLogo height={30} />
-          </Link>
-        </div>
-
-        {/* Compact Mobile Brand Selector + Quick Actions */}
-        <div style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
-          {activeBrand && (
-            <button
-              type="button"
-              onClick={() => {
-                const activeList = brands.filter((b) => b.status !== "archived");
-                if (activeList.length > 1) {
-                  const idx = activeList.findIndex((b) => b.id === activeBrand.id);
-                  const nextBrand = activeList[(idx + 1) % activeList.length];
-                  if (nextBrand) setActiveBrand(nextBrand.id);
-                } else {
-                  setNewBrandModalOpen(true);
-                }
-              }}
-              aria-label={`Marca activa: ${activeBrand.name}. Toca para cambiar de marca`}
-              title={`Marca activa: ${activeBrand.name}`}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                height: 30,
-                padding: "0 9px",
-                borderRadius: 9999,
-                border: "1px solid var(--ui-border)",
-                background: "var(--ui-surface-2)",
-                color: "var(--ui-text)",
-                fontSize: 12,
-                fontWeight: 600,
-                cursor: "pointer",
-                maxWidth: 120,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <span
-                style={{
-                  width: 16,
-                  height: 16,
-                  borderRadius: 5,
-                  background: activeBrand.color || "#16324F",
-                  color: "#FFFFFF",
-                  fontSize: 8.5,
-                  fontWeight: 700,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                {activeBrand.initials}
-              </span>
-              <span
-                style={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {activeBrand.name}
-              </span>
-            </button>
-          )}
-
-          <button
-            type="button"
-            onClick={() => setAiDrawerOpen(true)}
-            className="hubly-icon-btn hb-icon-btn"
-            aria-label="Abrir asistente Hubly"
-            title="Hubi"
-            style={{ width: 32, height: 32 }}
-          >
-            <HublyCatAvatar size={20} />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setCmdkOpen(true)}
-            className="hubly-icon-btn hb-icon-btn"
-            aria-label="Buscar"
-            title="Buscar"
-            style={{ width: 32, height: 32 }}
-          >
-            <Search size={15} />
-          </button>
-        </div>
-      </header>
+      <MobileTopbar
+        drawerOpen={mobileDrawerOpen}
+        onToggleDrawer={() => setMobileDrawerOpen((prev) => !prev)}
+        activeBrand={activeBrand}
+        withQuery={withQuery}
+      />
 
       {/* Mobile Drawer Backdrop (< 768px) */}
       {mobileDrawerOpen && (
@@ -832,140 +605,7 @@ export default function SaaSAppLayout({
               </button>
 
               {/* Interactive Notifications Popover */}
-              {notificationsOpen && (
-                <div
-                  role="dialog"
-                  aria-label="Centro de notificaciones"
-                  style={{
-                    position: "absolute",
-                    top: "calc(100% + 6px)",
-                    left: 0,
-                    width: 280,
-                    background: "var(--ui-surface)",
-                    border: "1px solid var(--ui-border)",
-                    borderRadius: 14,
-                    padding: 10,
-                    zIndex: 65,
-                    boxShadow: "0 14px 32px rgba(15, 23, 42, 0.14)",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      marginBottom: 8,
-                      padding: "0 4px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: 12.5,
-                        fontWeight: 700,
-                        color: "var(--ui-text)",
-                      }}
-                    >
-                      Notificaciones ({unreadNotificationsCount})
-                    </span>
-                    {unreadNotificationsCount > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => markAllNotificationsRead()}
-                        style={{
-                          border: "none",
-                          background: "transparent",
-                          color: "var(--hb-accent-text)",
-                          fontSize: 11,
-                          fontWeight: 600,
-                          cursor: "pointer",
-                          padding: 0,
-                        }}
-                      >
-                        Marcar leídas
-                      </button>
-                    )}
-                  </div>
-
-                  <div
-                    className="hubly-scroll"
-                    style={{
-                      maxHeight: 220,
-                      overflowY: "auto",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 4,
-                    }}
-                  >
-                    {notifications.length === 0 ? (
-                      <div
-                        style={{
-                          padding: "16px 8px",
-                          textAlign: "center",
-                          fontSize: 12,
-                          color: "var(--ui-text-5)",
-                        }}
-                      >
-                        Todo al día en tu agencia
-                      </div>
-                    ) : (
-                      notifications.slice(0, 6).map((item) => (
-                        <button
-                          key={item.id}
-                          type="button"
-                          onClick={() => markNotificationRead(item.id)}
-                          style={{
-                            width: "100%",
-                            textAlign: "left",
-                            padding: "8px 10px",
-                            borderRadius: 10,
-                            border: "1px solid transparent",
-                            background: item.read ? "transparent" : "#F1F9FD",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "flex-start",
-                            gap: 8,
-                          }}
-                        >
-                          <span
-                            style={{
-                              width: 7,
-                              height: 7,
-                              borderRadius: 9999,
-                              background: item.read ? "var(--ui-border-strong)" : "var(--hb-accent)",
-                              marginTop: 5,
-                              flexShrink: 0,
-                            }}
-                          />
-                          <span style={{ minWidth: 0, flex: 1 }}>
-                            <span
-                              style={{
-                                display: "block",
-                                fontSize: 12,
-                                fontWeight: item.read ? 500 : 600,
-                                color: "var(--ui-text-1)",
-                                lineHeight: 1.3,
-                              }}
-                            >
-                              {item.title}
-                            </span>
-                            <span
-                              style={{
-                                display: "block",
-                                fontSize: 11,
-                                color: "var(--ui-text-4)",
-                                marginTop: 2,
-                                lineHeight: 1.3,
-                              }}
-                            >
-                              {item.body}
-                            </span>
-                          </span>
-                        </button>
-                      ))
-                    )}
-                  </div>
-                </div>
-              )}
+              {notificationsOpen && <NotificationsPopover />}
             </div>
           </div>
         ) : (
@@ -1595,220 +1235,7 @@ export default function SaaSAppLayout({
           </div>
 
           {/* Quick Profile & Workspace Switcher Popover */}
-          {profileMenuOpen && (
-            <div
-              role="dialog"
-              aria-label={backendEnabled ? "Editar perfil" : "Editar perfil y espacio de trabajo"}
-              data-testid="sidebar-profile-popover"
-              style={{
-                position: "absolute",
-                bottom: "calc(100% + 10px)",
-                left: 0,
-                width: 236,
-                background: "var(--ui-surface)",
-                border: "1px solid var(--ui-border)",
-                borderRadius: 16,
-                padding: 14,
-                zIndex: 70,
-                boxShadow: "0 16px 38px rgba(15, 23, 42, 0.16)",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: 10,
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: 12.5,
-                    fontWeight: 700,
-                    color: "var(--ui-text)",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                  }}
-                >
-                  <User size={13} style={{ color: "var(--hb-accent-text)" }} />
-                  Perfil del operador
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setProfileMenuOpen(false)}
-                  className="hubly-icon-btn hb-icon-btn"
-                  aria-label="Cerrar menú de perfil"
-                  style={{ width: 24, height: 24 }}
-                >
-                  <X size={13} />
-                </button>
-              </div>
-
-              <form
-                onSubmit={handleSaveProfile}
-                style={{ display: "flex", flexDirection: "column", gap: 8 }}
-              >
-                <label style={{ display: "block" }}>
-                  <span
-                    style={{
-                      display: "block",
-                      fontSize: 11,
-                      fontWeight: 600,
-                      color: "var(--ui-text-4)",
-                      marginBottom: 3,
-                    }}
-                  >
-                    Nombre
-                  </span>
-                  <input
-                    type="text"
-                    value={draftName}
-                    onChange={(e) => setDraftName(e.target.value)}
-                    className="hubly-input saas-input"
-                    aria-label="Nombre del operador"
-                    style={{ padding: "6px 10px", fontSize: 12.5 }}
-                  />
-                </label>
-
-                <label style={{ display: "block" }}>
-                  <span
-                    style={{
-                      display: "block",
-                      fontSize: 11,
-                      fontWeight: 600,
-                      color: "var(--ui-text-4)",
-                      marginBottom: 3,
-                    }}
-                  >
-                    Rol
-                  </span>
-                  <input
-                    type="text"
-                    value={draftRole}
-                    onChange={(e) => setDraftRole(e.target.value)}
-                    className="hubly-input saas-input"
-                    aria-label="Rol del operador"
-                    style={{ padding: "6px 10px", fontSize: 12.5 }}
-                  />
-                </label>
-
-                <label style={{ display: "block" }}>
-                  <span
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 4,
-                      fontSize: 11,
-                      fontWeight: 600,
-                      color: "var(--ui-text-4)",
-                      marginBottom: 3,
-                    }}
-                  >
-                    <Globe size={11} />
-                    Zona horaria
-                  </span>
-                  <select
-                    value={draftTimezone}
-                    onChange={(e) => setDraftTimezone(e.target.value)}
-                    className="hubly-select saas-select"
-                    aria-label="Zona horaria"
-                    style={{ padding: "6px 10px", fontSize: 12 }}
-                  >
-                    {TIMEZONE_OPTIONS.map((tz) => (
-                      <option key={tz.value} value={tz.value}>
-                        {tz.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <button
-                  type="submit"
-                  className="hbtn hbtn-primary hbtn-sm"
-                  style={{
-                    width: "100%",
-                    marginTop: 2,
-                    height: 32,
-                    borderRadius: 9,
-                    fontSize: 12,
-                    fontWeight: 600,
-                  }}
-                >
-                  {profileSavedToast ? "¡Perfil actualizado!" : "Guardar perfil"}
-                </button>
-              </form>
-
-              {/* Los espacios de ejemplo solo existen en modo demo: con cuentas reales pisarían los datos de la agencia. */}
-              {!backendEnabled && (
-                <>
-                  <div
-                    style={{
-                      height: 1,
-                      background: "var(--ui-muted)",
-                      margin: "12px 0 10px",
-                    }}
-                  />
-
-                  <div>
-                    <div
-                      style={{
-                        fontSize: 11,
-                        fontWeight: 700,
-                        color: "var(--ui-text-4)",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.05em",
-                        marginBottom: 6,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 5,
-                      }}
-                    >
-                      <Building2 size={11} />
-                      Espacio de trabajo
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                      {DEMO_WORKSPACES.map((ws) => {
-                        const isCurrentWs = workspaceId === ws.id;
-                        return (
-                          <button
-                            key={ws.id}
-                            type="button"
-                            onClick={() => {
-                              void switchWorkspace(ws.id);
-                              setProfileMenuOpen(false);
-                            }}
-                            style={{
-                              width: "100%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              padding: "6px 8px",
-                              borderRadius: 8,
-                              border: isCurrentWs
-                                ? "1px solid #BFE2F4"
-                                : "1px solid transparent",
-                              background: isCurrentWs ? "#F1F9FD" : "transparent",
-                              color: isCurrentWs ? "var(--ui-accent-text)" : "var(--ui-text-2)",
-                              fontSize: 12,
-                              fontWeight: isCurrentWs ? 600 : 500,
-                              cursor: "pointer",
-                              textAlign: "left",
-                            }}
-                          >
-                            <span>{ws.label}</span>
-                            {isCurrentWs && (
-                              <Check size={13} style={{ color: "var(--ui-accent-text-2)" }} />
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          )}
+          {profileMenuOpen && <ProfilePopover onClose={() => setProfileMenuOpen(false)} />}
         </div>
       </aside>
 
@@ -1824,169 +1251,12 @@ export default function SaaSAppLayout({
       {/* =====================================================================
           MOBILE BOTTOM TABBAR (< 768px): Mi espacio, Social, Hubi, Ads, Más
          ===================================================================== */}
-      <nav
-        aria-label="Barra de navegación inferior móvil"
-        className="hubly-mobile-tabbar"
-        style={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 60,
-          background: "var(--ui-surface)",
-          backdropFilter: "blur(12px)",
-          borderTop: "1px solid var(--ui-border)",
-          display: "grid",
-          gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
-          alignItems: "center",
-          padding: "0 4px",
-          zIndex: 46,
-        }}
-      >
-        <Link
-          href={withQuery("/tareas")}
-          aria-current={isNavActive("/tareas") ? "page" : undefined}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 3,
-            textDecoration: "none",
-            fontSize: 10.5,
-            fontWeight: isNavActive("/tareas") ? 700 : 500,
-            color: isNavActive("/tareas") ? "var(--ui-accent-text)" : "var(--ui-text-4)",
-          }}
-        >
-          <NotebookIcon active={isNavActive("/tareas")} />
-          <span>Mi espacio</span>
-        </Link>
-
-        <Link
-          href={withQuery("/parrillas")}
-          aria-current={isNavActive("/parrillas") ? "page" : undefined}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 3,
-            textDecoration: "none",
-            fontSize: 10.5,
-            fontWeight: isNavActive("/parrillas") ? 700 : 500,
-            color: isNavActive("/parrillas") ? "var(--ui-accent-text)" : "var(--ui-text-4)",
-          }}
-        >
-          <HashBoldIcon active={isNavActive("/parrillas")} />
-          <span>Social</span>
-        </Link>
-
-        <button
-          type="button"
-          onClick={() => setAiDrawerOpen(true)}
-          aria-label="Abrir asistente Hubly"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 2,
-            border: "none",
-            background: "transparent",
-            fontSize: 10.5,
-            fontWeight: 700,
-            color: "var(--ui-text)",
-            cursor: "pointer",
-            padding: 0,
-          }}
-        >
-          <span
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: 9999,
-              background: "#F1F9FD",
-              border: "1.5px solid var(--hb-accent)",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              overflow: "hidden",
-            }}
-          >
-            <HublyCatAvatar size={24} />
-          </span>
-          <span>Hubi</span>
-        </button>
-
-        <Link
-          href={withQuery("/anuncios")}
-          aria-current={isNavActive("/anuncios") ? "page" : undefined}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 3,
-            textDecoration: "none",
-            fontSize: 10.5,
-            fontWeight: isNavActive("/anuncios") ? 700 : 500,
-            color: isNavActive("/anuncios") ? "var(--ui-accent-text)" : "var(--ui-text-4)",
-          }}
-        >
-          <BullseyeFilledIcon active={isNavActive("/anuncios")} />
-          <span>Ads</span>
-        </Link>
-
-        <button
-          type="button"
-          onClick={() => setMobileDrawerOpen(true)}
-          aria-label="Más opciones de navegación"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 3,
-            border: "none",
-            background: "transparent",
-            fontSize: 10.5,
-            fontWeight: 500,
-            color: "var(--ui-text-4)",
-            cursor: "pointer",
-            padding: 0,
-          }}
-        >
-          <Menu size={16} />
-          <span>Más</span>
-        </button>
-      </nav>
+      <MobileTabbar onOpenDrawer={() => setMobileDrawerOpen(true)} withQuery={withQuery} isNavActive={isNavActive} />
 
       {/* =====================================================================
           SHARED SURFACES, DRAWERS & MODALS
          ===================================================================== */}
-      <DescubreHublyWidgetSurface />
-      <AppDialogHost />
-      <ChatQueueRunner />
-      <SaveStatus />
-      <FloatingAIDrawer />
-      <PostComposerModal />
-      <NewBrandModal />
-      <CommandPaletteModal />
-      <InviteTeamModal />
-      <NotebookReaderModalSurface
-        open={Boolean(activeNotebookId)}
-        notebookId={activeNotebookId}
-        notebook={activeNotebook}
-        onClose={() => setActiveNotebookId(null)}
-      />
-      <WidgetConfigModalSurface
-        open={widgetConfigModalOpen}
-        onClose={() => setWidgetConfigModalOpen(false)}
-      />
-      <AutoSuggestionsModalSurface
-        open={autoSuggestionsModalOpen}
-        onClose={() => setAutoSuggestionsModalOpen(false)}
-      />
+      <AppSurfaces />
     </div>
   );
 }
