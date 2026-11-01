@@ -98,6 +98,9 @@ export const PRICING_CONSTANTS = {
   },
 };
 
+/** Las horas, marcas y precios no existen en negativo ni vacías: fuera de rango cuentan como cero. */
+const nonNegative = (value: number): number => (Number.isFinite(value) && value > 0 ? value : 0);
+
 /**
  * FÓRMULA 1: Cálculo exacto de horas ahorradas
  *
@@ -105,7 +108,11 @@ export const PRICING_CONSTANTS = {
  * Jornadas = Math.round((total / 8) * 10) / 10
  */
 export function calculateHoursSaved(inputs: HoursSavedInputs): HoursSavedResult {
-  const { brands, postsPerBrand, reportHours, gridHours, postMinutes } = inputs;
+  const brands = nonNegative(inputs.brands);
+  const postsPerBrand = nonNegative(inputs.postsPerBrand);
+  const reportHours = nonNegative(inputs.reportHours);
+  const gridHours = nonNegative(inputs.gridHours);
+  const postMinutes = nonNegative(inputs.postMinutes);
   const reportHoursTotal = brands * reportHours;
   const gridHoursTotal = brands * gridHours;
   const scheduleHoursTotal = (brands * postsPerBrand * postMinutes) / 60;
@@ -135,9 +142,10 @@ export function calculateVolumePricing(
   currency: Currency = "mxn"
 ): VolumePricingResult {
   const plan = PRICING_CONSTANTS.v3.estudio;
+  const requestedBrands = nonNegative(totalBrands);
   const basePrice = plan.prices[currency];
   const brandsIncluded = plan.maxBrands;
-  const extraBrandsCount = Math.max(0, totalBrands - brandsIncluded);
+  const extraBrandsCount = Math.max(0, requestedBrands - brandsIncluded);
 
   const rawTiers = plan.extraBrandTiers;
   const tierItems: TierItem[] = [];
@@ -148,11 +156,11 @@ export function calculateVolumePricing(
     name: "Marcas 1–10",
     brandFrom: 1,
     brandTo: 10,
-    count: Math.min(totalBrands, 10),
+    count: Math.min(requestedBrands, 10),
     unitPrice: basePrice,
     amount: basePrice,
     isIncluded: true,
-    isActive: totalBrands >= 1,
+    isActive: requestedBrands >= 1,
   });
 
   let previousUpTo = 0;
@@ -175,7 +183,7 @@ export function calculateVolumePricing(
       unitPrice,
       amount: countInTier * unitPrice,
       isIncluded: false,
-      isActive: totalBrands >= brandFrom,
+      isActive: requestedBrands >= brandFrom,
     });
 
     remainingExtras = Math.max(0, remainingExtras - countInTier);
@@ -197,7 +205,7 @@ export function calculateVolumePricing(
   const annualSavings = monthlySavings * 12;
 
   return {
-    totalBrands,
+    totalBrands: requestedBrands,
     basePlan: {
       name: "Plan Estudio",
       brandsIncluded,
