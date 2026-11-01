@@ -150,8 +150,16 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
   const workflowName = (id?: string | null) => workflow.find((w) => w.id === id)?.name ?? "";
   const pillars = [...new Set([...(brand.core?.pillars ?? []), ...posts.map((p) => p.pillar || "General")])];
   const hasPillars = (brand.core?.pillars?.length ?? 0) > 0;
-  const customSelects = (brand.customFieldDefinitions ?? []).filter((f) => f.type === "select");
+  const customSelects = useMemo(
+    () => (brand.customFieldDefinitions ?? []).filter((f) => f.type === "select"),
+    [brand.customFieldDefinitions]
+  );
   const customFields = brand.customFieldDefinitions ?? [];
+  const activeGroup: KanbanGroup = useMemo(() => {
+    if (group === "pilar" && !hasPillars) return "estatus";
+    if (group.startsWith("campo:") && !customSelects.some((f) => `campo:${f.id}` === group)) return "estatus";
+    return group;
+  }, [customSelects, group, hasPillars]);
 
   const filtered = useMemo(() => filterPosts(posts, filters), [filters, posts]);
   const inView = filtered.filter((p) => inPeriod(p.scheduledDate, anchor, view));
@@ -391,36 +399,36 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
   };
 
   const kanbanColumns = (): { id: string; label: string; color?: string; lockedDrop?: boolean }[] => {
-    if (group === "estatus") {
+    if (activeGroup === "estatus") {
       const columns = workflow.map((w) => ({ id: w.id, label: w.name, color: w.color }));
       // Solo aparece si hay posts anteriores al catálogo o sin estatus.
       return filtered.some((p) => columnOf(p) === NO_VALUE) ? [{ id: NO_VALUE, label: "Sin estatus" }, ...columns] : columns;
     }
-    if (group === "pilar") return pillars.map((p) => ({ id: p, label: p }));
-    if (group === "formato") return FORMAT_COLUMNS.map((f) => ({ id: f, label: f }));
-    if (group === "responsable") return [{ id: NO_VALUE, label: "Sin asignar" }, ...team.map((m) => ({ id: m.id, label: m.name }))];
-    if (group === "publicacion") return PUBLICATION_COLUMNS.map((s) => ({ id: s, label: STATUS_NAMES[s], lockedDrop: s === "published" }));
-    const field = customSelects.find((f) => `campo:${f.id}` === group);
+    if (activeGroup === "pilar") return pillars.map((p) => ({ id: p, label: p }));
+    if (activeGroup === "formato") return FORMAT_COLUMNS.map((f) => ({ id: f, label: f }));
+    if (activeGroup === "responsable") return [{ id: NO_VALUE, label: "Sin asignar" }, ...team.map((m) => ({ id: m.id, label: m.name }))];
+    if (activeGroup === "publicacion") return PUBLICATION_COLUMNS.map((s) => ({ id: s, label: STATUS_NAMES[s], lockedDrop: s === "published" }));
+    const field = customSelects.find((f) => `campo:${f.id}` === activeGroup);
     return [{ id: NO_VALUE, label: "Sin valor" }, ...(field?.options ?? []).map((o) => ({ id: o.id, label: o.label, color: o.color }))];
   };
 
   const columnOf = (post: SocialPost): string => {
-    if (group === "estatus") return post.workflowStatusId && workflow.some((w) => w.id === post.workflowStatusId) ? post.workflowStatusId : NO_VALUE;
-    if (group === "formato") return post.format;
-    if (group === "responsable") return post.assigneeIds?.[0] ?? NO_VALUE;
-    if (group === "publicacion") return post.status;
-    if (group === "pilar") return post.pillar || "General";
-    return String(post.customFields?.[group.slice(6)] ?? NO_VALUE);
+    if (activeGroup === "estatus") return post.workflowStatusId && workflow.some((w) => w.id === post.workflowStatusId) ? post.workflowStatusId : NO_VALUE;
+    if (activeGroup === "formato") return post.format;
+    if (activeGroup === "responsable") return post.assigneeIds?.[0] ?? NO_VALUE;
+    if (activeGroup === "publicacion") return post.status;
+    if (activeGroup === "pilar") return post.pillar || "General";
+    return String(post.customFields?.[activeGroup.slice(6)] ?? NO_VALUE);
   };
 
   const moveToColumn = (post: SocialPost, column: string) => {
     if (columnOf(post) === column) return;
     const value = column === NO_VALUE ? null : column;
-    if (group === "estatus") updatePostFields(post.id, { workflowStatusId: value });
-    else if (group === "formato") updatePostFields(post.id, { format: column as PostFormat });
-    else if (group === "pilar") updatePostFields(post.id, { pillar: column });
-    else if (group === "responsable") updatePostFields(post.id, { assigneeIds: value ? [value] : [], assignee: team.find((m) => m.id === value)?.name ?? "" });
-    else if (group === "publicacion") {
+    if (activeGroup === "estatus") updatePostFields(post.id, { workflowStatusId: value });
+    else if (activeGroup === "formato") updatePostFields(post.id, { format: column as PostFormat });
+    else if (activeGroup === "pilar") updatePostFields(post.id, { pillar: column });
+    else if (activeGroup === "responsable") updatePostFields(post.id, { assigneeIds: value ? [value] : [], assignee: team.find((m) => m.id === value)?.name ?? "" });
+    else if (activeGroup === "publicacion") {
       // Arrastrar nunca marca un post como publicado: eso se registra con enlace y fecha reales.
       if (column === "published") {
         setNotice("Para marcarlo como publicado, ábrelo y registra la publicación en Resultados.");
@@ -431,7 +439,7 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
         return;
       }
       updatePostStatus(post.id, column as PostStatus, undefined, authorName, "agency");
-    } else updatePostFields(post.id, { customFields: { ...post.customFields, [group.slice(6)]: value } });
+    } else updatePostFields(post.id, { customFields: { ...post.customFields, [activeGroup.slice(6)]: value } });
   };
 
   const renderKanban = () => {
@@ -442,13 +450,13 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
         <div className="hubly-social-kanban-head">
           <label>
             Columnas por
-            <select className="hubly-social-cell" value={group} onChange={(e) => chooseGroup(e.target.value as KanbanGroup)}>
+            <select className="hubly-social-cell" value={activeGroup} onChange={(e) => chooseGroup(e.target.value as KanbanGroup)}>
               <option value="estatus">Estatus — el flujo de tu equipo</option>
               <option value="formato">Formato — reel, carrusel, imagen…</option>
               <option value="responsable">Responsable — qué tiene cada quien</option>
-              <option value="publicacion">Publicación — borrador, planificado, publicado</option>
-              {hasPillars && <option value="pilar">Pilar</option>}
-              {customSelects.map((f) => <option key={f.id} value={`campo:${f.id}`}>{f.name}</option>)}
+              <option value="publicacion">Publicación — borrador, programado, publicado</option>
+              {hasPillars && <option value="pilar">Pilar — pilares de tu marca</option>}
+              {customSelects.map((f) => <option key={f.id} value={`campo:${f.id}`}>{f.name} — campo de tu marca</option>)}
             </select>
           </label>
         </div>
