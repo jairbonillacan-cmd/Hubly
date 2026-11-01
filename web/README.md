@@ -1,3 +1,3 @@
-# Landing de Hubly
+# Web de Hubly
 
-Landing en Next.js. Las instrucciones para ejecutarla están en el [README principal](../README.md#ejecutar-la-landing).
+Landing y aplicación en Next.js. Las instrucciones para ejecutarlas están en el [README principal](../README.md#ejecutar-el-proyecto).

@@ -14,7 +14,7 @@
 </p>
 
 > [!NOTE]
-> **Hubly está empezando.** El repositorio contiene la landing y un prototipo de la aplicación con datos de ejemplo: todavía no hay cuentas reales, conexión con redes ni publicación. Las funciones de abajo son lo que queremos construir.
+> **Hubly sigue en desarrollo.** Ya funcionan las cuentas, las agencias, el calendario y la aprobación por enlace, pero todavía no se conecta con las redes: nada se publica de forma automática. Sin Supabase, la app corre en modo demo con datos de ejemplo.
 
 ## Qué quiere resolver
 
@@ -24,16 +24,26 @@ Las fotos en tres carpetas de Drive, los textos en un documento que nadie encuen
   <img src=".github/assets/landing.png" alt="Captura de la landing de Hubly, con una demostración del calendario de publicaciones" width="85%">
 </p>
 
-## Funciones previstas
+## Qué hay hoy
 
 | | |
 |---|---|
-| **Programación** | Calendario por marca, con publicación automática en las principales redes. |
-| **Parrillas** | Publicaciones ordenadas por día, para compartir por enlace o PDF. |
+| **Cuentas y agencias** | Registro con correo o Google, varias agencias por persona, invitaciones y cuatro roles: propietario, administrador, editor y lector. |
+| **Calendario** | Vistas de mes, semana, tabla y Kanban por marca, y un editor con formatos, límites y vista previa de diez redes. |
+| **Parrillas** | Publicaciones ordenadas por día, con importación desde CSV, XLSX o una tabla pegada. |
 | **Aprobación del cliente** | Revisión por enlace, sin cuenta ni contraseña, con comentarios por publicación. |
-| **Reportes** | Reportes mensuales de redes y anuncios a partir de las cuentas conectadas. |
-| **Panel de anuncios** | Gasto y resultados por cliente en las distintas plataformas. |
-| **Asistente con IA** | Textos con la voz y las reglas de cada marca. |
+| **Archivos** | Biblioteca privada por agencia: imágenes y documentos de hasta 20 MB, videos de hasta 100 MB. |
+| **Textos con IA** | Redacción en el editor con el tono, los pilares y las palabras de cada marca. Requiere una clave de Anthropic. |
+| **Reportes** | Resultados por marca, a partir de las cifras que el equipo captura en cada publicación. |
+
+## Qué falta
+
+| | |
+|---|---|
+| **Conexión con redes** | Enlazar las cuentas de cada marca y publicar de forma automática. |
+| **Reportes automáticos** | Traer las cifras de las cuentas conectadas, sin capturarlas a mano. |
+| **Panel de anuncios** | Gasto y resultados por cliente. Hoy solo existe en modo demo. |
+| **Asistente con IA** | El chat con cada marca. Hoy solo existe en modo demo. |
 
 ## Por qué código abierto
 
@@ -45,10 +55,11 @@ Las fotos en tres carpetas de Drive, los textos en un documento que nadie encuen
 
 - [x] Repositorio, licencia y landing
 - [x] Prototipo de la interfaz con datos de ejemplo
-- [ ] Cuentas, agencias y permisos reales
-- [ ] Calendario y publicación programada
-- [ ] Parrillas y aprobación por enlace
-- [ ] Reportes y panel de anuncios
+- [x] Cuentas, agencias y permisos reales
+- [x] Calendario y editor de publicaciones
+- [x] Parrillas y aprobación por enlace
+- [ ] Conexión con redes y publicación programada
+- [ ] Reportes automáticos y panel de anuncios
 - [ ] Asistente con la voz de cada marca
 
 El orden puede cambiar según lo que nos cuenten las agencias.
@@ -63,7 +74,34 @@ npm install
 npm run dev
 ```
 
-Se abre en [localhost:3000](http://localhost:3000). Para que la lista de espera guarde registros, copia `web/.env.example` a `web/.env.local` y define `WAITLIST_WEBHOOK_URL`.
+Se abre en [localhost:3000](http://localhost:3000), en modo demo. Para activar el resto, copia `web/.env.example` a `web/.env.local` y define lo que necesites:
+
+| Variable | Para qué sirve |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Cuentas y datos reales. Sigue los pasos de [Conectar Supabase](supabase/README.md). |
+| `ANTHROPIC_API_KEY` | Redacción con IA en el editor. |
+| `WAITLIST_WEBHOOK_URL` | Guardar los registros de la lista de espera de la landing. |
+
+### Comprobaciones
+
+Se ejecutan en `web/`. Todas menos las pruebas en navegador corren también en cada pull request.
+
+| Comando | Qué comprueba |
+|---|---|
+| `npm run build` | Que el proyecto compila. |
+| `npx tsc --noEmit` | Los tipos. |
+| `npm test` | Las pruebas unitarias. |
+| `npm run test:db` | Las migraciones y los permisos, en un Postgres local sin Supabase. |
+| `npm run check:ui` | Las reglas de la [guía de interfaz](docs/GUIA-UX-UI-AGENTES.md). |
+| `npx playwright test` | Los flujos en navegador, con Chrome instalado. |
+
+## Estructura
+
+| Carpeta | Contenido |
+|---|---|
+| `web/` | Landing y aplicación en Next.js. |
+| `supabase/` | Migraciones del esquema y permisos. |
+| `docs/` | Guía de interfaz, planes y registros de trabajo. |
 
 ## Contribuir
 
