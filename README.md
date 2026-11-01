@@ -36,6 +36,16 @@ Las fotos en tres carpetas de Drive, los textos en un documento que nadie encuen
 | **Textos con IA** | Redacción en el editor con el tono, los pilares y las palabras de cada marca. Requiere una clave de Anthropic. |
 | **Reportes** | Resultados por marca, a partir de las cifras que el equipo captura en cada publicación. |
 
+<p align="center">
+  <img src=".github/assets/app-calendario.png" alt="Calendario mensual de una marca de ejemplo, con publicaciones programadas en noviembre" width="85%">
+</p>
+
+<p align="center">
+  <img src=".github/assets/app-aprobacion.png" alt="Portal de revisión de una marca de ejemplo, donde el cliente aprueba publicaciones o pide cambios sin crear cuenta" width="85%">
+</p>
+
+<p align="center"><em>Capturas del modo demo, con marcas de ejemplo.</em></p>
+
 ## Qué falta
 
 | | |
