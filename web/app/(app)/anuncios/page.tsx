@@ -475,10 +475,19 @@ export default function AnunciosPage() {
   return <DemoAnunciosPage />;
 }
 
+const SUBNAV_LINK: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 7,
+  padding: "6px 14px",
+  borderRadius: 999,
+  color: "var(--ui-text-3)",
+  fontWeight: 500,
+  fontSize: 13,
+  textDecoration: "none",
+};
+
 function DemoAnunciosPage() {
-  const [activeSubNav, setActiveSubNav] = useState<"tableros" | "anuncios" | "ideas" | "reportes">(
-    "anuncios"
-  );
   const [viewMode, setViewMode] = useState<"cards" | "table" | "funnels">("cards");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -529,74 +538,29 @@ function DemoAnunciosPage() {
             borderRadius: 999,
           }}
         >
-          <button
-            type="button"
-            onClick={() => setActiveSubNav("tableros")}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 7,
-              padding: "6px 14px",
-              borderRadius: 999,
-              border: "none",
-              background: activeSubNav === "tableros" ? "var(--ui-surface)" : "transparent",
-              color: activeSubNav === "tableros" ? "var(--hb-accent-text)" : "var(--ui-text-3)",
-              fontWeight: activeSubNav === "tableros" ? 600 : 500,
-              fontSize: 13,
-              cursor: "pointer",
-              boxShadow:
-                activeSubNav === "tableros" ? "0 1px 2px rgba(15, 23, 42, 0.06)" : "none",
-            }}
-          >
+          <Link href="/parrillas?tab=tableros" style={SUBNAV_LINK}>
             <Gauge size={14} />
             <span>Tableros</span>
-          </button>
+          </Link>
 
-          <button
-            type="button"
-            onClick={() => setActiveSubNav("anuncios")}
+          <span
+            aria-current="page"
             style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 7,
-              padding: "6px 14px",
-              borderRadius: 999,
-              border: "none",
-              background: activeSubNav === "anuncios" ? "var(--ui-surface)" : "transparent",
-              color: activeSubNav === "anuncios" ? "var(--hb-accent-text)" : "var(--ui-text-3)",
-              fontWeight: activeSubNav === "anuncios" ? 600 : 500,
-              fontSize: 13,
-              cursor: "pointer",
-              boxShadow:
-                activeSubNav === "anuncios" ? "0 1px 2px rgba(15, 23, 42, 0.06)" : "none",
+              ...SUBNAV_LINK,
+              background: "var(--ui-surface)",
+              color: "var(--hb-accent-text)",
+              fontWeight: 600,
+              boxShadow: "0 1px 2px rgba(15, 23, 42, 0.06)",
             }}
           >
             <Megaphone size={14} style={{ color: "var(--hb-accent-text)" }} />
             <span>Anuncios</span>
-          </button>
+          </span>
 
-          <button
-            type="button"
-            onClick={() => setActiveSubNav("ideas")}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 7,
-              padding: "6px 14px",
-              borderRadius: 999,
-              border: "none",
-              background: activeSubNav === "ideas" ? "var(--ui-surface)" : "transparent",
-              color: activeSubNav === "ideas" ? "var(--hb-accent-text)" : "var(--ui-text-3)",
-              fontWeight: activeSubNav === "ideas" ? 600 : 500,
-              fontSize: 13,
-              cursor: "pointer",
-              boxShadow:
-                activeSubNav === "ideas" ? "0 1px 2px rgba(15, 23, 42, 0.06)" : "none",
-            }}
-          >
+          <Link href="/parrillas?tab=ideas" style={SUBNAV_LINK}>
             <Sparkles size={14} />
             <span>Ideas</span>
-          </button>
+          </Link>
 
           <Link
             href="/reportes"

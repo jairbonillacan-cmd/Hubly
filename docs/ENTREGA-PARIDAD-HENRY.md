@@ -4,26 +4,45 @@ Rama `agente/integracion`: fusiona `agente/glm-calidad`, `agente/gemini-flujos` 
 
 ## Pruebas de esta entrega
 
-Ejecutadas en la rama de integración, con servidor propio en el puerto 3004.
+Ejecutadas el 31 de octubre en la rama de integración, con servidor propio en el puerto 3004, sobre el código final (tras las correcciones de la revisión visual). Una corrida completa, sin repeticiones.
 
 | Comando | Resultado |
 |---|---|
-| `npm run check:ui` | Correcto. Deuda heredada sin empeorar: 1581 hallazgos |
+| `npm run check:ui` | Correcto. Deuda heredada sin empeorar: 1571 hallazgos |
 | `npx tsc --noEmit` | Sin errores |
 | `npm run build` | Compila |
 | `npm test` | 43 pasan |
 | `npm run test:db` | 69 pasan (PGlite con las migraciones reales y un `storage` mínimo) |
 | `npx playwright test` | 88 pasan, en modo demo contra el servidor de desarrollo, con Chrome |
-| `npm run audit:controles` | 679 controles: 565 responden, 29 ya activos, 46 enlaces, 19 deshabilitados, 19 sin efecto visible, 0 con error, 1 omitido |
+| `npm run audit:controles` | 679 controles: 564 responden, 29 ya activos, 49 enlaces, 19 deshabilitados, 17 sin efecto visible, 0 con error, 1 omitido |
+
+La matriz dice 2026-11-01 porque el script escribe la fecha en UTC, y su texto «previo a la integración» es fijo. Entre corridas, «Café Bruma» y «Min» en `/marcas` intercambian el detalle: un clic suelto en «Café Bruma» sí navega a `/marca`, así que es variación de tiempos de la auditoría.
+
+## Revisión visual
+
+`/chat`, `/anuncios`, `/reportes` y `/dashboard`, mirando las capturas en 1440 claro, 1440 oscuro y 390 claro, arriba y al final del scroll; en `/chat`, también con conversación abierta y con un mensaje escrito. Sin errores de consola, sin desbordamiento y sin elementos cortados, medido en el navegador. A 1440 y a 390, 0 widgets quedan bajo el aviso al final del scroll de `/dashboard`.
+
+Las pruebas pasaban con estos defectos, que se vieron en las capturas y se corrigieron:
+
+| Defecto | Causa | Corrección |
+|---|---|---|
+| `/chat` en oscuro: área de mensajes blanca y título casi invisible | `#FAFBFC` fijo | Token `--ui-surface-2` |
+| `/chat` en oscuro: buscador blanco, bordes claros y «# General» activo con poco contraste | Colores fijos y `--hb-accent` usado como texto | `--ui-muted`, `--ui-border` y `--hb-accent-text` |
+| `/chat` a 1440: el botón de Hubi tapaba parte de «Enviar» | El compositor llegaba a la esquina del botón | Margen derecho en `.hubly-chat-form` |
+| `/chat` a 390: el aviso pisaba el campo de mensaje | Alto del panel | Panel más bajo; sin solape medido |
+| `/reportes` a 390: «Costo por visita» y «CTR» cortados | Rejilla fija de cuatro columnas con `overflow: hidden` | `.hubly-reporte-cifras`: dos columnas en móvil |
+| `/reportes` en oscuro: icono del vacío casi invisible | `#DBEAFE` fijo | Token `--ui-sky-soft` |
 
 ## Pendiente tras la integración
 
+- **Sin comprobar en esta revisión:** modo oscuro a 390, recorrido con teclado, hover y foco de cada control, y ventanas abiertas. La regresión de `/chat` en oscuro no tiene prueba automática: `rutas.spec.ts` no abre una conversación.
+- **`/reportes` muestra cifras inventadas sin etiqueta:** «+24.2% vs semana previa», «Top 5% del sector» y «Gasto Total $2,231.21» aparecen sin «Datos de ejemplo», a diferencia de `/anuncios`. Choca con la regla de honestidad.
+- **`/chat` y `/anuncios` no tienen `h1`.** La guía pide uno por pantalla.
+- **`/chat`:** tras enviar un mensaje, la lista y la cabecera siguen diciendo «Sin mensajes aún».
 - **Táctiles en móvil:** la tabla de `entregas/B.md` marcaba sus rutas como conformes, pero una medición a 390 px encontró controles bajo 44 px en las 12 (por ejemplo 19 de 22 en `/tareas`). Se corrigió ampliando a `.hubly-main` la regla móvil. Quedan bajo 44 px, medidos en el contenido de cada página: las casillas de tarea en `/tareas` (círculo de 18 px con área pulsable de 44 px por pseudoelemento), la casilla «Ver archivadas» en `/marcas` (13 px, su etiqueta mide 44 de alto) y el nombre «Min» en sus tarjetas (27 de ancho). Las ventanas abiertas de esas rutas no se midieron.
-- **`/chat` a 390:** muestra la lista y el panel a la vez, y el texto «Selecciona una conversación» queda cortado en una columna de 103 px. Ya pasaba en la rama de B.
-- **Pestañas falsas en `/anuncios`:** «Tableros», «Anuncios» e «Ideas» solo cambian el resalte; el contenido es el mismo.
 - **Sin efecto visible en `/dashboard/equipo`:** «7 días», «30 días», «90 días» y «Semana» aparecen así en la matriz. Falta revisar a mano si son botones muertos o si solo no hay datos que cambien.
 - **`web/scripts/check-ui-baseline.json`:** sus topes siguen altos aunque se redujo deuda. No se ejecutó `--update`, porque el plan lo prohíbe sin autorización.
-- **Token de verde legible en oscuro:** falta en la guía; hoy `#059669` en `/anuncios` da menos de 4.5:1.
+- **Token de verde legible en oscuro:** falta en la guía; hoy `#059669` en `/anuncios` y `/reportes` da menos de 4.5:1. En `/reportes` se ve claramente tenue.
 - **Prueba inestable:** `calendario.spec.ts:77` falló 2 de 5 corridas durante el trabajo de A, por un post duplicado. Desde el bloqueo de escrituras no ha vuelto a fallar, pero la causa no está confirmada.
 - **Cola de B descartada:** el botón «Subir» sin selector de archivos en `MediaLibrary.tsx:196` no corresponde al código: esa línea es el botón de inicio y el `input` de archivo sí existe.
 
