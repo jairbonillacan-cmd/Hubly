@@ -11,6 +11,21 @@ const PANTALLAS = [
   ["parrillas", "/parrillas"],
   ["equipo", "/dashboard/equipo"],
   ["anuncios", "/anuncios"],
+  ["ajustes", "/ajustes"],
+  ["archivos", "/archivos"],
+  ["automatizaciones", "/automatizaciones"],
+  ["crm", "/crm"],
+  ["dashboard-salud-cuentas", "/dashboard/salud-cuentas"],
+  ["equipo-raiz", "/equipo"],
+  ["estrategia", "/estrategia"],
+  ["ia", "/ia"],
+  ["marca", "/marca"],
+  ["marcas", "/marcas"],
+  ["notificaciones", "/notificaciones"],
+  ["proyectos", "/proyectos"],
+  ["reportes", "/reportes"],
+  ["salud", "/salud"],
+  ["tareas", "/tareas"],
 ] as const;
 
 const VISTAS = [

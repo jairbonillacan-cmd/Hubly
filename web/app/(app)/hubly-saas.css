@@ -173,7 +173,7 @@
   font-family: var(--hubly-font-sans);
   font-size: 14px;
   line-height: 1.5;
-  color: #0F172A;
+  color: var(--ui-text);
   background: #FAFAFA;
   min-height: 100dvh;
   width: 100%;
@@ -199,7 +199,7 @@ nextjs-portal,
 html:has(.hubly-app-root, .hb-app-root),
 body:has(.hubly-app-root, .hb-app-root) {
   background: #FAFAFA !important;
-  color: #0F172A !important;
+  color: var(--ui-text) !important;
   scrollbar-width: none !important;
   overflow-x: hidden;
 }
@@ -241,7 +241,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 :is(.hubly-app-root, .hb-app-root) ::selection {
   background: #E6F4FB;
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 /* ==========================================================================
@@ -267,7 +267,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   font-family: var(--hubly-font-sans);
   letter-spacing: -0.02em;
   line-height: 1.25;
-  color: #0F172A;
+  color: var(--ui-text);
   text-wrap: normal;
   margin: 0;
 }
@@ -298,7 +298,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   font-weight: 700;
   letter-spacing: -0.025em;
   line-height: 1.25;
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hubly-subtitle-date {
@@ -306,7 +306,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   font-size: 13px;
   font-weight: 400;
   line-height: 1.5;
-  color: #64748B;
+  color: var(--ui-text-4);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hubly-widget-title,
@@ -316,7 +316,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 20px;
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-heading-lg {
@@ -325,7 +325,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.25;
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hubly-mono,
@@ -349,8 +349,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   height: 36px;
   padding: 0 14px;
   border-radius: 12px;
-  border: 1px solid #CBD5E1;
-  background: #FFFFFF;
+  border: 1px solid var(--ui-border-strong);
+  background: var(--ui-surface);
   color: #1E293B;
   font-family: var(--hubly-font-sans);
   font-size: 13px;
@@ -381,9 +381,9 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn:hover:not(:disabled):not([aria-disabled="true"]) {
-  background: #F8FAFC;
+  background: var(--ui-surface-2);
   border-color: #94A3B8;
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn:focus-visible {
@@ -480,7 +480,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 :is(.hubly-app-root, .hb-app-root) .hbtn-primary {
   --hbtn-edge: var(--hb-accent-edge);
   background: var(--hb-accent);
-  color: #FFFFFF;
+  color: var(--on-accent);
   border: 1px solid var(--hb-accent-hover);
 }
 
@@ -488,15 +488,15 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 :is(.hubly-app-root, .hb-app-root) .hbtn-primary:hover:not(:disabled):not([aria-disabled="true"]) {
   background: var(--hb-accent-hover);
   border-color: var(--hb-accent-edge);
-  color: #FFFFFF;
+  color: var(--on-accent);
 }
 
 /* 2. Amber (.hbtn-amber, .hbtn-hb) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-amber,
 :is(.hubly-app-root, .hb-app-root) .hbtn-hb {
   --hbtn-edge: var(--hb-accent-edge);
-  background: #FFFFFF;
-  color: #0F172A;
+  background: var(--ui-surface);
+  color: var(--ui-text);
   border: 1.5px solid var(--hb-accent);
 }
 
@@ -504,7 +504,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 :is(.hubly-app-root, .hb-app-root) .hbtn-hb:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #F1F9FD;
   border-color: var(--hb-accent-hover);
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-amber-solid {
@@ -522,71 +522,71 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 /* 3. Secondary / Neutral White (.hbtn-secondary) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-secondary {
   --hbtn-edge: #C9C9DC;
-  background: #FFFFFF;
-  color: #334155;
+  background: var(--ui-surface);
+  color: var(--ui-text-2);
   border: 1px solid #D6DFE7;
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-secondary:hover:not(:disabled):not([aria-disabled="true"]) {
-  background: #F8FAFC;
-  border-color: #CBD5E1;
-  color: #0F172A;
+  background: var(--ui-surface-2);
+  border-color: var(--ui-border-strong);
+  color: var(--ui-text);
 }
 
 /* 4. Blue (.hbtn-blue) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-blue {
   --hbtn-edge: #1E40AF;
   background: #2563EB;
-  color: #FFFFFF;
+  color: var(--on-accent);
   border: 1px solid #1D4ED8;
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-blue:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #1D4ED8;
   border-color: #1E40AF;
-  color: #FFFFFF;
+  color: var(--on-accent);
 }
 
 /* 5. Pink (.hbtn-pink) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-pink {
   --hbtn-edge: #9D174D;
   background: #EC4899;
-  color: #FFFFFF;
+  color: var(--on-accent);
   border: 1px solid #DB2777;
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-pink:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #DB2777;
   border-color: #9D174D;
-  color: #FFFFFF;
+  color: var(--on-accent);
 }
 
 /* 6. Purple (.hbtn-purple) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-purple {
   --hbtn-edge: #4C1D95;
   background: #7C3AED;
-  color: #FFFFFF;
+  color: var(--on-accent);
   border: 1px solid #6D28D9;
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-purple:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #6D28D9;
   border-color: #4C1D95;
-  color: #FFFFFF;
+  color: var(--on-accent);
 }
 
 /* 7. Danger (.hbtn-danger) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-danger {
   --hbtn-edge: #B91C1C;
   background: #EF4444;
-  color: #FFFFFF;
+  color: var(--on-accent);
   border: 1px solid #DC2626;
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-danger:hover:not(:disabled):not([aria-disabled="true"]) {
   background: #DC2626;
   border-color: #B91C1C;
-  color: #FFFFFF;
+  color: var(--on-accent);
 }
 
 /* 8. Ghost Variants (.hbtn-ghost, .hbtn-ghost-primary, .hbtn-ghost-danger) */
@@ -600,13 +600,13 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-ghost {
-  color: #475569;
+  color: var(--ui-text-3);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-ghost:hover:not(:disabled):not([aria-disabled="true"]) {
-  background: #F1F5F9;
+  background: var(--ui-muted);
   border-color: transparent;
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-ghost-primary {
@@ -658,15 +658,15 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
    ========================================================================== */
 
 :is(.hubly-app-root, .hb-app-root) .hq-rail {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
   border-radius: 18px;
   box-shadow: var(--shadow-lg);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hq-card {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
   border-radius: 16px;
   box-shadow:
     0 1px 2px rgba(26, 26, 46, 0.04),
@@ -681,19 +681,19 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .hq-card-i:hover {
-  border-color: #CBD5E1;
+  border-color: var(--ui-border-strong);
   box-shadow:
     0 2px 4px rgba(26, 26, 46, 0.05),
     0 20px 44px -22px rgb(var(--hb-accent-rgb) / 0.32);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hq-inset {
-  background: #F8FAFC;
+  background: var(--ui-surface-2);
   border-radius: 13px;
 }
 
 :is(.hubly-app-root, .hb-app-root) .hq-soft {
-  background: #FFFFFF;
+  background: var(--ui-surface);
   border-radius: 20px;
   box-shadow:
     0 1px 2px rgba(26, 26, 46, 0.05),
@@ -719,9 +719,9 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .hq-pop {
-  background: #FFFFFF;
+  background: var(--ui-surface);
   border-radius: 18px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--ui-border);
   box-shadow:
     0 2px 6px rgba(26, 26, 46, 0.06),
     0 24px 60px -20px rgba(26, 26, 46, 0.34);
@@ -731,7 +731,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   background: rgba(255, 255, 255, 0.78);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   backdrop-filter: blur(16px) saturate(140%);
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--ui-border);
 }
 
 /* ==========================================================================
@@ -745,9 +745,9 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   margin: 0 0 0 4px;
   position: sticky;
   top: 8px;
-  background: #FFFFFF;
+  background: var(--ui-surface);
   border-radius: 18px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--ui-border);
   box-shadow:
     0 8px 32px rgba(15, 23, 42, 0.07),
     0 2px 8px rgba(15, 23, 42, 0.04);
@@ -777,10 +777,10 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   width: 24px;
   height: 24px;
   border-radius: 9999px;
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
-  color: #94A3B8;
+  color: var(--ui-text-5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -795,9 +795,9 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-sidebar-collapse-btn, .hb-sidebar-collapse-btn):hover {
-  color: #0F172A;
-  border-color: #CBD5E1;
-  background: #F8FAFC;
+  color: var(--ui-text);
+  border-color: var(--ui-border-strong);
+  background: var(--ui-surface-2);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-sidebar-collapse-btn, .hb-sidebar-collapse-btn):active {
@@ -808,7 +808,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   font-family: var(--hubly-font-serif);
   font-size: 22px;
   font-weight: 700;
-  color: #0F172A;
+  color: var(--ui-text);
   letter-spacing: -0.025em;
   line-height: 1;
   text-decoration: none;
@@ -818,7 +818,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-section-label, .hb-section-label) {
   font-size: 10.5px;
   font-weight: 600;
-  color: #94A3B8;
+  color: var(--ui-text-5);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 12px 10px 6px;
@@ -834,7 +834,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   border-radius: 10px;
   font-size: 13.5px;
   font-weight: 500;
-  color: #475569;
+  color: var(--ui-text-3);
   border: 1px solid transparent;
   background: transparent;
   text-decoration: none;
@@ -848,12 +848,12 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-nav-item, .hb-nav-item):hover:not(:disabled):not([aria-disabled="true"]) {
-  background: #F8FAFC;
-  color: #0F172A;
+  background: var(--ui-surface-2);
+  color: var(--ui-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-nav-item, .hb-nav-item):active:not(:disabled):not([aria-disabled="true"]) {
-  background: #F1F5F9;
+  background: var(--ui-muted);
   transform: scale(0.99);
 }
 
@@ -887,7 +887,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   border-radius: 8px;
   border: 1px solid transparent;
   background: transparent;
-  color: #94A3B8;
+  color: var(--ui-text-5);
   cursor: pointer;
   padding: 0;
   transition: color 120ms ease, background-color 120ms ease, transform 90ms ease;
@@ -895,13 +895,13 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-icon-btn, .hb-icon-btn):hover:not(:disabled) {
-  color: #475569;
-  background: #F8FAFC;
+  color: var(--ui-text-3);
+  background: var(--ui-surface-2);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-icon-btn, .hb-icon-btn):active:not(:disabled) {
   transform: scale(0.94);
-  background: #F1F5F9;
+  background: var(--ui-muted);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-icon-btn, .hb-icon-btn):disabled {
@@ -972,8 +972,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   height: 36px;
   padding: 3px;
   border-radius: 14px;
-  background: #F1F5F9;
-  border: 1px solid #E2E8F0;
+  background: var(--ui-muted);
+  border: 1px solid var(--ui-border);
   box-sizing: border-box;
 }
 
@@ -988,7 +988,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   font-size: 13px;
   font-weight: 600;
   line-height: 1;
-  color: #64748B;
+  color: var(--ui-text-4);
   background: transparent;
   border: 1px solid transparent;
   cursor: pointer;
@@ -1004,7 +1004,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav-tab, .hb-pill-tab, .saas-pill, .saas-subnav-item):hover:not(:disabled) {
-  color: #0F172A;
+  color: var(--ui-text);
   background: rgba(255, 255, 255, 0.55);
 }
 
@@ -1015,13 +1015,13 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 /* Active Pill Contract: Warm Amber var(--hb-accent) with white text & subtle shadow, plus segmented white/indigo support */
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav-tab.is-amber-active, .hubly-subnav-tab[data-variant="amber"]:is(.active, .is-active, [aria-selected="true"])) {
   background: var(--hb-accent);
-  color: #FFFFFF;
+  color: var(--on-accent);
   border-color: var(--hb-accent);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-subnav-tab, .hb-pill-tab, .saas-pill, .saas-subnav-item):is(.active, .is-active, [aria-selected="true"]) {
-  background: #FFFFFF;
+  background: var(--ui-surface);
   color: var(--hb-accent-text);
   border-color: rgba(226, 232, 240, 0.85);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
@@ -1037,8 +1037,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
    ========================================================================== */
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-card, .hb-card, .saas-card) {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
   border-radius: 16px;
   box-shadow:
     0 1px 2px rgba(26, 26, 46, 0.04),
@@ -1047,8 +1047,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-card-warm, .saas-card-warm) {
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: var(--ui-surface-2);
+  border: 1px solid var(--ui-border);
   border-radius: 16px;
   padding: 20px;
 }
@@ -1099,7 +1099,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   border-radius: 9999px;
   border: 1px solid transparent;
   background: transparent;
-  color: #64748B;
+  color: var(--ui-text-4);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -1112,7 +1112,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .hubly-filter-pill:hover:not(:disabled) {
-  color: #0F172A;
+  color: var(--ui-text);
   background: rgba(15, 23, 42, 0.04);
 }
 
@@ -1185,9 +1185,9 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   font-family: var(--hubly-font-sans);
   font-size: 13px;
   font-weight: 600;
-  color: #334155;
-  background: #FFFFFF;
-  border: 1px solid #CBD5E1;
+  color: var(--ui-text-2);
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border-strong);
   cursor: pointer;
   text-decoration: none;
   white-space: nowrap;
@@ -1200,9 +1200,9 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn:hover:not(:disabled) {
-  background: #F8FAFC;
+  background: var(--ui-surface-2);
   border-color: #94A3B8;
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn:active:not(:disabled) {
@@ -1223,7 +1223,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-primary {
   background: var(--hb-accent);
-  color: #FFFFFF;
+  color: var(--on-accent);
   border-color: var(--hb-accent);
   box-shadow: 0 1px 2px rgb(var(--hb-accent-rgb) / 0.25);
 }
@@ -1231,35 +1231,35 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 :is(.hubly-app-root, .hb-app-root) .saas-btn-primary:hover:not(:disabled) {
   background: var(--hb-accent-hover);
   border-color: var(--hb-accent-hover);
-  color: #FFFFFF;
+  color: var(--on-accent);
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-secondary {
-  background: #FFFFFF;
-  color: #334155;
-  border: 1px solid #CBD5E1;
+  background: var(--ui-surface);
+  color: var(--ui-text-2);
+  border: 1px solid var(--ui-border-strong);
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-secondary:hover:not(:disabled) {
-  background: #F8FAFC;
-  color: #0F172A;
+  background: var(--ui-surface-2);
+  color: var(--ui-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-ghost {
   background: transparent;
-  color: #64748B;
+  color: var(--ui-text-4);
   border-color: transparent;
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-ghost:hover:not(:disabled) {
-  background: #F1F5F9;
-  color: #0F172A;
+  background: var(--ui-muted);
+  color: var(--ui-text);
   border-color: transparent;
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.saas-btn-amber, .saas-btn-yellow) {
-  background: #FFFFFF;
-  color: #0F172A;
+  background: var(--ui-surface);
+  color: var(--ui-text);
   border: 1.5px solid var(--hb-accent);
   box-shadow: 0 1px 3px rgb(var(--hb-accent-rgb) / 0.12);
 }
@@ -1271,18 +1271,18 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-ink {
   background: #0F172A;
-  color: #FFFFFF;
+  color: var(--on-accent);
   border-color: #0F172A;
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-ink:hover:not(:disabled) {
   background: #1E293B;
-  color: #FFFFFF;
+  color: var(--on-accent);
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-coral {
   background: #EF4444;
-  color: #FFFFFF;
+  color: var(--on-accent);
   border-color: #EF4444;
 }
 
@@ -1329,8 +1329,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-badge-neutral, .saas-badge-neutral, .saas-status-draft) {
-  background: #F1F5F9;
-  color: #64748B;
+  background: var(--ui-muted);
+  color: var(--ui-text-4);
 }
 
 /* ==========================================================================
@@ -1340,9 +1340,9 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-input, .saas-input, .hubly-select, .saas-select, .hubly-textarea, .saas-textarea) {
   width: 100%;
   border-radius: 10px;
-  border: 1px solid #E2E8F0;
-  background: #FFFFFF;
-  color: #0F172A;
+  border: 1px solid var(--ui-border);
+  background: var(--ui-surface);
+  color: var(--ui-text);
   font-family: var(--hubly-font-sans);
   font-size: 13.5px;
   padding: 8px 12px;
@@ -1355,11 +1355,11 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-input, .saas-input, .hubly-textarea, .saas-textarea)::placeholder {
-  color: #94A3B8;
+  color: var(--ui-text-5);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-input, .saas-input, .hubly-select, .saas-select, .hubly-textarea, .saas-textarea):hover:not(:disabled):not(:focus) {
-  border-color: #CBD5E1;
+  border-color: var(--ui-border-strong);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-input, .saas-input, .hubly-select, .saas-select, .hubly-textarea, .saas-textarea):focus {
@@ -1368,9 +1368,9 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-input, .saas-input, .hubly-select, .saas-select, .hubly-textarea, .saas-textarea):disabled {
-  background: #F8FAFC;
-  color: #94A3B8;
-  border-color: #E2E8F0;
+  background: var(--ui-surface-2);
+  color: var(--ui-text-5);
+  border-color: var(--ui-border);
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -1380,9 +1380,9 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   width: 18px;
   height: 18px;
   border-radius: 5px;
-  border: 1.5px solid #CBD5E1;
-  background: #FFFFFF;
-  color: #FFFFFF;
+  border: 1.5px solid var(--ui-border-strong);
+  background: var(--ui-surface);
+  color: var(--on-accent);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1406,13 +1406,13 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 :is(.hubly-app-root, .hb-app-root) .hubly-checkbox:is(:checked, .is-checked, [aria-checked="true"]) {
   background: var(--hb-accent);
   border-color: var(--hb-accent);
-  color: #FFFFFF;
+  color: var(--on-accent);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hubly-checkbox:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background: #F1F5F9;
+  background: var(--ui-muted);
 }
 
 /* ==========================================================================
@@ -1424,13 +1424,13 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 1px;
   background: #E2E8F0;
-  border: 1px solid #E2E8F0;
+  border: 1px solid var(--ui-border);
   border-radius: 14px;
   overflow: hidden;
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-cal-cell {
-  background: #FFFFFF;
+  background: var(--ui-surface);
   min-height: 112px;
   padding: 8px;
   display: flex;
@@ -1451,8 +1451,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #94A3B8;
-  background: #F8FAFC;
+  color: var(--ui-text-5);
+  background: var(--ui-surface-2);
   padding: 10px 14px;
   border-bottom: 1px solid #E5E7EB;
 }
@@ -1460,17 +1460,17 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-table, .saas-table) td {
   padding: 12px 14px;
   border-bottom: 1px solid #F1F5F9;
-  color: #334155;
+  color: var(--ui-text-2);
   vertical-align: middle;
   transition: background-color 120ms ease;
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-table, .saas-table) tbody tr:hover td {
-  background: #F8FAFC;
+  background: var(--ui-surface-2);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-table, .saas-table) tbody tr:active td {
-  background: #F1F5F9;
+  background: var(--ui-muted);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-table, .saas-table) tbody tr:is(.is-selected, [aria-selected="true"]) td {
@@ -1510,8 +1510,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-modal, .saas-modal) {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
   border-radius: 20px;
   box-shadow:
     0 24px 60px rgba(15, 23, 42, 0.18),
@@ -1520,7 +1520,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   max-height: 90dvh;
   overflow-y: auto;
   padding: 24px;
-  color: #0F172A;
+  color: var(--ui-text);
 }
 
 /* ==========================================================================
