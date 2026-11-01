@@ -1,5 +1,6 @@
 "use client";
 
+import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useRef, useState } from "react";
 import { HublyCheckIcon, HublyCloseIcon, HublyCopyIcon, HublyPlusIcon, HublySearchIcon } from "@/components/app/icons/DuotoneIcons";
 import {
@@ -15,9 +16,6 @@ import {
 } from "@/lib/invitaciones";
 import { useHublyStore } from "@/lib/store";
 import { backendEnabled } from "@/lib/supabase/config";
-import { useFocusTrap } from "@/lib/use-focus-trap";
-import { useLayer } from "@/lib/use-layer";
-import { useModalPresence } from "@/lib/use-modal-presence";
 
 type Tab = "existente" | "link" | "correo";
 type Sent = { email: string; link: string };
@@ -277,21 +275,15 @@ export function InviteTeamModal() {
   const setOpen = useHublyStore((s) => s.setInviteModalOpen);
   const [tab, setTab] = useState<Tab>(TAB_INICIAL);
   const [role, setRole] = useState(DEFAULT_INVITE_ROLE);
-  const dialogRef = useRef<HTMLDivElement | null>(null);
   const tabRefs = useRef<Partial<Record<Tab, HTMLButtonElement | null>>>({});
 
   const close = () => setOpen(false);
-  const presence = useModalPresence(open);
-  useLayer(open, close);
-  useFocusTrap(dialogRef, open);
 
   useEffect(() => {
     if (!open) return;
     setTab(TAB_INICIAL); // eslint-disable-line react-hooks/set-state-in-effect
     setRole(DEFAULT_INVITE_ROLE);
   }, [open]);
-
-  if (!presence.mounted) return null;
 
   // El link nunca ofreció Administración; ese rol solo se da a personas concretas.
   const roles = tab === "link" ? INVITE_ROLES.slice(1) : INVITE_ROLES;
@@ -307,56 +299,48 @@ export function InviteTeamModal() {
   };
 
   return (
-    <div
-      className="hubly-overlay hubly-cal-overlay"
-      data-state={presence.state}
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) close();
-      }}
-    >
-      <div ref={dialogRef} className="hubly-sheet hubly-cal-modal hubly-touch" data-state={presence.state} role="dialog" aria-modal="true" aria-label="Invitar a la agencia">
-        <div className="hubly-cal-modal-head">
-          <h2>Invitar a la agencia</h2>
-          <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar" onClick={close}>
-            <HublyCloseIcon size={14} />
-          </button>
-        </div>
-        {canInvite() ? (
-          <>
-            <RoleField value={rolActivo} onChange={setRole} options={roles} />
-            <div className="hubly-invite-tabs" role="tablist" aria-label="Forma de invitar" onKeyDown={moveTab}>
-              {TABS.map((t) => (
-                <button
-                  key={t.id}
-                  ref={(el) => {
-                    tabRefs.current[t.id] = el;
-                  }}
-                  type="button"
-                  role="tab"
-                  id={`invitar-${t.id}`}
-                  aria-selected={tab === t.id}
-                  aria-controls="invitar-panel"
-                  tabIndex={tab === t.id ? 0 : -1}
-                  onClick={() => setTab(t.id)}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </div>
-            <div id="invitar-panel" className="hubly-cal-modal-scroll" role="tabpanel" aria-labelledby={`invitar-${tab}`}>
-              {tab === "existente" && <ExistenteTab role={rolActivo} />}
-              {tab === "link" && <LinkTab role={rolActivo} />}
-              {tab === "correo" && <CorreoTab role={rolActivo} />}
-            </div>
-          </>
-        ) : (
-          <div className="hubly-ajustes-empty">
-            <strong>Tu rol no permite invitar</strong>
-            <p>Pídeselo a quien administra la agencia.</p>
-          </div>
-        )}
+    <Modal open={open} onClose={close} label="Invitar a la agencia" className="hubly-sheet hubly-cal-modal hubly-touch">
+      <div className="hubly-cal-modal-head">
+        <h2>Invitar a la agencia</h2>
+        <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar" onClick={close}>
+          <HublyCloseIcon size={14} />
+        </button>
       </div>
-    </div>
+      {canInvite() ? (
+        <>
+          <RoleField value={rolActivo} onChange={setRole} options={roles} />
+          <div className="hubly-invite-tabs" role="tablist" aria-label="Forma de invitar" onKeyDown={moveTab}>
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                ref={(el) => {
+                  tabRefs.current[t.id] = el;
+                }}
+                type="button"
+                role="tab"
+                id={`invitar-${t.id}`}
+                aria-selected={tab === t.id}
+                aria-controls="invitar-panel"
+                tabIndex={tab === t.id ? 0 : -1}
+                onClick={() => setTab(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+          <div id="invitar-panel" className="hubly-cal-modal-scroll" role="tabpanel" aria-labelledby={`invitar-${tab}`}>
+            {tab === "existente" && <ExistenteTab role={rolActivo} />}
+            {tab === "link" && <LinkTab role={rolActivo} />}
+            {tab === "correo" && <CorreoTab role={rolActivo} />}
+          </div>
+        </>
+      ) : (
+        <div className="hubly-ajustes-empty">
+          <strong>Tu rol no permite invitar</strong>
+          <p>Pídeselo a quien administra la agencia.</p>
+        </div>
+      )}
+    </Modal>
   );
 }
 
