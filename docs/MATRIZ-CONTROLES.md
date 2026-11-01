@@ -4,7 +4,7 @@ Generada con `npm run audit:controles` en modo demo el 2026-11-01 (previo a la i
 
 **Qué significa:** «responde» indica que pulsar cambió la página (el detalle dice qué cambió) sin error; no prueba que el resultado sea correcto ni que persista, porque la auditoría bloquea las escrituras. La persistencia y los permisos se prueban en `e2e/` y `tests/`. «Ya activo» es una pestaña o filtro que ya estaba seleccionado, así que no cambia nada: es lo esperado. «Sin efecto visible» pide revisión manual: puede ser un botón muerto o un cambio que la auditoría no detecta. Los editores (compositor) se abren pero no se recorren aquí: los cubre `compositor.spec.ts`.
 
-**Totales:** 679 controles (259 en páginas, 420 dentro de ventanas) · 564 responden · 29 ya activos · 49 enlaces · 17 sin efecto visible · 19 deshabilitados · 0 con error · 0 sin poder probar · 1 omitidos.
+**Totales:** 573 controles (258 en páginas, 315 dentro de ventanas) · 456 responden · 24 ya activos · 52 enlaces · 16 sin efecto visible · 20 deshabilitados · 0 con error · 4 sin poder probar · 1 omitidos.
 
 Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/dashboard/salud-cuentas`, `/estrategia` → `/marca`.
 
@@ -18,7 +18,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | — | Nueva marca | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | — | Invitar equipo | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | — | Buscar | responde | abre una ventana; cambia un estado; cambia el texto |
-| `/dashboard` | — | + Widget | responde | abre una ventana; cambia un estado; cambia el texto |
+| `/dashboard` | — | + Widget | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | — | Editar | responde | cambia un estado; cambia el texto |
 | `/dashboard` | — | Min (2) | responde | cambia el texto |
 | `/dashboard` | — | Nueva | responde | cambia el texto; cambia un campo |
@@ -33,46 +33,20 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | — | Ver todas → | enlace | /parrillas |
 | `/dashboard` | Lo que te toca | Listo | responde | cierra una ventana; cambia el texto |
 | `/dashboard` | Lo que te toca | Abrir Mi espacio | enlace | /tareas |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Cerrar modal de nueva marca | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Cafetería & Panadería | responde | cambia un estado; cambia un campo |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Hospitalidad & Diseño | ya activo | estaba seleccionado |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Clínica Dermatológica | responde | cambia un estado; cambia un campo |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Restaurante & Gastronomía | responde | cambia un estado; cambia un campo |
-| `/dashboard` | Nueva marca / Cuenta de cliente | E-commerce & Moda | responde | cambia un estado; cambia un campo |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Inmobiliaria & Arquitectura | responde | cambia un estado; cambia un campo |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Tecnología / SaaS | responde | cambia un estado; cambia un campo |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Seleccionar color #16324F | responde | cambia un estado |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Seleccionar color #C87A51 | responde | cambia un estado |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Seleccionar color #2E5E4E | responde | cambia un estado |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Seleccionar color #5B50D6 | ya activo | estaba seleccionado |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Seleccionar color #B88D40 | responde | cambia un estado |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Seleccionar color #E11D48 | responde | cambia un estado |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Seleccionar color #0EA5E9 | responde | cambia un estado |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Seleccionar color #10B981 | responde | cambia un estado |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Seleccionar color #7C3AED | responde | cambia un estado |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Seleccionar color #0F172A | responde | cambia un estado |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Disminuir Posts / mes | responde | cambia el texto |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Aumentar Posts / mes | responde | cambia el texto |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Disminuir Stories / mes | responde | cambia el texto |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Aumentar Stories / mes | responde | cambia el texto |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Disminuir Reels / mes | responde | cambia el texto |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Aumentar Reels / mes | responde | cambia el texto |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Disminuir Campañas Ads | responde | cambia el texto |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Aumentar Campañas Ads | responde | cambia el texto |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Cancelar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard` | Nueva marca / Cuenta de cliente | Crear marca | responde | cambia el texto |
-| `/dashboard` | Invitar miembro al equipo | Cerrar modal de invitación | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard` | Invitar miembro al equipo | Seleccionar todas | responde | cambia un estado; cambia el texto |
-| `/dashboard` | Invitar miembro al equipo | CB Café Bruma | responde | cambia un estado; cambia el texto |
-| `/dashboard` | Invitar miembro al equipo | M Min | responde | cambia un estado; cambia el texto |
-| `/dashboard` | Invitar miembro al equipo | CN Clínica Norte | responde | cambia un estado; cambia el texto |
-| `/dashboard` | Invitar miembro al equipo | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard` | Invitar miembro al equipo | Generar invitación local | responde | cambia el texto |
+| `/dashboard` | Nueva marca | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `/dashboard` | Nueva marca | Cancelar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `/dashboard` | Nueva marca | Crear marca | deshabilitado |  |
+| `/dashboard` | Invitar a la agencia | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `/dashboard` | Invitar a la agencia | Usuario existente | responde | cambia un estado; cambia el texto; cambia un campo |
+| `/dashboard` | Invitar a la agencia | Por link | responde | cambia un estado; cambia el texto; cambia un campo |
+| `/dashboard` | Invitar a la agencia | Por correo | ya activo | estaba seleccionado |
+| `/dashboard` | Invitar a la agencia | Agregar otro | responde | cambia el texto; cambia un campo |
+| `/dashboard` | Invitar a la agencia | Crear invitación | responde | cambia el texto |
 | `/dashboard` | Resultados de búsqueda | Crear o programar post Abre el compositor de posts, Reels y  | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo (editor: lo cubre compositor.spec) |
 | `/dashboard` | Resultados de búsqueda | Crear marca Configura identidad y compromisos mensuales | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | Resultados de búsqueda | Invitar al equipo Genera una invitación con rol y marcas asi | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | Resultados de búsqueda | Revisar sugerencias Compromisos propuestos según el cumplimi | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
-| `/dashboard` | Resultados de búsqueda | Configurar widgets Mostrar, ocultar, cambiar columna o reord | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
+| `/dashboard` | Resultados de búsqueda | Configurar widgets Agrega o quita widgets de Inicio | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | Resultados de búsqueda | Pregúntale a Hubi Consulta tareas vencidas, salud de cuentas | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
 | `/dashboard` | Resultados de búsqueda | Dashboard · Inicio Resumen operativo, tareas, libretas y apr | responde | cierra una ventana; cambia un estado; cambia el texto |
 | `/dashboard` | Resultados de búsqueda | Dashboard · Salud de cuentas Cumplimiento de entregas, presu | responde | navega a /dashboard/salud-cuentas; cierra una ventana; cambia un estado |
@@ -91,36 +65,30 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | Resultados de búsqueda | Manda tu primer reporte Min · Jair · Vence mañana Alta | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
 | `/dashboard` | Resultados de búsqueda | Ajustar horario a 8:00 am en post de panqué de cardamomo Caf | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
 | `/dashboard` | Resultados de búsqueda | Mandar liga de parrilla de noviembre a Elena por WhatsApp Ca | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Cerrar configuración de widgets | responde | cierra una ventana; cambia un estado; cambia el texto |
-| `/dashboard` | Configurar widgets del Dashboard | Mostrar widget Tareas | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | 1 columna | responde | cambia un estado; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | 2 columnas | responde | intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | 3 columnas | responde | cambia un estado; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Tareas hacia arriba | deshabilitado |  |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Tareas hacia abajo | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mostrar widget Libretas Kraft | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Libretas Kraft hacia arriba | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Libretas Kraft hacia abajo | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mostrar widget Hoy | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Hoy hacia arriba | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Hoy hacia abajo | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mostrar widget Notificaciones | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Notificaciones hacia arriba | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Notificaciones hacia abajo | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mostrar widget Aprobaciones | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Aprobaciones hacia arriba | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Aprobaciones hacia abajo | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mostrar widget Gráfica de Ads | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Gráfica de Ads hacia arriba | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Gráfica de Ads hacia abajo | responde | cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mostrar widget Ads activos | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Ads activos hacia arriba | responde | cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Ads activos hacia abajo | responde | cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mostrar widget Proyectos críticos | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Proyectos críticos hacia arriba | responde | cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Mover Proyectos críticos hacia abajo | deshabilitado |  |
-| `/dashboard` | Configurar widgets del Dashboard | Restablecer diseño original | responde | cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard` | Configurar widgets del Dashboard | Listo | responde | cierra una ventana; cambia un estado; cambia el texto |
+| `/dashboard` | Widgets | Listo | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `/dashboard` | Widgets | Métrica Agregar Un número grande que tú eliges: posts, gasto | responde | cambia un estado; cambia el texto; cambia un campo; intenta guardar (bloqueado) |
+| `/dashboard` | Widgets | Tareas Agregado Lo vencido, lo de hoy y lo que viene | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard` | Widgets | TU PRIMER POST N° 01 · OCT 26 | no se pudo pulsar | elementHandle.click: Timeout 4000ms exceeded.; lo tapa button.hubly-wgal-toggle |
+| `/dashboard` | Widgets | REPORTES SIN POWERPOINT ★ N° 02 · OCT 26 | no se pudo pulsar | elementHandle.click: Timeout 4000ms exceeded.; lo tapa button.hubly-wgal-toggle |
+| `/dashboard` | Widgets | TU DÍA EN MI ESPACIO N° 03 · OCT 26 | no se pudo pulsar | elementHandle.click: Timeout 4000ms exceeded.; lo tapa button.hubly-wgal-toggle |
+| `/dashboard` | Widgets | NÚCLEO DE MARCA N° 04 · OCT 26 | no se pudo pulsar | elementHandle.click: Timeout 4000ms exceeded.; lo tapa button.hubly-wgal-toggle |
+| `/dashboard` | Widgets | Libretas Agregado Tus libretas de Mi espacio | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard` | Widgets | Notificaciones Agregado Lo que necesita tu atención | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard` | Widgets | Proyectos críticos Agregar Los abiertos, por revisión y fech | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard` | Widgets | Hoy Agregado Lo que sale hoy | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard` | Widgets | Aprobaciones Agregado Lo que espera a tu cliente | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard` | Widgets | Calendario → | enlace | /calendario |
+| `/dashboard` | Widgets | Posts Agregar Lo próximo de la marca activa | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard` | Widgets | Feed Agregar Lo último publicado de la marca activa | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard` | Widgets | Semana Agregar Posts por día en todas tus marcas | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard` | Widgets | Chat → | enlace | /chat |
+| `/dashboard` | Widgets | Mensajes Agregar Tus chats con el equipo | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard` | Widgets | Equipo → | enlace | /equipo |
+| `/dashboard` | Widgets | Actividad Agregar Qué ha hecho el equipo | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard` | Widgets | Ver equipo → | enlace | /equipo |
+| `/dashboard` | Widgets | Equipo Agregar Quién lleva más puntos | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard` | Widgets | Gráfica de Ads Agregar Inversión acumulada y CTR | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard` | Widgets | Ads activos Agregar Campañas en circulación y sus resultados | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `/dashboard` | Nueva libreta Kraft | Cerrar libreta | responde | cierra una ventana; cambia el texto; cambia un campo |
 | `/dashboard` | Nueva libreta Kraft | Negrita | responde | cambia un estado |
 | `/dashboard` | Nueva libreta Kraft | Cursiva | responde | cambia un estado |
@@ -246,13 +214,12 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard/equipo` | — | Ver perfil 🥉 J Jair (tú) Dueño · 0 tareas · 0 posts 63 pts  | sin efecto visible |  |
 | `/dashboard/equipo` | — | Ver perfil | responde | abre una ventana; cambia el texto |
 | `/dashboard/equipo` | — | Cómo funcionan los puntos · Se miden por esfuerzo, no por cl | responde | abre una ventana; cambia un estado; cambia el texto |
-| `/dashboard/equipo` | Invitar miembro al equipo | Cerrar modal de invitación | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard/equipo` | Invitar miembro al equipo | Seleccionar todas | responde | cambia un estado; cambia el texto |
-| `/dashboard/equipo` | Invitar miembro al equipo | CB Café Bruma | responde | cambia un estado; cambia el texto |
-| `/dashboard/equipo` | Invitar miembro al equipo | M Min | responde | cambia un estado; cambia el texto |
-| `/dashboard/equipo` | Invitar miembro al equipo | CN Clínica Norte | responde | cambia un estado; cambia el texto |
-| `/dashboard/equipo` | Invitar miembro al equipo | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard/equipo` | Invitar miembro al equipo | Generar invitación local | responde | cambia el texto |
+| `/dashboard/equipo` | Invitar a la agencia | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `/dashboard/equipo` | Invitar a la agencia | Usuario existente | responde | cambia un estado; cambia el texto; cambia un campo |
+| `/dashboard/equipo` | Invitar a la agencia | Por link | responde | cambia un estado; cambia el texto; cambia un campo |
+| `/dashboard/equipo` | Invitar a la agencia | Por correo | ya activo | estaba seleccionado |
+| `/dashboard/equipo` | Invitar a la agencia | Agregar otro | responde | cambia el texto; cambia un campo |
+| `/dashboard/equipo` | Invitar a la agencia | Crear invitación | responde | cambia el texto |
 | `/dashboard/equipo` | hubly-dropdown | Mi vista (1) | ya activo | estaba seleccionado |
 | `/dashboard/equipo` | hubly-dropdown | Todo el equipo (3) | responde | cambia un estado; cambia el texto |
 | `/dashboard/equipo` | hubly-dropdown | Todas | sin efecto visible |  |
@@ -302,34 +269,9 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard/salud-cuentas` | — | Editar compromisos | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard/salud-cuentas` | — | Activar | responde | cambia el texto; intenta guardar (bloqueado) |
 | `/dashboard/salud-cuentas` | — | Editar compromisos | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Cerrar modal de nueva marca | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Cafetería & Panadería | responde | cambia un estado; cambia un campo |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Hospitalidad & Diseño | ya activo | estaba seleccionado |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Clínica Dermatológica | responde | cambia un estado; cambia un campo |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Restaurante & Gastronomía | responde | cambia un estado; cambia un campo |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | E-commerce & Moda | responde | cambia un estado; cambia un campo |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Inmobiliaria & Arquitectura | responde | cambia un estado; cambia un campo |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Tecnología / SaaS | responde | cambia un estado; cambia un campo |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Seleccionar color #16324F | responde | cambia un estado |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Seleccionar color #C87A51 | responde | cambia un estado |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Seleccionar color #2E5E4E | responde | cambia un estado |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Seleccionar color #5B50D6 | ya activo | estaba seleccionado |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Seleccionar color #B88D40 | responde | cambia un estado |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Seleccionar color #E11D48 | responde | cambia un estado |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Seleccionar color #0EA5E9 | responde | cambia un estado |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Seleccionar color #10B981 | responde | cambia un estado |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Seleccionar color #7C3AED | responde | cambia un estado |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Seleccionar color #0F172A | responde | cambia un estado |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Disminuir Posts / mes | responde | cambia el texto |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Aumentar Posts / mes | responde | cambia el texto |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Disminuir Stories / mes | responde | cambia el texto |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Aumentar Stories / mes | responde | cambia el texto |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Disminuir Reels / mes | responde | cambia el texto |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Aumentar Reels / mes | responde | cambia el texto |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Disminuir Campañas Ads | responde | cambia el texto |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Aumentar Campañas Ads | responde | cambia el texto |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Cancelar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Crear marca | responde | cambia el texto |
+| `/dashboard/salud-cuentas` | Nueva marca | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `/dashboard/salud-cuentas` | Nueva marca | Cancelar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `/dashboard/salud-cuentas` | Nueva marca | Crear marca | deshabilitado |  |
 | `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Cerrar sugerencias automáticas | responde | cierra una ventana; cambia el texto |
 | `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Recomendaciones por marca (7) | sin efecto visible |  |
 | `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Métricas semanales de pauta | responde | cambia un estado; cambia el texto; cambia un campo |
@@ -453,40 +395,15 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/marcas` | — | Tabla | responde | cambia un estado; cambia el texto |
 | `/marcas` | — | Por usuario | responde | cambia un estado; cambia el texto |
 | `/marcas` | — | Ver archivadas (0) | responde | cambia el texto |
-| `/marcas` | — | Café Bruma | responde | cambia el texto; intenta guardar (bloqueado) |
+| `/marcas` | — | Café Bruma | responde | navega a /marca; cambia un estado; intenta guardar (bloqueado) |
 | `/marcas` | — | Archivar Café Bruma | responde | cambia el texto; intenta guardar (bloqueado) |
 | `/marcas` | — | Min | responde | navega a /marca; cambia un estado; intenta guardar (bloqueado) |
 | `/marcas` | — | Archivar Min | deshabilitado |  |
 | `/marcas` | — | Clínica Norte | responde | navega a /marca; cambia un estado; intenta guardar (bloqueado) |
 | `/marcas` | — | Archivar Clínica Norte | responde | cambia el texto; intenta guardar (bloqueado) |
-| `/marcas` | Nueva marca / Cuenta de cliente | Cerrar modal de nueva marca | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/marcas` | Nueva marca / Cuenta de cliente | Cafetería & Panadería | responde | cambia un estado; cambia un campo |
-| `/marcas` | Nueva marca / Cuenta de cliente | Hospitalidad & Diseño | ya activo | estaba seleccionado |
-| `/marcas` | Nueva marca / Cuenta de cliente | Clínica Dermatológica | responde | cambia un estado; cambia un campo |
-| `/marcas` | Nueva marca / Cuenta de cliente | Restaurante & Gastronomía | responde | cambia un estado; cambia un campo |
-| `/marcas` | Nueva marca / Cuenta de cliente | E-commerce & Moda | responde | cambia un estado; cambia un campo |
-| `/marcas` | Nueva marca / Cuenta de cliente | Inmobiliaria & Arquitectura | responde | cambia un estado; cambia un campo |
-| `/marcas` | Nueva marca / Cuenta de cliente | Tecnología / SaaS | responde | cambia un estado; cambia un campo |
-| `/marcas` | Nueva marca / Cuenta de cliente | Seleccionar color #16324F | responde | cambia un estado |
-| `/marcas` | Nueva marca / Cuenta de cliente | Seleccionar color #C87A51 | responde | cambia un estado |
-| `/marcas` | Nueva marca / Cuenta de cliente | Seleccionar color #2E5E4E | responde | cambia un estado |
-| `/marcas` | Nueva marca / Cuenta de cliente | Seleccionar color #5B50D6 | ya activo | estaba seleccionado |
-| `/marcas` | Nueva marca / Cuenta de cliente | Seleccionar color #B88D40 | responde | cambia un estado |
-| `/marcas` | Nueva marca / Cuenta de cliente | Seleccionar color #E11D48 | responde | cambia un estado |
-| `/marcas` | Nueva marca / Cuenta de cliente | Seleccionar color #0EA5E9 | responde | cambia un estado |
-| `/marcas` | Nueva marca / Cuenta de cliente | Seleccionar color #10B981 | responde | cambia un estado |
-| `/marcas` | Nueva marca / Cuenta de cliente | Seleccionar color #7C3AED | responde | cambia un estado |
-| `/marcas` | Nueva marca / Cuenta de cliente | Seleccionar color #0F172A | responde | cambia un estado |
-| `/marcas` | Nueva marca / Cuenta de cliente | Disminuir Posts / mes | responde | cambia el texto |
-| `/marcas` | Nueva marca / Cuenta de cliente | Aumentar Posts / mes | responde | cambia el texto |
-| `/marcas` | Nueva marca / Cuenta de cliente | Disminuir Stories / mes | responde | cambia el texto |
-| `/marcas` | Nueva marca / Cuenta de cliente | Aumentar Stories / mes | responde | cambia el texto |
-| `/marcas` | Nueva marca / Cuenta de cliente | Disminuir Reels / mes | responde | cambia el texto |
-| `/marcas` | Nueva marca / Cuenta de cliente | Aumentar Reels / mes | responde | cambia el texto |
-| `/marcas` | Nueva marca / Cuenta de cliente | Disminuir Campañas Ads | responde | cambia el texto |
-| `/marcas` | Nueva marca / Cuenta de cliente | Aumentar Campañas Ads | responde | cambia el texto |
-| `/marcas` | Nueva marca / Cuenta de cliente | Cancelar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/marcas` | Nueva marca / Cuenta de cliente | Crear marca | responde | cambia el texto |
+| `/marcas` | Nueva marca | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `/marcas` | Nueva marca | Cancelar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `/marcas` | Nueva marca | Crear marca | deshabilitado |  |
 | `/marca` | — | Guardar | responde | cambia el texto; intenta guardar (bloqueado) |
 | `/marca` | — | Agregar persona | responde | cambia el texto; cambia un campo; intenta guardar (bloqueado) |
 | `/marca` | — | Aceptada | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
@@ -505,8 +422,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/archivos` | — | Inicio de la biblioteca | sin efecto visible |  |
 | `/archivos` | — | Carpeta | responde | cambia el texto; cambia un campo |
 | `/archivos` | — | Subir | responde | abre el selector de archivos |
-| `/archivos` | — | portada_operacion_cartago.jpg 287 KB | enlace | /api/media/2e346774-4a64-4ee3-a8db-8bde97ef052a/file |
-| `/archivos` | — | Eliminar portada_operacion_cartago.jpg | sin efecto visible |  |
+| `/archivos` | — | Subir archivos | responde | abre el selector de archivos |
 | `/proyectos` | — | Buscar proyecto | responde | cambia el contenido; cambia un campo |
 | `/proyectos` | — | Filas | ya activo | estaba seleccionado |
 | `/proyectos` | — | Kanban | responde | cambia un estado; cambia el texto |
@@ -612,7 +528,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `(sidebar y Hubi)` | — | Marcas | enlace | /marcas |
 | `(sidebar y Hubi)` | — | Automatizaciones | enlace | /automatizaciones |
 | `(sidebar y Hubi)` | — | Cambiar marca activa (Min) | responde | abre una ventana; cambia un estado; cambia el texto |
-| `(sidebar y Hubi)` | — | Nueva marca | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `(sidebar y Hubi)` | — | Invitar a la agencia | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `(sidebar y Hubi)` | — | Núcleo de marca | enlace | /marca |
 | `(sidebar y Hubi)` | — | Content Manager | enlace | /archivos |
 | `(sidebar y Hubi)` | — | Proyectos | enlace | /proyectos |
@@ -626,35 +542,13 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `(sidebar y Hubi)` | Seleccionar marca activa | CB Café Bruma | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `(sidebar y Hubi)` | Seleccionar marca activa | M Min | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `(sidebar y Hubi)` | Seleccionar marca activa | CN Clínica Norte | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
-| `(sidebar y Hubi)` | Seleccionar marca activa | Nueva marca | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Cerrar modal de nueva marca | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Cafetería & Panadería | responde | cambia un estado; cambia un campo |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Hospitalidad & Diseño | ya activo | estaba seleccionado |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Clínica Dermatológica | responde | cambia un estado; cambia un campo |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Restaurante & Gastronomía | responde | cambia un estado; cambia un campo |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | E-commerce & Moda | responde | cambia un estado; cambia un campo |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Inmobiliaria & Arquitectura | responde | cambia un estado; cambia un campo |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Tecnología / SaaS | responde | cambia un estado; cambia un campo |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Seleccionar color #16324F | responde | cambia un estado |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Seleccionar color #C87A51 | responde | cambia un estado |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Seleccionar color #2E5E4E | responde | cambia un estado |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Seleccionar color #5B50D6 | ya activo | estaba seleccionado |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Seleccionar color #B88D40 | responde | cambia un estado |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Seleccionar color #E11D48 | responde | cambia un estado |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Seleccionar color #0EA5E9 | responde | cambia un estado |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Seleccionar color #10B981 | responde | cambia un estado |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Seleccionar color #7C3AED | responde | cambia un estado |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Seleccionar color #0F172A | responde | cambia un estado |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Disminuir Posts / mes | responde | cambia el texto |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Aumentar Posts / mes | responde | cambia el texto |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Disminuir Stories / mes | responde | cambia el texto |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Aumentar Stories / mes | responde | cambia el texto |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Disminuir Reels / mes | responde | cambia el texto |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Aumentar Reels / mes | responde | cambia el texto |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Disminuir Campañas Ads | responde | cambia el texto |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Aumentar Campañas Ads | responde | cambia el texto |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Cancelar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `(sidebar y Hubi)` | Nueva marca / Cuenta de cliente | Crear marca | responde | cambia el texto |
+| `(sidebar y Hubi)` | Seleccionar marca activa | Crear marca | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `(sidebar y Hubi)` | Invitar a la agencia | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
+| `(sidebar y Hubi)` | Invitar a la agencia | Usuario existente | responde | cambia un estado; cambia el texto; cambia un campo |
+| `(sidebar y Hubi)` | Invitar a la agencia | Por link | responde | cambia un estado; cambia el texto; cambia un campo |
+| `(sidebar y Hubi)` | Invitar a la agencia | Por correo | ya activo | estaba seleccionado |
+| `(sidebar y Hubi)` | Invitar a la agencia | Agregar otro | responde | cambia el texto; cambia un campo |
+| `(sidebar y Hubi)` | Invitar a la agencia | Crear invitación | responde | cambia el texto |
 | `(sidebar y Hubi)` | Hubi | Expandir el panel de Hubi | responde | cambia un estado |
 | `(sidebar y Hubi)` | Hubi | Cerrar Hubi | responde | cierra una ventana; cambia un estado; cambia el texto |
 | `(sidebar y Hubi)` | Hubi | Conectar las redes | responde | cambia el texto |
@@ -666,7 +560,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `(sidebar y Hubi)` | Resultados de búsqueda | Crear marca Configura identidad y compromisos mensuales | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Invitar al equipo Genera una invitación con rol y marcas asi | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Revisar sugerencias Compromisos propuestos según el cumplimi | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
-| `(sidebar y Hubi)` | Resultados de búsqueda | Configurar widgets Mostrar, ocultar, cambiar columna o reord | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
+| `(sidebar y Hubi)` | Resultados de búsqueda | Configurar widgets Agrega o quita widgets de Inicio | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Pregúntale a Hubi Consulta tareas vencidas, salud de cuentas | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Dashboard · Inicio Resumen operativo, tareas, libretas y apr | responde | cierra una ventana; cambia un estado; cambia el texto |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Dashboard · Salud de cuentas Cumplimiento de entregas, presu | responde | navega a /dashboard/salud-cuentas; cierra una ventana; cambia un estado |

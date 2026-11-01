@@ -1,6 +1,28 @@
 # Entrega de paridad con Henry: 31 de octubre de 2026
 
-Rama `agente/integracion`: fusiona `agente/glm-calidad`, `agente/gemini-flujos` y `agente/opus-diseno`, sin conflictos, más sus colas. Nada se ha publicado.
+Rama `agente/integracion`: fusiona `agente/glm-calidad`, `agente/gemini-flujos` y `agente/opus-diseno`, sin conflictos, más sus colas.
+
+## Fusión a `main`
+
+`main` reúne `paridad-henry` con el trabajo de las demás sesiones: modo oscuro, nueva marca e invitaciones, galería de widgets, confirmación al cerrar sesión, chats de Hubi, buscador, agentes de Hubi, y Color y Avisar al publicar (este último estaba sin commitear y se tomó tal cual de la carpeta principal).
+
+Resultados sobre el conjunto, con servidor propio en el puerto 3030:
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto. Deuda heredada sin empeorar: 1484 hallazgos |
+| `npx tsc --noEmit` | Sin errores |
+| `npm run build` | Compila |
+| `npm test` | 58 pasan |
+| `npm run test:db` | 77 pasan |
+| `npx playwright test` | 93 pasan |
+| `npm run audit:controles` | 573 controles: 456 responden, 24 ya activos, 52 enlaces, 20 deshabilitados, 16 sin efecto visible, 0 con error, 4 sin poder probar, 1 omitido |
+
+Los 4 sin poder probar son libretas dentro de la vista previa de la galería de widgets: esa vista es `inert` y `aria-hidden`, y el control real es el botón que la cubre. La auditoría baja de 679 a 573 controles porque la galería sustituyó al modal anterior de widgets.
+
+Se miraron capturas de `/chat`, `/dashboard`, `/reportes` y `/anuncios`, la galería, el sidebar de Hubi y Chats, y el compositor en oscuro, sin errores de consola. No se probó el flujo completo de crear un agente, chatear con Hubi a pantalla completa ni el nuevo buscador a mano; esos dependen de sus pruebas automáticas y de la revisión de cada sesión.
+
+**«Avisar al publicar» aún no envía nada:** guarda a quién avisar, pero no hay envío conectado.
 
 ## Pruebas de esta entrega
 
