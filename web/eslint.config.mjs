@@ -11,6 +11,7 @@ const config = [
       "react-hooks/purity": "warn",
       "react-hooks/refs": "warn",
       "react-hooks/preserve-manual-memoization": "warn",
+      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_", ignoreRestSiblings: true }],
     },
   },
   { ignores: [".next/**", "e2e/.salida/**", "next-env.d.ts"] },

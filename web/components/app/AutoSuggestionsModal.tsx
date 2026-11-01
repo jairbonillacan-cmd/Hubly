@@ -22,7 +22,7 @@ import {
   HublyTargetIcon as MousePointerClick,
 } from "@/components/app/icons/DuotoneIcons";
 
-export interface SuggestedMetricItem {
+interface SuggestedMetricItem {
   id: string;
   checked: boolean;
   icon: "globe" | "mouse" | "form" | "chat" | "ig" | "fb";
@@ -31,29 +31,9 @@ export interface SuggestedMetricItem {
   target: string;
 }
 
-export interface BrandConfigMetric {
-  id: string;
-  name: string;
-  target: string | number;
-  unit: "por semana" | "por mes" | "por campaña" | string;
-  checked?: boolean;
-}
 
-export interface BrandConfig {
-  id: string;
-  name: string;
-  runsPaidAds: boolean;
-  monthlySpend: string | number;
-  commitments: {
-    Publicaciones: number;
-    Stories: number;
-    Reels: number;
-    "Campañas Ads": number;
-  };
-  metrics: BrandConfigMetric[];
-}
 
-export interface AutoSuggestionsModalProps {
+interface AutoSuggestionsModalProps {
   open?: boolean;
   onClose?: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1227,4 +1207,3 @@ export function AutoSuggestionsModal({
   );
 }
 
-export default AutoSuggestionsModal;

@@ -18,7 +18,7 @@ import {
   HublyTrashIcon as Trash2,
 } from "@/components/app/icons/DuotoneIcons";
 
-export interface NotebookReaderModalProps {
+interface NotebookReaderModalProps {
   open?: boolean;
   notebookId?: string | null;
   onClose?: () => void;
@@ -985,4 +985,3 @@ export function NotebookReaderModal({
   );
 }
 
-export default NotebookReaderModal;

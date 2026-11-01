@@ -8,7 +8,7 @@ import type { DashboardWidgetId } from "@/lib/types";
 import { WidgetPreview } from "@/components/app/dashboard/WidgetPreview";
 import { HublyCheckIcon as Check, HublyPlusIcon as Plus } from "@/components/app/icons/DuotoneIcons";
 
-export interface WidgetConfigModalProps {
+interface WidgetConfigModalProps {
   open: boolean;
   onClose: () => void;
 }
@@ -191,4 +191,3 @@ export function WidgetConfigModal({ open, onClose }: WidgetConfigModalProps) {
   );
 }
 
-export default WidgetConfigModal;

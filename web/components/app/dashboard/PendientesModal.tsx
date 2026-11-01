@@ -11,7 +11,7 @@ import {
 
 type TaskGroup = ReturnType<typeof selectTasksBreakdown>["groups"][number];
 
-export interface PendientesModalProps {
+interface PendientesModalProps {
   open: boolean;
   onClose: () => void;
   groups: TaskGroup[];

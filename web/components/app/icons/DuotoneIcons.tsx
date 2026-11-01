@@ -4,7 +4,7 @@ import React from "react";
  * Iconos propios de Hubly: dos capas rellenas, sin trazo.
  * Heredan el color del texto; --hi-soft y --hi-strong lo fijan donde hace falta, como en el sidebar.
  */
-export interface DuotoneIconProps extends React.SVGProps<SVGSVGElement> {
+interface DuotoneIconProps extends React.SVGProps<SVGSVGElement> {
   size?: number | string;
   title?: string;
   active?: boolean;
@@ -281,17 +281,6 @@ export const HublyPersonIcon = createDuotoneIcon("HublyPersonIcon", () => (
   </>
 ));
 
-export const HublyPaletteIcon = createDuotoneIcon("HublyPaletteIcon", () => (
-  <>
-    <path
-      fill={SOFT}
-      d="M12 2.8a9.2 9.2 0 1 0 0 18.4c1.6 0 2.4-1 2.4-2.1 0-1.4-1.2-1.8-1.2-3 0-.9.8-1.6 1.8-1.6h2.6c2.4 0 3.6-1.6 3.6-3.4 0-4.6-4.4-8.3-9.2-8.3Z"
-    />
-    <circle cx="7.4" cy="11.2" r="1.6" fill={STRONG} />
-    <circle cx="9.8" cy="7" r="1.6" fill={STRONG} />
-    <circle cx="14.6" cy="7" r="1.6" fill={STRONG} />
-  </>
-));
 
 export const HublyUploadIcon = createDuotoneIcon("HublyUploadIcon", () => (
   <>
@@ -317,21 +306,6 @@ export const HublyLibraryIcon = createDuotoneIcon("HublyLibraryIcon", () => (
   </>
 ));
 
-export const HublyCloudIcon = createDuotoneIcon("HublyCloudIcon", () => (
-  <>
-    <path
-      fill={SOFT}
-      d="M7.4 20a5 5 0 0 1-.6-10 6.2 6.2 0 0 1 11.9 1.3A4.4 4.4 0 0 1 17.8 20H7.4Z"
-    />
-    <path
-      stroke={STRONG}
-      strokeWidth="2.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M12.4 16.6v-5M10 13.6l2.4-2.4 2.4 2.4"
-    />
-  </>
-));
 
 export const HublySparkIcon = createDuotoneIcon("HublySparkIcon", () => (
   <>
@@ -671,12 +645,6 @@ export const HublyMenuIcon = createDuotoneIcon("HublyMenuIcon", () => (
   </g>
 ));
 
-export const HublyPlusCircleIcon = createDuotoneIcon("HublyPlusCircleIcon", () => (
-  <>
-    <circle cx="12" cy="12" r="9.4" fill={SOFT} />
-    <path stroke={STRONG} strokeWidth="2.6" strokeLinecap="round" d="M12 7.6v8.8M7.6 12h8.8" />
-  </>
-));
 
 export const HublyMoreIcon = createDuotoneIcon("HublyMoreIcon", () => (
   <>
@@ -770,13 +738,6 @@ export const HublyPrinterIcon = createDuotoneIcon("HublyPrinterIcon", () => (
   </>
 ));
 
-export const HublyAtIcon = createDuotoneIcon("HublyAtIcon", () => (
-  <>
-    <circle cx="12" cy="12" r="9.4" fill={SOFT} />
-    <circle cx="12" cy="12" r="3.2" stroke={STRONG} strokeWidth="2.4" />
-    <path stroke={STRONG} strokeWidth="2.4" strokeLinecap="round" d="M15.2 8.8V13a2 2 0 0 0 4 0" />
-  </>
-));
 
 export const HublySmileIcon = createDuotoneIcon("HublySmileIcon", () => (
   <>

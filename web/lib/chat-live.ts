@@ -67,7 +67,7 @@ interface ChatLiveInput {
   set: (patch: (s: ChatState) => Partial<ChatState>) => void;
 }
 
-export interface ChatRemote {
+interface ChatRemote {
   sendMessage: (m: ChatMessage) => void;
   editMessage: (id: string, text: string) => void;
   deleteMessage: (id: string) => void;

@@ -21,15 +21,11 @@ import {
   HublyChevronRightIcon as ChevronRight,
   HublyCloseIcon as X,
   HublyExpandIcon as Maximize2,
-  HublyPaperclipIcon as Paperclip,
   HublyPeopleIcon as Users,
   HublyPlugIcon as Plug,
   HublyTrashIcon as Trash2,
 } from "@/components/app/icons/DuotoneIcons";
 
-export function HublyAvatarIllustration({ size = 34 }: { size?: number }) {
-  return <HublyCatAvatar size={size} />;
-}
 
 // Backwards-compatible alias so any existing import of HublyAvatarIllustration renders the Hubly cat
 
@@ -611,4 +607,3 @@ export function FloatingAIDrawer() {
   );
 }
 
-export default FloatingAIDrawer;

@@ -18,8 +18,8 @@ import type {
   TeamMember,
 } from "./types";
 
-export const WORKSPACE_STORAGE_PREFIX = "hubly:workspace:v3:";
-export const LEGACY_STORAGE_KEYS = [
+const WORKSPACE_STORAGE_PREFIX = "hubly:workspace:v3:";
+const LEGACY_STORAGE_KEYS = [
   "hubly-workspace-v2",
   "hb-workspace-v1",
   "hubly-workspace-storage-v1",
@@ -30,17 +30,17 @@ function mergeMissingWidgets(saved: DashboardWidgetConfig[]): DashboardWidgetCon
   return [...saved, ...missing.map((d) => ({ ...d, order: saved.length + d.order }))];
 }
 
-export function sanitizeWorkspaceId(rawId?: string | null): string {
+function sanitizeWorkspaceId(rawId?: string | null): string {
   if (!rawId || typeof rawId !== "string") return "default";
   const cleaned = rawId.trim().replace(/[^a-zA-Z0-9_-]/g, "");
   return cleaned || "default";
 }
 
-export function getWorkspaceStorageKey(workspaceId = "default"): string {
+function getWorkspaceStorageKey(workspaceId = "default"): string {
   return `${WORKSPACE_STORAGE_PREFIX}${sanitizeWorkspaceId(workspaceId)}`;
 }
 
-export function resolveWorkspaceIdFromUrl(search?: string): string {
+function resolveWorkspaceIdFromUrl(search?: string): string {
   const rawSearch =
     typeof search === "string"
       ? search
@@ -522,7 +522,6 @@ export function normalizeWorkspacePayload(
   };
 }
 
-export const normalizeWorkspaceData = normalizeWorkspacePayload;
 
 export function hasStoredWorkspaceInV3(workspaceId = "default"): boolean {
   if (typeof window === "undefined") return false;

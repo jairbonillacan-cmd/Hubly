@@ -6,10 +6,6 @@ import { useHublyStore } from "@/lib/store";
 import { selectOnboardingStatus } from "@/lib/domain-selectors";
 import type { OnboardingProgress } from "@/lib/types";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
-import { InviteTeamModal } from "@/components/app/InviteTeamModal";
-import { NotebookReaderModal } from "@/components/app/NotebookReaderModal";
-import { WidgetConfigModal } from "@/components/app/WidgetConfigModal";
-import { AutoSuggestionsModal } from "@/components/app/AutoSuggestionsModal";
 import {
   HublyCheckIcon as Check,
   HublyChevronDownIcon as ChevronDown,
@@ -446,4 +442,3 @@ export function DescubreHublyWidget() {
 }
 
 
-export default DescubreHublyWidget;

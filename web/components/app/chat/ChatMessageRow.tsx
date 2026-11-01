@@ -69,7 +69,7 @@ interface ChatMessageRowProps {
   onMessagePerson?: () => void;
 }
 
-export interface ChatPerson {
+interface ChatPerson {
   name: string;
   role?: string;
   email?: string;

@@ -21,7 +21,6 @@ import {
   HublyCheckCircleIcon as CheckCircle2,
   HublySendIcon as Send,
   HublyShieldIcon as ShieldCheck,
-  HublySparkIcon as Sparkles,
 } from "@/components/app/icons/DuotoneIcons";
 
 function ClientSharePortalInner() {

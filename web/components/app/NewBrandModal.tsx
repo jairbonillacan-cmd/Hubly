@@ -433,4 +433,3 @@ export function NewBrandModal() {
   );
 }
 
-export default NewBrandModal;

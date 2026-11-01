@@ -20,7 +20,7 @@ import { backendEnabled } from "./supabase/config";
 /* 1. SALUDO Y FECHA DINÁMICOS POR ZONA HORARIA                               */
 /* ========================================================================== */
 
-export interface GreetingAndDateResult {
+interface GreetingAndDateResult {
   greetingPrefix: "Buenos días" | "Buenas tardes" | "Buenas noches";
   greeting: string;
   userName: string;
@@ -168,7 +168,7 @@ export function selectGreetingAndDate(
 /* 2. SELECTOR DE DESGLOSE Y AGRUPACIÓN DE TAREAS                             */
 /* ========================================================================== */
 
-export interface TaskGroupSection {
+interface TaskGroupSection {
   key: "ATRASADAS" | "HOY" | "MAÑANA" | "PRÓXIMAS";
   bucket: TaskDueBucket;
   label: string;
@@ -176,7 +176,7 @@ export interface TaskGroupSection {
   allTasks: TaskItem[];
 }
 
-export interface TasksBreakdownResult {
+interface TasksBreakdownResult {
   ATRASADAS: TaskItem[];
   HOY: TaskItem[];
   MAÑANA: TaskItem[];
@@ -213,7 +213,7 @@ export function addDaysToIsoDate(isoDate: string, daysOffset: number): string {
   return `${yy}-${mm}-${dd}`;
 }
 
-export function isTaskCompleted(task: TaskItem): boolean {
+function isTaskCompleted(task: TaskItem): boolean {
   return (
     Boolean(task.completed) ||
     task.status === "done" ||
@@ -221,14 +221,14 @@ export function isTaskCompleted(task: TaskItem): boolean {
   );
 }
 
-export function getPriorityWeight(priority?: string): number {
+function getPriorityWeight(priority?: string): number {
   const norm = (priority || "").toLowerCase();
   if (norm === "alta") return 3;
   if (norm === "media") return 2;
   return 1;
 }
 
-export function computeTaskDueBucket(
+function computeTaskDueBucket(
   task: Pick<TaskItem, "dueDate" | "dueLabel" | "dueBucket">,
   todayIso: string,
   tomorrowIso: string
@@ -271,7 +271,7 @@ export function computeTaskDueBucket(
   return "today";
 }
 
-export function sortTasksByPriorityAndDate(items: TaskItem[]): TaskItem[] {
+function sortTasksByPriorityAndDate(items: TaskItem[]): TaskItem[] {
   return [...items].sort((a, b) => {
     const pDiff = getPriorityWeight(b.priority) - getPriorityWeight(a.priority);
     if (pDiff !== 0) return pDiff;
@@ -391,7 +391,7 @@ export function selectTasksBreakdown(
 /* 3. SELECTOR DE POSTS DE HOY Y APROBACIONES PENDIENTES                      */
 /* ========================================================================== */
 
-export interface TodayPostsAndApprovalsResult {
+interface TodayPostsAndApprovalsResult {
   todayPosts: PostItem[];
   approvalPosts: PostItem[];
   pendingApprovals: PostItem[];
@@ -403,7 +403,7 @@ export interface TodayPostsAndApprovalsResult {
   todayIso: string;
 }
 
-export function isPostInApproval(post: PostItem): boolean {
+function isPostInApproval(post: PostItem): boolean {
   return (
     post.status === "pending" ||
     post.statusLabel === "En aprobación" ||
@@ -466,7 +466,7 @@ export type AccountHealthFilter =
   | "En riesgo"
   | "Completas";
 
-export type AccountHealthSortBy =
+type AccountHealthSortBy =
   | "name_asc"
   | "health_desc"
   | "health_asc"
@@ -483,7 +483,7 @@ export interface DeliverableCommitmentSummary {
   percent: number;
 }
 
-export interface AccountsHealthOptions {
+interface AccountsHealthOptions {
   period?: CommitmentPeriod;
   filter?: AccountHealthFilter;
   searchQuery?: string;
@@ -516,7 +516,7 @@ export interface EvaluatedBrandAccount extends BrandWorkspace {
   isComplete: boolean;
 }
 
-export interface AccountsHealthSummary {
+interface AccountsHealthSummary {
   totalAccounts: number;
   totalBrands: number;
   completeCount: number;
@@ -528,7 +528,7 @@ export interface AccountsHealthSummary {
   averageHealthScore: number;
 }
 
-export interface AccountsHealthResult {
+interface AccountsHealthResult {
   accounts: EvaluatedBrandAccount[];
   allEvaluatedAccounts: EvaluatedBrandAccount[];
   summary: AccountsHealthSummary;
@@ -547,7 +547,7 @@ function normalizeHealthFilter(
   return "todas";
 }
 
-export function resolvePeriodSnapshot(
+function resolvePeriodSnapshot(
   commitments: AccountCommitment | undefined,
   period: CommitmentPeriod = "mes_actual"
 ): {
@@ -1151,7 +1151,7 @@ export interface EvaluatedTeamMember extends TeamMember {
   weeklyActivity: WeekdayActivityBar[];
 }
 
-export interface TeamProductivityResult {
+interface TeamProductivityResult {
   members: EvaluatedTeamMember[];
   ranking: EvaluatedTeamMember[];
   activeMember: EvaluatedTeamMember;
@@ -1160,7 +1160,7 @@ export interface TeamProductivityResult {
   totalAchievementsCatalog: number;
 }
 
-export function formatActiveDuration(minutes: number): string {
+function formatActiveDuration(minutes: number): string {
   if (!minutes || minutes <= 1) return "menos de un minuto";
   if (minutes < 60) return `${Math.round(minutes)}m`;
   const hrs = Math.floor(minutes / 60);
@@ -1460,7 +1460,7 @@ export function selectTeamProductivity(
 /* 7. SELECTOR DE PROGRESO DE ONBOARDING ("DESCUBRE HUBLY")                   */
 /* ========================================================================== */
 
-export interface OnboardingStepItem {
+interface OnboardingStepItem {
   id: "redes" | "post" | "aprueba" | "equipo";
   key:
     | "brandCreatedOrSelected"
@@ -1474,7 +1474,7 @@ export interface OnboardingStepItem {
   completed: boolean;
 }
 
-export interface OnboardingStatusResult {
+interface OnboardingStatusResult {
   completedCount: number;
   totalCount: 4;
   progressPercent: number;

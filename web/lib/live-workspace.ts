@@ -2,7 +2,7 @@ import type { HublyWorkspaceData } from "./types";
 import { adoptLegacyKey } from "./account-scoped-storage";
 
 export type SaveState = "idle" | "saving" | "saved" | "error" | "conflict" | "readonly";
-export type LiveLoad =
+type LiveLoad =
   | { kind: "ok"; data: HublyWorkspaceData; agencyId: string; role: string }
   | { kind: "no_agency" }
   | { kind: "unauthenticated" }

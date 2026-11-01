@@ -5,7 +5,7 @@ import { Cover, type CoverKind } from "../Cover";
 import type { MediaItem, MediaAspectRatio } from "./types";
 import { PlayIcon, VolumeIcon, HeartIcon } from "./SocialIcons";
 
-export type MediaPlaceholderProps = {
+type MediaPlaceholderProps = {
   media?: MediaItem[];
   aspectRatio?: MediaAspectRatio;
   altText?: string;

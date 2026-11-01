@@ -15,7 +15,7 @@ Prioridad: P0 riesgo de datos o legal · P1 impide el ciclo real o los cambios s
 | 2. Datos reales por dominio | `/api/workspace` eliminado o reducido a preferencias; aislamiento por marca probado | Pendiente |
 | 3. Publicación real | Un post aprobado sale a tiempo, una sola vez, aun con reintento forzado | Pendiente |
 | 4. Ciclo completo con la agencia | Dos semanas con un cliente real sin volver a la herramienta anterior | Pendiente |
-| 5. Código y diseño mantenibles | Continua: la deuda solo baja | Pendiente |
+| 5. Código y diseño mantenibles | Continua: la deuda solo baja | En curso, adelantada |
 | 6. Paridad con Henry | Matriz con estado real, parcial o prevista | Pendiente |
 | 7. Preparación para otras agencias | `docs/RELEASE-READINESS.md` con restauración de respaldo probada | Pendiente |
 
@@ -37,10 +37,9 @@ Revisado el 1 de noviembre de 2026 sobre el reporte de auditoría externo.
 | F-03 | P2 | Los logros y XP no se persisten en servidor | `EquipoView.tsx` | 4 |
 | F-04 | P2 | Cifras del dashboard de equipo ajustadas para parecerse a una captura | `domain-selectors.ts`, `EquipoView.tsx` | 5 |
 | C-01 | P2 | Archivos gigantes: `EquipoView` 3,195, `store` 2,303, `layout` 1,996, `InicioView` 1,784, `parrillas` 1,552, `PostComposerModal` 1,535 | `wc -l` | 5 |
-| C-02 | P2 | Modal de invitación duplicado | `EquipoView.tsx:249`, `InviteTeamModal.tsx` | 5 |
 | C-03 | P2 | 13 usos de `as unknown as` y alias de tipos | `layout.tsx`, `lib/types.ts` | 5 |
 | C-04 | P2 | Deuda de UI congelada en 1,437 hallazgos | `scripts/check-ui-baseline.json` | 5 |
-| C-05 | P2 | 38 errores de `react-hooks` y 88 avisos de ESLint, degradados a avisos con tope | `web/eslint.config.mjs` | 5 |
+| C-05 | P2 | 37 errores de `react-hooks` degradados a avisos, y 12 avisos más, con tope de 49 | `web/eslint.config.mjs` | 5 |
 
 **Corregido respecto al reporte:** el chat ya tiene tablas propias, `0007` ahora es `0010` y aún no hay producción. Los mensajes y canales siguen en el tipo del documento para el modo demo.
 

@@ -3,15 +3,9 @@
 import { BuyerPersonas } from "@/components/app/marca/BuyerPersonas";
 import React, { useState, useEffect } from "react";
 import { useHublyStore } from "@/lib/store";
-import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import {
-  HublyBoltIcon as Zap,
   HublyCheckIcon as Check,
-  HublyGlobeIcon as Globe,
-  HublyPencilIcon as Pencil,
-  HublyRefreshIcon as RefreshCw,
   HublySparkIcon,
-  HublyTargetIcon as Target,
 } from "@/components/app/icons/DuotoneIcons";
 
 

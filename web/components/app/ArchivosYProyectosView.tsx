@@ -1,9 +1,8 @@
 "use client";
 
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useHublyStore } from "@/lib/store";
-import { Cover } from "@/components/Cover";
 import { KanbanDropSlot } from "@/components/app/KanbanDropSlot";
 import { useKanbanDrag } from "@/lib/use-kanban-drag";
 import { MediaLibrary } from "@/components/app/media/MediaLibrary";
@@ -13,56 +12,15 @@ import type { BrandProject } from "@/lib/types";
 import {
   HublyArchiveIcon as Archive,
   HublyCheckIcon as Check,
-  HublyChevronDownIcon as ChevronDown,
-  HublyFolderIcon as Folder,
   HublyLayersIcon as Layers,
   HublyPinIcon as Pin,
-  HublyPlusCircleIcon as PlusCircle,
   HublyPlusIcon as Plus,
   HublySearchIcon as Search,
-  HublySparkIcon as Sparkles,
   HublyTrashIcon as Trash2,
-  HublyUploadIcon as Upload,
 } from "@/components/app/icons/DuotoneIcons";
 
 const PROJECT_COLUMNS = ["En curso", "Revisión", "Completado"] as const;
 
-function GoldenCloudUploadIllustration() {
-  return (
-    <svg
-      width="68"
-      height="64"
-      viewBox="0 0 68 64"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Cloud body with warm gold fill and brown-gold outline */}
-      <path
-        d="M21 49H48.5C54.8513 49 60 43.8513 60 37.5C60 31.6524 55.6317 26.8235 49.9806 26.0942C48.8768 19.2367 42.9317 14 35.75 14C27.781 14 21.3182 20.4318 21.2505 28.3849C15.4793 29.1525 11 34.088 11 40C11 44.9706 15.0294 49 20 49H21Z"
-        fill="#BFE2F4"
-        stroke="var(--hb-accent-text)"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Inner shading */}
-      <path
-        d="M22 46H47.5C52.4706 46 56.5 41.9706 56.5 37C56.5 32.5 53.1 28.8 48.7 28.2"
-        stroke="var(--hb-accent)"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      {/* Upward Arrow */}
-      <path
-        d="M35.5 39V23M35.5 23L29.5 29M35.5 23L41.5 29"
-        stroke="var(--hb-accent-text)"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
   const searchParams = useSearchParams();
@@ -72,7 +30,6 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
   const assets = useHublyStore((s) => s.assets);
   const projects = useHublyStore((s) => s.projects);
-  const addAsset = useHublyStore((s) => s.addAsset);
   const addProject = useHublyStore((s) => s.addProject);
   const moveProject = useHublyStore((s) => s.moveProject);
   const updateProject = useHublyStore((s) => s.updateProject);
@@ -88,10 +45,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
   const [mode, setMode] = useState<"content" | "proyectos">(
     tabParam === "proyectos" ? "proyectos" : "content"
   );
-  const [contentSubTab, setContentSubTab] = useState<"archivos" | "carpetas">("archivos");
-  const [projectView, setProjectView] = useState<"filas" | "kanban" | "tabla">("filas");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [projectSearchOpen, setProjectSearchOpen] = useState(false);
+  const [projectView, setProjectView] = useState<"filas" | "kanban" | "tabla">("filas");  const [projectSearchOpen, setProjectSearchOpen] = useState(false);
   const [projectSearchQuery, setProjectSearchQuery] = useState("");
   const [newProjectModal, setNewProjectModal] = useState(false);
   const [projectFilter, setProjectFilter] = useState<"todos" | BrandProject["status"] | "archivados">("todos");
@@ -115,18 +69,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
     setTimeout(() => setToast(null), 2400);
   };
 
-  const brandAssets = assets.filter((a) => {
-    if (a.brandId !== activeBrand.id) return false;
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      return (
-        a.name.toLowerCase().includes(q) ||
-        a.folder.toLowerCase().includes(q) ||
-        a.aiTags.some((t) => t.toLowerCase().includes(q))
-      );
-    }
-    return true;
-  });
+  const brandAssets = assets.filter((a) => a.brandId === activeBrand.id);
 
   const ownProjects = projects.filter((p) => p.brandId === activeBrand.id);
   const brandProjects = ownProjects

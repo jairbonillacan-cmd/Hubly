@@ -43,7 +43,7 @@ export interface PhoneMedia {
   poster?: string;
 }
 
-export interface PhonePost {
+interface PhonePost {
   network: SocialNetwork;
   format: PostFormat;
   brandName: string;
@@ -62,7 +62,7 @@ const WIDTH = 360;
 const HEIGHT = 760;
 
 /** Marco fijo a tamaño lógico y escalado completo: el post nunca se deforma. */
-export function PhoneFrame({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
+function PhoneFrame({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const [scale, setScale] = useState(0.5);
 

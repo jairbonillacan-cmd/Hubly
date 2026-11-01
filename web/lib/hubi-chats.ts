@@ -14,14 +14,14 @@ export interface HubiTurn {
   actionLabel?: string;
 }
 
-export interface HubiChat {
+interface HubiChat {
   id: string;
   title: string;
   updatedAt: number;
   turns: HubiTurn[];
 }
 
-export interface DeletedChat {
+interface DeletedChat {
   chat: HubiChat;
   expiresAt: number;
 }

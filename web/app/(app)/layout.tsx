@@ -35,7 +35,6 @@ import {
   HublyCheckIcon as Check,
   HublyChevronDownIcon as ChevronDown,
   HublyChevronLeftIcon as ChevronLeft,
-  HublyChevronRightIcon as ChevronRight,
   HublyCloseIcon as X,
   HublyGlobeIcon as Globe,
   HublyHeadsetIcon,
@@ -46,7 +45,6 @@ import {
   HublyPlusIcon as Plus,
   HublySearchIcon as Search,
   HublySettingsIcon as Settings,
-  HublySparkIcon as Sparkles,
   HublySunIcon as Sun,
   HublyTagIcon,
   HublyBuildingIcon,
@@ -114,7 +112,6 @@ export default function SaaSAppLayout({
   const activeNotebookId = useHublyStore((s) => s.activeNotebookId);
   const setActiveNotebookId = useHublyStore((s) => s.setActiveNotebookId);
 
-  const openComposer = useHublyStore((s) => s.openComposer);
   const setCmdkOpen = useHublyStore((s) => s.setCmdkOpen);
   const setNewBrandModalOpen = useHublyStore((s) => s.setNewBrandModalOpen);
   const aiDrawerOpen = useHublyStore((s) => s.aiDrawerOpen);
@@ -122,7 +119,6 @@ export default function SaaSAppLayout({
   const setAiDrawerOpen = useHublyStore((s) => s.setAiDrawerOpen);
   const agents = useHublyStore((s) => s.agents) ?? NO_AGENTS;
   const addAgent = useHublyStore((s) => s.addAgent);
-  const inviteModalOpen = useHublyStore((s) => s.inviteModalOpen);
   const setInviteModalOpen = useHublyStore((s) => s.setInviteModalOpen);
   const widgetConfigModalOpen = useHublyStore((s) => s.widgetConfigModalOpen);
   const setWidgetConfigModalOpen = useHublyStore(

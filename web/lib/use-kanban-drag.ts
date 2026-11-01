@@ -1,14 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { CSSProperties, KeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
+import type { KeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
 
 const DRAG_THRESHOLD_PX = 5;
 const TOUCH_HOLD_MS = 220;
 const EDGE_SCROLL_PX = 56;
 const EDGE_SCROLL_STEP = 14;
 
-export interface KanbanDragState {
+interface KanbanDragState {
   id: string;
   overCol: string | null;
   /** Tarjeta delante de la que caería; null significa al final de la columna. */

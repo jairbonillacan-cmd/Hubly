@@ -195,7 +195,7 @@ async function pulsar(page, estado, ambito, c, ruta, camino, filas, ventanaNombr
     await el.hover({ timeout: 1500 }).catch(() => {});
     try {
       await el.click({ timeout: 4000 });
-    } catch (e1) {
+    } catch {
       const por = await el.evaluate((n) => window.__aud.tapado(n)).catch(() => "");
       await page.waitForTimeout(500);
       await el.click({ timeout: 4000 }).catch((e2) => { throw new Error(`${String(e2.message).split("\n")[0].slice(0, 90)}${por ? `; lo tapa ${por}` : ""}`); });

@@ -1,6 +1,6 @@
 import type { PlatformSettings, PostFormat, PostMedia, SocialNetwork } from "./types";
 
-export interface NetworkSpec {
+interface NetworkSpec {
   id: SocialNetwork;
   short: string;
   color: string;
@@ -51,7 +51,7 @@ export function networkFormatLabel(network: SocialNetwork, format: PostFormat): 
 
 export const countHashtags = (text: string) => (text.match(/#[\wáéíóúñÁÉÍÓÚÑ]+/g) ?? []).length;
 
-export type CaptionLevel = "ok" | "near" | "over";
+type CaptionLevel = "ok" | "near" | "over";
 
 /** Aviso al 90% y error al superar el límite de la red. */
 export function captionLevel(length: number, maxChars: number): CaptionLevel {
@@ -74,7 +74,7 @@ export function feedCutIndex(caption: string, network: SocialNetwork): number | 
   return cuts.length ? Math.min(...cuts) : null;
 }
 
-export interface NetworkIssue {
+interface NetworkIssue {
   network: SocialNetwork;
   message: string;
 }

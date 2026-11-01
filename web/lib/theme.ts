@@ -2,7 +2,7 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 
-export type HublyTheme = "light" | "dark";
+type HublyTheme = "light" | "dark";
 
 const STORAGE_KEY = "hubly-theme";
 const listeners = new Set<() => void>();

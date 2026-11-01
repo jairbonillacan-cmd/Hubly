@@ -1,7 +1,7 @@
 import type { SVGProps } from "react";
 import type { SocialPlatform, ReactionType } from "./types";
 
-export type IconProps = SVGProps<SVGSVGElement> & {
+type IconProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
 

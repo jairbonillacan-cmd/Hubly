@@ -860,4 +860,3 @@ export function SaludCuentasView() {
   );
 }
 
-export default SaludCuentasView;
