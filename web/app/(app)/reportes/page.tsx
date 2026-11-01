@@ -73,7 +73,7 @@ function DemoReportesPage() {
         paddingBottom: 60,
       }}
     >
-      {/* Top Hubi Sub-Navigation Bar (10b-social-media-reportes-1440.png) */}
+      {/* Top Hubi Sub-Navigation Bar */}
       <div
         style={{
           display: "flex",
@@ -229,7 +229,7 @@ function DemoReportesPage() {
         </Link>
       </div>
 
-      {/* Secondary Toolbar matching 10b-social-media-reportes-1440.png */}
+      {/* Secondary Toolbar */}
       <div
         style={{
           display: "flex",
@@ -347,7 +347,7 @@ function DemoReportesPage() {
         </div>
       </div>
 
-      {/* Hubi Empty-State Card (10b-social-media-reportes-1440.png) */}
+      {/* Hubi Empty-State Card */}
       <div
         style={{
           display: "flex",

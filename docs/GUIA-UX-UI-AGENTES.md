@@ -657,7 +657,7 @@ Español de México, tuteando. Directo y cercano.
 - Vocabulario fijo: post, parrilla, marca, cliente, tarea, libreta, aprobación, reporte. No uses «contenido», «publicación» o «campaña» como sinónimos si la pantalla ya dice otra cosa.
 - Comillas angulares: «así». Puntos suspensivos con el carácter `…`.
 - **Honestidad (de `PRODUCT.md`):** lo que no existe lleva «Función prevista»; lo inventado, «Datos de ejemplo». Nunca inventes clientes, cifras, testimonios ni logos.
-- No nombres competidores ni copies textos de otros productos.
+- No nombres competidores en textos públicos. Solo Henry puede servir de referencia, según el [ADR 0001](adr/0001-paridad-con-henry.md).
 - Datos de ejemplo realistas y del sector: «Café Bruma», «Clínica Norte», nunca «Lorem ipsum», «Usuario 1» o «Acme».
 - Lo escrito por el usuario se muestra tal cual, incluso «asd».
 

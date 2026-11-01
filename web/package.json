@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "lint": "eslint . --max-warnings 126",
     "check:ui": "node scripts/check-ui.mjs",
     "test:db": "node tests/db-permisos.test.mjs",
     "dev:live": "node tests/dev-live.mjs",
@@ -38,6 +39,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.3",
     "tsx": "^4.23.15",
     "typescript": "^5",
     "ws": "^8.22.1"

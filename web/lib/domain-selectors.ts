@@ -1233,7 +1233,7 @@ export function selectTeamProductivity(
     );
 
     // En estado inicial, Jair tiene 0 terminadas, 3 en curso, 0 publicados y "menos de un minuto" activo
-    // para coincidir 1:1 con 03-dashboard-equipo-1440.png; pero en cuanto completa una tarea o publica un post,
+    // como valor inicial; pero en cuanto completa una tarea o publica un post,
     // sus contadores, tiempo activo, XP y ranking suben en vivo.
     const baselineCompleted = isPrimaryUser
       ? Math.max(0, liveCompletedTasks - 1 + eventTaskCompletions)

@@ -973,7 +973,7 @@ export default function SaaSAppLayout({
             </div>
           </div>
         ) : (
-          /* Collapsed Top Header (68px rail, matches 02-dashboard-cuentas-1440.png & 01-dashboard-inicio-768.png) */
+          /* Collapsed Top Header (68px rail) */
           <div
             style={{
               display: "flex",

@@ -1,6 +1,6 @@
 // Capturas de las 8 escenas del calendario social y su editor, para compararlas con docs/referencias/henry-2026-10-31/.
 //   E2E_BASE=http://localhost:3001 node e2e/capturas-henry.mjs [ronda] [escena...]
-// Guarda PNG de viewport en docs/planes-agentes/capturas-A/<ronda>/. Bloquea toda escritura a /api/ para no tocar datos guardados.
+// Guarda PNG de viewport en docs/archivo/planes-agentes/capturas-A/<ronda>/. Bloquea toda escritura a /api/ para no tocar datos guardados.
 // Playwright borra web/e2e/.salida, por eso no se usa esa carpeta.
 import { chromium } from "@playwright/test";
 import { mkdirSync } from "node:fs";
@@ -8,7 +8,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const BASE = process.env.E2E_BASE || "http://localhost:3000";
-const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "docs", "planes-agentes", "capturas-A");
+const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "docs", "archivo", "planes-agentes", "capturas-A");
 const RONDA = process.argv[2] || "ronda-1";
 const SOLO = process.argv.slice(3);
 const SALIDA = join(RAIZ, RONDA);

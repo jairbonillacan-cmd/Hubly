@@ -35,7 +35,7 @@ export default function TareasPage() {
         padding: "12px 0 40px",
       }}
     >
-      {/* ROW 1: Top Segmented Pill Bar + Right Actions (matching 05-todos-mi-espacio-1440.png) */}
+      {/* ROW 1: Top Segmented Pill Bar + Right Actions */}
       <div
         style={{
           display: "flex",
@@ -147,7 +147,7 @@ export default function TareasPage() {
 
         {/* Right Actions: Search + Nueva Lista buttons */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          {/* Exact 36x36 '+' button from 05-todos-mi-espacio-1440.png top-right */}
+          {/* Exact 36x36 '+' button top-right */}
           <button
             type="button"
             onClick={() => {
