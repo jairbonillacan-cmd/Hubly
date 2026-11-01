@@ -306,6 +306,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
   const selectedAssignees = team.filter((m) => draft.assigneeIds.includes(m.id));
   const notifyMembers = team.filter((m) => draft.notifyMemberIds.includes(m.id));
   const notifyMatches = team.filter((m) => m.name.toLowerCase().includes(notifySearch.trim().toLowerCase()));
+  const selectedPalette = POST_PALETTE.find((p) => p.color === draft.color);
 
   const toggleNetwork = (network: SocialNetwork) => {
     if (locked) return;
@@ -508,6 +509,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
               <X size={18} />
             </button>
           </header>
+          {draft.color && <div className="hubly-composer-colorbar" style={{ background: draft.color }} aria-hidden />}
 
           {recoveredAt && (
             <div className="hubly-composer-recovered" role="status">
@@ -575,13 +577,25 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                       </button>
                     );
                   })}
+                  {draft.notifyMemberIds.length > 0 && (
+                    <button
+                      type="button"
+                      className="is-clear"
+                      onClick={() => {
+                        update({ notifyMemberIds: [], notifyOnPublish: false });
+                        setPopover(null);
+                      }}
+                    >
+                      Quitar aviso
+                    </button>
+                  )}
                 </div>
               )}
             </div>
             <div className="hubly-composer-pop">
-              <button type="button" aria-expanded={popover === "color"} disabled={locked} onClick={() => setPopover(popover === "color" ? null : "color")}>
+              <button type="button" aria-label="Color del post" aria-expanded={popover === "color"} disabled={locked} onClick={() => setPopover(popover === "color" ? null : "color")}>
                 {draft.color ? <i style={{ background: draft.color }} /> : <i className="is-none" />}
-                <span>Color</span>
+                <span>{selectedPalette ? selectedPalette.name : "Color"}</span>
               </button>
               {popover === "color" && (
                 <div className="hubly-composer-menu is-colors" role="group" aria-label="Color del post">

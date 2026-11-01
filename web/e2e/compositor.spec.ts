@@ -207,4 +207,15 @@ test("Avisar al publicar indica que se guarda como referencia sin enviar avisos 
   const menu = page.getByRole("group", { name: "Avisar al publicar" });
   await expect(menu).toBeVisible();
   await expect(menu.getByRole("note")).toContainText("Se guarda en el post como referencia; aún no envía avisos automáticos.");
+  await menu.locator("button").first().click();
+  await expect(menu.getByRole("button", { name: "Quitar aviso" })).toBeVisible();
+  await menu.getByRole("button", { name: "Quitar aviso" }).click();
+  await expect(page.getByRole("button", { name: "Avisar al publicar" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Color del post" }).click();
+  const colorMenu = page.getByRole("group", { name: "Color del post" });
+  await expect(colorMenu).toBeVisible();
+  await colorMenu.getByRole("button", { name: "Rosa" }).click();
+  await expect(page.getByRole("button", { name: "Color del post" })).toContainText("Rosa");
+  await expect(page.locator(".hubly-composer-colorbar")).toBeVisible();
 });
