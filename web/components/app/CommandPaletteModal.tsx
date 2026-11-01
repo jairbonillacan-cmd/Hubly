@@ -190,7 +190,7 @@ export function CommandPaletteModal({
         id: "act-widgets",
         group: "Acciones",
         label: "Configurar widgets",
-        sublabel: "Mostrar, ocultar, cambiar columna o reordenar widgets",
+        sublabel: "Agrega o quita widgets de Inicio",
         icon: <LayoutGrid size={17} />,
         action: () => {
           handleClose();

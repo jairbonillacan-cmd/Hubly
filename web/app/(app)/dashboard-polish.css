@@ -232,7 +232,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
   min-height: 30px;
   margin-bottom: 10px;
 }
-.is-editing .hb-widget-head { padding-right: 88px; }
+.is-editing .hb-widget-head { padding-right: 120px; }
 .hb-widget-title {
   display: inline-flex;
   align-items: center;
@@ -2439,3 +2439,78 @@ html.dark .hubly-invite-error { color: #FCA5A5; } /* ui-ok: el rojo de estado no
 html.dark .hubly-salud-item .hubly-ajustes-dot { background-color: var(--ui-muted) !important; color: var(--ui-text) !important; }
 html.dark .hubly-app-root .saas-btn-secondary { border-color: var(--ui-border-strong); background: var(--ui-surface); color: var(--ui-text-2); }
 html.dark .hubly-app-root .saas-btn-secondary:hover:not(:disabled) { background: var(--ui-surface-2); color: var(--ui-text); }
+
+/* Galería de widgets y widgets añadidos -------------------------------------- */
+
+.hubly-edit-btn.is-width { width: auto; min-width: 28px; padding: 0 4px; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
+@media (max-width: 767.98px) { .hubly-edit-btn.is-width { display: none; } }
+
+.hubly-cal-modal.hubly-wgal { gap: 0; width: 100%; max-width: 880px; height: calc(100dvh - 64px); max-height: 820px; padding: 0; overflow: hidden; background: var(--ui-surface); }
+.hubly-wgal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 24px 24px 16px; border-bottom: 1px solid var(--ui-border); }
+.hubly-wgal-head h2 { margin: 0; color: var(--ui-text); font-size: 18px; font-weight: 700; }
+.hubly-wgal-head p { margin: 4px 0 0; color: var(--ui-text-4); font-size: 12.5px; }
+.hubly-wgal-aviso { padding: 8px 24px; border-bottom: 1px solid var(--ui-border); background: var(--ui-surface-2); color: var(--ui-text-2); font-size: 12.5px; font-weight: 600; }
+.hubly-wgal-scroll { display: flex; flex: 1; flex-direction: column; gap: 24px; min-height: 0; padding: 20px 24px 24px; overflow-y: auto; }
+h3.hubly-wgal-rotulo, .hubly-wgal-rotulo { margin: 0 0 10px; color: var(--ui-text-4); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+html.dark .hubly-app-root h3.hubly-wgal-rotulo { color: var(--ui-text-4); }
+.hubly-wgal-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.hubly-wgal-card {
+  position: relative;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 14px;
+  background: var(--ui-surface);
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hubly-wgal-card:hover { border-color: var(--ui-border-strong); background: var(--ui-surface-2); }
+.hubly-wgal-card.is-placed { border-color: var(--ui-sky-border); }
+.hubly-wgal-preview { height: 180px; overflow: hidden; border-radius: 10px; background: var(--ui-surface-2); pointer-events: none; }
+.hubly-wgal-zoom { height: 300px; padding: 16px; overflow: hidden; zoom: 0.6; }
+.hubly-wgal-zoom .hb-widget-body { min-height: 0; overflow: hidden; }
+.hubly-wgal-zoom .hubly-wgal-rotulo { margin: 4px 0; }
+.hubly-wgal-zoom .hubly-task-row { justify-content: flex-start; gap: 10px; }
+.hubly-wgal-toggle { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; width: 100%; padding: 10px 2px 0; border: none; outline: none; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.hubly-wgal-toggle::before { content: ""; position: absolute; inset: 0; border-radius: 14px; }
+.hubly-wgal-toggle:focus-visible::before { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
+.hubly-wgal-nombre { overflow: hidden; color: var(--ui-text); font-size: 13.5px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.hubly-wgal-estado { display: inline-flex; align-items: center; gap: 4px; color: var(--ui-text-4); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.hubly-wgal-card.is-placed .hubly-wgal-estado { color: var(--hb-accent-text); }
+.hubly-wgal-desc { grid-column: 1 / -1; color: var(--ui-text-4); font-size: 11.5px; }
+@media (max-width: 767.98px) {
+  .hubly-wgal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hubly-wgal-head .hbtn { min-height: 44px; }
+}
+@media (max-width: 640px) {
+  .hubly-cal-modal.hubly-wgal { height: 92dvh; }
+  .hubly-wgal-head { padding: 18px 16px 12px; }
+  .hubly-wgal-aviso { padding: 8px 16px; }
+  .hubly-wgal-scroll { padding: 16px 16px 24px; }
+  .hubly-wgal-grid { grid-template-columns: minmax(0, 1fr); }
+  .hubly-wgal-preview { height: 150px; }
+  .hubly-wgal-zoom { height: 250px; }
+}
+
+.hubly-wfilas { padding: 8px 12px; }
+.hubly-wfila { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px; }
+.hubly-wfila + .hubly-wfila { border-top: 1px solid var(--ui-border); }
+.hubly-wfila-texto { flex: 1; min-width: 0; }
+.hubly-wfila-titulo, .hubly-wfila-meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hubly-wfila-titulo { color: var(--ui-text); font-size: 13px; font-weight: 600; }
+.hubly-wfila-meta { margin-top: 2px; color: var(--ui-text-4); font-size: 11px; }
+.hubly-wfila-lado { flex-shrink: 0; color: var(--ui-text-4); font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hubly-wfilas-mas { padding: 8px; color: var(--ui-text-4); font-size: 11px; font-weight: 600; }
+.hubly-wpill { flex-shrink: 0; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.hubly-wmetrica { display: flex; flex-direction: column; justify-content: center; gap: 4px; padding: 16px 20px; }
+.hubly-wnumero { color: var(--ui-text); font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+.hubly-wnumero-rotulo { margin: 0; color: var(--ui-text-4); font-size: 12.5px; }
+.hb-widget-head:has(.hubly-wselect) .hb-widget-title { flex-shrink: 0; }
+.hubly-wselect { flex: 0 1 170px; min-width: 0; height: 30px; padding: 0 8px; border: 1px solid var(--ui-border-strong); border-radius: 8px; background: var(--ui-surface); color: var(--ui-text-2); font-size: 12px; }
+.hubly-wselect:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
+.hubly-wsemana { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 16px 20px; }
+.hubly-wsemana-dias { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.hubly-wsemana-dia { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 2px; border: 1px solid var(--ui-border); border-radius: 8px; color: var(--ui-text-4); font-size: 11px; font-variant-numeric: tabular-nums; }
+.hubly-wsemana-dia strong { color: var(--ui-text); font-size: 13px; font-weight: 600; }
+.hubly-wsemana-dia.is-today { border-color: var(--hb-accent); background: var(--hb-accent); color: var(--on-accent); }
+.hubly-wsemana-dia.is-today strong { color: var(--on-accent); }
+@media (max-width: 767.98px) { .hubly-wselect { min-height: 44px; } }
