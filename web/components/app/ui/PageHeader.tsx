@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import "./ui-kit.css";
 
 /** Título de pantalla de la plantilla A de la guía. Va dentro de `.hubly-cal-header`. */
 export function PageHeader({ title, subtitle, actions }: { title: string; subtitle?: ReactNode; actions?: ReactNode }) {
