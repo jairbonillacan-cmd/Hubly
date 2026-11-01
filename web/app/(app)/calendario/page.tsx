@@ -6,6 +6,9 @@ import { useHublyStore } from "@/lib/store";
 import { backendEnabled } from "@/lib/supabase/config";
 import { selectGreetingAndDate } from "@/lib/domain-selectors";
 import { useModalPresence } from "@/lib/use-modal-presence";
+import { EmptyState } from "@/components/app/ui/EmptyState";
+import { Field } from "@/components/app/ui/Field";
+import { PageHeader } from "@/components/app/ui/PageHeader";
 import {
   HublyBentoIcon as LayoutGrid,
   HublyCalendarIcon as CalendarPlus,
@@ -376,32 +379,32 @@ export default function CalendarioPage() {
   return (
     <div className="hubly-cal">
       <header className="hubly-cal-header">
-        <div className="hubly-cal-title-row">
-          <div style={{ minWidth: 0 }}>
-            <h1 className="hubly-cal-title">Calendario</h1>
-            <p className="hubly-cal-subtitle">Posts y actividades de todas tus marcas, en una sola agenda.</p>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-            <button
-              type="button"
-              className="hubly-cal-reveal"
-              title="Revisar la parrilla como presentación"
-              onClick={() => router.push("/parrillas")}
-            >
-              <Presentation size={18} />
-              <span>Revisar</span>
-            </button>
-            <button
-              type="button"
-              className="hubly-cal-reveal"
-              title="Nueva actividad"
-              onClick={() => openNewActivity(todayIso)}
-            >
-              <CalendarPlus size={18} />
-              <span>Actividad</span>
-            </button>
-          </div>
-        </div>
+        <PageHeader
+          title="Calendario"
+          subtitle="Posts y actividades de todas tus marcas, en una sola agenda."
+          actions={
+            <>
+              <button
+                type="button"
+                className="hubly-cal-reveal"
+                title="Revisar la parrilla como presentación"
+                onClick={() => router.push("/parrillas")}
+              >
+                <Presentation size={18} />
+                <span>Revisar</span>
+              </button>
+              <button
+                type="button"
+                className="hubly-cal-reveal"
+                title="Nueva actividad"
+                onClick={() => openNewActivity(todayIso)}
+              >
+                <CalendarPlus size={18} />
+                <span>Actividad</span>
+              </button>
+            </>
+          }
+        />
 
         <div className="hubly-cal-toolbar">
           <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -530,10 +533,7 @@ export default function CalendarioPage() {
       <div key={view} className="hubly-cal-body tablero-aparece">
         {view === "lista" &&
           (listDays.length === 0 ? (
-            <div className="hubly-cal-empty">
-              <strong>Nada programado este mes</strong>
-              <span>Crea una actividad o agenda un post para verlo aquí.</span>
-            </div>
+            <EmptyState title="Nada programado este mes">Crea una actividad o agenda un post para verlo aquí.</EmptyState>
           ) : (
             <div className="hubly-cal-agenda">
               {listDays.map((iso) => {
@@ -661,9 +661,7 @@ export default function CalendarioPage() {
               </div>
             ))}
             {visibleBrands.length === 0 && (
-              <div className="hubly-cal-empty">
-                <strong>Sin contenido esta semana</strong>
-              </div>
+              <EmptyState title="Sin contenido esta semana" />
             )}
             {emptyBrandsCount > 0 && (
               <button type="button" className="hubly-cal-more-brands" onClick={() => setShowEmptyBrands((v) => !v)}>
@@ -703,8 +701,7 @@ export default function CalendarioPage() {
             </div>
 
             <div className="hubly-cal-modal-scroll">
-              <label className="hubly-cal-field">
-                <span>Título</span>
+              <Field label="Título">
                 <input
                   className="hubly-cal-line"
                   autoFocus
@@ -713,7 +710,7 @@ export default function CalendarioPage() {
                   value={draftTitle}
                   onChange={(e) => setDraftTitle(e.target.value)}
                 />
-              </label>
+              </Field>
 
               <div className="hubly-cal-types" role="radiogroup" aria-label="Tipo de actividad">
                 {ACTIVITY_TYPES.map(({ id, Icon }) => (

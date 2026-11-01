@@ -27,13 +27,31 @@ const total = (value) =>
   typeof value === "number" ? value : Object.values(value).reduce((sum, item) => sum + total(item), 0);
 const maxWarnings = (text) => Number(JSON.parse(text).scripts.lint.match(/--max-warnings (\d+)/)?.[1] ?? 0);
 
+// Por regla: una regla nueva añade deuda ya existente sin que nadie haya empeorado nada.
+const uiRules = (text) => {
+  const rules = {};
+  for (const counts of Object.values(JSON.parse(text))) {
+    for (const [id, count] of Object.entries(counts)) rules[id] = (rules[id] ?? 0) + count;
+  }
+  return rules;
+};
+
 const measures = [
-  ["scripts/check-ui-baseline.json", (text) => total(JSON.parse(text))],
   ["scripts/check-size-baseline.json", (text) => total(JSON.parse(text))],
   ["package.json", maxWarnings],
 ];
 
 let failed = false;
+const uiBefore = previous("scripts/check-ui-baseline.json");
+if (uiBefore !== null) {
+  const was = uiRules(uiBefore);
+  for (const [id, now] of Object.entries(uiRules(current("scripts/check-ui-baseline.json")))) {
+    if (id in was && now > was[id]) {
+      console.error(`check-ui-baseline.json: la regla ${id} subió de ${was[id]} a ${now}`);
+      failed = true;
+    }
+  }
+}
 for (const [path, measure] of measures) {
   const before = previous(path);
   if (before === null) continue;

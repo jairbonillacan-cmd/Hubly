@@ -35,6 +35,7 @@ const RULES = [
   { id: "exclamacion", why: "exclamación en el texto de interfaz (§14)", test: (l) => /["'`>]\s*¡/.test(l) },
   { id: "tailwind-color", why: "color de Tailwind: usa un token (§3)", test: (l) => /\b(bg|text|border|ring)-(red|green|emerald|blue|indigo|violet|purple|pink|gray|slate|zinc|neutral|amber|yellow)-\d{2,3}\b/.test(l) },
   { id: "transition-all", why: "transition: all; nombra las propiedades (§7)", test: (l) => /transition(-property)?:\s*["']?all\b/.test(l) },
+  { id: "hbtn-directo", why: "botón con clases .hbtn: usa <Button> de components/app/ui (§9.2)", test: (l) => /className="hbtn\b/.test(l) && !/hbtn-outline|hbtn-indigo/.test(l), skipFile: /components\/app\/ui\// },
   {
     id: "tamano-fuente",
     why: "tamaño de texto fuera de la escala (§4)",
@@ -65,7 +66,7 @@ function scan() {
       readFileSync(full, "utf8").split(/\r?\n/).forEach((line, index) => {
         if (line.includes("ui-ok:")) return;
         for (const rule of RULES) {
-          if (!rule.test(line)) continue;
+          if (rule.skipFile?.test(file) || !rule.test(line)) continue;
           result[file] ??= {};
           result[file][rule.id] ??= [];
           result[file][rule.id].push(index + 1);

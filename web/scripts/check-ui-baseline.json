@@ -1,4 +1,7 @@
 {
+  "app/(app)/ajustes/page.tsx": {
+    "hbtn-directo": 1
+  },
   "app/(app)/anuncios/page.tsx": {
     "color-fijo": 88,
     "degradado": 1,
@@ -17,7 +20,11 @@
     "tamano-fuente": 1
   },
   "app/(app)/calendario/page.tsx": {
-    "color-fijo": 2
+    "color-fijo": 2,
+    "hbtn-directo": 2
+  },
+  "app/(app)/chat/page.tsx": {
+    "hbtn-directo": 2
   },
   "app/(app)/crm/page.tsx": {
     "color-fijo": 6,
@@ -38,9 +45,13 @@
     "rgb-fijo": 34,
     "tamano-fuente": 5
   },
+  "app/(app)/ia/page.tsx": {
+    "hbtn-directo": 2
+  },
   "app/(app)/layout.tsx": {
     "color-fijo": 13,
     "exclamacion": 1,
+    "hbtn-directo": 1,
     "rgb-fijo": 4,
     "tamano-fuente": 3
   },
@@ -75,9 +86,11 @@
     "rgb-fijo": 3
   },
   "components/app/AccessPanel.tsx": {
-    "color-fijo": 2
+    "color-fijo": 2,
+    "hbtn-directo": 1
   },
   "components/app/AppDialogHost.tsx": {
+    "hbtn-directo": 1,
     "rgb-fijo": 1,
     "tamano-fuente": 1
   },
@@ -91,6 +104,9 @@
     "rgb-fijo": 5,
     "tamano-fuente": 1
   },
+  "components/app/CommandPaletteModal.tsx": {
+    "hbtn-directo": 2
+  },
   "components/app/DescubreHublyWidget.tsx": {
     "rgb-fijo": 1,
     "transition-all": 1
@@ -98,6 +114,9 @@
   "components/app/FloatingAIDrawer.tsx": {
     "color-fijo": 3,
     "emoji": 7
+  },
+  "components/app/InviteTeamModal.tsx": {
+    "hbtn-directo": 6
   },
   "components/app/KraftNotebookCard.tsx": {
     "color-fijo": 15,
@@ -109,7 +128,8 @@
     "color-fijo": 1
   },
   "components/app/NewBrandModal.tsx": {
-    "color-fijo": 1
+    "color-fijo": 1,
+    "hbtn-directo": 9
   },
   "components/app/NotebookEditor.tsx": {
     "lucide": 1
@@ -120,10 +140,53 @@
     "tamano-fuente": 1
   },
   "components/app/PostComposerModal.tsx": {
-    "color-fijo": 5
+    "color-fijo": 5,
+    "hbtn-directo": 15
   },
   "components/app/SaveStatus.tsx": {
     "color-fijo": 2
+  },
+  "components/app/WidgetConfigModal.tsx": {
+    "hbtn-directo": 1
+  },
+  "components/app/agents/AgentBuilder.tsx": {
+    "hbtn-directo": 6
+  },
+  "components/app/ajustes/ChangePassword.tsx": {
+    "hbtn-directo": 3
+  },
+  "components/app/ajustes/CuentaPanel.tsx": {
+    "hbtn-directo": 1
+  },
+  "components/app/ajustes/EquipoPanel.tsx": {
+    "hbtn-directo": 3
+  },
+  "components/app/ajustes/FotoPerfil.tsx": {
+    "hbtn-directo": 6
+  },
+  "components/app/ajustes/IntegracionesPanel.tsx": {
+    "hbtn-directo": 1
+  },
+  "components/app/ajustes/MarcasPanel.tsx": {
+    "hbtn-directo": 5
+  },
+  "components/app/ajustes/PerfilPanel.tsx": {
+    "hbtn-directo": 1
+  },
+  "components/app/ajustes/RolesPanel.tsx": {
+    "hbtn-directo": 1
+  },
+  "components/app/chat/ChatBots.tsx": {
+    "hbtn-directo": 3
+  },
+  "components/app/chat/ChatComposer.tsx": {
+    "hbtn-directo": 3
+  },
+  "components/app/chat/ChatDetails.tsx": {
+    "hbtn-directo": 4
+  },
+  "components/app/chat/ChatMessageRow.tsx": {
+    "hbtn-directo": 2
   },
   "components/app/dashboard/EquipoView.tsx": {
     "color-fijo": 53,
@@ -136,6 +199,7 @@
   "components/app/dashboard/InicioView.tsx": {
     "color-fijo": 31,
     "exclamacion": 1,
+    "hbtn-directo": 7,
     "radio": 1,
     "rgb-fijo": 5
   },
@@ -146,8 +210,12 @@
   },
   "components/app/dashboard/PendientesModal.tsx": {
     "color-fijo": 7,
+    "hbtn-directo": 2,
     "radio": 1,
     "rgb-fijo": 2
+  },
+  "components/app/dashboard/SaludCuentasView.tsx": {
+    "hbtn-directo": 16
   },
   "components/app/media/MediaLibrary.tsx": {
     "color-fijo": 1,
@@ -166,8 +234,15 @@
     "color-fijo": 1,
     "lucide": 1
   },
+  "components/app/social/ComposerDatePicker.tsx": {
+    "hbtn-directo": 3
+  },
   "components/app/social/ComposerExtras.tsx": {
-    "color-fijo": 2
+    "color-fijo": 2,
+    "hbtn-directo": 5
+  },
+  "components/app/social/ComposerPanels.tsx": {
+    "hbtn-directo": 5
   },
   "components/app/social/FeedSimulator.tsx": {
     "color-fijo": 1,

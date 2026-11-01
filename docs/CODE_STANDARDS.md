@@ -7,6 +7,9 @@ La interfaz se rige por [GUIA-UX-UI-AGENTES.md](GUIA-UX-UI-AGENTES.md). Aquí va
 - Extrae lo compartido al tercer uso, no antes, y solo si cambia por las mismas razones.
 - Una dependencia nueva se justifica en el PR: mantenimiento, licencia, seguridad y solape con lo que ya hay.
 
+## Componentes
+Usa `web/components/app/ui/` antes de escribir marcado propio. Si un patrón se repite tres veces y no está, se añade ahí.
+
 ## Tamaño
 - Hasta 400 líneas por archivo. Los que ya pasan no pueden crecer (`npm run check:size`).
 - Al dividir: primero mover sin cambiar lógica, con su propio commit. Después simplificar.
