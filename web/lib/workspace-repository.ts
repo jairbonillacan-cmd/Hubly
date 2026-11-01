@@ -63,9 +63,7 @@ const ACTIVE_DEMO_WORKSPACE_KEY = "hubly:espacio-demo";
 export function rememberWorkspaceId(workspaceId: string): void {
   try {
     window.localStorage.setItem(ACTIVE_DEMO_WORKSPACE_KEY, sanitizeWorkspaceId(workspaceId));
-  } catch {
-    // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
-  }
+  } catch { /* Almacenamiento lleno o bloqueado: se sigue sin él. */ }
 }
 
 export function resolveActiveWorkspaceId(): string {
@@ -596,9 +594,7 @@ export function clearWorkspaceStorage(workspaceId = "default"): void {
         window.localStorage.removeItem(legacyKey);
       }
     }
-  } catch {
-    // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
-  }
+  } catch { /* Almacenamiento lleno o bloqueado: se sigue sin él. */ }
 }
 
 export function buildReferenceFixtureWorkspace(

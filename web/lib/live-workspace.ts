@@ -27,9 +27,7 @@ export const liveAgencies = () => agencies;
 export function selectLiveAgency(id: string) {
   try {
     localStorage.setItem(AGENCY_KEY, id);
-  } catch {
-    // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
-  }
+  } catch { /* Almacenamiento lleno o bloqueado: se sigue sin él. */ }
 }
 function selectedAgency() {
   try {
@@ -64,9 +62,7 @@ function dropConflict() {
   if (!agencyId) return;
   try {
     localStorage.removeItem(conflictKey(agencyId));
-  } catch {
-    // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
-  }
+  } catch { /* Almacenamiento lleno o bloqueado: se sigue sin él. */ }
 }
 
 function restoreConflict() {
@@ -78,9 +74,7 @@ function restoreConflict() {
     if (!saved) return;
     conflicted = JSON.parse(saved) as HublyWorkspaceData;
     setTimeout(() => emit("conflict"), 0);
-  } catch {
-    // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
-  }
+  } catch { /* Almacenamiento lleno o bloqueado: se sigue sin él. */ }
 }
 
 export async function loadLiveWorkspace(): Promise<LiveLoad> {

@@ -150,9 +150,7 @@ type DraftStorage = Pick<Storage, "getItem" | "setItem" | "removeItem" | "key" |
 export function saveRecovery(storage: DraftStorage, key: string, draft: PostDraft) {
   try {
     storage.setItem(key, JSON.stringify({ draft, savedAt: new Date().toISOString() }));
-  } catch {
-    // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
-  }
+  } catch { /* Almacenamiento lleno o bloqueado: se sigue sin él. */ }
 }
 
 export function loadRecovery(storage: DraftStorage, key: string): { draft: PostDraft; savedAt: string } | null {
@@ -170,9 +168,7 @@ export function loadRecovery(storage: DraftStorage, key: string): { draft: PostD
 export function clearRecovery(storage: DraftStorage, key: string) {
   try {
     storage.removeItem(key);
-  } catch {
-    // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
-  }
+  } catch { /* Almacenamiento lleno o bloqueado: se sigue sin él. */ }
 }
 
 /** Al cerrar sesión no deben quedar borradores en un equipo compartido. */
@@ -184,9 +180,7 @@ export function clearAllRecoveries(storage: DraftStorage) {
       if (key?.startsWith(PREFIX)) keys.push(key);
     }
     keys.forEach((key) => storage.removeItem(key));
-  } catch {
-    // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
-  }
+  } catch { /* Almacenamiento lleno o bloqueado: se sigue sin él. */ }
 }
 
 export function hasRecovery(postId: string): boolean {
@@ -195,8 +189,6 @@ export function hasRecovery(postId: string): boolean {
     for (let i = 0; i < localStorage.length; i += 1) {
       if (localStorage.key(i)?.startsWith(PREFIX) && localStorage.key(i)?.endsWith(`:${postId}`)) return true;
     }
-  } catch {
-    // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
-  }
+  } catch { /* Almacenamiento lleno o bloqueado: se sigue sin él. */ }
   return false;
 }
