@@ -159,8 +159,10 @@ test("varios archivos, orden, copy por red y guardado sin fecha", async ({ page 
   await page.getByRole("button", { name: "Volver a heredar" }).click();
   await expect(page.getByLabel("Copy de Pinterest")).toHaveValue("Copy común");
 
-  // Sin fecha no se puede planificar, pero sí guardar, y no recibe la fecha de hoy.
+  // Sin fecha no se puede programar, pero sí guardar, y no recibe la fecha de hoy.
+  await page.getByRole("radio", { name: "Programar" }).click();
   await expect(page.getByRole("button", { name: "Selecciona fecha" })).toBeDisabled();
+  await page.getByRole("radio", { name: "Solo guardar" }).click();
   await page.getByRole("button", { name: "Guardar borrador" }).click();
   await expect(editor(page)).toHaveCount(0);
   const guardado = await page.evaluate((t) => {
@@ -175,6 +177,40 @@ test("varios archivos, orden, copy por red y guardado sin fecha", async ({ page 
     const creado = store.posts.find((p) => p.title === t);
     if (creado) store.deletePost(creado.id);
   }, titulo);
+});
+
+test("programar elige fecha y hora y publicar ya no finge publicar", async ({ page }) => {
+  await abrirEditor(page);
+  await page.getByRole("radio", { name: "Programar" }).click();
+  await page.getByRole("button", { name: "Elegir fecha y hora" }).click();
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".hubly-datepick")).toHaveCount(0);
+  await expect(editor(page)).toBeVisible();
+  await page.getByRole("button", { name: "Elegir fecha y hora" }).click();
+  await page.getByRole("button", { name: "Mes siguiente" }).click();
+  await page.locator(".hubly-datepick-day:not([data-outside])").first().click();
+  await page.getByRole("button", { name: "Subir hora" }).click();
+  await page.getByRole("button", { name: "Listo" }).click();
+  await expect(page.locator(".hubly-composer-datefield")).toContainText("10:00");
+  await expect(page.getByRole("button", { name: "Programar", exact: true })).toBeEnabled();
+
+  await page.getByRole("radio", { name: "Publicar ya" }).click();
+  await expect(page.getByRole("button", { name: "Marcar como publicado" })).toBeVisible();
+  await expect(page.locator(".hubly-composer-datefield")).toHaveCount(0);
+  await page.getByRole("button", { name: "Marcar como publicado" }).click();
+  await expect(page.locator(".hubly-composer-foot [role='alert']")).toContainText("Escribe el copy");
+});
+
+test("los colaboradores de Instagram llegan al teléfono y tienen tope", async ({ page }) => {
+  await abrirEditor(page);
+  const campo = page.getByLabel(/Colaboradores de Instagram/);
+  for (const cuenta of ["@uno", "dos", "tres"]) {
+    await campo.fill(cuenta);
+    await campo.press("Enter");
+  }
+  await expect(page.locator(".hubly-composer-collabfield > span")).toHaveCount(3);
+  await expect(campo).toHaveCount(0);
+  await expect(page.locator(".np-post-head").first()).toContainText("y 3 más");
 });
 
 test("cada una de las diez redes tiene su propia interfaz en el teléfono", async ({ page }) => {

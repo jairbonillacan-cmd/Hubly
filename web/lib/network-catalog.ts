@@ -29,6 +29,15 @@ export const NETWORKS: NetworkSpec[] = [
 
 export const networkSpec = (id: SocialNetwork): NetworkSpec => NETWORKS.find((n) => n.id === id) ?? NETWORKS[0];
 
+/** Cómo llama cada red a un mismo formato: una imagen en TikTok son «Fotos», un video en Instagram es «Reel». */
+export function networkFormatLabel(network: SocialNetwork, format: PostFormat): string {
+  if (format === "Texto") return "Solo texto";
+  if (format === "Story") return "Story";
+  if (format === "Reel / Video") return network === "Instagram" ? "Reel" : network === "YouTube" ? "Short" : "Video";
+  if (network === "TikTok") return "Fotos";
+  return format === "Carrusel" ? "Carrusel" : "Post";
+}
+
 export const countHashtags = (text: string) => (text.match(/#[\wáéíóúñÁÉÍÓÚÑ]+/g) ?? []).length;
 
 export type CaptionLevel = "ok" | "near" | "over";

@@ -104,6 +104,10 @@ export interface PlatformSettings {
   boardName?: string;
   firstComment?: string;
   location?: string;
+  /** Instagram: cuentas invitadas a la publicación en colaboración. */
+  collaborators?: string[];
+  /** TikTok: que la red elija la música del carrusel de fotos. */
+  autoMusic?: boolean;
   subreddit?: string;
   flair?: string;
   topicType?: "STANDARD" | "EVENT" | "OFFER";
@@ -449,10 +453,6 @@ export interface AdCreative {
   hookScore: number;
 }
 
-export interface ChatMessage {
-  id: string;
-  channelId: string;
-  sender: string;
 /** Elemento del espacio de trabajo que se manda dentro de un mensaje. */
 export interface ChatAttachment {
   kind: "post" | "task" | "project" | "asset";
@@ -462,13 +462,13 @@ export interface ChatAttachment {
   href: string;
 }
 
+export interface ChatMessage {
+  id: string;
+  channelId: string;
+  sender: string;
   senderInitials: string;
   text: string;
   time: string;
-}
-
-export interface ChatChannel {
-  id: string;
   /** Marca de tiempo en ms. Los mensajes de ejemplo no la tienen y cuentan como de hoy. */
   createdAt?: number;
   /** Id del mensaje al que responde, si es una respuesta en hilo. */
@@ -478,6 +478,10 @@ export interface ChatChannel {
   /** Emoji → nombres de quienes reaccionaron. */
   reactions?: Record<string, string[]>;
   attachment?: ChatAttachment;
+}
+
+export interface ChatChannel {
+  id: string;
   name: string;
   type: "brand" | "direct";
   brandId?: string;

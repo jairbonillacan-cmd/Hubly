@@ -802,6 +802,20 @@ export const HublyLogOutIcon = createDuotoneIcon("HublyLogOutIcon", () => (
   </>
 ));
 
+export const HublyDownloadIcon = createDuotoneIcon("HublyDownloadIcon", () => (
+  <>
+    <path fill={SOFT} d="M3 15.4a1.4 1.4 0 0 1 2.8 0v2a1 1 0 0 0 1 1h10.4a1 1 0 0 0 1-1v-2a1.400 1.400 0 0 1 2.800 0v2a3.800 3.800 0 0 1-3.800 3.800H6.800A3.800 3.800 0 0 1 3 17.400v-2Z" />
+    <path stroke={STRONG} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" d="M12 3.400v11M7.800 10.600 12 14.800l4.200-4.200" />
+  </>
+));
+
+export const HublyMusicIcon = createDuotoneIcon("HublyMusicIcon", () => (
+  <>
+    <path fill={SOFT} d="M9 6.400 19.400 3.600A1.300 1.300 0 0 1 21 4.900v3L9 11V6.400Z" />
+    <path fill={STRONG} d="M9 8v8.200a3.400 3.400 0 1 1-2.400-3.200V6.900A1.300 1.300 0 0 1 7.600 5.600L9 5.300V8Zm12-2.800v9a3.400 3.400 0 1 1-2.400-3.200V5.200H21Z" />
+  </>
+));
+
 export const HublyPlayIcon = createDuotoneIcon("HublyPlayIcon", () => (
   <path fill={STRONG} d="M7 4.6c0-1.3 1.4-2.1 2.5-1.4l11 7.4c1 .7 1 2.1 0 2.8l-11 7.4c-1.1.7-2.5-.1-2.5-1.4V4.6Z" />
 ));

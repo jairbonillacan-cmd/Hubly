@@ -6,16 +6,18 @@ import { backendEnabled } from "@/lib/supabase/config";
 import { currentAgencyId } from "@/lib/live-workspace";
 import { askConfirm, askText } from "@/components/app/AppDialogHost";
 import { CaptionAssistant, ManualResults } from "@/components/app/social/ComposerExtras";
+import { ComposerDatePicker, scheduleLabel } from "@/components/app/social/ComposerDatePicker";
 import { NotebookEditor } from "@/components/app/NotebookEditor";
 import { MediaPickerModal } from "@/components/app/media/MediaPickerModal";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { useLayer } from "@/lib/use-layer";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import { PhonePreview, type PhoneMedia } from "@/components/previews/phone/PhonePreview";
-import { FacebookIcon, LinkedInIcon, TikTokIcon } from "@/components/previews/SocialIcons";
+import { CanvaIcon, DriveIcon, FacebookIcon, LinkedInIcon, TikTokIcon } from "@/components/previews/SocialIcons";
 import { formatBytes, mediaFileUrl, MAX_MEDIA_PER_POST, mediaKindFor, type MediaRecord } from "@/lib/media";
 import { hevcWarning, uploadMedia, type UploadHandle } from "@/lib/media-client";
-import { captionLevel, countHashtags, NETWORKS, networkIssues, networkSpec } from "@/lib/network-catalog";
+import { captionLevel, countHashtags, NETWORKS, networkFormatLabel, networkIssues, networkSpec } from "@/lib/network-catalog";
+import { localIsoDate } from "@/lib/date";
 import {
   captionFor,
   clearRecovery,
@@ -32,28 +34,34 @@ import {
 } from "@/lib/post-draft";
 import { DEFAULT_WORKFLOW } from "@/lib/calendar-views";
 import { moveInList } from "@/lib/use-kanban-drag";
+import { safeLinkHref } from "@/lib/supabase/config";
 import type { CustomFieldDefinition, PlatformSettings, PostFormat, PostMedia, PostStatus, SocialNetwork, WorkflowStatus } from "@/lib/types";
 import {
   HublyArrowLeftIcon as ArrowLeft,
   HublyArrowRightIcon as ArrowRight,
   HublyBellIcon,
+  HublyCalendarIcon,
   HublyChartIcon,
   HublyCheckIcon,
   HublyChatIcon,
   HublyClipboardIcon,
+  HublyClockIcon,
   HublyCloseIcon as X,
-  HublyCloudIcon,
   HublyCopyIcon as Copy,
   HublyDocumentIcon,
+  HublyDownloadIcon,
   HublyEyeIcon as Eye,
   HublyImageIcon,
   HublyLibraryIcon,
   HublyMemoIcon,
-  HublyPaletteIcon,
+  HublyMusicIcon,
   HublyPencilIcon as Pencil,
+  HublyPeopleIcon,
   HublyPersonIcon,
   HublyPlusIcon as Plus,
   HublyPulseIcon,
+  HublySaveIcon,
+  HublySendIcon,
   HublyTrashIcon as Trash2,
   HublyUploadIcon,
 } from "@/components/app/icons/DuotoneIcons";
@@ -104,7 +112,18 @@ export const GLYPHS: Record<SocialNetwork, React.ReactNode> = {
   "Google Business": <BrandMark d="M22 8.5 20.4 3H3.6L2 8.5a3.2 3.2 0 0 0 1 2.3V21h18V10.8a3.2 3.2 0 0 0 1-2.3ZM12 19H5v-7.2c.9 0 1.8-.4 2.5-1.1a3.4 3.4 0 0 0 4.5 0 3.4 3.4 0 0 0 4.5 0c.7.7 1.6 1.1 2.5 1.1V14h-5v5h-2Zm7 0h-3v-3h3v3Z" />,
 };
 
-const POST_FORMATS: PostFormat[] = ["Imagen", "Carrusel", "Reel / Video", "Story", "Texto"];
+const FORMAT_LABEL: Record<PostFormat, string> = { Imagen: "Imagen", Carrusel: "Carrusel", "Reel / Video": "Video", Story: "Story", Texto: "Solo texto" };
+const IMAGE_FORMATS: PostFormat[] = ["Imagen", "Carrusel", "Texto", "Story"];
+const VIDEO_FORMATS: PostFormat[] = ["Reel / Video", "Story", "Texto"];
+const MAX_COLLABORATORS = 3;
+type PublishMode = "guardar" | "programar" | "publicar";
+const PUBLISH_MODES: { id: PublishMode; label: string; Icon: typeof HublyImageIcon }[] = [
+  { id: "guardar", label: "Solo guardar", Icon: HublySaveIcon },
+  { id: "programar", label: "Programar", Icon: HublyClockIcon },
+  { id: "publicar", label: "Publicar ya", Icon: HublySendIcon },
+];
+/** Las redes con marca negra se confundirían con el fondo en modo oscuro. */
+const networkInk = (color: string) => (color === "#000000" ? "var(--ui-text)" : color);
 const POST_COLORS = ["#16324F", "#2A76B0", "#0F766E", "#15803D", "#B45309", "#B91C1C", "#7C3AED", "#BE185D"];
 const POST_PALETTE = [
   { name: "Rosa", color: "#E98B8B" }, // ui-ok: dato guardado en el post, igual en ambos temas
@@ -140,7 +159,7 @@ interface UploadSlot {
   handle?: UploadHandle;
 }
 
-type Popover = "assignee" | "notify" | "color" | "workflow" | "field" | null;
+type Popover = "assignee" | "notify" | "color" | "workflow" | "field" | "date" | null;
 
 export function PostComposerModal({ open: openProp, onClose: onCloseProp, initialPostId, defaultBrandId }: PostComposerModalProps = {}) {
   const fileRef = useRef<HTMLInputElement | null>(null);
@@ -190,6 +209,10 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
   const [fieldName, setFieldName] = useState("");
   const [fieldType, setFieldType] = useState<CustomFieldDefinition["type"]>("text");
   const [dragMedia, setDragMedia] = useState<string | null>(null);
+  const [dropActive, setDropActive] = useState(false);
+  const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
+  const [publishMode, setPublishMode] = useState<PublishMode>("guardar");
+  const [collabDraft, setCollabDraft] = useState("");
 
   const owner = `${profile?.id || "local"}:${currentAgencyId() || "demo"}`;
   const key = draft ? recoveryKey(owner, draft.brandId, draft.postId) : null;
@@ -221,6 +244,9 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
     setCopyNetwork("General");
     setPreviewNet(null);
     setErrorMsg(null);
+    setSelectedMedia(null);
+    setCollabDraft("");
+    setPublishMode(editingPost?.status === "scheduled" ? "programar" : "guardar");
     /* eslint-enable react-hooks/set-state-in-effect */
     // Solo al abrir o cambiar de post: patchPost actualiza editingPost mientras se escribe.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -264,7 +290,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
   useEffect(() => {
     if (!popover) return;
     const closeOutside = (e: MouseEvent) => {
-      if (!(e.target as Element).closest(".hubly-composer-pop")) setPopover(null);
+      if (!(e.target as Element).closest(".hubly-composer-pop, .hubly-composer-when")) setPopover(null);
     };
     document.addEventListener("mousedown", closeOutside);
     return () => document.removeEventListener("mousedown", closeOutside);
@@ -383,12 +409,13 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
 
   const save = (finalStatus: PostStatus) => {
     if (finalStatus === "scheduled" && !draft.scheduledDate) {
-      setErrorMsg("Selecciona una fecha para planificar.");
+      setErrorMsg("Selecciona una fecha para programar.");
       return;
     }
     if (finalStatus !== "draft") {
       if (!draft.caption.trim() && !Object.values(draft.platformSettings).some((s) => s?.caption?.trim())) {
-        setErrorMsg(finalStatus === "scheduled" ? "Escribe el copy antes de planificar." : "Escribe el copy antes de enviar a revisión.");
+        const action = finalStatus === "scheduled" ? "programar" : finalStatus === "published" ? "marcarlo como publicado" : "enviar a revisión";
+        setErrorMsg(`Escribe el copy antes de ${action}.`);
         return;
       }
       if (issues.length > 0) {
@@ -402,8 +429,20 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
       return;
     }
     if (key) clearRecovery(localStorage, key);
-    savePost({ ...draftToPost({ ...draft, status: finalStatus }, editingPost, authorName) });
+    // Registrar una publicación fecha el post hoy si no tenía fecha.
+    const scheduledDate = finalStatus === "published" ? draft.scheduledDate || localIsoDate() : draft.scheduledDate;
+    savePost({ ...draftToPost({ ...draft, status: finalStatus, scheduledDate }, editingPost, authorName) });
     handleClose();
+  };
+
+  const addCollaborator = () => {
+    const handle = collabDraft.trim().replace(/^@+/, "");
+    if (!handle) return;
+    const current = draft.platformSettings.Instagram?.collaborators ?? [];
+    if (current.length < MAX_COLLABORATORS && !current.includes(handle)) {
+      updateSettings("Instagram", { collaborators: [...current, handle] });
+    }
+    setCollabDraft("");
   };
 
   const discardRecovery = () => {
@@ -468,6 +507,9 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
 
   const networkFormats = (network: SocialNetwork) => networkSpec(network).formats;
   const previewFormat = formatFor(draft, previewNetwork);
+  const activeMedia = media.find((m) => m.id === selectedMedia) ?? media[0];
+  const activeMediaIndex = activeMedia ? media.indexOf(activeMedia) : 0;
+  const collaborators = draft.platformSettings.Instagram?.collaborators ?? [];
 
   return (
     <>
@@ -490,7 +532,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                 <span>{STATUS_TEXT[draft.status]}</span>
                 {workflowStatus && <em style={{ color: workflowStatus.color }}>{workflowStatus.name}</em>}
                 <span className="hubly-composer-dots" aria-label={`Redes: ${draft.networks.join(", ")}`}>
-                  {draft.networks.map((n) => <i key={n} style={{ background: networkSpec(n).color }} />)}
+                  {draft.networks.map((n) => <i key={n} style={{ background: networkInk(networkSpec(n).color) }} />)}
                 </span>
               </div>
             </div>
@@ -499,7 +541,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                 <Copy size={17} />
               </button>
             )}
-            {!readOnly && (
+            {!readOnly && (editingPost || dirty) && (
               <button type="button" className="hubly-cal-icon is-danger" aria-label="Eliminar post" title="Eliminar post" onClick={() => void remove()}>
                 <Trash2 size={17} />
               </button>
@@ -666,7 +708,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
             <div className="hubly-composer-tabs-scroll">
               {TABS.map(({ id, label, Icon }) => (
                 <button key={id} type="button" aria-current={tab === id ? "true" : undefined} onClick={() => { setTab(id); setMobilePane("editar"); }}>
-                  <Icon size={20} />
+                  <Icon size={18} />
                   <span>{label}</span>
                 </button>
               ))}
@@ -698,7 +740,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                         aria-label={id}
                         disabled={locked}
                         aria-pressed={draft.networks.includes(id)}
-                        style={draft.networks.includes(id) ? { borderColor: color, color, boxShadow: `0 0 0 1px ${color}` } : undefined}
+                        style={{ "--net": networkInk(color) } as React.CSSProperties}
                         onClick={() => toggleNetwork(id)}
                       >
                         {GLYPHS[id]}
@@ -706,31 +748,44 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                     ))}
                   </div>
 
-                  <div className="hubly-composer-sources">
+                  <div className="hubly-composer-sources" data-compact={media.length > 0 || undefined}>
                     <button
                       type="button"
+                      data-drop={dropActive || undefined}
                       disabled={locked || media.length + uploads.length >= MAX_MEDIA_PER_POST}
                       onClick={() => fileRef.current?.click()}
-                      onDragOver={(e) => e.preventDefault()}
+                      onDragOver={(e) => { e.preventDefault(); setDropActive(true); }}
+                      onDragLeave={() => setDropActive(false)}
                       onDrop={(e) => {
                         e.preventDefault();
+                        setDropActive(false);
                         addFiles(e.dataTransfer.files);
                       }}
                     >
-                      <HublyUploadIcon size={18} />
-                      <strong><b>Agregar</b> · máx {MAX_MEDIA_PER_POST}</strong>
+                      <i><HublyUploadIcon size={18} /></i>
+                      {media.length > 0 ? (
+                        <strong><b>Agregar</b> · máx {MAX_MEDIA_PER_POST}</strong>
+                      ) : (
+                        <>
+                          <strong>Arrastra archivos aquí o <b>haz clic</b></strong>
+                          <small>Imágenes y videos · máx {MAX_MEDIA_PER_POST} archivos</small>
+                        </>
+                      )}
                     </button>
                     <button type="button" disabled={locked} onClick={() => setPickerFor("media")}>
-                      <HublyLibraryIcon size={18} />
-                      <strong>Elegir del <b>Content Manager</b></strong>
+                      <i><HublyLibraryIcon size={18} /></i>
+                      <strong>{media.length === 0 && "Elegir del "}<b>Content Manager</b></strong>
+                      {media.length === 0 && <small>Archivos ya subidos de la marca</small>}
                     </button>
-                    <button type="button" disabled title="Disponible cuando se conecte Canva en una entrega posterior">
-                      <HublyPaletteIcon size={18} />
-                      <strong>Traer de <b>Canva</b> <small>próximamente</small></strong>
+                    <button type="button" disabled title="Función prevista: aún no se conecta con Canva">
+                      <i><CanvaIcon size={18} /></i>
+                      <strong>Traer de <b>Canva</b></strong>
+                      {media.length === 0 && <small>Función prevista</small>}
                     </button>
-                    <button type="button" disabled title="Disponible cuando se conecte Drive en una entrega posterior">
-                      <HublyCloudIcon size={18} />
-                      <strong>Traer de <b>Drive</b> <small>próximamente</small></strong>
+                    <button type="button" disabled title="Función prevista: aún no se conecta con Drive">
+                      <i><DriveIcon size={18} /></i>
+                      <strong>Traer de <b>Drive</b></strong>
+                      {media.length === 0 && <small>Función prevista</small>}
                     </button>
                     <input
                       ref={fileRef}
@@ -774,108 +829,192 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                   )}
 
                   {media.length > 0 && (
-                    <ol className="hubly-composer-media" aria-label="Archivos del post, en orden de publicación">
-                      {media.map((item, index) => (
-                        <li
-                          key={item.id}
-                          draggable={!locked}
-                          data-dragging={dragMedia === item.id || undefined}
-                          onDragStart={() => setDragMedia(item.id)}
-                          onDragEnd={() => setDragMedia(null)}
-                          onDragOver={(e) => e.preventDefault()}
-                          onDrop={(e) => {
-                            e.preventDefault();
-                            if (dragMedia && dragMedia !== item.id) update({ media: moveInList(media, dragMedia, item.id, (m) => m) });
-                            setDragMedia(null);
-                          }}
-                        >
-                          {item.kind === "video" ? (
-                            <video src={`${mediaItemUrl(item)}#t=0.1`} preload="metadata" muted playsInline aria-label={item.name} />
-                          ) : (
-                            // Archivo privado: next/image no puede optimizar su URL firmada.
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={mediaItemUrl(item)} alt={item.name} draggable={false} />
-                          )}
-                          <b>{index + 1}</b>
-                          {!locked && (
-                            <div>
-                              {media.length > 1 && <button type="button" aria-label={`Mover ${item.name} antes`} disabled={index === 0} onClick={() => moveMedia(item.id, -1)}><ArrowLeft size={13} /></button>}
-                              {media.length > 1 && <button type="button" aria-label={`Mover ${item.name} después`} disabled={index === media.length - 1} onClick={() => moveMedia(item.id, 1)}><ArrowRight size={13} /></button>}
-                              <button type="button" aria-label={`Quitar ${item.name}`} onClick={() => update({ media: media.filter((m) => m.id !== item.id) })}><X size={13} /></button>
-                            </div>
-                          )}
-                        </li>
-                      ))}
-                    </ol>
+                    <>
+                      <ol className="hubly-composer-media" aria-label="Archivos del post, en orden de publicación">
+                        {media.map((item, index) => (
+                          <li
+                            key={item.id}
+                            draggable={!locked}
+                            data-selected={activeMedia?.id === item.id || undefined}
+                            data-dragging={dragMedia === item.id || undefined}
+                            onDragStart={() => setDragMedia(item.id)}
+                            onDragEnd={() => setDragMedia(null)}
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              if (dragMedia && dragMedia !== item.id) update({ media: moveInList(media, dragMedia, item.id, (m) => m) });
+                              setDragMedia(null);
+                            }}
+                          >
+                            <button type="button" className="hubly-composer-thumb" aria-label={`Ver ${item.name}`} aria-pressed={activeMedia?.id === item.id} onClick={() => setSelectedMedia(item.id)}>
+                              {item.kind === "video" ? (
+                                <video src={`${mediaItemUrl(item)}#t=0.1`} preload="metadata" muted playsInline aria-label={item.name} />
+                              ) : (
+                                // Archivo privado: next/image no puede optimizar su URL firmada.
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={mediaItemUrl(item)} alt={item.name} draggable={false} />
+                              )}
+                            </button>
+                            <b>{index + 1}</b>
+                            {!locked && (
+                              <div>
+                                {media.length > 1 && <button type="button" aria-label={`Mover ${item.name} antes`} disabled={index === 0} onClick={() => moveMedia(item.id, -1)}><ArrowLeft size={13} /></button>}
+                                {media.length > 1 && <button type="button" aria-label={`Mover ${item.name} después`} disabled={index === media.length - 1} onClick={() => moveMedia(item.id, 1)}><ArrowRight size={13} /></button>}
+                                <button type="button" aria-label={`Quitar ${item.name}`} onClick={() => update({ media: media.filter((m) => m.id !== item.id) })}><X size={13} /></button>
+                              </div>
+                            )}
+                          </li>
+                        ))}
+                      </ol>
+                      {draft.networks.includes("TikTok") && <small className="hubly-composer-hint">Para que llene toda la pantalla en TikTok: 1080×1920.</small>}
+                      <div className="hubly-composer-mediatools">
+                        <a className="hbtn hbtn-secondary hbtn-sm" href={activeMedia ? mediaItemUrl(activeMedia) : undefined} download={activeMedia?.name}>
+                          <HublyDownloadIcon size={15} /> Descargar archivo
+                        </a>
+                        <button type="button" className="hbtn hbtn-secondary hbtn-sm" disabled title="Función prevista: aún no hay biblioteca de música">
+                          <HublyMusicIcon size={15} /> Agregar música
+                        </button>
+                      </div>
+                      <div className="hubly-composer-formats">
+                        <div className="hubly-composer-formatrow" role="group" aria-label="Formato del post">
+                          <span aria-hidden>Formato</span>
+                          {(media.some((m) => m.kind === "video") ? VIDEO_FORMATS : IMAGE_FORMATS).map((f) => (
+                            <button key={f} type="button" className="hubly-cal-pill" aria-pressed={draft.format === f} disabled={locked} onClick={() => update({ format: f })}>{FORMAT_LABEL[f]}</button>
+                          ))}
+                        </div>
+                        <ul className="hubly-composer-formatmap" aria-label="Formato en cada red">
+                          {draft.networks.map((n) => (
+                            <li key={n}><i style={{ background: networkInk(networkSpec(n).color) }} />{n}: {networkFormatLabel(n, formatFor(draft, n))}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </>
                   )}
 
-                  <div className="hubly-composer-formats">
-                    <div className="hubly-composer-formatrow" role="group" aria-label="Formato del post">
-                      <span aria-hidden>Formato</span>
-                      {POST_FORMATS.map((f) => (
-                        <button key={f} type="button" className="hubly-cal-pill" aria-pressed={draft.format === f} disabled={locked} onClick={() => update({ format: f })}>{f}</button>
+                  <div className="hubly-composer-copy">
+                    <div className="hubly-composer-copytabs" role="tablist" aria-label="Copy por red">
+                      <button type="button" role="tab" aria-selected={copyTarget === "General"} onClick={() => setCopyNetwork("General")}>General</button>
+                      {draft.networks.map((n) => (
+                        <button key={n} type="button" role="tab" aria-selected={copyTarget === n} onClick={() => { setCopyNetwork(n); setPreviewNet(n); }}>
+                          {n}{draft.platformSettings[n]?.caption !== undefined ? " •" : ""}
+                        </button>
                       ))}
                     </div>
-                    {draft.networks.length > 1 && (
-                      <p className="hubly-composer-hint">{draft.networks.map((n) => `${n}: ${formatFor(draft, n)}`).join(" · ")}</p>
-                    )}
-                  </div>
-
-                  <div className="hubly-composer-copytabs" role="tablist" aria-label="Copy por red">
-                    <button type="button" role="tab" aria-selected={copyTarget === "General"} onClick={() => setCopyNetwork("General")}>General</button>
-                    {draft.networks.map((n) => (
-                      <button key={n} type="button" role="tab" aria-selected={copyTarget === n} onClick={() => { setCopyNetwork(n); setPreviewNet(n); }}>
-                        {n}{draft.platformSettings[n]?.caption !== undefined ? " •" : ""}
-                      </button>
-                    ))}
-                  </div>
-
-                  <CaptionAssistant
-                    brand={brand}
-                    network={copyTarget === "General" ? previewNetwork : copyTarget}
-                    format={draft.format}
-                    onUse={(text) => (copyTarget === "General" ? update({ caption: text }) : updateSettings(copyTarget, { caption: text }))}
-                  />
-                  <textarea
-                    className="hubly-composer-caption"
-                    value={copyValue}
-                    disabled={locked}
-                    onChange={(e) => (copyTarget === "General" ? update({ caption: e.target.value }) : updateSettings(copyTarget, { caption: e.target.value }))}
-                    placeholder={copyTarget === "General" ? "Escribe el copy para todas las redes…" : `Escribe el copy para ${copyTarget}…`}
-                    aria-label={copyTarget === "General" ? "Copy general" : `Copy de ${copyTarget}`}
-                  />
-                  <div className="hubly-composer-count" data-level={level}>
-                    <span>{copyValue.length.toLocaleString("es-MX")} / {limit.toLocaleString("es-MX")} caracteres · {countHashtags(copyValue)} hashtags</span>
-                    {copyTarget !== "General" && (
-                      inherits ? (
-                        <span>Hereda el copy general</span>
-                      ) : (
-                        <button type="button" disabled={locked} onClick={() => updateSettings(copyTarget, { caption: undefined })}>Volver a heredar</button>
-                      )
-                    )}
+                    <textarea
+                      className="hubly-composer-caption"
+                      value={copyValue}
+                      disabled={locked}
+                      onChange={(e) => (copyTarget === "General" ? update({ caption: e.target.value }) : updateSettings(copyTarget, { caption: e.target.value }))}
+                      placeholder={copyTarget === "General" ? "Escribe el copy para todas las redes…" : `Escribe el copy para ${copyTarget}…`}
+                      aria-label={copyTarget === "General" ? "Copy general" : `Copy de ${copyTarget}`}
+                    />
+                    <CaptionAssistant
+                      brand={brand}
+                      network={copyTarget === "General" ? previewNetwork : copyTarget}
+                      format={draft.format}
+                      title={draft.title}
+                      current={copyValue}
+                      disabled={locked}
+                      onUse={(text) => (copyTarget === "General" ? update({ caption: text }) : updateSettings(copyTarget, { caption: text }))}
+                      counter={
+                        <div className="hubly-composer-count" data-level={level}>
+                          {copyTarget !== "General" && (
+                            inherits ? (
+                              <span>Hereda el copy general</span>
+                            ) : (
+                              <button type="button" disabled={locked} onClick={() => updateSettings(copyTarget, { caption: undefined })}>Volver a heredar</button>
+                            )
+                          )}
+                          <span>{copyValue.length.toLocaleString("es-MX")}/{limit.toLocaleString("es-MX")} · {countHashtags(copyValue)} hashtags</span>
+                        </div>
+                      }
+                    />
                   </div>
 
                   {copyTarget !== "General" && (
                     <NetworkSettings network={copyTarget} settings={draft.platformSettings[copyTarget] ?? {}} formats={networkFormats(copyTarget)} generalFormat={draft.format} disabled={locked} onChange={(patch) => updateSettings(copyTarget, patch)} />
                   )}
 
-                  {issues.length > 0 && (
-                    <ul className="hubly-composer-issues" aria-label="Pendientes para publicar">
-                      {issues.map((issue) => <li key={`${issue.network}-${issue.message}`}><b>{issue.network}:</b> {issue.message}</li>)}
-                    </ul>
+                  {draft.networks.includes("Instagram") && (
+                    <div className="hubly-composer-collabs">
+                      <label htmlFor="hubly-collab-input"><HublyPeopleIcon size={15} /> Colaboradores de Instagram <small>{collaborators.length}/{MAX_COLLABORATORS}</small></label>
+                      <div className="hubly-composer-collabfield">
+                        {collaborators.map((handle) => (
+                          <span key={handle}>
+                            @{handle}
+                            {!locked && <button type="button" aria-label={`Quitar a ${handle}`} onClick={() => updateSettings("Instagram", { collaborators: collaborators.filter((c) => c !== handle) })}><X size={12} /></button>}
+                          </span>
+                        ))}
+                        {collaborators.length < MAX_COLLABORATORS && (
+                          <input
+                            id="hubly-collab-input"
+                            value={collabDraft}
+                            disabled={locked}
+                            placeholder="Agregar @usuario"
+                            onChange={(e) => setCollabDraft(e.target.value.replace(/\s/g, ""))}
+                            onBlur={addCollaborator}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === ",") {
+                                e.preventDefault();
+                                addCollaborator();
+                              }
+                            }}
+                          />
+                        )}
+                      </div>
+                      <small className="hubly-composer-hint">Cada cuenta recibe una invitación al publicar y debe aceptarla. Deben ser cuentas públicas de empresa o creador.</small>
+                    </div>
                   )}
 
-                  <div className="hubly-composer-schedule">
-                    <label>
-                      Fecha planificada
-                      <input className="hubly-cal-input" type="date" value={draft.scheduledDate} disabled={locked} onChange={(e) => update({ scheduledDate: e.target.value })} />
-                    </label>
-                    <label>
-                      Hora
-                      <input className="hubly-cal-input" type="time" value={draft.scheduledTime} disabled={locked} onChange={(e) => update({ scheduledTime: e.target.value })} />
-                    </label>
+                  {draft.networks.includes("TikTok") && media.length > 0 && !media.some((m) => m.kind === "video") && (
+                    <div className="hubly-composer-netbox">
+                      <small>TikTok · carrusel de fotos</small>
+                      <label>
+                        <input type="checkbox" disabled={locked} checked={draft.platformSettings.TikTok?.autoMusic === true} onChange={(e) => updateSettings("TikTok", { autoMusic: e.target.checked || undefined })} />
+                        <span>
+                          <strong>Que TikTok elija la música</strong>
+                          <small>La red pone una canción recomendada de su biblioteca. Es la única forma de ponerle música a un carrusel por API.</small>
+                        </span>
+                      </label>
+                    </div>
+                  )}
+
+                  <div className="hubly-composer-when">
+                    <div className="hubly-composer-modes" role="radiogroup" aria-label="Qué hacer con el post">
+                      {PUBLISH_MODES.map(({ id, label, Icon }) => (
+                        <button key={id} type="button" role="radio" aria-checked={publishMode === id} disabled={locked} onClick={() => { setPublishMode(id); setPopover(null); setErrorMsg(null); }}>
+                          <Icon size={15} /> {label}
+                        </button>
+                      ))}
+                    </div>
+                    {publishMode === "publicar" && (
+                      <small className="hubly-composer-hint">Hubly aún no publica por ti: súbelo a la red y márcalo aquí. Después captura sus cifras en Resultados.</small>
+                    )}
+                    {publishMode === "programar" && (
+                      <small className="hubly-composer-hint">Programar lo ordena en tu calendario, hora de Ciudad de México. No publica en la red.</small>
+                    )}
+                    {publishMode !== "publicar" && (
+                      <div className="hubly-composer-datewrap">
+                        <button type="button" className="hubly-composer-datefield" disabled={locked} aria-expanded={popover === "date"} data-empty={!draft.scheduledDate || undefined} onClick={() => setPopover(popover === "date" ? null : "date")}>
+                          <HublyCalendarIcon size={16} />
+                          <span>{scheduleLabel(draft.scheduledDate, draft.scheduledTime) ?? "Elegir fecha y hora"}</span>
+                        </button>
+                        {popover === "date" && (
+                          <ComposerDatePicker
+                            date={draft.scheduledDate}
+                            time={draft.scheduledTime}
+                            onChange={(scheduledDate, scheduledTime) => update({ scheduledDate, scheduledTime })}
+                            onClose={() => setPopover(null)}
+                          />
+                        )}
+                      </div>
+                    )}
+                    {publishMode !== "guardar" && issues.length > 0 && (
+                      <ul className="hubly-composer-issues" aria-label="Pendientes para publicar">
+                        {issues.map((issue) => <li key={`${issue.network}-${issue.message}`}><b>{issue.network}:</b> {issue.message}</li>)}
+                      </ul>
+                    )}
                   </div>
-                  <small className="hubly-composer-hint">Planificar organiza tu calendario, hora de Ciudad de México. No publica en la red.</small>
                 </>
               )}
 
@@ -945,7 +1084,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                       {draft.documents.filter((d) => (d.folder ?? "") === folder).map((doc) => (
                         <div key={doc.id} className="hubly-composer-doc">
                           <HublyDocumentIcon size={20} />
-                          <a href={doc.url} target="_blank" rel="noopener noreferrer">{doc.name}</a>
+                          <a href={safeLinkHref(doc.url)} target="_blank" rel="noopener noreferrer">{doc.name}</a>
                           {!readOnly && (
                             <button type="button" aria-label={`Quitar ${doc.name}`} onClick={() => syncExtras({ documents: draft.documents.filter((d) => d.id !== doc.id) })}>
                               <X size={14} />
@@ -1038,15 +1177,15 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                     type="button"
                     aria-pressed={n === previewNetwork}
                     onClick={() => setPreviewNet(n)}
-                    style={n === previewNetwork ? { background: networkSpec(n).color, color: "#FFFFFF" } : undefined}
+                    style={{ "--net": networkInk(networkSpec(n).color), "--net-on": networkSpec(n).color === "#000000" ? "var(--ui-surface)" : "var(--on-accent)" } as React.CSSProperties}
                   >
-                    <i style={{ background: n === previewNetwork ? "#FFFFFF" : networkSpec(n).color }} />
+                    <i />
                     {n}
                   </button>
                 ))}
               </div>
               <PhonePreview
-                key={`${previewNetwork}-${previewFormat}`}
+                key={`${previewNetwork}-${previewFormat}-${activeMediaIndex}`}
                 post={{
                   network: previewNetwork,
                   format: previewFormat,
@@ -1058,9 +1197,10 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                   media: previewMedia,
                   cover: draft.cover,
                   settings: draft.platformSettings[previewNetwork],
+                  activeIndex: activeMediaIndex,
                 }}
               />
-              <small>{previewNetwork} · {previewFormat}</small>
+              <small>{previewNetwork} · {networkFormatLabel(previewNetwork, previewFormat)}</small>
             </aside>
           </div>
 
@@ -1071,15 +1211,26 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
               <small>{editingPost?.activity?.length ? `Creado ${new Date(editingPost.activity[editingPost.activity.length - 1].at).toLocaleString("es-MX", { dateStyle: "short", timeStyle: "short" })}` : dirty ? "Cambios guardados en este navegador" : ""}</small>
             )}
             <button type="button" className="hbtn hbtn-ghost" onClick={handleClose}>{locked ? "Cerrar" : "Cancelar"}</button>
-            {!locked && (
+            {!locked && publishMode === "guardar" && (
               <>
-                <button type="button" className="hbtn hbtn-secondary" onClick={() => save(editingPost ? draft.status : "draft")}>
+                <button type="button" className="hbtn hbtn-secondary" onClick={() => save("pending")}>Enviar a revisión</button>
+                <button type="button" className="hbtn hbtn-primary" onClick={() => save(editingPost ? draft.status : "draft")}>
                   {editingPost ? "Guardar" : "Guardar borrador"}
                 </button>
-                <button type="button" className="hbtn hbtn-secondary" onClick={() => save("pending")}>Enviar a revisión</button>
-                <button type="button" className="hbtn hbtn-primary" disabled={!draft.scheduledDate} onClick={() => save("scheduled")}>
-                  {draft.scheduledDate ? "Planificar" : "Selecciona fecha"}
+              </>
+            )}
+            {!locked && publishMode !== "guardar" && (
+              <>
+                <button type="button" className="hbtn hbtn-secondary" onClick={() => save(editingPost ? draft.status : "draft")}>
+                  <HublySaveIcon size={15} /> Guardar
                 </button>
+                {publishMode === "programar" ? (
+                  <button type="button" className="hbtn hbtn-primary" disabled={!draft.scheduledDate} onClick={() => save("scheduled")}>
+                    {draft.scheduledDate ? "Programar" : "Selecciona fecha"}
+                  </button>
+                ) : (
+                  <button type="button" className="hbtn hbtn-primary" onClick={() => save("published")}>Marcar como publicado</button>
+                )}
               </>
             )}
           </footer>

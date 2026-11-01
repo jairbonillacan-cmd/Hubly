@@ -76,6 +76,25 @@ export function LinkedInIcon({ size = 20, className, ...props }: IconProps) {
   );
 }
 
+export function CanvaIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true" {...props}>
+      <circle cx="12" cy="12" r="11" fill="#00A3B4" /> {/* ui-ok: logo de tercero */}
+      <path d="M15.8 14.9c-.9 1.3-2.3 2.2-3.8 2.2-2.2 0-3.6-1.8-3.4-4.2.2-2.700 2.200-5 4.500-5 1.200 0 2 .7 2 1.700 0 1-.8 1.700-1.500 1.700-.3 0-.5-.2-.4-.5.2-.5.4-.8.2-1.100-.2-.3-.6-.2-1 .1-.9.7-1.500 2-1.500 3.200 0 1.300.7 2.100 1.700 2.100 1 0 2-.7 2.800-1.700.3-.3.700.1.400.500z" fill="#FFFFFF" /> {/* ui-ok: logo de tercero */}
+    </svg>
+  );
+}
+
+export function DriveIcon({ size = 20, className, ...props }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true" {...props}>
+      <path d="M8.300 3h7.400l6.800 11.800h-7.400z" fill="#FBBC04" /> {/* ui-ok: logo de tercero */}
+      <path d="M8.300 3 1.500 14.800 5.200 21l6.800-11.800z" fill="#0F9D58" /> {/* ui-ok: logo de tercero */}
+      <path d="M5.200 21h13.600l3.700-6.200H8.900z" fill="#4285F4" /> {/* ui-ok: logo de tercero */}
+    </svg>
+  );
+}
+
 export function PlatformBadgeIcon({
   platform,
   size = 18,

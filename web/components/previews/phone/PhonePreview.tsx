@@ -17,6 +17,7 @@ import {
   MessageCircle,
   MoreHorizontal,
   Music2,
+  Play,
   Plus,
   Repeat2,
   Search,
@@ -28,7 +29,7 @@ import {
   User,
   Video,
 } from "lucide-react";
-import { Cover, type CoverKind } from "@/components/Cover";
+import type { CoverKind } from "@/components/Cover";
 import { feedCutIndex } from "@/lib/network-catalog";
 import type { PlatformSettings, PostFormat, SocialNetwork } from "@/lib/types";
 
@@ -50,6 +51,8 @@ export interface PhonePost {
   media: PhoneMedia[];
   cover: CoverKind;
   settings?: PlatformSettings;
+  /** Archivo con el que abre la vista previa. */
+  activeIndex?: number;
 }
 
 const WIDTH = 360;
@@ -108,14 +111,15 @@ function Avatar({ post, size = 36, ring }: { post: PhonePost; size?: number; rin
 }
 
 function MediaView({ post, ratio, fit = "cover", rounded = 0 }: { post: PhonePost; ratio?: string; fit?: "cover" | "contain"; rounded?: number }) {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(post.activeIndex ?? 0);
   const items = post.media;
   const current = items[Math.min(index, Math.max(items.length - 1, 0))];
   const style = { aspectRatio: ratio, borderRadius: rounded };
   if (!current) {
     return (
-      <div className="np-media" style={style}>
-        <Cover kind={post.cover} />
+      <div className="np-media np-media-empty" style={style}>
+        <span><Play size={15} /></span>
+        <small>Sin archivo</small>
       </div>
     );
   }
@@ -183,10 +187,11 @@ function InstagramScreen({ post }: { post: PhonePost }) {
       </div>
     );
   }
+  const collaborators = post.settings?.collaborators ?? [];
   return (
     <div className="np-column">
       <div className="np-ig-top"><strong>Instagram</strong><span className="np-row"><Heart size={22} /><Send size={22} /></span></div>
-      <div className="np-post-head"><Avatar post={post} size={32} ring="#E4405F" /><div><b>{post.handle}</b>{post.settings?.location && <small>{post.settings.location}</small>}</div><MoreHorizontal size={18} /></div>
+      <div className="np-post-head"><Avatar post={post} size={32} ring="#E4405F" /><div><b>{post.handle}{collaborators.length > 0 && ` y ${collaborators.length === 1 ? collaborators[0] : `${collaborators.length} más`}`}</b>{post.settings?.location && <small>{post.settings.location}</small>}</div><MoreHorizontal size={18} /></div>
       <MediaView post={post} ratio="4 / 5" />
       <div className="np-actions"><Heart size={24} /><MessageCircle size={24} /><Send size={24} /><Bookmark size={24} style={{ marginLeft: "auto" }} /></div>
       <Caption post={post} strongName={post.handle} />
