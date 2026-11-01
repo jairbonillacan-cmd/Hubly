@@ -25,12 +25,19 @@ test("Salud de cuentas: un h1, búsqueda, filtros, orden y vacío por filtro", a
   await page.getByTestId("filter-pill-en_riesgo").click();
   await expect(page.getByTestId("filter-pill-en_riesgo")).toHaveAttribute("aria-pressed", "true");
   await expect(tarjetas).toHaveCount(1);
+  await expect(page.locator(".hubly-cal-subtitle")).toContainText(`1 de ${total} cuentas`);
   await page.getByTestId("filter-pill-todas").click();
 
   await page.getByLabel("Ordenar cuentas").selectOption("name_asc");
   const nombres = await tarjetas.locator(".hubly-cal-row-title").allInnerTexts();
   const primeros = nombres.map((n) => n.trim().split(/\s+/)[0]);
   expect(primeros).toEqual([...primeros].sort((a, b) => a.localeCompare(b, "es")));
+
+  const ultima = tarjetas.last();
+  const ultimoId = await ultima.getAttribute("data-testid");
+  await ultima.getByRole("button", { name: /^Fijar / }).click();
+  await expect(tarjetas.first()).toHaveAttribute("data-testid", ultimoId!);
+  await tarjetas.first().getByRole("button", { name: /^Soltar / }).click();
 });
 
 test("Salud de cuentas: editar y guardar compromisos recalcula el cumplimiento", async ({ page }) => {

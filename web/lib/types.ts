@@ -329,6 +329,7 @@ export interface BrandWorkspace {
   healthStatus: BrandHealthStatus;
   healthScore: number;
   status?: string;
+  pinned?: boolean;
   archived?: boolean;
   commitments: AccountCommitment;
   core: BrandCore;
