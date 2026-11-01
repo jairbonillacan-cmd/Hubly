@@ -35,7 +35,7 @@ export function EquipoCatalogo({ view }: { view: EquipoViewModel }) {
           >
             <div>
               <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: "var(--ui-text)" }}>
-                Catálogo completo de logros (39)
+                Función prevista: catálogo de logros (39)
               </h3>
               <p style={{ margin: "2px 0 0", fontSize: 12, color: "var(--ui-text-4)" }}>
                 Desbloqueados por actividad real en tareas, contenido, proyectos, CRM y Hubly AI

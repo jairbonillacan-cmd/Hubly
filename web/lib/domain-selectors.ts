@@ -1232,11 +1232,8 @@ export function selectTeamProductivity(
       0
     );
 
-    // En estado inicial, Jair tiene 0 terminadas, 3 en curso, 0 publicados y "menos de un minuto" activo
-    // como valor inicial; pero en cuanto completa una tarea o publica un post,
-    // sus contadores, tiempo activo, XP y ranking suben en vivo.
     const baselineCompleted = isPrimaryUser
-      ? Math.max(0, liveCompletedTasks - 1 + eventTaskCompletions)
+      ? liveCompletedTasks + eventTaskCompletions
       : Math.round(member.tasksCompleted * multiplier) + eventTaskCompletions;
 
     const completedTasksCount = isPrimaryUser
@@ -1244,7 +1241,7 @@ export function selectTeamProductivity(
       : Math.max(liveCompletedTasks, baselineCompleted);
 
     const inProgressTasksCount = isPrimaryUser
-      ? Math.max(1, liveInProgressTasks)
+      ? liveInProgressTasks
       : Math.max(member.tasksInProgress, liveInProgressTasks);
 
     const publishedPostsCount = isPrimaryUser
@@ -1266,13 +1263,12 @@ export function selectTeamProductivity(
         ? `${Math.max(15, Math.round(activeMinutes / completedTasksCount))}m`
         : "—";
 
-    const baseXp = isPrimaryUser ? 53 : member.points || 300;
+    const baseXp = member.points || 0;
     const xp =
       Math.round(baseXp * (isPrimaryUser ? 1 : multiplier)) +
       completedTasksCount * 25 +
       publishedPostsCount * 30 +
-      memberEvents.length * 5 -
-      (isPrimaryUser ? 5 : 0);
+      memberEvents.length * 5;
 
     const level = Math.max(1, Math.floor(xp / 100) + 1);
     const nextLevelThreshold = level * 100;
