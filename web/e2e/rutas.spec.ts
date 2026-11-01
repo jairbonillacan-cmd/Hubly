@@ -82,3 +82,13 @@ for (const esquema of ["light", "dark"] as const) {
     });
   }
 }
+
+test("/chat y /anuncios muestran su encabezado principal h1", async ({ page }) => {
+  await page.goto("/chat");
+  await page.waitForLoadState("networkidle");
+  await expect(page.getByRole("heading", { level: 1, name: "Chat" })).toBeVisible();
+
+  await page.goto("/anuncios");
+  await page.waitForLoadState("networkidle");
+  await expect(page.getByRole("heading", { level: 1, name: "Anuncios" })).toBeVisible();
+});

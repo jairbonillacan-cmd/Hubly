@@ -289,16 +289,7 @@ export default function ChatPage() {
             justifyContent: "space-between",
           }}
         >
-          <span
-            style={{
-              fontSize: 17,
-              fontWeight: 700,
-              color: "var(--ui-text)",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Chat
-          </span>
+          <h1 className="hubly-cal-title">Chat</h1>
           <button
             type="button"
             onClick={() => setSelectedId("ch-general")}

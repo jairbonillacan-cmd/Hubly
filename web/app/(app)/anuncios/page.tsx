@@ -589,6 +589,13 @@ function DemoAnunciosPage() {
         </div>
       </div>
 
+      <div className="hubly-cal-title-row" style={{ paddingTop: 0, paddingBottom: 14 }}>
+        <div style={{ minWidth: 0 }}>
+          <h1 className="hubly-cal-title">Anuncios</h1>
+          <p className="hubly-cal-subtitle">Campañas y piezas promocionadas de tu marca.</p>
+        </div>
+      </div>
+
       <div
         role="note"
         style={{
