@@ -7,6 +7,7 @@ import {
   normalizeWorkspacePayload,
 } from "@/lib/workspace-repository";
 import { readBodyText } from "@/lib/api-guard";
+import { brandFromRow, type BrandRow } from "@/lib/brand-rows";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import type { HublyWorkspaceData } from "@/lib/types";
@@ -132,6 +133,15 @@ async function liveGet(requestedAgency: string | null) {
     avatarUrl: (auth.user.user_metadata?.avatar_url as string) || undefined,
     avatarSourceUrl: (auth.user.user_metadata?.avatar_source_url as string) || undefined,
   };
+  // Con la tabla de marcas poblada, ella manda y aplica los permisos por marca.
+  // Sin filas, o sin la migración aplicada, se sigue con el documento.
+  const { data: brandRows, error: brandsError } = await supabase
+    .from("brands")
+    .select("id, name, slug, data")
+    .eq("agency_id", membership.agency_id)
+    .order("position");
+  if (!brandsError && brandRows?.length) data.brands = (brandRows as BrandRow[]).map(brandFromRow);
+
   const { data: members } = await supabase.rpc("list_members", { target_agency: membership.agency_id });
   const ROLE_LABEL: Record<string, string> = { owner: "Dueño", admin: "Administración", editor: "Edición", viewer: "Solo lectura" };
   data.team = ((members ?? []) as { user_id: string; role: string; email: string; name: string }[]).map((m) => {

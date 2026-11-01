@@ -400,5 +400,35 @@ ok("otra agencia intacta", (await db.query(`select version from public.agency_wo
   ok("marcas: expulsar quita la asignación", (await db.query(`select 1 from public.brand_members where agency_id = $1 and user_id = $2`, [ag, B])).rows.length === 0);
   ok("marcas: expulsado no ve", (await ver(B)).length === 0);
 }
+// --- Guardar sincroniza las marcas ---
+{
+  const ag = (await as(A, "authenticated", `select public.create_agency('Sincronia') id`))[0].id;
+  await db.query(`insert into public.agency_members values ($1,$2,'editor')`, [ag, B]);
+  const guardar = async (who, brands) => {
+    const { version } = (await db.query(`select version from public.agency_workspaces where agency_id = $1`, [ag])).rows[0];
+    return as(who, "authenticated", `select public.save_workspace($1,$2,$3) v`, [ag, JSON.stringify({ brands, posts: [] }), version]);
+  };
+  const filas = async () => (await db.query(`select id, name, position from public.brands where agency_id = $1 order by position`, [ag])).rows;
+  const enDoc = async () => (await db.query(`select data->'brands' b from public.agency_workspaces where agency_id = $1`, [ag])).rows[0].b;
+  await guardar(A, [{ id: "s1", name: "Uno", color: "#1" }, { id: "s2", name: "Dos" }]);
+  ok("guardar: crea las filas en orden", (await filas()).map((f) => f.id).join() === "s1,s2");
+  await guardar(A, [{ id: "s2", name: "Dos bis" }, { id: "s1", name: "Uno" }]);
+  const f = await filas();
+  ok("guardar: actualiza nombre y orden", f[0].id === "s2" && f[0].name === "Dos bis");
+  await guardar(A, [{ id: "s1", name: "Uno" }, { id: "s2", name: "Dos" }, { id: "s3", name: "Tres" }]);
+  await as(A, "authenticated", `insert into public.brand_members (agency_id, brand_id, user_id) values ($1,'s1',$2)`, [ag, B]);
+  await guardar(B, [{ id: "s1", name: "Uno por B" }, { id: "s2", name: "Pisada" }]);
+  const tras = await filas();
+  ok("guardar: una marca oculta no se pisa", tras.find((x) => x.id === "s2").name === "Dos");
+  ok("guardar: una marca oculta no se borra", tras.some((x) => x.id === "s3"));
+  ok("guardar: la visible sí cambia", tras.find((x) => x.id === "s1").name === "Uno por B");
+  ok("guardar: el documento coincide", (await enDoc()).find((x) => x.id === "s2").name === "Dos" && (await enDoc()).length === 3);
+  await guardar(A, [{ id: "s1", name: "Uno" }]);
+  ok("guardar: el dueño borra", (await filas()).length === 1);
+  await errs("guardar: un lector sigue sin poder", async () => {
+    await db.query(`update public.agency_members set role = 'viewer' where agency_id = $1 and user_id = $2`, [ag, B]);
+    await guardar(B, []);
+  }, "forbidden");
+}
 console.log(`\n${pass} ok, ${fail} fallos`);
 process.exit(fail ? 1 : 0);
