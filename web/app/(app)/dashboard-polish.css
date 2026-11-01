@@ -2650,3 +2650,11 @@ html.dark .hubly-app-root h3.hubly-wgal-rotulo { color: var(--ui-text-4); }
 @media (max-width: 767.98px) {
   .hubly-not-found-acciones .hbtn { min-height: 44px; }
 }
+
+/* Pantalla de carga con Hubi */
+.hubly-carga { position: fixed; inset: 0; z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: var(--ui-surface); color: var(--ui-text-3); font-size: 14px; }
+.hubly-carga-hubi { transform-origin: center bottom; animation: hubly-hubi-balanceo 2.4s ease-in-out infinite; }
+@keyframes hubly-hubi-balanceo { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-6px) rotate(3deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .hubly-carga-hubi { animation: none; }
+}

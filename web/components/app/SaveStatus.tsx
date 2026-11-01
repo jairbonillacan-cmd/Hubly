@@ -1,11 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { HublyBrandLogo } from "@/components/brand/HublyBrandLogo";
 import { useHublyStore } from "@/lib/store";
 import { backendEnabled } from "@/lib/supabase/config";
 import { hasPendingSave, keepMyVersion, retryLiveSave, discardMyVersion, type SaveState } from "@/lib/live-workspace";
 
 const bannerButton = { border: "1px solid #FFFFFF", background: "transparent", color: "#FFFFFF", borderRadius: 7, padding: "2px 8px", cursor: "pointer", fontWeight: 600 } as const;
+
+export function HubiCargando() {
+  return (
+    <div role="status" className="hubly-carga">
+      <span className="hubly-carga-hubi"><HublyBrandLogo kind="isotipo" height={88} alt="" /></span>
+      Cargando tu agencia…
+    </div>
+  );
+}
 
 /** En modo real: bloquea la vista hasta cargar los datos y avisa si un guardado falla. */
 export function SaveStatus() {
@@ -32,11 +42,7 @@ export function SaveStatus() {
 
   if (!backendEnabled) return null;
   if (!hydrated) {
-    return (
-      <div role="status" style={{ position: "fixed", inset: 0, zIndex: 300, background: "var(--ui-surface)", color: "var(--ui-text-3)", display: "grid", placeItems: "center", fontSize: 14 }}>
-        Cargando tu agencia…
-      </div>
-    );
+    return <HubiCargando />;
   }
   if (state !== "error" && state !== "conflict" && state !== "readonly") return null;
   return (
