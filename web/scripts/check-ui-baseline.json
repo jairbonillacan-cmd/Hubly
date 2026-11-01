@@ -48,9 +48,7 @@
     "hbtn-directo": 2
   },
   "app/(app)/layout.tsx": {
-    "color-fijo": 7,
-    "rgb-fijo": 2,
-    "tamano-fuente": 2
+    "rgb-fijo": 1
   },
   "app/(app)/marca/page.tsx": {
     "color-fijo": 4,
@@ -224,6 +222,11 @@
     "radio": 1,
     "tamano-fuente": 1
   },
+  "components/app/shell/BrandSwitcher.tsx": {
+    "color-fijo": 4,
+    "rgb-fijo": 1,
+    "tamano-fuente": 1
+  },
   "components/app/shell/MobileTabbar.tsx": {
     "color-fijo": 1
   },
@@ -240,6 +243,13 @@
     "exclamacion": 1,
     "hbtn-directo": 1,
     "rgb-fijo": 1
+  },
+  "components/app/shell/SidebarFooter.tsx": {
+    "color-fijo": 1
+  },
+  "components/app/shell/SidebarTop.tsx": {
+    "color-fijo": 2,
+    "tamano-fuente": 1
   },
   "components/app/social/CalendarModals.tsx": {
     "color-fijo": 1,
