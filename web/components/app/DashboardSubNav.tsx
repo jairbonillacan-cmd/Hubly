@@ -36,13 +36,12 @@ interface SubNavTabItem {
 }
 
 /**
- * Extracts preserved `?workspace=` and `?fixture=` query parameters from the current browser URL
+ * Extracts preserved `?fixture=` and `?clock=` query parameters from the current browser URL
  * or fallback store state so switching between `/dashboard`, `/dashboard/salud-cuentas`, and `/dashboard/equipo`
- * never loses the active workspace or test fixture context.
+ * never loses the test fixture context.
  */
 function buildPreservedQueryString(
   rawSearch: string,
-  storeWorkspaceId: string,
   storeIsFixture: boolean
 ): string {
   const out = new URLSearchParams();
@@ -51,16 +50,11 @@ function buildPreservedQueryString(
     const incoming = new URLSearchParams(
       rawSearch.startsWith("?") ? rawSearch.slice(1) : rawSearch
     );
-    const ws = incoming.get("workspace") || incoming.get("ws");
     const fixture = incoming.get("fixture");
     const clock = incoming.get("clock");
-    if (ws) out.set("workspace", ws);
     if (fixture) out.set("fixture", fixture);
     if (clock) out.set("clock", clock);
   } else {
-    if (storeWorkspaceId && storeWorkspaceId !== "default") {
-      out.set("workspace", storeWorkspaceId);
-    }
     if (storeIsFixture) {
       out.set("fixture", "reference");
     }
@@ -81,7 +75,6 @@ export function DashboardSubNav({
   const pathname = usePathname() || "/dashboard";
   const router = useRouter();
 
-  const workspaceId = useHublyStore((s) => s.workspaceId);
   const isReferenceFixture = useHublyStore((s) => s.isReferenceFixture);
   const brands = useHublyStore((s) => s.brands);
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
@@ -92,11 +85,11 @@ export function DashboardSubNav({
 
   useEffect(() => {
     setLocationSearch(window.location.search);
-  }, [pathname, workspaceId, isReferenceFixture]);
+  }, [pathname, isReferenceFixture]);
 
   const preservedQuery = useMemo(
-    () => buildPreservedQueryString(locationSearch, workspaceId, isReferenceFixture),
-    [locationSearch, workspaceId, isReferenceFixture]
+    () => buildPreservedQueryString(locationSearch, isReferenceFixture),
+    [locationSearch, isReferenceFixture]
   );
 
   const resolvedActiveKey: "inicio" | "cuentas" | "equipo" = useMemo(() => {
