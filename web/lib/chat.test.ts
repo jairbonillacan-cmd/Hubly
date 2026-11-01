@@ -17,6 +17,7 @@ import {
   scheduleChoices,
   toggleReaction,
 } from "@/lib/chat";
+import { directKey, isMissingTable, rowToChannel, rowToMessage, unreadCount, type ChannelRow, type MessageRow } from "@/lib/chat-rows";
 import type { ChatMessage } from "@/lib/types";
 
 const at = (iso: string) => new Date(`${iso}:00`).getTime();
@@ -130,4 +131,37 @@ test("el mensaje separa menciones conocidas y enlaces", () => {
     { kind: "link", value: "https://hubly.mx/a" },
   ]);
   assert.deepEqual(messageSegments("@Nadie aquí", ["Lucía"]), [{ kind: "text", value: "@Nadie aquí" }]);
+});
+
+test("una fila vuelve a mensaje con reacciones agrupadas y hora local", () => {
+  const m = rowToMessage(
+    { id: "1", channel_id: "c", agency_id: "a", user_id: "u", sender_name: "Ana", sender_initials: "AN", sender_avatar: null, text: "hola", parent_id: null, attachment: null, pinned: true, edited_at: null, created_at: new Date(at("2026-10-31T12:02")).toISOString() },
+    [{ message_id: "1", user_id: "u", user_name: "Ana", emoji: "🔥" }, { message_id: "1", user_id: "v", user_name: "Beto", emoji: "🔥" }]
+  );
+  assert.deepEqual(m.reactions, { "🔥": ["Ana", "Beto"] });
+  assert.equal(m.time, "12:02 p.m.");
+  assert.equal(m.pinned, true);
+});
+
+test("sin leer ignora lo propio, los hilos y lo ya leído", () => {
+  const row = (over: Partial<MessageRow>): MessageRow => ({ id: "x", channel_id: "c", agency_id: "a", user_id: "otro", sender_name: "O", sender_initials: "O", sender_avatar: null, text: "t", parent_id: null, attachment: null, pinned: false, edited_at: null, created_at: "2026-10-31T12:00:00Z", ...over });
+  const rows = [row({}), row({ user_id: "yo" }), row({ parent_id: "p" }), row({ created_at: "2026-10-30T12:00:00Z" }), row({ channel_id: "d" })];
+  assert.equal(unreadCount(rows, "c", "yo", "2026-10-31T00:00:00Z"), 1);
+  assert.equal(unreadCount(rows, "c", "yo", null), 2);
+});
+
+test("un directo se llama como la otra persona y su clave no depende del orden", () => {
+  const row: ChannelRow = { id: "c", agency_id: "a", kind: "direct", name: "guardado", description: "", emoji: "", brand_id: null, unique_key: "k", member_ids: ["yo", "ana"], is_archived: false };
+  const channel = rowToChannel(row, "yo", [{ id: "ana", name: "Ana Ruiz" }], { channel_id: "c", muted: true, pinned: false, hidden: false, last_read_at: null }, 2);
+  assert.equal(channel.name, "Ana Ruiz");
+  assert.equal(channel.memberId, "ana");
+  assert.equal(channel.muted, true);
+  assert.equal(directKey("b", "a"), directKey("a", "b"));
+});
+
+test("distingue tablas ausentes de otros errores", () => {
+  assert.equal(isMissingTable({ code: "PGRST205" }), true);
+  assert.equal(isMissingTable({ code: "42P01" }), true);
+  assert.equal(isMissingTable({ code: "42501", message: "denied" }), false);
+  assert.equal(isMissingTable(null), false);
 });

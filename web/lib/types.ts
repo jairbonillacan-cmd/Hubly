@@ -487,6 +487,10 @@ export interface ChatMessage {
   channelId: string;
   sender: string;
   senderInitials: string;
+  /** Solo con el chat en tablas. */
+  senderId?: string;
+  senderAvatar?: string;
+  isBot?: boolean;
   text: string;
   time: string;
   /** Marca de tiempo en ms. Los mensajes de ejemplo no la tienen y cuentan como de hoy. */
@@ -503,12 +507,22 @@ export interface ChatMessage {
 export interface ChatChannel {
   id: string;
   name: string;
-  type: "brand" | "direct" | "agency";
+  type: "brand" | "direct" | "agency" | "general" | "self";
   brandId?: string;
   unread: number;
   description?: string;
   /** En un mensaje directo: la persona del equipo con quien se habla. */
   memberId?: string;
+  archived?: boolean;
+  emoji?: string;
+  /** Canal privado: solo estas personas. Vacío o ausente, abierto a toda la agencia. */
+  memberIds?: string[];
+  /** Hay una mención sin leer para quien mira. */
+  mentioned?: boolean;
+  /** Preferencias de quien mira; en modo demo viven en su navegador. */
+  muted?: boolean;
+  listPinned?: boolean;
+  hidden?: boolean;
 }
 
 export interface TeamMember {

@@ -23,6 +23,7 @@ import {
   HublyPinIcon,
   HublyPlusIcon,
   HublyReplyIcon,
+  HublySendIcon,
   HublySmileIcon,
   HublyTrashIcon,
 } from "@/components/app/icons/DuotoneIcons";
@@ -62,6 +63,17 @@ interface ChatMessageRowProps {
   onCreateTask: () => void;
   onRemind: (at: number, label: string) => void;
   onNotice: (text: string) => void;
+  /** Datos de quien escribió; sin ellos, su nombre no abre tarjeta. */
+  person?: ChatPerson | null;
+  onMessagePerson?: () => void;
+}
+
+export interface ChatPerson {
+  name: string;
+  role?: string;
+  email?: string;
+  online?: boolean;
+  isSelf?: boolean;
 }
 
 function withQuery(text: string, query: string): React.ReactNode {
@@ -155,8 +167,10 @@ export function ChatMessageRow({
   onCreateTask,
   onRemind,
   onNotice,
+  person,
+  onMessagePerson,
 }: ChatMessageRowProps) {
-  const [menu, setMenu] = useState<"react" | "remind" | "more" | null>(null);
+  const [menu, setMenu] = useState<"react" | "remind" | "more" | "person" | null>(null);
   const [allEmoji, setAllEmoji] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
   const mine = m.sender === myName;
@@ -202,12 +216,42 @@ export function ChatMessageRow({
       {compact ? (
         <span className="hubly-chat-msg-gutter">{time.replace(/ .*/, "")}</span>
       ) : (
-        <ChatAvatar initials={m.senderInitials} photo={mine ? myPhoto : undefined} />
+        <ChatAvatar initials={m.senderInitials} photo={m.senderAvatar ?? (mine ? myPhoto : undefined)} />
       )}
       <div className="hubly-chat-msg-body">
         {compact ? null : (
           <div className="hubly-chat-msg-head">
-            <span className="hubly-chat-msg-name">{m.sender}</span>
+            {person ? (
+              <span className="hubly-chat-tool-wrap">
+                <button type="button" className="hubly-chat-msg-name hubly-chat-msg-namebtn" data-pop-trigger aria-expanded={menu === "person"} onClick={() => (menu === "person" ? closeMenu() : setMenu("person"))}>
+                  {m.sender}
+                </button>
+                <PopMenu open={menu === "person"} onClose={closeMenu} label={`Perfil de ${m.sender}`} className="hubly-chat-profile">
+                  <div className="hubly-chat-profile-head">
+                    <ChatAvatar initials={m.senderInitials} photo={m.senderAvatar ?? (mine ? myPhoto : undefined)} size="lg" online={person.online} />
+                    <div className="hubly-lista-texto">
+                      <div className="hubly-cal-row-title">{person.name}</div>
+                      <div className="hubly-cal-row-meta">{person.online ? "En línea" : "Sin conexión"}{person.role ? ` · ${person.role}` : ""}</div>
+                    </div>
+                  </div>
+                  {person.email ? (
+                    <button type="button" role="menuitem" className="hubly-chat-menuitem" onClick={() => copy(person.email!, "Correo copiado")}>
+                      <HublyCopyIcon size={15} />
+                      <span className="hubly-chat-details-clip">{person.email}</span>
+                    </button>
+                  ) : null}
+                  {onMessagePerson ? (
+                    <button type="button" role="menuitem" className="hubly-chat-menuitem" onClick={() => { onMessagePerson(); closeMenu(); }}>
+                      <HublySendIcon size={15} />
+                      <span>{person.isSelf ? "Abrir tus notas" : "Mandar mensaje"}</span>
+                    </button>
+                  ) : null}
+                </PopMenu>
+              </span>
+            ) : (
+              <span className="hubly-chat-msg-name">{m.sender}</span>
+            )}
+            {m.isBot ? <span className="hubly-chat-msg-flag">Bot</span> : null}
             <span className="hubly-chat-msg-time">{time}</span>
             {m.pinned ? (
               <span className="hubly-chat-msg-flag">

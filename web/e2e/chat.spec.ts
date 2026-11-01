@@ -15,6 +15,12 @@ const openChat = async (page: Page, name = "café-bruma") => {
 const composer = (page: Page) => page.locator(".hubly-chat-panel .hubly-chat-input").last();
 const lastMessage = (page: Page) => page.locator(".hubly-chat-scroll .hubly-chat-msg").last();
 const tool = (page: Page, name: string) => lastMessage(page).getByRole("button", { name, exact: true });
+// La lista puede repintarse bajo el cursor mientras hidrata: se insiste hasta ver la barra.
+const showTools = (page: Page) =>
+  expect(async () => {
+    await lastMessage(page).hover();
+    await expect(lastMessage(page).locator(".hubly-chat-tools")).toBeVisible({ timeout: 500 });
+  }).toPass({ timeout: 15_000 });
 
 test("envía con menciones y enlaces, sin desbordar", async ({ page }) => {
   await openChat(page);
@@ -38,20 +44,20 @@ test("Shift+Enter no envía y reacciona, edita y borra", async ({ page }) => {
   await expect(page.locator(".hubly-chat-scroll .hubly-chat-msg")).toHaveCount(0);
   await composer(page).press("Enter");
 
-  await lastMessage(page).hover();
+  await showTools(page);
   await tool(page, "Reaccionar").click();
   await page.getByRole("button", { name: "Ver más emojis" }).click();
   await page.getByRole("menuitem", { name: "Reaccionar con 🚀" }).click();
   await expect(lastMessage(page).locator(".hubly-chat-reaction")).toHaveAttribute("aria-pressed", "true");
 
-  await lastMessage(page).hover();
+  await showTools(page);
   await tool(page, "Editar").click();
   await page.getByRole("textbox", { name: "Editar mensaje" }).fill("corregido");
   await page.getByRole("textbox", { name: "Editar mensaje" }).press("Enter");
   await expect(lastMessage(page)).toContainText("corregido");
   await expect(lastMessage(page)).toContainText("(editado)");
 
-  await lastMessage(page).hover();
+  await showTools(page);
   await tool(page, "Eliminar").click();
   await page.getByRole("button", { name: "Eliminar", exact: true }).last().click();
   await expect(page.getByText("corregido")).toHaveCount(0);
@@ -59,7 +65,7 @@ test("Shift+Enter no envía y reacciona, edita y borra", async ({ page }) => {
 
 test("el hilo guarda respuestas y las cuenta", async ({ page }) => {
   await openChat(page);
-  await lastMessage(page).hover();
+  await showTools(page);
   await tool(page, "Responder en hilo").click();
   const hilo = page.getByRole("complementary", { name: "Hilo" });
   await hilo.getByRole("textbox", { name: "Responder en el hilo" }).fill("respuesta");

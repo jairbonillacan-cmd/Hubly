@@ -181,5 +181,72 @@ ok("otra agencia intacta", (await db.query(`select version from public.agency_wo
   const tras = (await db.query(`select data from public.agency_workspaces where agency_id=$1`, [agencyM])).rows[0].data;
   ok("aprobar en el portal etiqueta Aprobado", tras.posts.find((p) => p.id === "m1").statusLabel === "Aprobado");
 }
+// Chat: aislamiento por agencia, mensajes directos privados y autoría.
+{
+  const uuid = (n) => `${String(n).repeat(8)}-0000-4000-8000-${String(n).repeat(12)}`;
+  const canal = (await as(A, "authenticated", `insert into public.chat_channels (agency_id, kind, name, unique_key) values ($1,'general','General','general') returning id`, [ag]))[0].id;
+  const msg = (id, canalId, agencia, texto = "hola") => [`insert into public.chat_messages (id, channel_id, agency_id, sender_name, sender_initials, text) values ($1,$2,$3,'Ana','AN',$4)`, [id, canalId, agencia, texto]];
+  await as(A, "authenticated", ...msg(uuid(1), canal, ag));
+  ok("chat: el miembro lee su mensaje", (await as(A, "authenticated", `select * from public.chat_messages`)).length === 1);
+  ok("chat: otra agencia no ve el canal", (await as(B, "authenticated", `select * from public.chat_channels where id=$1`, [canal])).length === 0);
+  ok("chat: otra agencia no ve mensajes", (await as(B, "authenticated", `select * from public.chat_messages`)).length === 0);
+  await errs("chat: otra agencia no escribe", () => as(B, "authenticated", ...msg(uuid(2), canal, ag)), "row-level");
+  await errs("chat: anon no lee", () => as(null, "anon", `select * from public.chat_messages`), "permission");
+  await errs("chat: no se finge autor", () => as(A, "authenticated", `insert into public.chat_messages (id, channel_id, agency_id, user_id, sender_name, sender_initials, text) values ($1,$2,$3,$4,'B','B','x')`, [uuid(3), canal, ag, B]), "row-level");
+  await errs("chat: no se mueve a otro canal", () => as(A, "authenticated", `update public.chat_messages set channel_id=$1`, [canal]), "permission");
+  await errs("chat: mensaje vacío rechazado", () => as(A, "authenticated", ...msg(uuid(4), canal, ag, "")), "check");
+
+  await db.query(`insert into public.agency_members (agency_id, user_id, role) values ($1,$2,'editor'), ($1,$3,'editor') on conflict (agency_id, user_id) do update set role = 'editor'`, [ag, B, D]);
+  const directo = (await as(A, "authenticated", `insert into public.chat_channels (agency_id, kind, name, unique_key, member_ids) values ($1,'direct','Dos','d',$2) returning id`, [ag, [A, B]]))[0].id;
+  await as(A, "authenticated", ...msg(uuid(5), directo, ag, "privado"));
+  ok("chat: el otro participante lee el directo", (await as(B, "authenticated", `select * from public.chat_messages where channel_id=$1`, [directo])).length === 1);
+  ok("chat: un tercero no ve el directo", (await as(D, "authenticated", `select * from public.chat_messages where channel_id=$1`, [directo])).length === 0);
+  ok("chat: un tercero no ve que existe", (await as(D, "authenticated", `select * from public.chat_channels where id=$1`, [directo])).length === 0);
+  await errs("chat: no se crea directo ajeno", () => as(D, "authenticated", `insert into public.chat_channels (agency_id, kind, name, unique_key, member_ids) values ($1,'direct','X','x',$2)`, [ag, [A, B]]), "row-level");
+
+  await as(B, "authenticated", `update public.chat_messages set text='cambiado' where id=$1`, [uuid(1)]);
+  ok("chat: no se edita lo ajeno", (await as(A, "authenticated", `select text from public.chat_messages where id=$1`, [uuid(1)]))[0].text === "hola");
+  await as(B, "authenticated", `select public.chat_set_pinned($1, true)`, [uuid(1)]);
+  ok("chat: cualquier miembro fija", (await as(A, "authenticated", `select pinned from public.chat_messages where id=$1`, [uuid(1)]))[0].pinned === true);
+  await errs("chat: no fija un directo que no ve", () => as(D, "authenticated", `select public.chat_set_pinned($1, true)`, [uuid(5)]), "forbidden");
+
+  await as(B, "authenticated", `insert into public.chat_reactions (message_id, agency_id, user_name, emoji) values ($1,$2,'Beto','🔥')`, [uuid(1), ag]);
+  await errs("chat: no reacciona en un directo que no ve", () => as(D, "authenticated", `insert into public.chat_reactions (message_id, agency_id, user_name, emoji) values ($1,$2,'D','🔥')`, [uuid(5), ag]), "row-level");
+  await as(A, "authenticated", `delete from public.chat_reactions where message_id=$1`, [uuid(1)]);
+  ok("chat: no se borra la reacción ajena", (await as(B, "authenticated", `select * from public.chat_reactions`)).length === 1);
+
+  await as(A, "authenticated", `insert into public.chat_preferences (channel_id, muted) values ($1,true)`, [canal]);
+  ok("chat: las preferencias son de cada quien", (await as(B, "authenticated", `select * from public.chat_preferences`)).length === 0);
+  await as(A, "authenticated", `insert into public.chat_scheduled (channel_id, sender_name, sender_initials, text, send_at, repeat) values ($1,'Ana','AN','luego',now() - interval '1 minute','weekly')`, [canal]);
+  ok("chat: lo programado es privado", (await as(B, "authenticated", `select * from public.chat_scheduled`)).length === 0);
+
+  await as(B, "authenticated", `select public.chat_flush_due()`);
+  await as(B, "authenticated", `select public.chat_flush_due()`);
+  ok("chat: lo programado sale una vez, aunque lo dispare otro", (await as(A, "authenticated", `select * from public.chat_messages where text='luego'`)).length === 1);
+  ok("chat: la serie pasa a su siguiente fecha", (await as(A, "authenticated", `select send_at > now() f from public.chat_scheduled`))[0].f === true);
+
+  const privado = (await as(A, "authenticated", `insert into public.chat_channels (agency_id, kind, name, member_ids) values ($1,'agency','Privado',$2) returning id`, [ag, [A, B]]))[0].id;
+  ok("chat: un miembro ve el canal privado", (await as(B, "authenticated", `select * from public.chat_channels where id=$1`, [privado])).length === 1);
+  ok("chat: quien no es miembro no lo ve", (await as(D, "authenticated", `select * from public.chat_channels where id=$1`, [privado])).length === 0);
+  await errs("chat: quien no es miembro no escribe", () => as(D, "authenticated", ...msg(uuid(6), privado, ag)), "row-level");
+
+  const token = (await as(A, "authenticated", `select public.chat_create_bot($1,'Ventas') t`, [canal]))[0].t;
+  await as(null, "anon", `select public.chat_bot_post($1,'venta nueva')`, [token]);
+  const delBot = await as(A, "authenticated", `select * from public.chat_messages where text='venta nueva'`);
+  ok("chat: el bot publica con su token", delBot.length === 1 && delBot[0].sender_name === "Ventas");
+  await errs("chat: token inválido rechazado", () => as(null, "anon", `select public.chat_bot_post('x','y')`), "invalid_token");
+  await errs("chat: no se lee el hash del token", () => as(A, "authenticated", `select token_hash from public.chat_bots`), "permission");
+  await errs("chat: otra agencia no crea bots aquí", async () => { await db.query(`delete from public.agency_members where agency_id=$1 and user_id=$2`, [ag, D]); await as(D, "authenticated", `select public.chat_create_bot($1,'x')`, [canal]); }, "forbidden");
+  await db.query(`insert into public.agency_members (agency_id, user_id, role) values ($1,$2,'editor')`, [ag, D]);
+  await db.query(`insert into public.chat_messages (id, channel_id, agency_id, user_id, bot_id, sender_name, sender_initials, text) select gen_random_uuid(), channel_id, agency_id, id, id, name, 'V', 'x' from public.chat_bots, generate_series(1,30)`);
+  await errs("chat: el bot tiene límite por minuto", () => as(null, "anon", `select public.chat_bot_post($1,'otra')`, [token]), "rate_limited");
+
+  await as(B, "authenticated", `delete from public.chat_messages where id=$1`, [uuid(1)]);
+  ok("chat: un editor no borra lo ajeno", (await as(A, "authenticated", `select * from public.chat_messages where id=$1`, [uuid(1)])).length === 1);
+  await errs("chat: el canal general no se borra", async () => {
+    const r = await as(A, "authenticated", `delete from public.chat_channels where id=$1 returning id`, [canal]);
+    if (r.length === 0) throw new Error("row-level: sin filas");
+  }, "row-level");
+}
 console.log(`\n${pass} ok, ${fail} fallos`);
 process.exit(fail ? 1 : 0);

@@ -69,13 +69,14 @@ interface ChatComposerProps {
   brandId: string;
   mentions: ChatMentionOption[];
   onSend: (text: string, attachments: ChatAttachment[]) => void;
+  onTyping?: () => void;
   /** Sin esta función no se ofrece programar, como en un hilo. */
   onSchedule?: (text: string, at: number, repeat: Repeat) => void;
 }
 
 const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 
-export function ChatComposer({ ref, label, placeholder, brandId, mentions, onSend, onSchedule }: ChatComposerProps) {
+export function ChatComposer({ ref, label, placeholder, brandId, mentions, onSend, onTyping, onSchedule }: ChatComposerProps) {
   const [draft, setDraft] = useState("");
   const [menu, setMenu] = useState<PickKind | "root" | null>(null);
   const [pickQuery, setPickQuery] = useState("");
@@ -428,6 +429,7 @@ export function ChatComposer({ ref, label, placeholder, brandId, mentions, onSen
         placeholder={placeholder}
         onChange={(e) => {
           setDraft(e.target.value);
+          if (e.target.value) onTyping?.();
           syncMention(e.target.value, e.target.selectionStart);
           grow();
         }}

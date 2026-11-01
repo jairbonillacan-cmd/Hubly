@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { backendEnabled, SUPABASE_KEY, SUPABASE_URL } from "@/lib/supabase/config";
 
 const PUBLIC_PATHS = ["/", "/login", "/register", "/recuperar", "/icon.svg"];
-const PUBLIC_PREFIXES = ["/share/", "/auth/", "/api/share/", "/api/waitlist", "/brand/"];
+const PUBLIC_PREFIXES = ["/share/", "/auth/", "/api/share/", "/api/waitlist", "/api/chat/bots/", "/brand/"];
 
 function isPublic(pathname: string) {
   return PUBLIC_PATHS.includes(pathname) || PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));

@@ -14,7 +14,8 @@ import {
   HublyPlusIcon,
   HublySearchIcon,
 } from "@/components/app/icons/DuotoneIcons";
-import { matchesQuery } from "@/lib/chat";
+import { matchesQuery, messageTime } from "@/lib/chat";
+import type { ChatMessage } from "@/lib/types";
 import { ChatAvatar } from "./ChatAvatar";
 import type { ChatMentionOption } from "./ChatComposer";
 import { PopMenu } from "./PopMenu";
@@ -28,6 +29,8 @@ export interface ChatListItem {
   pinned: boolean;
   hidden: boolean;
   dormant: boolean;
+  mentioned?: boolean;
+  emoji?: string;
   initials: string;
   photo?: string;
   online?: boolean;
@@ -49,6 +52,8 @@ interface ChatSidebarProps {
   myInitials: string;
   myPhoto?: string;
   people: ChatMentionOption[];
+  results: ChatMessage[];
+  onOpenResult: (m: ChatMessage) => void;
   onQuery: (value: string) => void;
   onSelect: (id: string) => void;
   onOpenSelf: () => void;
@@ -67,6 +72,8 @@ export function ChatSidebar({
   myInitials,
   myPhoto,
   people,
+  results,
+  onOpenResult,
   onQuery,
   onSelect,
   onOpenSelf,
@@ -108,13 +115,13 @@ export function ChatSidebar({
           {row.group === "directos" ? (
             <ChatAvatar initials={row.initials} photo={row.photo} size="sm" online={row.online} />
           ) : (
-            <span className="hubly-chat-item-hash"><HublyHashIcon size={15} /></span>
+            <span className="hubly-chat-item-hash">{row.emoji || <HublyHashIcon size={15} />}</span>
           )}
           <span className="hubly-chat-item-name">{row.name}</span>
           {row.muted ? (
             <span className="hubly-chat-item-muted"><HublyBellOffIcon size={14} title="Avisos silenciados" /></span>
           ) : row.unread > 0 ? (
-            <span className="hubly-chat-badge" aria-label={`${row.unread} sin leer`}>{row.unread}</span>
+            <span className="hubly-chat-badge" aria-label={`${row.unread} sin leer${row.mentioned ? ", con una mención" : ""}`}>{row.mentioned ? "@" : ""}{row.unread}</span>
           ) : null}
         </button>
         <button
@@ -260,7 +267,23 @@ export function ChatSidebar({
           </section>
         ) : null}
 
-        {searching && items.length === 0 ? (
+        {searching && results.length > 0 ? (
+          <section className="hubly-chat-group" aria-label="Mensajes encontrados">
+            <div className="hubly-chat-results-title">Mensajes</div>
+            <ul className="hubly-chat-rows">
+              {results.map((m) => (
+                <li key={m.id}>
+                  <button type="button" className="hubly-chat-result" onClick={() => onOpenResult(m)}>
+                    <span className="hubly-chat-result-meta">{m.sender} · {messageTime(m)}</span>
+                    <span className="hubly-chat-result-text">{m.text || m.attachment?.title}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        {searching && items.length === 0 && results.length === 0 ? (
           <p className="hubly-chat-lista-empty">Sin resultados con esta búsqueda.</p>
         ) : null}
       </div>

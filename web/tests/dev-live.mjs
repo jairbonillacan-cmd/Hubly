@@ -1,7 +1,7 @@
 // Arranca la app en modo real contra el Supabase simulado: npm run dev:live
 import { spawn } from "node:child_process";
 
-const mockPort = "54399";
+const mockPort = process.argv[3] || "54399";
 const appPort = process.argv[2] || "3200";
 const cwd = new URL("..", import.meta.url);
 const children = [

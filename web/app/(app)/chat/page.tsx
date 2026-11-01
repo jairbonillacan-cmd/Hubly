@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { chatRemote, useChatPresence } from "@/lib/chat-live";
 import { useHublyStore } from "@/lib/store";
 import {
   GENERAL_CHANNEL_ID,
@@ -95,7 +96,12 @@ export default function ChatPage() {
   const scheduleChatMessage = useHublyStore((s) => s.scheduleChatMessage);
   const cancelChatScheduled = useHublyStore((s) => s.cancelChatScheduled);
   const addChatReminder = useHublyStore((s) => s.addChatReminder);
+  const setChatPreference = useHublyStore((s) => s.setChatPreference);
   const addTask = useHublyStore((s) => s.addTask);
+  const online = useChatPresence((s) => s.online);
+  const typing = useChatPresence((s) => s.typing);
+  const hasOlder = useChatPresence((s) => s.hasOlder);
+  const liveReady = useChatPresence((s) => s.ready);
 
   const myName = profile?.name || "Equipo";
   const myInitials = initialsOf(myName);
@@ -112,6 +118,8 @@ export default function ChatPage() {
   const [limit, setLimit] = useState(PAGE_SIZE);
   const [queueOpen, setQueueOpen] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [remoteResults, setRemoteResults] = useState<ChatMessage[]>([]);
+  const keepScroll = useRef<number | null>(null);
   const [muted, toggleMutedId] = usePreferenceList(MUTED_KEY);
   const [pinnedChats, togglePinOf] = usePreferenceList(PINNED_KEY);
   const [hiddenChats, toggleHiddenOf] = usePreferenceList(HIDDEN_KEY);
@@ -145,25 +153,44 @@ export default function ChatPage() {
 
   const items = useMemo<ChatListItem[]>(() => {
     const now = Date.now();
-    const base = [
-      { id: GENERAL_CHANNEL_ID, name: "General", group: "agencia" as const, unread: 0, initials: "#" },
-      { id: SELF_CHANNEL_ID, name: `${myName} (tú)`, group: "directos" as const, unread: 0, initials: myInitials, photo: myPhoto, online: true },
-    ];
-    const fromStore = channels.map((c) => ({
-      id: c.id,
-      name: c.name.replace(/^#\s*/, ""),
-      group: c.type === "brand" ? ("marcas" as const) : c.type === "agency" ? ("agencia" as const) : ("directos" as const),
-      unread: c.unread,
-      initials: initialsOf(c.name.replace(/\s*\(.*\)$/, "")),
-    }));
-    return [...base, ...fromStore].map((i) => ({
-      ...i,
-      muted: muted.includes(i.id),
-      pinned: pinnedChats.includes(i.id),
-      hidden: hiddenChats.includes(i.id),
-      dormant: isDormant(messages, i.id, now),
-    }));
-  }, [channels, messages, muted, pinnedChats, hiddenChats, myName, myInitials, myPhoto]);
+    const hasGeneral = channels.some((c) => c.type === "general");
+    const base = hasGeneral
+      ? []
+      : [
+          { id: GENERAL_CHANNEL_ID, name: "General", group: "agencia" as const, unread: 0, initials: "#", type: "general" as const },
+          { id: SELF_CHANNEL_ID, name: `${myName} (tú)`, group: "directos" as const, unread: 0, initials: myInitials, photo: myPhoto, online: true, type: "self" as const },
+        ];
+    const fromStore = channels
+      .filter((c) => !c.archived)
+      .map((c) => {
+        const self = c.type === "self";
+        return {
+          id: c.id,
+          name: self ? `${myName} (tú)` : c.name.replace(/^#\s*/, ""),
+          group: c.type === "brand" ? ("marcas" as const) : c.type === "agency" || c.type === "general" ? ("agencia" as const) : ("directos" as const),
+          unread: c.unread,
+          mentioned: c.mentioned,
+          emoji: c.emoji,
+          initials: self ? myInitials : initialsOf(c.name.replace(/\s*\(.*\)$/, "")),
+          photo: self ? myPhoto : undefined,
+          online: self || (c.memberId ? online.includes(c.memberId) : false),
+          type: c.type,
+          stored: c,
+        };
+      });
+    return [...base, ...fromStore]
+      .map((i) => {
+        const stored = "stored" in i ? i.stored : undefined;
+        return {
+          ...i,
+          muted: stored?.muted || muted.includes(i.id),
+          pinned: stored?.listPinned || pinnedChats.includes(i.id),
+          hidden: stored?.hidden || hiddenChats.includes(i.id),
+          dormant: isDormant(messages, i.id, now),
+        };
+      })
+      .sort((a, b) => Number(a.type === "self") - Number(b.type === "self"));
+  }, [channels, messages, muted, pinnedChats, hiddenChats, myName, myInitials, myPhoto, online]);
 
   const visibleItems = useMemo(() => {
     const q = listQuery.trim();
@@ -173,9 +200,32 @@ export default function ChatPage() {
     );
   }, [items, listQuery, messages]);
 
+  useEffect(() => {
+    const q = listQuery.trim();
+    const search = chatRemote()?.search;
+    if (q.length < 2 || !search) {
+      setRemoteResults([]);
+      return;
+    }
+    const timer = window.setTimeout(() => void search(q).then(setRemoteResults), 250);
+    return () => window.clearTimeout(timer);
+  }, [listQuery, liveReady]);
+
+  // Lo que está en memoria más lo que el servidor encontró fuera de ella.
+  const results = useMemo(() => {
+    const q = listQuery.trim();
+    if (q.length < 2) return [];
+    const local = messages.filter((m) => m.text && matchesQuery({ text: m.text, sender: "" }, q));
+    const seen = new Set(local.map((m) => m.id));
+    return [...local, ...remoteResults.filter((m) => !seen.has(m.id))].slice(-12).reverse();
+  }, [listQuery, messages, remoteResults]);
+
   const active = items.find((i) => i.id === selectedId) ?? null;
   const channel = channels.find((c) => c.id === selectedId);
   const isMuted = active?.muted ?? false;
+  const isSelf = active?.id === SELF_CHANNEL_ID || channel?.type === "self";
+  const selfId = channels.find((c) => c.type === "self")?.id ?? SELF_CHANNEL_ID;
+  const typingNow = selectedId ? typing[selectedId]?.name : undefined;
   const brandId = channel?.brandId ?? activeBrandId;
   const brandName = brands.find((b) => b.id === channel?.brandId)?.name;
 
@@ -193,6 +243,13 @@ export default function ChatPage() {
     () => (scheduled ?? []).filter((q) => q.channelId === selectedId && q.authorId === myId).sort((a, b) => a.sendAt - b.sendAt),
     [scheduled, selectedId, myId]
   );
+
+  // Al llegar las tablas, General y las notas dejan de ser provisionales y cambian de id.
+  useEffect(() => {
+    const real =
+      selectedId === GENERAL_CHANNEL_ID ? channels.find((c) => c.type === "general") : selectedId === SELF_CHANNEL_ID ? channels.find((c) => c.type === "self") : undefined;
+    if (real) setSelectedId(real.id);
+  }, [selectedId, channels]);
 
   const select = useCallback((id: string | null) => {
     setSelectedId(id);
@@ -214,12 +271,28 @@ export default function ChatPage() {
       return;
     }
     const el = scrollRef.current;
+    if (el && keepScroll.current !== null) {
+      // Al traer anteriores, lo que se estaba leyendo no se mueve.
+      el.scrollTop = el.scrollHeight - keepScroll.current;
+      keepScroll.current = null;
+      return;
+    }
     if (el && !channelQuery) el.scrollTop = el.scrollHeight;
   }, [selectedId, roots.length, focusId, channelQuery]);
 
+  // Con tablas, las preferencias siguen a la persona entre dispositivos.
+  const flag = (id: string, key: "muted" | "listPinned" | "hidden", toggleLocal: (id: string) => void) => {
+    if (chatRemote()) {
+      const current = channels.find((c) => c.id === id)?.[key] ?? false;
+      setChatPreference(id, { [key]: !current });
+    } else {
+      toggleLocal(id);
+    }
+  };
+
   const toggleMute = (id: string) => {
-    setNotice(muted.includes(id) ? "Avisos activados en este chat" : "Avisos silenciados en este chat");
-    toggleMutedId(id);
+    setNotice(items.find((i) => i.id === id)?.muted ? "Avisos activados en este chat" : "Avisos silenciados en este chat");
+    flag(id, "muted", toggleMutedId);
   };
 
   const send = (text: string, attachments: ChatAttachment[], parentId?: string) => {
@@ -267,6 +340,20 @@ export default function ChatPage() {
     document.getElementById(`msg-${id}`)?.scrollIntoView({ block: "center" });
   };
 
+  const personOf = (m: ChatMessage) => {
+    if (m.isBot) return null;
+    if (m.sender === myName) return { name: myName, role: profile?.role, email: profile?.email, online: true, isSelf: true };
+    const member = team.find((t) => (m.senderId ? t.id === m.senderId : t.name === m.sender));
+    if (!member) return null;
+    return { name: member.name, role: member.role, email: member.email, online: online.includes(member.id) };
+  };
+
+  const messagePerson = (m: ChatMessage) => {
+    if (m.sender === myName) return () => select(selfId);
+    const member = team.find((t) => (m.senderId ? t.id === m.senderId : t.name === m.sender));
+    return member ? () => openPerson({ id: member.id, name: member.name, initials: member.initials || initialsOf(member.name) }) : undefined;
+  };
+
   const rowFor = (m: ChatMessage, prev: ChatMessage | undefined, inThread: boolean) => (
     <ChatMessageRow
       key={m.id}
@@ -299,6 +386,8 @@ export default function ChatPage() {
         setNotice(`Te lo recordamos: ${label.charAt(0).toLowerCase()}${label.slice(1)}`);
       }}
       onNotice={setNotice}
+      person={personOf(m)}
+      onMessagePerson={messagePerson(m)}
     />
   );
 
@@ -308,7 +397,7 @@ export default function ChatPage() {
       ? channel.description
       : active.group === "marcas"
         ? `Canal de ${brandName ?? "la marca"}`
-        : active.id === SELF_CHANNEL_ID
+        : isSelf
           ? "Notas, borradores y recordatorios"
           : active.group === "agencia"
             ? "Canal de la agencia"
@@ -316,7 +405,7 @@ export default function ChatPage() {
 
   const members: ChatMentionOption[] = !active
     ? []
-    : active.id === SELF_CHANNEL_ID
+    : isSelf
       ? [me]
       : channel?.type === "direct"
         ? [me, ...people.filter((p) => p.id === channel.memberId || channel.name.startsWith(p.name))]
@@ -327,7 +416,9 @@ export default function ChatPage() {
                 .filter((m) => m.status === "Activo" && m.name !== myName && m.brandIds?.includes(channel.brandId ?? ""))
                 .map((m) => ({ id: m.id, name: m.name, initials: m.initials || initialsOf(m.name) })),
             ]
-          : [me, ...people];
+          : channel?.memberIds?.length
+            ? [me, ...people].filter((p) => channel.memberIds!.includes(p.id))
+            : [me, ...people];
 
   const lastPinned = pinned[pinned.length - 1];
 
@@ -340,14 +431,20 @@ export default function ChatPage() {
         myInitials={myInitials}
         myPhoto={myPhoto}
         people={people}
+        results={results}
+        onOpenResult={(m) => {
+          useHublyStore.setState((st) => (st.messages.some((x) => x.id === m.id) ? {} : { messages: [m, ...st.messages] }));
+          select(m.channelId);
+          setFocusId(m.parentId ?? m.id);
+        }}
         onQuery={setListQuery}
         onSelect={select}
-        onOpenSelf={() => select(SELF_CHANNEL_ID)}
+        onOpenSelf={() => select(selfId)}
         onNewChannel={newChannel}
         onOpenPerson={openPerson}
-        onTogglePin={togglePinOf}
+        onTogglePin={(id) => flag(id, "listPinned", togglePinOf)}
         onToggleMute={toggleMute}
-        onToggleHidden={toggleHiddenOf}
+        onToggleHidden={(id) => flag(id, "hidden", toggleHiddenOf)}
         onMarkRead={markChatRead}
       />
 
@@ -392,7 +489,7 @@ export default function ChatPage() {
                 {active.group === "directos" ? (
                   <ChatAvatar initials={active.initials} photo={active.photo} size="sm" online={active.online} />
                 ) : (
-                  <span className="hubly-chat-item-hash"><HublyHashIcon size={15} /></span>
+                  <span className="hubly-chat-item-hash">{channel?.emoji || <HublyHashIcon size={15} />}</span>
                 )}
                 <h1>{active.name}</h1>
               </button>
@@ -462,7 +559,7 @@ export default function ChatPage() {
               {roots.length === 0 ? (
                 <div className="hubly-chat-vacio">
                   <h2 className="hubly-chat-vacio-title">Sin mensajes</h2>
-                  <p>{active.id === SELF_CHANNEL_ID ? "Guarda aquí notas y borradores." : `Escribe el primero en ${active.name}.`}</p>
+                  <p>{isSelf ? "Guarda aquí notas y borradores." : `Escribe el primero en ${active.name}.`}</p>
                 </div>
               ) : shown.length === 0 ? (
                 <div className="hubly-chat-vacio">
@@ -472,8 +569,17 @@ export default function ChatPage() {
                 </div>
               ) : (
                 <>
-                  {hiddenCount > 0 ? (
-                    <button type="button" className="hbtn hbtn-xs hbtn-ghost hubly-chat-older" onClick={() => setLimit((v) => v + PAGE_SIZE)}>
+                  {hiddenCount > 0 || (selectedId && hasOlder[selectedId] && !channelQuery) ? (
+                    <button
+                      type="button"
+                      className="hbtn hbtn-xs hbtn-ghost hubly-chat-older"
+                      onClick={() => {
+                        const el = scrollRef.current;
+                        if (el) keepScroll.current = el.scrollHeight - el.scrollTop;
+                        setLimit((v) => v + PAGE_SIZE);
+                        if (hiddenCount === 0 && selectedId) void chatRemote()?.loadOlder(selectedId);
+                      }}
+                    >
                       Ver mensajes anteriores
                     </button>
                   ) : null}
@@ -490,6 +596,7 @@ export default function ChatPage() {
             {notice ? <div className="hubly-chat-notice" role="status">{notice}</div> : null}
 
             <div className="hubly-chat-foot">
+              {typingNow ? <p className="hubly-chat-typing" role="status">{typingNow} está escribiendo…</p> : null}
               {queue.length > 0 ? (
                 <div className="hubly-chat-queue">
                   <button type="button" className="hubly-chat-queue-head" aria-expanded={queueOpen} onClick={() => setQueueOpen((v) => !v)}>
@@ -519,9 +626,10 @@ export default function ChatPage() {
                 key={active.id}
                 ref={composerRef}
                 label={`Mensaje en ${active.name}`}
-                placeholder={active.id === SELF_CHANNEL_ID ? "Escribe una nota…" : `Escribe en ${active.name}…`}
+                placeholder={isSelf ? "Escribe una nota…" : `Escribe en ${active.name}…`}
                 brandId={brandId}
                 mentions={people}
+                onTyping={() => chatRemote()?.typing(active.id)}
                 onSend={(text, attachments) => send(text, attachments)}
                 onSchedule={(text, at, repeat) => {
                   scheduleChatMessage({
@@ -551,6 +659,13 @@ export default function ChatPage() {
           subtitle={subtitle}
           description={channel?.description}
           editable={channel?.type === "agency"}
+          emoji={channel?.emoji}
+          candidates={channel?.type === "agency" ? [me, ...people] : undefined}
+          memberIds={channel?.memberIds}
+          myId={me.id}
+          onSetMembers={(memberIds) => updateChatChannel(active.id, { memberIds })}
+          botsChannelId={chatRemote() && channel && channel.type !== "direct" && channel.type !== "self" ? channel.id : undefined}
+          onNotice={setNotice}
           members={members}
           pinned={pinned}
           files={channelFiles}
@@ -559,6 +674,11 @@ export default function ChatPage() {
           onSave={(patch) => {
             updateChatChannel(active.id, patch);
             setNotice("Cambios guardados");
+          }}
+          onArchive={() => {
+            updateChatChannel(active.id, { archived: true });
+            select(null);
+            setNotice("Canal archivado");
           }}
           onDelete={() => {
             deleteChatChannel(active.id);

@@ -4,6 +4,7 @@ import http from "node:http";
 import { randomUUID } from "node:crypto";
 import fs from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
+import { WebSocketServer } from "ws";
 
 const PORT = Number(process.argv[2] || 54399);
 const db = new PGlite();
@@ -101,6 +102,12 @@ async function handle(req, res, body, url) {
     });
   }
 
+  // Solo para pruebas: da de alta a alguien en una agencia sin pasar por una invitación.
+  if (p === "/__test/member") {
+    await db.query(`insert into public.agency_members (agency_id, user_id, role) values ($1,$2,$3)`, [body.agencyId, body.userId, body.role || "editor"]);
+    return send(200, { ok: true });
+  }
+
   const user = fromAuth(req);
   if (p.startsWith("/rest/v1/rpc/")) {
     const fn = p.slice("/rest/v1/rpc/".length).replace(/\W/g, "");
@@ -108,6 +115,17 @@ async function handle(req, res, body, url) {
     const args = names.map((n, i) => `${n.replace(/\W/g, "")} => $${i + 1}`).join(", ");
     try {
       const r = await run(user, `select * from public.${fn}(${args}) as r`, names.map((n) => body[n]));
+      if (fn === "chat_bot_post" || fn === "chat_flush_due") {
+        for (const row of r.rows) {
+          const created = (await db.query(`select * from public.chat_messages where id = $1`, [row.r])).rows[0];
+          if (created) emitChange("chat_messages", "INSERT", created);
+        }
+      }
+      if (fn === "chat_set_pinned") {
+        const row = (await db.query(`select * from public.chat_messages where id = $1`, [body.target_message])).rows[0];
+        if (row) emitChange("chat_messages", "UPDATE", row);
+      }
+      if (fn === "chat_flush_due") return send(200, r.rows.map((row) => row.r));
       if (r.fields.length === 1 && r.fields[0].name === "r") return send(200, r.rows[0]?.r ?? null);
       return send(200, r.rows);
     } catch (e) {
@@ -124,11 +142,27 @@ async function handle(req, res, body, url) {
     const where = [], params = [];
     for (const [k, v] of url.searchParams) {
       if (["select", "limit", "order", "offset"].includes(k)) continue;
+      if (k === "columns" || k === "on_conflict") continue;
       if (v.startsWith("eq.")) { params.push(v.slice(3)); where.push(`t.${k.replace(/\W/g, "")}::text = $${params.length}`); }
+      if (v === "is.null") where.push(`t.${k.replace(/\W/g, "")} is null`);
+      if (v.startsWith("neq.")) { params.push(v.slice(4)); where.push(`t.${k.replace(/\W/g, "")}::text <> $${params.length}`); }
+      if (v.startsWith("gt.") || v.startsWith("lt.")) { params.push(v.slice(3)); where.push(`t.${k.replace(/\W/g, "")} ${v[0] === "g" ? ">" : "<"} $${params.length}::timestamptz`); }
+      if (v.startsWith("ilike.")) { params.push(v.slice(6).replaceAll("*", "%")); where.push(`t.${k.replace(/\W/g, "")} ilike $${params.length}`); }
+      if (v.startsWith("in.(")) {
+        const values = v.slice(4, -1).split(",").map((x) => x.replace(/^"|"$/g, ""));
+        params.push(values);
+        where.push(`t.${k.replace(/\W/g, "")}::text = any($${params.length})`);
+      }
+    }
+    const whereSql = where.length ? "where " + where.join(" and ") : "";
+    try {
+      if (req.method !== "GET") return send(...(await write(user, req, table, body, url, whereSql, params)));
+    } catch (e) {
+      return send(e.code === "42501" ? 403 : 400, { message: e.message, code: e.code });
     }
     const order = url.searchParams.get("order");
-    const sql = `select ${[list, ...extra].join(",")} from public.${table} t ${where.length ? "where " + where.join(" and ") : ""}
-      ${order ? `order by t.${order.split(".")[0].replace(/\W/g, "")}` : ""} ${url.searchParams.get("limit") ? `limit ${Number(url.searchParams.get("limit"))}` : ""}`;
+    const sql = `select ${[list, ...extra].join(",")} from public.${table} t ${whereSql}
+      ${order ? `order by t.${order.split(".")[0].replace(/\W/g, "")} ${order.includes(".desc") ? "desc" : ""}` : ""} ${url.searchParams.get("limit") ? `limit ${Number(url.searchParams.get("limit"))}` : ""}`;
     try {
       const { rows } = await run(user, sql, params);
       if ((req.headers.accept || "").includes("vnd.pgrst.object")) {
@@ -142,7 +176,150 @@ async function handle(req, res, body, url) {
   send(404, { message: "not found" });
 }
 
-http
+const param = (v) => (v !== null && typeof v === "object" && !Array.isArray(v) ? JSON.stringify(v) : v);
+
+/** Escrituras REST con las reglas reales: se ejecutan con el rol y la identidad de quien llama. */
+async function write(user, req, table, body, url, whereSql, params) {
+  const name = `public.${table}`;
+  if (req.method === "POST") {
+    const rows = Array.isArray(body) ? body : [body];
+    const prefer = req.headers.prefer || "";
+    const conflict = url.searchParams.get("on_conflict");
+    for (const row of rows) {
+      const keys = Object.keys(row).map((k) => k.replace(/\W/g, ""));
+      const marks = keys.map((_, i) => `$${i + 1}`).join(",");
+      let tail = "";
+      if (prefer.includes("ignore-duplicates")) tail = ` on conflict ${conflict ? `(${conflict})` : ""} do nothing`;
+      else if (prefer.includes("merge-duplicates")) tail = ` on conflict (${conflict}) do update set ${keys.filter((k) => !conflict.split(",").includes(k)).map((k) => `${k} = excluded.${k}`).join(",")}`;
+      const r = await run(user, `insert into ${name} (${keys.join(",")}) values (${marks})${tail} returning *`, Object.values(row).map(param));
+      for (const created of r.rows) emitChange(table, "INSERT", created);
+    }
+    return [201];
+  }
+  if (req.method === "PATCH") {
+    const keys = Object.keys(body).map((k) => k.replace(/\W/g, ""));
+    const sets = keys.map((k, i) => `${k} = $${params.length + i + 1}`).join(",");
+    const r = await run(user, `update ${name} t set ${sets} ${whereSql} returning *`, [...params, ...Object.values(body).map(param)]);
+    for (const changed of r.rows) emitChange(table, "UPDATE", changed);
+    return [204];
+  }
+  const r = await run(user, `delete from ${name} t ${whereSql} returning *`, params);
+  for (const gone of r.rows) emitChange(table, "DELETE", gone);
+  return [204];
+}
+
+// Realtime mínimo: el protocolo Phoenix de Supabase, con RLS aplicada a cada suscriptor.
+const sockets = new Set();
+const PRIMARY = { chat_channels: ["id"], chat_messages: ["id"], chat_reactions: ["message_id", "user_id", "emoji"] };
+
+function frame(ws, joinRef, ref, topic, event, payload) {
+  const out = ws.vsn2 ? JSON.stringify([joinRef, ref, topic, event, payload]) : JSON.stringify({ join_ref: joinRef, ref, topic, event, payload });
+  if (ws.readyState === 1) ws.send(out);
+}
+
+function emitChange(table, type, row) {
+  const keys = PRIMARY[table];
+  if (!keys) return;
+  const record = type === "DELETE" ? {} : row;
+  // Como Supabase con RLS: un borrado solo trae la llave primaria.
+  const old_record = type === "DELETE" ? Object.fromEntries(keys.map((k) => [k, row[k]])) : {};
+  const columns = Object.keys(type === "DELETE" ? old_record : row).map((name) => ({ name, type: "text" }));
+  for (const ws of sockets) {
+    for (const join of ws.joins.values()) {
+      const ids = join.bindings
+        .filter((b) => b.table === table && (b.event === "*" || b.event === type))
+        .filter((b) => {
+          if (!b.filter || type === "DELETE") return !b.filter;
+          const [col, value] = b.filter.split("=eq.");
+          return String(row[col]) === value;
+        })
+        .map((b) => b.id);
+      if (ids.length === 0) continue;
+      const visible = type === "DELETE"
+        ? Promise.resolve(true)
+        : run(ws.user, `select 1 from public.${table} where ${keys.map((k, i) => `${k}::text = $${i + 1}`).join(" and ")}`, keys.map((k) => String(row[k]))).then((r) => r.rows.length > 0, () => false);
+      visible.then((ok) => {
+        if (!ok) return;
+        frame(ws, join.joinRef, null, join.topic, "postgres_changes", {
+          ids,
+          data: { type, schema: "public", table, commit_timestamp: new Date().toISOString(), errors: null, columns, record, old_record },
+        });
+      });
+    }
+  }
+}
+
+function presenceOf(topic) {
+  const state = {};
+  for (const ws of sockets) {
+    const join = ws.joins.get(topic);
+    if (join?.presenceKey) state[join.presenceKey] = { metas: [{ phx_ref: `${join.presenceKey}-ref`, ...(join.meta || {}) }] };
+  }
+  return state;
+}
+
+/** El cliente manda sus broadcasts en binario: tipo, seis longitudes y luego cada campo. */
+function decodeBroadcast(buf) {
+  const [joinLen, refLen, topicLen, eventLen, metaLen, encoding] = buf.subarray(1, 7);
+  let at = 7;
+  const take = (n) => buf.subarray(at, (at += n)).toString("utf8");
+  const joinRef = take(joinLen);
+  const ref = take(refLen);
+  const topic = take(topicLen);
+  const event = take(eventLen);
+  take(metaLen);
+  const body = buf.subarray(at).toString("utf8");
+  return [joinRef, ref, topic, "broadcast", { type: "broadcast", event, payload: encoding === 1 ? JSON.parse(body) : body }];
+}
+
+function onSocketMessage(ws, raw, isBinary) {
+  const parsed = isBinary ? decodeBroadcast(raw) : JSON.parse(raw.toString());
+  const isArray = Array.isArray(parsed);
+  if (isArray) ws.vsn2 = true;
+  const [joinRef, ref, topic, event, payload] = isArray
+    ? parsed
+    : [parsed.join_ref, parsed.ref, parsed.topic, parsed.event, parsed.payload];
+  const reply = (response = {}) => frame(ws, joinRef, ref, topic, "phx_reply", { status: "ok", response });
+  if (event === "heartbeat" || event === "access_token") return reply();
+  if (event === "phx_join") {
+    const token = payload.access_token || "";
+    try {
+      const sub = JSON.parse(Buffer.from(token.split(".")[1], "base64url")).sub;
+      ws.user = [...users.values()].find((u) => u.id === sub) || null;
+    } catch {
+      ws.user = null;
+    }
+    let next = 1;
+    const bindings = (payload.config?.postgres_changes || []).map((b) => ({ ...b, id: next++ }));
+    ws.joins.set(topic, { topic, joinRef: joinRef ?? ref, bindings, presenceKey: payload.config?.presence?.key || null });
+    reply({ postgres_changes: bindings });
+    frame(ws, joinRef ?? ref, null, topic, "presence_state", presenceOf(topic));
+    return;
+  }
+  if (event === "phx_leave") {
+    ws.joins.delete(topic);
+    return reply();
+  }
+  if (event === "presence") {
+    const join = ws.joins.get(topic);
+    if (join) join.meta = payload.payload;
+    reply();
+    for (const other of sockets) {
+      const j = other.joins.get(topic);
+      if (j) frame(other, j.joinRef, null, topic, "presence_state", presenceOf(topic));
+    }
+    return;
+  }
+  if (event === "broadcast") {
+    reply();
+    for (const other of sockets) {
+      const j = other.joins.get(topic);
+      if (other !== ws && j) frame(other, j.joinRef, null, topic, "broadcast", payload);
+    }
+  }
+}
+
+const server = http
   .createServer((req, res) => {
     res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
     res.setHeader("Access-Control-Allow-Headers", req.headers["access-control-request-headers"] || "*");
@@ -165,3 +342,26 @@ http
     });
   })
   .listen(PORT, () => console.log(`mock-supabase en http://localhost:${PORT}`));
+
+new WebSocketServer({ server, path: "/realtime/v1/websocket" }).on("connection", (ws) => {
+  ws.joins = new Map();
+  ws.user = null;
+  sockets.add(ws);
+  ws.on("message", (raw, isBinary) => {
+    try {
+      onSocketMessage(ws, raw, isBinary);
+    } catch (e) {
+      console.error("realtime simulado:", e);
+    }
+  });
+  ws.on("close", () => {
+    const topics = [...ws.joins.keys()];
+    sockets.delete(ws);
+    for (const topic of topics) {
+      for (const other of sockets) {
+        const j = other.joins.get(topic);
+        if (j) frame(other, j.joinRef, null, topic, "presence_state", presenceOf(topic));
+      }
+    }
+  });
+});

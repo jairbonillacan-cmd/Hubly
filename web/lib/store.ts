@@ -11,6 +11,7 @@ import {
 import { selectAccountRecommendations } from "./domain-selectors";
 import { localIsoDate } from "./date";
 import { nextOccurrence, toggleReaction } from "./chat";
+import { chatRemote, newChatId, startChatLive } from "./chat-live";
 import { moveInList } from "./use-kanban-drag";
 import { backendEnabled } from "./supabase/config";
 import { createAgent, duplicateAgent, isBlankAgent } from "./agents";
@@ -38,6 +39,7 @@ import type {
   BrandCore,
   ChatAttachment,
   ChatChannel,
+  ChatMessage,
   ChatReminder,
   ChatScheduledMessage,
   BrandProject,
@@ -315,7 +317,8 @@ export interface HublyStoreState extends HublyWorkspaceData {
   toggleChatPin: (messageId: string) => void;
   markChatRead: (channelId: string) => void;
   addChatChannel: (input: Pick<ChatChannel, "name" | "type"> & Partial<ChatChannel>) => ChatChannel;
-  updateChatChannel: (channelId: string, patch: Partial<Pick<ChatChannel, "name" | "description">>) => void;
+  updateChatChannel: (channelId: string, patch: Partial<Pick<ChatChannel, "name" | "description" | "archived" | "emoji" | "memberIds">>) => void;
+  setChatPreference: (channelId: string, patch: Partial<Pick<ChatChannel, "muted" | "listPinned" | "hidden">>) => void;
   /** Borra el canal con sus mensajes y lo que tenía en cola. */
   deleteChatChannel: (channelId: string) => void;
   scheduleChatMessage: (input: Omit<ChatScheduledMessage, "id">) => void;
@@ -357,10 +360,11 @@ function extractWorkspaceData(state: HublyStoreState): HublyWorkspaceData {
     assets: state.assets,
     projects: state.projects,
     ads: state.ads,
-    channels: state.channels,
-    messages: state.messages,
-    chatScheduled: state.chatScheduled,
-    chatReminders: state.chatReminders,
+    channels: chatRemote() ? [] : state.channels,
+    // Con las tablas de chat activas, nada del chat se escribe en el documento.
+    messages: chatRemote() ? [] : state.messages,
+    chatScheduled: chatRemote() ? [] : state.chatScheduled,
+    chatReminders: chatRemote() ? [] : state.chatReminders,
     team: state.team,
     invitations: state.invitations,
     activityEvents: state.activityEvents,
@@ -563,6 +567,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
           if (saved && loaded.data.brands.some((b) => b.id === saved)) activeBrandId = saved;
         } catch {}
         set({ ...loaded.data, activeBrandId, activeNotebookId: null, hydrated: true, role: loaded.role });
+        void startChatLive({ agencyId: loaded.agencyId, get: () => get(), set: (patch) => set((s) => patch(s) as Partial<HublyStoreState>) });
       } else if (loaded.kind === "unauthenticated") {
         window.location.assign("/login");
       } else if (loaded.kind === "no_agency") {
@@ -2081,23 +2086,23 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     const body = text.trim();
     if (!body && !options?.attachment) return;
     const now = new Date();
-    set((s) => ({
-      messages: [
-        ...s.messages,
-        {
-          id: `msg-${now.getTime()}-${s.messages.length}`,
-          channelId,
-          sender,
-          senderInitials,
-          text: body,
-          time: `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`,
-          createdAt: now.getTime(),
-          ...(options?.parentId ? { parentId: options.parentId } : {}),
-          ...(options?.attachment ? { attachment: options.attachment } : {}),
-        },
-      ],
-    }));
-    persistWorkspaceState(get());
+    const remote = chatRemote();
+    const message: ChatMessage = {
+      id: remote ? newChatId() : `msg-${now.getTime()}-${get().messages.length}`,
+      channelId,
+      sender,
+      senderInitials,
+      text: body,
+      time: `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`,
+      createdAt: now.getTime(),
+      ...(remote && get().profile?.id ? { senderId: get().profile.id } : {}),
+      ...(remote && get().profile?.avatarUrl ? { senderAvatar: get().profile.avatarUrl } : {}),
+      ...(options?.parentId ? { parentId: options.parentId } : {}),
+      ...(options?.attachment ? { attachment: options.attachment } : {}),
+    };
+    set((s) => ({ messages: [...s.messages, message] }));
+    if (remote) remote.sendMessage(message);
+    else persistWorkspaceState(get());
   },
 
   editChatMessage: (messageId, text) => {
@@ -2106,46 +2111,65 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     set((s) => ({
       messages: s.messages.map((m) => (m.id === messageId ? { ...m, text: body, editedAt: Date.now() } : m)),
     }));
-    persistWorkspaceState(get());
+    chatRemote()?.editMessage(messageId, body);
+    if (!chatRemote()) persistWorkspaceState(get());
   },
 
   deleteChatMessage: (messageId) => {
     set((s) => ({ messages: s.messages.filter((m) => m.id !== messageId && m.parentId !== messageId) }));
-    persistWorkspaceState(get());
+    chatRemote()?.deleteMessage(messageId);
+    if (!chatRemote()) persistWorkspaceState(get());
   },
 
   toggleChatReaction: (messageId, emoji, who) => {
+    const had = get().messages.find((m) => m.id === messageId)?.reactions?.[emoji]?.includes(who) ?? false;
     set((s) => ({
       messages: s.messages.map((m) =>
         m.id === messageId ? { ...m, reactions: toggleReaction(m.reactions, emoji, who) } : m
       ),
     }));
-    persistWorkspaceState(get());
+    chatRemote()?.react(messageId, emoji, !had, who);
+    if (!chatRemote()) persistWorkspaceState(get());
   },
 
   toggleChatPin: (messageId) => {
+    const pinned = !get().messages.find((m) => m.id === messageId)?.pinned;
     set((s) => ({
-      messages: s.messages.map((m) => (m.id === messageId ? { ...m, pinned: !m.pinned } : m)),
+      messages: s.messages.map((m) => (m.id === messageId ? { ...m, pinned } : m)),
     }));
-    persistWorkspaceState(get());
+    chatRemote()?.pin(messageId, pinned);
+    if (!chatRemote()) persistWorkspaceState(get());
   },
 
   markChatRead: (channelId) => {
+    chatRemote()?.markRead(channelId);
     if (!get().channels.some((c) => c.id === channelId && c.unread > 0)) return;
-    set((s) => ({ channels: s.channels.map((c) => (c.id === channelId ? { ...c, unread: 0 } : c)) }));
-    persistWorkspaceState(get());
+    set((s) => ({ channels: s.channels.map((c) => (c.id === channelId ? { ...c, unread: 0, mentioned: false } : c)) }));
+    if (!chatRemote()) persistWorkspaceState(get());
   },
 
   addChatChannel: (input) => {
-    const channel: ChatChannel = { unread: 0, ...input, id: `ch-${Date.now()}` };
+    const remote = chatRemote();
+    const channel: ChatChannel = { unread: 0, ...input, id: remote ? newChatId() : `ch-${Date.now()}` };
     set((s) => ({ channels: [...s.channels, channel] }));
-    persistWorkspaceState(get());
+    if (remote) remote.addChannel(channel);
+    else persistWorkspaceState(get());
     return channel;
   },
 
   updateChatChannel: (channelId, patch) => {
     set((s) => ({ channels: s.channels.map((c) => (c.id === channelId ? { ...c, ...patch } : c)) }));
-    persistWorkspaceState(get());
+    chatRemote()?.updateChannel(channelId, patch);
+    if (!chatRemote()) persistWorkspaceState(get());
+  },
+
+  setChatPreference: (channelId, patch) => {
+    set((s) => ({ channels: s.channels.map((c) => (c.id === channelId ? { ...c, ...patch } : c)) }));
+    chatRemote()?.setPreference(channelId, {
+      ...(patch.muted !== undefined ? { muted: patch.muted } : {}),
+      ...(patch.listPinned !== undefined ? { pinned: patch.listPinned } : {}),
+      ...(patch.hidden !== undefined ? { hidden: patch.hidden } : {}),
+    });
   },
 
   deleteChatChannel: (channelId) => {
@@ -2155,22 +2179,30 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
       chatScheduled: (s.chatScheduled || []).filter((q) => q.channelId !== channelId),
       chatReminders: (s.chatReminders || []).filter((r) => r.channelId !== channelId),
     }));
-    persistWorkspaceState(get());
+    chatRemote()?.deleteChannel(channelId);
+    if (!chatRemote()) persistWorkspaceState(get());
   },
 
   scheduleChatMessage: (input) => {
-    set((s) => ({ chatScheduled: [...(s.chatScheduled || []), { ...input, id: `cola-${Date.now()}` }] }));
-    persistWorkspaceState(get());
+    const remote = chatRemote();
+    const item = { ...input, id: remote ? newChatId() : `cola-${Date.now()}` };
+    set((s) => ({ chatScheduled: [...(s.chatScheduled || []), item] }));
+    if (remote) remote.schedule(item);
+    else persistWorkspaceState(get());
   },
 
   cancelChatScheduled: (id) => {
     set((s) => ({ chatScheduled: (s.chatScheduled || []).filter((q) => q.id !== id) }));
-    persistWorkspaceState(get());
+    chatRemote()?.cancelScheduled(id);
+    if (!chatRemote()) persistWorkspaceState(get());
   },
 
   addChatReminder: (input) => {
-    set((s) => ({ chatReminders: [...(s.chatReminders || []), { ...input, id: `rec-${Date.now()}` }] }));
-    persistWorkspaceState(get());
+    const remote = chatRemote();
+    const item = { ...input, id: remote ? newChatId() : `rec-${Date.now()}` };
+    set((s) => ({ chatReminders: [...(s.chatReminders || []), item] }));
+    if (remote) remote.addReminder(item);
+    else persistWorkspaceState(get());
   },
 
   flushChatQueue: (now) => {
@@ -2179,7 +2211,10 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     const dueMessages = chatScheduled.filter((q) => mine(q) && q.sendAt <= now);
     const dueReminders = chatReminders.filter((r) => mine(r) && r.remindAt <= now);
     if (dueMessages.length === 0 && dueReminders.length === 0) return;
-    for (const q of dueMessages) get().sendChatMessage(q.channelId, q.text, q.sender, q.senderInitials);
+    const remote = chatRemote();
+    // Con tablas, el servidor envía cada uno una sola vez aunque haya varias sesiones abiertas.
+    if (remote && dueMessages.length > 0) remote.flushDue();
+    if (!remote) for (const q of dueMessages) get().sendChatMessage(q.channelId, q.text, q.sender, q.senderInitials);
     for (const r of dueReminders) {
       get().addNotification({
         title: "Recordatorio del chat",
@@ -2192,12 +2227,13 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     const remindedIds = new Set(dueReminders.map((r) => r.id));
     set((s) => ({
       chatScheduled: (s.chatScheduled || []).flatMap((q) => {
-        if (!handled.has(q.id)) return [q];
+        if (!handled.has(q.id) || remote) return [q];
         return q.repeat === "none" ? [] : [{ ...q, sendAt: nextOccurrence(q.sendAt, q.repeat, now) }];
       }),
       chatReminders: (s.chatReminders || []).filter((r) => !remindedIds.has(r.id)),
     }));
-    persistWorkspaceState(get());
+    if (remote) for (const r of dueReminders) remote.removeReminder(r.id);
+    else persistWorkspaceState(get());
   },
 
   resetDemoData: (options) => {
