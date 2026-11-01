@@ -1,3 +1,4 @@
+import { readJson } from "@/lib/api-guard";
 import { NextResponse } from "next/server";
 import { cleanButtons } from "@/lib/chat-rows";
 import { createSupabaseServer } from "@/lib/supabase/server";
@@ -9,7 +10,7 @@ const MAX_BODY_CHARS = 8000;
 export async function POST(request: Request, { params }: { params: Promise<{ token: string }> }) {
   if (!backendEnabled) return NextResponse.json({ error: "not_available" }, { status: 404 });
   const { token } = await params;
-  const body = (await request.json().catch(() => null)) as { text?: unknown; botones?: unknown; responder_a?: unknown } | null;
+  const body = await readJson<{ text?: unknown; botones?: unknown; responder_a?: unknown }>(request);
   const text = typeof body?.text === "string" ? body.text.trim() : "";
   if (!text || text.length > MAX_BODY_CHARS) return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
 

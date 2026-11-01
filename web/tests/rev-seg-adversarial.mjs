@@ -83,7 +83,7 @@ const roles = (await db.query("select role, count(*) c from public.agency_member
 ok("queda al menos un dueño", roles.some((r) => r.role === "owner" && Number(r.c) >= 1));
 await auth(AD, `select public.update_member_role($1,$2,'owner')`, [ag, O]); // restaurar para el resto
 
-// 3) CHECK de 0007 con prefijo no-UUID (NULL pasa la restricción)
+// 3) CHECK de 0010 con prefijo no-UUID (NULL pasa la restricción)
 const insertAsset = `insert into public.media_assets (agency_id, brand_id, name, kind, mime, size_bytes, path, status) values ($1,'b1','x.png','image','image/png',10,$2,'ready') returning id`;
 let nonUuidAsset = null;
 try {

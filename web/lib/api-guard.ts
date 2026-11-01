@@ -42,6 +42,7 @@ const RULES: Rule[] = [
   { method: "POST", prefix: "/api/members", limit: 60, windowMs: MINUTE },
   { method: "POST", prefix: "/api/media", limit: 120, windowMs: MINUTE },
   { method: "POST", prefix: "/api/share", limit: 120, windowMs: MINUTE },
+  { method: "POST", prefix: "/api/chat/", limit: 120, windowMs: MINUTE },
   { method: "GET", prefix: "/api/share/", limit: 600, windowMs: MINUTE },
   { method: "POST", prefix: "/api/invitations/", limit: 30, windowMs: MINUTE },
   { method: "GET", prefix: "/api/invitations/", limit: 60, windowMs: MINUTE },

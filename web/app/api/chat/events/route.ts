@@ -1,10 +1,11 @@
+import { readJson } from "@/lib/api-guard";
 import { NextResponse } from "next/server";
 import { deliver, type BotDelivery } from "@/lib/chat-bot-delivery";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
 /** Avisa a los bots de un mensaje o de un clic en sus botones. Los permisos los decide la base de datos. */
 export async function POST(request: Request) {
-  const body = (await request.json().catch(() => null)) as { messageId?: unknown; buttonId?: unknown } | null;
+  const body = await readJson<{ messageId?: unknown; buttonId?: unknown }>(request, 2048);
   if (typeof body?.messageId !== "string") return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
   const buttonId = typeof body.buttonId === "string" ? body.buttonId.slice(0, 40) : undefined;
 

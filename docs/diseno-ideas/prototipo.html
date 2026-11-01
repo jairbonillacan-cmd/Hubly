@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ideas: prototipo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+/* Valores copiados de docs/GUIA-UX-UI-AGENTES.md §3. En la app se usan los tokens reales. */
+:root {
+  --ui-surface:#FFFFFF; --ui-surface-2:#F8FAFC; --ui-muted:#F1F5F9; --ui-border:#E2E8F0; --ui-border-strong:#CBD5E1;
+  --ui-text:#0F172A; --ui-text-2:#334155; --ui-text-3:#475569; --ui-text-4:#64748B; --ui-text-5:#94A3B8;
+  --hb-accent:#16324F; --hb-accent-hover:#0F2539; --hb-accent-edge:#0B1C2E; --hb-accent-text:#16324F; --hb-accent-rgb:22 50 79; --on-accent:#FFFFFF;
+  --ui-sky-soft:#DCEFF9; --ui-sky-text:#16324F; --ui-sky-border:#BFE2F4; --danger:#B3261E;
+}
+html.dark {
+  --ui-surface:#15202B; --ui-surface-2:#1C2A38; --ui-muted:#263747; --ui-border:#2B3E50; --ui-border-strong:#3A5064;
+  --ui-text:#ECECF1; --ui-text-2:#D2D2DB; --ui-text-3:#BDBDC9; --ui-text-4:#A5A5B3; --ui-text-5:#8F8F9E;
+  --hb-accent:#2A76B0; --hb-accent-hover:#3487C4; --hb-accent-edge:#1D5A88; --hb-accent-text:#9AD4F1; --hb-accent-rgb:42 118 176;
+  --ui-sky-soft:#22384A; --ui-sky-text:#BFE2F4; --ui-sky-border:#2F4C63; --danger:#F2A69F;
+}
+* { box-sizing:border-box; }
+html, body { margin:0; background:var(--ui-surface); color:var(--ui-text-2); font:400 14px/1.45 "Bricolage Grotesque",sans-serif; }
+button, input, select { font:inherit; }
+button { cursor:pointer; }
+:focus-visible { outline:2px solid var(--hb-accent); outline-offset:2px; }
+svg { display:block; flex:none; }
+[hidden] { display:none !important; }
+h1, h2, h3, p { margin:0; }
+
+/* Barra del prototipo: no forma parte del diseño */
+.proto-bar { display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; padding:8px 32px; background:var(--ui-muted); border-bottom:1px solid var(--ui-border); font-size:12px; color:var(--ui-text-3); }
+.proto-bar strong { font-weight:600; color:var(--ui-text); }
+.proto-bar select, .proto-bar button { height:30px; padding:0 10px; border:1px solid var(--ui-border-strong); border-radius:8px; background:var(--ui-surface); color:var(--ui-text); font-size:12px; }
+.proto-bar .sp { flex:1; }
+
+.page { padding:0 32px 100px; }
+.subnav { display:flex; gap:2px; padding:16px 0; overflow-x:auto; border-bottom:1px solid var(--ui-border); margin-bottom:20px; }
+.subnav-tab, .inner-tab { display:inline-flex; align-items:center; height:28px; padding:0 14px; border:1px solid transparent; border-radius:10px; background:transparent; color:var(--ui-text-4); font-size:13px; font-weight:600; white-space:nowrap; transition:background-color 150ms, color 150ms; }
+.subnav-tab:hover, .inner-tab:hover { color:var(--ui-text); background:var(--ui-surface-2); }
+.subnav-tab[aria-selected="true"], .inner-tab[aria-selected="true"] { background:var(--ui-sky-soft); border-color:var(--ui-sky-border); color:var(--ui-sky-text); }
+
+.section-title { font-size:16px; font-weight:700; letter-spacing:-.01em; color:var(--ui-text); }
+.section-sub { font-size:12.5px; color:var(--ui-text-4); margin:2px 0 14px; }
+
+.hbtn { --edge:var(--ui-border-strong); display:inline-flex; align-items:center; justify-content:center; gap:6px; height:36px; padding:0 14px; border:1px solid var(--ui-border-strong); border-radius:12px; background:var(--ui-surface); color:var(--ui-text-2); font-size:13px; font-weight:600; line-height:1; white-space:nowrap; box-shadow:0 4px 0 var(--edge); transition:transform 90ms cubic-bezier(.4,0,.2,1), box-shadow 90ms cubic-bezier(.4,0,.2,1), background-color 150ms; margin-bottom:4px; }
+.hbtn:hover:not(:disabled) { background:var(--ui-surface-2); color:var(--ui-text); }
+.hbtn:active:not(:disabled) { transform:translateY(3px); box-shadow:0 1px 0 var(--edge); }
+.hbtn:disabled { opacity:.55; cursor:not-allowed; }
+.hbtn-primary { --edge:var(--hb-accent-edge); background:var(--hb-accent); border-color:var(--hb-accent-hover); color:var(--on-accent); }
+.hbtn-primary:hover:not(:disabled) { background:var(--hb-accent-hover); color:var(--on-accent); }
+.hbtn-ghost { border-color:transparent; background:transparent; box-shadow:none; margin-bottom:0; }
+.hbtn-sm { height:30px; padding:0 10px; font-size:12.5px; border-radius:10px; }
+
+.paste { display:flex; gap:8px; max-width:640px; }
+.paste-field { flex:1; min-width:0; display:flex; align-items:center; gap:8px; height:40px; padding:0 12px; border:1px solid var(--ui-border-strong); border-radius:10px; background:var(--ui-surface); color:var(--ui-text-4); }
+.paste-field:focus-within { outline:2px solid var(--hb-accent); outline-offset:2px; }
+.paste-field input { flex:1; min-width:0; border:0; outline:0; background:transparent; color:var(--ui-text); font-size:13.5px; }
+.paste-field input::placeholder { color:var(--ui-text-4); }
+.field-error { color:var(--danger); font-size:12px; margin-top:6px; }
+.field-ok { color:var(--ui-text-3); font-size:12px; margin-top:6px; }
+
+.toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:20px 0 16px; }
+.toolbar .sp { flex:1; }
+.count { font-size:11px; font-weight:600; padding:1px 7px; border-radius:999px; background:var(--ui-muted); color:var(--ui-text-3); margin-left:6px; }
+.pick { height:32px; padding:0 10px; border:1px solid var(--ui-border-strong); border-radius:8px; background:var(--ui-surface); color:var(--ui-text-2); font-size:12.5px; font-weight:500; }
+
+.idea-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:20px 16px; }
+.idea-card { display:block; width:100%; min-width:0; padding:0; border:0; background:transparent; text-align:left; color:inherit; border-radius:14px; }
+.idea-card:hover .idea-title { color:var(--hb-accent-text); text-decoration:underline; text-underline-offset:2px; }
+.idea-cover { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; aspect-ratio:9/16; border:1px solid var(--ui-border); border-radius:14px; background:var(--ui-muted); color:var(--ui-text-4); font-size:11px; font-weight:500; overflow:hidden; transition:border-color 150ms; }
+.idea-card:hover .idea-cover { border-color:var(--ui-border-strong); }
+.net { position:absolute; top:8px; left:8px; padding:2px 7px; border-radius:6px; background:var(--ui-surface); border:1px solid var(--ui-border); color:var(--ui-text-3); font-size:11px; font-weight:600; }
+.saved { position:absolute; top:8px; right:8px; padding:2px 7px; border-radius:6px; background:var(--ui-surface); border:1px solid var(--ui-border); color:var(--ui-text-3); font-size:11px; font-weight:600; }
+.idea-title { margin-top:8px; font-size:13px; font-weight:600; color:var(--ui-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.idea-meta { margin-top:2px; font-size:11px; color:var(--ui-text-4); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-variant-numeric:tabular-nums; }
+
+.empty { padding:64px 16px; text-align:center; font-size:13px; color:var(--ui-text-4); }
+.empty strong { display:block; font-size:15px; font-weight:600; color:var(--ui-text); margin-bottom:4px; }
+.empty .hbtn { margin-top:14px; }
+.loading { padding:64px 16px; font-size:13px; color:var(--ui-text-4); }
+
+.back { display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 8px 0 4px; margin:0 0 12px -4px; border:0; border-radius:8px; background:transparent; color:var(--ui-text-4); font-size:12.5px; font-weight:600; }
+.back:hover { color:var(--ui-text); background:var(--ui-surface-2); }
+.idea-detail { display:grid; grid-template-columns:minmax(260px,340px) minmax(0,1fr); gap:32px; align-items:start; }
+.player { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; aspect-ratio:9/16; border:1px solid var(--ui-border); border-radius:14px; background:var(--ui-muted); color:var(--ui-text-4); font-size:12.5px; text-align:center; padding:16px; }
+.detail-title { font-size:20px; font-weight:700; letter-spacing:-.01em; color:var(--ui-text); line-height:1.25; overflow-wrap:anywhere; }
+.detail-author { display:flex; flex-wrap:wrap; gap:4px 8px; align-items:center; margin:6px 0 4px; font-size:12.5px; color:var(--ui-text-4); }
+.detail-author a { color:var(--hb-accent-text); font-weight:600; display:inline-flex; gap:4px; align-items:center; }
+.metrics { font-size:13px; color:var(--ui-text-2); font-variant-numeric:tabular-nums; }
+.metrics small { font-size:11px; color:var(--ui-text-4); }
+.actions { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 20px; }
+.idea-analysis { border:1px solid var(--ui-border); border-radius:14px; }
+.analysis-row { padding:16px 20px; }
+.analysis-row + .analysis-row { border-top:1px solid var(--ui-border); }
+.analysis-row h3 { font-size:13.5px; font-weight:600; color:var(--ui-text); margin-bottom:4px; }
+.analysis-row p { font-size:14px; }
+.analysis-note { display:flex; align-items:center; gap:6px; padding:10px 20px; border-top:1px solid var(--ui-border); font-size:11px; color:var(--ui-text-4); }
+.analysis-state { padding:16px 20px; font-size:13px; color:var(--ui-text-3); display:flex; flex-wrap:wrap; align-items:center; gap:10px; justify-content:space-between; }
+.caption { margin-top:20px; }
+.label { font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ui-text-4); margin-bottom:4px; }
+.caption p { font-size:13px; color:var(--ui-text-3); overflow-wrap:anywhere; }
+.notice { padding:10px 12px; border:1px solid var(--ui-border); border-radius:10px; font-size:13px; color:var(--ui-text-2); margin-bottom:16px; }
+
+.toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); z-index:90; display:flex; gap:12px; padding:10px 14px; border-radius:12px; background:var(--ui-text); color:var(--ui-surface); font-size:13px; font-weight:500; }
+
+@media (max-width:767.98px) {
+  .proto-bar { padding:8px 12px; }
+  .page { padding:0 12px 100px; }
+  .idea-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px 12px; }
+  .idea-detail { grid-template-columns:minmax(0,1fr); gap:16px; }
+  .player { max-width:280px; width:100%; margin:0 auto; }
+  .paste { flex-direction:column; align-items:stretch; }
+  .paste-field { flex:none; min-height:44px; }
+  .subnav { scrollbar-width:none; }
+  .hbtn, .pick, .subnav-tab, .inner-tab, .back { min-height:44px; }
+  .actions .hbtn { flex:1 1 140px; }
+  .toolbar .sp { display:none; }
+}
+@media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="i-link" fill="none" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path stroke="currentColor" opacity=".3" d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path stroke="currentColor" d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></g>
+    <g id="i-spark"><path fill="currentColor" d="M10 3.6c.2-.7 1.2-.7 1.4 0l1 3.7a4 4 0 0 0 2.8 2.8l3.7 1c.7.2.7 1.2 0 1.4l-3.7 1a4 4 0 0 0-2.8 2.8l-1 3.7c-.2.7-1.2.7-1.4 0l-1-3.7A4 4 0 0 0 6.2 14l-3.7-1c-.7-.2-.7-1.2 0-1.4l3.7-1A4 4 0 0 0 9 7.8l1-4.2Z"/><path fill="currentColor" opacity=".3" d="M18.4 2.8c.1-.4.7-.4.8 0l.4 1.5c.1.5.5.9 1 1l1.5.4c.4.1.4.7 0 .8l-1.5.4c-.5.1-.9.5-1 1l-.4 1.5c-.1.4-.7.4-.8 0L18 8.9c-.1-.5-.5-.9-1-1l-1.5-.4c-.4-.1-.4-.7 0-.8l1.5-.4c.5-.1.9-.5 1-1l.4-1.5Z"/></g>
+    <g id="i-back" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path stroke="currentColor" opacity=".3" d="M19.5 12h-13"/><path stroke="currentColor" d="M11 6l-6 6 6 6"/></g>
+    <g id="i-image"><rect x="2.8" y="4" width="18.4" height="16" rx="3.4" fill="currentColor" opacity=".3"/><circle cx="8.4" cy="9.4" r="1.9" fill="currentColor"/><path fill="currentColor" d="M5.2 18.4h13.6c.8 0 1.3-.9.8-1.6l-3.1-4.1a1.2 1.2 0 0 0-1.9 0l-2 2.5-1.5-1.8a1.2 1.2 0 0 0-1.9 0l-4.7 3.4c-.6.5-.3 1.6.7 1.6Z"/></g>
+    <g id="i-external"><rect x="3" y="5" width="16" height="16" rx="3.4" fill="currentColor" opacity=".3"/><path fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" d="M12 12 20.5 3.5M14.5 3.5h6v6"/></g>
+    <g id="i-calendar"><rect x="3" y="4.6" width="18" height="16.6" rx="3.2" fill="currentColor" opacity=".3"/><path fill="currentColor" d="M6.2 4.6h11.6A3.2 3.2 0 0 1 21 7.8v2.4H3V7.8a3.2 3.2 0 0 1 3.2-3.2Z"/><rect x="7" y="2.6" width="2.2" height="4.6" rx="1.1" fill="currentColor"/><rect x="14.8" y="2.6" width="2.2" height="4.6" rx="1.1" fill="currentColor"/></g>
+  </defs>
+</svg>
+
+<div class="proto-bar">
+  <strong>Prototipo · Datos de ejemplo</strong>
+  <label>Estado
+    <select id="state">
+      <option value="data">Con datos</option>
+      <option value="loading">Cargando</option>
+      <option value="empty">Guardadas vacío</option>
+      <option value="filter">Vacío por filtro</option>
+      <option value="error">Error de red</option>
+      <option value="long">Mucho contenido</option>
+    </select>
+  </label>
+  <span class="sp"></span>
+  <button type="button" id="theme" aria-pressed="false">Modo oscuro</button>
+</div>
+
+<main class="page">
+  <nav class="subnav" role="tablist" aria-label="Secciones de parrilla">
+    <button class="subnav-tab" role="tab" aria-selected="false" tabindex="-1">Calendario</button>
+    <button class="subnav-tab" role="tab" aria-selected="true">Ideas</button>
+    <button class="subnav-tab" role="tab" aria-selected="false" tabindex="-1">Mensajes</button>
+    <button class="subnav-tab" role="tab" aria-selected="false" tabindex="-1">Analytics</button>
+    <button class="subnav-tab" role="tab" aria-selected="false" tabindex="-1">Tableros</button>
+    <button class="subnav-tab" role="tab" aria-selected="false" tabindex="-1">Reportes</button>
+    <button class="subnav-tab" role="tab" aria-selected="false" tabindex="-1">Links</button>
+  </nav>
+
+  <section id="gallery">
+    <h1 class="section-title">Ideas</h1>
+    <p class="section-sub">Reels de referencia para tus próximos posts.</p>
+
+    <form class="paste" id="paste" novalidate>
+      <label class="paste-field">
+        <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-link"/></svg>
+        <input id="link" type="url" aria-label="Link del reel" aria-describedby="link-msg" placeholder="Pega un link de Instagram o TikTok">
+      </label>
+      <button class="hbtn hbtn-secondary" id="paste-btn" type="submit">Guardar idea</button>
+    </form>
+    <p id="link-msg" class="field-error" hidden></p>
+
+    <div class="toolbar">
+      <div role="tablist" aria-label="Colección">
+        <button type="button" class="inner-tab" role="tab" data-tab="library" aria-selected="true">Biblioteca<span class="count" id="n-lib">8</span></button>
+        <button type="button" class="inner-tab" role="tab" data-tab="saved" aria-selected="false">Guardadas<span class="count" id="n-saved">2</span></button>
+      </div>
+      <span class="sp"></span>
+      <select class="pick" id="f-niche" aria-label="Filtrar por sector">
+        <option value="">Todos los sectores</option><option>Cafeterías</option><option>Salud</option><option>Moda</option>
+      </select>
+      <select class="pick" id="f-net" aria-label="Filtrar por red">
+        <option value="">Todas las redes</option><option>Instagram</option><option>TikTok</option>
+      </select>
+    </div>
+
+    <div id="content"></div>
+  </section>
+
+  <section id="detail" hidden></section>
+</main>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+const IDEAS = [
+  {id:1,net:"Instagram",niche:"Cafeterías",title:"Proceso del café en un solo plano",author:"@cafe.bruma",views:"48.2 k",likes:"3,120",comments:"86",age:"hace 3 semanas",caption:"De la tostadora a tu taza, sin cortes.",hook:"Un plano continuo que no permite adivinar el final.",why:"El caption promete un proceso completo, y la cifra de comentarios sugiere que el tema genera preguntas.",adapt:"Graba de 15 a 20 segundos del proceso más visual de tu marca, sin cortes y sin hablar a cámara.",saved:true},
+  {id:2,net:"TikTok",niche:"Salud",title:"Tres mitos sobre la limpieza dental",author:"@clinica.norte",views:null,age:"hace 1 mes",caption:"Mito 3: si no duele, no hay problema.",hook:"Abre con un mito que muchos creen.",why:"La estructura en lista hace que quieras ver el siguiente punto.",adapt:"Elige tres dudas que tus clientes repiten y responde cada una en una frase.",saved:false,noCover:true},
+  {id:3,net:"Instagram",niche:"Moda",title:"Una prenda, tres formas de usarla",author:"@atelier.lima",views:"21.4 k",likes:"1,884",comments:"42",age:"hace 2 meses",caption:"¿Cuál es tu favorita, 1, 2 o 3?",hook:"Termina con una pregunta fácil de responder.",why:"La pregunta numerada invita a comentar con poco esfuerzo.",adapt:"Muestra un producto en tres usos y pide elegir un número.",saved:true},
+  {id:4,net:"Instagram",niche:"Cafeterías",title:"Lo que nadie ve antes de abrir",author:"@panaderia.sol",views:"12.7 k",likes:"904",comments:"19",age:"hace 2 semanas",caption:"5:40 a. m. y el horno ya está listo.",hook:"La hora exacta crea curiosidad desde el inicio.",why:"Enseñar lo que normalmente no se ve hace cercana a la marca.",adapt:"Graba los minutos previos a abrir tu negocio con la hora en pantalla.",saved:false},
+  {id:5,net:"TikTok",niche:"Moda",title:"Antes y después de un arreglo",author:"@sastre.centro",views:null,age:"hace 5 días",caption:"Le quedaba grande. Ya no.",hook:"El contraste se entiende en menos de un segundo.",why:"El caption es corto y deja el resultado a la vista.",adapt:"Enseña un caso real, con permiso del cliente, en dos tomas: antes y después.",saved:false,noCover:true},
+  {id:6,net:"Instagram",niche:"Salud",title:"Qué llevar a tu primera consulta",author:"@clinica.norte",views:"6.3 k",likes:"410",comments:"12",age:"hace 1 semana",caption:"Guárdalo para tu próxima cita.",hook:"Resuelve una duda práctica de inmediato.",why:"La invitación a guardar se ajusta a un contenido útil para después.",adapt:"Haz una lista corta de lo que debe saber un cliente antes de su primera visita.",saved:false},
+  {id:7,net:"Instagram",niche:"Cafeterías",title:"La receta que más nos piden",author:"@cafe.bruma",views:"33.9 k",likes:"2,610",comments:"158",age:"hace 3 meses",caption:"Nos la pidieron 40 veces. Aquí está.",hook:"La demanda del público es la razón para verlo.",why:"Decir cuánto se ha pedido funciona como prueba social.",adapt:"Toma la pregunta más repetida de tus mensajes y respóndela en video.",saved:false},
+  {id:8,net:"Instagram",niche:"Moda",title:"Cómo elegir la talla sin probarte",author:"@atelier.lima",views:"9.8 k",likes:"344",comments:"7",age:"hace 2 meses",caption:"Solo necesitas una cinta métrica.",hook:"Promete resolver un problema común al comprar en línea.",why:"El tema reduce una objeción de compra.",adapt:"Explica cómo resolver la principal duda que frena una compra de tu marca.",saved:false}
+];
+const LONG = {id:99,net:"Instagram",niche:"Moda",title:"Un título muy largo escrito por alguien que quiso explicar con todo detalle de qué trataba este reel y por qué le pareció importante guardarlo para más adelante en la parrilla de su marca",author:"@una.cuenta.con.un.nombre.de.usuario.extremadamente.largo.para.probar",views:"1,204.8 k",likes:"88,120",comments:"12,086",age:"hace 11 meses",caption:"asd",hook:"",why:"",adapt:"",saved:false,noAnalysis:true};
+
+const $ = (s) => document.querySelector(s);
+const icon = (n,s) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const esc = (t) => String(t).replace(/[&<>"]/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let tab = "library", state = "data", lastOpener = null, toastTimer;
+
+function list() {
+  let items = state === "long" ? [LONG, ...IDEAS] : IDEAS;
+  if (tab === "saved") items = items.filter((i) => i.saved);
+  const n = $("#f-niche").value, r = $("#f-net").value;
+  return items.filter((i) => (!n || i.niche === n) && (!r || i.net === r));
+}
+function card(i) {
+  const cover = i.noCover ? `${icon("image",22)}<span>Sin portada</span>` : `${icon("image",22)}<span>Portada del reel</span>`;
+  const meta = [i.author, i.views && `${i.views} vistas`].filter(Boolean).join(" · ");
+  return `<button type="button" class="idea-card" data-id="${i.id}" title="${esc(i.title)}">
+    <span class="idea-cover"><span class="net">${i.net}</span>${i.saved ? '<span class="saved">Guardada</span>' : ""}${cover}</span>
+    <div class="idea-title">${esc(i.title)}</div><div class="idea-meta">${esc(meta)}</div></button>`;
+}
+function render() {
+  const c = $("#content");
+  $("#n-lib").textContent = IDEAS.length + (state === "long" ? 1 : 0);
+  $("#n-saved").textContent = state === "empty" ? 0 : IDEAS.filter((i) => i.saved).length;
+  if (state === "loading") { c.innerHTML = '<p class="loading" role="status">Cargando ideas…</p>'; return; }
+  if (state === "error") { c.innerHTML = '<div class="empty"><strong>No pudimos cargar las ideas</strong>Revisa tu conexión e inténtalo otra vez.<br><button type="button" class="hbtn hbtn-secondary" data-reset>Reintentar</button></div>'; return; }
+  if (state === "empty" && tab === "saved") { c.innerHTML = '<div class="empty"><strong>Sin ideas guardadas</strong>Pega un link o guarda una de la biblioteca para verla aquí.</div>'; return; }
+  const items = state === "filter" ? [] : list();
+  if (!items.length) { c.innerHTML = '<div class="empty"><strong>Sin resultados con estos filtros</strong>Prueba con otro sector o red.<br><button type="button" class="hbtn hbtn-secondary" data-reset>Limpiar filtros</button></div>'; return; }
+  c.innerHTML = `<div class="idea-grid">${items.map(card).join("")}</div>`;
+}
+function metrics(i) {
+  if (!i.views) return `<p class="metrics"><small>TikTok no entrega métricas sin acceso a su API.</small></p>`;
+  return `<p class="metrics">${i.views} vistas · ${i.likes} me gusta · ${i.comments} comentarios <small>· Actualizado hoy</small></p>`;
+}
+function analysis(i) {
+  if (i.noAnalysis) return `<div class="idea-analysis"><div class="analysis-state"><span>Sin análisis por ahora</span><button type="button" class="hbtn hbtn-secondary hbtn-sm" data-analyze>Reintentar</button></div></div>`;
+  return `<div class="idea-analysis">
+    <div class="analysis-row"><h3>Por qué puede funcionar</h3><p>${esc(i.hook)} ${esc(i.why)}</p></div>
+    <div class="analysis-row"><h3>Cómo adaptarlo a Café Bruma</h3><p>${esc(i.adapt)}</p></div>
+    <div class="analysis-note">${icon("spark",14)}Análisis de IA. Basado en el caption y las métricas; no vio el video.</div></div>`;
+}
+function open(id, opener) {
+  const i = [...IDEAS, LONG].find((x) => x.id === +id);
+  lastOpener = id;
+  $("#gallery").hidden = true;
+  const d = $("#detail"); d.hidden = false;
+  d.innerHTML = `<button type="button" class="back" id="back">${icon("back",15)}Regresar</button>
+    <div class="idea-detail">
+      <div class="player">${icon("image",22)}<span>Aquí se carga el reproductor oficial de ${i.net} al abrir</span></div>
+      <div>
+        <h2 class="detail-title" id="detail-title" tabindex="-1">${esc(i.title)}</h2>
+        <div class="detail-author"><span style="overflow-wrap:anywhere">${esc(i.author)} · ${i.age}</span><a href="#" data-orig>Ver original ${icon("external",14)}</a></div>
+        ${metrics(i)}
+        <div class="actions">
+          <button type="button" class="hbtn hbtn-primary" data-post>${icon("calendar",17)}Crear post</button>
+          <button type="button" class="hbtn hbtn-secondary" data-save aria-pressed="${i.saved}">${i.saved ? "Guardada" : "Guardar idea"}</button>
+        </div>
+        ${analysis(i)}
+        <div class="caption"><div class="label">Caption original</div><p>${esc(i.caption)}</p></div>
+      </div>
+    </div>`;
+  window.scrollTo(0,0);
+  $("#detail-title").focus({preventScroll:true});
+}
+function close() {
+  $("#detail").hidden = true; $("#gallery").hidden = false;
+  render();
+  const b = document.querySelector(`.idea-card[data-id="${lastOpener}"]`); if (b) b.focus();
+}
+function toast(t) {
+  const el = $("#toast"); el.textContent = t; el.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 3000);
+}
+document.addEventListener("click", (e) => {
+  const c = e.target.closest(".idea-card"); if (c) return open(c.dataset.id);
+  if (e.target.closest("#back")) return close();
+  const t = e.target.closest("[data-tab]");
+  if (t) { tab = t.dataset.tab; document.querySelectorAll("[data-tab]").forEach((b) => b.setAttribute("aria-selected", b === t)); return render(); }
+  if (e.target.closest("[data-reset]")) { $("#f-niche").value = ""; $("#f-net").value = ""; state = "data"; $("#state").value = "data"; return render(); }
+  if (e.target.closest("[data-post]")) return toast("Borrador creado en la parrilla");
+  if (e.target.closest("[data-orig]")) { e.preventDefault(); return toast("Abre la publicación original en otra pestaña"); }
+  if (e.target.closest("[data-analyze]")) { e.target.textContent = "Analizando…"; e.target.disabled = true; return; }
+  const s = e.target.closest("[data-save]");
+  if (s) {
+    const i = [...IDEAS, LONG].find((x) => x.id === +lastOpener);
+    i.saved = !i.saved; s.textContent = i.saved ? "Guardada" : "Guardar idea"; s.setAttribute("aria-pressed", i.saved);
+    toast(i.saved ? "Idea guardada" : "Idea quitada de Guardadas");
+  }
+});
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#detail").hidden) close(); });
+$("#f-niche").addEventListener("change", render);
+$("#f-net").addEventListener("change", render);
+$("#state").addEventListener("change", (e) => { state = e.target.value; if (!$("#detail").hidden) close(); if (state === "empty") { tab = "saved"; document.querySelectorAll("[data-tab]").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === "saved")); } render(); });
+$("#theme").addEventListener("click", (e) => { const d = document.documentElement.classList.toggle("dark"); e.target.setAttribute("aria-pressed", d); e.target.textContent = d ? "Modo claro" : "Modo oscuro"; });
+$("#paste").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const input = $("#link"), msg = $("#link-msg"), v = input.value.trim();
+  let host = ""; try { host = new URL(v).hostname; } catch {}
+  if (!/^(www\.)?instagram\.com$|^((www|vm)\.)?tiktok\.com$/.test(host)) {
+    msg.textContent = "Usa un link de Instagram o TikTok, por ejemplo instagram.com/reel/…"; msg.hidden = false; input.setAttribute("aria-invalid","true"); input.focus(); return;
+  }
+  msg.hidden = true; input.removeAttribute("aria-invalid"); input.value = "";
+  toast("Idea guardada");
+});
+render();
+</script>
+</body>
+</html>

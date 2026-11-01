@@ -184,7 +184,7 @@ ok("otra agencia intacta", (await db.query(`select version from public.agency_wo
   const tras = (await db.query(`select data from public.agency_workspaces where agency_id=$1`, [agencyM])).rows[0].data;
   ok("aprobar en el portal etiqueta Aprobado", tras.posts.find((p) => p.id === "m1").statusLabel === "Aprobado");
 
-  // Endurecimiento (0007)
+  // Endurecimiento (0010)
   await errs("un registro no apunta a archivos de otra agencia", () => as(B, "authenticated", insertAsset, [agencyN, "robo.png", path + ".copia"]), "media_assets_path_in_agency");
   await errs("la ruta de un registro no cambia", () => asA(`update public.media_assets set path='x' where id=$1`, [asset]), "permission");
   await errs("un registro no cambia de agencia", () => asA(`update public.media_assets set agency_id=$2 where id=$1`, [asset, agencyN]), "permission");
@@ -213,7 +213,7 @@ ok("otra agencia intacta", (await db.query(`select version from public.agency_wo
   ok("la cuota de IA se agota", (await asA(`select public.consume_ai_quota() r`))[0].r === false);
   await errs("nadie lee la cuota directamente", () => asA(`select * from public.ai_usage`), "permission");
   const abiertas = (await db.query(`select routine_name n from information_schema.role_routine_grants where grantee='anon' and routine_schema='public'`)).rows.map((r) => r.n);
-  const publicas = ["get_share_portal", "invitation_preview", "media_path_agency", "member_role", "share_media_allowed", "share_media_path", "submit_share_decision"];
+  const publicas = ["chat_bot_post", "get_share_portal", "invitation_preview", "media_path_agency", "member_role", "share_media_allowed", "share_media_path", "submit_share_decision"];
   ok("anon solo ejecuta las funciones del portal", abiertas.every((n) => publicas.includes(n)), abiertas.join(","));
 }
 

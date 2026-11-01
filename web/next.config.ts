@@ -8,6 +8,9 @@ const supabaseOrigin = process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.en
 // parcial, así que quedan permitidos. SRI (abajo) no los cubre —solo recursos externos— pero
 // añade integridad a todos los archivos con src: una CDN comprometida no puede alterarlos.
 // Quitar 'unsafe-inline' rompe la app: NO hacerlo sin nonces por petición.
+// El tiempo real de Supabase va por wss:, que un origen https: no cubre en connect-src.
+const supabaseRealtimeOrigin = supabaseOrigin.replace(/^http/, "ws");
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
@@ -16,7 +19,7 @@ const contentSecurityPolicy = [
   `img-src 'self' data: blob: https: ${supabaseOrigin}`,
   `media-src 'self' blob: https: ${supabaseOrigin}`,
   "font-src 'self' data:",
-  `connect-src 'self' data: blob: ${supabaseOrigin}${isDev ? " ws:" : ""}`,
+  `connect-src 'self' data: blob: ${supabaseOrigin} ${supabaseRealtimeOrigin}${isDev ? " ws:" : ""}`,
   "worker-src 'self' blob:",
   "object-src 'none'",
   "frame-src 'none'",
