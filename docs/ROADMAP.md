@@ -47,5 +47,4 @@ Revisado el 1 de noviembre de 2026 sobre el reporte de auditoría externo.
 **Sin validar:** el coste real de los re-renders en `layout.tsx` (no se midió) y las condiciones de carrera entre personas (no se reprodujeron).
 
 ## Pendiente del dueño (etapa 0)
-- Crear el proyecto Supabase de desarrollo y aplicar `0008`, `0009` y `0010`.
 - Confirmar la protección de `main` y la limpieza de ramas y worktrees.
