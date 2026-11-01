@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { useCallback, useEffect, useState } from "react";
 import { useHublyStore } from "@/lib/store";
 import { currentAgencyId, liveAgencies, selectLiveAgency } from "@/lib/live-workspace";
@@ -123,9 +124,9 @@ export function AccessPanel() {
         <section>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 10 }}>
             <h2 style={{ ...h2, margin: 0 }}>Invitaciones ({openInvites.length})</h2>
-            <button type="button" className="hbtn hbtn-secondary hbtn-sm" onClick={() => setInviteModalOpen(true)}>
+            <Button variant="secondary" size="sm" onClick={() => setInviteModalOpen(true)}>
               <HublyPlusIcon size={15} /> Invitar
-            </button>
+            </Button>
           </div>
           {openInvites.length > 0 && (
             <ul style={list}>

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { useState } from "react";
 import { AccessPanel } from "@/components/app/AccessPanel";
 import { askConfirm } from "@/components/app/AppDialogHost";
@@ -68,10 +69,10 @@ export function EquipoPanel() {
         subtitle="Miembros de la agencia y sus roles"
         actions={
           <>
-            <button type="button" className="hbtn hbtn-secondary" onClick={() => void addAll()}>Agregar a todas las marcas</button>
-            <button type="button" className="hbtn hbtn-secondary" onClick={() => setInviteModalOpen(true)}>
+            <Button variant="secondary" onClick={() => void addAll()}>Agregar a todas las marcas</Button>
+            <Button variant="secondary" onClick={() => setInviteModalOpen(true)}>
               <HublyPlusIcon size={17} /> Agregar miembro
-            </button>
+            </Button>
           </>
         }
       />
@@ -86,9 +87,9 @@ export function EquipoPanel() {
               <div className="hubly-ajustes-row-meta">{m.email}{m.status === "Invitado" ? " · Invitación pendiente" : ""}</div>
             </div>
             <div className="hubly-ajustes-row-actions">
-              <button type="button" className="hbtn hbtn-secondary hbtn-sm" onClick={() => setEditing(m)}>
+              <Button variant="secondary" size="sm" onClick={() => setEditing(m)}>
                 <HublyPencilIcon size={15} /> Editar marcas
-              </button>
+              </Button>
               <select
                 className="hubly-cal-line hubly-ajustes-select"
                 aria-label={`Rol de ${m.name}`}

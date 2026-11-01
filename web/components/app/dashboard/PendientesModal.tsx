@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
@@ -56,9 +57,9 @@ export function PendientesModal({ open, onClose, groups, onToggle }: PendientesM
           <span className="hb-widget-badge" style={{ height: 24, padding: "0 10px" }}>
             {urgentCount} de {allCount}
           </span>
-          <button ref={closeRef} type="button" className="hbtn hbtn-secondary hbtn-sm" onClick={onClose}>
+          <Button ref={closeRef} variant="secondary" size="sm" onClick={onClose}>
             Listo
-          </button>
+          </Button>
         </div>
       </div>
 

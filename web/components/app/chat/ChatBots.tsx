@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import React, { useCallback, useEffect, useState } from "react";
 import { askConfirm, askText } from "@/components/app/AppDialogHost";
 import { chatRemote, useChatPresence, type ChatBot } from "@/lib/chat-live";
@@ -42,7 +43,7 @@ function BotEvents({ bot, onSaved, onNotice }: { bot: ChatBot; onSaved: () => vo
           <span>{event.label}</span>
         </label>
       ))}
-      <button type="button" className="hbtn hbtn-xs hbtn-secondary" onClick={save}>Guardar eventos</button>
+      <Button variant="secondary" size="xs" onClick={save}>Guardar eventos</Button>
       {secret ? (
         <div className="hubly-chat-boturl" role="status">
           <p>Copia el secreto ahora: no se vuelve a mostrar. Cada aviso llega firmado en la cabecera X-Hubly-Firma con HMAC-SHA256.</p>
@@ -121,13 +122,13 @@ export function ChatBots({ channelId, onNotice }: { channelId: string; onNotice:
         <div className="hubly-chat-boturl" role="status">
           <p>Copia esta URL ahora: no se vuelve a mostrar. Envía un POST con JSON <code>{'{"text":"Hola"}'}</code>.</p>
           <code className="hubly-chat-boturl-value">{freshUrl}</code>
-          <button type="button" className="hbtn hbtn-xs hbtn-secondary" onClick={copy}>
+          <Button variant="secondary" size="xs" onClick={copy}>
             <HublyCopyIcon size={13} /> Copiar URL
-          </button>
+          </Button>
         </div>
       ) : null}
       {error ? <p className="hubly-chat-composer-error" role="alert">{error}</p> : null}
-      <button type="button" className="hbtn hbtn-xs hbtn-secondary hubly-chat-botadd" onClick={create}>Crear bot</button>
+      <Button variant="secondary" size="xs" className="hubly-chat-botadd" onClick={create}>Crear bot</Button>
     </section>
   );
 }

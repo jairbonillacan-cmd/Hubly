@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -148,18 +149,18 @@ export function AgentBuilder({ agentId }: { agentId: string }) {
             <span className="hubly-agente-estado">Borrador</span>
           </div>
           <div className="hubly-agente-acciones">
-            <button type="button" className="hbtn hbtn-secondary hbtn-sm" disabled>Probar</button>
+            <Button variant="secondary" size="sm" disabled>Probar</Button>
             {!readOnly && (
               <>
-                <button type="button" className="hbtn hbtn-secondary hbtn-sm" onClick={duplicate}>
+                <Button variant="secondary" size="sm" onClick={duplicate}>
                   <Copy size={15} /> Duplicar
-                </button>
+                </Button>
                 <button type="button" className="hubly-cal-icon" aria-label="Eliminar agente" title="Eliminar agente" onClick={remove}>
                   <Trash size={16} />
                 </button>
               </>
             )}
-            <button type="button" className="hbtn hbtn-primary hbtn-sm" disabled>Activar</button>
+            <Button variant="primary" size="sm" disabled>Activar</Button>
           </div>
         </div>
       </header>
@@ -202,16 +203,16 @@ export function AgentBuilder({ agentId }: { agentId: string }) {
                 );
               })}
             </div>
-            <button type="button" className="hbtn hbtn-ghost hbtn-sm hubly-agente-cero" onClick={describe}>
+            <Button variant="ghost" size="sm" className="hubly-agente-cero" onClick={describe}>
               Describir desde cero
-            </button>
+            </Button>
           </section>
         )}
 
         {!agent.purpose && agent.messages.length > 0 && !readOnly && (
-          <button type="button" className="hbtn hbtn-ghost hbtn-sm hubly-agente-cero" onClick={() => updateAgent(agent.id, { messages: [] })}>
+          <Button variant="ghost" size="sm" className="hubly-agente-cero" onClick={() => updateAgent(agent.id, { messages: [] })}>
             Ver plantillas
-          </button>
+          </Button>
         )}
 
         {askingCadence && !readOnly && (
@@ -242,9 +243,9 @@ export function AgentBuilder({ agentId }: { agentId: string }) {
             placeholder={readOnly ? "Tu rol es de solo lectura" : "Escríbele a Hubi…"}
             onChange={(e) => setInput(e.target.value)}
           />
-          <button type="submit" className="hbtn hbtn-primary hbtn-ic" aria-label="Enviar a Hubi" title="Enviar a Hubi" disabled={!input.trim() || readOnly}>
+          <Button type="submit" variant="primary" iconOnly aria-label="Enviar a Hubi" title="Enviar a Hubi" disabled={!input.trim() || readOnly}>
             <Send size={17} />
-          </button>
+          </Button>
         </form>
       </div>
     </div>

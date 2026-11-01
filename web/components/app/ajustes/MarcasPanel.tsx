@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { askConfirm } from "@/components/app/AppDialogHost";
@@ -45,9 +46,9 @@ export function MarcasPanel() {
         title="Marcas"
         subtitle="Administra las marcas de tu agencia: crea, archiva o restaura"
         actions={
-          <button type="button" className="hbtn hbtn-secondary" onClick={() => setNewBrandModalOpen(true)}>
+          <Button variant="secondary" onClick={() => setNewBrandModalOpen(true)}>
             <HublyPlusIcon size={17} /> Nueva marca
-          </button>
+          </Button>
         }
       />
 
@@ -80,18 +81,17 @@ export function MarcasPanel() {
                   </div>
                   <div className="hubly-ajustes-row-actions">
                     {!b.archived && (
-                      <button type="button" className="hbtn hbtn-secondary hbtn-sm" onClick={() => { setActiveBrand(b.id); router.push("/marca"); }}>Configurar</button>
+                      <Button variant="secondary" size="sm" onClick={() => { setActiveBrand(b.id); router.push("/marca"); }}>Configurar</Button>
                     )}
-                    <button
-                      type="button"
-                      className="hbtn hbtn-ghost hbtn-sm hbtn-ic"
+                    <Button
+                      variant="ghost" size="sm" iconOnly
                       disabled={isActive}
                       title={isActive ? "Cambia de marca activa para archivarla" : b.archived ? "Restaurar" : "Archivar"}
                       aria-label={`${b.archived ? "Restaurar" : "Archivar"} ${b.name}`}
                       onClick={() => updateBrand(b.id, { archived: !b.archived, status: b.archived ? undefined : "archived" })}
                     >
                       <HublyArchiveIcon size={15} />
-                    </button>
+                    </Button>
                   </div>
                 </div>
               );
@@ -127,7 +127,7 @@ export function MarcasPanel() {
           </label>
         </div>
         <div className="hubly-ajustes-inline">
-          <button type="submit" className="hbtn hbtn-secondary" disabled={!dirty}>{saved ? "Guardado" : "Guardar"}</button>
+          <Button type="submit" variant="secondary" disabled={!dirty}>{saved ? "Guardado" : "Guardar"}</Button>
           <span role="status" className="hubly-ajustes-hint" hidden={!saved}>Los cambios de la agencia se guardaron.</span>
         </div>
       </form>
@@ -137,9 +137,8 @@ export function MarcasPanel() {
           <p className="hubly-ajustes-label">Datos de demostración</p>
           <p className="hubly-ajustes-hint">Devuelve marcas, posts y tareas de ejemplo a su estado original.</p>
           <div className="hubly-ajustes-inline">
-            <button
-              type="button"
-              className="hbtn hbtn-secondary"
+            <Button
+              variant="secondary"
               onClick={async () => {
                 if (!(await askConfirm("¿Restaurar los datos de demostración? Se pierde lo que cambiaste.", "Restaurar"))) return;
                 resetDemoData();
@@ -148,7 +147,7 @@ export function MarcasPanel() {
               }}
             >
               <HublyRefreshIcon size={17} /> Restaurar datos
-            </button>
+            </Button>
             <span role="status" className="hubly-ajustes-hint" hidden={!restored}>Datos restaurados</span>
           </div>
         </div>

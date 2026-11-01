@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import React, { useState } from "react";
 import { askText } from "@/components/app/AppDialogHost";
 import type { ChatMessage } from "@/lib/types";
@@ -93,7 +94,7 @@ export function ChatDetails({
               <span>Emoji</span>
               <input className="hubly-cal-line" maxLength={8} value={draftEmoji} onChange={(e) => setDraftEmoji(e.target.value)} />
             </label>
-            <button type="submit" className="hbtn hbtn-sm hbtn-secondary" disabled={!dirty || !draftName.trim()}>Guardar cambios</button>
+            <Button type="submit" variant="secondary" size="sm" disabled={!dirty || !draftName.trim()}>Guardar cambios</Button>
           </form>
         ) : (
           <div>
@@ -123,15 +124,14 @@ export function ChatDetails({
                     <ChatAvatar initials={person.initials} size="sm" />
                     <span className="hubly-chat-details-clip">{person.name}</span>
                     {person.id === myId ? null : (
-                      <button
-                        type="button"
-                        className="hbtn hbtn-xs hbtn-ghost"
+                      <Button
+                        variant="ghost" size="xs"
                         aria-pressed={inside}
                         aria-label={`${inside ? "Quitar a" : "Agregar a"} ${person.name}`}
                         onClick={() => onSetMembers(inside ? memberIds.filter((id) => id !== person.id) : [...memberIds, person.id])}
                       >
                         {inside ? "Quitar" : "Agregar"}
-                      </button>
+                      </Button>
                     )}
                   </li>
                 );
@@ -191,8 +191,8 @@ export function ChatDetails({
 
         {editable ? (
           <div className="hubly-chat-details-danger">
-            <button type="button" className="hbtn hbtn-sm hbtn-secondary" onClick={onArchive}>Archivar canal</button>
-            <button type="button" className="hbtn hbtn-sm hbtn-danger" onClick={confirmDelete}>Eliminar canal</button>
+            <Button variant="secondary" size="sm" onClick={onArchive}>Archivar canal</Button>
+            <Button variant="danger" size="sm" onClick={confirmDelete}>Eliminar canal</Button>
           </div>
         ) : null}
       </div>

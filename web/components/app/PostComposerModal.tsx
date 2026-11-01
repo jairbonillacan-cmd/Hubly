@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useHublyStore } from "@/lib/store";
 import { currentAgencyId } from "@/lib/live-workspace";
@@ -974,12 +975,12 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                       </ol>
                       {draft.networks.includes("TikTok") && firstImage && <TikTokFitHint url={mediaItemUrl(firstImage)} />}
                       <div className="hubly-composer-mediatools">
-                        <button type="button" className="hbtn hbtn-secondary hbtn-sm" onClick={downloadAll}>
+                        <Button variant="secondary" size="sm" onClick={downloadAll}>
                           <HublyDownloadIcon size={15} /> {media.length === 1 ? "Descargar archivo" : `Descargar ${media.length} archivos`}
-                        </button>
-                        <button type="button" className="hbtn hbtn-secondary hbtn-sm" disabled title="Función prevista: aún no hay biblioteca de música">
+                        </Button>
+                        <Button variant="secondary" size="sm" disabled title="Función prevista: aún no hay biblioteca de música">
                           <HublyMusicIcon size={15} /> Agregar música
-                        </button>
+                        </Button>
                       </div>
                       <div className="hubly-composer-formats">
                         {formatOptions.length > 1 && (
@@ -1087,7 +1088,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                             <small>Elige un cuadro del video o sube tu propia imagen.</small>
                           </span>
                         </button>
-                        {draft.coverAssetId && !locked && <button type="button" className="hbtn hbtn-ghost hbtn-sm" onClick={() => update({ coverAssetId: undefined })}>Quitar</button>}
+                        {draft.coverAssetId && !locked && <Button variant="ghost" size="sm" onClick={() => update({ coverAssetId: undefined })}>Quitar</Button>}
                       </div>
                       {draft.networks.includes("TikTok") && <small className="hubly-composer-hint">En TikTok la portada es un cuadro del video: una imagen externa no se puede fijar por API.</small>}
                       <label className="hubly-composer-stack">
@@ -1255,11 +1256,11 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                         <input className="hubly-cal-input" value={docName} onChange={(e) => setDocName(e.target.value)} placeholder="Nombre" aria-label="Nombre del documento" />
                         <input className="hubly-cal-input" value={docUrl} onChange={(e) => setDocUrl(e.target.value)} placeholder="https://…" aria-label="Enlace del documento" />
                         <input className="hubly-cal-input" value={docFolder} onChange={(e) => setDocFolder(e.target.value)} placeholder="Carpeta (opcional)" aria-label="Carpeta del documento" />
-                        <button type="submit" className="hbtn hbtn-secondary hbtn-sm">Agregar enlace</button>
+                        <Button type="submit" variant="secondary" size="sm">Agregar enlace</Button>
                       </form>
-                      <button type="button" className="hbtn hbtn-secondary hbtn-sm" style={{ justifySelf: "start" }} onClick={() => setPickerFor("documents")}>
+                      <Button variant="secondary" size="sm" style={{ justifySelf: "start" }} onClick={() => setPickerFor("documents")}>
                         Adjuntar del Content Manager
-                      </button>
+                      </Button>
                     </>
                   )}
                 </div>
@@ -1285,7 +1286,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                       }}
                     >
                       <input className="hubly-cal-input" style={{ flex: 1, minWidth: 0 }} value={chatDraft} onChange={(e) => setChatDraft(e.target.value)} placeholder="Escribe un mensaje…" aria-label="Mensaje al equipo" />
-                      <button type="submit" className="hbtn hbtn-secondary hbtn-sm">Enviar</button>
+                      <Button type="submit" variant="secondary" size="sm">Enviar</Button>
                     </form>
                   )}
                 </div>
@@ -1351,32 +1352,31 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
             ) : (
               <small>{editingPost?.activity?.length ? `Creado ${new Date(editingPost.activity[editingPost.activity.length - 1].at).toLocaleString("es-MX", { dateStyle: "short", timeStyle: "short" })}` : dirty ? "Cambios guardados en este navegador" : ""}</small>
             )}
-            <button type="button" className="hbtn hbtn-ghost" onClick={() => void requestClose()}>{locked ? "Cerrar" : "Cancelar"}</button>
+            <Button variant="ghost" onClick={() => void requestClose()}>{locked ? "Cerrar" : "Cancelar"}</Button>
             {!locked && publishMode === "guardar" && (
               <>
-                <button type="button" className="hbtn hbtn-secondary" onClick={() => save("pending")}>Enviar a revisión</button>
-                <button type="button" className="hbtn hbtn-primary" onClick={() => save(editingPost ? draft.status : "draft")}>
+                <Button variant="secondary" onClick={() => save("pending")}>Enviar a revisión</Button>
+                <Button variant="primary" onClick={() => save(editingPost ? draft.status : "draft")}>
                   {editingPost ? "Guardar" : "Guardar borrador"}
-                </button>
+                </Button>
               </>
             )}
             {!locked && publishMode !== "guardar" && (
               <>
-                <button type="button" className="hbtn hbtn-secondary" title="Guarda el post sin programarlo" onClick={() => save(editingPost ? draft.status : "draft")}>
+                <Button variant="secondary" title="Guarda el post sin programarlo" onClick={() => save(editingPost ? draft.status : "draft")}>
                   <HublySaveIcon size={15} /> Guardar
-                </button>
+                </Button>
                 {publishMode === "programar" ? (
-                  <button
-                    type="button"
-                    className="hbtn hbtn-primary"
+                  <Button
+                    variant="primary"
                     disabled={!draft.scheduledDate || pastSchedule || noNetworks}
                     title={pastSchedule ? "Esa hora ya pasó: elige una fecha futura para programar" : noNetworks ? "Selecciona al menos una red" : undefined}
                     onClick={() => void askToPublish("programar")}
                   >
                     {scheduleButton}
-                  </button>
+                  </Button>
                 ) : (
-                  <button type="button" className="hbtn hbtn-primary" disabled={noNetworks} onClick={() => void askToPublish("publicar")}>Marcar como publicado</button>
+                  <Button variant="primary" disabled={noNetworks} onClick={() => void askToPublish("publicar")}>Marcar como publicado</Button>
                 )}
               </>
             )}
@@ -1409,10 +1409,9 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
               <h2 id="hubly-pending-title">Tienes cambios sin guardar</h2>
               <p>«{draft.title || "Sin título"}» sigue abierto. ¿Qué quieres hacer antes de abrir otro post?</p>
               <div>
-                <button type="button" autoFocus className="hbtn hbtn-ghost" onClick={() => resolveComposerPending("keep")}>Seguir editando</button>
-                <button
-                  type="button"
-                  className="hbtn hbtn-secondary"
+                <Button autoFocus variant="ghost" onClick={() => resolveComposerPending("keep")}>Seguir editando</Button>
+                <Button
+                  variant="secondary"
                   onClick={() => {
                     if (key) clearRecovery(localStorage, key);
                     uploads.forEach((u) => u.handle?.cancel());
@@ -1420,10 +1419,9 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                   }}
                 >
                   Descartar
-                </button>
-                <button
-                  type="button"
-                  className="hbtn hbtn-primary"
+                </Button>
+                <Button
+                  variant="primary"
                   onClick={() => {
                     if (activeUploads) {
                       setErrorMsg("Espera a que terminen las subidas o cancélalas.");
@@ -1436,7 +1434,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                   }}
                 >
                   Guardar
-                </button>
+                </Button>
               </div>
             </div>
           </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -381,7 +382,6 @@ export function InicioView() {
     setNewTaskTitle("");
     setShowQuickTaskForm(false);
   };
-
 
   const handleSaveNotebook = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1386,40 +1386,40 @@ export function InicioView() {
           )}
         </p>
         <div className="hubly-hero-actions">
-          <button type="button" onClick={handleOpenNewPost} className="hbtn hbtn-secondary">
+          <Button onClick={handleOpenNewPost} variant="secondary">
             <HublyHashIcon size={18} />
             <span>Nuevo post</span>
-          </button>
-          <button type="button" onClick={handleOpenNewBrand} className="hbtn hbtn-secondary">
+          </Button>
+          <Button onClick={handleOpenNewBrand} variant="secondary">
             <HublyTagIcon size={18} />
             <span>Nueva marca</span>
-          </button>
-          <button type="button" onClick={handleOpenInviteTeam} className="hbtn hbtn-secondary">
+          </Button>
+          <Button onClick={handleOpenInviteTeam} variant="secondary">
             <HublyPeopleIcon size={18} />
             <span>Invitar equipo</span>
-          </button>
-          <button type="button" onClick={handleOpenSearch} className="hbtn hbtn-gold" title="Buscar (Ctrl+K)">
+          </Button>
+          <Button onClick={handleOpenSearch} variant="gold" title="Buscar (Ctrl+K)">
             <HublySearchIcon size={18} />
             <span>Buscar</span>
-          </button>
+          </Button>
         </div>
       </header>
 
       <div className="hubly-tablero-tools">
         {editWidgetsMode && (
           <>
-            <button type="button" onClick={handleResetLayout} className="hbtn hbtn-ghost hbtn-sm">
+            <Button onClick={handleResetLayout} variant="ghost" size="sm">
               <RotateCcw size={13} />
               <span>Restablecer</span>
-            </button>
-            <button type="button" onClick={handleCopyLayout} className="hbtn hbtn-secondary hbtn-sm">
+            </Button>
+            <Button onClick={handleCopyLayout} variant="secondary" size="sm">
               {layoutCopied ? "¡Copiado!" : "Copiar mi acomodo"}
-            </button>
+            </Button>
           </>
         )}
-        <button type="button" onClick={() => setWidgetConfigModalOpen(true)} className="hbtn hbtn-gold hbtn-sm">
+        <Button onClick={() => setWidgetConfigModalOpen(true)} variant="gold" size="sm">
           + Widget
-        </button>
+        </Button>
         <button
           type="button"
           onClick={() => setEditWidgetsMode(!editWidgetsMode)}

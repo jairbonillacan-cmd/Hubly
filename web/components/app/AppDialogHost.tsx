@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { useEffect, useRef, useState } from "react";
 
 type Request =
@@ -87,9 +88,9 @@ export function AppDialogHost() {
           />
         )}
         <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
-          <button type="button" className="hbtn hbtn-ghost" onClick={() => close(false)}>
+          <Button variant="ghost" onClick={() => close(false)}>
             Cancelar
-          </button>
+          </Button>
           <button ref={confirmRef} type="submit" className={`hbtn ${request.kind === "confirm" && request.danger ? "hbtn-danger" : "hbtn-primary"}`}>
             {request.confirmLabel}
           </button>

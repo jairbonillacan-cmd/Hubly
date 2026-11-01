@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import React, { useState } from "react";
 import Link from "next/link";
 import { useHublyStore } from "@/lib/store";
@@ -162,14 +163,13 @@ function DemoHublyAIPage() {
           }}
         >
           {SUGGESTION_PILLS.map((pill) => (
-            <button
+            <Button
               key={pill}
-              type="button"
-              className="hbtn hbtn-secondary hbtn-sm"
+              variant="secondary" size="sm"
               onClick={() => handleAskAssistant(pill)}
             >
               {pill}
-            </button>
+            </Button>
           ))}
         </div>
 

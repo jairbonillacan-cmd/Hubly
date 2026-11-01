@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { useHublyStore } from "@/lib/store";
 import { PanelHead, Previsto } from "./Panel";
 
@@ -51,7 +52,7 @@ export function CuentaPanel() {
         <p className="hubly-ajustes-label">Eliminar mi cuenta</p>
         <p className="hubly-ajustes-hint">Saldrías de todas tus agencias y marcas, y tu nombre y correo se borrarían. No se puede deshacer.</p>
         <div className="hubly-ajustes-inline">
-          <button type="button" className="hbtn hbtn-danger" disabled data-planned title="Función prevista">Eliminar mi cuenta</button>
+          <Button variant="danger" disabled data-planned title="Función prevista">Eliminar mi cuenta</Button>
           <Previsto />
         </div>
       </div>

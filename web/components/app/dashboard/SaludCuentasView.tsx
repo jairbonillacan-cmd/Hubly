@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import React, { useState, useEffect, useMemo } from "react";
 import { useHublyStore } from "@/lib/store";
 import {
@@ -366,9 +367,9 @@ export function SaludCuentasView() {
             )}
           </p>
         </div>
-        <button type="button" className="hbtn hbtn-secondary" onClick={() => setNewBrandModalOpen(true)}>
+        <Button variant="secondary" onClick={() => setNewBrandModalOpen(true)}>
           <HublyPlusIcon size={17} /> Nueva marca
-        </button>
+        </Button>
       </header>
 
       {summary.uncommittedBrandsCount > 0 && (
@@ -381,14 +382,13 @@ export function SaludCuentasView() {
             </strong>
             Declara cuánto vas a entregar y Hubly calculará el cumplimiento y la salud de cada una.
           </p>
-          <button
-            type="button"
-            className="hbtn hbtn-secondary hbtn-sm"
+          <Button
+            variant="secondary" size="sm"
             data-testid="open-suggestions-modal-btn"
             onClick={() => setAutoSuggestionsModalOpen(true)}
           >
             Declarar compromisos
-          </button>
+          </Button>
         </div>
       )}
 
@@ -457,26 +457,24 @@ export function SaludCuentasView() {
             </div>
             <div className="hubly-salud-actions">
               {showRecommendations && (
-                <button
-                  type="button"
-                  className="hbtn hbtn-secondary hbtn-sm"
+                <Button
+                  variant="secondary" size="sm"
                   data-testid="apply-all-recommendations-btn"
                   onClick={handleApplyAllRecommendations}
                 >
                   Aplicar todas ({recommendations.length})
-                </button>
+                </Button>
               )}
-              <button type="button" className="hbtn hbtn-ghost hbtn-sm" onClick={() => setAutoSuggestionsModalOpen(true)}>
+              <Button variant="ghost" size="sm" onClick={() => setAutoSuggestionsModalOpen(true)}>
                 Configurar por marca
-              </button>
-              <button
-                type="button"
-                className="hbtn hbtn-ghost hbtn-sm"
+              </Button>
+              <Button
+                variant="ghost" size="sm"
                 aria-expanded={showRecommendations}
                 onClick={() => setShowRecommendations((v) => !v)}
               >
                 {showRecommendations ? "Ocultar" : "Mostrar"}
-              </button>
+              </Button>
             </div>
           </div>
           {showRecommendations && (
@@ -502,22 +500,20 @@ export function SaludCuentasView() {
                     </div>
                   </div>
                   <div className="hubly-salud-actions">
-                    <button
-                      type="button"
-                      className="hbtn hbtn-ghost hbtn-sm"
+                    <Button
+                      variant="ghost" size="sm"
                       data-testid={`dismiss-rec-${rec.id}`}
                       onClick={() => handleDismissSingleRecommendation(rec)}
                     >
                       Descartar
-                    </button>
-                    <button
-                      type="button"
-                      className="hbtn hbtn-secondary hbtn-sm"
+                    </Button>
+                    <Button
+                      variant="secondary" size="sm"
                       data-testid={`apply-rec-${rec.id}`}
                       onClick={() => handleApplySingleRecommendation(rec)}
                     >
                       Aplicar
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -543,9 +539,9 @@ export function SaludCuentasView() {
             <>
               <strong>Sin cuentas</strong>
               <span>Crea una marca para medir su cumplimiento.</span>
-              <button type="button" className="hbtn hbtn-secondary" onClick={() => setNewBrandModalOpen(true)}>
+              <Button variant="secondary" onClick={() => setNewBrandModalOpen(true)}>
                 <HublyPlusIcon size={17} /> Nueva marca
-              </button>
+              </Button>
             </>
           ) : (
             <>
@@ -555,14 +551,13 @@ export function SaludCuentasView() {
                   ? "Ninguna cuenta coincide con lo que buscas."
                   : "No hay cuentas en este periodo."}
               </span>
-              <button
-                type="button"
-                className="hbtn hbtn-secondary hbtn-sm"
+              <Button
+                variant="secondary" size="sm"
                 data-testid="clear-accounts-filters-btn"
                 onClick={handleClearFilters}
               >
                 Limpiar filtros
-              </button>
+              </Button>
             </>
           )}
         </div>
@@ -609,40 +604,37 @@ export function SaludCuentasView() {
                     </div>
                   </div>
                   <div className="hubly-salud-actions">
-                    <button
-                      type="button"
-                      className="hbtn hbtn-ghost hbtn-sm"
+                    <Button
+                      variant="ghost" size="sm"
                       aria-label={`${brand.pinned ? "Soltar" : "Fijar"} ${brand.name}`}
                       aria-pressed={Boolean(brand.pinned)}
                       title={brand.pinned ? "Soltar cuenta" : "Fijar cuenta arriba"}
                       onClick={() => updateBrand(brand.id, { pinned: !brand.pinned })}
                     >
                       <HublyPinIcon size={15} />
-                    </button>
+                    </Button>
                     <span className="hubly-salud-status" data-tone={tone} data-testid={`account-health-badge-${brand.id}`}>
                       {STATUS_LABEL[account.healthStatus] ?? "En progreso"} · {account.healthScore}%
                     </span>
                     {isActive ? (
                       <span className="hubly-salud-current">Marca activa</span>
                     ) : (
-                      <button
-                        type="button"
-                        className="hbtn hbtn-ghost hbtn-sm"
+                      <Button
+                        variant="ghost" size="sm"
                         title={`Trabajar con ${brand.name}`}
                         onClick={() => setActiveBrand(brand.id)}
                       >
                         Activar
-                      </button>
+                      </Button>
                     )}
-                    <button
-                      type="button"
-                      className="hbtn hbtn-secondary hbtn-sm"
+                    <Button
+                      variant="secondary" size="sm"
                       aria-expanded={isEditing}
                       data-testid={`edit-commitments-btn-${brand.id}`}
                       onClick={() => handleStartEditCommitments(account)}
                     >
                       {isEditing ? "Cerrar edición" : "Editar compromisos"}
-                    </button>
+                    </Button>
                   </div>
                 </div>
 
@@ -757,14 +749,13 @@ export function SaludCuentasView() {
                               <span>
                                 {m.name} · {m.unit}: {m.value}
                               </span>
-                              <button
-                                type="button"
-                                className="hbtn hbtn-ghost hbtn-xs"
+                              <Button
+                                variant="ghost" size="xs"
                                 aria-label={`Eliminar métrica ${m.name}`}
                                 onClick={() => handleRemoveDraftCustomMetric(m.id)}
                               >
                                 Quitar
-                              </button>
+                              </Button>
                             </li>
                           ))}
                         </ul>
@@ -819,29 +810,27 @@ export function SaludCuentasView() {
                           <option value="mes">por mes</option>
                           <option value="total">total</option>
                         </select>
-                        <button
-                          type="button"
-                          className="hbtn hbtn-secondary hbtn-sm"
+                        <Button
+                          variant="secondary" size="sm"
                           disabled={!newMetricName.trim()}
                           onClick={handleAddDraftCustomMetric}
                         >
                           <HublyCheckIcon size={15} /> Agregar
-                        </button>
+                        </Button>
                       </div>
                     </div>
 
                     <div className="hubly-salud-actions is-end">
-                      <button type="button" className="hbtn hbtn-ghost" onClick={handleCancelEdit}>
+                      <Button variant="ghost" onClick={handleCancelEdit}>
                         Cancelar
-                      </button>
-                      <button
-                        type="button"
-                        className="hbtn hbtn-primary"
+                      </Button>
+                      <Button
+                        variant="primary"
                         data-testid={`save-commitments-btn-${brand.id}`}
                         onClick={() => handleSaveCommitments(brand.id, brand.name)}
                       >
                         Guardar compromisos
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 )}

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -116,7 +117,6 @@ const addMinutes = (time: string, minutes: number) => {
   const total = (hour * 60 + minute + minutes) % 1440;
   return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
 };
-
 
 export default function CalendarioPage() {
   const router = useRouter();
@@ -791,12 +791,12 @@ export default function CalendarioPage() {
         </div>
 
         <div className="hubly-cal-modal-actions">
-          <button type="button" className="hbtn hbtn-ghost hbtn-sm" onClick={() => setNewActivityDate(null)}>
+          <Button variant="ghost" size="sm" onClick={() => setNewActivityDate(null)}>
             Cancelar
-          </button>
-          <button type="submit" className="hbtn hbtn-primary hbtn-sm">
+          </Button>
+          <Button type="submit" variant="primary" size="sm">
             Crear actividad
-          </button>
+          </Button>
         </div>
       </Modal>
     </div>

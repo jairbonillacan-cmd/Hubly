@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { Modal } from "@/components/app/ui/Modal";
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -153,7 +154,6 @@ export function CommandPaletteModal({
       setCmdkOpen(false);
     }
   }, [onCloseProp, setCmdkOpen]);
-
 
   // Global Cmd+K / Ctrl+K shortcut
   useEffect(() => {
@@ -639,8 +639,8 @@ export function CommandPaletteModal({
           <strong>Sin resultados para «{query}»</strong>
           <span>Prueba con otro nombre o limpia la búsqueda.</span>
           <div className="hubly-command-empty-actions">
-            <button type="button" className="hbtn hbtn-secondary" onClick={() => { updateQuery(""); inputRef.current?.focus(); }}>Limpiar búsqueda</button>
-            <button type="button" className="hbtn hbtn-secondary" onClick={() => askHubi(query.trim())}>Preguntar a Hubi</button>
+            <Button variant="secondary" onClick={() => { updateQuery(""); inputRef.current?.focus(); }}>Limpiar búsqueda</Button>
+            <Button variant="secondary" onClick={() => askHubi(query.trim())}>Preguntar a Hubi</Button>
           </div>
         </div>
       )}

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import React, { useState } from "react";
 import { localIsoDate } from "@/lib/date";
 import { safeLinkHref } from "@/lib/supabase/config";
@@ -62,7 +63,7 @@ export function ManualResults({ post }: { post: SocialPost }) {
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} aria-label="Fecha de publicación" style={field} />
           <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Enlace al post (opcional)" aria-label="Enlace al post" style={{ ...field, flex: "1 1 200px" }} />
-          <button type="submit" className="hbtn hbtn-secondary hbtn-sm">{published ? "Actualizar" : "Marcar como publicado"}</button>
+          <Button type="submit" variant="secondary" size="sm">{published ? "Actualizar" : "Marcar como publicado"}</Button>
         </div>
         {safeLinkHref(post.publishedUrl) && (
           <a href={safeLinkHref(post.publishedUrl)} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12.5, color: "var(--ui-accent-text-2)", fontWeight: 600 }}>Abrir publicación</a>
@@ -88,7 +89,7 @@ export function ManualResults({ post }: { post: SocialPost }) {
           ))}
         </div>
         <div>
-          <button type="submit" disabled={!published} title={published ? undefined : "Primero marca el post como publicado"} className="hbtn hbtn-secondary hbtn-sm">Guardar resultados</button>
+          <Button type="submit" disabled={!published} title={published ? undefined : "Primero marca el post como publicado"} variant="secondary" size="sm">Guardar resultados</Button>
         </div>
       </form>
       {error && <p role="alert" style={{ color: "#B91C1C", fontSize: 13, margin: 0 }}>{error}</p>}
@@ -166,9 +167,9 @@ export function CaptionAssistant({
   return (
     <>
       <div className="hubly-composer-genrow">
-        <button type="button" disabled={busy || disabled} onClick={generate} className="hbtn hbtn-gold hbtn-sm">
+        <Button disabled={busy || disabled} onClick={generate} variant="gold" size="sm">
           <Sparkles size={15} /> {busy ? "Generando…" : "Generar caption"}
-        </button>
+        </Button>
         {counter}
       </div>
       {error && <p role="alert" className="hubly-composer-generror">{error}</p>}
@@ -176,8 +177,8 @@ export function CaptionAssistant({
         <div className="hubly-composer-gendraft">
           <p>{draft}</p>
           <div>
-            <button type="button" className="hbtn hbtn-secondary hbtn-sm" onClick={() => { onUse(draft); setDraft(null); }}>Reemplazar mi texto</button>
-            <button type="button" className="hbtn hbtn-ghost hbtn-sm" onClick={() => setDraft(null)}>Descartar</button>
+            <Button variant="secondary" size="sm" onClick={() => { onUse(draft); setDraft(null); }}>Reemplazar mi texto</Button>
+            <Button variant="ghost" size="sm" onClick={() => setDraft(null)}>Descartar</Button>
           </div>
           <small>Generado con IA: revísalo antes de publicar.</small>
         </div>

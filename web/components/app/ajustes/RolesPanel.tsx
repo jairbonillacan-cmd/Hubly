@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { PanelHead, Previsto } from "./Panel";
 
 export const ROLES = [
@@ -17,7 +18,7 @@ export function RolesPanel() {
       <PanelHead
         title="Roles"
         subtitle="Decide qué rol tiene cada persona. Asígnalos en Equipo"
-        actions={<><Previsto /><button type="button" className="hbtn hbtn-secondary" disabled data-planned title="Función prevista">Crear rol</button></>}
+        actions={<><Previsto /><Button variant="secondary" disabled data-planned title="Función prevista">Crear rol</Button></>}
       />
       <div className="hubly-ajustes-section">
         <p className="hubly-ajustes-label">Predeterminados</p>
