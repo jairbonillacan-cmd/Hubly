@@ -2,7 +2,7 @@
 
 import { Modal } from "@/components/app/ui/Modal";
 import { useEffect, useRef, useState } from "react";
-import { Library, X } from "lucide-react";
+import { HublyLibraryIcon as Library, HublyCloseIcon as X } from "@/components/app/icons/DuotoneIcons";
 import type { MediaKind, MediaRecord } from "@/lib/media";
 import { MediaLibrary } from "./MediaLibrary";
 
