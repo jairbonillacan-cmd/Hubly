@@ -219,7 +219,7 @@ export function EquipoLogrosRanking({ view }: { view: EquipoViewModel }) {
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <Users size={15} style={{ color: "#16324F" }} />
+              <Users size={15} style={{ color: "var(--hb-accent-text)" }} />
               <span style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>
                 Ranking del Equipo
               </span>

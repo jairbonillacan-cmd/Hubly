@@ -1023,7 +1023,7 @@ export function InicioView() {
                         gap: 10,
                         padding: "10px 12px",
                         borderRadius: 12,
-                        background: "#F1F9FD",
+                        background: "var(--ui-sky-soft)",
                         border: "1px solid #E6F4FB",
                       }}
                     >
@@ -1043,7 +1043,7 @@ export function InicioView() {
                           fontWeight: 600,
                           color: "var(--ui-accent-text-2)",
                           background: "var(--ui-surface)",
-                          border: "1px solid #BFE2F4",
+                          border: "1px solid var(--ui-sky-border)",
                           borderRadius: 999,
                           padding: "2px 8px",
                           cursor: "pointer",
@@ -1333,7 +1333,7 @@ export function InicioView() {
                       <span className="hubly-task-title" style={{ display: "block", fontWeight: 600 }}>
                         {project.title}
                       </span>
-                      <span style={{ fontSize: 11.5, color: "#6B7886" }}>
+                      <span style={{ fontSize: 11.5, color: "var(--ui-text-4)" }}>
                         {brands.find((b) => b.id === project.brandId)?.name || "Marca"} · {project.status}
                       </span>
                     </span>
