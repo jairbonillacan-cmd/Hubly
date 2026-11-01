@@ -1,5 +1,6 @@
 "use client";
 
+import { copyText } from "@/lib/clipboard";
 import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useRef, useState } from "react";
 import { HublyCheckIcon, HublyCloseIcon, HublyCopyIcon, HublyPlusIcon, HublySearchIcon } from "@/components/app/icons/DuotoneIcons";
@@ -32,7 +33,7 @@ const TAB_INICIAL: Tab = backendEnabled ? "link" : "correo";
 export function InviteLinkRow({ link, label }: { link: string; label: string }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
-    await navigator.clipboard?.writeText(link).catch(() => {});
+    if (!(await copyText(link))) return;
     setCopied(true);
     window.setTimeout(() => setCopied(false), 2000);
   };

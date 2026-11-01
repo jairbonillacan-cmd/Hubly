@@ -1,5 +1,6 @@
 "use client";
 
+import { copyText } from "@/lib/clipboard";
 import { useMemo, useState } from "react";
 import { useHublyStore } from "@/lib/store";
 import { useModalPresence } from "@/lib/use-modal-presence";
@@ -303,13 +304,13 @@ export function useEquipoView() {
       typeof window !== "undefined" && inviteLink.startsWith("/")
         ? `${window.location.origin}${inviteLink}`
         : inviteLink;
-    if (typeof navigator !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(url).catch(() => {});
-    }
-    setCopiedInviteId(id);
-    setTimeout(() => {
-      setCopiedInviteId((curr) => (curr === id ? null : curr));
-    }, 2000);
+    void copyText(url).then((ok) => {
+      if (!ok) return;
+      setCopiedInviteId(id);
+      setTimeout(() => {
+        setCopiedInviteId((curr) => (curr === id ? null : curr));
+      }, 2000);
+    });
   };
   const pendingInvitations = useMemo(
     () => invitations.filter((i) => i.status === "Pendiente"),

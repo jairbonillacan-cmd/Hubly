@@ -455,7 +455,7 @@ async function connect(input: ChatLiveInput): Promise<boolean> {
         .from("chat_bots")
         .select(useChatPresence.getState().serverFeatures ? "id, name, events_url, events" : "id, name")
         .eq("channel_id", channelId);
-      return (data ?? []) as unknown as ChatBot[];
+      return (data ?? []) as unknown as ChatBot[]; // Sin tipos generados de la base.
     },
     createBot: async (channelId, name) => {
       const { data, error } = await db.rpc("chat_create_bot", { target_channel: channelId, bot_name: name });

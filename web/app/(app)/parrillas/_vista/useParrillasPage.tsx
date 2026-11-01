@@ -1,5 +1,6 @@
 "use client";
 
+import { copyText } from "@/lib/clipboard";
 import React, { useEffect, useState } from "react";
 import { useHublyStore } from "@/lib/store";
 import { backendEnabled } from "@/lib/supabase/config";
@@ -82,15 +83,19 @@ export function useParrillasPage() {
     if (backendEnabled) e?.preventDefault?.();
     const url = backendEnabled ? await liveShareUrl() : `${window.location.origin}/share/${shareToken}`;
     if (!url) return;
-    navigator.clipboard?.writeText(url).catch(() => {});
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2200);
+    void copyText(url).then((ok) => {
+      if (!ok) return;
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2200);
+    });
   };
   const handleCopyBioLink = () => {
     if (typeof window === "undefined") return;
-    navigator.clipboard?.writeText(`https://hubly.app/@${brandHandle}`).catch(() => {});
-    setCopiedBio(true);
-    setTimeout(() => setCopiedBio(false), 2000);
+    void copyText(`https://hubly.app/@${brandHandle}`).then((ok) => {
+      if (!ok) return;
+      setCopiedBio(true);
+      setTimeout(() => setCopiedBio(false), 2000);
+    });
   };
   const handleConnectNetwork = (netName: string) => {
     setConnectingNet(netName);

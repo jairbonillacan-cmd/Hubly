@@ -69,6 +69,7 @@ export function Modal({
       }}
     >
       {onSubmit ? (
+        // La misma referencia sirve a los dos elementos: solo se usa como HTMLElement.
         <form ref={surface as unknown as RefObject<HTMLFormElement>} {...dialog} onSubmit={onSubmit}>
           {children}
         </form>

@@ -116,6 +116,7 @@ async function liveGet(requestedAgency: string | null) {
     .single();
   if (error || !row) return NextResponse.json({ error: "load_failed" }, { status: 500 });
 
+  // El cliente de Supabase tipa esta relación como lista, aunque aquí devuelve una sola fila.
   const agency = membership.agencies as unknown as { name: string } | null;
   const data = normalizeWorkspacePayload(row.data as Partial<HublyWorkspaceData>, membership.agency_id, { live: true });
   // El perfil es de cada persona: nunca se toma del documento compartido.
