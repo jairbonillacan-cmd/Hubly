@@ -986,8 +986,8 @@ export function InicioView() {
                             fontWeight: 600,
                             padding: "3px 8px",
                             borderRadius: 999,
-                            background: "#ECFDF5",
-                            color: "#059669",
+                            background: "var(--hubly-success-bg)",
+                            color: "var(--tinta-exito)",
                             flexShrink: 0,
                           }}
                         >
@@ -1257,7 +1257,7 @@ export function InicioView() {
                   <div style={{ fontSize: 11, color: "var(--ui-text-4)", fontWeight: 600 }}>
                     CTR PROMEDIO
                   </div>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: "#059669", marginTop: 4 }}>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: "var(--tinta-exito)", marginTop: 4 }}>
                     {avgCtr}%
                   </div>
                 </div>
@@ -1325,8 +1325,8 @@ export function InicioView() {
                         fontWeight: 700,
                         padding: "2px 8px",
                         borderRadius: 999,
-                        background: "#ECFDF5",
-                        color: "#059669",
+                        background: "var(--hubly-success-bg)",
+                        color: "var(--tinta-exito)",
                       }}
                     >
                       Click {camp.clickScore}

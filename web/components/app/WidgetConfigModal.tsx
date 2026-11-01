@@ -349,7 +349,7 @@ export function WidgetConfigModal({
                 borderRadius: 10,
                 background: "var(--ui-accent-soft)",
                 border: "1px solid #BFE2F4",
-                color: "var(--hb-accent-edge)",
+                color: "var(--hb-accent-text)",
                 fontSize: 12.5,
                 fontWeight: 600,
               }}
