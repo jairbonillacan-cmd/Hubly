@@ -347,3 +347,18 @@ test("importar: separadores, comillas, fechas, mapeo y duplicados", async () => 
   assert.equal(rows[3].errors.length, 2);
   assert.equal(rows[0].row, 2);
 });
+
+test("PRODUCT.md y CONTRIBUTING.md reflejan el estado real del código y los comandos de verificación", async () => {
+  const fs = await import("node:fs");
+  const path = await import("node:path");
+  const root = path.resolve(process.cwd(), "..");
+  const product = fs.readFileSync(path.join(root, "PRODUCT.md"), "utf8");
+  const contributing = fs.readFileSync(path.join(root, "CONTRIBUTING.md"), "utf8");
+
+  assert.equal(product.includes("Todavía no hay producto funcional"), false);
+  assert.match(product, /Supabase/);
+  assert.match(product, /no publica automáticamente en redes sociales/i);
+  assert.match(contributing, /npm run check:ui/);
+  assert.match(contributing, /npm run test:db/);
+  assert.match(contributing, /GUIA-UX-UI-AGENTES\.md/);
+});
