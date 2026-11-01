@@ -7,6 +7,7 @@ import { backendEnabled } from "@/lib/supabase/config";
 import React, { useState } from "react";
 import Link from "next/link";
 import {
+  HublyImageIcon,
   HublyBentoIcon as LayoutGrid,
   HublyCloseIcon as X,
   HublyInfoIcon as Info,
@@ -22,7 +23,6 @@ import {
 interface SampleAdCard {
   id: string;
   title: string;
-  artworkKind: "thehive" | "taxco-quartz" | "veracruz-amethyst" | "mineralia-live" | "bee-here";
   status: "Activo";
   clickScore: number;
   resultados: number;
@@ -38,7 +38,6 @@ const SAMPLE_ADS: SampleAdCard[] = [
   {
     id: "hb-ad-1",
     title: "Publicación de Instagram: Fall in Round Top looks...",
-    artworkKind: "thehive",
     status: "Activo",
     clickScore: 100,
     resultados: 45,
@@ -53,7 +52,6 @@ const SAMPLE_ADS: SampleAdCard[] = [
   {
     id: "hb-ad-2",
     title: "Instagram post: TAXCO QUARTZ FROM GUERRERO,...",
-    artworkKind: "taxco-quartz",
     status: "Activo",
     clickScore: 100,
     resultados: 47,
@@ -68,7 +66,6 @@ const SAMPLE_ADS: SampleAdCard[] = [
   {
     id: "hb-ad-3",
     title: "Publicación de Instagram: Fall in Round Top looks...",
-    artworkKind: "thehive",
     status: "Activo",
     clickScore: 100,
     resultados: 28,
@@ -83,7 +80,6 @@ const SAMPLE_ADS: SampleAdCard[] = [
   {
     id: "hb-ad-4",
     title: "Instagram post: 💜VERACRUZ AMETHYST | TATATILA,...",
-    artworkKind: "veracruz-amethyst",
     status: "Activo",
     clickScore: 100,
     resultados: 39,
@@ -98,7 +94,6 @@ const SAMPLE_ADS: SampleAdCard[] = [
   {
     id: "hb-ad-5",
     title: "Instagram post: 🎃 MineraliA LIVE SALE — Rare Specimens...",
-    artworkKind: "mineralia-live",
     status: "Activo",
     clickScore: 100,
     resultados: 34,
@@ -113,7 +108,6 @@ const SAMPLE_ADS: SampleAdCard[] = [
   {
     id: "hb-ad-6",
     title: "Instagram post: MineraliA LIVE SALE — Wholesale Lot...",
-    artworkKind: "mineralia-live",
     status: "Activo",
     clickScore: 100,
     resultados: 29,
@@ -128,7 +122,6 @@ const SAMPLE_ADS: SampleAdCard[] = [
   {
     id: "hb-ad-7",
     title: "Publicación de Instagram: Fall in Round Top looks...",
-    artworkKind: "thehive",
     status: "Activo",
     clickScore: 100,
     resultados: 24,
@@ -143,7 +136,6 @@ const SAMPLE_ADS: SampleAdCard[] = [
   {
     id: "hb-ad-8",
     title: "Publicación de Instagram: 🐝 LAST DAYS — BEE HERE BEFORE IT ENDS...",
-    artworkKind: "bee-here",
     status: "Activo",
     clickScore: 100,
     resultados: 22,
@@ -156,296 +148,6 @@ const SAMPLE_ADS: SampleAdCard[] = [
       "Creativo de cierre de temporada ('LAST DAYS · BEE HERE BEFORE IT ENDS'). Alta tasa de clics en ubicación y cómo llegar.",
   },
 ];
-
-function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
-  if (kind === "thehive") {
-    return (
-      <svg
-        viewBox="0 0 280 340"
-        width="100%"
-        height="100%"
-        preserveAspectRatio="xMidYMid slice"
-        style={{ display: "block" }}
-      >
-        {/* Foliage & Sky Top */}
-        <rect width="280" height="340" fill="#1E291A" />
-        <path d="M0 0 L280 0 L280 140 L0 140 Z" fill="#1A2616" />
-        {/* Tree canopy texture */}
-        <circle cx="40" cy="30" r="55" fill="#2A3B1F" opacity="0.8" />
-        <circle cx="120" cy="20" r="65" fill="#324625" opacity="0.7" />
-        <circle cx="230" cy="35" r="60" fill="#24351A" opacity="0.85" />
-        {/* Sunlight glow behind tent */}
-        <rect x="0" y="95" width="280" height="80" fill="#475535" opacity="0.65" />
-
-        {/* Blue-roof Barn / Pavilion in Round Top */}
-        <polygon points="15,175 105,125 195,175" fill="#1E3A5F" />
-        <polygon points="165,175 230,132 280,175" fill="#172554" />
-        <rect x="25" y="175" width="160" height="45" fill="#292524" />
-        {/* Warm interior lights */}
-        <rect x="50" y="185" width="25" height="22" fill="var(--hb-accent)" opacity="0.75" />
-        <rect x="95" y="185" width="30" height="22" fill="#9099D3" opacity="0.75" />
-        <rect x="140" y="185" width="25" height="22" fill="var(--hb-accent)" opacity="0.75" />
-
-        {/* Green lawn & gravel path */}
-        <rect x="0" y="218" width="280" height="122" fill="#3F5E2A" />
-        <polygon points="0,245 280,225 280,275 0,295" fill="#A8A29E" opacity="0.55" />
-
-        {/* Honeycomb Hexagon Icon top-right */}
-        <g transform="translate(178, 12)" stroke="#FFFFFF" strokeWidth="1.8" fill="none">
-          <polygon points="12,0 22,6 22,18 12,24 2,18 2,6" />
-          <polygon points="24,8 34,14 34,26 24,32 14,26 14,14" />
-          <polygon points="12,22 22,28 22,40 12,46 2,40 2,28" />
-        </g>
-
-        {/* THE HIVE Typography */}
-        <text
-          x="130"
-          y="42"
-          textAnchor="middle"
-          fill="#FFFFFF"
-          fontFamily="Georgia, serif"
-          fontSize="24"
-          letterSpacing="2"
-        >
-          THE
-        </text>
-        <text
-          x="140"
-          y="82"
-          textAnchor="middle"
-          fill="#FFFFFF"
-          fontFamily="Georgia, serif"
-          fontSize="44"
-          letterSpacing="3"
-        >
-          HIVE
-        </text>
-
-        <text
-          x="140"
-          y="128"
-          textAnchor="middle"
-          fill="#F8FAFC"
-          fontSize="8.5"
-          fontWeight="700"
-          letterSpacing="2.5"
-        >
-          THE FALL SHOW
-        </text>
-        <text
-          x="140"
-          y="168"
-          textAnchor="middle"
-          fill="#FFFFFF"
-          fontSize="20"
-          fontWeight="600"
-        >
-          Through October 31
-        </text>
-        <text
-          x="140"
-          y="190"
-          textAnchor="middle"
-          fill="#F8FAFC"
-          fontSize="9.5"
-          fontWeight="700"
-          letterSpacing="1.2"
-        >
-          OPEN DAILY · 9 AM–6 PM
-        </text>
-        <text
-          x="140"
-          y="206"
-          textAnchor="middle"
-          fill="#E2E8F0"
-          fontSize="8.5"
-        >
-          Hwy 237 &amp; W Fuchs Rd · Carmine, Texas
-        </text>
-
-        {/* Social Handle & URL */}
-        <circle cx="90" cy="246" r="7" stroke="#FFFFFF" strokeWidth="1.5" fill="none" />
-        <circle cx="108" cy="246" r="7" fill="#FFFFFF" />
-        <text x="164" y="250" textAnchor="middle" fill="#FFFFFF" fontSize="10" fontWeight="600">
-          @thehiveroundtop
-        </text>
-        <text x="140" y="268" textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="600">
-          thehiveroundtop.com
-        </text>
-      </svg>
-    );
-  }
-
-  if (kind === "taxco-quartz") {
-    return (
-      <svg
-        viewBox="0 0 280 340"
-        width="100%"
-        height="100%"
-        preserveAspectRatio="xMidYMid slice"
-        style={{ display: "block" }}
-      >
-        {/* Display box & dark velvet lining */}
-        <rect width="280" height="340" fill="#CBD5E1" />
-        <polygon points="35,20 275,35 260,295 20,275" fill="#F8FAFC" stroke="#94A3B8" strokeWidth="2" />
-        <polygon points="50,35 255,48 242,275 38,255" fill="#1E293B" />
-
-        {/* Hand holding the crystal specimen */}
-        <path
-          d="M0 70 C55 45 105 70 115 135 C120 190 95 265 40 320 L0 320 Z"
-          fill="#D99B78"
-        />
-
-        {/* Sparkling Silver/White Taxco Quartz Cluster */}
-        <g transform="translate(22, 32)">
-          <polygon points="85,15 135,5 165,45 120,75 65,55" fill="#94A3B8" />
-          <polygon points="45,50 115,35 155,95 95,135 25,105" fill="#CBD5E1" />
-          <polygon points="95,45 185,30 220,95 165,155 85,125" fill="#64748B" />
-          <polygon points="35,95 110,75 145,145 85,195 15,155" fill="#94A3B8" />
-          <polygon points="85,110 175,85 215,155 155,220 75,185" fill="#E2E8F0" />
-          <polygon points="25,145 95,125 135,195 75,245 10,205" fill="#64748B" />
-          {/* White druzy quartz crystal points */}
-          <polygon points="75,55 95,38 112,62 90,78" fill="#F8FAFC" />
-          <polygon points="125,75 152,58 168,85 140,102" fill="#FFFFFF" />
-          <polygon points="55,110 82,92 98,118 72,135" fill="#F1F5F9" />
-          <polygon points="105,135 138,112 158,145 122,168" fill="#FFFFFF" />
-          <polygon points="145,150 175,132 192,162 162,182" fill="#F8FAFC" />
-          <polygon points="68,168 98,148 115,178 85,198" fill="#E2E8F0" />
-          <circle cx="95" cy="65" r="3" fill="#FFFFFF" />
-          <circle cx="145" cy="95" r="3.5" fill="#FFFFFF" />
-          <circle cx="128" cy="142" r="4" fill="#FFFFFF" />
-          <circle cx="82" cy="122" r="3" fill="#FFFFFF" />
-          <circle cx="165" cy="158" r="3" fill="#FFFFFF" />
-        </g>
-      </svg>
-    );
-  }
-
-  if (kind === "veracruz-amethyst") {
-    return (
-      <svg
-        viewBox="0 0 280 340"
-        width="100%"
-        height="100%"
-        preserveAspectRatio="xMidYMid slice"
-        style={{ display: "block" }}
-      >
-        {/* Warm skin/studio background */}
-        <rect width="280" height="340" fill="#B07D62" />
-        {/* Fingers holding the amethyst specimen */}
-        <ellipse cx="45" cy="65" rx="65" ry="42" fill="#C68B6E" />
-        <ellipse cx="40" cy="155" rx="58" ry="44" fill="#B87A5C" />
-        <ellipse cx="45" cy="245" rx="62" ry="45" fill="#A3664A" />
-        <ellipse cx="235" cy="165" rx="60" ry="95" fill="#7C4D38" />
-
-        {/* Translucent Purple Veracruz Amethyst Crystal Points */}
-        <g transform="translate(38, 18)">
-          <polygon points="75,10 105,45 92,115 58,95" fill="#9333EA" opacity="0.85" />
-          <polygon points="110,5 148,50 132,125 95,105" fill="#7E22CE" opacity="0.9" />
-          <polygon points="45,55 88,85 75,165 32,135" fill="#A855F7" opacity="0.85" />
-          <polygon points="85,65 135,95 118,185 68,155" fill="#6B21A8" opacity="0.92" />
-          <polygon points="128,60 185,95 165,180 115,150" fill="#9333EA" opacity="0.85" />
-          <polygon points="55,135 112,165 95,245 38,215" fill="#7E22CE" opacity="0.9" />
-          <polygon points="105,130 165,165 145,255 88,225" fill="#581C87" opacity="0.92" />
-          {/* Crystalline highlights */}
-          <polygon points="82,25 98,52 88,95 72,75" fill="#E9D5FF" opacity="0.65" />
-          <polygon points="118,22 138,55 125,105 108,82" fill="#F3E8FF" opacity="0.55" />
-          <polygon points="95,85 122,108 110,162 82,138" fill="#D8B4FE" opacity="0.6" />
-          <polygon points="65,150 95,172 82,225 55,198" fill="#E9D5FF" opacity="0.55" />
-          <circle cx="95" cy="55" r="3.5" fill="#FFFFFF" />
-          <circle cx="125" cy="95" r="4" fill="#FFFFFF" />
-          <circle cx="85" cy="145" r="3.5" fill="#FFFFFF" />
-          <circle cx="135" cy="175" r="3" fill="#FFFFFF" />
-        </g>
-      </svg>
-    );
-  }
-
-  if (kind === "mineralia-live") {
-    return (
-      <svg
-        viewBox="0 0 280 340"
-        width="100%"
-        height="100%"
-        preserveAspectRatio="xMidYMid slice"
-        style={{ display: "block" }}
-      >
-        <rect width="280" height="340" fill="#18121E" />
-        <circle cx="220" cy="60" r="70" fill="#3B1D5A" opacity="0.55" />
-        <circle cx="60" cy="180" r="85" fill="#2E1065" opacity="0.5" />
-        <text x="95" y="28" fill="#FFFFFF" fontSize="13" fontWeight="700" fontFamily="Georgia, serif">
-          MineraliA
-        </text>
-        <text x="175" y="27" fill="#D8B4FE" fontSize="9.5" fontWeight="600">
-          @amethysts.us
-        </text>
-        <text
-          x="140"
-          y="78"
-          textAnchor="middle"
-          fill="#FACC15"
-          fontSize="34"
-          fontWeight="900"
-          letterSpacing="1.5"
-        >
-          LIVE SALE
-        </text>
-        {/* Crystal cluster silhouette */}
-        <polygon points="90,220 115,125 140,220" fill="#7E22CE" />
-        <polygon points="120,220 148,110 176,220" fill="#9333EA" />
-        <polygon points="155,220 178,135 202,220" fill="#A855F7" />
-        <polygon points="70,220 92,150 112,220" fill="#6B21A8" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg
-      viewBox="0 0 280 340"
-      width="100%"
-      height="100%"
-      preserveAspectRatio="xMidYMid slice"
-      style={{ display: "block" }}
-    >
-      <rect width="280" height="340" fill="#141A12" />
-      <text
-        x="140"
-        y="28"
-        textAnchor="middle"
-        fill="var(--hb-accent)"
-        fontSize="9.5"
-        fontWeight="800"
-        letterSpacing="2.5"
-      >
-        LAST DAYS
-      </text>
-      <text
-        x="140"
-        y="56"
-        textAnchor="middle"
-        fill="#FACC15"
-        fontSize="24"
-        fontWeight="900"
-        letterSpacing="1"
-      >
-        BEE HERE
-      </text>
-      <text
-        x="140"
-        y="80"
-        textAnchor="middle"
-        fill="#FFFFFF"
-        fontSize="20"
-        fontWeight="800"
-        letterSpacing="0.5"
-      >
-        BEFORE IT ENDS
-      </text>
-      <polygon points="30,220 140,145 250,220" fill="#1E3A5F" />
-      <rect x="45" y="220" width="190" height="65" fill="#292524" />
-    </svg>
-  );
-}
 
 function ExampleTag() {
   return (
@@ -817,7 +519,7 @@ function DemoAnunciosPage() {
             >
               {/* Creative Poster Cover (330px height) */}
               <div style={{ position: "relative", height: 330, overflow: "hidden" }}>
-                <AdPosterArtwork kind={ad.artworkKind} />
+                <div className="hubly-anuncio-portada" aria-hidden><HublyImageIcon size={28} /></div>
 
                 {/* Top-Left Meta Infinity Badge */}
                 <div

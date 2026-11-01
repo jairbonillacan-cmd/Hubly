@@ -8,3 +8,6 @@
 .hubly-member-overlay { position: fixed; inset: 0; z-index: 110; display: flex; justify-content: flex-end; background: rgb(var(--hb-accent-rgb) / 0.32); }
 .hubly-member-drawer { display: grid; align-content: start; gap: 18px; width: 100%; max-width: 440px; height: 100%; padding: 22px; overflow-y: auto; background: var(--ui-surface); }
 .hubly-crm-modal { display: grid; gap: 12px; max-width: 560px; max-height: 90vh; padding: 20px; overflow-y: auto; }
+
+/* Portada neutra de los anuncios de ejemplo */
+.hubly-anuncio-portada { display: grid; place-items: center; height: 100%; background: var(--ui-muted); color: var(--ui-text-5); }
