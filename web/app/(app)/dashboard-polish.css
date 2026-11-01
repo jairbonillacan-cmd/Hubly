@@ -64,7 +64,7 @@
 .hubly-sheet { animation: hubly-card-in 180ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 .hubly-sheet[data-state="closing"] { animation: hubly-card-out 150ms cubic-bezier(0.4, 0, 1, 1) both; }
 
-html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none !important; }
+html:has(.hubly-sheet, [role="dialog"], .hubly-dropdown, .hubly-cal-filters) :is([data-mision-pildora], [data-hb-fab]) { display: none !important; }
 
 .hubly-drawer { animation: hubly-drawer-in 200ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 
@@ -733,8 +733,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   font-size: 12px;
   cursor: pointer;
 }
-.hubly-cal-brand-option:hover { background: #F5F8FB; }
-.hubly-cal-checkbox { display: grid; place-items: center; width: 16px; height: 16px; border: 1px solid #D6DFE7; border-radius: 5px; color: var(--hb-accent-text); }
+.hubly-cal-brand-option:hover { background: var(--ui-surface-2); }
+.hubly-cal-checkbox { display: grid; place-items: center; width: 16px; height: 16px; border: 1px solid var(--ui-border-strong); border-radius: 5px; color: var(--hb-accent-text); }
 .hubly-cal-brand-option[aria-pressed="true"] .hubly-cal-checkbox { border-color: var(--hb-accent); background: rgb(var(--hb-accent-rgb) / 0.1); }
 .hubly-cal-brand-dot { display: inline-grid; place-items: center; flex-shrink: 0; width: 16px; height: 16px; border-radius: 50%; color: #FFFFFF; font-size: 8.8px; font-weight: 700; }
 .hubly-cal-pills { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -1292,7 +1292,7 @@ html.dark .hubly-app-root .hbtn.hbtn-primary { background: var(--hb-accent); col
 html.dark .hubly-app-root .hbtn.hbtn-ghost { background: transparent; }
 html.dark .hubly-app-root .hbtn.hbtn-gold { border-color: var(--ui-sky); color: #FFFFFF; }
 html.dark :is(.hb-widget-body, .hubly-cal-header, .hubly-cal-rows, .hubly-cal-month, .hubly-cal-date, .hubly-cal-today, .hubly-cal-reveal, .hubly-cal-pill, .hubly-cal-filters, .hubly-cal-modal, .hubly-cal-line, .hubly-cal-types button, .hubly-cal-durations button, .hubly-cal-cell-add, .hubly-composer, .hubly-hubi-panel, .hubly-hubi-fab, .hubly-composer-phone) { border-color: #2B3E50; background: #172330; color: #FFFFFF; }
-html.dark :is(.hb-widget-title, .hb-empty-title, .hubly-task-title, .hubly-hero-title, .hubly-hero-pending, .hubly-pending-pill, .hubly-cal, .hubly-cal-title, .hubly-cal-period, .hubly-cal-date strong, .hubly-cal-empty strong, .hubly-composer-title, .hubly-composer-banner strong, .hubly-composer-meta select, .hubly-sidebar-panel-head.is-chats span, .hubly-hubi-head h2) { color: #FFFFFF; }
+html.dark :is(.hb-widget-title, .hb-empty-title, .hubly-task-title, .hubly-hero-title, .hubly-hero-pending, .hubly-pending-pill, .hubly-cal, .hubly-cal-title, .hubly-cal-period, .hubly-cal-date strong, .hubly-cal-empty strong, .hubly-cal-brand-option, .hubly-composer-title, .hubly-composer-banner strong, .hubly-composer-meta select, .hubly-sidebar-panel-head.is-chats span, .hubly-hubi-head h2) { color: #FFFFFF; }
 html.dark :is(.hubly-hubi-action, .hubly-hubi-grid button) { color: #FFFFFF; }
 html.dark :is(.hubly-sidebar-brand, .hubly-sidebar-empty strong, .hubly-cal-today, .hubly-cal-pill, .hubly-cal-cell-num:not(.is-today), .hubly-composer-banner span, .hubly-cal-durations label, .hubly-cal-durations button) { color: #DADAE2; }
 html.dark :is(.hubly-cal-tabs, .hubly-cal-input, .hubly-hubi-composer, .hubly-composer-caption, .hubly-composer-meta, .hubly-composer-preview, .hubly-sidebar-empty i, .hubly-composer-networks button, .hubly-composer-sources button > span, .hubly-composer-phone-media) { background: #20303F; color: #DADAE2; }
@@ -1305,7 +1305,13 @@ html.dark .hubly-dashboard-subnav-wrap .hubly-subnav.hubly-tablero-tabs { backgr
 html.dark .hubly-dashboard-subnav-wrap .hubly-subnav-tab { color: #9E9EAC; }
 html.dark .hubly-dashboard-subnav-wrap .hubly-subnav-tab:hover { background: #2B3E50; color: #FFFFFF; }
 html.dark .hubly-dashboard-subnav-wrap .hubly-subnav-tab.is-active { background: #2B3E50; color: #9AD4F1; }
-html.dark .hubly-task-row:hover, html.dark .hubly-cal-row:hover, html.dark .hubly-cal-icon:hover, html.dark .hubly-hubi-head button:hover, html.dark .hubly-cal-modal-close:hover { background: #20303F; }
+html.dark .hubly-task-row:hover, html.dark .hubly-cal-row:hover, html.dark .hubly-cal-icon:hover, html.dark .hubly-cal-reveal:hover, html.dark .hubly-cal-today:hover, html.dark .hubly-cal-pill:hover, html.dark .hubly-hubi-head button:hover, html.dark .hubly-cal-modal-close:hover { background: var(--ui-surface-2); color: var(--ui-text); }
+html.dark .hubly-cal-reveal span { color: var(--ui-text-2); }
+html.dark .hubly-cal-tab:not([aria-selected="true"]):hover { color: var(--ui-text); }
+html.dark .hubly-cal-input:focus { background: var(--ui-surface); }
+html.dark .hubly-edit-btn { border-color: var(--ui-border-strong); background: var(--ui-surface-2); box-shadow: 0 2.5px 0 var(--ui-border); color: var(--ui-text-3); }
+html.dark .hubly-edit-btn:hover { color: var(--ui-text); }
+:is(.hubly-subnav-tab, .hubly-cal-reveal, .hubly-cal-icon, .hubly-cal-today, .hubly-cal-tab, .hubly-cal-brand-option, .hubly-cal-pill, .hubly-cal-chip, .hubly-cal-modal-close, .hubly-cal-types button, .hubly-cal-durations button, .hubly-cal-color):focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
 html.dark .hubly-check { border-color: #566B7E; background: transparent; }
 html.dark .hb-empty-illus { background: #20303F; }
 html.dark .hubly-app-root [data-mision-pildora] { border-color: #2B3E50 !important; background: #172330 !important; }

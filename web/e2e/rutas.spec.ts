@@ -137,3 +137,40 @@ test("/dashboard/equipo refleja el periodo seleccionado y el estado activo de su
   await expect(btn90d).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText(/Últimos 90 días/)).toBeVisible();
 });
+
+test("ventanas abiertas a 390 y modo oscuro mantienen contraste, foco y ocultan la píldora flotante", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem("hubly-theme", "dark");
+    } catch {}
+  });
+  await page.emulateMedia({ colorScheme: "dark" });
+
+  await page.goto("/calendario");
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: "Filtros" }).click();
+  await expect(page.locator(".hubly-cal-filters")).toBeVisible();
+  expect(await contrasteBajo(page)).toEqual([]);
+  await expect(page.locator("[data-mision-pildora]")).toBeHidden();
+
+  const brandOpt = page.locator(".hubly-cal-brand-option").first();
+  await page.keyboard.press("Tab");
+  await brandOpt.focus();
+  const outlineStyle = await brandOpt.evaluate((el) => getComputedStyle(el).outlineStyle);
+  expect(outlineStyle).not.toBe("none");
+});
+
+test("controles de calendario conservan contraste en hover en modo oscuro", async ({ page }) => {
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem("hubly-theme", "dark");
+    } catch {}
+  });
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/calendario");
+  await page.waitForLoadState("networkidle");
+  const btnHoy = page.getByRole("button", { name: /Hoy|Ir a hoy/ }).first();
+  await btnHoy.hover();
+  expect(await contrasteBajo(page)).toEqual([]);
+});
