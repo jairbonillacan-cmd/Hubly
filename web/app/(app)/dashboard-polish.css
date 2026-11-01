@@ -2905,3 +2905,73 @@ html.dark .hubly-app-root h3.hubly-wgal-rotulo { color: var(--ui-text-4); }
 @media (prefers-reduced-motion: reduce) {
   .hubly-datepick { animation: none; }
 }
+
+/* Editor de post: confirmación, portada, repetición y avisos por red. */
+.hubly-composer[data-docdrop] { outline: 2px solid var(--hb-accent-text); outline-offset: -2px; }
+.hubly-composer-tabs button em { padding: 0 6px; border-radius: 999px; background: var(--ui-muted); color: var(--ui-text-3); font-size: 11px; font-style: normal; font-variant-numeric: tabular-nums; }
+.hubly-composer-copytabs button { display: inline-flex; align-items: center; gap: 5px; }
+.hubly-composer-copytabs button i { width: 5px; height: 5px; border-radius: 999px; background: currentColor; }
+.hubly-composer-copytabs button[aria-selected="true"][style] { background: var(--net); color: var(--net-on); }
+.hubly-composer-copynote { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 0; color: var(--ui-text-3); font-size: 12px; }
+.hubly-composer-copynote span { flex: 1 1 200px; }
+.hubly-composer-copynote button { border: 0; background: transparent; color: var(--hb-accent-text); font-size: 12px; font-weight: 600; cursor: pointer; }
+.hubly-composer-fielderror { color: var(--ui-text-2); font-size: 12px; font-weight: 600; }
+.hubly-composer-fullrow { grid-column: 1 / -1; }
+.hubly-composer-check { display: flex; align-items: flex-start; gap: 8px; color: var(--ui-text); font-size: 13px; cursor: pointer; }
+.hubly-composer .hubly-composer-netsettings label.hubly-composer-check { display: flex; color: var(--ui-text); font-size: 13px; font-weight: 400; }
+.hubly-composer-check input { flex-shrink: 0; margin-top: 2px; }
+.hubly-composer-check strong { display: block; font-size: 13px; font-weight: 500; }
+.hubly-composer-check small { display: block; margin-top: 2px; color: var(--ui-text-4); font-size: 11px; font-weight: 400; }
+.hubly-composer-stack { display: grid; gap: 4px; color: var(--ui-text-3); font-size: 11.5px; font-weight: 600; }
+.hubly-composer-netbox label.hubly-composer-stack { display: grid; align-items: stretch; cursor: default; }
+.hubly-composer-netsettings .hubly-composer-netbox { padding: 0; border: 0; }
+.hubly-composer-stack textarea { height: auto; padding: 8px 10px; resize: vertical; }
+.hubly-composer-indent { display: grid; gap: 8px; padding-left: 24px; }
+.hubly-composer-repeat { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--ui-border); border-radius: 12px; }
+.hubly-composer-days { display: flex; gap: 4px; }
+.hubly-composer-days button { display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 999px; background: var(--ui-muted); color: var(--ui-text-4); font-size: 12px; font-weight: 600; cursor: pointer; }
+.hubly-composer-days button[aria-pressed="true"] { background: var(--hb-accent); color: var(--on-accent); }
+.hubly-composer-repeatend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--ui-text-3); font-size: 12px; }
+.hubly-composer-repeatend label { display: inline-flex; align-items: center; gap: 6px; }
+.hubly-composer-repeatend input { width: 150px; }
+.hubly-composer-besthours { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--ui-text-4); font-size: 11.5px; }
+.hubly-composer-coverrow { display: flex; align-items: center; gap: 8px; }
+.hubly-composer-coverbtn { display: flex; flex: 1; align-items: center; gap: 10px; min-width: 0; padding: 8px; border: 1px solid var(--ui-border); border-radius: 10px; background: transparent; color: var(--ui-text); text-align: left; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-composer-coverbtn:hover:not(:disabled) { background: var(--ui-surface-2); }
+.hubly-composer-coverbtn img, .hubly-composer-coverbtn i { display: grid; flex-shrink: 0; place-items: center; width: 40px; height: 52px; border-radius: 6px; background: var(--ui-muted); color: var(--ui-text-3); object-fit: cover; }
+.hubly-composer-coverbtn strong { display: block; font-size: 13px; font-weight: 600; }
+.hubly-composer-coverbtn small { display: block; color: var(--ui-text-4); font-size: 11px; }
+.hubly-composer-coverpick { width: min(480px, 100%); }
+.hubly-composer-coverpick video { display: block; width: 100%; max-height: 320px; margin-bottom: 10px; border-radius: 10px; background: var(--ui-muted); object-fit: contain; }
+.hubly-composer-coverpick input[type="range"] { width: 100%; margin-bottom: 12px; accent-color: var(--hb-accent); }
+.hubly-composer-confirm dl { margin: 0 0 12px; padding: 10px 12px; border-radius: 10px; background: var(--ui-surface-2); }
+.hubly-composer-confirm dt { color: var(--ui-text-4); font-size: 11px; }
+.hubly-composer-confirm dd { margin: 2px 0 0; color: var(--ui-text); font-size: 13.5px; font-weight: 600; }
+.hubly-composer-nocopy { display: grid; gap: 2px; margin-bottom: 12px; padding: 10px 12px; border: 1px solid var(--ui-border-strong); border-radius: 10px; font-size: 12.5px; }
+.hubly-composer-nocopy strong { font-size: 13px; font-weight: 600; }
+.hubly-composer-nocopy span { color: var(--ui-text-3); }
+.hubly-composer-confirmlabel { display: block; margin-bottom: 6px; color: var(--ui-text-4); font-size: 11px; font-weight: 600; }
+.hubly-composer-confirm ul { display: grid; gap: 6px; margin: 0 0 12px; padding: 0; list-style: none; }
+.hubly-composer-confirm li { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--ui-border); border-radius: 10px; font-size: 13px; font-weight: 500; }
+.hubly-composer-confirm li i { display: grid; place-items: center; color: var(--ui-text-3); }
+.hubly-composer-confirm .hubly-composer-hint { display: block; margin-bottom: 14px; }
+.hubly-composer-menurow { display: flex; align-items: center; }
+.hubly-composer-menurow > button:first-child { display: flex; flex: 1; align-items: center; gap: 8px; min-width: 0; min-height: 32px; padding: 4px 8px; border: 0; border-radius: 8px; background: transparent; color: inherit; font-size: 12.5px; text-align: left; cursor: pointer; }
+.hubly-composer-menurow > button:first-child:hover { background: var(--ui-muted); }
+.hubly-composer-menurow > button:first-child[aria-pressed="true"] { font-weight: 700; }
+.hubly-composer-menurow > button:first-child > i { flex-shrink: 0; width: 9px; height: 9px; border-radius: 999px; }
+.hubly-composer-menurow > button:last-child { display: grid; place-items: center; width: 24px; height: 24px; border: 0; border-radius: 6px; background: transparent; color: var(--ui-text-4); cursor: pointer; }
+.hubly-composer-menurow > button:last-child:hover { background: var(--ui-muted); }
+.hubly-composer-newstatus { display: grid; gap: 6px; padding: 6px 4px 2px; }
+.hubly-composer-newstatus > div { display: flex; gap: 6px; }
+.hubly-composer-newstatus > div button { width: 20px; height: 20px; padding: 0; border: 0; border-radius: 999px; cursor: pointer; }
+.hubly-composer-newstatus > div button[aria-pressed="true"] { box-shadow: 0 0 0 1px var(--ui-surface), 0 0 0 3px var(--ui-text-3); }
+.hubly-composer-newstatus .is-create { min-height: 30px; border: 0; border-radius: 8px; background: var(--ui-muted); font-size: 12.5px; cursor: pointer; }
+.hubly-composer-newstatus .is-create:disabled { cursor: not-allowed; opacity: 0.6; }
+.hubly-composer-fielddel { display: grid; place-items: center; padding: 2px; border: 0; background: transparent; color: var(--ui-text-4); cursor: pointer; }
+.hubly-composer-todoassign { flex: 0 0 130px; width: 130px; }
+@media (max-width: 767.98px) {
+  .hubly-composer-todo { flex-wrap: wrap; }
+  .hubly-composer-todoassign { flex-basis: 100%; width: 100%; }
+  .hubly-composer-days button { width: 40px; height: 40px; }
+}

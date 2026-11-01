@@ -152,11 +152,14 @@ test("varios archivos, orden, copy por red y guardado sin fecha", async ({ page 
   await page.getByRole("button", { name: "Pinterest", exact: true }).click();
   await page.getByRole("tab", { name: "Pinterest" }).click();
   await expect(page.getByLabel("Copy de Pinterest")).toHaveValue("Copy común");
-  await expect(page.getByText("Hereda el copy general")).toBeVisible();
+  await expect(page.getByText("Lo que cambies aquí solo sale en Pinterest")).toBeVisible();
   await page.getByLabel("Copy de Pinterest").fill("Solo Pinterest");
   await expect(page.locator(".hubly-phone-app")).toContainText("Solo Pinterest");
   await expect(page.locator(".np-pin-save")).toHaveText("Guardar");
-  await page.getByRole("button", { name: "Volver a heredar" }).click();
+  await page.getByRole("tab", { name: "General" }).click();
+  await expect(page.getByText("Pinterest tiene su propio texto")).toBeVisible();
+  await page.getByRole("button", { name: "Usar este en Pinterest" }).click();
+  await page.getByRole("tab", { name: "Pinterest" }).click();
   await expect(page.getByLabel("Copy de Pinterest")).toHaveValue("Copy común");
 
   // Sin fecha no se puede programar, pero sí guardar, y no recibe la fecha de hoy.
@@ -192,13 +195,65 @@ test("programar elige fecha y hora y publicar ya no finge publicar", async ({ pa
   await page.getByRole("button", { name: "Subir hora" }).click();
   await page.getByRole("button", { name: "Listo" }).click();
   await expect(page.locator(".hubly-composer-datefield")).toContainText("10:00");
-  await expect(page.getByRole("button", { name: "Programar", exact: true })).toBeEnabled();
+  const programar = page.locator(".hubly-composer-foot").getByRole("button", { name: /^Programar \d/ });
+  await expect(programar).toBeEnabled();
+
+  // Instagram sin archivo no pasa de aquí.
+  await programar.click();
+  await expect(page.locator(".hubly-composer-foot [role='alert']")).toContainText("Instagram");
+
+  // Con Facebook sí: antes de programar se confirma dónde y cuándo, y avisa que no tiene copy.
+  const red = (nombre: string) => page.locator(".hubly-composer-networks").getByRole("button", { name: nombre, exact: true });
+  await red("Facebook").click();
+  await red("Instagram").click();
+  await programar.click();
+  const dialogo = page.getByRole("alertdialog");
+  await expect(dialogo).toContainText("Confirmar programación");
+  await expect(dialogo).toContainText("Este post no tiene copy");
+  await dialogo.getByRole("button", { name: "Cancelar" }).click();
+  await expect(dialogo).toHaveCount(0);
 
   await page.getByRole("radio", { name: "Publicar ya" }).click();
-  await expect(page.getByRole("button", { name: "Marcar como publicado" })).toBeVisible();
   await expect(page.locator(".hubly-composer-datefield")).toHaveCount(0);
   await page.getByRole("button", { name: "Marcar como publicado" }).click();
-  await expect(page.locator(".hubly-composer-foot [role='alert']")).toContainText("Escribe el copy");
+  await expect(page.getByRole("alertdialog")).toContainText("¿Ya lo subiste a la red?");
+  await page.getByRole("alertdialog").getByRole("button", { name: "Cancelar" }).click();
+
+  // Sin ninguna red no se puede programar ni publicar.
+  await red("Facebook").click();
+  await expect(page.getByRole("radio", { name: "Solo guardar" })).toBeEnabled();
+  await expect(page.getByRole("radio", { name: "Programar" })).toBeDisabled();
+  await expect(page.getByText("elige arriba en qué red sale")).toBeVisible();
+});
+
+test("el estatus se crea con color y los archivos deciden el formato", async ({ page }) => {
+  await abrirEditor(page);
+  await page.locator(".hubly-composer-meta").getByRole("button", { name: /revisión|Sin estatus/ }).click();
+  await page.getByRole("button", { name: "Agregar estatus" }).click();
+  await page.getByLabel("Nombre del estatus").fill("Con cliente");
+  await page.getByRole("button", { name: "Lila" }).click();
+  await page.getByRole("button", { name: "Crear", exact: true }).click();
+  await expect(page.locator(".hubly-composer-meta")).toContainText("Con cliente");
+
+  await page.getByLabel("Subir archivos del post").setInputFiles([
+    { name: "a.png", mimeType: "image/png", buffer: PNG },
+    { name: "b.png", mimeType: "image/png", buffer: PNG },
+  ]);
+  await expect(page.locator(".hubly-composer-media li")).toHaveCount(2);
+  await expect(page.getByRole("button", { name: "Descargar 2 archivos" })).toBeVisible();
+  await expect(page.locator(".hubly-composer-formatrow").getByRole("button", { name: "Carrusel" })).toHaveAttribute("aria-pressed", "true");
+
+  // Story trae la repetición por días.
+  await page.locator(".hubly-composer-formatrow").getByRole("button", { name: "Story" }).click();
+  await page.getByLabel("Repetir esta story").check();
+  await page.getByRole("button", { name: "lunes" }).click();
+  await expect(page.getByRole("button", { name: "lunes" })).toHaveAttribute("aria-pressed", "true");
+
+  // Deja el catálogo de estatus como estaba: el modo demo guarda este cambio.
+  await page.locator(".hubly-composer-meta").getByRole("button", { name: "Con cliente" }).click();
+  await page.getByRole("button", { name: "Eliminar el estatus Con cliente" }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Eliminar", exact: true }).click();
+  await expect(page.locator(".hubly-composer-meta")).not.toContainText("Con cliente");
 });
 
 test("los colaboradores de Instagram llegan al teléfono y tienen tope", async ({ page }) => {

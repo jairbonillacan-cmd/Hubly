@@ -38,6 +38,7 @@ export interface PhoneMedia {
   kind: "image" | "video";
   url?: string;
   name?: string;
+  poster?: string;
 }
 
 export interface PhonePost {
@@ -126,7 +127,7 @@ function MediaView({ post, ratio, fit = "cover", rounded = 0 }: { post: PhonePos
   return (
     <div className="np-media" style={style}>
       {current.kind === "video" ? (
-        <video key={current.id} src={current.url} controls playsInline preload="metadata" style={{ objectFit: fit }} aria-label={current.name || "Video del post"} />
+        <video key={current.id} src={current.url} poster={current.poster} controls={!isImmersive(post)} autoPlay={isImmersive(post)} muted={isImmersive(post)} loop={isImmersive(post)} playsInline preload="metadata" style={{ objectFit: fit }} aria-label={current.name || "Video del post"} />
       ) : (
         // Vista previa de un archivo privado: next/image no puede optimizar la URL firmada.
         // eslint-disable-next-line @next/next/no-img-element

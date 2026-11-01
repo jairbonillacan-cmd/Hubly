@@ -40,11 +40,14 @@ export function scheduleLabel(date: string, time: string): string | null {
 export function ComposerDatePicker({
   date,
   time,
+  allowPast = false,
   onChange,
   onClose,
 }: {
   date: string;
   time: string;
+  /** Solo programar exige una fecha futura; un borrador puede quedar apartado en cualquier día. */
+  allowPast?: boolean;
   onChange: (date: string, time: string) => void;
   onClose: () => void;
 }) {
@@ -87,7 +90,7 @@ export function ComposerDatePicker({
               key={day}
               type="button"
               className="hubly-datepick-day"
-              disabled={day < today}
+              disabled={!allowPast && day < today}
               aria-pressed={day === date}
               aria-current={day === today ? "date" : undefined}
               data-outside={d.getMonth() !== cursor.month || undefined}

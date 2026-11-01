@@ -11,6 +11,7 @@ import type {
   SocialPost,
 } from "./types";
 import { mediaFileUrl } from "./media";
+import type { StoryRepeat } from "./composer-rules";
 
 /** Todo lo editable de un post mientras el compositor está abierto. */
 export interface PostDraft {
@@ -37,6 +38,10 @@ export interface PostDraft {
   todos: PostTodo[];
   documents: PostDocument[];
   chat: PostChatMessage[];
+  coverAssetId?: string;
+  videoContext?: string;
+  /** Solo vive en el editor: al programar se convierte en posts con su propia fecha. */
+  repeat?: StoryRepeat | null;
 }
 
 export function draftFromPost(
@@ -67,6 +72,8 @@ export function draftFromPost(
     todos: post?.todos ?? [],
     documents: post?.documents ?? [],
     chat: post?.chat ?? [],
+    ...(post?.coverAssetId ? { coverAssetId: post.coverAssetId } : {}),
+    ...(post?.videoContext ? { videoContext: post.videoContext } : {}),
   };
 }
 
@@ -97,6 +104,8 @@ export function draftToPost(draft: PostDraft, existing: SocialPost | null, fallb
     todos: draft.todos,
     documents: draft.documents,
     chat: draft.chat,
+    coverAssetId: draft.coverAssetId,
+    videoContext: draft.videoContext,
     activity: existing?.activity,
     status: draft.status,
     scheduledDate: draft.scheduledDate,

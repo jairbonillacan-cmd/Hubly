@@ -103,6 +103,7 @@ export function CaptionAssistant({
   network,
   format,
   title,
+  context,
   current,
   disabled,
   counter,
@@ -112,6 +113,8 @@ export function CaptionAssistant({
   network: SocialNetwork;
   format: PostFormat;
   title: string;
+  /** De qué trata el video: manda sobre lo demás. */
+  context?: string;
   current: string;
   disabled?: boolean;
   counter: React.ReactNode;
@@ -123,6 +126,7 @@ export function CaptionAssistant({
 
   const generate = async () => {
     const brief =
+      context?.trim() ||
       current.trim() ||
       title.trim() ||
       `Escribe un caption para un post de ${format} en ${network}${brand ? ` de la marca ${brand.name}` : ""}.`;

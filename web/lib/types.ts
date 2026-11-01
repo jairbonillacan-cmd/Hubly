@@ -77,6 +77,10 @@ export interface SocialPost {
   /** Hasta diez archivos en el orden de publicación; `mediaUrl` queda solo para posts antiguos. */
   media?: PostMedia[];
   platformSettings?: Partial<Record<SocialNetwork, PlatformSettings>>;
+  /** Imagen de la biblioteca usada como portada del video. */
+  coverAssetId?: string;
+  /** De qué trata el video; manda sobre lo demás al generar el caption. */
+  videoContext?: string;
   workflowStatusId?: string | null;
   assigneeIds?: string[];
   color?: string;
@@ -108,6 +112,14 @@ export interface PlatformSettings {
   collaborators?: string[];
   /** TikTok: que la red elija la música del carrusel de fotos. */
   autoMusic?: boolean;
+  tiktokPrivacy?: "PUBLIC_TO_EVERYONE" | "MUTUAL_FOLLOW_FRIENDS" | "FOLLOWER_OF_CREATOR" | "SELF_ONLY";
+  allowComment?: boolean;
+  allowDuet?: boolean;
+  allowStitch?: boolean;
+  commercial?: boolean;
+  brandOrganic?: boolean;
+  brandContent?: boolean;
+  aiGenerated?: boolean;
   subreddit?: string;
   flair?: string;
   topicType?: "STANDARD" | "EVENT" | "OFFER";
@@ -133,6 +145,7 @@ export interface PostTodo {
   id: string;
   text: string;
   done: boolean;
+  assigneeId?: string;
 }
 
 export interface PostDocument {

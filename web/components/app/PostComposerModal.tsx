@@ -7,6 +7,7 @@ import { currentAgencyId } from "@/lib/live-workspace";
 import { askConfirm, askText } from "@/components/app/AppDialogHost";
 import { CaptionAssistant, ManualResults } from "@/components/app/social/ComposerExtras";
 import { ComposerDatePicker, scheduleLabel } from "@/components/app/social/ComposerDatePicker";
+import { BestHours, CollaboratorsField, ConfirmPublish, CoverPicker, PeopleMenu, StoryRepeatField, TikTokFitHint, TikTokSettings, videoDuration } from "@/components/app/social/ComposerPanels";
 import { NotebookEditor } from "@/components/app/NotebookEditor";
 import { MediaPickerModal } from "@/components/app/media/MediaPickerModal";
 import { useModalPresence } from "@/lib/use-modal-presence";
@@ -16,8 +17,9 @@ import { PhonePreview, type PhoneMedia } from "@/components/previews/phone/Phone
 import { CanvaIcon, DriveIcon, FacebookIcon, LinkedInIcon, TikTokIcon } from "@/components/previews/SocialIcons";
 import { formatBytes, mediaFileUrl, MAX_MEDIA_PER_POST, mediaKindFor, type MediaRecord } from "@/lib/media";
 import { hevcWarning, uploadMedia, type UploadHandle } from "@/lib/media-client";
-import { captionLevel, countHashtags, NETWORKS, networkFormatLabel, networkIssues, networkSpec } from "@/lib/network-catalog";
+import { captionLevel, NETWORKS, networkFormatLabel, networkIssues, networkSpec } from "@/lib/network-catalog";
 import { localIsoDate } from "@/lib/date";
+import { availableFormats, isPastSchedule, normalizeFormat, repeatDates, videoLimit } from "@/lib/composer-rules";
 import {
   captionFor,
   clearRecovery,
@@ -113,9 +115,6 @@ export const GLYPHS: Record<SocialNetwork, React.ReactNode> = {
 };
 
 const FORMAT_LABEL: Record<PostFormat, string> = { Imagen: "Imagen", Carrusel: "Carrusel", "Reel / Video": "Video", Story: "Story", Texto: "Solo texto" };
-const IMAGE_FORMATS: PostFormat[] = ["Imagen", "Carrusel", "Texto", "Story"];
-const VIDEO_FORMATS: PostFormat[] = ["Reel / Video", "Story", "Texto"];
-const MAX_COLLABORATORS = 3;
 type PublishMode = "guardar" | "programar" | "publicar";
 const PUBLISH_MODES: { id: PublishMode; label: string; Icon: typeof HublyImageIcon }[] = [
   { id: "guardar", label: "Solo guardar", Icon: HublySaveIcon },
@@ -177,6 +176,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
   const deletePost = useHublyStore((s) => s.deletePost);
   const duplicatePost = useHublyStore((s) => s.duplicatePost);
   const updateBrand = useHublyStore((s) => s.updateBrand);
+  const openComposer = useHublyStore((s) => s.openComposer);
   const team = useHublyStore((s) => s.team);
   const composerDefaultDate = useHublyStore((s) => s.composerDefaultDate);
   const composerPending = useHublyStore((s) => s.composerPending);
@@ -197,7 +197,6 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
   const [uploads, setUploads] = useState<UploadSlot[]>([]);
   const [pickerFor, setPickerFor] = useState<"media" | "documents" | null>(null);
   const [popover, setPopover] = useState<Popover>(null);
-  const [notifySearch, setNotifySearch] = useState("");
   const [copyNetwork, setCopyNetwork] = useState<SocialNetwork | "General">("General");
   const [previewNet, setPreviewNet] = useState<SocialNetwork | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -212,7 +211,10 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
   const [dropActive, setDropActive] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
   const [publishMode, setPublishMode] = useState<PublishMode>("guardar");
-  const [collabDraft, setCollabDraft] = useState("");
+  const [confirmIntent, setConfirmIntent] = useState<"programar" | "publicar" | null>(null);
+  const [coverOpen, setCoverOpen] = useState(false);
+  const [docDrop, setDocDrop] = useState(false);
+  const [newStatus, setNewStatus] = useState<{ name: string; color: string } | null>(null);
 
   const owner = `${profile?.id || "local"}:${currentAgencyId() || "demo"}`;
   const key = draft ? recoveryKey(owner, draft.brandId, draft.postId) : null;
@@ -245,7 +247,9 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
     setPreviewNet(null);
     setErrorMsg(null);
     setSelectedMedia(null);
-    setCollabDraft("");
+    setConfirmIntent(null);
+    setCoverOpen(false);
+    setNewStatus(null);
     setPublishMode(editingPost?.status === "scheduled" ? "programar" : "guardar");
     /* eslint-enable react-hooks/set-state-in-effect */
     // Solo al abrir o cambiar de post: patchPost actualiza editingPost mientras se escribe.
@@ -276,16 +280,29 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
     else closeComposer();
   };
 
+  const requestClose = async () => {
+    if (activeUploads && !(await askConfirm("Hay una subida en curso. Si cierras se pierde el archivo que se está subiendo.", "Cerrar de todos modos"))) return;
+    handleClose();
+  };
+
   // Otros modales manejan su propio Escape; el editor solo responde cuando es lo de arriba.
   useLayer(
     isOpen,
     () => {
       if (composerPending) resolveComposerPending("keep");
       else if (popover) setPopover(null);
-      else handleClose();
+      else void requestClose();
     },
     { deferTo: '.hubly-overlay:not(.hubly-composer-overlay), [role="dialog"][aria-modal="true"]' }
   );
+
+  // Los archivos mandan: un video no puede quedar como imagen ni varias fotos como una sola.
+  useEffect(() => {
+    if (!draft) return;
+    const next = normalizeFormat(draft.format, draft.media);
+    /* eslint-disable-next-line react-hooks/set-state-in-effect -- corrige el formato al cambiar los archivos */
+    if (next !== draft.format) setDraft((d) => (d ? { ...d, format: next } : d));
+  }, [draft]);
 
   useEffect(() => {
     if (!popover) return;
@@ -310,15 +327,15 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
   const fields = brand?.customFieldDefinitions ?? [];
   const media = useMemo(() => draft?.media ?? [], [draft?.media]);
   const previewMedia: PhoneMedia[] = useMemo(
-    () => media.map((m) => ({ id: m.id, kind: m.kind, name: m.name, url: mediaItemUrl(m) })),
-    [media]
+    () => media.map((m) => ({ id: m.id, kind: m.kind, name: m.name, url: mediaItemUrl(m), poster: m.kind === "video" && draft?.coverAssetId ? mediaFileUrl(draft.coverAssetId) : undefined })),
+    [media, draft?.coverAssetId]
   );
 
   if (!presence.mounted || !draft || !brand) return null;
 
   const published = draft.status === "published";
   const locked = readOnly || published;
-  const previewNetwork = previewNet && draft.networks.includes(previewNet) ? previewNet : draft.networks[0];
+  const previewNetwork = previewNet && draft.networks.includes(previewNet) ? previewNet : (draft.networks[0] ?? "Instagram");
   const workflowStatus = workflow.find((w) => w.id === draft.workflowStatusId);
   const issues = networkIssues({ networks: draft.networks, caption: draft.caption, media, platformSettings: draft.platformSettings });
   const authorName = profile?.name || "Equipo";
@@ -326,23 +343,20 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
   const inherits = copyTarget !== "General" && draft.platformSettings[copyTarget]?.caption === undefined;
   const copyValue = copyTarget === "General" ? draft.caption : captionFor(draft, copyTarget);
   const limit = copyTarget === "General"
-    ? Math.min(...draft.networks.map((n) => networkSpec(n).maxChars))
+    ? Math.min(2200, ...draft.networks.map((n) => networkSpec(n).maxChars))
     : networkSpec(copyTarget).maxChars;
   const level = captionLevel(copyValue.length, limit);
   const selectedAssignees = team.filter((m) => draft.assigneeIds.includes(m.id));
   const notifyMembers = team.filter((m) => draft.notifyMemberIds.includes(m.id));
-  const notifyMatches = team.filter((m) => m.name.toLowerCase().includes(notifySearch.trim().toLowerCase()));
+  const photoFor = (member: { email?: string }) => (member.email === profile?.email ? profile?.avatarUrl : undefined);
+  const todosDone = draft.todos.filter((t) => t.done).length;
 
   const toggleNetwork = (network: SocialNetwork) => {
     if (locked) return;
     // Al activar una red, la vista previa pasa a ella para ver cómo queda.
     if (!draft.networks.includes(network)) setPreviewNet(network);
     update({
-      networks: draft.networks.includes(network)
-        ? draft.networks.length > 1
-          ? draft.networks.filter((n) => n !== network)
-          : draft.networks
-        : [...draft.networks, network],
+      networks: draft.networks.includes(network) ? draft.networks.filter((n) => n !== network) : [...draft.networks, network],
     });
   };
 
@@ -413,9 +427,8 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
       return;
     }
     if (finalStatus !== "draft") {
-      if (!draft.caption.trim() && !Object.values(draft.platformSettings).some((s) => s?.caption?.trim())) {
-        const action = finalStatus === "scheduled" ? "programar" : finalStatus === "published" ? "marcarlo como publicado" : "enviar a revisión";
-        setErrorMsg(`Escribe el copy antes de ${action}.`);
+      if (finalStatus === "pending" && !hasCopy) {
+        setErrorMsg("Escribe el copy antes de enviar a revisión.");
         return;
       }
       if (issues.length > 0) {
@@ -432,18 +445,80 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
     // Registrar una publicación fecha el post hoy si no tenía fecha.
     const scheduledDate = finalStatus === "published" ? draft.scheduledDate || localIsoDate() : draft.scheduledDate;
     savePost({ ...draftToPost({ ...draft, status: finalStatus, scheduledDate }, editingPost, authorName) });
+    if (finalStatus === "scheduled" && storyRepeats.length > 0) {
+      storyRepeats.forEach((date) => savePost({ ...draftToPost({ ...draft, postId: null, status: "scheduled", scheduledDate: date }, null, authorName) }));
+    }
     handleClose();
   };
 
-  const addCollaborator = () => {
-    const handle = collabDraft.trim().replace(/^@+/, "");
-    if (!handle) return;
-    const current = draft.platformSettings.Instagram?.collaborators ?? [];
-    if (current.length < MAX_COLLABORATORS && !current.includes(handle)) {
-      updateSettings("Instagram", { collaborators: [...current, handle] });
+  /** Revisa lo que impediría salir antes de pedir la confirmación final. */
+  const askToPublish = async (intent: "programar" | "publicar") => {
+    setErrorMsg(null);
+    if (draft.networks.length === 0) return;
+    if (intent === "programar" && isPastSchedule(draft.scheduledDate, draft.scheduledTime)) {
+      setErrorMsg("Esa hora ya pasó. Elige una fecha futura para programar.");
+      return;
     }
-    setCollabDraft("");
+    if (issues.length > 0) {
+      setErrorMsg(`${issues[0].network}: ${issues[0].message}`);
+      return;
+    }
+    if (activeUploads) {
+      setErrorMsg("Espera a que terminen las subidas o cancélalas.");
+      return;
+    }
+    const firstVideo = media.find((m) => m.kind === "video");
+    const seconds = firstVideo ? await videoDuration(mediaItemUrl(firstVideo) ?? "") : null;
+    if (seconds !== null) {
+      const tooLong = draft.networks.map((n) => videoLimit(n, formatFor(draft, n))).filter((l) => l && seconds > l.seconds);
+      if (tooLong.length > 0) {
+        setErrorMsg(`El video dura de más para ${tooLong.map((l) => l?.label).join(", ")}. Recórtalo o quita esa red.`);
+        return;
+      }
+    }
+    setConfirmIntent(intent);
   };
+
+  const downloadAll = () => {
+    const base = (draft.title.trim() || "post").replace(/[\\/:*?"<>|]+/g, "").slice(0, 60) || "post";
+    media.forEach((item, index) => {
+      const url = mediaItemUrl(item);
+      if (!url) return;
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = media.length > 1 ? `${base} ${index + 1}` : base;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    });
+  };
+
+  const uploadDocuments = (files: FileList) => {
+    Array.from(files).slice(0, 10).forEach((file) => {
+      uploadMedia(file, { brandId: draft.brandId, folder: "" }, () => {}).promise
+        .then((record) => setDraft((d) => {
+          if (!d) return d;
+          const documents = [...d.documents, { id: `doc-${record.id}`, name: record.name, url: mediaFileUrl(record.id) }];
+          if (editingPost) patchPost(editingPost.id, { documents });
+          return { ...d, documents };
+        }))
+        .catch(() => setErrorMsg(`No pudimos subir ${file.name}. Revisa tu conexión e inténtalo otra vez.`));
+    });
+  };
+
+  const useCopyEverywhere = () => {
+    if (copyTarget === "General") return;
+    const platformSettings = Object.fromEntries(
+      Object.entries(draft.platformSettings).map(([network, settings]) => {
+        const rest = { ...settings };
+        delete rest.caption;
+        return [network, rest];
+      })
+    );
+    update({ caption: copyValue, platformSettings });
+    setCopyNetwork("General");
+  };
+
 
   const discardRecovery = () => {
     if (key) clearRecovery(localStorage, key);
@@ -463,13 +538,24 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
     handleClose();
   };
 
-  const addWorkflowStatus = async () => {
-    const name = await askText("Nombre del nuevo estatus", "", "Crear");
-    if (!name?.trim()) return;
-    const created: WorkflowStatus = { id: `wf-${Date.now()}`, name: name.trim(), color: POST_COLORS[workflow.length % POST_COLORS.length] };
+  const addWorkflowStatus = () => {
+    if (!newStatus?.name.trim()) return;
+    const created: WorkflowStatus = { id: `wf-${Date.now()}`, name: newStatus.name.trim(), color: newStatus.color };
     updateBrand(brand.id, { workflowStatuses: [...workflow, created] });
     update({ workflowStatusId: created.id });
+    setNewStatus(null);
     setPopover(null);
+  };
+
+  const removeWorkflowStatus = async (status: WorkflowStatus) => {
+    if (!(await askConfirm(`¿Eliminar el estatus «${status.name}»?`))) return;
+    updateBrand(brand.id, { workflowStatuses: workflow.filter((w) => w.id !== status.id) });
+    if (draft.workflowStatusId === status.id) update({ workflowStatusId: null });
+  };
+
+  const removeField = async (field: CustomFieldDefinition) => {
+    if (!(await askConfirm(`¿Eliminar el campo «${field.name}»? Los valores existentes se conservan.`))) return;
+    updateBrand(brand.id, { customFieldDefinitions: fields.filter((f) => f.id !== field.id) });
   };
 
   const addField = () => {
@@ -507,15 +593,52 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
 
   const networkFormats = (network: SocialNetwork) => networkSpec(network).formats;
   const previewFormat = formatFor(draft, previewNetwork);
+  const hasCopy = Boolean(draft.caption.trim()) || Object.values(draft.platformSettings).some((s) => s?.caption?.trim());
+  const isVideoPost = media.some((m) => m.kind === "video");
+  const formatOptions = availableFormats(draft.networks, media);
+  const storyRepeats = draft.format === "Story" && draft.repeat && draft.scheduledDate ? repeatDates(draft.repeat, draft.scheduledDate) : [];
+  const pastSchedule = publishMode === "programar" && isPastSchedule(draft.scheduledDate, draft.scheduledTime);
+  const noNetworks = draft.networks.length === 0;
+  const scheduleButton = draft.scheduledDate
+    ? `${draft.status === "scheduled" ? "Programado" : "Programar"} ${new Date(`${draft.scheduledDate}T12:00:00`).toLocaleDateString("es-MX", { day: "2-digit", month: "2-digit" })}${draft.scheduledTime ? ` ${draft.scheduledTime}` : ""}`
+    : "Selecciona fecha";
+  const firstVideoUrl = media.find((m) => m.kind === "video");
+  const firstImage = media.find((m) => m.kind === "image");
+  const othersWithOwnCopy = draft.networks.filter((n) => {
+    const own = draft.platformSettings[n]?.caption?.trim();
+    return own && own !== draft.caption.trim();
+  });
+  const hasOwnCopy = copyTarget !== "General" && !inherits;
+  const inheritingOthers = draft.networks.filter((n) => n !== copyTarget && draft.platformSettings[n]?.caption === undefined);
   const activeMedia = media.find((m) => m.id === selectedMedia) ?? media[0];
   const activeMediaIndex = activeMedia ? media.indexOf(activeMedia) : 0;
   const collaborators = draft.platformSettings.Instagram?.collaborators ?? [];
 
   return (
     <>
-      <div className="hubly-composer-scrim" data-state={presence.state} onMouseDown={handleClose} aria-hidden />
+      <div className="hubly-composer-scrim" data-state={presence.state} onMouseDown={() => void requestClose()} aria-hidden />
       <div className="hubly-overlay hubly-composer-overlay" data-state={presence.state}>
-        <div ref={sheetRef} className="hubly-sheet hubly-composer" data-state={presence.state} role="dialog" aria-modal="false" aria-label="Editor de post">
+        <div
+          ref={sheetRef}
+          className="hubly-sheet hubly-composer"
+          data-state={presence.state}
+          data-docdrop={docDrop || undefined}
+          role="dialog"
+          aria-modal="false"
+          aria-label="Editor de post"
+          onDragOver={(e) => {
+            if (tab !== "documentos" || readOnly || !e.dataTransfer.types.includes("Files")) return;
+            e.preventDefault();
+            setDocDrop(true);
+          }}
+          onDragLeave={(e) => { if (e.currentTarget === e.target) setDocDrop(false); }}
+          onDrop={(e) => {
+            if (tab !== "documentos" || readOnly || e.dataTransfer.files.length === 0) return;
+            e.preventDefault();
+            setDocDrop(false);
+            uploadDocuments(e.dataTransfer.files);
+          }}
+        >
           <header className="hubly-composer-head">
             <div style={{ minWidth: 0, flex: 1 }}>
               <input
@@ -537,7 +660,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
               </div>
             </div>
             {editingPost && !readOnly && (
-              <button type="button" className="hubly-cal-icon" aria-label="Duplicar post" title="Duplicar post" onClick={() => { const copyId = duplicatePost(editingPost.id); if (copyId) handleClose(); }}>
+              <button type="button" className="hubly-cal-icon" aria-label="Duplicar post" title="Duplicar post" onClick={() => { const copyId = duplicatePost(editingPost.id); if (copyId) { setComposerDirty(false); openComposer(copyId); } }}>
                 <Copy size={17} />
               </button>
             )}
@@ -546,7 +669,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                 <Trash2 size={17} />
               </button>
             )}
-            <button type="button" className="hubly-cal-icon" aria-label="Cerrar" title="Cerrar; tus cambios quedan guardados en este navegador" onClick={handleClose}>
+            <button type="button" className="hubly-cal-icon" aria-label="Cerrar" title="Cerrar; tus cambios quedan guardados en este navegador" onClick={() => void requestClose()}>
               <X size={18} />
             </button>
           </header>
@@ -567,56 +690,34 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                 <span>{selectedAssignees.length ? selectedAssignees.map((m) => m.name.split(" ")[0]).join(", ") : draft.assignee || "Sin asignar"}</span>
               </button>
               {popover === "assignee" && (
-                <div className="hubly-composer-menu" role="group" aria-label="Responsables">
-                  {team.length === 0 && <small>Aún no hay miembros en el equipo.</small>}
-                  {team.map((member) => (
-                    <label key={member.id}>
-                      <input
-                        type="checkbox"
-                        checked={draft.assigneeIds.includes(member.id)}
-                        onChange={() => {
-                          const next = draft.assigneeIds.includes(member.id) ? draft.assigneeIds.filter((id) => id !== member.id) : [...draft.assigneeIds, member.id];
-                          update({ assigneeIds: next, assignee: team.find((m) => m.id === next[0])?.name ?? "" });
-                        }}
-                      />
-                      {member.name}
-                    </label>
-                  ))}
-                </div>
+                <PeopleMenu
+                  label="Responsables"
+                  team={team}
+                  selected={draft.assigneeIds}
+                  photoFor={photoFor}
+                  onToggle={(id) => {
+                    const next = draft.assigneeIds.includes(id) ? draft.assigneeIds.filter((x) => x !== id) : [...draft.assigneeIds, id];
+                    update({ assigneeIds: next, assignee: team.find((m) => m.id === next[0])?.name ?? "" });
+                  }}
+                />
               )}
             </div>
             <div className="hubly-composer-pop">
-              <button type="button" className={draft.notifyOnPublish ? "is-on" : undefined} aria-expanded={popover === "notify"} disabled={locked} onClick={() => { setNotifySearch(""); setPopover(popover === "notify" ? null : "notify"); }}>
+              <button type="button" className={draft.notifyOnPublish ? "is-on" : undefined} aria-expanded={popover === "notify"} disabled={locked} onClick={() => setPopover(popover === "notify" ? null : "notify")}>
                 <HublyBellIcon size={17} />
                 <span>{notifyMembers.length ? `Avisar a ${notifyMembers.map((m) => m.name.split(" ")[0]).join(", ")}` : "Avisar al publicar"}</span>
               </button>
               {popover === "notify" && (
-                <div className="hubly-composer-menu is-people" role="group" aria-label="Avisar al publicar">
-                  <input className="hubly-cal-input" autoFocus value={notifySearch} onChange={(e) => setNotifySearch(e.target.value)} placeholder="Buscar…" aria-label="Buscar miembro" />
-                  {team.length === 0 && <small>Aún no hay miembros en el equipo.</small>}
-                  {team.length > 0 && notifyMatches.length === 0 && <small>Sin resultados</small>}
-                  {notifyMatches.map((member) => {
-                    const selected = draft.notifyMemberIds.includes(member.id);
-                    const photo = member.email === profile?.email ? profile?.avatarUrl : undefined;
-                    return (
-                      <button
-                        key={member.id}
-                        type="button"
-                        aria-pressed={selected}
-                        onClick={() => {
-                          const next = selected ? draft.notifyMemberIds.filter((id) => id !== member.id) : [...draft.notifyMemberIds, member.id];
-                          update({ notifyMemberIds: next, notifyOnPublish: next.length > 0 });
-                        }}
-                      >
-                        <span className="hubly-composer-avatar" style={{ background: member.avatarColor || "var(--hb-accent)" }}>
-                          {photo ? <img src={photo} alt="" /> : member.initials}
-                        </span>
-                        <span className="hubly-composer-person">{member.name}</span>
-                        {selected && <HublyCheckIcon size={14} />}
-                      </button>
-                    );
-                  })}
-                </div>
+                <PeopleMenu
+                  label="Avisar al publicar"
+                  team={team}
+                  selected={draft.notifyMemberIds}
+                  photoFor={photoFor}
+                  onToggle={(id) => {
+                    const next = draft.notifyMemberIds.includes(id) ? draft.notifyMemberIds.filter((x) => x !== id) : [...draft.notifyMemberIds, id];
+                    update({ notifyMemberIds: next, notifyOnPublish: next.length > 0 });
+                  }}
+                />
               )}
             </div>
             <div className="hubly-composer-pop">
@@ -648,11 +749,26 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                 <div className="hubly-composer-menu" role="group" aria-label="Estatus editorial">
                   <button type="button" onClick={() => { update({ workflowStatusId: null }); setPopover(null); }}>Sin estatus</button>
                   {workflow.map((w) => (
-                    <button key={w.id} type="button" aria-pressed={draft.workflowStatusId === w.id} onClick={() => { update({ workflowStatusId: w.id }); setPopover(null); }}>
-                      <i style={{ background: w.color }} /> {w.name}
-                    </button>
+                    <div key={w.id} className="hubly-composer-menurow">
+                      <button type="button" aria-pressed={draft.workflowStatusId === w.id} onClick={() => { update({ workflowStatusId: w.id }); setPopover(null); }}>
+                        <i style={{ background: w.color }} /> {w.name}
+                      </button>
+                      <button type="button" aria-label={`Eliminar el estatus ${w.name}`} title="Eliminar" onClick={() => void removeWorkflowStatus(w)}><X size={12} /></button>
+                    </div>
                   ))}
-                  <button type="button" className="is-create" onClick={() => void addWorkflowStatus()}><Plus size={13} /> Crear estatus</button>
+                  {newStatus ? (
+                    <form className="hubly-composer-newstatus" onSubmit={(e) => { e.preventDefault(); addWorkflowStatus(); }}>
+                      <input className="hubly-cal-input" autoFocus value={newStatus.name} onChange={(e) => setNewStatus({ ...newStatus, name: e.target.value })} placeholder="Nombre del estatus" aria-label="Nombre del estatus" />
+                      <div role="group" aria-label="Color del estatus">
+                        {POST_PALETTE.map(({ name, color }) => (
+                          <button key={color} type="button" title={name} aria-label={name} aria-pressed={newStatus.color === color} style={{ background: color }} onClick={() => setNewStatus({ ...newStatus, color })} />
+                        ))}
+                      </div>
+                      <button type="submit" className="is-create" disabled={!newStatus.name.trim()}>Crear</button>
+                    </form>
+                  ) : (
+                    <button type="button" className="is-create" onClick={() => setNewStatus({ name: "", color: POST_PALETTE[0].color })}><Plus size={13} /> Agregar estatus</button>
+                  )}
                 </div>
               )}
             </div>
@@ -662,6 +778,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
               return (
                 <label key={field.id} className="hubly-composer-field">
                   <small>{field.name}</small>
+                  {!locked && <button type="button" className="hubly-composer-fielddel" aria-label={`Eliminar el campo ${field.name}`} title="Eliminar campo" onClick={(e) => { e.preventDefault(); void removeField(field); }}><X size={11} /></button>}
                   {field.type === "checkbox" ? (
                     <input type="checkbox" disabled={locked} checked={value === true} onChange={(e) => set(e.target.checked)} />
                   ) : field.type === "select" ? (
@@ -706,12 +823,16 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
 
           <nav className="hubly-composer-tabs" aria-label="Secciones del post">
             <div className="hubly-composer-tabs-scroll">
-              {TABS.map(({ id, label, Icon }) => (
-                <button key={id} type="button" aria-current={tab === id ? "true" : undefined} onClick={() => { setTab(id); setMobilePane("editar"); }}>
-                  <Icon size={18} />
-                  <span>{label}</span>
-                </button>
-              ))}
+              {TABS.filter(({ id }) => id !== "resultados" || published).map(({ id, label, Icon }) => {
+                const badge = id === "todos" && draft.todos.length > 0 ? `${todosDone}/${draft.todos.length}` : id === "chat" && draft.chat.length > 0 ? String(draft.chat.length) : null;
+                return (
+                  <button key={id} type="button" aria-current={tab === id ? "true" : undefined} onClick={() => { setTab(id); setMobilePane("editar"); }}>
+                    <Icon size={18} />
+                    <span>{label}</span>
+                    {badge && <em>{badge}</em>}
+                  </button>
+                );
+              })}
             </div>
             <button type="button" className="hubly-composer-mobile-preview" aria-pressed={mobilePane === "vista"} onClick={() => setMobilePane(mobilePane === "vista" ? "editar" : "vista")}>
               {mobilePane === "vista" ? <Pencil size={17} /> : <Eye size={17} />}
@@ -866,27 +987,34 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                           </li>
                         ))}
                       </ol>
-                      {draft.networks.includes("TikTok") && <small className="hubly-composer-hint">Para que llene toda la pantalla en TikTok: 1080×1920.</small>}
+                      {draft.networks.includes("TikTok") && firstImage && <TikTokFitHint url={mediaItemUrl(firstImage)} />}
                       <div className="hubly-composer-mediatools">
-                        <a className="hbtn hbtn-secondary hbtn-sm" href={activeMedia ? mediaItemUrl(activeMedia) : undefined} download={activeMedia?.name}>
-                          <HublyDownloadIcon size={15} /> Descargar archivo
-                        </a>
+                        <button type="button" className="hbtn hbtn-secondary hbtn-sm" onClick={downloadAll}>
+                          <HublyDownloadIcon size={15} /> {media.length === 1 ? "Descargar archivo" : `Descargar ${media.length} archivos`}
+                        </button>
                         <button type="button" className="hbtn hbtn-secondary hbtn-sm" disabled title="Función prevista: aún no hay biblioteca de música">
                           <HublyMusicIcon size={15} /> Agregar música
                         </button>
                       </div>
                       <div className="hubly-composer-formats">
-                        <div className="hubly-composer-formatrow" role="group" aria-label="Formato del post">
-                          <span aria-hidden>Formato</span>
-                          {(media.some((m) => m.kind === "video") ? VIDEO_FORMATS : IMAGE_FORMATS).map((f) => (
-                            <button key={f} type="button" className="hubly-cal-pill" aria-pressed={draft.format === f} disabled={locked} onClick={() => update({ format: f })}>{FORMAT_LABEL[f]}</button>
-                          ))}
-                        </div>
-                        <ul className="hubly-composer-formatmap" aria-label="Formato en cada red">
-                          {draft.networks.map((n) => (
-                            <li key={n}><i style={{ background: networkInk(networkSpec(n).color) }} />{n}: {networkFormatLabel(n, formatFor(draft, n))}</li>
-                          ))}
-                        </ul>
+                        {formatOptions.length > 1 && (
+                          <div className="hubly-composer-formatrow" role="group" aria-label="Formato del post">
+                            <span aria-hidden>Formato</span>
+                            {formatOptions.map((f) => (
+                              <button key={f} type="button" className="hubly-cal-pill" aria-pressed={draft.format === f} disabled={locked} onClick={() => update({ format: f })}>{FORMAT_LABEL[f]}</button>
+                            ))}
+                          </div>
+                        )}
+                        {draft.networks.length >= 2 && (
+                          <ul className="hubly-composer-formatmap" aria-label="Formato en cada red">
+                            {draft.networks.map((n) => (
+                              <li key={n}><i style={{ background: networkInk(networkSpec(n).color) }} />{n}: {networkFormatLabel(n, formatFor(draft, n))}</li>
+                            ))}
+                          </ul>
+                        )}
+                        {draft.format === "Story" && draft.networks.includes("TikTok") && (
+                          <small className="hubly-composer-hint">TikTok no permite publicar Stories por API: esta Story no sale ahí. Si la quieres en su perfil, crea un post aparte.</small>
+                        )}
                       </div>
                     </>
                   )}
@@ -895,75 +1023,58 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                     <div className="hubly-composer-copytabs" role="tablist" aria-label="Copy por red">
                       <button type="button" role="tab" aria-selected={copyTarget === "General"} onClick={() => setCopyNetwork("General")}>General</button>
                       {draft.networks.map((n) => (
-                        <button key={n} type="button" role="tab" aria-selected={copyTarget === n} onClick={() => { setCopyNetwork(n); setPreviewNet(n); }}>
-                          {n}{draft.platformSettings[n]?.caption !== undefined ? " •" : ""}
+                        <button key={n} type="button" role="tab" aria-selected={copyTarget === n} style={{ "--net": networkInk(networkSpec(n).color), "--net-on": networkSpec(n).color === "#000000" ? "var(--ui-surface)" : "var(--on-accent)" } as React.CSSProperties} onClick={() => { setCopyNetwork(n); setPreviewNet(n); }}>
+                          {n}{draft.platformSettings[n]?.caption !== undefined && <i title="Tiene su propio texto" />}
                         </button>
                       ))}
                     </div>
+                    {copyTarget !== "General" && (
+                      <NetworkSettings network={copyTarget} settings={draft.platformSettings[copyTarget] ?? {}} formats={networkFormats(copyTarget)} generalFormat={draft.format} isVideo={isVideoPost} disabled={locked} onChange={(patch) => updateSettings(copyTarget, patch)} />
+                    )}
                     <textarea
                       className="hubly-composer-caption"
                       value={copyValue}
                       disabled={locked}
                       onChange={(e) => (copyTarget === "General" ? update({ caption: e.target.value }) : updateSettings(copyTarget, { caption: e.target.value }))}
-                      placeholder={copyTarget === "General" ? "Escribe el copy para todas las redes…" : `Escribe el copy para ${copyTarget}…`}
+                      placeholder={copyTarget === "General" ? "Escribe el copy para todas las redes…" : `Texto para ${copyTarget}…`}
                       aria-label={copyTarget === "General" ? "Copy general" : `Copy de ${copyTarget}`}
                     />
+                    {copyTarget !== "General" && draft.caption.trim() && draft.networks.length > 1 && (
+                      <p className="hubly-composer-copynote">
+                        <span>
+                          {hasOwnCopy
+                            ? `Este texto solo sale en ${copyTarget}.${inheritingOthers.length ? ` ${inheritingOthers.join(", ")} salen con el de General.` : ""}`
+                            : `Lo que cambies aquí solo sale en ${copyTarget}. Para cambiarlo en todas, usa General.`}
+                        </span>
+                        {hasOwnCopy && !locked && <button type="button" onClick={useCopyEverywhere}>Usar en todas las redes</button>}
+                      </p>
+                    )}
                     <CaptionAssistant
                       brand={brand}
                       network={copyTarget === "General" ? previewNetwork : copyTarget}
                       format={draft.format}
                       title={draft.title}
+                      context={draft.videoContext}
                       current={copyValue}
                       disabled={locked}
                       onUse={(text) => (copyTarget === "General" ? update({ caption: text }) : updateSettings(copyTarget, { caption: text }))}
                       counter={
                         <div className="hubly-composer-count" data-level={level}>
-                          {copyTarget !== "General" && (
-                            inherits ? (
-                              <span>Hereda el copy general</span>
-                            ) : (
-                              <button type="button" disabled={locked} onClick={() => updateSettings(copyTarget, { caption: undefined })}>Volver a heredar</button>
-                            )
-                          )}
-                          <span>{copyValue.length.toLocaleString("es-MX")}/{limit.toLocaleString("es-MX")} · {countHashtags(copyValue)} hashtags</span>
+                          <span>{copyValue.length}/{limit}</span>
                         </div>
                       }
                     />
+                    {copyTarget === "General" && draft.caption.trim() && othersWithOwnCopy.map((n) => (
+                      <p key={n} className="hubly-composer-copynote">
+                        <span>{n} tiene su propio texto y es el que se publica ahí, no este.</span>
+                        <button type="button" onClick={() => { setCopyNetwork(n); setPreviewNet(n); }}>Ver</button>
+                        {!locked && <button type="button" onClick={() => updateSettings(n, { caption: undefined })}>Usar este en {n}</button>}
+                      </p>
+                    ))}
                   </div>
 
-                  {copyTarget !== "General" && (
-                    <NetworkSettings network={copyTarget} settings={draft.platformSettings[copyTarget] ?? {}} formats={networkFormats(copyTarget)} generalFormat={draft.format} disabled={locked} onChange={(patch) => updateSettings(copyTarget, patch)} />
-                  )}
-
-                  {draft.networks.includes("Instagram") && (
-                    <div className="hubly-composer-collabs">
-                      <label htmlFor="hubly-collab-input"><HublyPeopleIcon size={15} /> Colaboradores de Instagram <small>{collaborators.length}/{MAX_COLLABORATORS}</small></label>
-                      <div className="hubly-composer-collabfield">
-                        {collaborators.map((handle) => (
-                          <span key={handle}>
-                            @{handle}
-                            {!locked && <button type="button" aria-label={`Quitar a ${handle}`} onClick={() => updateSettings("Instagram", { collaborators: collaborators.filter((c) => c !== handle) })}><X size={12} /></button>}
-                          </span>
-                        ))}
-                        {collaborators.length < MAX_COLLABORATORS && (
-                          <input
-                            id="hubly-collab-input"
-                            value={collabDraft}
-                            disabled={locked}
-                            placeholder="Agregar @usuario"
-                            onChange={(e) => setCollabDraft(e.target.value.replace(/\s/g, ""))}
-                            onBlur={addCollaborator}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" || e.key === ",") {
-                                e.preventDefault();
-                                addCollaborator();
-                              }
-                            }}
-                          />
-                        )}
-                      </div>
-                      <small className="hubly-composer-hint">Cada cuenta recibe una invitación al publicar y debe aceptarla. Deben ser cuentas públicas de empresa o creador.</small>
-                    </div>
+                  {draft.networks.includes("Instagram") && draft.format !== "Story" && draft.format !== "Texto" && (
+                    <CollaboratorsField value={collaborators} disabled={locked} icon={<HublyPeopleIcon size={15} />} onChange={(next) => updateSettings("Instagram", { collaborators: next.length ? next : undefined })} />
                   )}
 
                   {draft.networks.includes("TikTok") && media.length > 0 && !media.some((m) => m.kind === "video") && (
@@ -979,14 +1090,37 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                     </div>
                   )}
 
+                  {firstVideoUrl && (
+                    <div className="hubly-composer-netbox">
+                      <small>Portada</small>
+                      <div className="hubly-composer-coverrow">
+                        <button type="button" className="hubly-composer-coverbtn" disabled={locked} onClick={() => setCoverOpen(true)}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          {draft.coverAssetId ? <img src={mediaFileUrl(draft.coverAssetId)} alt="Portada" /> : <i><HublyImageIcon size={18} /></i>}
+                          <span>
+                            <strong>{draft.coverAssetId ? "Editar portada" : "Elegir portada"}</strong>
+                            <small>Elige un cuadro del video o sube tu propia imagen.</small>
+                          </span>
+                        </button>
+                        {draft.coverAssetId && !locked && <button type="button" className="hbtn hbtn-ghost hbtn-sm" onClick={() => update({ coverAssetId: undefined })}>Quitar</button>}
+                      </div>
+                      {draft.networks.includes("TikTok") && <small className="hubly-composer-hint">En TikTok la portada es un cuadro del video: una imagen externa no se puede fijar por API.</small>}
+                      <label className="hubly-composer-stack">
+                        Contexto del video · manda sobre lo demás al generar el caption
+                        <textarea className="hubly-cal-input" rows={2} disabled={locked} value={draft.videoContext ?? ""} placeholder="De qué trata el video, qué se ve, qué se promociona…" onChange={(e) => update({ videoContext: e.target.value || undefined })} />
+                      </label>
+                    </div>
+                  )}
+
                   <div className="hubly-composer-when">
                     <div className="hubly-composer-modes" role="radiogroup" aria-label="Qué hacer con el post">
                       {PUBLISH_MODES.map(({ id, label, Icon }) => (
-                        <button key={id} type="button" role="radio" aria-checked={publishMode === id} disabled={locked} onClick={() => { setPublishMode(id); setPopover(null); setErrorMsg(null); }}>
+                        <button key={id} type="button" role="radio" aria-checked={publishMode === id} disabled={locked || (id !== "guardar" && noNetworks)} onClick={() => { setPublishMode(id); setPopover(null); setErrorMsg(null); }}>
                           <Icon size={15} /> {label}
                         </button>
                       ))}
                     </div>
+                    {noNetworks && <small className="hubly-composer-hint">Para programarlo o publicarlo, elige arriba en qué red sale.</small>}
                     {publishMode === "publicar" && (
                       <small className="hubly-composer-hint">Hubly aún no publica por ti: súbelo a la red y márcalo aquí. Después captura sus cifras en Resultados.</small>
                     )}
@@ -1002,6 +1136,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                         {popover === "date" && (
                           <ComposerDatePicker
                             date={draft.scheduledDate}
+                            allowPast={publishMode !== "programar"}
                             time={draft.scheduledTime}
                             onChange={(scheduledDate, scheduledTime) => update({ scheduledDate, scheduledTime })}
                             onClose={() => setPopover(null)}
@@ -1009,6 +1144,9 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                         )}
                       </div>
                     )}
+                    {publishMode !== "publicar" && <BestHours posts={posts.filter((p) => p.brandId === draft.brandId)} date={draft.scheduledDate} onPick={(scheduledDate, scheduledTime) => update({ scheduledDate, scheduledTime })} />}
+                    {publishMode === "guardar" && draft.scheduledDate && <small className="hubly-composer-hint">Queda apartado ese día y a esa hora, pero no se programa. Para eso, elige «Programar».</small>}
+                    {publishMode !== "publicar" && draft.format === "Story" && <StoryRepeatField value={draft.repeat} time={draft.scheduledTime} disabled={locked} onChange={(repeat) => update({ repeat })} />}
                     {publishMode !== "guardar" && issues.length > 0 && (
                       <ul className="hubly-composer-issues" aria-label="Pendientes para publicar">
                         {issues.map((issue) => <li key={`${issue.network}-${issue.message}`}><b>{issue.network}:</b> {issue.message}</li>)}
@@ -1030,12 +1168,20 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
               )}
 
               {tab === "notas" && (
+                <>
+                <p className="hubly-composer-hint">Notas internas, briefing o referencias para este post.</p>
                 <NotebookEditor key={draft.postId ?? "nuevo"} initialContent={draft.notes} ariaLabel="Notas internas del post" onChange={(html) => syncExtras({ notes: html })} />
+                </>
               )}
 
               {tab === "todos" && (
                 <div className="hubly-composer-todos">
-                  {draft.todos.length === 0 && <span className="hubly-composer-hint">Agrega lo que falta para terminar este post.</span>}
+                  {draft.todos.length === 0 && (
+                    <div className="hubly-cal-empty">
+                      <strong>Sin tareas todavía</strong>
+                      <span>Escribe abajo para agregar lo que falta para terminar este post.</span>
+                    </div>
+                  )}
                   {draft.todos.map((todo) => (
                     <div key={todo.id} className="hubly-composer-todo">
                       <input
@@ -1053,6 +1199,16 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                         data-done={todo.done || undefined}
                         onChange={(e) => syncExtras({ todos: draft.todos.map((t) => (t.id === todo.id ? { ...t, text: e.target.value } : t)) })}
                       />
+                      <select
+                        className="hubly-cal-input hubly-composer-todoassign"
+                        value={todo.assigneeId ?? ""}
+                        disabled={readOnly}
+                        aria-label={`Asignar ${todo.text}`}
+                        onChange={(e) => syncExtras({ todos: draft.todos.map((t) => (t.id === todo.id ? { ...t, assigneeId: e.target.value || undefined } : t)) })}
+                      >
+                        <option value="">Sin asignar</option>
+                        {team.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
+                      </select>
                       {!readOnly && (
                         <button type="button" aria-label={`Quitar ${todo.text}`} onClick={() => syncExtras({ todos: draft.todos.filter((t) => t.id !== todo.id) })}>
                           <X size={14} />
@@ -1077,7 +1233,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
 
               {tab === "documentos" && (
                 <div className="hubly-composer-docs">
-                  {draft.documents.length === 0 && <span className="hubly-composer-hint">Agrega briefs, guiones o archivos de referencia.</span>}
+                  {draft.documents.length === 0 && <span className="hubly-composer-hint">Agrega briefs, guiones o archivos de referencia. También puedes arrastrarlos aquí.</span>}
                   {[...new Set(draft.documents.map((d) => d.folder ?? ""))].sort().map((folder) => (
                     <section key={folder || "sin-carpeta"} aria-label={folder || "Sin carpeta"}>
                       {folder && <h4>{folder}</h4>}
@@ -1210,7 +1366,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
             ) : (
               <small>{editingPost?.activity?.length ? `Creado ${new Date(editingPost.activity[editingPost.activity.length - 1].at).toLocaleString("es-MX", { dateStyle: "short", timeStyle: "short" })}` : dirty ? "Cambios guardados en este navegador" : ""}</small>
             )}
-            <button type="button" className="hbtn hbtn-ghost" onClick={handleClose}>{locked ? "Cerrar" : "Cancelar"}</button>
+            <button type="button" className="hbtn hbtn-ghost" onClick={() => void requestClose()}>{locked ? "Cerrar" : "Cancelar"}</button>
             {!locked && publishMode === "guardar" && (
               <>
                 <button type="button" className="hbtn hbtn-secondary" onClick={() => save("pending")}>Enviar a revisión</button>
@@ -1221,21 +1377,47 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
             )}
             {!locked && publishMode !== "guardar" && (
               <>
-                <button type="button" className="hbtn hbtn-secondary" onClick={() => save(editingPost ? draft.status : "draft")}>
+                <button type="button" className="hbtn hbtn-secondary" title="Guarda el post sin programarlo" onClick={() => save(editingPost ? draft.status : "draft")}>
                   <HublySaveIcon size={15} /> Guardar
                 </button>
                 {publishMode === "programar" ? (
-                  <button type="button" className="hbtn hbtn-primary" disabled={!draft.scheduledDate} onClick={() => save("scheduled")}>
-                    {draft.scheduledDate ? "Programar" : "Selecciona fecha"}
+                  <button
+                    type="button"
+                    className="hbtn hbtn-primary"
+                    disabled={!draft.scheduledDate || pastSchedule || noNetworks}
+                    title={pastSchedule ? "Esa hora ya pasó: elige una fecha futura para programar" : noNetworks ? "Selecciona al menos una red" : undefined}
+                    onClick={() => void askToPublish("programar")}
+                  >
+                    {scheduleButton}
                   </button>
                 ) : (
-                  <button type="button" className="hbtn hbtn-primary" onClick={() => save("published")}>Marcar como publicado</button>
+                  <button type="button" className="hbtn hbtn-primary" disabled={noNetworks} onClick={() => void askToPublish("publicar")}>Marcar como publicado</button>
                 )}
               </>
             )}
           </footer>
         </div>
 
+        {confirmIntent && (
+          <ConfirmPublish
+            intent={confirmIntent}
+            when={scheduleLabel(draft.scheduledDate, draft.scheduledTime)}
+            networks={draft.networks.filter((n) => !(draft.format === "Story" && n === "TikTok"))}
+            noCopy={draft.format !== "Story" && !hasCopy}
+            repeats={storyRepeats.length}
+            renderIcon={(n) => GLYPHS[n]}
+            onCancel={() => setConfirmIntent(null)}
+            onConfirm={() => { setConfirmIntent(null); save(confirmIntent === "programar" ? "scheduled" : "published"); }}
+          />
+        )}
+        {coverOpen && firstVideoUrl && (
+          <CoverPicker
+            videoUrl={mediaItemUrl(firstVideoUrl) ?? ""}
+            brandId={draft.brandId}
+            onCancel={() => setCoverOpen(false)}
+            onSaved={(coverAssetId) => { update({ coverAssetId }); setCoverOpen(false); }}
+          />
+        )}
         {composerPending && (
           <div className="hubly-picker-scrim">
             <div className="hubly-composer-pending" role="alertdialog" aria-modal="true" aria-labelledby="hubly-pending-title">
@@ -1305,6 +1487,7 @@ function NetworkSettings({
   settings,
   formats,
   generalFormat,
+  isVideo,
   disabled,
   onChange,
 }: {
@@ -1312,6 +1495,7 @@ function NetworkSettings({
   settings: PlatformSettings;
   formats: PostFormat[];
   generalFormat: PostFormat;
+  isVideo: boolean;
   disabled: boolean;
   onChange: (patch: Partial<PlatformSettings>) => void;
 }) {
@@ -1332,7 +1516,9 @@ function NetworkSettings({
       </label>
       {network === "Instagram" && [text("firstComment", "Primer comentario", "Opcional", 2200), text("location", "Ubicación", "Opcional")]}
       {network === "YouTube" && text("title", "Título del video", "Hasta 100 caracteres", 100)}
-      {network === "Pinterest" && [text("boardName", "Tablero", "Nombre del tablero"), text("title", "Título del Pin", "Hasta 100 caracteres", 100), text("link", "Enlace de destino", "https://…")]}
+      {network === "Pinterest" && [text("title", `Título del Pin · ${(settings.title ?? "").length}/100`, "Cuéntales de qué se trata tu Pin", 100), text("boardName", "Tablero", "Nombre del tablero"), text("link", "Enlace", "https://…")]}
+      {network === "Pinterest" && settings.link && !/^https:\/\//i.test(settings.link) && <small className="hubly-composer-fielderror">Pinterest pide un enlace que empiece con https://</small>}
+      {network === "TikTok" && <div className="hubly-composer-fullrow"><TikTokSettings settings={settings} isVideo={isVideo} disabled={disabled} onChange={onChange} /></div>}
       {network === "Reddit" && [text("subreddit", "Comunidad", "r/marketing"), text("title", "Título del hilo", "Hasta 300 caracteres", 300), text("flair", "Etiqueta", "Opcional")]}
       {network === "Google Business" && (
         <>
