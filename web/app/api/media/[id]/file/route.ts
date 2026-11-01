@@ -3,7 +3,7 @@ import { createReadStream } from "node:fs";
 import fs from "node:fs/promises";
 import { Readable } from "node:stream";
 import { MEDIA_BUCKET } from "@/lib/media";
-import { demoFilePath, demoGet } from "@/lib/media-demo-store";
+import { demoDiskEnabled, demoFilePath, demoGet } from "@/lib/media-demo-store";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
@@ -29,7 +29,7 @@ export async function GET(request: Request, { params }: Ctx) {
   if (!info) return NextResponse.json({ error: "not_found" }, { status: 404 });
 
   // Los videos piden rangos para poder adelantar.
-  const headers = { "Content-Type": record.mime, "Accept-Ranges": "bytes", "Cache-Control": "private, max-age=3600", "X-Content-Type-Options": "nosniff" };
+  const headers = { "Content-Type": record.mime, "Accept-Ranges": "bytes", "Cache-Control": "private, max-age=3600", "X-Content-Type-Options": "nosniff", "Content-Security-Policy": "sandbox" };
   const range = request.headers.get("range")?.match(/^bytes=(\d*)-(\d*)$/);
   if (range && (range[1] || range[2])) {
     const start = range[1] ? Number(range[1]) : Math.max(0, info.size - Number(range[2]));
@@ -45,7 +45,7 @@ export async function GET(request: Request, { params }: Ctx) {
 
 /** Solo modo demo: con Supabase el navegador sube directo a la URL firmada. */
 export async function PUT(request: Request, { params }: Ctx) {
-  if (backendEnabled) return NextResponse.json({ error: "not_found" }, { status: 404 });
+  if (backendEnabled || !demoDiskEnabled) return NextResponse.json({ error: "not_found" }, { status: 404 });
   const { id } = await params;
   const record = await demoGet(id);
   const file = demoFilePath(id);

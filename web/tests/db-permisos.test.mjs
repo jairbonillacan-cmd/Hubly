@@ -17,6 +17,9 @@ await db.exec(`
   grant usage on schema storage to anon, authenticated;
   grant execute on function storage.foldername(text) to anon, authenticated;
   grant select, insert, delete on storage.objects to anon, authenticated;
+  -- Igual que Supabase: lo nuevo en public nace con permisos para todos.
+  alter default privileges in schema public grant all on tables to anon, authenticated;
+  alter default privileges in schema public grant all on functions to anon, authenticated;
 `);
 const dir = new URL("../../supabase/migrations/", import.meta.url);
 for (const f of fs.readdirSync(dir).sort()) await db.exec(fs.readFileSync(new URL(f, dir), "utf8"));
@@ -180,6 +183,84 @@ ok("otra agencia intacta", (await db.query(`select version from public.agency_wo
   await as(null, "anon", `select public.submit_share_decision($1,'m1','approved','','Cliente')`, [rawToken]);
   const tras = (await db.query(`select data from public.agency_workspaces where agency_id=$1`, [agencyM])).rows[0].data;
   ok("aprobar en el portal etiqueta Aprobado", tras.posts.find((p) => p.id === "m1").statusLabel === "Aprobado");
+
+  // Endurecimiento (0007)
+  await errs("un registro no apunta a archivos de otra agencia", () => as(B, "authenticated", insertAsset, [agencyN, "robo.png", path + ".copia"]), "media_assets_path_in_agency");
+  await errs("la ruta de un registro no cambia", () => asA(`update public.media_assets set path='x' where id=$1`, [asset]), "permission");
+  await errs("un registro no cambia de agencia", () => asA(`update public.media_assets set agency_id=$2 where id=$1`, [asset, agencyN]), "permission");
+  ok("sí se renombra un archivo", (await asA(`update public.media_assets set name='nuevo.png' where id=$1 returning id`, [asset])).length === 1);
+  await errs("anon no toca la tabla de medios", () => as(null, "anon", `select * from public.media_assets`), "permission");
+  ok("el bucket de medios no admite SVG", !(await db.query(`select allowed_mime_types m from storage.buckets where id='media'`)).rows[0].m.includes("image/svg+xml"));
+  await asA(`insert into storage.objects (bucket_id, name) values ('avatars',$1)`, [`${A}/foto.jpg`]);
+  ok("nadie lista los avatares de otros", (await as(null, "anon", `select * from storage.objects where bucket_id='avatars'`)).length === 0 && (await as(B, "authenticated", `select * from storage.objects where bucket_id='avatars'`)).length === 0);
+  ok("cada quien ve su avatar", (await asA(`select * from storage.objects where bucket_id='avatars'`)).length === 1);
+  await errs("invitación sin correo no es un link de administración", () => asA(`select public.create_invitation($1,null,'admin')`, [agencyM]), "invalid_email");
+  await errs("invitación con correo inválido", () => asA(`select public.create_invitation($1,'no-es-correo','viewer')`, [agencyM]), "invalid_email");
+  await errs("documento sin listas rechazado", () => asA(`select public.save_workspace($1,'{"brands":{}}',1)`, [agencyM]), "invalid_payload");
+  await errs("documento gigante rechazado", () => asA(`select public.save_workspace($1,$2,1)`, [agencyM, JSON.stringify({ brands: [], posts: [], x: "a".repeat(8400000) })]), "too_large");
+  const openLink = (await asA(`select public.create_invite_link($1,'viewer') t`, [agencyM]))[0].t;
+  await as(B, "authenticated", `select public.accept_invitation($1)`, [openLink]);
+  await asA(`select public.remove_member($1,$2)`, [agencyM, B]);
+  await errs("quien salió no vuelve con el link", () => as(B, "authenticated", `select public.accept_invitation($1)`, [openLink]), "invalid_invitation");
+  await db.query(`update public.agency_workspaces set data = jsonb_set(data, '{posts,0,comments}', $2::jsonb) where agency_id=$1`, [agencyM, JSON.stringify(Array(200).fill({ id: "c" }))]);
+  ok("el portal no acumula comentarios sin fin", (await as(null, "anon", `select public.submit_share_decision($1,'m1','approved','','Cliente') r`, [rawToken]))[0].r === false);
+  await db.query(`update public.agency_workspaces set data = jsonb_set(jsonb_set(data, '{posts,0,comments}', '[]'), '{notifications}', $2::jsonb) where agency_id=$1`, [agencyM, JSON.stringify(Array(300).fill({ id: "n" }))]);
+  await as(null, "anon", `select public.submit_share_decision($1,'m1','approved','','Cliente')`, [rawToken]);
+  ok("las notificaciones del portal tienen tope", (await db.query(`select jsonb_array_length(data->'notifications') n from public.agency_workspaces where agency_id=$1`, [agencyM])).rows[0].n === 200);
+  await errs("anon no consume cuota de IA", () => as(null, "anon", `select public.consume_ai_quota()`), "permission");
+  ok("la cuota de IA deja pasar", (await asA(`select public.consume_ai_quota() r`))[0].r === true);
+  await db.query(`update public.ai_usage set requests = 100`);
+  ok("la cuota de IA se agota", (await asA(`select public.consume_ai_quota() r`))[0].r === false);
+  await errs("nadie lee la cuota directamente", () => asA(`select * from public.ai_usage`), "permission");
+  const abiertas = (await db.query(`select routine_name n from information_schema.role_routine_grants where grantee='anon' and routine_schema='public'`)).rows.map((r) => r.n);
+  const publicas = ["get_share_portal", "invitation_preview", "media_path_agency", "member_role", "share_media_allowed", "share_media_path", "submit_share_decision"];
+  ok("anon solo ejecuta las funciones del portal", abiertas.every((n) => publicas.includes(n)), abiertas.join(","));
+}
+
+// --- Correcciones de la segunda revisión (docs/revision-seguridad-glm.md, fase 1) ---
+{
+  const ag2 = (await as(A, "authenticated", `select public.create_agency('Correcciones') id`))[0].id;
+  await db.query(`insert into public.agency_members values ($1,$2,'admin')`, [ag2, B]);
+
+  // H5: solo el dueño invita con rol de administración; el admin sigue pudiendo invitar editor.
+  await errs("H5: admin no invita admin", () => as(B, "authenticated", `select public.create_invitation($1,'nuevo@x.com','admin')`, [ag2]), "forbidden");
+  const invAdmin = (await as(A, "authenticated", `select public.create_invitation($1,'nuevo@x.com','admin') t`, [ag2]))[0].t;
+  ok("H5: el dueño sí invita admin", typeof invAdmin === "string");
+  await as(B, "authenticated", `select public.create_invitation($1,'editor@x.com','editor')`, [ag2]);
+  ok("H5: admin sí invita editor", (await as(A, "authenticated", `select count(*)::int c from public.agency_invitations where agency_id=$1 and email='editor@x.com'`, [ag2]))[0].c === 1);
+
+  // H2: expulsar revoca también las invitaciones por correo pendientes del expulsado, sin distinguir mayúsculas.
+  const invB = (await as(A, "authenticated", `select public.create_invitation($1,'B@X.COM','viewer') t`, [ag2]))[0].t;
+  await as(A, "authenticated", `select public.remove_member($1,$2)`, [ag2, B]);
+  await errs("H2: la invitación por correo del expulsado queda revocada", () => as(B, "authenticated", `select public.accept_invitation($1)`, [invB]), "invalid_invitation");
+
+  // H9: la ruta de un registro de medios siempre empieza por el UUID de su agencia.
+  await errs("H9: path sin UUID rechazado", () => as(A, "authenticated",
+    `insert into public.media_assets (agency_id, brand_id, name, kind, mime, size_bytes, path, status) values ($1,'b1','x.png','image','image/png',10,'sin-uuid/x.png','ready')`, [ag2]),
+    "media_assets_path_in_agency");
+
+  // H10: tope de anidamiento y portal tolerante con formas inesperadas.
+  const profundo = { brands: [], posts: [] };
+  let hoja = { a: null };
+  for (let i = 0; i < 300; i++) hoja = { a: hoja };
+  profundo.x = hoja;
+  await errs("H10: documento demasiado anidado rechazado", () => as(A, "authenticated", `select public.save_workspace($1,$2,1)`, [ag2, JSON.stringify(profundo)]), "too_deep");
+  const docRaro = { brands: [{ id: "b1", name: "M" }], posts: [
+    { id: "r1", brandId: "b1", title: "R", status: "pending", comments: { sorpresa: true }, networks: "Instagram", media: 5 },
+  ] };
+  const verR = (await db.query(`select version v from public.agency_workspaces where agency_id=$1`, [ag2])).rows[0].v;
+  await as(A, "authenticated", `select public.save_workspace($1,$2,$3)`, [ag2, JSON.stringify(docRaro), verR]);
+  const tokR = (await as(A, "authenticated", `select public.create_share_link($1,'b1') t`, [ag2]))[0].t;
+  const portalR = (await as(null, "anon", `select public.get_share_portal($1) p`, [tokR]))[0].p;
+  const postR = portalR?.posts?.find?.((p) => p?.id === "r1");
+  ok("H10: el portal normaliza comments a lista", Array.isArray(postR?.comments));
+  ok("H10: el portal normaliza networks a lista", Array.isArray(postR?.networks));
+  ok("H10: el portal normaliza media a lista", Array.isArray(postR?.media));
+  // posts que no es lista: el portal no debe lanzar error (aquí se fuerza por dentro de la base)
+  await db.query(`update public.agency_workspaces set data=jsonb_set(data,'{posts}','{"r1":1}'::jsonb) where agency_id=$1`, [ag2]);
+  let portalObj = "sin-error";
+  try { portalObj = JSON.stringify((await as(null, "anon", `select public.get_share_portal($1) p`, [tokR]))[0].p); } catch (e) { portalObj = "error: " + e.message.slice(0, 40); }
+  ok("H10: posts con forma de objeto no tumba el portal", !portalObj.startsWith("error"), portalObj);
 }
 // Chat: aislamiento por agencia, mensajes directos privados y autoría.
 {

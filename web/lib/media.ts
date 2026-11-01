@@ -6,6 +6,9 @@ export const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
 export const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
 export const MAX_DOCUMENT_BYTES = 20 * 1024 * 1024;
 
+// Lista cerrada: SVG puede llevar scripts, y "image/svg+xml; x=1" también empieza por image/.
+const IMAGE_MIMES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif", "image/heic", "image/heif"]);
+
 const DOCUMENT_MIMES = new Set([
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -30,7 +33,7 @@ export interface MediaRecord {
 }
 
 export function mediaKindFor(mime: string): MediaKind | null {
-  if (mime.startsWith("image/") && mime !== "image/svg+xml") return "image";
+  if (IMAGE_MIMES.has(mime)) return "image";
   if (mime === "video/mp4" || mime === "video/quicktime" || mime === "video/webm") return "video";
   if (mime === "application/pdf") return "pdf";
   if (DOCUMENT_MIMES.has(mime)) return "doc";

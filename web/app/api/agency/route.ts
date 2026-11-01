@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readJson } from "@/lib/api-guard";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
@@ -8,7 +9,7 @@ export async function POST(request: Request) {
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return NextResponse.json({ error: "not_authenticated" }, { status: 401 });
 
-  const { name, another } = (await request.json().catch(() => ({}))) as { name?: string; another?: boolean };
+  const { name, another } = (await readJson<{ name?: string; another?: boolean }>(request, 2048)) ?? {};
   const clean = typeof name === "string" ? name.trim() : "";
   if (!clean) return NextResponse.json({ error: "name_required" }, { status: 400 });
 
