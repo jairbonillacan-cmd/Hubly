@@ -9,6 +9,7 @@ import "./dashboard-polish.css";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { useHublyTheme } from "@/lib/theme";
 import { useHublyStore } from "@/lib/store";
+import { useHubiChats } from "@/lib/hubi-chats";
 import { useLayer } from "@/lib/use-layer";
 import { PostComposerModal } from "@/components/app/PostComposerModal";
 import { NewBrandModal } from "@/components/app/NewBrandModal";
@@ -18,6 +19,7 @@ import { NotebookReaderModal } from "@/components/app/NotebookReaderModal";
 import { WidgetConfigModal } from "@/components/app/WidgetConfigModal";
 import { AutoSuggestionsModal } from "@/components/app/AutoSuggestionsModal";
 import { FloatingAIDrawer } from "@/components/app/FloatingAIDrawer";
+import { HubiChatList } from "@/components/app/HubiChatList";
 import { AppDialogHost } from "@/components/app/AppDialogHost";
 import { SaveStatus } from "@/components/app/SaveStatus";
 import { backendEnabled } from "@/lib/supabase/config";
@@ -413,7 +415,8 @@ export default function SaaSAppLayout({
     setCollapsed((prev) => !prev);
   };
 
-  const targetCollapsed = ((composerOpen ? !composerSidebarOpen : collapsed) || aiDrawerOpen) && !mobileDrawerOpen;
+  const hubiFullView = useHubiChats((s) => s.fullView);
+  const targetCollapsed = ((composerOpen ? !composerSidebarOpen : collapsed) || (aiDrawerOpen && !hubiFullView)) && !mobileDrawerOpen;
   const [isEffectiveCollapsed, setRenderedCollapsed] = useState(targetCollapsed);
   const [sidebarMotion, setSidebarMotion] = useState<"" | "collapsing" | "expanding">("");
   const sidebarRef = useRef<HTMLElement | null>(null);
@@ -645,6 +648,9 @@ export default function SaaSAppLayout({
           targetCollapsed ? "is-collapsed" : ""
         } ${sidebarMotion ? `is-animating is-${sidebarMotion}` : ""} ${mobileDrawerOpen ? "is-mobile-drawer-open" : ""} ${profileMenuOpen ? "has-profile-popover" : ""}`.trim()}
         data-sidebar-tab={activeSidebarTab}
+        onClickCapture={(e) => {
+          if (hubiFullView && (e.target as HTMLElement).closest("a[href]")) setAiDrawerOpen(false);
+        }}
         style={{
           transition:
             "width 200ms cubic-bezier(0.4, 0, 0.2, 1), min-width 200ms cubic-bezier(0.4, 0, 0.2, 1), padding 200ms cubic-bezier(0.4, 0, 0.2, 1)",
@@ -1384,19 +1390,7 @@ export default function SaaSAppLayout({
                 </button>
               </>
             ) : (
-              <>
-                <div className="hubly-sidebar-panel-head is-chats">
-                  <span>Chats</span>
-                  <button type="button" aria-label="Nueva conversación" onClick={() => setAiDrawerOpen(true)}>
-                    <Plus size={14} />
-                  </button>
-                </div>
-                <button type="button" className="hubly-sidebar-empty is-large" onClick={() => setAiDrawerOpen(true)}>
-                  <i><Plus size={16} /></i>
-                  <strong>Inicia una conversación</strong>
-                  <small>Pregunta, crea copies, pasa links…</small>
-                </button>
-              </>
+              <HubiChatList onOpen={() => setMobileDrawerOpen(false)} />
             )}
           </div>
         )}
