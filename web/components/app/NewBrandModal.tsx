@@ -5,7 +5,7 @@ import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { InviteLinkRow } from "@/components/app/InviteTeamModal";
-import { GLYPHS as NETWORK_GLYPHS } from "@/components/app/PostComposerModal";
+import { GLYPHS as NETWORK_GLYPHS } from "@/components/app/compositor/PostComposerModal-shared";
 import {
   HublyBuildingIcon,
   HublyCheckIcon,
