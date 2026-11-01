@@ -13,6 +13,7 @@ import {
   HublyChartIcon as BarChart2,
   HublyChatIcon as MessageCircle,
   HublyHomeIcon as Home,
+  HublyInfoIcon as Info,
   HublyLinkIcon as Link2,
   HublyPlusIcon as Plus,
   HublyPresentationIcon,
@@ -26,6 +27,24 @@ import {
 export default function ReportesPage() {
   if (backendEnabled) return <LiveReportes />;
   return <DemoReportesPage />;
+}
+
+function ExampleTag() {
+  return (
+    <span
+      style={{
+        flexShrink: 0,
+        background: "var(--ui-muted)",
+        color: "var(--ui-text-3)",
+        fontSize: 11,
+        fontWeight: 600,
+        padding: "2px 8px",
+        borderRadius: 999,
+      }}
+    >
+      Ejemplo
+    </span>
+  );
 }
 
 function DemoReportesPage() {
@@ -401,6 +420,27 @@ function DemoReportesPage() {
             boxShadow: "0 4px 20px rgba(15, 23, 42, 0.04)",
           }}
         >
+          <div
+            role="note"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              marginBottom: 20,
+              padding: "10px 12px",
+              border: "1px solid var(--ui-border)",
+              borderRadius: 12,
+              background: "var(--ui-surface-2)",
+              color: "var(--ui-text-2)",
+              fontSize: 12.5,
+            }}
+          >
+            <Info size={16} style={{ flexShrink: 0, color: "var(--hb-accent-text)" }} />
+            <span>
+              Datos de ejemplo. Aún no hay redes conectadas para sincronizar métricas automáticamente: las cifras de este informe son demostrativas.
+            </span>
+          </div>
+
           {/* Report Header Banner */}
           <div
             style={{
@@ -476,8 +516,19 @@ function DemoReportesPage() {
                   padding: "16px 18px",
                 }}
               >
-                <div style={{ fontSize: 12, color: "var(--ui-text-4)", fontWeight: 600, marginBottom: 6 }}>
-                  {kpi.label}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: 8,
+                    marginBottom: 6,
+                  }}
+                >
+                  <span style={{ fontSize: 12, color: "var(--ui-text-4)", fontWeight: 600 }}>
+                    {kpi.label}
+                  </span>
+                  <ExampleTag />
                 </div>
                 <div style={{ fontSize: 24, fontWeight: 800, color: "var(--ui-text)", marginBottom: 4 }}>
                   {kpi.value}

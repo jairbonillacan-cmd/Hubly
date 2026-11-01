@@ -107,3 +107,12 @@ test("/chat actualiza el estado vacío tras enviar un mensaje en # General", asy
   await expect(page.getByText(/Sin mensajes aún/)).toHaveCount(0);
   await expect(page.getByText("Todavía no hay canales con conversación.")).toHaveCount(0);
 });
+
+test("/reportes avisa cuando muestra cifras de ejemplo", async ({ page }) => {
+  await page.goto("/reportes");
+  await page.waitForLoadState("networkidle");
+  const nota = page.getByRole("note");
+  await expect(nota).toBeVisible();
+  await expect(nota).toContainText("Datos de ejemplo.");
+  await expect(page.getByText("Ejemplo", { exact: true }).first()).toBeVisible();
+});
