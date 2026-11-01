@@ -54,26 +54,39 @@ async function readWorkspaceDb(workspaceId: string): Promise<HublyWorkspaceData>
   }
 }
 
+let workspaceWriteQueue: Promise<unknown> = Promise.resolve();
+function exclusiveWorkspaceWrite<T>(task: () => Promise<T>): Promise<T> {
+  const run = workspaceWriteQueue.then(task, task);
+  workspaceWriteQueue = run.catch(() => {});
+  return run;
+}
+
 async function writeWorkspaceDb(
   workspaceId: string,
   data: HublyWorkspaceData
 ): Promise<HublyWorkspaceData> {
-  const safeId = sanitizeWorkspaceId(workspaceId);
-  const filePath = getWorkspaceFilePath(safeId);
-  const normalized = normalizeWorkspacePayload(data, safeId);
+  return exclusiveWorkspaceWrite(async () => {
+    const safeId = sanitizeWorkspaceId(workspaceId);
+    const filePath = getWorkspaceFilePath(safeId);
+    const tmpPath = `${filePath}.${Date.now()}.${Math.random().toString(36).slice(2)}.tmp`;
+    const normalized = normalizeWorkspacePayload(data, safeId);
 
-  await fs.mkdir(WORKSPACES_DIR, { recursive: true });
-  await fs.writeFile(filePath, JSON.stringify(normalized, null, 2), "utf8");
+    await fs.mkdir(WORKSPACES_DIR, { recursive: true });
+    await fs.writeFile(tmpPath, JSON.stringify(normalized, null, 2), "utf8");
+    await fs.rename(tmpPath, filePath);
 
-  if (safeId === "default") {
-    try {
-      await fs.writeFile(LEGACY_DB_FILE, JSON.stringify(normalized, null, 2), "utf8");
-    } catch {
-      // Non-fatal
+    if (safeId === "default") {
+      try {
+        const legacyTmp = `${LEGACY_DB_FILE}.${Date.now()}.${Math.random().toString(36).slice(2)}.tmp`;
+        await fs.writeFile(legacyTmp, JSON.stringify(normalized, null, 2), "utf8");
+        await fs.rename(legacyTmp, LEGACY_DB_FILE);
+      } catch {
+        // Non-fatal
+      }
     }
-  }
 
-  return normalized;
+    return normalized;
+  });
 }
 
 const MAX_BODY_BYTES = 8 * 1024 * 1024;
@@ -162,15 +175,29 @@ async function livePost(request: Request) {
   if (Number(request.headers.get("content-length") || 0) > MAX_BODY_BYTES) {
     return NextResponse.json({ error: "too_large" }, { status: 413 });
   }
-  const body = (await request.json().catch(() => null)) as {
+  const supabase = await createSupabaseServer();
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) return NextResponse.json({ error: "not_authenticated" }, { status: 401 });
+
+  let raw = "";
+  try {
+    raw = await request.text();
+    if (Buffer.byteLength(raw, "utf8") > MAX_BODY_BYTES) {
+      return NextResponse.json({ error: "too_large" }, { status: 413 });
+    }
+  } catch {
+    return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
+  }
+
+  const body = (JSON.parse(raw || "null") as {
     agencyId?: string;
     version?: number;
     data?: HublyWorkspaceData;
-  } | null;
+  } | null);
+
   if (!body?.agencyId || typeof body.version !== "number" || !Array.isArray(body.data?.brands) || !Array.isArray(body.data?.posts)) {
     return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
   }
-  const supabase = await createSupabaseServer();
   const { data, error } = await supabase.rpc("save_workspace", {
     target_agency: body.agencyId,
     // Lo personal no se guarda en el documento de la agencia.
@@ -203,29 +230,39 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   if (backendEnabled) return livePost(request);
+  if (Number(request.headers.get("content-length") || 0) > MAX_BODY_BYTES) {
+    return NextResponse.json({ error: "too_large" }, { status: 413 });
+  }
+  let body: (Partial<HublyWorkspaceData> & { action?: string }) | null = null;
   try {
-    const { searchParams } = new URL(request.url);
-    const body = (await request.json()) as Partial<HublyWorkspaceData> & {
-      action?: string;
-    };
-
-    const workspaceId = sanitizeWorkspaceId(
-      searchParams.get("workspaceId") ||
-        searchParams.get("workspace") ||
-        body?.workspaceId ||
-        "default"
-    );
-
-    if (body?.action === "reset") {
-      const fresh = createSeedWorkspaceData(workspaceId);
-      await writeWorkspaceDb(workspaceId, fresh);
-      return NextResponse.json({ ok: true, workspaceId, data: fresh });
+    const raw = await request.text();
+    if (Buffer.byteLength(raw, "utf8") > MAX_BODY_BYTES) {
+      return NextResponse.json({ error: "too_large" }, { status: 413 });
     }
+    body = JSON.parse(raw);
+  } catch {
+    return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
+  }
 
-    if (!body || !Array.isArray(body.brands) || !Array.isArray(body.posts)) {
-      return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
-    }
+  const { searchParams } = new URL(request.url);
+  const workspaceId = sanitizeWorkspaceId(
+    searchParams.get("workspaceId") ||
+      searchParams.get("workspace") ||
+      body?.workspaceId ||
+      "default"
+  );
 
+  if (body?.action === "reset") {
+    const fresh = createSeedWorkspaceData(workspaceId);
+    await writeWorkspaceDb(workspaceId, fresh);
+    return NextResponse.json({ ok: true, workspaceId, data: fresh });
+  }
+
+  if (!body || !Array.isArray(body.brands) || !Array.isArray(body.posts)) {
+    return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
+  }
+
+  try {
     const saved = await writeWorkspaceDb(workspaceId, body as HublyWorkspaceData);
     return NextResponse.json({
       ok: true,

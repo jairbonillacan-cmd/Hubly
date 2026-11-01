@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createReadStream } from "node:fs";
 import fs from "node:fs/promises";
 import { Readable } from "node:stream";
-import { MEDIA_BUCKET } from "@/lib/media";
+import { maxBytesFor, MEDIA_BUCKET, validateMediaMagicBytes } from "@/lib/media";
 import { demoFilePath, demoGet } from "@/lib/media-demo-store";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseServer } from "@/lib/supabase/server";
@@ -15,6 +15,8 @@ export async function GET(request: Request, { params }: Ctx) {
 
   if (backendEnabled) {
     const supabase = await createSupabaseServer();
+    const { data: auth } = await supabase.auth.getUser();
+    if (!auth.user) return NextResponse.json({ error: "not_authenticated" }, { status: 401 });
     const { data: asset } = await supabase.from("media_assets").select("path").eq("id", id).maybeSingle();
     if (!asset) return NextResponse.json({ error: "not_found" }, { status: 404 });
     const { data } = await supabase.storage.from(MEDIA_BUCKET).createSignedUrl(asset.path, SIGNED_SECONDS);
@@ -52,6 +54,8 @@ export async function PUT(request: Request, { params }: Ctx) {
   if (!record || !file || !request.body) return NextResponse.json({ error: "not_found" }, { status: 404 });
   const bytes = Buffer.from(await request.arrayBuffer());
   if (bytes.length !== record.sizeBytes) return NextResponse.json({ error: "size_mismatch" }, { status: 422 });
+  if (bytes.length > maxBytesFor(record.kind)) return NextResponse.json({ error: "too_large" }, { status: 413 });
+  if (!validateMediaMagicBytes(bytes, record.mime)) return NextResponse.json({ error: "mime_mismatch" }, { status: 422 });
   await fs.writeFile(file, bytes);
   return NextResponse.json({ ok: true });
 }

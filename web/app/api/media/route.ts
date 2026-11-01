@@ -81,7 +81,15 @@ export async function POST(request: Request) {
     mime?: string;
     sizeBytes?: number;
   } | null;
-  if (!body?.brandId || !body.name || !body.mime || typeof body.sizeBytes !== "number") {
+  if (
+    !body?.brandId ||
+    !body.name ||
+    !body.mime ||
+    typeof body.sizeBytes !== "number" ||
+    !Number.isFinite(body.sizeBytes) ||
+    !Number.isInteger(body.sizeBytes) ||
+    body.sizeBytes <= 0
+  ) {
     return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
   }
   const rejection = mediaRejection(body.mime, body.sizeBytes);

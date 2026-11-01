@@ -1,7 +1,12 @@
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const MAX_BODY_BYTES = 16 * 1024;
 
 // Reenvía cada registro a WAITLIST_WEBHOOK_URL (Zapier, Make, n8n, Google Apps Script...).
 export async function POST(request: Request) {
+  if (Number(request.headers.get("content-length") || 0) > MAX_BODY_BYTES) {
+    return Response.json({ error: "too_large" }, { status: 413 });
+  }
+
   let payload: { email?: unknown; website?: unknown };
   try {
     payload = await request.json();

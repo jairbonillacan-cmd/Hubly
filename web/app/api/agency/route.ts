@@ -11,6 +11,7 @@ export async function POST(request: Request) {
   const { name, another } = (await request.json().catch(() => ({}))) as { name?: string; another?: boolean };
   const clean = typeof name === "string" ? name.trim() : "";
   if (!clean) return NextResponse.json({ error: "name_required" }, { status: 400 });
+  if (clean.length > 120) return NextResponse.json({ error: "name_too_long" }, { status: 400 });
 
   // Repetir el envío no debe crear otra agencia.
   const { data: existing } = await supabase
