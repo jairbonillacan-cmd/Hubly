@@ -370,5 +370,35 @@ ok("otra agencia intacta", (await db.query(`select version from public.agency_wo
   await db.query(`update public.social_accounts set needs_reconnect = true where id = $1`, [cuenta]);
   ok("motor: un canal por reconectar no publica", (await db.query(`select * from public.claim_publish_jobs()`)).rows.length === 0);
 }
+// --- Marcas en tabla ---
+{
+  const ag = (await as(A, "authenticated", `select public.create_agency('Marcas') id`))[0].id;
+  await db.query(`insert into public.agency_members values ($1,$2,'viewer')`, [ag, B]);
+  const doc = { brands: [{ id: "m1", name: "Uno", slug: "uno", color: "#111", core: { pillars: ["a"] } }, { id: "m2", name: "Dos", status: "archived" }, "basura", { name: "sin id" }], posts: [] };
+  await db.query(`update public.agency_workspaces set data = $2 where agency_id = $1`, [ag, JSON.stringify(doc)]);
+  await errs("marcas: un miembro no lanza la copia", () => as(A, "authenticated", `select public.copy_brands_from_workspace($1)`, [ag]), "permission");
+  ok("marcas: copia las válidas", (await db.query(`select public.copy_brands_from_workspace($1) n`, [ag])).rows[0].n === 2);
+  ok("marcas: copiar otra vez no duplica", (await db.query(`select public.copy_brands_from_workspace($1) n`, [ag])).rows[0].n === 0);
+  const uno = (await db.query(`select * from public.brands where agency_id = $1 and id = 'm1'`, [ag])).rows[0];
+  ok("marcas: no pierde campos", uno.name === "Uno" && uno.slug === "uno" && uno.data.color === "#111" && uno.data.core.pillars[0] === "a");
+  ok("marcas: conserva archivadas", (await db.query(`select archived from public.brands where agency_id = $1 and id = 'm2'`, [ag])).rows[0].archived === true);
+  ok("marcas: el documento sigue intacto", (await db.query(`select jsonb_array_length(data->'brands') n from public.agency_workspaces where agency_id = $1`, [ag])).rows[0].n === 4);
+  const ver = (who) => as(who, "authenticated", `select id from public.brands where agency_id = $1 order by id`, [ag]);
+  ok("marcas: sin asignar se ve todo", (await ver(B)).length === 2);
+  await as(A, "authenticated", `insert into public.brand_members (agency_id, brand_id, user_id) values ($1,'m1',$2)`, [ag, B]);
+  const vistas = await ver(B);
+  ok("marcas: con asignación solo la suya", vistas.length === 1 && vistas[0].id === "m1");
+  ok("marcas: el dueño ve todas", (await ver(A)).length === 2);
+  await errs("marcas: un lector no edita", async () => {
+    const f = await as(B, "authenticated", `update public.brands set name = 'x' where agency_id = $1 returning id`, [ag]);
+    if (f.length === 0) throw new Error("row-level: sin filas");
+  }, "row-level");
+  await errs("marcas: un lector no se asigna", () => as(B, "authenticated", `insert into public.brand_members (agency_id, brand_id, user_id) values ($1,'m2',$2)`, [ag, B]), "row-level");
+  await errs("marcas: anon no lee", () => as(null, "anon", `select * from public.brands`), "permission");
+  ok("marcas: otra agencia no ve", (await as(B, "authenticated", `select id from public.brands where agency_id <> $1 and id = 'm1'`, [ag])).length === 0);
+  await db.query(`delete from public.agency_members where agency_id = $1 and user_id = $2`, [ag, B]);
+  ok("marcas: expulsar quita la asignación", (await db.query(`select 1 from public.brand_members where agency_id = $1 and user_id = $2`, [ag, B])).rows.length === 0);
+  ok("marcas: expulsado no ve", (await ver(B)).length === 0);
+}
 console.log(`\n${pass} ok, ${fail} fallos`);
 process.exit(fail ? 1 : 0);
