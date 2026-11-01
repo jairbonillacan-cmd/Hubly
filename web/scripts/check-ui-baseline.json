@@ -1,10 +1,15 @@
 {
-  "app/(app)/anuncios/page.tsx": {
+  "app/(app)/anuncios/_vista/partes/AnunciosCabecera.tsx": {
+    "rgb-fijo": 4,
+    "tamano-fuente": 1
+  },
+  "app/(app)/anuncios/_vista/partes/AnunciosTarjetas.tsx": {
     "color-fijo": 9,
     "degradado": 1,
-    "emoji": 3,
-    "rgb-fijo": 6,
-    "tamano-fuente": 1
+    "rgb-fijo": 2
+  },
+  "app/(app)/anuncios/_vista/partes/demoAnunciosPage-shared.tsx": {
+    "emoji": 3
   },
   "app/(app)/app-base.css": {
     "color-fijo": 62,
