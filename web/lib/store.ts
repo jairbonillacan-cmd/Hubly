@@ -848,7 +848,6 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
           brandCreatedOrSelected: true,
         },
         activityEvents: [event, ...s.activityEvents],
-        newBrandModalOpen: false,
       };
     });
     persistWorkspaceState(get());

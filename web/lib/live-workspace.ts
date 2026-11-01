@@ -15,6 +15,7 @@ let conflicted: HublyWorkspaceData | null = null;
 let timer: ReturnType<typeof setTimeout> | undefined;
 let inFlight = false;
 let readOnly = false;
+let role: string | null = null;
 let agencies: { id: string; name: string }[] = [];
 const AGENCY_KEY = "hubly:agencia-activa";
 const conflictKey = (id: string) => `hubly:conflicto:${id}`;
@@ -34,6 +35,7 @@ function selectedAgency() {
 }
 
 export const currentAgencyId = () => agencyId;
+export const currentRole = () => role;
 export const hasPendingSave = () => pending !== null || inFlight || conflicted !== null;
 
 function emit(state: SaveState) {
@@ -78,6 +80,7 @@ export async function loadLiveWorkspace(): Promise<LiveLoad> {
     agencies = json.agencies ?? [];
     agencyId = json.agencyId;
     version = json.version;
+    role = json.role;
     readOnly = json.role === "viewer";
     if (!readOnly && !conflicted) restoreConflict();
     return { kind: "ok", data: json.data, agencyId: json.agencyId, role: json.role };
