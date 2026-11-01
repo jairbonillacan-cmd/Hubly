@@ -1749,6 +1749,7 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-composer-count button { border: 0; background: transparent; color: var(--hb-accent-text); font-size: 12px; font-weight: 700; cursor: pointer; }
 .hubly-composer-netsettings { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; padding: 12px; border: 1px solid var(--ui-border); border-radius: 12px; }
 .hubly-composer-netsettings label { display: grid; gap: 4px; color: var(--ui-text-3); font-size: 11.5px; font-weight: 600; }
+.hubly-composer-nethead { grid-column: 1 / -1; color: var(--ui-text-2); font-size: 12px; font-weight: 700; }
 .hubly-composer-netsettings > small { grid-column: 1 / -1; }
 .hubly-composer-inline { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600; }
 .hubly-composer-issues { margin: 0; padding: 10px 12px 10px 28px; border-radius: 10px; background: color-mix(in srgb, #F59E0B 12%, var(--ui-surface)); color: var(--ui-text-1); font-size: 12.5px; }

@@ -153,6 +153,7 @@ test("varios archivos, orden, copy por red y guardado sin fecha", async ({ page 
   await page.getByRole("tab", { name: "Pinterest" }).click();
   await expect(page.getByLabel("Copy de Pinterest")).toHaveValue("Copy común");
   await expect(page.getByText("Hereda el copy general")).toBeVisible();
+  await expect(page.getByText("Ajustes de Pinterest")).toBeVisible();
   await page.getByLabel("Copy de Pinterest").fill("Solo Pinterest");
   await expect(page.locator(".hubly-phone-app")).toContainText("Solo Pinterest");
   await expect(page.locator(".np-pin-save")).toHaveText("Guardar");

@@ -1174,6 +1174,7 @@ function NetworkSettings({
   );
   return (
     <div className="hubly-composer-netsettings">
+      <strong className="hubly-composer-nethead">Ajustes de {network}</strong>
       <label>
         Formato en {network}
         <select className="hubly-cal-input" disabled={disabled} value={settings.format ?? ""} onChange={(e) => onChange({ format: (e.target.value || undefined) as PostFormat | undefined })}>
