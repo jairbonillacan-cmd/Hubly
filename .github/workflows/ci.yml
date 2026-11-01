@@ -16,6 +16,8 @@ jobs:
         working-directory: web
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v5
         with:
           node-version: 24
@@ -25,6 +27,9 @@ jobs:
       - run: npm audit --omit=dev --audit-level=high
       - run: npm run lint
       - run: npm run check:ui
+      - run: npm run check:size
+      - if: github.event_name == 'pull_request'
+        run: node scripts/check-deuda.mjs origin/${{ github.base_ref }}
       - run: npm run build
       - run: npx tsc --noEmit
       - run: npm test

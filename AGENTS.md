@@ -16,7 +16,7 @@ No apagues ni reinicies el servidor de desarrollo: el usuario ve los cambios en 
 
 ## Trabajo
 
-El plan vigente está en [docs/ROADMAP.md](docs/ROADMAP.md) y las decisiones en [docs/adr/](docs/adr/). Lo que esté en `docs/archivo/` es historia, no instrucciones.
+Antes de programar lee [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) y [docs/CODE_STANDARDS.md](docs/CODE_STANDARDS.md), y busca lo que ya exista. El plan vigente está en [docs/ROADMAP.md](docs/ROADMAP.md) y las decisiones en [docs/adr/](docs/adr/). Lo que esté en `docs/archivo/` es historia, no instrucciones.
 
 - Un solo agente escribe en cada dominio a la vez; sin ramas paralelas sobre los mismos archivos.
 - Cada PR tiene un solo objetivo, incluye evidencia de pruebas y dice qué no se comprobó.
@@ -26,5 +26,6 @@ El plan vigente está en [docs/ROADMAP.md](docs/ROADMAP.md) y las decisiones en 
 - Sin comentarios con nombres de capturas, chunks o agentes.
 - No copies, traduzcas ni adaptes código de Postiz. Solo se usa como inspiración, con el proceso del ADR 0003.
 - No hay pantalla nueva sin backend real, o con la etiqueta «Función prevista».
-- Antes de entregar corre, desde `web/`: `npm run lint`, `npm run check:ui`, `npx tsc --noEmit`, `npm test`, `npm run test:db` y `npm run build`.
-- No subas el tope de avisos de `npm run lint`. Solo puede bajar.
+- Antes de entregar corre, desde `web/`: `npm run lint`, `npm run check:ui`, `npm run check:size`, `npx tsc --noEmit`, `npm test`, `npm run test:db` y `npm run build`.
+- Las bases de deuda y el tope de avisos de `npm run lint` solo pueden bajar.
+- Si refactorizas, corre `npm run test:visual`. Regenera sus capturas solo con un cambio visual intencional, y dilo en el PR.
