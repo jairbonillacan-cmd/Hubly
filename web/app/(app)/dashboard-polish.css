@@ -957,8 +957,8 @@ html.theme-switching, html.theme-switching *, html.theme-switching ::before, htm
     transition: margin-left 0.2s ease, margin-right 0.25s ease;
   }
   .hubly-app-root.hb-app-root:has(.hubly-sidebar.is-collapsed) .hubly-main.hb-main { margin-left: 92px; }
-  .hubly-app-root.hb-app-root:has([data-hubi-panel][data-state="open"]) .hubly-main.hb-main { margin-right: 444px; }
-  .hubly-app-root.hb-app-root:has([data-hubi-panel][data-state="open"][data-expanded="true"]) .hubly-main.hb-main { margin-right: 744px; }
+  .hubly-app-root.hb-app-root:has([data-hubi-panel][data-state="open"][data-view="panel"]) .hubly-main.hb-main { margin-right: 444px; }
+  .hubly-app-root.hb-app-root:has([data-hubi-panel][data-state="open"][data-view="panel"][data-expanded="true"]) .hubly-main.hb-main { margin-right: 744px; }
   .hubly-app-root.hb-app-root .hubly-page.hb-page { max-width: none; padding: 20px 32px 72px; }
   .hubly-cal { margin: -20px -32px -72px; }
 }
@@ -1043,7 +1043,7 @@ html.dark .hubly-app-root [style*="rgba(226, 232, 240"] { border-color: #3A5064 
 .hubly-sidebar-panel-head.is-chats { margin: 0 -12px 12px; padding: 12px 20px; border-bottom: 1px solid #E3E9EF; }
 .hubly-sidebar-panel-head.is-chats span { color: #111C27; font-size: 13px; letter-spacing: 0; text-transform: none; }
 .hubly-sidebar-panel-head button { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: none; border-radius: 7px; background: transparent; color: var(--hb-accent-text); cursor: pointer; }
-.hubly-sidebar-panel-head button:hover { background: #F5F8FB; }
+.hubly-sidebar-panel-head button:hover { background: var(--ui-muted); }
 .hubly-sidebar-empty {
   display: flex;
   flex-direction: column;
@@ -1112,6 +1112,7 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 }
 .hubly-hubi-panel[data-state="closing"] { animation: hubly-hubi-out 250ms cubic-bezier(0.4, 0, 1, 1) both; }
 .hubly-hubi-panel[data-expanded="true"] { width: min(720px, calc(100vw - 24px)); }
+.hubly-hubi-body { display: flex; flex: 1; flex-direction: column; gap: 14px; padding: 18px 16px; overflow-y: auto; }
 .hubly-hubi-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid #E3E9EF; }
 .hubly-hubi-head > div { display: flex; align-items: center; gap: 8px; }
 .hubly-hubi-head h2 { margin: 0; font-size: 14px; font-weight: 600; }
@@ -2341,3 +2342,49 @@ html.dark .hubly-cal-pill[aria-pressed="true"] { border-color: var(--hb-accent);
 html.dark .hubly-salud-item .hubly-ajustes-dot { background-color: var(--ui-muted) !important; color: var(--ui-text) !important; }
 html.dark .hubly-app-root .saas-btn-secondary { border-color: var(--ui-border-strong); background: var(--ui-surface); color: var(--ui-text-2); }
 html.dark .hubly-app-root .saas-btn-secondary:hover:not(:disabled) { background: var(--ui-surface-2); color: var(--ui-text); }
+
+/* Chats de Hubi en el sidebar */
+.hubly-chat-list { display: flex; flex: 1; flex-direction: column; gap: 2px; min-height: 0; margin: 0; padding: 0; overflow-y: auto; list-style: none; }
+.hubly-chat-row { position: relative; display: flex; flex-shrink: 0; align-items: center; border-radius: 10px; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-chat-row:hover, .hubly-chat-row:focus-within { background: var(--ui-muted); }
+.hubly-chat-row.is-active { background: var(--ui-sky-soft); }
+.hubly-chat-open { display: flex; flex: 1; align-items: center; gap: 8px; min-width: 0; height: 34px; padding: 0 10px; border: none; border-radius: 10px; background: transparent; font: inherit; text-align: left; cursor: pointer; }
+.hubly-chat-open:focus-visible, .hubly-chat-delete:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: -2px; }
+.hubly-chat-title { flex: 1; min-width: 0; overflow: hidden; color: var(--ui-text); font-size: 13px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+.hubly-chat-row.is-active .hubly-chat-title { color: var(--ui-sky-text); font-weight: 600; }
+.hubly-chat-time { flex-shrink: 0; color: var(--ui-text-4); font-size: 11px; font-variant-numeric: tabular-nums; transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-chat-delete { position: absolute; top: 5px; right: 5px; display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: none; border-radius: 8px; background: transparent; color: var(--ui-text-4); cursor: pointer; opacity: 0; transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1), background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-chat-row:hover .hubly-chat-delete, .hubly-chat-row:focus-within .hubly-chat-delete { opacity: 1; }
+.hubly-chat-row:hover .hubly-chat-time, .hubly-chat-row:focus-within .hubly-chat-time { opacity: 0; }
+.hubly-chat-delete:hover { background: var(--hubly-danger-bg); color: var(--hubly-danger-text); }
+
+.hubly-undo-stack { position: fixed; left: 50%; bottom: 28px; z-index: 90; display: flex; flex-direction: column; align-items: center; gap: 8px; translate: -50% 0; }
+.hubly-undo-stack .hubly-undo-toast { position: static; translate: none; white-space: nowrap; }
+.hubly-undo-seconds { min-width: 28px; color: rgba(255, 255, 255, 0.72); font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums; }
+
+/* Conversación a pantalla completa, junto al sidebar */
+.hubly-hubi-panel[data-view="full"] { top: 0; right: 0; bottom: 0; left: 280px; width: auto; border-radius: 0; background: var(--ui-surface); box-shadow: none; animation: hubly-fade-in 150ms ease both; }
+.hubly-hubi-panel[data-view="full"][data-state="closing"] { opacity: 0; animation: none; transition: opacity 150ms ease; }
+.hubly-app-root:has(.hubly-sidebar.is-collapsed) .hubly-hubi-panel[data-view="full"] { left: 92px; }
+.hubly-hubi-panel[data-view="full"] .hubly-hubi-body { padding: 32px max(24px, calc((100% - 760px) / 2)); }
+.hubly-hubi-panel[data-view="full"] .hubly-hubi-intro { width: min(480px, 100%); margin: auto; }
+.hubly-hubi-panel[data-view="full"] .hubly-hubi-composer { margin: 8px max(24px, calc((100% - 760px) / 2)) 20px; }
+
+@media (hover: none), (max-width: 767.98px) {
+  .hubly-chat-open { height: 44px; }
+  .hubly-chat-delete { position: static; flex-shrink: 0; width: 44px; height: 44px; opacity: 1; }
+  .hubly-chat-row:hover .hubly-chat-time, .hubly-chat-row:focus-within .hubly-chat-time { opacity: 1; }
+}
+
+@media (max-width: 767.98px) {
+  .hubly-sidebar-panel-head button { width: 44px; height: 44px; }
+  .hubly-undo-stack { bottom: 76px; }
+  .hubly-hubi-panel[data-view="full"], .hubly-app-root:has(.hubly-sidebar.is-collapsed) .hubly-hubi-panel[data-view="full"] { left: 0; bottom: 60px; }
+  .hubly-hubi-panel[data-view="full"] .hubly-hubi-body { padding: 20px 16px; }
+  .hubly-hubi-panel[data-view="full"] .hubly-hubi-composer { margin: 8px 12px 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hubly-chat-row, .hubly-chat-time, .hubly-chat-delete { transition: none; }
+  .hubly-hubi-panel[data-view="full"] { animation: none; transition: none; }
+}
