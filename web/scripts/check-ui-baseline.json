@@ -112,7 +112,7 @@
   },
   "components/app/AutoSuggestionsModal.tsx": {
     "color-fijo": 20,
-    "rgb-fijo": 5,
+    "rgb-fijo": 4,
     "tamano-fuente": 1
   },
   "components/app/CommandPaletteModal.tsx": {
@@ -147,7 +147,7 @@
   },
   "components/app/NotebookReaderModal.tsx": {
     "color-fijo": 65,
-    "rgb-fijo": 3,
+    "rgb-fijo": 2,
     "tamano-fuente": 1
   },
   "components/app/PostComposerModal.tsx": {
@@ -204,7 +204,7 @@
     "exclamacion": 1,
     "hbtn-directo": 7,
     "radio": 1,
-    "rgb-fijo": 5
+    "rgb-fijo": 4
   },
   "components/app/dashboard/MemberDrawer.tsx": {
     "color-fijo": 4,

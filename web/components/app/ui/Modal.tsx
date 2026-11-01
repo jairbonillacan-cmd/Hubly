@@ -1,7 +1,7 @@
 "use client";
 import "./ui-kit.css";
 
-import { useRef, type FormEventHandler, type KeyboardEventHandler, type ReactNode, type RefObject } from "react";
+import { useRef, type CSSProperties, type FormEventHandler, type KeyboardEventHandler, type ReactNode, type RefObject } from "react";
 import { useFocusTrap } from "@/lib/use-focus-trap";
 import { useLayer } from "@/lib/use-layer";
 import { useModalPresence } from "@/lib/use-modal-presence";
@@ -16,6 +16,8 @@ interface ModalProps {
   /** Clases de la ventana y del velo. Por defecto, la receta §9.9 de la guía. */
   className?: string;
   overlayClassName?: string;
+  /** Solo para superficies con colores propios, como la libreta Kraft. */
+  style?: CSSProperties;
   /** Variante ancha de `.hubly-social-modal`. */
   wide?: boolean;
   /** Para medir o recorrer la ventana desde fuera. */
@@ -34,6 +36,7 @@ export function Modal({
   children,
   className = "hubly-sheet hubly-cal-modal",
   overlayClassName = "hubly-overlay hubly-cal-overlay",
+  style,
   wide,
   surfaceRef,
   onKeyDown,
@@ -48,6 +51,7 @@ export function Modal({
 
   const dialog = {
     className,
+    style,
     "data-state": presence.state,
     "data-wide": wide || undefined,
     role: "dialog",

@@ -1,5 +1,6 @@
 "use client";
 
+import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useId, useRef, useState } from "react";
 import { useHublyStore } from "@/lib/store";
 import { useModalPresence } from "@/lib/use-modal-presence";
@@ -313,43 +314,8 @@ export function AutoSuggestionsModal({
       }
     });
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        e.stopPropagation();
-        handleClose();
-        return;
-      }
-
-      if (e.key === "Tab") {
-        const focusables = getFocusableElements(dialogRef.current);
-        if (focusables.length === 0) {
-          e.preventDefault();
-          return;
-        }
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        const active = document.activeElement as HTMLElement | null;
-
-        if (e.shiftKey) {
-          if (!active || active === first || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (!active || active === last || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown, true);
-
     return () => {
       window.cancelAnimationFrame(rafId);
-      document.removeEventListener("keydown", handleKeyDown, true);
       const remainingDialogs = document.querySelectorAll(
         '[role="dialog"][aria-modal="true"]'
       );
@@ -363,7 +329,6 @@ export function AutoSuggestionsModal({
         });
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const presence = useModalPresence(isOpen);
@@ -463,747 +428,727 @@ export function AutoSuggestionsModal({
   };
 
   return (
-    <div
-      className="hubly-overlay"
-      data-state={presence.state}
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) handleClose();
-      }}
+    <Modal
+      open={isOpen}
+      onClose={handleClose}
+      labelledBy={titleId}
+      className="hubly-sheet"
+      surfaceRef={dialogRef}
       style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 110,
-        background: "rgba(15, 23, 42, 0.45)",
-        backdropFilter: "blur(4px)",
+        width: "100%",
+        maxWidth: 680,
+        maxHeight: "90vh",
+        background: "var(--ui-surface)",
+        borderRadius: 20,
+        border: "1px solid var(--ui-border)",
+        boxShadow: "0 24px 60px rgba(15, 23, 42, 0.22)",
         display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 16,
+        flexDirection: "column",
+        overflow: "hidden",
+        color: "var(--ui-text)",
       }}
     >
+      {/* Header */}
       <div
-        ref={dialogRef}
-        className="hubly-sheet"
-        data-state={presence.state}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
         style={{
-          width: "100%",
-          maxWidth: 680,
-          maxHeight: "90vh",
-          background: "var(--ui-surface)",
-          borderRadius: 20,
-          border: "1px solid var(--ui-border)",
-          boxShadow: "0 24px 60px rgba(15, 23, 42, 0.22)",
+          padding: "18px 22px 14px",
+          borderBottom: "1px solid var(--ui-muted)",
           display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-          color: "var(--ui-text)",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 12,
         }}
       >
-        {/* Header */}
-        <div
-          style={{
-            padding: "18px 22px 14px",
-            borderBottom: "1px solid var(--ui-muted)",
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            gap: 12,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "flex-start", gap: 11 }}>
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: 10,
-                background: "var(--ui-accent-soft)",
-                color: "var(--hb-accent-text)",
-                display: "grid",
-                placeItems: "center",
-                flexShrink: 0,
-                marginTop: 2,
-              }}
-            >
-              <Sparkles size={18} />
-            </div>
-            <div>
-              <h2
-                id={titleId}
-                style={{
-                  margin: 0,
-                  fontSize: 16.5,
-                  fontWeight: 700,
-                  color: "var(--ui-text)",
-                  lineHeight: 1.25,
-                }}
-              >
-                Sugerencias automáticas de compromisos
-              </h2>
-              <p
-                style={{
-                  margin: "3px 0 0",
-                  fontSize: 12.5,
-                  color: "var(--ui-text-4)",
-                  lineHeight: 1.4,
-                }}
-              >
-                Recomendaciones calculadas con reglas determinísticas sobre el
-                cumplimiento real del último mes en tus {brands.length} marcas.
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleClose}
-            aria-label="Cerrar sugerencias automáticas"
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 11 }}>
+          <div
             style={{
-              width: 32,
-              height: 32,
-              borderRadius: 9999,
-              border: "1px solid var(--ui-border)",
-              background: "var(--ui-surface-2)",
-              color: "var(--ui-text-4)",
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              background: "var(--ui-accent-soft)",
+              color: "var(--hb-accent-text)",
               display: "grid",
               placeItems: "center",
-              cursor: "pointer",
               flexShrink: 0,
+              marginTop: 2,
             }}
           >
-            <X size={15} />
+            <Sparkles size={18} />
+          </div>
+          <div>
+            <h2
+              id={titleId}
+              style={{
+                margin: 0,
+                fontSize: 16.5,
+                fontWeight: 700,
+                color: "var(--ui-text)",
+                lineHeight: 1.25,
+              }}
+            >
+              Sugerencias automáticas de compromisos
+            </h2>
+            <p
+              style={{
+                margin: "3px 0 0",
+                fontSize: 12.5,
+                color: "var(--ui-text-4)",
+                lineHeight: 1.4,
+              }}
+            >
+              Recomendaciones calculadas con reglas determinísticas sobre el
+              cumplimiento real del último mes en tus {brands.length} marcas.
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleClose}
+          aria-label="Cerrar sugerencias automáticas"
+          style={{
+            width: 32,
+            height: 32,
+            borderRadius: 9999,
+            border: "1px solid var(--ui-border)",
+            background: "var(--ui-surface-2)",
+            color: "var(--ui-text-4)",
+            display: "grid",
+            placeItems: "center",
+            cursor: "pointer",
+            flexShrink: 0,
+          }}
+        >
+          <X size={15} />
+        </button>
+      </div>
+
+      {/* Mode Switcher Bar */}
+      <div
+        style={{
+          padding: "10px 22px",
+          background: "var(--ui-surface-2)",
+          borderBottom: "1px solid var(--ui-muted)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 8,
+        }}
+      >
+        <div
+          style={{
+            display: "inline-flex",
+            background: "var(--ui-border)",
+            padding: 3,
+            borderRadius: 10,
+            gap: 2,
+          }}
+        >
+          <button
+            ref={firstActionRef}
+            type="button"
+            aria-pressed={activeView === "reglas"}
+            onClick={() => setActiveView("reglas")}
+            style={{
+              padding: "5px 12px",
+              borderRadius: 8,
+              border: "none",
+              background:
+                activeView === "reglas" ? "var(--ui-surface)" : "transparent",
+              color: activeView === "reglas" ? "var(--hb-accent)" : "var(--ui-text-3)",
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: "pointer",
+              boxShadow:
+                activeView === "reglas"
+                  ? "0 1px 2px rgba(15,23,42,0.08)"
+                  : "none",
+            }}
+          >
+            Recomendaciones por marca ({pendingRecommendations.length})
+          </button>
+          <button
+            type="button"
+            aria-pressed={activeView === "metricas"}
+            onClick={() => setActiveView("metricas")}
+            style={{
+              padding: "5px 12px",
+              borderRadius: 8,
+              border: "none",
+              background:
+                activeView === "metricas" ? "var(--ui-surface)" : "transparent",
+              color: activeView === "metricas" ? "var(--hb-accent)" : "var(--ui-text-3)",
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: "pointer",
+              boxShadow:
+                activeView === "metricas"
+                  ? "0 1px 2px rgba(15,23,42,0.08)"
+                  : "none",
+            }}
+          >
+            Métricas semanales de pauta
           </button>
         </div>
 
-        {/* Mode Switcher Bar */}
-        <div
-          style={{
-            padding: "10px 22px",
-            background: "var(--ui-surface-2)",
-            borderBottom: "1px solid var(--ui-muted)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 8,
-          }}
-        >
+        <span style={{ fontSize: 11.5, color: "var(--ui-text-4)", fontWeight: 500 }}>
+          Motor de reglas local · Auditable
+        </span>
+      </div>
+
+      {/* Scrollable Content */}
+      <div
+        style={{
+          padding: "16px 22px",
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: 12,
+          flex: 1,
+        }}
+      >
+        {feedbackBanner && (
           <div
+            role="status"
             style={{
-              display: "inline-flex",
-              background: "var(--ui-border)",
-              padding: 3,
+              padding: "9px 14px",
               borderRadius: 10,
-              gap: 2,
+              background: "#DCFCE7",
+              border: "1px solid #86EFAC",
+              color: "#166534",
+              fontSize: 12.5,
+              fontWeight: 600,
             }}
           >
-            <button
-              ref={firstActionRef}
-              type="button"
-              aria-pressed={activeView === "reglas"}
-              onClick={() => setActiveView("reglas")}
-              style={{
-                padding: "5px 12px",
-                borderRadius: 8,
-                border: "none",
-                background:
-                  activeView === "reglas" ? "var(--ui-surface)" : "transparent",
-                color: activeView === "reglas" ? "var(--hb-accent)" : "var(--ui-text-3)",
-                fontSize: 12,
-                fontWeight: 700,
-                cursor: "pointer",
-                boxShadow:
-                  activeView === "reglas"
-                    ? "0 1px 2px rgba(15,23,42,0.08)"
-                    : "none",
-              }}
-            >
-              Recomendaciones por marca ({pendingRecommendations.length})
-            </button>
-            <button
-              type="button"
-              aria-pressed={activeView === "metricas"}
-              onClick={() => setActiveView("metricas")}
-              style={{
-                padding: "5px 12px",
-                borderRadius: 8,
-                border: "none",
-                background:
-                  activeView === "metricas" ? "var(--ui-surface)" : "transparent",
-                color: activeView === "metricas" ? "var(--hb-accent)" : "var(--ui-text-3)",
-                fontSize: 12,
-                fontWeight: 700,
-                cursor: "pointer",
-                boxShadow:
-                  activeView === "metricas"
-                    ? "0 1px 2px rgba(15,23,42,0.08)"
-                    : "none",
-              }}
-            >
-              Métricas semanales de pauta
-            </button>
+            {feedbackBanner}
           </div>
+        )}
 
-          <span style={{ fontSize: 11.5, color: "var(--ui-text-4)", fontWeight: 500 }}>
-            Motor de reglas local · Auditable
-          </span>
-        </div>
+        {activeView === "reglas" ? (
+          pendingRecommendations.length > 0 ? (
+            pendingRecommendations.map((rec) => {
+              const effectiveVal = getEffectiveValue(rec);
+              const diffAbs = effectiveVal - rec.currentCommitted;
+              const diffPct =
+                rec.currentCommitted > 0
+                  ? Math.round((diffAbs / rec.currentCommitted) * 100)
+                  : 100;
 
-        {/* Scrollable Content */}
-        <div
-          style={{
-            padding: "16px 22px",
-            overflowY: "auto",
-            display: "flex",
-            flexDirection: "column",
-            gap: 12,
-            flex: 1,
-          }}
-        >
-          {feedbackBanner && (
-            <div
-              role="status"
-              style={{
-                padding: "9px 14px",
-                borderRadius: 10,
-                background: "#DCFCE7",
-                border: "1px solid #86EFAC",
-                color: "#166534",
-                fontSize: 12.5,
-                fontWeight: 600,
-              }}
-            >
-              {feedbackBanner}
-            </div>
-          )}
-
-          {activeView === "reglas" ? (
-            pendingRecommendations.length > 0 ? (
-              pendingRecommendations.map((rec) => {
-                const effectiveVal = getEffectiveValue(rec);
-                const diffAbs = effectiveVal - rec.currentCommitted;
-                const diffPct =
-                  rec.currentCommitted > 0
-                    ? Math.round((diffAbs / rec.currentCommitted) * 100)
-                    : 100;
-
-                return (
-                  <div
-                    key={rec.id}
-                    style={{
-                      padding: "14px 16px",
-                      borderRadius: 14,
-                      border: "1px solid var(--ui-border-strong)",
-                      background: "var(--ui-surface)",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 10,
-                      boxShadow: "0 2px 6px rgba(15,23,42,0.03)",
-                    }}
-                  >
-                    {/* Top Row: Brand Avatar + Name + Metric + Delta Badge */}
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        flexWrap: "wrap",
-                        gap: 10,
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 10,
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: 34,
-                            height: 34,
-                            borderRadius: 10,
-                            background: rec.brandColor,
-                            color: "#FFFFFF",
-                            fontSize: 12,
-                            fontWeight: 700,
-                            display: "grid",
-                            placeItems: "center",
-                            flexShrink: 0,
-                          }}
-                        >
-                          {rec.brandInitial}
-                        </div>
-                        <div>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 7,
-                            }}
-                          >
-                            <span
-                              style={{
-                                fontSize: 14,
-                                fontWeight: 700,
-                                color: "var(--ui-text)",
-                              }}
-                            >
-                              {rec.brandName}
-                            </span>
-                            <span
-                              style={{
-                                padding: "2px 8px",
-                                borderRadius: 9999,
-                                background: "var(--ui-muted)",
-                                color: "var(--ui-text-2)",
-                                fontSize: 11,
-                                fontWeight: 700,
-                              }}
-                            >
-                              {getMetricTitle(rec)}
-                            </span>
-                          </div>
-                          <div
-                            style={{
-                              fontSize: 11.5,
-                              color: "var(--ui-text-4)",
-                              marginTop: 2,
-                            }}
-                          >
-                            Compromiso actual:{" "}
-                            <strong style={{ color: "var(--ui-text)" }}>
-                              {rec.currentCommitted}/mes
-                            </strong>{" "}
-                            · Completado mes pasado:{" "}
-                            <strong style={{ color: "var(--ui-text)" }}>
-                              {rec.completedLastPeriod}
-                            </strong>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Delta Badge +X (+Y%) */}
-                      <span
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 4,
-                          padding: "4px 10px",
-                          borderRadius: 9999,
-                          background: diffAbs >= 0 ? "#DCFCE7" : "#E6F4FB",
-                          color: diffAbs >= 0 ? "#15803D" : "var(--ui-accent-text)",
-                          fontSize: 12,
-                          fontWeight: 800,
-                        }}
-                      >
-                        <TrendingUp size={13} />
-                        <span>
-                          {diffAbs >= 0 ? `+${diffAbs}` : diffAbs} (
-                          {diffPct >= 0 ? `+${diffPct}%` : `${diffPct}%`})
-                        </span>
-                      </span>
-                    </div>
-
-                    {/* Explicit Rule Reason & Data Source */}
-                    <div
-                      style={{
-                        padding: "9px 12px",
-                        borderRadius: 10,
-                        background: "var(--ui-surface-2)",
-                        border: "1px solid var(--ui-muted)",
-                        fontSize: 12,
-                        color: "var(--ui-text-2)",
-                        lineHeight: 1.45,
-                      }}
-                    >
-                      <div>{rec.reason}</div>
-                      <div
-                        style={{
-                          fontSize: 11,
-                          color: "var(--ui-text-4)",
-                          marginTop: 4,
-                          fontWeight: 600,
-                        }}
-                      >
-                        Fuente: {rec.dataSourceLabel}
-                      </div>
-                    </div>
-
-                    {/* Bottom Controls: Manual +/- Stepper + Individual Aplicar / Descartar */}
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        flexWrap: "wrap",
-                        gap: 10,
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 8,
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontSize: 12,
-                            fontWeight: 600,
-                            color: "var(--ui-text-3)",
-                          }}
-                        >
-                          Nuevo compromiso sugerido:
-                        </span>
-
-                        <div
-                          style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 6,
-                            background: "var(--ui-surface-2)",
-                            border: "1px solid var(--ui-border-strong)",
-                            borderRadius: 9,
-                            padding: "2px 6px",
-                          }}
-                        >
-                          <button
-                            type="button"
-                            onClick={() => handleAdjustValue(rec, -1)}
-                            aria-label={`Disminuir meta sugerida para ${rec.brandName}`}
-                            style={{
-                              width: 24,
-                              height: 24,
-                              borderRadius: 6,
-                              border: "none",
-                              background: "var(--ui-surface)",
-                              color: "var(--ui-text-2)",
-                              display: "grid",
-                              placeItems: "center",
-                              cursor: "pointer",
-                              padding: 0,
-                            }}
-                          >
-                            <Minus size={12} />
-                          </button>
-                          <span
-                            style={{
-                              minWidth: 28,
-                              textAlign: "center",
-                              fontSize: 13.5,
-                              fontWeight: 800,
-                              color: "var(--hb-accent-text)",
-                            }}
-                          >
-                            {effectiveVal}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => handleAdjustValue(rec, 1)}
-                            aria-label={`Aumentar meta sugerida para ${rec.brandName}`}
-                            style={{
-                              width: 24,
-                              height: 24,
-                              borderRadius: 6,
-                              border: "none",
-                              background: "var(--ui-surface)",
-                              color: "var(--ui-text-2)",
-                              display: "grid",
-                              placeItems: "center",
-                              cursor: "pointer",
-                              padding: 0,
-                            }}
-                          >
-                            <Plus size={12} />
-                          </button>
-                        </div>
-                        <span style={{ fontSize: 11.5, color: "var(--ui-text-4)" }}>
-                          / mes
-                        </span>
-                      </div>
-
-                      <div
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 8,
-                        }}
-                      >
-                        <button
-                          type="button"
-                          onClick={() => handleDismissSingle(rec)}
-                          style={{
-                            height: 32,
-                            padding: "0 12px",
-                            borderRadius: 8,
-                            border: "1px solid var(--ui-border)",
-                            background: "var(--ui-surface)",
-                            color: "var(--ui-text-4)",
-                            fontSize: 12,
-                            fontWeight: 600,
-                            cursor: "pointer",
-                          }}
-                        >
-                          Descartar
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleApplySingle(rec)}
-                          style={{
-                            height: 32,
-                            padding: "0 14px",
-                            borderRadius: 8,
-                            border: "none",
-                            background: "var(--ui-accent-soft)",
-                            color: "var(--hb-accent-text)",
-                            fontSize: 12,
-                            fontWeight: 700,
-                            cursor: "pointer",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 5,
-                          }}
-                        >
-                          <Check size={13} />
-                          <span>Aplicar</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <div
-                style={{
-                  padding: "28px 20px",
-                  textAlign: "center",
-                  borderRadius: 14,
-                  background: "var(--ui-surface-2)",
-                  border: "1px dashed var(--ui-border-strong)",
-                }}
-              >
+              return (
                 <div
+                  key={rec.id}
                   style={{
-                    fontSize: 14,
-                    fontWeight: 700,
-                    color: "var(--ui-text)",
-                    marginBottom: 4,
-                  }}
-                >
-                  ¡Todas las sugerencias automáticas están al día!
-                </div>
-                <p
-                  style={{
-                    fontSize: 12.5,
-                    color: "var(--ui-text-4)",
-                    margin: "0 0 12px",
-                  }}
-                >
-                  Has aplicado o revisado todas las recomendaciones de entregas
-                  mensuales para tus marcas.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setActiveView("metricas")}
-                  style={{
-                    padding: "7px 14px",
-                    borderRadius: 9,
-                    border: "1px solid #BFE2F4",
-                    background: "var(--ui-accent-soft)",
-                    color: "var(--hb-accent-text)",
-                    fontSize: 12,
-                    fontWeight: 700,
-                    cursor: "pointer",
-                  }}
-                >
-                  Ver métricas semanales de pauta →
-                </button>
-              </div>
-            )
-          ) : (
-            /* Weekly Ad Metrics View */
-            <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-              {metrics.map((m) => (
-                <div
-                  key={m.id}
-                  onClick={() => toggleMetricChecked(m.id)}
-                  style={{
+                    padding: "14px 16px",
+                    borderRadius: 14,
+                    border: "1px solid var(--ui-border-strong)",
+                    background: "var(--ui-surface)",
                     display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 12,
-                    padding: "11px 14px",
-                    borderRadius: 12,
-                    border: m.checked
-                      ? "1px solid #BFE2F4"
-                      : "1px solid #E2E8F0",
-                    background: m.checked ? "#F5F7FF" : "var(--ui-surface)",
-                    cursor: "pointer",
+                    flexDirection: "column",
+                    gap: 10,
+                    boxShadow: "0 2px 6px rgba(15,23,42,0.03)",
                   }}
                 >
+                  {/* Top Row: Brand Avatar + Name + Metric + Delta Badge */}
                   <div
                     style={{
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: "space-between",
+                      flexWrap: "wrap",
                       gap: 10,
-                      minWidth: 0,
                     }}
                   >
-                    <button
-                      type="button"
-                      role="checkbox"
-                      aria-checked={m.checked}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleMetricChecked(m.id);
-                      }}
-                      style={{
-                        width: 18,
-                        height: 18,
-                        borderRadius: 5,
-                        border: m.checked ? "none" : "1.5px solid var(--ui-border-strong)",
-                        background: m.checked ? "var(--hb-accent)" : "var(--ui-surface)",
-                        color: "#FFFFFF",
-                        display: "grid",
-                        placeItems: "center",
-                        padding: 0,
-                        cursor: "pointer",
-                      }}
-                    >
-                      {m.checked && <Check size={12} strokeWidth={3} />}
-                    </button>
-
-                    <MetricCardIcon type={m.icon} />
-
-                    <div style={{ minWidth: 0 }}>
-                      <div
-                        style={{
-                          fontSize: 13,
-                          fontWeight: 700,
-                          color: "var(--ui-text)",
-                        }}
-                      >
-                        {m.title}
-                      </div>
-                      <div style={{ fontSize: 11.5, color: "var(--ui-text-4)" }}>
-                        {m.subtitle}
-                      </div>
-                    </div>
-                  </div>
-
-                  {m.checked && (
                     <div
-                      onClick={(e) => e.stopPropagation()}
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: 6,
+                        gap: 10,
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 34,
+                          height: 34,
+                          borderRadius: 10,
+                          background: rec.brandColor,
+                          color: "#FFFFFF",
+                          fontSize: 12,
+                          fontWeight: 700,
+                          display: "grid",
+                          placeItems: "center",
+                          flexShrink: 0,
+                        }}
+                      >
+                        {rec.brandInitial}
+                      </div>
+                      <div>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 7,
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontSize: 14,
+                              fontWeight: 700,
+                              color: "var(--ui-text)",
+                            }}
+                          >
+                            {rec.brandName}
+                          </span>
+                          <span
+                            style={{
+                              padding: "2px 8px",
+                              borderRadius: 9999,
+                              background: "var(--ui-muted)",
+                              color: "var(--ui-text-2)",
+                              fontSize: 11,
+                              fontWeight: 700,
+                            }}
+                          >
+                            {getMetricTitle(rec)}
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            fontSize: 11.5,
+                            color: "var(--ui-text-4)",
+                            marginTop: 2,
+                          }}
+                        >
+                          Compromiso actual:{" "}
+                          <strong style={{ color: "var(--ui-text)" }}>
+                            {rec.currentCommitted}/mes
+                          </strong>{" "}
+                          · Completado mes pasado:{" "}
+                          <strong style={{ color: "var(--ui-text)" }}>
+                            {rec.completedLastPeriod}
+                          </strong>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Delta Badge +X (+Y%) */}
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 4,
+                        padding: "4px 10px",
+                        borderRadius: 9999,
+                        background: diffAbs >= 0 ? "#DCFCE7" : "#E6F4FB",
+                        color: diffAbs >= 0 ? "#15803D" : "var(--ui-accent-text)",
+                        fontSize: 12,
+                        fontWeight: 800,
+                      }}
+                    >
+                      <TrendingUp size={13} />
+                      <span>
+                        {diffAbs >= 0 ? `+${diffAbs}` : diffAbs} (
+                        {diffPct >= 0 ? `+${diffPct}%` : `${diffPct}%`})
+                      </span>
+                    </span>
+                  </div>
+
+                  {/* Explicit Rule Reason & Data Source */}
+                  <div
+                    style={{
+                      padding: "9px 12px",
+                      borderRadius: 10,
+                      background: "var(--ui-surface-2)",
+                      border: "1px solid var(--ui-muted)",
+                      fontSize: 12,
+                      color: "var(--ui-text-2)",
+                      lineHeight: 1.45,
+                    }}
+                  >
+                    <div>{rec.reason}</div>
+                    <div
+                      style={{
+                        fontSize: 11,
+                        color: "var(--ui-text-4)",
+                        marginTop: 4,
+                        fontWeight: 600,
+                      }}
+                    >
+                      Fuente: {rec.dataSourceLabel}
+                    </div>
+                  </div>
+
+                  {/* Bottom Controls: Manual +/- Stepper + Individual Aplicar / Descartar */}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      flexWrap: "wrap",
+                      gap: 10,
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 8,
                       }}
                     >
                       <span
                         style={{
-                          fontSize: 11.5,
-                          color: "var(--ui-text-4)",
+                          fontSize: 12,
                           fontWeight: 600,
+                          color: "var(--ui-text-3)",
                         }}
                       >
-                        Meta
+                        Nuevo compromiso sugerido:
                       </span>
-                      <input
-                        type="text"
-                        value={m.target}
-                        onChange={(e) =>
-                          updateMetricTarget(m.id, e.target.value)
-                        }
-                        aria-label={`Meta para ${m.title}`}
+
+                      <div
                         style={{
-                          width: 66,
-                          height: 30,
-                          borderRadius: 8,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 6,
+                          background: "var(--ui-surface-2)",
                           border: "1px solid var(--ui-border-strong)",
-                          background: "var(--ui-surface)",
-                          textAlign: "center",
-                          fontSize: 12.5,
-                          fontWeight: 700,
-                          color: "var(--ui-text)",
+                          borderRadius: 9,
+                          padding: "2px 6px",
                         }}
-                      />
+                      >
+                        <button
+                          type="button"
+                          onClick={() => handleAdjustValue(rec, -1)}
+                          aria-label={`Disminuir meta sugerida para ${rec.brandName}`}
+                          style={{
+                            width: 24,
+                            height: 24,
+                            borderRadius: 6,
+                            border: "none",
+                            background: "var(--ui-surface)",
+                            color: "var(--ui-text-2)",
+                            display: "grid",
+                            placeItems: "center",
+                            cursor: "pointer",
+                            padding: 0,
+                          }}
+                        >
+                          <Minus size={12} />
+                        </button>
+                        <span
+                          style={{
+                            minWidth: 28,
+                            textAlign: "center",
+                            fontSize: 13.5,
+                            fontWeight: 800,
+                            color: "var(--hb-accent-text)",
+                          }}
+                        >
+                          {effectiveVal}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => handleAdjustValue(rec, 1)}
+                          aria-label={`Aumentar meta sugerida para ${rec.brandName}`}
+                          style={{
+                            width: 24,
+                            height: 24,
+                            borderRadius: 6,
+                            border: "none",
+                            background: "var(--ui-surface)",
+                            color: "var(--ui-text-2)",
+                            display: "grid",
+                            placeItems: "center",
+                            cursor: "pointer",
+                            padding: 0,
+                          }}
+                        >
+                          <Plus size={12} />
+                        </button>
+                      </div>
+                      <span style={{ fontSize: 11.5, color: "var(--ui-text-4)" }}>
+                        / mes
+                      </span>
                     </div>
-                  )}
+
+                    <div
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 8,
+                      }}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => handleDismissSingle(rec)}
+                        style={{
+                          height: 32,
+                          padding: "0 12px",
+                          borderRadius: 8,
+                          border: "1px solid var(--ui-border)",
+                          background: "var(--ui-surface)",
+                          color: "var(--ui-text-4)",
+                          fontSize: 12,
+                          fontWeight: 600,
+                          cursor: "pointer",
+                        }}
+                      >
+                        Descartar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleApplySingle(rec)}
+                        style={{
+                          height: 32,
+                          padding: "0 14px",
+                          borderRadius: 8,
+                          border: "none",
+                          background: "var(--ui-accent-soft)",
+                          color: "var(--hb-accent-text)",
+                          fontSize: 12,
+                          fontWeight: 700,
+                          cursor: "pointer",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 5,
+                        }}
+                      >
+                        <Check size={13} />
+                        <span>Aplicar</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              ))}
+              );
+            })
+          ) : (
+            <div
+              style={{
+                padding: "28px 20px",
+                textAlign: "center",
+                borderRadius: 14,
+                background: "var(--ui-surface-2)",
+                border: "1px dashed var(--ui-border-strong)",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: "var(--ui-text)",
+                  marginBottom: 4,
+                }}
+              >
+                ¡Todas las sugerencias automáticas están al día!
+              </div>
+              <p
+                style={{
+                  fontSize: 12.5,
+                  color: "var(--ui-text-4)",
+                  margin: "0 0 12px",
+                }}
+              >
+                Has aplicado o revisado todas las recomendaciones de entregas
+                mensuales para tus marcas.
+              </p>
+              <button
+                type="button"
+                onClick={() => setActiveView("metricas")}
+                style={{
+                  padding: "7px 14px",
+                  borderRadius: 9,
+                  border: "1px solid #BFE2F4",
+                  background: "var(--ui-accent-soft)",
+                  color: "var(--hb-accent-text)",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                Ver métricas semanales de pauta →
+              </button>
             </div>
-          )}
-        </div>
+          )
+        ) : (
+          /* Weekly Ad Metrics View */
+          <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+            {metrics.map((m) => (
+              <div
+                key={m.id}
+                onClick={() => toggleMetricChecked(m.id)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 12,
+                  padding: "11px 14px",
+                  borderRadius: 12,
+                  border: m.checked
+                    ? "1px solid #BFE2F4"
+                    : "1px solid #E2E8F0",
+                  background: m.checked ? "#F5F7FF" : "var(--ui-surface)",
+                  cursor: "pointer",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    minWidth: 0,
+                  }}
+                >
+                  <button
+                    type="button"
+                    role="checkbox"
+                    aria-checked={m.checked}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleMetricChecked(m.id);
+                    }}
+                    style={{
+                      width: 18,
+                      height: 18,
+                      borderRadius: 5,
+                      border: m.checked ? "none" : "1.5px solid var(--ui-border-strong)",
+                      background: m.checked ? "var(--hb-accent)" : "var(--ui-surface)",
+                      color: "#FFFFFF",
+                      display: "grid",
+                      placeItems: "center",
+                      padding: 0,
+                      cursor: "pointer",
+                    }}
+                  >
+                    {m.checked && <Check size={12} strokeWidth={3} />}
+                  </button>
 
-        {/* Footer */}
-        <div
-          style={{
-            padding: "14px 22px",
-            borderTop: "1px solid var(--ui-muted)",
-            background: "var(--ui-surface-2)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 10,
-          }}
-        >
-          <span style={{ fontSize: 12, color: "var(--ui-text-4)" }}>
-            Se guarda automáticamente en{" "}
-            <strong style={{ color: "var(--ui-text-2)" }}>Salud de Cuentas</strong>
-          </span>
+                  <MetricCardIcon type={m.icon} />
 
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <button
-              type="button"
-              onClick={handleClose}
-              style={{
-                height: 36,
-                padding: "0 14px",
-                borderRadius: 10,
-                border: "1px solid var(--ui-border-strong)",
-                background: "var(--ui-surface)",
-                color: "var(--ui-text-3)",
-                fontSize: 12.5,
-                fontWeight: 600,
-                cursor: "pointer",
-              }}
-            >
-              Cancelar
-            </button>
+                  <div style={{ minWidth: 0 }}>
+                    <div
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 700,
+                        color: "var(--ui-text)",
+                      }}
+                    >
+                      {m.title}
+                    </div>
+                    <div style={{ fontSize: 11.5, color: "var(--ui-text-4)" }}>
+                      {m.subtitle}
+                    </div>
+                  </div>
+                </div>
 
-            <button
-              type="button"
-              onClick={handleApplyAll}
-              style={{
-                height: 36,
-                padding: "0 16px",
-                borderRadius: 10,
-                border: "none",
-                background: "var(--hb-accent)",
-                color: "#FFFFFF",
-                fontSize: 12.5,
-                fontWeight: 600,
-                cursor: "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                boxShadow: "0 2px 6px rgb(var(--hb-accent-rgb) / 0.28)",
-              }}
-            >
-              <Sparkles size={13} />
-              <span>
-                Aplicar todas las sugerencias ({pendingRecommendations.length})
-              </span>
-            </button>
+                {m.checked && (
+                  <div
+                    onClick={(e) => e.stopPropagation()}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 11.5,
+                        color: "var(--ui-text-4)",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Meta
+                    </span>
+                    <input
+                      type="text"
+                      value={m.target}
+                      onChange={(e) =>
+                        updateMetricTarget(m.id, e.target.value)
+                      }
+                      aria-label={`Meta para ${m.title}`}
+                      style={{
+                        width: 66,
+                        height: 30,
+                        borderRadius: 8,
+                        border: "1px solid var(--ui-border-strong)",
+                        background: "var(--ui-surface)",
+                        textAlign: "center",
+                        fontSize: 12.5,
+                        fontWeight: 700,
+                        color: "var(--ui-text)",
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div
+        style={{
+          padding: "14px 22px",
+          borderTop: "1px solid var(--ui-muted)",
+          background: "var(--ui-surface-2)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 10,
+        }}
+      >
+        <span style={{ fontSize: 12, color: "var(--ui-text-4)" }}>
+          Se guarda automáticamente en{" "}
+          <strong style={{ color: "var(--ui-text-2)" }}>Salud de Cuentas</strong>
+        </span>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <button
+            type="button"
+            onClick={handleClose}
+            style={{
+              height: 36,
+              padding: "0 14px",
+              borderRadius: 10,
+              border: "1px solid var(--ui-border-strong)",
+              background: "var(--ui-surface)",
+              color: "var(--ui-text-3)",
+              fontSize: 12.5,
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            onClick={handleApplyAll}
+            style={{
+              height: 36,
+              padding: "0 16px",
+              borderRadius: 10,
+              border: "none",
+              background: "var(--hb-accent)",
+              color: "#FFFFFF",
+              fontSize: 12.5,
+              fontWeight: 600,
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              boxShadow: "0 2px 6px rgb(var(--hb-accent-rgb) / 0.28)",
+            }}
+          >
+            <Sparkles size={13} />
+            <span>
+              Aplicar todas las sugerencias ({pendingRecommendations.length})
+            </span>
+          </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 
