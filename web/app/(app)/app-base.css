@@ -60,7 +60,7 @@
   font-size: 14px;
   line-height: 1.5;
   color: var(--ui-text);
-  background: #FAFAFA;
+  background: var(--ui-surface-2);
   min-height: 100dvh;
   display: flex;
   align-items: flex-start;
@@ -104,7 +104,7 @@
 }
 
 .hb-app-root ::selection {
-  background: #E6F4FB;
+  background: var(--ui-sky-soft);
   color: var(--ui-text);
 }
 
@@ -117,7 +117,7 @@ nextjs-portal,
 
 html:has(.hb-app-root),
 body:has(.hb-app-root) {
-  background: #FAFAFA !important;
+  background: var(--ui-surface-2) !important;
   color: var(--ui-text) !important;
   scrollbar-width: none !important;
 }
@@ -162,8 +162,8 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 .hb-app-root .hbtn-secondary {
   --hbtn-edge: #D6DFE7;
   background: var(--ui-surface);
-  color: #111C27;
-  border: 1px solid #D6DFE7;
+  color: var(--ui-text);
+  border: 1px solid var(--ui-border-strong);
 }
 
 .hb-app-root .hbtn-secondary:hover {
@@ -173,12 +173,12 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 .hb-app-root .hbtn-hb {
   --hbtn-edge: var(--hb-accent-edge);
   background: var(--ui-surface);
-  color: #111C27;
+  color: var(--ui-text);
   border: 1.5px solid var(--hb-accent);
 }
 
 .hb-app-root .hbtn-hb:hover {
-  background: #F1F9FD;
+  background: var(--ui-sky-soft);
 }
 
 
@@ -195,7 +195,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   top: 12px;
   background: var(--ui-surface);
   border-radius: 20px;
-  border: 1px solid #F1F5F9;
+  border: 1px solid var(--ui-border);
   box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
   padding: 18px 14px 14px;
   display: flex;
@@ -283,8 +283,8 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .hb-nav-item.active {
-  background: #F1F9FD;
-  border: 1px solid #BFE2F4;
+  background: var(--ui-sky-soft);
+  border: 1px solid var(--ui-sky-border);
   color: var(--hb-accent-text);
   font-weight: 600;
 }
@@ -329,7 +329,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: #FAFAFA;
+  background: var(--ui-surface-2);
 }
 
 .hb-page,
@@ -399,7 +399,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 .hb-card,
 .saas-card {
   background: var(--ui-surface);
-  border: 1px solid #EDF2F7;
+  border: 1px solid var(--ui-border);
   border-radius: 16px;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
   padding: 20px;
@@ -550,7 +550,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 
 .saas-btn-amber:hover:not(:disabled),
 .saas-btn-yellow:hover:not(:disabled) {
-  background: #F1F9FD;
+  background: var(--ui-sky-soft);
   border-color: var(--hb-accent-hover);
 }
 
@@ -592,13 +592,13 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 .saas-status-approved,
 .saas-status-scheduled,
 .saas-status-published {
-  background: #EAF6FC;
+  background: var(--ui-sky-soft);
   color: var(--hb-accent-text);
 }
 
 .saas-badge-amber,
 .saas-status-pending {
-  background: #E6F4FB;
+  background: var(--ui-sky-soft);
   color: var(--hb-accent-text);
 }
 
@@ -682,12 +682,12 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   letter-spacing: 0.06em;
   color: var(--ui-text-5);
   padding: 10px 14px;
-  border-bottom: 1px solid #F1F5F9;
+  border-bottom: 1px solid var(--ui-border);
 }
 
 .saas-table td {
   padding: 12px 14px;
-  border-bottom: 1px solid #F1F5F9;
+  border-bottom: 1px solid var(--ui-border);
   color: var(--ui-text-2);
   vertical-align: middle;
 }

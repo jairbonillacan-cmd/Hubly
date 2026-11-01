@@ -64,7 +64,7 @@ function scan() {
       const file = relative(root, full).split(sep).join("/");
       if (skipped.some((re) => re.test(file))) continue;
       readFileSync(full, "utf8").split(/\r?\n/).forEach((line, index) => {
-        if (line.includes("ui-ok:")) return;
+        if (line.includes("ui-ok:")) return; if (/^\s*--[\w-]+:/.test(line)) return; // Una definición de token no es usar un color fijo.
         for (const rule of RULES) {
           if (rule.skipFile?.test(file) || !rule.test(line)) continue;
           result[file] ??= {};

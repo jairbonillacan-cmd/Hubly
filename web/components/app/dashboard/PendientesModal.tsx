@@ -42,14 +42,14 @@ export function PendientesModal({ open, onClose, groups, onToggle }: PendientesM
           justifyContent: "space-between",
           gap: 12,
           padding: "20px 24px 16px",
-          borderBottom: "1px solid #F1F1F6",
+          borderBottom: "1px solid var(--ui-border)",
         }}
       >
         <div>
-          <h2 id="pendientes-title" style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#111C27" }}>
+          <h2 id="pendientes-title" style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "var(--ui-text)" }}>
             Lo que te toca
           </h2>
-          <p style={{ margin: "4px 0 0", fontSize: 12.5, color: "#6B7886" }}>
+          <p style={{ margin: "4px 0 0", fontSize: 12.5, color: "var(--ui-text-4)" }}>
             {urgentCount} para hoy
           </p>
         </div>
@@ -65,7 +65,7 @@ export function PendientesModal({ open, onClose, groups, onToggle }: PendientesM
 
       <div style={{ padding: "16px 24px", overflowY: "auto" }}>
         {urgentGroups.length === 0 ? (
-          <p style={{ margin: 0, padding: "14px 0", textAlign: "center", fontSize: 13, color: "#6B7886" }}>
+          <p style={{ margin: 0, padding: "14px 0", textAlign: "center", fontSize: 13, color: "var(--ui-text-4)" }}>
             Nada vencido ni para hoy.
           </p>
         ) : (
@@ -121,10 +121,10 @@ export function PendientesModal({ open, onClose, groups, onToggle }: PendientesM
           flexWrap: "wrap",
           gap: 10,
           padding: "14px 24px 18px",
-          borderTop: "1px solid #F1F1F6",
+          borderTop: "1px solid var(--ui-border)",
         }}
       >
-        <span style={{ fontSize: 12, color: "#6B7886" }}>
+        <span style={{ fontSize: 12, color: "var(--ui-text-4)" }}>
           Vencidas y de hoy. Lo demás vive en Mi espacio.
         </span>
         <Link href="/tareas" className="hbtn hbtn-secondary hbtn-sm" onClick={onClose}>

@@ -100,7 +100,7 @@ export default function MarcaCorePage() {
               width: 40,
               height: 40,
               borderRadius: "50%",
-              background: "#E6F4FB",
+              background: "var(--ui-sky-soft)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",

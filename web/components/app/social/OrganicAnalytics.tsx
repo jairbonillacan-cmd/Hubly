@@ -35,7 +35,7 @@ export function OrganicAnalytics({ posts }: { posts: SocialPost[] }) {
 
   return (
     <div style={{ display: "grid", gap: 16 }}>
-      <p role="note" style={{ margin: 0, fontSize: 12.5, fontWeight: 600, color: "var(--ui-accent-text)", background: "#E6F4FB", borderRadius: 10, padding: "8px 12px" }}>
+      <p role="note" style={{ margin: 0, fontSize: 12.5, fontWeight: 600, color: "var(--ui-accent-text)", background: "var(--ui-sky-soft)", borderRadius: 10, padding: "8px 12px" }}>
         {backendEnabled ? "Resultados capturados a mano en cada post." : "Datos de ejemplo: todavía no hay cuentas conectadas."}
       </p>
 

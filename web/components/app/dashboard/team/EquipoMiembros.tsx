@@ -73,7 +73,7 @@ export function EquipoMiembros({ view }: { view: EquipoViewModel }) {
             marginBottom: 22,
             padding: "14px 18px",
             borderRadius: 14,
-            border: "1px solid #BFE2F4",
+            border: "1px solid var(--ui-sky-border)",
             background: "var(--ui-accent-soft)",
             display: "flex",
             flexDirection: "column",

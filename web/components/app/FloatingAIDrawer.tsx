@@ -551,7 +551,7 @@ export function FloatingAIDrawer() {
                             style={{
                               padding: "5px 11px",
                               borderRadius: 8,
-                              border: "1px solid #BFE2F4",
+                              border: "1px solid var(--ui-sky-border)",
                               background: "var(--ui-accent-soft)",
                               color: "var(--hb-accent-text)",
                               fontSize: 11.5,

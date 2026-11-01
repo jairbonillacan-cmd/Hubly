@@ -939,7 +939,7 @@ export function AutoSuggestionsModal({
                 style={{
                   padding: "7px 14px",
                   borderRadius: 9,
-                  border: "1px solid #BFE2F4",
+                  border: "1px solid var(--ui-sky-border)",
                   background: "var(--ui-accent-soft)",
                   color: "var(--hb-accent-text)",
                   fontSize: 12,

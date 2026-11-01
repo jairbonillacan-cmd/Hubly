@@ -97,7 +97,7 @@ export function MobileTabbar({ onOpenDrawer, withQuery, isNavActive }: MobileTab
             width: 30,
             height: 30,
             borderRadius: 9999,
-            background: "#F1F9FD",
+            background: "var(--ui-sky-soft)",
             border: "1.5px solid var(--hb-accent)",
             display: "inline-flex",
             alignItems: "center",
