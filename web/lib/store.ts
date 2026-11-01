@@ -10,7 +10,7 @@ import {
 } from "./seed-data";
 import { selectAccountRecommendations } from "./domain-selectors";
 import { localIsoDate } from "./date";
-import { toggleReaction } from "./chat";
+import { nextOccurrence, toggleReaction } from "./chat";
 import { moveInList } from "./use-kanban-drag";
 import { backendEnabled } from "./supabase/config";
 import { createAgent, duplicateAgent, isBlankAgent } from "./agents";
@@ -37,6 +37,9 @@ import type {
   AgencyTask,
   BrandCore,
   ChatAttachment,
+  ChatChannel,
+  ChatReminder,
+  ChatScheduledMessage,
   BrandProject,
   BrandWorkspace,
   AutomationRule,
@@ -311,6 +314,15 @@ export interface HublyStoreState extends HublyWorkspaceData {
   toggleChatReaction: (messageId: string, emoji: string, who: string) => void;
   toggleChatPin: (messageId: string) => void;
   markChatRead: (channelId: string) => void;
+  addChatChannel: (input: Pick<ChatChannel, "name" | "type"> & Partial<ChatChannel>) => ChatChannel;
+  updateChatChannel: (channelId: string, patch: Partial<Pick<ChatChannel, "name" | "description">>) => void;
+  /** Borra el canal con sus mensajes y lo que tenía en cola. */
+  deleteChatChannel: (channelId: string) => void;
+  scheduleChatMessage: (input: Omit<ChatScheduledMessage, "id">) => void;
+  cancelChatScheduled: (id: string) => void;
+  addChatReminder: (input: Omit<ChatReminder, "id">) => void;
+  /** Envía lo programado y avisa los recordatorios vencidos de esta persona. */
+  flushChatQueue: (now: number) => void;
 }
 
 const STATUS_TO_LABEL: Record<PostStatus, PostStatusLabel> = {
@@ -347,6 +359,8 @@ function extractWorkspaceData(state: HublyStoreState): HublyWorkspaceData {
     ads: state.ads,
     channels: state.channels,
     messages: state.messages,
+    chatScheduled: state.chatScheduled,
+    chatReminders: state.chatReminders,
     team: state.team,
     invitations: state.invitations,
     activityEvents: state.activityEvents,
@@ -2119,6 +2133,70 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   markChatRead: (channelId) => {
     if (!get().channels.some((c) => c.id === channelId && c.unread > 0)) return;
     set((s) => ({ channels: s.channels.map((c) => (c.id === channelId ? { ...c, unread: 0 } : c)) }));
+    persistWorkspaceState(get());
+  },
+
+  addChatChannel: (input) => {
+    const channel: ChatChannel = { unread: 0, ...input, id: `ch-${Date.now()}` };
+    set((s) => ({ channels: [...s.channels, channel] }));
+    persistWorkspaceState(get());
+    return channel;
+  },
+
+  updateChatChannel: (channelId, patch) => {
+    set((s) => ({ channels: s.channels.map((c) => (c.id === channelId ? { ...c, ...patch } : c)) }));
+    persistWorkspaceState(get());
+  },
+
+  deleteChatChannel: (channelId) => {
+    set((s) => ({
+      channels: s.channels.filter((c) => c.id !== channelId),
+      messages: s.messages.filter((m) => m.channelId !== channelId),
+      chatScheduled: (s.chatScheduled || []).filter((q) => q.channelId !== channelId),
+      chatReminders: (s.chatReminders || []).filter((r) => r.channelId !== channelId),
+    }));
+    persistWorkspaceState(get());
+  },
+
+  scheduleChatMessage: (input) => {
+    set((s) => ({ chatScheduled: [...(s.chatScheduled || []), { ...input, id: `cola-${Date.now()}` }] }));
+    persistWorkspaceState(get());
+  },
+
+  cancelChatScheduled: (id) => {
+    set((s) => ({ chatScheduled: (s.chatScheduled || []).filter((q) => q.id !== id) }));
+    persistWorkspaceState(get());
+  },
+
+  addChatReminder: (input) => {
+    set((s) => ({ chatReminders: [...(s.chatReminders || []), { ...input, id: `rec-${Date.now()}` }] }));
+    persistWorkspaceState(get());
+  },
+
+  flushChatQueue: (now) => {
+    const { profile, chatScheduled = [], chatReminders = [] } = get();
+    const mine = <T extends { authorId: string }>(item: T) => item.authorId === profile?.id;
+    const dueMessages = chatScheduled.filter((q) => mine(q) && q.sendAt <= now);
+    const dueReminders = chatReminders.filter((r) => mine(r) && r.remindAt <= now);
+    if (dueMessages.length === 0 && dueReminders.length === 0) return;
+    for (const q of dueMessages) get().sendChatMessage(q.channelId, q.text, q.sender, q.senderInitials);
+    for (const r of dueReminders) {
+      get().addNotification({
+        title: "Recordatorio del chat",
+        body: r.text,
+        kind: "sistema",
+        actionUrl: `/chat?c=${encodeURIComponent(r.channelId)}&m=${encodeURIComponent(r.messageId)}`,
+      });
+    }
+    const handled = new Set(dueMessages.map((q) => q.id));
+    const remindedIds = new Set(dueReminders.map((r) => r.id));
+    set((s) => ({
+      chatScheduled: (s.chatScheduled || []).flatMap((q) => {
+        if (!handled.has(q.id)) return [q];
+        return q.repeat === "none" ? [] : [{ ...q, sendAt: nextOccurrence(q.sendAt, q.repeat, now) }];
+      }),
+      chatReminders: (s.chatReminders || []).filter((r) => !remindedIds.has(r.id)),
+    }));
     persistWorkspaceState(get());
   },
 

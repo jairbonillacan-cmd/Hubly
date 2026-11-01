@@ -3,34 +3,50 @@
 import React, { useCallback, useState } from "react";
 import Link from "next/link";
 import { askConfirm } from "@/components/app/AppDialogHost";
-import { QUICK_REACTIONS } from "@/lib/chat";
+import { MORE_REACTIONS, QUICK_REACTIONS, messageSegments, messageTime, reminderChoices } from "@/lib/chat";
 import type { ChatMessage } from "@/lib/types";
 import {
+  HublyBellIcon,
+  HublyBoltIcon,
+  HublyCalendarIcon,
   HublyClipboardIcon,
   HublyCopyIcon,
-  HublyFolderIcon,
+  HublyDocumentIcon,
   HublyHashIcon,
+  HublyImageIcon,
   HublyLayersIcon,
   HublyLinkIcon,
+  HublyMegaphoneIcon,
   HublyMoreIcon,
+  HublyPeopleIcon,
   HublyPencilIcon,
   HublyPinIcon,
+  HublyPlusIcon,
   HublyReplyIcon,
   HublySmileIcon,
   HublyTrashIcon,
 } from "@/components/app/icons/DuotoneIcons";
+import { ChatAvatar } from "./ChatAvatar";
 import { PopMenu } from "./PopMenu";
 
 const ATTACHMENT_ICON = {
   post: HublyHashIcon,
+  grid: HublyCalendarIcon,
   task: HublyClipboardIcon,
   project: HublyLayersIcon,
-  asset: HublyFolderIcon,
+  asset: HublyImageIcon,
+  ad: HublyMegaphoneIcon,
+  lead: HublyPeopleIcon,
+  automation: HublyBoltIcon,
+  file: HublyDocumentIcon,
+  voice: HublyDocumentIcon,
 } as const;
 
 interface ChatMessageRowProps {
   message: ChatMessage;
   myName: string;
+  myPhoto?: string;
+  mentionNames: string[];
   /** Sin cabecera: sigue a un mensaje del mismo autor. */
   compact?: boolean;
   replyCount?: number;
@@ -44,10 +60,11 @@ interface ChatMessageRowProps {
   onPin: () => void;
   onReact: (emoji: string) => void;
   onCreateTask: () => void;
+  onRemind: (at: number, label: string) => void;
   onNotice: (text: string) => void;
 }
 
-function highlight(text: string, query: string) {
+function withQuery(text: string, query: string): React.ReactNode {
   const q = query.trim();
   if (!q) return text;
   const at = text.toLowerCase().indexOf(q.toLowerCase());
@@ -61,9 +78,70 @@ function highlight(text: string, query: string) {
   );
 }
 
+function MessageText({ text, names, query }: { text: string; names: string[]; query: string }) {
+  return (
+    <>
+      {messageSegments(text, names).map((segment, i) => {
+        if (segment.kind === "mention") return <span key={i} className="hubly-chat-mention">{segment.value}</span>;
+        // messageSegments solo marca como enlace lo que empieza por http(s).
+        if (segment.kind === "link") {
+          return (
+            <a key={i} className="hubly-chat-link" href={segment.value} target="_blank" rel="noreferrer noopener">
+              {segment.value}
+            </a>
+          );
+        }
+        return <React.Fragment key={i}>{withQuery(segment.value, query)}</React.Fragment>;
+      })}
+    </>
+  );
+}
+
+function Attachment({ attachment: a }: { attachment: NonNullable<ChatMessage["attachment"]> }) {
+  if (a.kind === "voice") {
+    return (
+      <div className="hubly-chat-voice">
+        <audio controls preload="metadata" src={a.href} aria-label={a.title} />
+        {a.meta ? <span className="hubly-chat-msg-time">{a.meta}</span> : null}
+      </div>
+    );
+  }
+  if (a.kind === "file" && a.mime?.startsWith("image/")) {
+    return (
+      <a className="hubly-chat-media" href={a.href} target="_blank" rel="noreferrer noopener" title={a.title}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={a.href} alt={a.title} loading="lazy" />
+      </a>
+    );
+  }
+  if (a.kind === "file" && a.mime?.startsWith("video/")) {
+    return (
+      <div className="hubly-chat-media">
+        <video controls preload="metadata" src={a.href} aria-label={a.title} />
+      </div>
+    );
+  }
+  const Icon = ATTACHMENT_ICON[a.kind];
+  const body = (
+    <>
+      <span className="hubly-cal-row-icon hubly-lista-icono"><Icon size={17} /></span>
+      <span className="hubly-lista-texto">
+        <span className="hubly-cal-row-title">{a.title}</span>
+        {a.meta ? <span className="hubly-cal-row-meta">{a.meta}</span> : null}
+      </span>
+    </>
+  );
+  if (a.kind === "file") {
+    return <a href={a.href} className="hubly-chat-attachment" target="_blank" rel="noreferrer noopener" download={a.title}>{body}</a>;
+  }
+  return <Link href={a.href} className="hubly-chat-attachment">{body}</Link>;
+}
+
 export function ChatMessageRow({
   message: m,
   myName,
+  myPhoto,
+  mentionNames,
   compact,
   replyCount = 0,
   canReply = true,
@@ -75,12 +153,17 @@ export function ChatMessageRow({
   onPin,
   onReact,
   onCreateTask,
+  onRemind,
   onNotice,
 }: ChatMessageRowProps) {
-  const [menu, setMenu] = useState<"react" | "more" | null>(null);
+  const [menu, setMenu] = useState<"react" | "remind" | "more" | null>(null);
+  const [allEmoji, setAllEmoji] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
   const mine = m.sender === myName;
-  const closeMenu = useCallback(() => setMenu(null), []);
+  const closeMenu = useCallback(() => {
+    setMenu(null);
+    setAllEmoji(false);
+  }, []);
 
   const copy = async (text: string, notice: string) => {
     try {
@@ -89,7 +172,7 @@ export function ChatMessageRow({
     } catch {
       onNotice("No pudimos copiar. Hazlo a mano.");
     }
-    setMenu(null);
+    closeMenu();
   };
 
   const remove = async () => {
@@ -101,28 +184,33 @@ export function ChatMessageRow({
     setEditing(null);
   };
 
+  const react = (emoji: string) => {
+    onReact(emoji);
+    closeMenu();
+  };
+
   const reactions = Object.entries(m.reactions ?? {});
-  const AttachmentIcon = m.attachment ? ATTACHMENT_ICON[m.attachment.kind] : null;
-  const linkTarget = `${m.channelId}`;
+  const time = messageTime(m);
 
   return (
     <div
       id={`msg-${m.id}`}
       className={`hubly-chat-msg${compact ? " is-compact" : ""}${highlighted ? " is-highlighted" : ""}${menu ? " has-menu" : ""}`}
       data-message-id={m.id}
+      tabIndex={-1} // En táctil, tocar el mensaje le da foco y muestra sus acciones.
     >
       {compact ? (
-        <span className="hubly-chat-msg-gutter" title={m.time}>{m.time}</span>
+        <span className="hubly-chat-msg-gutter">{time.replace(/ .*/, "")}</span>
       ) : (
-        <span className="hubly-chat-avatar" aria-hidden="true">{m.senderInitials}</span>
+        <ChatAvatar initials={m.senderInitials} photo={mine ? myPhoto : undefined} />
       )}
       <div className="hubly-chat-msg-body">
         {compact ? null : (
           <div className="hubly-chat-msg-head">
             <span className="hubly-chat-msg-name">{m.sender}</span>
-            <span className="hubly-chat-msg-time">{m.time}</span>
+            <span className="hubly-chat-msg-time">{time}</span>
             {m.pinned ? (
-              <span className="hubly-chat-msg-flag" title="Fijado en el chat">
+              <span className="hubly-chat-msg-flag">
                 <HublyPinIcon size={13} />
                 <span>Fijado</span>
               </span>
@@ -133,7 +221,7 @@ export function ChatMessageRow({
         {editing !== null ? (
           <div className="hubly-chat-edit">
             <textarea
-              className="hubly-chat-input"
+              className="hubly-chat-input hubly-chat-input-edit"
               value={editing}
               rows={2}
               autoFocus
@@ -156,20 +244,12 @@ export function ChatMessageRow({
           </div>
         ) : m.text ? (
           <p className="hubly-chat-msg-text">
-            {highlight(m.text, query)}
+            <MessageText text={m.text} names={mentionNames} query={query} />
             {m.editedAt ? <span className="hubly-chat-msg-edited"> (editado)</span> : null}
           </p>
         ) : null}
 
-        {m.attachment && AttachmentIcon ? (
-          <Link href={m.attachment.href} className="hubly-chat-attachment">
-            <span className="hubly-cal-row-icon hubly-lista-icono"><AttachmentIcon size={17} /></span>
-            <span className="hubly-lista-texto">
-              <span className="hubly-cal-row-title">{m.attachment.title}</span>
-              {m.attachment.meta ? <span className="hubly-cal-row-meta">{m.attachment.meta}</span> : null}
-            </span>
-          </Link>
-        ) : null}
+        {m.attachment ? <Attachment attachment={m.attachment} /> : null}
 
         {reactions.length > 0 ? (
           <div className="hubly-chat-reactions">
@@ -200,7 +280,7 @@ export function ChatMessageRow({
       {editing === null ? (
         <div className="hubly-chat-tools" role="toolbar" aria-label="Acciones del mensaje">
           {canReply ? (
-            <button type="button" className="hubly-chat-tool" aria-label="Responder en hilo" title="Responder en hilo" onClick={onReply}>
+            <button type="button" className="hubly-chat-tool" aria-label="Responder en hilo" data-tip="Responder en hilo" onClick={onReply}>
               <HublyReplyIcon size={15} />
             </button>
           ) : null}
@@ -210,42 +290,77 @@ export function ChatMessageRow({
               className="hubly-chat-tool"
               data-pop-trigger
               aria-label="Reaccionar"
-              title="Reaccionar"
+              data-tip="Reaccionar"
               aria-expanded={menu === "react"}
-              onClick={() => setMenu(menu === "react" ? null : "react")}
+              onClick={() => (menu === "react" ? closeMenu() : setMenu("react"))}
             >
               <HublySmileIcon size={15} />
             </button>
             <PopMenu open={menu === "react"} onClose={closeMenu} label="Reacciones" className="hubly-chat-reactpop">
-              {QUICK_REACTIONS.map((emoji) => (
+              <div className="hubly-chat-emoji-row">
+                {QUICK_REACTIONS.map((emoji) => (
+                  <button key={emoji} type="button" role="menuitem" className="hubly-chat-emoji" aria-label={`Reaccionar con ${emoji}`} onClick={() => react(emoji)}>
+                    {emoji}
+                  </button>
+                ))}
+                {allEmoji ? null : (
+                  <button type="button" className="hubly-chat-emoji" aria-label="Ver más emojis" onClick={() => setAllEmoji(true)}>
+                    <HublyPlusIcon size={15} />
+                  </button>
+                )}
+              </div>
+              {allEmoji ? (
+                <div className="hubly-chat-emoji-grid">
+                  {MORE_REACTIONS.map((emoji) => (
+                    <button key={emoji} type="button" role="menuitem" className="hubly-chat-emoji" aria-label={`Reaccionar con ${emoji}`} onClick={() => react(emoji)}>
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </PopMenu>
+          </span>
+          <button type="button" className="hubly-chat-tool" aria-label="Crear tarea" data-tip="Crear tarea" onClick={onCreateTask}>
+            <HublyClipboardIcon size={15} />
+          </button>
+          <span className="hubly-chat-tool-wrap">
+            <button
+              type="button"
+              className="hubly-chat-tool"
+              data-pop-trigger
+              aria-label="Recordar más tarde"
+              data-tip="Recordar más tarde"
+              aria-expanded={menu === "remind"}
+              onClick={() => (menu === "remind" ? closeMenu() : setMenu("remind"))}
+            >
+              <HublyBellIcon size={15} />
+            </button>
+            <PopMenu open={menu === "remind"} onClose={closeMenu} label="Recordar más tarde" className="hubly-chat-morepop">
+              {reminderChoices(new Date()).map((choice) => (
                 <button
-                  key={emoji}
+                  key={choice.label}
                   type="button"
                   role="menuitem"
-                  className="hubly-chat-emoji"
-                  aria-label={`Reaccionar con ${emoji}`}
+                  className="hubly-chat-menuitem"
                   onClick={() => {
-                    onReact(emoji);
-                    setMenu(null);
+                    onRemind(choice.at, choice.label);
+                    closeMenu();
                   }}
                 >
-                  {emoji}
+                  <span>{choice.label}</span>
                 </button>
               ))}
             </PopMenu>
           </span>
-          <button type="button" className="hubly-chat-tool" aria-label="Crear tarea" title="Crear tarea" onClick={onCreateTask}>
-            <HublyClipboardIcon size={15} />
-          </button>
+          {mine && !m.attachment ? (
+            <button type="button" className="hubly-chat-tool" aria-label="Editar" data-tip="Editar" onClick={() => setEditing(m.text)}>
+              <HublyPencilIcon size={15} />
+            </button>
+          ) : null}
           {mine ? (
-            <>
-              <button type="button" className="hubly-chat-tool" aria-label="Editar" title="Editar" onClick={() => setEditing(m.text)}>
-                <HublyPencilIcon size={15} />
-              </button>
-              <button type="button" className="hubly-chat-tool" aria-label="Eliminar" title="Eliminar" onClick={remove}>
-                <HublyTrashIcon size={15} />
-              </button>
-            </>
+            <button type="button" className="hubly-chat-tool" aria-label="Eliminar" data-tip="Eliminar" onClick={remove}>
+              <HublyTrashIcon size={15} />
+            </button>
           ) : null}
           <span className="hubly-chat-tool-wrap">
             <button
@@ -253,9 +368,10 @@ export function ChatMessageRow({
               className="hubly-chat-tool"
               data-pop-trigger
               aria-label="Más acciones"
-              title="Más acciones"
+              data-tip="Más acciones"
+              data-tip-end
               aria-expanded={menu === "more"}
-              onClick={() => setMenu(menu === "more" ? null : "more")}
+              onClick={() => (menu === "more" ? closeMenu() : setMenu("more"))}
             >
               <HublyMoreIcon size={15} />
             </button>
@@ -270,11 +386,11 @@ export function ChatMessageRow({
                 className="hubly-chat-menuitem"
                 onClick={() => {
                   onPin();
-                  setMenu(null);
+                  closeMenu();
                 }}
               >
                 <HublyPinIcon size={15} />
-                <span>{m.pinned ? "Quitar de fijados" : "Fijar en el chat"}</span>
+                <span>{m.pinned ? "Desfijar mensaje" : "Fijar mensaje"}</span>
               </button>
               <button
                 type="button"
@@ -282,13 +398,13 @@ export function ChatMessageRow({
                 className="hubly-chat-menuitem"
                 onClick={() =>
                   copy(
-                    `${window.location.origin}/chat?c=${encodeURIComponent(linkTarget)}&m=${encodeURIComponent(m.parentId ?? m.id)}`,
-                    "Liga copiada"
+                    `${window.location.origin}/chat?c=${encodeURIComponent(m.channelId)}&m=${encodeURIComponent(m.parentId ?? m.id)}`,
+                    "Enlace copiado"
                   )
                 }
               >
                 <HublyLinkIcon size={15} />
-                <span>Copiar liga al mensaje</span>
+                <span>Copiar enlace</span>
               </button>
             </PopMenu>
           </span>

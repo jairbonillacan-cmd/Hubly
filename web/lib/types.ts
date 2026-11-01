@@ -449,26 +449,46 @@ export interface AdCreative {
   hookScore: number;
 }
 
-export interface ChatMessage {
-  id: string;
-  channelId: string;
-  sender: string;
 /** Elemento del espacio de trabajo que se manda dentro de un mensaje. */
 export interface ChatAttachment {
-  kind: "post" | "task" | "project" | "asset";
+  kind: "post" | "grid" | "task" | "project" | "asset" | "ad" | "lead" | "automation" | "file" | "voice";
   id: string;
   title: string;
   meta?: string;
   href: string;
+  /** Solo en `file` y `voice`: el binario vive en la biblioteca de medios. */
+  mediaId?: string;
+  mime?: string;
 }
 
+/** Mensaje en cola: lo envía el navegador de su autor al llegar la hora. */
+export interface ChatScheduledMessage {
+  id: string;
+  channelId: string;
+  text: string;
+  sendAt: number;
+  repeat: "none" | "weekly" | "monthly";
+  authorId: string;
+  sender: string;
+  senderInitials: string;
+}
+
+export interface ChatReminder {
+  id: string;
+  channelId: string;
+  messageId: string;
+  text: string;
+  remindAt: number;
+  authorId: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  channelId: string;
+  sender: string;
   senderInitials: string;
   text: string;
   time: string;
-}
-
-export interface ChatChannel {
-  id: string;
   /** Marca de tiempo en ms. Los mensajes de ejemplo no la tienen y cuentan como de hoy. */
   createdAt?: number;
   /** Id del mensaje al que responde, si es una respuesta en hilo. */
@@ -478,10 +498,17 @@ export interface ChatChannel {
   /** Emoji → nombres de quienes reaccionaron. */
   reactions?: Record<string, string[]>;
   attachment?: ChatAttachment;
+}
+
+export interface ChatChannel {
+  id: string;
   name: string;
-  type: "brand" | "direct";
+  type: "brand" | "direct" | "agency";
   brandId?: string;
   unread: number;
+  description?: string;
+  /** En un mensaje directo: la persona del equipo con quien se habla. */
+  memberId?: string;
 }
 
 export interface TeamMember {
@@ -698,6 +725,8 @@ export interface HublyWorkspaceData {
   ads: AdCreative[];
   channels: ChatChannel[];
   messages: ChatMessage[];
+  chatScheduled?: ChatScheduledMessage[];
+  chatReminders?: ChatReminder[];
   team: TeamMember[];
   invitations: TeamInvitation[];
   activityEvents: ActivityEvent[];

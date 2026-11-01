@@ -2,6 +2,7 @@ import { localIsoDate } from "@/lib/date";
 import type { ChatMessage } from "@/lib/types";
 
 export const QUICK_REACTIONS = ["👍", "❤️", "😂", "🔥", "👀", "✅", "👏", "🎉"] as const;
+export const MORE_REACTIONS = ["🙌", "💪", "🙏", "😍", "🤔", "😅", "😮", "😢", "🤝", "💡", "🚀", "⭐", "💯", "📌", "🎯", "☕", "🥳", "😎", "🤩", "👌", "🙈", "❌", "⏰", "📣"] as const;
 
 /** Canales que no vienen del espacio de trabajo: el general de la agencia y las notas propias. */
 export const GENERAL_CHANNEL_ID = "ch-general";
@@ -14,8 +15,20 @@ const MONTHS = [
 const WEEKDAYS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
 const GROUP_WINDOW_MS = 5 * 60_000;
 
+/** Hora en formato de 12 horas: «12:02 p.m.». */
 export function timeLabel(d: Date): string {
-  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  const hours = d.getHours();
+  return `${hours % 12 || 12}:${String(d.getMinutes()).padStart(2, "0")} ${hours < 12 ? "a.m." : "p.m."}`;
+}
+
+/** Los mensajes de ejemplo solo guardan «HH:mm». */
+export function messageTime(m: Pick<ChatMessage, "createdAt" | "time">): string {
+  if (m.createdAt) return timeLabel(new Date(m.createdAt));
+  const match = /^(\d{1,2}):(\d{2})$/.exec(m.time);
+  if (!match) return m.time;
+  const d = new Date();
+  d.setHours(Number(match[1]), Number(match[2]));
+  return timeLabel(d);
 }
 
 /** Día (YYYY-MM-DD) al que pertenece un mensaje; sin marca de tiempo cuenta como hoy. */
@@ -100,6 +113,101 @@ export function toggleReaction(
   if (updated.length === 0) delete next[emoji];
   else next[emoji] = updated;
   return next;
+}
+
+const DORMANT_MS = 14 * 86_400_000;
+
+/** Sin mensajes en dos semanas. Un canal sin historial no cuenta: sigue a la vista para empezarlo. */
+export function isDormant(messages: ChatMessage[], channelId: string, now: number): boolean {
+  const own = messages.filter((m) => m.channelId === channelId);
+  if (own.length === 0) return false;
+  return own.every((m) => m.createdAt !== undefined && now - m.createdAt > DORMANT_MS);
+}
+
+/** Primera fecha futura de una serie, conservando la hora y sin saltar de mes a fin de mes. */
+export function nextOccurrence(from: number, repeat: "weekly" | "monthly", now: number): number {
+  const start = new Date(from);
+  const day = start.getDate();
+  let next = new Date(from);
+  let steps = 0;
+  while (next.getTime() <= now) {
+    steps += 1;
+    next = new Date(from);
+    if (repeat === "weekly") {
+      next.setDate(day + steps * 7);
+    } else {
+      next.setDate(1);
+      next.setMonth(start.getMonth() + steps);
+      const lastDay = new Date(next.getFullYear(), next.getMonth() + 1, 0).getDate();
+      next.setDate(Math.min(day, lastDay));
+    }
+  }
+  return next.getTime();
+}
+
+function at(base: Date, days: number, hour: number): Date {
+  const d = new Date(base);
+  d.setDate(d.getDate() + days);
+  d.setHours(hour, 0, 0, 0);
+  return d;
+}
+
+export interface TimeChoice {
+  label: string;
+  at: number;
+}
+
+/** Atajos para programar un mensaje; «Hoy» solo aparece si aún no pasan las 6 p.m. */
+export function scheduleChoices(now: Date): TimeChoice[] {
+  const choices: TimeChoice[] = [];
+  const evening = at(now, 0, 18);
+  if (evening > now) choices.push({ label: "Hoy a las 6 p.m.", at: evening.getTime() });
+  choices.push({ label: "Mañana a las 9 a.m.", at: at(now, 1, 9).getTime() });
+  const toMonday = ((8 - now.getDay()) % 7) || 7;
+  if (toMonday !== 1) choices.push({ label: "El lunes a las 9 a.m.", at: at(now, toMonday, 9).getTime() });
+  return choices;
+}
+
+export function reminderChoices(now: Date): TimeChoice[] {
+  return [{ label: "En 1 hora", at: now.getTime() + 3_600_000 }, ...scheduleChoices(now)];
+}
+
+export function scheduledLabel(sendAt: number, today: string = localIsoDate()): string {
+  const d = new Date(sendAt);
+  return `${dayLabel(localIsoDate(d), today)}, ${timeLabel(d)}`;
+}
+
+/** Palabra tras la última @ antes del cursor, o null si no se está mencionando a nadie. */
+export function mentionQuery(text: string, caret: number): string | null {
+  const match = /(?:^|\s)@([\p{L}\p{N}._-]*)$/u.exec(text.slice(0, caret));
+  return match ? match[1] : null;
+}
+
+export function insertMention(text: string, caret: number, name: string): { text: string; caret: number } {
+  const before = text.slice(0, caret).replace(/@[\p{L}\p{N}._-]*$/u, `@${name} `);
+  return { text: before + text.slice(caret), caret: before.length };
+}
+
+export type MessageSegment = { kind: "text" | "mention" | "link"; value: string };
+
+/** Separa menciones de personas conocidas y enlaces web; todo lo demás queda como texto. */
+export function messageSegments(text: string, names: string[]): MessageSegment[] {
+  const escaped = [...names]
+    .filter(Boolean)
+    .sort((a, b) => b.length - a.length)
+    .map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const mention = escaped.length ? `@(?:${escaped.join("|")})(?![\\p{L}\\p{N}])|` : "";
+  const pattern = new RegExp(`${mention}https?://[^\\s<>]+`, "giu");
+  const segments: MessageSegment[] = [];
+  let last = 0;
+  for (const found of text.matchAll(pattern)) {
+    const start = found.index;
+    if (start > last) segments.push({ kind: "text", value: text.slice(last, start) });
+    segments.push({ kind: found[0].startsWith("@") ? "mention" : "link", value: found[0] });
+    last = start + found[0].length;
+  }
+  if (last < text.length) segments.push({ kind: "text", value: text.slice(last) });
+  return segments;
 }
 
 export function initialsOf(name: string): string {

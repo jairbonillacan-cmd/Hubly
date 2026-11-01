@@ -21,6 +21,7 @@ import { AutoSuggestionsModal } from "@/components/app/AutoSuggestionsModal";
 import { FloatingAIDrawer } from "@/components/app/FloatingAIDrawer";
 import { HubiChatList } from "@/components/app/HubiChatList";
 import { AppDialogHost } from "@/components/app/AppDialogHost";
+import { ChatQueueRunner } from "@/components/app/chat/ChatQueueRunner";
 import { SaveStatus } from "@/components/app/SaveStatus";
 import { backendEnabled } from "@/lib/supabase/config";
 import type { HublyAgent } from "@/lib/types";
@@ -1969,6 +1970,7 @@ export default function SaaSAppLayout({
          ===================================================================== */}
       <DescubreHublyWidgetSurface />
       <AppDialogHost />
+      <ChatQueueRunner />
       <SaveStatus />
       <FloatingAIDrawer />
       <PostComposerModal />

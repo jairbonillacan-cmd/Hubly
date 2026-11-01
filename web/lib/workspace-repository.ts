@@ -484,6 +484,8 @@ export function normalizeWorkspacePayload(
       Array.isArray(sanitized.messages) && sanitized.messages.length > 0
         ? sanitized.messages
         : seed.messages,
+    chatScheduled: Array.isArray(sanitized.chatScheduled) ? sanitized.chatScheduled : [],
+    chatReminders: Array.isArray(sanitized.chatReminders) ? sanitized.chatReminders : [],
     team,
     invitations: Array.isArray(sanitized.invitations)
       ? sanitized.invitations

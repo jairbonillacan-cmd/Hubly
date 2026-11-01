@@ -9,9 +9,11 @@ import {
   continuesPrevious,
   groupByDay,
   initialsOf,
+  isDormant,
   matchesQuery,
   repliesOf,
   replyCounts,
+  scheduledLabel,
 } from "@/lib/chat";
 import { dueLabelFor, localIsoDate } from "@/lib/date";
 import type { ChatAttachment, ChatMessage } from "@/lib/types";
@@ -20,16 +22,25 @@ import {
   HublyBellIcon,
   HublyBellOffIcon,
   HublyChatIcon,
+  HublyChevronDownIcon,
+  HublyChevronRightIcon,
+  HublyClockIcon,
   HublyCloseIcon,
+  HublyHashIcon,
   HublyPinIcon,
   HublySearchIcon,
 } from "@/components/app/icons/DuotoneIcons";
-import { ChatSidebar, type ChatListItem } from "@/components/app/chat/ChatSidebar";
+import { askText } from "@/components/app/AppDialogHost";
+import { ChatAvatar } from "@/components/app/chat/ChatAvatar";
+import { ChatComposer, type ChatComposerHandle, type ChatMentionOption } from "@/components/app/chat/ChatComposer";
+import { ChatDetails } from "@/components/app/chat/ChatDetails";
 import { ChatMessageRow } from "@/components/app/chat/ChatMessageRow";
-import { ChatComposer } from "@/components/app/chat/ChatComposer";
+import { ChatSidebar, type ChatListItem } from "@/components/app/chat/ChatSidebar";
 
 const MUTED_KEY = "hubly-chat-muted";
 const PINNED_KEY = "hubly-chat-pinned";
+const HIDDEN_KEY = "hubly-chat-hidden";
+const PAGE_SIZE = 50;
 
 function readIds(key: string): string[] {
   try {
@@ -45,47 +56,69 @@ function writeIds(key: string, ids: string[]) {
   try {
     window.localStorage.setItem(key, JSON.stringify(ids));
   } catch {
-    /* Sin almacenamiento: el aviso se queda solo en esta sesión. */
+    /* Sin almacenamiento: la preferencia se queda solo en esta sesión. */
   }
 }
 
-function preview(m: ChatMessage | undefined): string {
-  if (!m) return "Sin mensajes";
-  if (m.text) return m.text;
-  return m.attachment ? m.attachment.title : "Sin mensajes";
+function usePreferenceList(key: string) {
+  const [ids, setIds] = useState<string[]>([]);
+  useEffect(() => setIds(readIds(key)), [key]);
+  const toggle = useCallback((id: string) => {
+    setIds((prev) => {
+      const next = prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id];
+      writeIds(key, next);
+      return next;
+    });
+  }, [key]);
+  return [ids, toggle] as const;
 }
+
+const hasFile = (m: ChatMessage) => m.attachment?.kind === "file" || m.attachment?.kind === "voice";
 
 export default function ChatPage() {
   const channels = useHublyStore((s) => s.channels);
   const messages = useHublyStore((s) => s.messages);
+  const team = useHublyStore((s) => s.team);
   const brands = useHublyStore((s) => s.brands);
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
-  const profileName = useHublyStore((s) => s.profile?.name);
+  const profile = useHublyStore((s) => s.profile);
+  const scheduled = useHublyStore((s) => s.chatScheduled);
   const sendChatMessage = useHublyStore((s) => s.sendChatMessage);
   const editChatMessage = useHublyStore((s) => s.editChatMessage);
   const deleteChatMessage = useHublyStore((s) => s.deleteChatMessage);
   const toggleChatReaction = useHublyStore((s) => s.toggleChatReaction);
   const toggleChatPin = useHublyStore((s) => s.toggleChatPin);
   const markChatRead = useHublyStore((s) => s.markChatRead);
+  const addChatChannel = useHublyStore((s) => s.addChatChannel);
+  const updateChatChannel = useHublyStore((s) => s.updateChatChannel);
+  const deleteChatChannel = useHublyStore((s) => s.deleteChatChannel);
+  const scheduleChatMessage = useHublyStore((s) => s.scheduleChatMessage);
+  const cancelChatScheduled = useHublyStore((s) => s.cancelChatScheduled);
+  const addChatReminder = useHublyStore((s) => s.addChatReminder);
   const addTask = useHublyStore((s) => s.addTask);
 
-  const myName = profileName || "Equipo";
+  const myName = profile?.name || "Equipo";
   const myInitials = initialsOf(myName);
+  const myPhoto = profile?.avatarUrl;
+  const myId = profile?.id ?? "";
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [listQuery, setListQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const [channelQuery, setChannelQuery] = useState("");
-  const [threadId, setThreadId] = useState<string | null>(null);
+  const [side, setSide] = useState<{ kind: "thread"; id: string } | { kind: "details" } | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [focusId, setFocusId] = useState<string | null>(null);
-  const [muted, setMuted] = useState<string[]>([]);
-  const [pinnedChats, setPinnedChats] = useState<string[]>([]);
-  const endRef = useRef<HTMLDivElement>(null);
+  const [limit, setLimit] = useState(PAGE_SIZE);
+  const [queueOpen, setQueueOpen] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [muted, toggleMutedId] = usePreferenceList(MUTED_KEY);
+  const [pinnedChats, togglePinOf] = usePreferenceList(PINNED_KEY);
+  const [hiddenChats, toggleHiddenOf] = usePreferenceList(HIDDEN_KEY);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const composerRef = useRef<ChatComposerHandle>(null);
 
   useEffect(() => {
-    setMuted(readIds(MUTED_KEY));
-    setPinnedChats(readIds(PINNED_KEY));
     const params = new URLSearchParams(window.location.search);
     const channel = params.get("c");
     if (channel) {
@@ -100,25 +133,37 @@ export default function ChatPage() {
     return () => window.clearTimeout(timer);
   }, [notice]);
 
-  // Canales: los del espacio de trabajo más el general de la agencia y las notas propias.
+  const people = useMemo<ChatMentionOption[]>(
+    () =>
+      team
+        .filter((m) => m.status === "Activo" && m.name !== myName && m.email !== profile?.email)
+        .map((m) => ({ id: m.id, name: m.name, initials: m.initials || initialsOf(m.name) })),
+    [team, myName, profile?.email]
+  );
+  const me = useMemo<ChatMentionOption>(() => ({ id: myId || "yo", name: myName, initials: myInitials }), [myId, myName, myInitials]);
+  const mentionNames = useMemo(() => [myName, ...people.map((p) => p.name)], [myName, people]);
+
   const items = useMemo<ChatListItem[]>(() => {
-    const lastOf = (id: string) => channelRoots(messages, id).at(-1);
-    const base: ChatListItem[] = [
-      { id: GENERAL_CHANNEL_ID, name: "General", group: "agencia", preview: preview(lastOf(GENERAL_CHANNEL_ID)), unread: 0, muted: false, pinned: false, initials: "#" },
-      { id: SELF_CHANNEL_ID, name: `${myName} (tú)`, group: "directos", preview: preview(lastOf(SELF_CHANNEL_ID)), unread: 0, muted: false, pinned: false, initials: myInitials },
+    const now = Date.now();
+    const base = [
+      { id: GENERAL_CHANNEL_ID, name: "General", group: "agencia" as const, unread: 0, initials: "#" },
+      { id: SELF_CHANNEL_ID, name: `${myName} (tú)`, group: "directos" as const, unread: 0, initials: myInitials, photo: myPhoto, online: true },
     ];
-    const fromStore = channels.map<ChatListItem>((c) => ({
+    const fromStore = channels.map((c) => ({
       id: c.id,
       name: c.name.replace(/^#\s*/, ""),
-      group: c.type === "brand" ? "marcas" : "directos",
-      preview: preview(lastOf(c.id)),
+      group: c.type === "brand" ? ("marcas" as const) : c.type === "agency" ? ("agencia" as const) : ("directos" as const),
       unread: c.unread,
-      muted: false,
-      pinned: false,
       initials: initialsOf(c.name.replace(/\s*\(.*\)$/, "")),
     }));
-    return [...base, ...fromStore].map((i) => ({ ...i, muted: muted.includes(i.id), pinned: pinnedChats.includes(i.id) }));
-  }, [channels, messages, muted, pinnedChats, myName, myInitials]);
+    return [...base, ...fromStore].map((i) => ({
+      ...i,
+      muted: muted.includes(i.id),
+      pinned: pinnedChats.includes(i.id),
+      hidden: hiddenChats.includes(i.id),
+      dormant: isDormant(messages, i.id, now),
+    }));
+  }, [channels, messages, muted, pinnedChats, hiddenChats, myName, myInitials, myPhoto]);
 
   const visibleItems = useMemo(() => {
     const q = listQuery.trim();
@@ -129,75 +174,72 @@ export default function ChatPage() {
   }, [items, listQuery, messages]);
 
   const active = items.find((i) => i.id === selectedId) ?? null;
-  const isMuted = active ? muted.includes(active.id) : false;
-  const brandName = (id?: string) => brands.find((b) => b.id === id)?.name;
+  const channel = channels.find((c) => c.id === selectedId);
+  const isMuted = active?.muted ?? false;
+  const brandId = channel?.brandId ?? activeBrandId;
+  const brandName = brands.find((b) => b.id === channel?.brandId)?.name;
 
   const roots = useMemo(() => (selectedId ? channelRoots(messages, selectedId) : []), [messages, selectedId]);
   const counts = useMemo(() => replyCounts(messages), [messages]);
   const shown = useMemo(() => roots.filter((m) => matchesQuery(m, channelQuery)), [roots, channelQuery]);
-  const days = useMemo(() => groupByDay(shown), [shown]);
+  const paged = useMemo(() => (focusId || channelQuery ? shown : shown.slice(-limit)), [focusId, channelQuery, shown, limit]);
+  const hiddenCount = shown.length - paged.length;
+  const days = useMemo(() => groupByDay(paged), [paged]);
   const pinned = useMemo(() => roots.filter((m) => m.pinned), [roots]);
-  const threadRoot = threadId ? messages.find((m) => m.id === threadId) ?? null : null;
-  const replies = useMemo(() => (threadId ? repliesOf(messages, threadId) : []), [messages, threadId]);
-
-  const select = useCallback(
-    (id: string | null) => {
-      setSelectedId(id);
-      setThreadId(null);
-      setSearchOpen(false);
-      setChannelQuery("");
-      setFocusId(null);
-      if (id) markChatRead(id);
-    },
-    [markChatRead]
+  const channelFiles = useMemo(() => messages.filter((m) => m.channelId === selectedId && hasFile(m)), [messages, selectedId]);
+  const threadRoot = side?.kind === "thread" ? messages.find((m) => m.id === side.id) ?? null : null;
+  const replies = useMemo(() => (threadRoot ? repliesOf(messages, threadRoot.id) : []), [messages, threadRoot]);
+  const queue = useMemo(
+    () => (scheduled ?? []).filter((q) => q.channelId === selectedId && q.authorId === myId).sort((a, b) => a.sendAt - b.sendAt),
+    [scheduled, selectedId, myId]
   );
 
-  // Al abrir una liga a un mensaje, el canal queda leído y el mensaje se muestra.
+  const select = useCallback((id: string | null) => {
+    setSelectedId(id);
+    setSide(null);
+    setSearchOpen(false);
+    setChannelQuery("");
+    setFocusId(null);
+    setLimit(PAGE_SIZE);
+    setQueueOpen(false);
+  }, []);
+
   useEffect(() => {
     if (selectedId) markChatRead(selectedId);
-  }, [selectedId, markChatRead]);
+  }, [selectedId, markChatRead, messages.length]);
 
   useEffect(() => {
     if (focusId) {
-      const el = document.getElementById(`msg-${focusId}`);
-      if (el) {
-        el.scrollIntoView({ block: "center" });
-        return;
-      }
+      document.getElementById(`msg-${focusId}`)?.scrollIntoView({ block: "center" });
+      return;
     }
-    if (!channelQuery) endRef.current?.scrollIntoView({ block: "end" });
+    const el = scrollRef.current;
+    if (el && !channelQuery) el.scrollTop = el.scrollHeight;
   }, [selectedId, roots.length, focusId, channelQuery]);
 
-  const toggleMuteOf = (id: string) => {
-    const was = muted.includes(id);
-    const next = was ? muted.filter((m) => m !== id) : [...muted, id];
-    setMuted(next);
-    writeIds(MUTED_KEY, next);
-    setNotice(was ? "Volverás a recibir avisos de este chat" : "Dejarás de recibir avisos de este chat");
+  const toggleMute = (id: string) => {
+    setNotice(muted.includes(id) ? "Avisos activados en este chat" : "Avisos silenciados en este chat");
+    toggleMutedId(id);
   };
 
-  const togglePinOf = (id: string) => {
-    const next = pinnedChats.includes(id) ? pinnedChats.filter((p) => p !== id) : [...pinnedChats, id];
-    setPinnedChats(next);
-    writeIds(PINNED_KEY, next);
-  };
-
-  const toggleMute = () => {
-    if (active) toggleMuteOf(active.id);
-  };
-
-  const send = (text: string, attachment?: ChatAttachment, parentId?: string) => {
+  const send = (text: string, attachments: ChatAttachment[], parentId?: string) => {
     if (!selectedId) return;
-    sendChatMessage(selectedId, text, myName, myInitials, { parentId, attachment });
+    if (attachments.length === 0) {
+      sendChatMessage(selectedId, text, myName, myInitials, { parentId });
+      return;
+    }
+    // El texto acompaña al primer adjunto; cada archivo más va en su propio mensaje.
+    attachments.forEach((attachment, i) =>
+      sendChatMessage(selectedId, i === 0 ? text : "", myName, myInitials, { parentId, attachment })
+    );
   };
 
   const createTask = (m: ChatMessage) => {
-    const channel = channels.find((c) => c.id === m.channelId);
+    const owner = channels.find((c) => c.id === m.channelId);
     const today = localIsoDate();
-    const title = (m.text || m.attachment?.title || "Tarea desde el chat").slice(0, 90);
     addTask({
-      brandId: channel?.brandId ?? activeBrandId,
-      title,
+      brandId: owner?.brandId ?? activeBrandId,
+      title: (m.text || m.attachment?.title || "Tarea desde el chat").slice(0, 90),
       description: m.text,
       dueDate: today,
       dueLabel: dueLabelFor(today, today),
@@ -209,83 +251,178 @@ export default function ChatPage() {
     setNotice("Tarea creada en Tareas");
   };
 
+  const newChannel = async () => {
+    const name = (await askText("Nombre del canal nuevo", "", "Crear canal"))?.trim();
+    if (!name) return;
+    select(addChatChannel({ name, type: "agency" }).id);
+  };
+
+  const openPerson = (person: ChatMentionOption) => {
+    const existing = channels.find((c) => c.type === "direct" && (c.memberId === person.id || c.name === person.name));
+    select(existing ? existing.id : addChatChannel({ name: person.name, type: "direct", memberId: person.id }).id);
+  };
+
+  const openMessage = (id: string) => {
+    setFocusId(id);
+    document.getElementById(`msg-${id}`)?.scrollIntoView({ block: "center" });
+  };
+
   const rowFor = (m: ChatMessage, prev: ChatMessage | undefined, inThread: boolean) => (
     <ChatMessageRow
       key={m.id}
       message={m}
       myName={myName}
+      myPhoto={myPhoto}
+      mentionNames={mentionNames}
       compact={continuesPrevious(prev, m)}
       replyCount={counts.get(m.id) ?? 0}
       canReply={!inThread}
       query={inThread ? "" : channelQuery}
       highlighted={m.id === focusId}
-      onReply={() => setThreadId(m.id)}
+      onReply={() => setSide({ kind: "thread", id: m.id })}
       onEdit={(text) => editChatMessage(m.id, text)}
       onDelete={() => {
-        if (threadId === m.id) setThreadId(null);
+        if (threadRoot?.id === m.id) setSide(null);
         deleteChatMessage(m.id);
       }}
       onPin={() => toggleChatPin(m.id)}
       onReact={(emoji) => toggleChatReaction(m.id, emoji, myName)}
       onCreateTask={() => createTask(m)}
+      onRemind={(at, label) => {
+        addChatReminder({
+          channelId: m.channelId,
+          messageId: m.parentId ?? m.id,
+          text: (m.text || m.attachment?.title || "Mensaje del chat").slice(0, 120),
+          remindAt: at,
+          authorId: myId,
+        });
+        setNotice(`Te lo recordamos: ${label.charAt(0).toLowerCase()}${label.slice(1)}`);
+      }}
       onNotice={setNotice}
     />
   );
 
-  const subtitle = active
-    ? active.group === "marcas"
-      ? `Canal de ${brandName(channels.find((c) => c.id === active.id)?.brandId) ?? "la marca"}`
-      : active.id === SELF_CHANNEL_ID
-        ? "Notas, borradores y recordatorios"
-        : active.group === "agencia"
-          ? "Todo el equipo"
-          : "Mensaje directo"
-    : "";
+  const subtitle = !active
+    ? ""
+    : channel?.description
+      ? channel.description
+      : active.group === "marcas"
+        ? `Canal de ${brandName ?? "la marca"}`
+        : active.id === SELF_CHANNEL_ID
+          ? "Notas, borradores y recordatorios"
+          : active.group === "agencia"
+            ? "Canal de la agencia"
+            : "Mensaje directo";
+
+  const members: ChatMentionOption[] = !active
+    ? []
+    : active.id === SELF_CHANNEL_ID
+      ? [me]
+      : channel?.type === "direct"
+        ? [me, ...people.filter((p) => p.id === channel.memberId || channel.name.startsWith(p.name))]
+        : channel?.type === "brand"
+          ? [
+              me,
+              ...team
+                .filter((m) => m.status === "Activo" && m.name !== myName && m.brandIds?.includes(channel.brandId ?? ""))
+                .map((m) => ({ id: m.id, name: m.name, initials: m.initials || initialsOf(m.name) })),
+            ]
+          : [me, ...people];
+
+  const lastPinned = pinned[pinned.length - 1];
 
   return (
-    <div className="hubly-chat" data-conversacion={selectedId ? "abierta" : "ninguna"} data-hilo={threadRoot ? "abierto" : "cerrado"}>
-      <ChatSidebar items={visibleItems} selectedId={selectedId} query={listQuery} onQuery={setListQuery} onSelect={select} onTogglePin={togglePinOf} onToggleMute={toggleMuteOf} onMarkRead={markChatRead} />
+    <div className="hubly-chat" data-conversacion={selectedId ? "abierta" : "ninguna"} data-hilo={side && active ? "abierto" : "cerrado"}>
+      <ChatSidebar
+        items={visibleItems}
+        selectedId={selectedId}
+        query={listQuery}
+        myInitials={myInitials}
+        myPhoto={myPhoto}
+        people={people}
+        onQuery={setListQuery}
+        onSelect={select}
+        onOpenSelf={() => select(SELF_CHANNEL_ID)}
+        onNewChannel={newChannel}
+        onOpenPerson={openPerson}
+        onTogglePin={togglePinOf}
+        onToggleMute={toggleMute}
+        onToggleHidden={toggleHiddenOf}
+        onMarkRead={markChatRead}
+      />
 
-      <section className="hubly-chat-panel" aria-label={active ? `Conversación ${active.name}` : "Conversación"}>
+      <section
+        className="hubly-chat-panel"
+        aria-label={active ? `Conversación ${active.name}` : "Conversación"}
+        onDragOver={(e) => {
+          if (active && e.dataTransfer.types.includes("Files")) {
+            e.preventDefault();
+            setDragging(true);
+          }
+        }}
+        onDragLeave={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDragging(false);
+        }}
+        onDrop={(e) => {
+          if (!dragging) return;
+          e.preventDefault();
+          setDragging(false);
+          composerRef.current?.addFiles(Array.from(e.dataTransfer.files));
+        }}
+      >
         {!active ? (
           <div className="hubly-chat-vacio">
             <HublyChatIcon size={40} />
-            <h1 className="hubly-chat-vacio-title">Chat</h1>
-            <p>Elige un canal o un mensaje directo para empezar.</p>
+            <h1 className="hubly-chat-vacio-title">Elige una conversación</h1>
+            <p>Abre un canal o un mensaje directo para empezar.</p>
           </div>
         ) : (
           <>
             <header className="hubly-chat-header">
-              <button type="button" className="hubly-cal-icon hubly-chat-volver" aria-label="Volver a conversaciones" title="Volver a conversaciones" onClick={() => select(null)}>
+              <button type="button" className="hubly-cal-icon hubly-chat-volver" aria-label="Volver a conversaciones" onClick={() => select(null)}>
                 <HublyArrowLeftIcon size={17} />
               </button>
-              <div className="hubly-chat-header-title">
+              <button
+                type="button"
+                className="hubly-chat-pill"
+                aria-label={`Ver detalles de ${active.name}`}
+                aria-expanded={side?.kind === "details"}
+                onClick={() => setSide(side?.kind === "details" ? null : { kind: "details" })}
+              >
+                {active.group === "directos" ? (
+                  <ChatAvatar initials={active.initials} photo={active.photo} size="sm" online={active.online} />
+                ) : (
+                  <span className="hubly-chat-item-hash"><HublyHashIcon size={15} /></span>
+                )}
                 <h1>{active.name}</h1>
-                <span>{subtitle}</span>
-              </div>
+              </button>
               <div className="hubly-chat-header-actions">
                 <button
                   type="button"
-                  className="hubly-cal-icon"
-                  aria-label="Buscar en este canal"
-                  title="Buscar en este canal"
+                  className="hubly-chat-pill-btn"
+                  aria-label="Buscar en este chat"
+                  data-tip="Buscar en este chat"
+                  data-tip-below
+                  data-tip-end
                   aria-pressed={searchOpen}
                   onClick={() => {
                     setSearchOpen((v) => !v);
                     setChannelQuery("");
                   }}
                 >
-                  <HublySearchIcon size={17} />
+                  <HublySearchIcon size={16} />
                 </button>
                 <button
                   type="button"
-                  className="hubly-cal-icon"
-                  aria-label={isMuted ? "Volver a avisarme aquí" : "Dejar de avisarme aquí"}
-                  title={isMuted ? "Volver a avisarme aquí" : "Dejar de avisarme aquí"}
+                  className="hubly-chat-pill-btn"
+                  aria-label={isMuted ? "Activar avisos" : "Silenciar avisos"}
+                  data-tip={isMuted ? "Activar avisos" : "Silenciar avisos"}
+                  data-tip-below
+                  data-tip-end
                   aria-pressed={isMuted}
-                  onClick={toggleMute}
+                  onClick={() => toggleMute(active.id)}
                 >
-                  {isMuted ? <HublyBellOffIcon size={17} /> : <HublyBellIcon size={17} />}
+                  {isMuted ? <HublyBellOffIcon size={16} /> : <HublyBellIcon size={16} />}
                 </button>
               </div>
             </header>
@@ -297,8 +434,8 @@ export default function ChatPage() {
                   type="search"
                   autoFocus
                   value={channelQuery}
-                  placeholder="Buscar en este canal"
-                  aria-label="Buscar en este canal"
+                  placeholder="Buscar en este chat"
+                  aria-label="Buscar en este chat"
                   onChange={(e) => setChannelQuery(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Escape") {
@@ -307,29 +444,25 @@ export default function ChatPage() {
                     }
                   }}
                 />
-                <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar búsqueda" onClick={() => { setSearchOpen(false); setChannelQuery(""); }}>
-                  <HublyCloseIcon size={14} />
+                <button type="button" className="hubly-chat-file-remove" aria-label="Cerrar búsqueda" onClick={() => { setSearchOpen(false); setChannelQuery(""); }}>
+                  <HublyCloseIcon size={13} />
                 </button>
               </div>
             ) : null}
 
-            {pinned.length > 0 && !searchOpen ? (
-              <button
-                type="button"
-                className="hubly-chat-pinbar"
-                onClick={() => document.getElementById(`msg-${pinned[pinned.length - 1].id}`)?.scrollIntoView({ block: "center" })}
-              >
+            {lastPinned && !searchOpen ? (
+              <button type="button" className="hubly-chat-pinbar" onClick={() => openMessage(lastPinned.id)}>
                 <HublyPinIcon size={14} />
-                <span className="hubly-chat-pinbar-text">{preview(pinned[pinned.length - 1])}</span>
+                <span className="hubly-chat-pinbar-text">{lastPinned.text || lastPinned.attachment?.title}</span>
                 <span className="hubly-chat-pinbar-count">{pinned.length === 1 ? "1 fijado" : `${pinned.length} fijados`}</span>
               </button>
             ) : null}
 
-            <div className="hubly-chat-scroll">
+            <div className="hubly-chat-scroll" ref={scrollRef}>
               {roots.length === 0 ? (
                 <div className="hubly-chat-vacio">
                   <h2 className="hubly-chat-vacio-title">Sin mensajes</h2>
-                  <p>Escribe el primero para coordinar con tu equipo.</p>
+                  <p>{active.id === SELF_CHANNEL_ID ? "Guarda aquí notas y borradores." : `Escribe el primero en ${active.name}.`}</p>
                 </div>
               ) : shown.length === 0 ? (
                 <div className="hubly-chat-vacio">
@@ -338,35 +471,107 @@ export default function ChatPage() {
                   <button type="button" className="hbtn hbtn-sm hbtn-secondary" onClick={() => setChannelQuery("")}>Limpiar búsqueda</button>
                 </div>
               ) : (
-                days.map((day) => (
-                  <section key={day.day} className="hubly-chat-day" aria-label={day.label}>
-                    <h2 className="hubly-chat-day-label"><span>{day.label}</span></h2>
-                    {day.messages.map((m, i) => rowFor(m, day.messages[i - 1], false))}
-                  </section>
-                ))
+                <>
+                  {hiddenCount > 0 ? (
+                    <button type="button" className="hbtn hbtn-xs hbtn-ghost hubly-chat-older" onClick={() => setLimit((v) => v + PAGE_SIZE)}>
+                      Ver mensajes anteriores
+                    </button>
+                  ) : null}
+                  {days.map((day) => (
+                    <section key={day.day} aria-label={day.label}>
+                      <h2 className="hubly-chat-day-label"><span>{day.label}</span></h2>
+                      {day.messages.map((m, i) => rowFor(m, day.messages[i - 1], false))}
+                    </section>
+                  ))}
+                </>
               )}
-              <div ref={endRef} />
             </div>
 
             {notice ? <div className="hubly-chat-notice" role="status">{notice}</div> : null}
 
             <div className="hubly-chat-foot">
+              {queue.length > 0 ? (
+                <div className="hubly-chat-queue">
+                  <button type="button" className="hubly-chat-queue-head" aria-expanded={queueOpen} onClick={() => setQueueOpen((v) => !v)}>
+                    <HublyClockIcon size={14} />
+                    <span>Programados ({queue.length})</span>
+                    {queueOpen ? <HublyChevronDownIcon size={14} /> : <HublyChevronRightIcon size={14} />}
+                  </button>
+                  {queueOpen ? (
+                    <ul className="hubly-chat-queue-list">
+                      {queue.map((q) => (
+                        <li key={q.id}>
+                          <span className="hubly-chat-queue-when">
+                            {scheduledLabel(q.sendAt)}
+                            {q.repeat === "weekly" ? " · cada semana" : q.repeat === "monthly" ? " · cada mes" : ""}
+                          </span>
+                          <span className="hubly-chat-queue-text" title={q.text}>{q.text}</span>
+                          <button type="button" className="hubly-chat-file-remove" aria-label={`Cancelar «${q.text}»`} onClick={() => cancelChatScheduled(q.id)}>
+                            <HublyCloseIcon size={12} />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+              ) : null}
               <ChatComposer
                 key={active.id}
+                ref={composerRef}
                 label={`Mensaje en ${active.name}`}
-                placeholder={active.id === SELF_CHANNEL_ID ? "Anota algo…" : `Escribe en ${active.name}…`}
-                onSend={(text, attachment) => send(text, attachment)}
+                placeholder={active.id === SELF_CHANNEL_ID ? "Escribe una nota…" : `Escribe en ${active.name}…`}
+                brandId={brandId}
+                mentions={people}
+                onSend={(text, attachments) => send(text, attachments)}
+                onSchedule={(text, at, repeat) => {
+                  scheduleChatMessage({
+                    channelId: active.id,
+                    text: text.trim(),
+                    sendAt: at,
+                    repeat,
+                    authorId: myId,
+                    sender: myName,
+                    senderInitials: myInitials,
+                  });
+                  setQueueOpen(true);
+                  setNotice(`Se enviará: ${scheduledLabel(at)}`);
+                }}
               />
             </div>
+
+            {dragging ? <div className="hubly-chat-drop">Suelta los archivos para adjuntarlos</div> : null}
           </>
         )}
       </section>
+
+      {active && side?.kind === "details" ? (
+        <ChatDetails
+          key={active.id}
+          name={active.name}
+          subtitle={subtitle}
+          description={channel?.description}
+          editable={channel?.type === "agency"}
+          members={members}
+          pinned={pinned}
+          files={channelFiles}
+          onClose={() => setSide(null)}
+          onOpenMessage={openMessage}
+          onSave={(patch) => {
+            updateChatChannel(active.id, patch);
+            setNotice("Cambios guardados");
+          }}
+          onDelete={() => {
+            deleteChatChannel(active.id);
+            select(null);
+          }}
+        />
+      ) : null}
 
       {threadRoot ? (
         <aside className="hubly-chat-hilo" aria-label="Hilo">
           <header className="hubly-chat-hilo-head">
             <h2>Hilo</h2>
-            <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar hilo" onClick={() => setThreadId(null)}>
+            <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar hilo" onClick={() => setSide(null)}>
               <HublyCloseIcon size={14} />
             </button>
           </header>
@@ -385,7 +590,9 @@ export default function ChatPage() {
               key={threadRoot.id}
               label="Responder en el hilo"
               placeholder="Responder en el hilo…"
-              onSend={(text, attachment) => send(text, attachment, threadRoot.id)}
+              brandId={brandId}
+              mentions={people}
+              onSend={(text, attachments) => send(text, attachments, threadRoot.id)}
             />
           </div>
         </aside>
