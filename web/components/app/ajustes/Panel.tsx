@@ -2,8 +2,8 @@
 
 import type { ReactNode } from "react";
 import { HublyCloseIcon } from "@/components/app/icons/DuotoneIcons";
-import { useLayer } from "@/lib/use-layer";
-import { useModalPresence } from "@/lib/use-modal-presence";
+import { Button } from "@/components/app/ui/Button";
+import { Modal } from "@/components/app/ui/Modal";
 
 export function PanelHead({ title, subtitle, actions }: { title: string; subtitle?: string; actions?: ReactNode }) {
   return (
@@ -41,40 +41,27 @@ interface ModalProps {
 }
 
 export function AjustesModal({ open, title, submitLabel = "Guardar", submitDisabled, onClose, onSubmit, children }: ModalProps) {
-  const presence = useModalPresence(open);
-  useLayer(open, onClose);
-  if (!presence.mounted) return null;
   return (
-    <div
-      className="hubly-overlay hubly-cal-overlay"
-      data-state={presence.state}
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose();
+    <Modal
+      open={open}
+      onClose={onClose}
+      label={title}
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
       }}
     >
-      <form
-        className="hubly-sheet hubly-cal-modal"
-        data-state={presence.state}
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSubmit();
-        }}
-      >
-        <div className="hubly-cal-modal-head">
-          <h2>{title}</h2>
-          <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar" onClick={onClose}>
-            <HublyCloseIcon size={14} />
-          </button>
-        </div>
-        <div className="hubly-cal-modal-scroll">{children}</div>
-        <div className="hubly-cal-modal-actions">
-          <button type="button" className="hbtn hbtn-ghost" onClick={onClose}>Cancelar</button>
-          <button type="submit" className="hbtn hbtn-primary" disabled={submitDisabled}>{submitLabel}</button>
-        </div>
-      </form>
-    </div>
+      <div className="hubly-cal-modal-head">
+        <h2>{title}</h2>
+        <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar" onClick={onClose}>
+          <HublyCloseIcon size={14} />
+        </button>
+      </div>
+      <div className="hubly-cal-modal-scroll">{children}</div>
+      <div className="hubly-cal-modal-actions">
+        <Button variant="ghost" onClick={onClose}>Cancelar</Button>
+        <Button variant="primary" type="submit" disabled={submitDisabled}>{submitLabel}</Button>
+      </div>
+    </Modal>
   );
 }

@@ -419,6 +419,8 @@ Reglas de B:
 
 **Cada receta se usa tal cual.** Si vas a crear un componente que se parece a uno de estos, detente.
 
+En `web/components/app/ui/` las recetas ya son componentes, y en código nuevo se usan ellos: `Button` (§9.2), `Field` (§9.4), `EmptyState` (§9.8, vacío de pantalla), `Modal` (§9.9) y `PageHeader` (plantilla A). Las clases de abajo explican lo que hacen por dentro.
+
 ### 9.1 Elegir el control
 
 | Necesito… | Uso |
