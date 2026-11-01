@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import { Modal } from "@/components/app/ui/Modal";
+import React, { useMemo, useState } from "react";
 import { useHublyStore } from "@/lib/store";
 import { askConfirm } from "@/components/app/AppDialogHost";
 import { useKanbanDrag } from "@/lib/use-kanban-drag";
@@ -227,30 +228,16 @@ export default function CrmPage() {
 }
 
 function ModalShell({ label, onClose, onSubmit, children }: { label: string; onClose: () => void; onSubmit: (e: React.FormEvent) => void; children: React.ReactNode }) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
   return (
-    <div
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-      style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(15,23,42,0.45)", display: "grid", placeItems: "center", padding: 16 }}
-    >
-      <form role="dialog" aria-modal="true" aria-label={label} onSubmit={onSubmit} style={{ width: "100%", maxWidth: 560, maxHeight: "90vh", overflowY: "auto", background: "var(--ui-surface)", borderRadius: 16, padding: 20, display: "grid", gap: 12 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h2 style={{ fontSize: 17, fontWeight: 700, margin: 0 }}>{label}</h2>
-          <button type="button" aria-label="Cerrar" onClick={onClose} style={{ border: 0, background: "transparent", cursor: "pointer", color: "var(--ui-text-4)", display: "grid" }}>
-            <X size={18} />
-          </button>
-        </div>
-        {children}
-      </form>
-    </div>
+    <Modal open onClose={onClose} label={label} className="hubly-sheet hubly-cal-modal hubly-crm-modal" onSubmit={onSubmit}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h2 style={{ fontSize: 17, fontWeight: 700, margin: 0 }}>{label}</h2>
+        <button type="button" aria-label="Cerrar" onClick={onClose} style={{ border: 0, background: "transparent", cursor: "pointer", color: "var(--ui-text-4)", display: "grid" }}>
+          <X size={18} />
+        </button>
+      </div>
+      {children}
+    </Modal>
   );
 }
 

@@ -1,10 +1,9 @@
 "use client";
 
+import { Modal } from "@/components/app/ui/Modal";
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHublyStore } from "@/lib/store";
-import { useLayer } from "@/lib/use-layer";
-import { useModalPresence } from "@/lib/use-modal-presence";
 import { useTypedText } from "@/lib/use-typed-text";
 import { dueLabelFor, localIsoDate } from "@/lib/date";
 import { STATUS_META } from "@/components/app/social/status-meta";
@@ -155,7 +154,6 @@ export function CommandPaletteModal({
     }
   }, [onCloseProp, setCmdkOpen]);
 
-  useLayer(isOpen, handleClose);
 
   // Global Cmd+K / Ctrl+K shortcut
   useEffect(() => {
@@ -549,8 +547,6 @@ export function CommandPaletteModal({
   };
 
   const typedExample = useTypedText(TYPED_EXAMPLES, isOpen && !query);
-  const presence = useModalPresence(isOpen);
-  if (!presence.mounted) return null;
 
   const groupedSections: Array<{
     group: string;
@@ -567,104 +563,98 @@ export function CommandPaletteModal({
   });
 
   return (
-    <div
-      className="hubly-overlay hubly-cal-overlay hubly-command-overlay"
-      data-state={presence.state}
-      onMouseDown={(e) => { if (e.target === e.currentTarget) handleClose(); }}
+    <Modal
+      open={isOpen}
+      onClose={handleClose}
+      labelledBy={titleId}
+      overlayClassName="hubly-overlay hubly-cal-overlay hubly-command-overlay"
+      className="hubly-sheet hubly-cal-modal hubly-command"
+      surfaceRef={dialogRef}
+      onKeyDown={handleKeyDown}
     >
-      <div
-        ref={dialogRef}
-        className="hubly-sheet hubly-cal-modal hubly-command"
-        data-state={presence.state}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        onKeyDown={handleKeyDown}
-      >
-        <div className="hubly-command-search">
-          <Search size={18} />
-          <div className="hubly-command-field" data-typing={typedExample !== null || undefined}>
-            <label id={titleId} htmlFor={`${listId}-input`}>Buscar en Hubly</label>
-            <div className="hubly-command-input">
-              <input
-                id={`${listId}-input`}
-                ref={inputRef}
-                type="text"
-                role="combobox"
-                aria-expanded={isOpen}
-                aria-controls={listId}
-                aria-autocomplete="list"
-                aria-activedescendant={allItems[activeIndex] ? `${listId}-${allItems[activeIndex].id}` : undefined}
-                autoComplete="off"
-                spellCheck={false}
-                value={query}
-                onChange={(e) => updateQuery(e.target.value)}
-                placeholder="Busca una acción, página o marca…"
-              />
-              {typedExample !== null && <span className="hubly-command-typed" aria-hidden="true">{typedExample}</span>}
-            </div>
+      <div className="hubly-command-search">
+        <Search size={18} />
+        <div className="hubly-command-field" data-typing={typedExample !== null || undefined}>
+          <label id={titleId} htmlFor={`${listId}-input`}>Buscar en Hubly</label>
+          <div className="hubly-command-input">
+            <input
+              id={`${listId}-input`}
+              ref={inputRef}
+              type="text"
+              role="combobox"
+              aria-expanded={isOpen}
+              aria-controls={listId}
+              aria-autocomplete="list"
+              aria-activedescendant={allItems[activeIndex] ? `${listId}-${allItems[activeIndex].id}` : undefined}
+              autoComplete="off"
+              spellCheck={false}
+              value={query}
+              onChange={(e) => updateQuery(e.target.value)}
+              placeholder="Busca una acción, página o marca…"
+            />
+            {typedExample !== null && <span className="hubly-command-typed" aria-hidden="true">{typedExample}</span>}
           </div>
-          {query && (
-            <button type="button" className="hubly-cal-modal-close" aria-label="Limpiar búsqueda" title="Limpiar búsqueda"
-              onClick={() => { updateQuery(""); inputRef.current?.focus(); }}>
-              <Close size={14} />
-            </button>
-          )}
-          <kbd className="hubly-command-shortcut">{shortcut}</kbd>
         </div>
-
-        <div id={listId} className="hubly-command-results" role="listbox" tabIndex={-1} aria-label="Resultados de búsqueda">
-          {groupedSections.map((section, groupIndex) => (
-            <div key={section.group} role="group" aria-labelledby={`${listId}-group-${groupIndex}`} className="hubly-command-group">
-              <div id={`${listId}-group-${groupIndex}`} className="hubly-command-heading">{section.group}</div>
-              {section.entries.map(({ item, flatIdx }) => (
-                <div
-                  key={item.id}
-                  id={`${listId}-${item.id}`}
-                  role="option"
-                  aria-selected={flatIdx === activeIndex}
-                  tabIndex={-1}
-                  className="hubly-command-option"
-                  onPointerMove={(e) => { if (e.pointerType === "mouse") { keyboardSelection.current = false; setSelectedIndex(flatIdx); } }}
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={item.action}
-                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); item.action(); } }}
-                >
-                  <span className="hubly-command-icon" aria-hidden="true">{item.icon}</span>
-                  <span className="hubly-command-copy">
-                    <span className="hubly-command-label" title={item.label}>{item.label}</span>
-                    {item.sublabel && <span className="hubly-command-description" title={item.sublabel}>{item.sublabel}</span>}
-                  </span>
-                  {item.badge && <span className="hubly-command-meta">{item.badge}</span>}
-                  <ChevronRight size={14} className="hubly-command-chevron" aria-hidden="true" />
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-        {allItems.length === 0 && (
-          <div className="hubly-cal-empty hubly-command-empty" role="status">
-            <Search size={22} aria-hidden="true" />
-            <strong>Sin resultados para «{query}»</strong>
-            <span>Prueba con otro nombre o limpia la búsqueda.</span>
-            <div className="hubly-command-empty-actions">
-              <button type="button" className="hbtn hbtn-secondary" onClick={() => { updateQuery(""); inputRef.current?.focus(); }}>Limpiar búsqueda</button>
-              <button type="button" className="hbtn hbtn-secondary" onClick={() => askHubi(query.trim())}>Preguntar a Hubi</button>
-            </div>
-          </div>
+        {query && (
+          <button type="button" className="hubly-cal-modal-close" aria-label="Limpiar búsqueda" title="Limpiar búsqueda"
+            onClick={() => { updateQuery(""); inputRef.current?.focus(); }}>
+            <Close size={14} />
+          </button>
         )}
-        <span className="sr-only" role="status">{allItems.length ? `${allItems.length} resultados` : ""}</span>
-
-        <div className="hubly-command-footer">
-          <div className="hubly-command-hints" aria-hidden="true">
-            <span><kbd><ArrowUp size={14} /></kbd><kbd><ArrowDown size={14} /></kbd> Navegar</span>
-            <span><kbd><CornerDownLeft size={14} /></kbd> Abrir</span>
-          </div>
-          <span className="hubly-command-touch-hint">Toca un resultado para abrirlo</span>
-          <button type="button" className="hubly-command-close" onClick={handleClose}><kbd>Esc</kbd> Cerrar</button>
-        </div>
+        <kbd className="hubly-command-shortcut">{shortcut}</kbd>
       </div>
-    </div>
+
+      <div id={listId} className="hubly-command-results" role="listbox" tabIndex={-1} aria-label="Resultados de búsqueda">
+        {groupedSections.map((section, groupIndex) => (
+          <div key={section.group} role="group" aria-labelledby={`${listId}-group-${groupIndex}`} className="hubly-command-group">
+            <div id={`${listId}-group-${groupIndex}`} className="hubly-command-heading">{section.group}</div>
+            {section.entries.map(({ item, flatIdx }) => (
+              <div
+                key={item.id}
+                id={`${listId}-${item.id}`}
+                role="option"
+                aria-selected={flatIdx === activeIndex}
+                tabIndex={-1}
+                className="hubly-command-option"
+                onPointerMove={(e) => { if (e.pointerType === "mouse") { keyboardSelection.current = false; setSelectedIndex(flatIdx); } }}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={item.action}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); item.action(); } }}
+              >
+                <span className="hubly-command-icon" aria-hidden="true">{item.icon}</span>
+                <span className="hubly-command-copy">
+                  <span className="hubly-command-label" title={item.label}>{item.label}</span>
+                  {item.sublabel && <span className="hubly-command-description" title={item.sublabel}>{item.sublabel}</span>}
+                </span>
+                {item.badge && <span className="hubly-command-meta">{item.badge}</span>}
+                <ChevronRight size={14} className="hubly-command-chevron" aria-hidden="true" />
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      {allItems.length === 0 && (
+        <div className="hubly-cal-empty hubly-command-empty" role="status">
+          <Search size={22} aria-hidden="true" />
+          <strong>Sin resultados para «{query}»</strong>
+          <span>Prueba con otro nombre o limpia la búsqueda.</span>
+          <div className="hubly-command-empty-actions">
+            <button type="button" className="hbtn hbtn-secondary" onClick={() => { updateQuery(""); inputRef.current?.focus(); }}>Limpiar búsqueda</button>
+            <button type="button" className="hbtn hbtn-secondary" onClick={() => askHubi(query.trim())}>Preguntar a Hubi</button>
+          </div>
+        </div>
+      )}
+      <span className="sr-only" role="status">{allItems.length ? `${allItems.length} resultados` : ""}</span>
+
+      <div className="hubly-command-footer">
+        <div className="hubly-command-hints" aria-hidden="true">
+          <span><kbd><ArrowUp size={14} /></kbd><kbd><ArrowDown size={14} /></kbd> Navegar</span>
+          <span><kbd><CornerDownLeft size={14} /></kbd> Abrir</span>
+        </div>
+        <span className="hubly-command-touch-hint">Toca un resultado para abrirlo</span>
+        <button type="button" className="hubly-command-close" onClick={handleClose}><kbd>Esc</kbd> Cerrar</button>
+      </div>
+    </Modal>
   );
 }
 

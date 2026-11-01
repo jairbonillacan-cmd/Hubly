@@ -1,7 +1,7 @@
 "use client";
 import "./ui-kit.css";
 
-import { useRef, type FormEventHandler, type ReactNode } from "react";
+import { useRef, type FormEventHandler, type KeyboardEventHandler, type ReactNode, type RefObject } from "react";
 import { useFocusTrap } from "@/lib/use-focus-trap";
 import { useLayer } from "@/lib/use-layer";
 import { useModalPresence } from "@/lib/use-modal-presence";
@@ -18,6 +18,9 @@ interface ModalProps {
   overlayClassName?: string;
   /** Variante ancha de `.hubly-social-modal`. */
   wide?: boolean;
+  /** Para medir o recorrer la ventana desde fuera. */
+  surfaceRef?: RefObject<HTMLDivElement | null>;
+  onKeyDown?: KeyboardEventHandler<HTMLElement>;
   /** Con `onSubmit` la ventana es un formulario. */
   onSubmit?: FormEventHandler<HTMLFormElement>;
 }
@@ -32,10 +35,13 @@ export function Modal({
   className = "hubly-sheet hubly-cal-modal",
   overlayClassName = "hubly-overlay hubly-cal-overlay",
   wide,
+  surfaceRef,
+  onKeyDown,
   onSubmit,
 }: ModalProps) {
   const presence = useModalPresence(open);
-  const surface = useRef<HTMLElement>(null);
+  const own = useRef<HTMLDivElement>(null);
+  const surface = surfaceRef ?? own;
   useLayer(open, onClose);
   useFocusTrap(surface, open);
   if (!presence.mounted) return null;
@@ -48,6 +54,7 @@ export function Modal({
     "aria-modal": true,
     "aria-label": label,
     "aria-labelledby": labelledBy,
+    onKeyDown,
   };
   return (
     <div
@@ -58,11 +65,11 @@ export function Modal({
       }}
     >
       {onSubmit ? (
-        <form ref={surface as React.RefObject<HTMLFormElement>} {...dialog} onSubmit={onSubmit}>
+        <form ref={surface as unknown as RefObject<HTMLFormElement>} {...dialog} onSubmit={onSubmit}>
           {children}
         </form>
       ) : (
-        <div ref={surface as React.RefObject<HTMLDivElement>} {...dialog}>
+        <div ref={surface} {...dialog}>
           {children}
         </div>
       )}

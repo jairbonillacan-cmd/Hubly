@@ -7,3 +7,4 @@
 .hubly-pendientes-modal { display: flex; flex-direction: column; gap: 0; max-width: 560px; max-height: 86vh; padding: 0; overflow: hidden; }
 .hubly-member-overlay { position: fixed; inset: 0; z-index: 110; display: flex; justify-content: flex-end; background: rgb(var(--hb-accent-rgb) / 0.32); }
 .hubly-member-drawer { display: grid; align-content: start; gap: 18px; width: 100%; max-width: 440px; height: 100%; padding: 22px; overflow-y: auto; background: var(--ui-surface); }
+.hubly-crm-modal { display: grid; gap: 12px; max-width: 560px; max-height: 90vh; padding: 20px; overflow-y: auto; }

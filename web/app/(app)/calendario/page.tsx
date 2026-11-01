@@ -1,5 +1,6 @@
 "use client";
 
+import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHublyStore } from "@/lib/store";
@@ -157,7 +158,6 @@ export default function CalendarioPage() {
   const lastOpenDate = useRef(todayIso);
   const filtersRef = useRef<HTMLDivElement | null>(null);
   const filtersPresence = useModalPresence(filtersOpen, 100);
-  const modalPresence = useModalPresence(newActivityDate !== null);
   const storageKey = `hubly:calendar-activities:${workspaceId}`;
 
   useEffect(() => { setAnchorIso(todayIso); router.prefetch("/tareas"); router.prefetch("/parrillas"); }, [router, todayIso]);
@@ -674,148 +674,131 @@ export default function CalendarioPage() {
         )}
       </div>
 
-      {modalPresence.mounted && (
-        <div
-          className="hubly-overlay hubly-cal-overlay"
-          data-state={modalPresence.state}
-          onMouseDown={(e) => {
-            if (e.target === e.currentTarget) setNewActivityDate(null);
-          }}
-        >
-          <form
-            className="hubly-sheet hubly-cal-modal"
-            data-state={modalPresence.state}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Nueva actividad"
-            onSubmit={saveActivity}
-          >
-            <div className="hubly-cal-modal-head">
-              <h2>
-                <i style={{ background: draftColor || "#94A3DD" }} />
-                Nueva actividad
-              </h2>
-              <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar" onClick={() => setNewActivityDate(null)}>
-                <X size={14} />
+      <Modal open={newActivityDate !== null} onClose={() => setNewActivityDate(null)} label="Nueva actividad" onSubmit={saveActivity}>
+        <div className="hubly-cal-modal-head">
+          <h2>
+            <i style={{ background: draftColor || "#94A3DD" }} />
+            Nueva actividad
+          </h2>
+          <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar" onClick={() => setNewActivityDate(null)}>
+            <X size={14} />
+          </button>
+        </div>
+
+        <div className="hubly-cal-modal-scroll">
+          <Field label="Título">
+            <input
+              className="hubly-cal-line"
+              autoFocus
+              required
+              placeholder="Ej. Grabación con cliente"
+              value={draftTitle}
+              onChange={(e) => setDraftTitle(e.target.value)}
+            />
+          </Field>
+
+          <div className="hubly-cal-types" role="radiogroup" aria-label="Tipo de actividad">
+            {ACTIVITY_TYPES.map(({ id, Icon }) => (
+              <button key={id} type="button" role="radio" aria-checked={draftCategory === id} onClick={() => setDraftCategory(id)}>
+                <Icon size={18} />
+                <span>{id}</span>
               </button>
-            </div>
+            ))}
+          </div>
 
-            <div className="hubly-cal-modal-scroll">
-              <Field label="Título">
-                <input
-                  className="hubly-cal-line"
-                  autoFocus
-                  required
-                  placeholder="Ej. Grabación con cliente"
-                  value={draftTitle}
-                  onChange={(e) => setDraftTitle(e.target.value)}
-                />
-              </Field>
-
-              <div className="hubly-cal-types" role="radiogroup" aria-label="Tipo de actividad">
-                {ACTIVITY_TYPES.map(({ id, Icon }) => (
-                  <button key={id} type="button" role="radio" aria-checked={draftCategory === id} onClick={() => setDraftCategory(id)}>
-                    <Icon size={18} />
-                    <span>{id}</span>
+          <div className="hubly-cal-field">
+            <span>Cuándo</span>
+            <input
+              className="hubly-cal-line"
+              type="date"
+              aria-label="Fecha"
+              value={newActivityDate ?? lastOpenDate.current}
+              onChange={(e) => setNewActivityDate(e.target.value)}
+            />
+            {!draftAllDay && (
+              <>
+                <input className="hubly-cal-line" type="time" aria-label="Hora de inicio" value={draftTime} onChange={(e) => setDraftTime(e.target.value)} />
+                <small>a</small>
+                <input className="hubly-cal-line" type="time" aria-label="Hora de fin" value={draftEndTime} onChange={(e) => setDraftEndTime(e.target.value)} />
+              </>
+            )}
+            <div className="hubly-cal-durations">
+              {!draftAllDay &&
+                [
+                  { label: "30 min", minutes: 30 },
+                  { label: "1 h", minutes: 60 },
+                  { label: "2 h", minutes: 120 },
+                ].map(({ label, minutes }) => (
+                  <button key={label} type="button" onClick={() => setDraftEndTime(addMinutes(draftTime, minutes))}>
+                    {label}
                   </button>
                 ))}
-              </div>
+              <label>
+                <input type="checkbox" checked={draftAllDay} onChange={(e) => setDraftAllDay(e.target.checked)} />
+                Todo el día
+              </label>
+            </div>
+          </div>
 
-              <div className="hubly-cal-field">
-                <span>Cuándo</span>
-                <input
-                  className="hubly-cal-line"
-                  type="date"
-                  aria-label="Fecha"
-                  value={newActivityDate ?? lastOpenDate.current}
-                  onChange={(e) => setNewActivityDate(e.target.value)}
+          <div className="hubly-cal-field">
+            <span>Repetir</span>
+            <div className="hubly-cal-pills">
+              {REPEAT_OPTIONS.map(({ id, label }) => (
+                <button key={id} type="button" className="hubly-cal-pill" aria-pressed={draftRepeat === id} onClick={() => setDraftRepeat(id)}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="hubly-cal-field">
+            <span>Color</span>
+            <div className="hubly-cal-colors">
+              <button type="button" className="hubly-cal-pill" aria-pressed={draftColor === null} onClick={() => setDraftColor(null)}>
+                <i />
+                Auto
+              </button>
+              {ACTIVITY_COLORS.map((color) => (
+                <button
+                  key={color}
+                  type="button"
+                  className="hubly-cal-color"
+                  aria-label={`Color ${color}`}
+                  aria-pressed={draftColor === color}
+                  style={{ background: color }}
+                  onClick={() => setDraftColor(color)}
                 />
-                {!draftAllDay && (
-                  <>
-                    <input className="hubly-cal-line" type="time" aria-label="Hora de inicio" value={draftTime} onChange={(e) => setDraftTime(e.target.value)} />
-                    <small>a</small>
-                    <input className="hubly-cal-line" type="time" aria-label="Hora de fin" value={draftEndTime} onChange={(e) => setDraftEndTime(e.target.value)} />
-                  </>
-                )}
-                <div className="hubly-cal-durations">
-                  {!draftAllDay &&
-                    [
-                      { label: "30 min", minutes: 30 },
-                      { label: "1 h", minutes: 60 },
-                      { label: "2 h", minutes: 120 },
-                    ].map(({ label, minutes }) => (
-                      <button key={label} type="button" onClick={() => setDraftEndTime(addMinutes(draftTime, minutes))}>
-                        {label}
-                      </button>
-                    ))}
-                  <label>
-                    <input type="checkbox" checked={draftAllDay} onChange={(e) => setDraftAllDay(e.target.checked)} />
-                    Todo el día
-                  </label>
-                </div>
-              </div>
-
-              <div className="hubly-cal-field">
-                <span>Repetir</span>
-                <div className="hubly-cal-pills">
-                  {REPEAT_OPTIONS.map(({ id, label }) => (
-                    <button key={id} type="button" className="hubly-cal-pill" aria-pressed={draftRepeat === id} onClick={() => setDraftRepeat(id)}>
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="hubly-cal-field">
-                <span>Color</span>
-                <div className="hubly-cal-colors">
-                  <button type="button" className="hubly-cal-pill" aria-pressed={draftColor === null} onClick={() => setDraftColor(null)}>
-                    <i />
-                    Auto
-                  </button>
-                  {ACTIVITY_COLORS.map((color) => (
-                    <button
-                      key={color}
-                      type="button"
-                      className="hubly-cal-color"
-                      aria-label={`Color ${color}`}
-                      aria-pressed={draftColor === color}
-                      style={{ background: color }}
-                      onClick={() => setDraftColor(color)}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <label className="hubly-cal-field">
-                <span>Marca (opcional)</span>
-                <select className="hubly-cal-line" value={draftBrandId} onChange={(e) => setDraftBrandId(e.target.value)}>
-                  <option value="">Ninguna — actividad general</option>
-                  {brands.map((brand) => (
-                    <option key={brand.id} value={brand.id}>
-                      {brand.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="hubly-cal-field">
-                <span>Lugar / link (opcional)</span>
-                <input className="hubly-cal-line" placeholder="Oficina, Meet, dirección…" value={draftPlace} onChange={(e) => setDraftPlace(e.target.value)} />
-              </label>
+              ))}
             </div>
+          </div>
 
-            <div className="hubly-cal-modal-actions">
-              <button type="button" className="hbtn hbtn-ghost hbtn-sm" onClick={() => setNewActivityDate(null)}>
-                Cancelar
-              </button>
-              <button type="submit" className="hbtn hbtn-primary hbtn-sm">
-                Crear actividad
-              </button>
-            </div>
-          </form>
+          <label className="hubly-cal-field">
+            <span>Marca (opcional)</span>
+            <select className="hubly-cal-line" value={draftBrandId} onChange={(e) => setDraftBrandId(e.target.value)}>
+              <option value="">Ninguna — actividad general</option>
+              {brands.map((brand) => (
+                <option key={brand.id} value={brand.id}>
+                  {brand.name}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="hubly-cal-field">
+            <span>Lugar / link (opcional)</span>
+            <input className="hubly-cal-line" placeholder="Oficina, Meet, dirección…" value={draftPlace} onChange={(e) => setDraftPlace(e.target.value)} />
+          </label>
         </div>
-      )}
+
+        <div className="hubly-cal-modal-actions">
+          <button type="button" className="hbtn hbtn-ghost hbtn-sm" onClick={() => setNewActivityDate(null)}>
+            Cancelar
+          </button>
+          <button type="submit" className="hbtn hbtn-primary hbtn-sm">
+            Crear actividad
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }
