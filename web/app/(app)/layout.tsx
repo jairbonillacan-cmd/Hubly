@@ -161,6 +161,12 @@ export default function SaaSAppLayout({
   // (`syncFromServer` automatically inspects `?workspace=` and `?fixture=reference`).
   useEffect(() => {
     void syncFromServer();
+    // Enlaces guardados con ?workspace=: ya se leyó, así que sale de la barra de direcciones.
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("workspace")) {
+      url.searchParams.delete("workspace");
+      window.history.replaceState(null, "", url);
+    }
   }, [syncFromServer]);
 
   // Keep profile draft fields in sync when store profile changes
@@ -280,18 +286,9 @@ export default function SaaSAppLayout({
     [notebooks, activeNotebookId]
   );
 
-  // Preserve ?workspace= and ?fixture= query params on internal navigation links
-  const preservedQuerySuffix = useMemo(() => {
-    const params = new URLSearchParams();
-    if (workspaceId && workspaceId !== "default") {
-      params.set("workspace", workspaceId);
-    }
-    if (isReferenceFixture) {
-      params.set("fixture", "reference");
-    }
-    const str = params.toString();
-    return str ? `?${str}` : "";
-  }, [workspaceId, isReferenceFixture]);
+  // Preserve ?fixture= on internal navigation links. La agencia activa no va en la
+  // URL: vive en el navegador, y así las rutas quedan limpias.
+  const preservedQuerySuffix = isReferenceFixture ? "?fixture=reference" : "";
 
   const withQuery = (baseHref: string) => {
     if (!preservedQuerySuffix) return baseHref;
@@ -1519,7 +1516,7 @@ export default function SaaSAppLayout({
             <button
               type="button"
               onClick={() => setProfileMenuOpen((prev) => !prev)}
-              aria-label={`Perfil de ${profile.name} (${profile.role}). Clic para editar perfil o espacio de trabajo`}
+              aria-label={`Perfil de ${profile.name} (${profile.role}). Clic para editar perfil${backendEnabled ? "" : " o espacio de trabajo"}`}
               aria-expanded={profileMenuOpen}
               data-testid="sidebar-profile-trigger"
               style={{
@@ -1604,7 +1601,7 @@ export default function SaaSAppLayout({
           {profileMenuOpen && (
             <div
               role="dialog"
-              aria-label="Editar perfil y espacio de trabajo"
+              aria-label={backendEnabled ? "Editar perfil" : "Editar perfil y espacio de trabajo"}
               data-testid="sidebar-profile-popover"
               style={{
                 position: "absolute",
@@ -1745,69 +1742,74 @@ export default function SaaSAppLayout({
                 </button>
               </form>
 
-              <div
-                style={{
-                  height: 1,
-                  background: "var(--ui-muted)",
-                  margin: "12px 0 10px",
-                }}
-              />
+              {/* Los espacios de ejemplo solo existen en modo demo: con cuentas reales pisarían los datos de la agencia. */}
+              {!backendEnabled && (
+                <>
+                  <div
+                    style={{
+                      height: 1,
+                      background: "var(--ui-muted)",
+                      margin: "12px 0 10px",
+                    }}
+                  />
 
-              <div>
-                <div
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 700,
-                    color: "var(--ui-text-4)",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    marginBottom: 6,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 5,
-                  }}
-                >
-                  <Building2 size={11} />
-                  Espacio de trabajo
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                  {DEMO_WORKSPACES.map((ws) => {
-                    const isCurrentWs = workspaceId === ws.id;
-                    return (
-                      <button
-                        key={ws.id}
-                        type="button"
-                        onClick={() => {
-                          void switchWorkspace(ws.id);
-                          setProfileMenuOpen(false);
-                        }}
-                        style={{
-                          width: "100%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          padding: "6px 8px",
-                          borderRadius: 8,
-                          border: isCurrentWs
-                            ? "1px solid #BFE2F4"
-                            : "1px solid transparent",
-                          background: isCurrentWs ? "#F1F9FD" : "transparent",
-                          color: isCurrentWs ? "var(--ui-accent-text)" : "var(--ui-text-2)",
-                          fontSize: 12,
-                          fontWeight: isCurrentWs ? 600 : 500,
-                          cursor: "pointer",
-                          textAlign: "left",
-                        }}
-                      >
-                        <span>{ws.label}</span>
-                        {isCurrentWs && (
-                          <Check size={13} style={{ color: "var(--ui-accent-text-2)" }} />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+                  <div>
+                    <div
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "var(--ui-text-4)",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                        marginBottom: 6,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 5,
+                      }}
+                    >
+                      <Building2 size={11} />
+                      Espacio de trabajo
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                      {DEMO_WORKSPACES.map((ws) => {
+                        const isCurrentWs = workspaceId === ws.id;
+                        return (
+                          <button
+                            key={ws.id}
+                            type="button"
+                            onClick={() => {
+                              void switchWorkspace(ws.id);
+                              setProfileMenuOpen(false);
+                            }}
+                            style={{
+                              width: "100%",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              padding: "6px 8px",
+                              borderRadius: 8,
+                              border: isCurrentWs
+                                ? "1px solid #BFE2F4"
+                                : "1px solid transparent",
+                              background: isCurrentWs ? "#F1F9FD" : "transparent",
+                              color: isCurrentWs ? "var(--ui-accent-text)" : "var(--ui-text-2)",
+                              fontSize: 12,
+                              fontWeight: isCurrentWs ? 600 : 500,
+                              cursor: "pointer",
+                              textAlign: "left",
+                            }}
+                          >
+                            <span>{ws.label}</span>
+                            {isCurrentWs && (
+                              <Check size={13} style={{ color: "var(--ui-accent-text-2)" }} />
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>

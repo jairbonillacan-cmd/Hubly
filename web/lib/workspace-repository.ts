@@ -57,6 +57,28 @@ export function resolveWorkspaceIdFromUrl(search?: string): string {
   }
 }
 
+const ACTIVE_DEMO_WORKSPACE_KEY = "hubly:espacio-demo";
+
+/** En modo demo el espacio elegido se recuerda en el navegador, no en la URL. */
+export function rememberWorkspaceId(workspaceId: string): void {
+  try {
+    window.localStorage.setItem(ACTIVE_DEMO_WORKSPACE_KEY, sanitizeWorkspaceId(workspaceId));
+  } catch {}
+}
+
+export function resolveActiveWorkspaceId(): string {
+  const fromUrl = resolveWorkspaceIdFromUrl();
+  if (fromUrl !== "default") {
+    rememberWorkspaceId(fromUrl);
+    return fromUrl;
+  }
+  try {
+    return sanitizeWorkspaceId(window.localStorage.getItem(ACTIVE_DEMO_WORKSPACE_KEY));
+  } catch {
+    return "default";
+  }
+}
+
 export function isReferenceFixtureUrl(search?: string): boolean {
   const rawSearch =
     typeof search === "string"

@@ -23,8 +23,9 @@ import {
   loadWorkspaceFromStorage,
   normalizeWorkspacePayload,
   pushWorkspaceToApi,
+  rememberWorkspaceId,
+  resolveActiveWorkspaceId,
   resolveTestClockFromUrl,
-  resolveWorkspaceIdFromUrl,
   saveWorkspaceToStorage,
 } from "./workspace-repository";
 import type {
@@ -551,7 +552,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
       return;
     }
 
-    const resolvedWorkspaceId = workspaceIdOverride || resolveWorkspaceIdFromUrl();
+    const resolvedWorkspaceId = workspaceIdOverride || resolveActiveWorkspaceId();
     const forceReferenceFixture = isReferenceFixtureUrl();
     const urlClock = resolveTestClockFromUrl();
 
@@ -612,7 +613,10 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   },
 
   switchWorkspace: async (workspaceId) => {
+    // Con cuentas reales, cargar un espacio de ejemplo acabaría guardado sobre la agencia.
+    if (backendEnabled) return;
     const cleanId = workspaceId.trim() || "default";
+    rememberWorkspaceId(cleanId);
     const storedWorkspace = loadWorkspaceFromStorage(cleanId);
     const loaded = storedWorkspace
       ? rebaseStaleFixture(storedWorkspace)
