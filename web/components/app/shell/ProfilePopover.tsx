@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   HublyBuildingIcon as Building2,
   HublyCheckIcon as Check,
@@ -35,12 +35,6 @@ export function ProfilePopover({ onClose }: { onClose: () => void }) {
   const [draftRole, setDraftRole] = useState(profile.role);
   const [draftTimezone, setDraftTimezone] = useState(profile.timezone);
   const [profileSavedToast, setProfileSavedToast] = useState(false);
-
-  useEffect(() => {
-    setDraftName(profile.name);
-    setDraftRole(profile.role);
-    setDraftTimezone(profile.timezone);
-  }, [profile.name, profile.role, profile.timezone]);
 
   const handleSaveProfile = (event: React.FormEvent) => {
     event.preventDefault();

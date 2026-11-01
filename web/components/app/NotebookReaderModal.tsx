@@ -23,7 +23,6 @@ interface NotebookReaderModalProps {
   open?: boolean;
   notebookId?: string | null;
   onClose?: () => void;
-  isFallbackMount?: boolean;
 }
 
 const NOTEBOOK_COLORS = [
@@ -33,7 +32,6 @@ const NOTEBOOK_COLORS = [
   { id: "slate", label: "Pizarra", bg: "#475569", spine: "#1E293B" },
 ];
 
-let primaryNotebookModalMounts = 0;
 const explicitNotebookOpenListeners = new Set<(id: string | null) => void>();
 let storePatchedForNotebook = false;
 
@@ -68,7 +66,6 @@ export function NotebookReaderModal({
   open: openProp,
   notebookId: notebookIdProp,
   onClose: onCloseProp,
-  isFallbackMount = false,
 }: NotebookReaderModalProps = {}) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement | null>(null);
@@ -76,7 +73,6 @@ export function NotebookReaderModal({
   const autosaveRef = useRef<number | undefined>(undefined);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
-  const [suppressedAsFallback, setSuppressedAsFallback] = useState(false);
   const [explicitStoreOpen, setExplicitStoreOpen] = useState(false);
 
   useEffect(() => {
@@ -90,17 +86,6 @@ export function NotebookReaderModal({
     };
   }, []);
 
-  useEffect(() => {
-    if (!isFallbackMount) {
-      primaryNotebookModalMounts += 1;
-      return () => {
-        primaryNotebookModalMounts = Math.max(0, primaryNotebookModalMounts - 1);
-      };
-    } else {
-      setSuppressedAsFallback(primaryNotebookModalMounts > 0);
-    }
-  }, [isFallbackMount]);
-
   const notebooks = useHublyStore((s) => s.notebooks);
   const activeNotebookId = useHublyStore((s) => s.activeNotebookId);
   const setActiveNotebookId = useHublyStore((s) => s.setActiveNotebookId);
@@ -111,7 +96,6 @@ export function NotebookReaderModal({
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
 
   const isOpen =
-    !suppressedAsFallback &&
     (openProp !== undefined
       ? openProp
       : explicitStoreOpen && Boolean(activeNotebookId));
@@ -151,7 +135,7 @@ export function NotebookReaderModal({
   // Sync form fields with active notebook
   useEffect(() => {
     if (!isOpen) return;
-    setErrorMsg(null);
+    setErrorMsg(null); // eslint-disable-line react-hooks/set-state-in-effect -- reinicia el formulario al abrir
     setSavedNotice(false);
 
     if (isCreatingNew || !currentNotebook) {

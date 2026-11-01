@@ -41,7 +41,7 @@ async function as(uid, role, sql, params = []) {
 }
 const auth = (uid, sql, p) => as(uid, "authenticated", sql, p);
 let pass = 0, fail = 0;
-const ok = (name, cond, extra = "") => { cond ? pass++ : fail++; console.log(`${cond ? "ok  " : "HALLAZGO"} ${name}${cond ? "" : " -> " + extra}`); };
+const ok = (name, cond, extra = "") => { if (cond) pass++; else fail++; console.log(`${cond ? "ok  " : "HALLAZGO"} ${name}${cond ? "" : " -> " + extra}`); };
 const trySql = async (name, uid, sql, params) => {
   try { const r = await auth(uid, sql, params); ok(name + " (permitido)", true); return r; }
   catch (e) { ok(name + " (bloqueado)", false, e.message.slice(0, 90)); return null; }

@@ -22,7 +22,7 @@ export default function TareasPage() {
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("seccion") === "libretas") {
-      setTopSection("libretas");
+      setTopSection("libretas"); // eslint-disable-line react-hooks/set-state-in-effect -- la URL solo existe en el navegador
     }
   }, []);
 

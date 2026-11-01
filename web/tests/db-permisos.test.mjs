@@ -30,7 +30,7 @@ async function as(uid, role, sql, params = []) {
   try { return (await db.query(sql, params)).rows; } finally { await db.exec("reset role"); }
 }
 let pass = 0, fail = 0;
-const ok = (name, cond, extra = "") => { cond ? pass++ : fail++; console.log(`${cond ? "ok  " : "FAIL"} ${name} ${cond ? "" : extra}`); };
+const ok = (name, cond, extra = "") => { if (cond) pass++; else fail++; console.log(`${cond ? "ok  " : "FAIL"} ${name} ${cond ? "" : extra}`); };
 const errs = async (name, fn, code) => {
   try { await fn(); ok(name, false, "no lanzó"); } catch (e) { ok(name, !code || e.message.includes(code), e.message); }
 };

@@ -155,19 +155,19 @@ export default function CalendarioPage() {
   const [draftColor, setDraftColor] = useState<string | null>(null);
   const [draftPlace, setDraftPlace] = useState("");
   const [draftBrandId, setDraftBrandId] = useState(activeBrandId); const [activeEntryId, setActiveEntryId] = useState<string | null>(null);
-  const lastOpenDate = useRef(todayIso);
+  const [lastOpenDate, setLastOpenDate] = useState(todayIso);
   const filtersRef = useRef<HTMLDivElement | null>(null);
   const filtersPresence = useModalPresence(filtersOpen, 100);
   const storageKey = `hubly:calendar-activities:${workspaceId}`;
 
-  useEffect(() => { setAnchorIso(todayIso); router.prefetch("/tareas"); router.prefetch("/parrillas"); }, [router, todayIso]);
+  useEffect(() => { setAnchorIso(todayIso); router.prefetch("/tareas"); router.prefetch("/parrillas"); }, [router, todayIso]); // eslint-disable-line react-hooks/set-state-in-effect -- fecha y datos locales solo tras hidratar
 
   const sharedActivities = useHublyStore((s) => s.calendarActivities);
   const setSharedActivities = useHublyStore((s) => s.setCalendarActivities);
 
   useEffect(() => {
     if (backendEnabled) {
-      setActivities((sharedActivities || []) as CalendarActivity[]);
+      setActivities((sharedActivities || []) as CalendarActivity[]); // eslint-disable-line react-hooks/set-state-in-effect -- fecha y datos locales solo tras hidratar
       return;
     }
     try {
@@ -305,7 +305,7 @@ export default function CalendarioPage() {
   };
 
   const openNewActivity = (isoDate: string) => {
-    lastOpenDate.current = isoDate;
+    setLastOpenDate(isoDate);
     setDraftTitle("");
     setDraftBrandId("");
     setDraftEndTime("");
@@ -712,7 +712,7 @@ export default function CalendarioPage() {
               className="hubly-cal-line"
               type="date"
               aria-label="Fecha"
-              value={newActivityDate ?? lastOpenDate.current}
+              value={newActivityDate ?? lastOpenDate}
               onChange={(e) => setNewActivityDate(e.target.value)}
             />
             {!draftAllDay && (

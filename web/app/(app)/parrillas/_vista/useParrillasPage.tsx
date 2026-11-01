@@ -39,7 +39,7 @@ export function useParrillasPage() {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
     const t = params.get("tab");
-    if (t === "liga" || t === "links") setActiveTab("links");
+    if (t === "liga" || t === "links") setActiveTab("links"); // eslint-disable-line react-hooks/set-state-in-effect -- URL o editor externos a React
     else if (t === "reportes") setActiveTab("reportes");
     else if (t === "ideas") setActiveTab("ideas");
     else if (t === "mensajes") setActiveTab("mensajes");
@@ -59,7 +59,7 @@ export function useParrillasPage() {
   const brandPosts = posts.filter((p) => p.brandId === activeBrand?.id);
   // Quien acaba de usar el editor debe ver su post en el calendario.
   useEffect(() => {
-    if (composerOpen) setShowDemoData(true);
+    if (composerOpen) setShowDemoData(true); // eslint-disable-line react-hooks/set-state-in-effect -- URL o editor externos a React
   }, [composerOpen]);
   const liveShareUrl = async () => {
     const res = await fetch("/api/share", {
