@@ -1,10 +1,19 @@
-import { readJson } from "@/lib/api-guard";
+import { readBodyText } from "@/lib/api-guard";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const MAX_BODY_BYTES = 2048;
 
 // Reenvía cada registro a WAITLIST_WEBHOOK_URL (Zapier, Make, n8n, Google Apps Script...).
 export async function POST(request: Request) {
-  const payload = await readJson<{ email?: unknown; website?: unknown }>(request, 2048);
+  const text = await readBodyText(request, MAX_BODY_BYTES).catch(() => null);
+  if (text === null) return Response.json({ error: "too_large" }, { status: 413 });
+
+  let payload: { email?: unknown; website?: unknown } | null;
+  try {
+    payload = JSON.parse(text);
+  } catch {
+    return Response.json({ error: "invalid_request" }, { status: 400 });
+  }
   if (!payload) return Response.json({ error: "invalid_request" }, { status: 400 });
 
   // Campo oculto: solo los bots lo rellenan, y se les responde como si nada.

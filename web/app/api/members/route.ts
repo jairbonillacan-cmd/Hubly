@@ -10,6 +10,8 @@ export async function GET(request: Request) {
   const agencyId = new URL(request.url).searchParams.get("agencyId");
   if (!agencyId) return NextResponse.json({ error: "invalid" }, { status: 400 });
   const supabase = await createSupabaseServer();
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) return NextResponse.json({ error: "not_authenticated" }, { status: 401, ...noStore });
   const [members, invitations, links] = await Promise.all([
     supabase.rpc("list_members", { target_agency: agencyId }),
     supabase.from("agency_invitations").select("id,email,role,expires_at,accepted_at,revoked_at").eq("agency_id", agencyId).order("created_at"),
@@ -26,6 +28,8 @@ export async function POST(request: Request) {
   if (!backendEnabled) return NextResponse.json({ error: "backend_disabled" }, { status: 404 });
   const body = (await readJson<Record<string, string>>(request, 4096)) ?? {};
   const supabase = await createSupabaseServer();
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) return NextResponse.json({ error: "not_authenticated" }, { status: 401 });
   const { action, agencyId } = body;
   const call = () => {
     switch (action) {

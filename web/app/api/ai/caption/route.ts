@@ -6,8 +6,13 @@ import { createSupabaseServer } from "@/lib/supabase/server";
 import { buildCaptionSystemPrompt, type CaptionBrandContext } from "@/lib/ai-caption";
 
 const MAX_BRIEF_CHARS = 2000;
+const MAX_BODY_BYTES = 64 * 1024;
 
 export async function POST(request: Request) {
+  if (Number(request.headers.get("content-length") || 0) > MAX_BODY_BYTES) {
+    return NextResponse.json({ error: "too_large" }, { status: 413 });
+  }
+
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json({ error: "ai_not_configured" }, { status: 503 });
   }
@@ -36,8 +41,8 @@ export async function POST(request: Request) {
   if (!brief) return NextResponse.json({ error: "brief_required" }, { status: 400 });
   if (brief.length > MAX_BRIEF_CHARS) return NextResponse.json({ error: "brief_too_long" }, { status: 400 });
 
-  const client = new Anthropic();
   try {
+    const client = new Anthropic();
     const response = await client.beta.messages.create({
       model: "claude-opus-5-5",
       max_tokens: 2000,
@@ -66,6 +71,6 @@ export async function POST(request: Request) {
     if (err instanceof Anthropic.APIError) {
       return NextResponse.json({ error: "failed" }, { status: 502 });
     }
-    throw err;
+    return NextResponse.json({ error: "failed" }, { status: 500 });
   }
 }

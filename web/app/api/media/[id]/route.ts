@@ -24,6 +24,8 @@ export async function PATCH(request: Request, { params }: Ctx) {
   }
 
   const supabase = await createSupabaseServer();
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) return NextResponse.json({ error: "not_authenticated" }, { status: 401 });
   const { data, error } = await supabase.from("media_assets").update(patch).eq("id", id).select("id").maybeSingle();
   if (error) return NextResponse.json({ error: "failed" }, { status: 500 });
   if (!data) return NextResponse.json({ error: "forbidden" }, { status: 403 });
@@ -33,11 +35,13 @@ export async function PATCH(request: Request, { params }: Ctx) {
 export async function DELETE(_request: Request, { params }: Ctx) {
   const { id } = await params;
   if (!backendEnabled) {
-    if (!demoDiskEnabled) return NextResponse.json({ error: "not_found" }, { status: 404 });
+    if (!demoDiskEnabled || !(await demoGet(id))) return NextResponse.json({ error: "not_found" }, { status: 404 });
     await demoRemove(id);
     return NextResponse.json({ ok: true });
   }
   const supabase = await createSupabaseServer();
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) return NextResponse.json({ error: "not_authenticated" }, { status: 401 });
   const { data: asset } = await supabase.from("media_assets").select("path").eq("id", id).maybeSingle();
   if (!asset) return NextResponse.json({ error: "not_found" }, { status: 404 });
   const { data: removed, error } = await supabase.from("media_assets").delete().eq("id", id).select("id").maybeSingle();
