@@ -544,13 +544,14 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
               )}
             </div>
             <div className="hubly-composer-pop">
-              <button type="button" className={draft.notifyOnPublish ? "is-on" : undefined} aria-expanded={popover === "notify"} disabled={locked} onClick={() => { setNotifySearch(""); setPopover(popover === "notify" ? null : "notify"); }}>
+              <button type="button" className={draft.notifyOnPublish ? "is-on" : undefined} title="Se guarda en el post como referencia; aún no envía avisos automáticos" aria-expanded={popover === "notify"} disabled={locked} onClick={() => { setNotifySearch(""); setPopover(popover === "notify" ? null : "notify"); }}>
                 <HublyBellIcon size={17} />
                 <span>{notifyMembers.length ? `Avisar a ${notifyMembers.map((m) => m.name.split(" ")[0]).join(", ")}` : "Avisar al publicar"}</span>
               </button>
               {popover === "notify" && (
                 <div className="hubly-composer-menu is-people" role="group" aria-label="Avisar al publicar">
                   <input className="hubly-cal-input" autoFocus value={notifySearch} onChange={(e) => setNotifySearch(e.target.value)} placeholder="Buscar…" aria-label="Buscar miembro" />
+                  <small role="note">Se guarda en el post como referencia; aún no envía avisos automáticos.</small>
                   {team.length === 0 && <small>Aún no hay miembros en el equipo.</small>}
                   {team.length > 0 && notifyMatches.length === 0 && <small>Sin resultados</small>}
                   {notifyMatches.map((member) => {

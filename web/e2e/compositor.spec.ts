@@ -199,3 +199,11 @@ test("cada una de las diez redes tiene su propia interfaz en el teléfono", asyn
     await expect(page.locator(`.hubly-phone-app`).locator(senas[nombre]).first()).toBeVisible();
   }
 });
+
+test("Avisar al publicar indica que se guarda como referencia sin enviar avisos automáticos", async ({ page }) => {
+  await abrirEditor(page);
+  await page.getByRole("button", { name: "Avisar al publicar" }).click();
+  const menu = page.getByRole("group", { name: "Avisar al publicar" });
+  await expect(menu).toBeVisible();
+  await expect(menu.getByRole("note")).toContainText("Se guarda en el post como referencia; aún no envía avisos automáticos.");
+});
