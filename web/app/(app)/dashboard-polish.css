@@ -2324,10 +2324,10 @@ html.dark .hubly-cal-pill[aria-pressed="true"] { border-color: var(--hb-accent);
 .hubly-chat-lista { display: flex; flex-direction: column; width: 280px; border-right: 1px solid var(--ui-border); }
 .hubly-chat-panel { display: flex; }
 .hubly-chat-volver { display: none; }
-.hubly-chat-form { padding: 14px 20px; }
+.hubly-chat-form { padding: 14px 52px 14px 20px; } /* Deja libre la esquina del botón de Hubi */
 @media (max-width: 767.98px) {
   .hubly-main.hb-main:has(.hubly-chat) { width: 100%; }
-  .hubly-chat { height: calc(100dvh - 180px); min-height: 420px; }
+  .hubly-chat { height: calc(100dvh - 196px); min-height: 420px; }
   .hubly-chat-lista { width: 100%; border-right: 0; }
   .hubly-chat[data-conversacion="ninguna"] .hubly-chat-panel,
   .hubly-chat[data-conversacion="abierta"] .hubly-chat-lista { display: none; }
@@ -2338,3 +2338,9 @@ html.dark .hubly-cal-pill[aria-pressed="true"] { border-color: var(--hb-accent);
 
 /* 23. Aviso desplegado: deja llegar con scroll a lo que queda detrás ------------- */
 html:has([data-mision-pildora][data-desplegado]) .hubly-main.hb-main { padding-bottom: 340px; }
+
+/* 24. Cifras del reporte: cuatro columnas en escritorio, dos en móvil ------------ */
+.hubly-reporte-cifras { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 767.98px) {
+  .hubly-reporte-cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

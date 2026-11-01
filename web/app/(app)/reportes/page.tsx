@@ -348,7 +348,7 @@ function DemoReportesPage() {
             width: 68,
             height: 68,
             borderRadius: 999,
-            background: "#DBEAFE",
+            background: "var(--ui-sky-soft)",
             color: "var(--hb-accent-text)",
             display: "grid",
             placeItems: "center",
@@ -455,9 +455,8 @@ function DemoReportesPage() {
 
           {/* 4 KPI Cards */}
           <div
+            className="hubly-reporte-cifras"
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
               gap: 14,
               marginBottom: 24,
             }}

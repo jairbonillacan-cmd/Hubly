@@ -190,7 +190,7 @@ export default function ChatPage() {
         width: "100%",
         background: "var(--ui-surface)",
         borderRadius: 16,
-        border: "1px solid #EEF2F6",
+        border: "1px solid var(--ui-border)",
         overflow: "hidden",
       }}
     >
@@ -218,8 +218,8 @@ export default function ChatPage() {
               display: "flex",
               alignItems: "center",
               gap: 8,
-              background: "#F4F5F8",
-              border: "1px solid #ECEEF4",
+              background: "var(--ui-muted)",
+              border: "1px solid var(--ui-border)",
               borderRadius: 999,
               padding: "9px 14px",
               boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
@@ -500,7 +500,7 @@ export default function ChatPage() {
                       style={{
                         fontSize: 13,
                         fontWeight: 600,
-                        color: selectedId === "ch-general" ? "var(--hb-accent)" : "var(--ui-text-1)",
+                        color: selectedId === "ch-general" ? "var(--hb-accent-text)" : "var(--ui-text-1)",
                       }}
                     >
                       # General
@@ -657,7 +657,7 @@ export default function ChatPage() {
                 letterSpacing: "-0.01em",
               }}
             >
-              Selecciona una conversacion
+              Selecciona una conversación
             </h2>
 
             <p
@@ -679,7 +679,7 @@ export default function ChatPage() {
             <header
               style={{
                 padding: "14px 22px",
-                borderBottom: "1px solid #EEF2F6",
+                borderBottom: "1px solid var(--ui-border)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
@@ -747,7 +747,7 @@ export default function ChatPage() {
                 display: "flex",
                 flexDirection: "column",
                 gap: 16,
-                background: "#FAFBFC",
+                background: "var(--ui-surface-2)",
               }}
             >
               {threadMessages.length === 0 ? (
@@ -847,7 +847,7 @@ export default function ChatPage() {
               className="hubly-chat-form"
               onSubmit={handleSend}
               style={{
-                borderTop: "1px solid #EEF2F6",
+                borderTop: "1px solid var(--ui-border)",
                 background: "var(--ui-surface)",
                 display: "flex",
                 alignItems: "center",
