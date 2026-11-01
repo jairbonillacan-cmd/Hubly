@@ -2,657 +2,188 @@
 
 import React, { useEffect, useId, useRef, useState } from "react";
 import { useHublyStore } from "@/lib/store";
+import { useLayer } from "@/lib/use-layer";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import type { DashboardWidgetId } from "@/lib/types";
-import {
-  HublyArrowDownIcon as ArrowDown,
-  HublyArrowUpIcon as ArrowUp,
-  HublyBentoIcon as LayoutGrid,
-  HublyCheckIcon as Check,
-  HublyCloseIcon as X,
-  HublyEyeIcon as Eye,
-  HublyEyeOffIcon as EyeOff,
-  HublyKanbanIcon as Columns,
-  HublyRefreshIcon as RotateCcw,
-} from "@/components/app/icons/DuotoneIcons";
+import { WidgetPreview } from "@/components/app/dashboard/WidgetPreview";
+import { HublyCheckIcon as Check, HublyPlusIcon as Plus } from "@/components/app/icons/DuotoneIcons";
 
 export interface WidgetConfigModalProps {
-  open?: boolean;
-  onClose?: () => void;
-  isFallbackMount?: boolean;
+  open: boolean;
+  onClose: () => void;
 }
 
-const WIDGET_METADATA: Record<
-  DashboardWidgetId,
-  { title: string; subtitle: string; badge: string }
-> = {
-  tareas: {
-    title: "Tareas",
-    subtitle: "Checklist operativo agrupado por Vencidas, Hoy, Mañana y Próximas.",
-    badge: "Operación",
+const CATALOGO: Array<{
+  grupo: string;
+  items: Array<{ id: DashboardWidgetId; title: string; description: string }>;
+}> = [
+  {
+    grupo: "Números",
+    items: [
+      { id: "metrica", title: "Métrica", description: "Un número grande que tú eliges: posts, gasto, resultados…" },
+    ],
   },
-  libretas: {
-    title: "Libretas Kraft",
-    subtitle: "Cuadernos de estrategia, tono de voz y bitácoras de cliente.",
-    badge: "Editorial",
+  {
+    grupo: "Tu trabajo",
+    items: [
+      { id: "tareas", title: "Tareas", description: "Lo vencido, lo de hoy y lo que viene" },
+      { id: "libretas", title: "Libretas", description: "Tus libretas de Mi espacio" },
+      { id: "notificaciones", title: "Notificaciones", description: "Lo que necesita tu atención" },
+      { id: "proyectos_criticos", title: "Proyectos críticos", description: "Los abiertos, por revisión y fecha" },
+    ],
   },
-  hoy: {
-    title: "Hoy",
-    subtitle: "Publicaciones programadas y entregables del día en curso.",
-    badge: "Calendario",
+  {
+    grupo: "Social media",
+    items: [
+      { id: "hoy", title: "Hoy", description: "Lo que sale hoy" },
+      { id: "aprobaciones", title: "Aprobaciones", description: "Lo que espera a tu cliente" },
+      { id: "posts", title: "Posts", description: "Lo próximo de la marca activa" },
+      { id: "feed", title: "Feed", description: "Lo último publicado de la marca activa" },
+      { id: "semana", title: "Semana", description: "Posts por día en todas tus marcas" },
+    ],
   },
-  notificaciones: {
-    title: "Notificaciones",
-    subtitle: "Actividad en vivo del equipo, aprobaciones y alertas de pauta.",
-    badge: "Actividad",
+  {
+    grupo: "Equipo",
+    items: [
+      { id: "mensajes", title: "Mensajes", description: "Tus chats con el equipo" },
+      { id: "actividad", title: "Actividad", description: "Qué ha hecho el equipo" },
+      { id: "equipo", title: "Equipo", description: "Quién lleva más puntos" },
+    ],
   },
-  aprobaciones: {
-    title: "Aprobaciones",
-    subtitle: "Piezas esperando visto bueno del cliente con acción en 1 clic.",
-    badge: "Clientes",
+  {
+    grupo: "Ads",
+    items: [
+      { id: "grafica_ads", title: "Gráfica de Ads", description: "Inversión acumulada y CTR" },
+      { id: "ads_activos", title: "Ads activos", description: "Campañas en circulación y sus resultados" },
+    ],
   },
-  grafica_ads: {
-    title: "Gráfica de Ads",
-    subtitle: "Curva comparativa de inversión, clics y ROAS de campañas.",
-    badge: "Opcional · Ads",
-  },
-  ads_activos: {
-    title: "Ads activos",
-    subtitle: "Tarjetas de campañas en circulación, presupuesto y conversiones.",
-    badge: "Opcional · Ads",
-  },
-  proyectos_criticos: {
-    title: "Proyectos críticos",
-    subtitle: "Proyectos abiertos priorizados por revisión, fecha y avance.",
-    badge: "Opcional · Proyectos",
-  },
-};
+];
 
-let primaryWidgetConfigMounts = 0;
-
-function getFocusableElements(container: HTMLElement | null): HTMLElement[] {
-  if (!container) return [];
-  const nodes = container.querySelectorAll<HTMLElement>(
-    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-  );
-  return Array.from(nodes).filter(
-    (el) => !el.hasAttribute("disabled") && el.offsetParent !== null
-  );
-}
-
-export function WidgetConfigModal({
-  open: openProp,
-  onClose: onCloseProp,
-  isFallbackMount = false,
-}: WidgetConfigModalProps = {}) {
+export function WidgetConfigModal({ open, onClose }: WidgetConfigModalProps) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement | null>(null);
-  const firstActionRef = useRef<HTMLButtonElement | null>(null);
-  const previousActiveElementRef = useRef<HTMLElement | null>(null);
+  const doneRef = useRef<HTMLButtonElement | null>(null);
 
-  const [suppressedAsFallback, setSuppressedAsFallback] = useState(false);
-
-  useEffect(() => {
-    if (!isFallbackMount) {
-      primaryWidgetConfigMounts += 1;
-      return () => {
-        primaryWidgetConfigMounts = Math.max(0, primaryWidgetConfigMounts - 1);
-      };
-    } else {
-      setSuppressedAsFallback(primaryWidgetConfigMounts > 0);
-    }
-  }, [isFallbackMount]);
-
-  const widgetConfigModalOpen = useHublyStore((s) => s.widgetConfigModalOpen);
-  const setWidgetConfigModalOpen = useHublyStore(
-    (s) => s.setWidgetConfigModalOpen
-  );
   const widgets = useHublyStore((s) => s.widgets);
-  const toggleWidgetVisibility = useHublyStore((s) => s.toggleWidgetVisibility);
-  const moveWidget = useHublyStore((s) => s.moveWidget);
-  const setWidgetSpan = useHublyStore((s) => s.setWidgetSpan);
-  const resetWidgetsLayout = useHublyStore((s) => s.resetWidgetsLayout);
-
-  const isOpen =
-    !suppressedAsFallback &&
-    (openProp !== undefined ? openProp : widgetConfigModalOpen);
+  const setWidgetVisibility = useHublyStore((s) => s.setWidgetVisibility);
+  const reorderWidgets = useHublyStore((s) => s.reorderWidgets);
 
   const [notice, setNotice] = useState<string | null>(null);
 
   const handleClose = () => {
     setNotice(null);
-    if (onCloseProp) {
-      onCloseProp();
-    } else {
-      setWidgetConfigModalOpen(false);
-    }
+    onClose();
   };
 
-  // Focus trap, Escape key, Initial focus & Scroll lock
+  useLayer(open, handleClose);
+
   useEffect(() => {
-    if (!isOpen) return;
+    if (open) doneRef.current?.focus();
+  }, [open]);
 
-    previousActiveElementRef.current =
-      document.activeElement as HTMLElement | null;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    const rafId = window.requestAnimationFrame(() => {
-      if (firstActionRef.current) {
-        firstActionRef.current.focus();
-      } else {
-        const focusables = getFocusableElements(dialogRef.current);
-        focusables[0]?.focus();
-      }
-    });
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        e.stopPropagation();
-        handleClose();
-        return;
-      }
-
-      if (e.key === "Tab") {
-        const focusables = getFocusableElements(dialogRef.current);
-        if (focusables.length === 0) {
-          e.preventDefault();
-          return;
-        }
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        const active = document.activeElement as HTMLElement | null;
-
-        if (e.shiftKey) {
-          if (!active || active === first || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (!active || active === last || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown, true);
-
-    return () => {
-      window.cancelAnimationFrame(rafId);
-      document.removeEventListener("keydown", handleKeyDown, true);
-      const remainingDialogs = document.querySelectorAll(
-        '[role="dialog"][aria-modal="true"]'
-      );
-      if (remainingDialogs.length <= 1) {
-        document.body.style.overflow = prevOverflow || "";
-      }
-      const prevEl = previousActiveElementRef.current;
-      if (prevEl && document.body.contains(prevEl)) {
-        window.requestAnimationFrame(() => {
-          prevEl.focus();
-        });
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
-
-  const presence = useModalPresence(isOpen);
+  const presence = useModalPresence(open);
   if (!presence.mounted) return null;
 
-  const sortedWidgets = [...widgets].sort((a, b) => a.order - b.order);
-  const visibleCount = sortedWidgets.filter((w) => w.visible).length;
+  const visibleIds = new Set(widgets.filter((w) => w.visible).map((w) => w.id));
 
-  const handleToggleVisible = (id: DashboardWidgetId, currentlyVisible: boolean) => {
-    if (currentlyVisible && visibleCount <= 1) {
-      setNotice("Mantén al menos un widget visible en el Dashboard.");
+  const handleToggle = (id: DashboardWidgetId) => {
+    if (visibleIds.has(id)) {
+      if (visibleIds.size <= 1) {
+        setNotice("Mantén al menos un widget visible en el Dashboard.");
+        return;
+      }
+      setNotice(null);
+      setWidgetVisibility(id, false);
       return;
     }
     setNotice(null);
-    toggleWidgetVisibility(id);
+    const sorted = [...widgets].sort((a, b) => a.order - b.order);
+    const placed = sorted.filter((w) => w.visible).map((w) => w.id);
+    const rest = sorted.filter((w) => !w.visible && w.id !== id).map((w) => w.id);
+    reorderWidgets([...placed, id, ...rest]);
+    setWidgetVisibility(id, true);
   };
 
-  const handleReset = () => {
-    resetWidgetsLayout();
-    setNotice("Se restableció la disposición original del tablero.");
-    window.setTimeout(() => setNotice(null), 2600);
+  const handleTrapTab = (e: React.KeyboardEvent) => {
+    if (e.key !== "Tab") return;
+    const focusables = Array.from(
+      dialogRef.current?.querySelectorAll<HTMLElement>("[data-wgal-foco]") ?? []
+    );
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last?.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first?.focus();
+    }
   };
 
   return (
     <div
-      className="hubly-overlay"
+      className="hubly-overlay hubly-cal-overlay"
       data-state={presence.state}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) handleClose();
       }}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 110,
-        background: "rgba(15, 23, 42, 0.45)",
-        backdropFilter: "blur(4px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 16,
-      }}
     >
       <div
         ref={dialogRef}
-        className="hubly-sheet"
+        className="hubly-sheet hubly-cal-modal hubly-wgal"
         data-state={presence.state}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        style={{
-          width: "100%",
-          maxWidth: 660,
-          maxHeight: "90vh",
-          background: "var(--ui-surface)",
-          borderRadius: 20,
-          border: "1px solid var(--ui-border)",
-          boxShadow: "0 24px 60px rgba(15, 23, 42, 0.22)",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-          color: "var(--ui-text)",
-        }}
+        onKeyDown={handleTrapTab}
       >
-        {/* Header */}
-        <div
-          style={{
-            padding: "16px 22px",
-            borderBottom: "1px solid var(--ui-muted)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 12,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: 10,
-                background: "var(--ui-accent-soft)",
-                color: "var(--hb-accent-text)",
-                display: "grid",
-                placeItems: "center",
-                flexShrink: 0,
-              }}
-            >
-              <LayoutGrid size={18} />
-            </div>
-            <div>
-              <h2
-                id={titleId}
-                style={{
-                  margin: 0,
-                  fontSize: 16,
-                  fontWeight: 700,
-                  color: "var(--ui-text)",
-                }}
-              >
-                Configurar widgets del Dashboard
-              </h2>
-              <p
-                style={{
-                  margin: "2px 0 0",
-                  fontSize: 12,
-                  color: "var(--ui-text-4)",
-                }}
-              >
-                Activa, oculta, cambia el ancho o reordena los {sortedWidgets.length}{" "}
-                módulos de Inicio ({visibleCount} visibles)
-              </p>
-            </div>
+        <div className="hubly-wgal-head">
+          <div>
+            <h2 id={titleId}>Widgets</h2>
+            <p>Toca uno para agregarlo a Inicio o quitarlo. Para acomodarlos o cambiar su ancho, usa Editar.</p>
           </div>
-
-          <button
-            type="button"
-            onClick={handleClose}
-            aria-label="Cerrar configuración de widgets"
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 9999,
-              border: "1px solid var(--ui-border)",
-              background: "var(--ui-surface-2)",
-              color: "var(--ui-text-4)",
-              display: "grid",
-              placeItems: "center",
-              cursor: "pointer",
-            }}
-          >
-            <X size={15} />
+          <button ref={doneRef} type="button" data-wgal-foco className="hbtn hbtn-primary hbtn-sm" onClick={handleClose}>
+            Listo
           </button>
         </div>
 
-        {/* Body */}
-        <div
-          style={{
-            padding: "18px 22px",
-            overflowY: "auto",
-            display: "flex",
-            flexDirection: "column",
-            gap: 10,
-          }}
-        >
-          {notice && (
-            <div
-              role="status"
-              style={{
-                padding: "9px 14px",
-                borderRadius: 10,
-                background: "var(--ui-accent-soft)",
-                border: "1px solid #BFE2F4",
-                color: "var(--hb-accent-text)",
-                fontSize: 12.5,
-                fontWeight: 600,
-              }}
-            >
-              {notice}
-            </div>
-          )}
+        {notice && <div className="hubly-wgal-aviso" role="status">{notice}</div>}
 
-          {sortedWidgets.map((w, idx) => {
-            const meta = WIDGET_METADATA[w.id] || {
-              title: w.title,
-              subtitle: w.description || "Widget operativo del Dashboard",
-              badge: "General",
-            };
-            const isFirst = idx === 0;
-            const isLast = idx === sortedWidgets.length - 1;
-
-            return (
-              <div
-                key={w.id}
-                style={{
-                  padding: "12px 14px",
-                  borderRadius: 14,
-                  border: w.visible
-                    ? "1px solid #CBD5E1"
-                    : "1px dashed #CBD5E1",
-                  background: w.visible ? "var(--ui-surface)" : "var(--ui-surface-2)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  flexWrap: "wrap",
-                  gap: 12,
-                  transition: "all 0.15s ease",
-                }}
-              >
-                {/* Left: Visibility Toggle + Title & Description */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    flex: "1 1 260px",
-                    minWidth: 0,
-                  }}
-                >
-                  <button
-                    ref={idx === 0 ? firstActionRef : undefined}
-                    type="button"
-                    role="switch"
-                    aria-checked={w.visible}
-                    aria-label={`Mostrar widget ${meta.title}`}
-                    onClick={() => handleToggleVisible(w.id, w.visible)}
-                    style={{
-                      width: 40,
-                      height: 24,
-                      borderRadius: 9999,
-                      border: "none",
-                      background: w.visible ? "var(--hb-accent)" : "var(--ui-border-strong)",
-                      padding: 2,
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: w.visible ? "flex-end" : "flex-start",
-                      flexShrink: 0,
-                      transition: "background 0.15s ease",
-                    }}
-                  >
-                    <span
-                      style={{
-                        width: 20,
-                        height: 20,
-                        borderRadius: 9999,
-                        background: "var(--ui-surface)",
-                        boxShadow: "0 1px 3px rgba(15,23,42,0.2)",
-                        display: "grid",
-                        placeItems: "center",
-                      }}
-                    >
-                      {w.visible ? (
-                        <Eye size={11} color="var(--hb-accent)" />
-                      ) : (
-                        <EyeOff size={11} color="#94A3B8" />
-                      )}
-                    </span>
-                  </button>
-
-                  <div style={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: 13.5,
-                          fontWeight: 700,
-                          color: w.visible ? "var(--ui-text)" : "var(--ui-text-4)",
-                        }}
+        <div className="hubly-wgal-scroll">
+          {CATALOGO.map(({ grupo, items }) => (
+            <section key={grupo}>
+              <h3 className="hubly-wgal-rotulo">{grupo}</h3>
+              <div className="hubly-wgal-grid">
+                {items.map((item) => {
+                  const placed = visibleIds.has(item.id);
+                  return (
+                    <div key={item.id} className={`hubly-wgal-card ${placed ? "is-placed" : ""}`}>
+                      <div className="hubly-wgal-preview" aria-hidden="true" inert>
+                        <div className="hubly-wgal-zoom">
+                          <WidgetPreview id={item.id} />
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        data-wgal-foco
+                        className="hubly-wgal-toggle"
+                        aria-pressed={placed}
+                        title={placed ? "Quitar de Inicio" : "Agregar a Inicio"}
+                        onClick={() => handleToggle(item.id)}
                       >
-                        {meta.title}
-                      </span>
-                      <span
-                        style={{
-                          padding: "1px 7px",
-                          borderRadius: 9999,
-                          background: w.visible ? "var(--ui-accent-soft)" : "var(--ui-muted)",
-                          color: w.visible ? "var(--hb-accent-text)" : "var(--ui-text-4)",
-                          fontSize: 10.5,
-                          fontWeight: 600,
-                        }}
-                      >
-                        {meta.badge}
-                      </span>
+                        <span className="hubly-wgal-nombre">{item.title}</span>
+                        <span className="hubly-wgal-estado">
+                          {placed ? <Check size={14} /> : <Plus size={14} />}
+                          {placed ? "Agregado" : "Agregar"}
+                        </span>
+                        <span className="hubly-wgal-desc">{item.description}</span>
+                      </button>
                     </div>
-                    <div
-                      style={{
-                        fontSize: 11.5,
-                        color: "var(--ui-text-4)",
-                        marginTop: 2,
-                        lineHeight: 1.35,
-                      }}
-                    >
-                      {meta.subtitle}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right: Column Selector (Izquierda | Derecha) + Order Arrows */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                  }}
-                >
-                  {/* Width switcher */}
-                  <div
-                    role="group"
-                    aria-label={`Ancho para ${meta.title}`}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      background: "var(--ui-muted)",
-                      padding: 2,
-                      borderRadius: 8,
-                      gap: 2,
-                    }}
-                  >
-                    {([1, 2, 3] as const).map((span) => {
-                      const isCurrent = (w.span ?? 1) === span;
-                      return (
-                        <button
-                          key={span}
-                          type="button"
-                          className="hubly-seg-pill"
-                          aria-pressed={isCurrent}
-                          aria-label={`${span} ${span === 1 ? "columna" : "columnas"}`}
-                          onClick={() => setWidgetSpan(w.id, span)}
-                          style={{
-                            minWidth: 26,
-                            padding: "4px 7px",
-                            borderRadius: 6,
-                            border: "none",
-                            background: isCurrent ? "var(--ui-surface)" : "transparent",
-                            color: isCurrent ? "var(--hb-accent-text)" : "var(--ui-text-4)",
-                            fontSize: 11,
-                            fontWeight: 600,
-                            cursor: "pointer",
-                            boxShadow: isCurrent ? "0 1px 2px rgba(15,23,42,0.08)" : "none",
-                          }}
-                        >
-                          {span}×
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Up / Down Order Buttons */}
-                  <div style={{ display: "inline-flex", gap: 4 }}>
-                    <button
-                      type="button"
-                      disabled={isFirst}
-                      onClick={() => moveWidget(w.id, "up")}
-                      aria-label={`Mover ${meta.title} hacia arriba`}
-                      title="Subir"
-                      style={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: 8,
-                        border: "1px solid var(--ui-border)",
-                        background: isFirst ? "var(--ui-surface-2)" : "var(--ui-surface)",
-                        color: isFirst ? "#CBD5E1" : "var(--ui-text-3)",
-                        display: "grid",
-                        placeItems: "center",
-                        cursor: isFirst ? "not-allowed" : "pointer",
-                        padding: 0,
-                      }}
-                    >
-                      <ArrowUp size={13} />
-                    </button>
-                    <button
-                      type="button"
-                      disabled={isLast}
-                      onClick={() => moveWidget(w.id, "down")}
-                      aria-label={`Mover ${meta.title} hacia abajo`}
-                      title="Bajar"
-                      style={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: 8,
-                        border: "1px solid var(--ui-border)",
-                        background: isLast ? "var(--ui-surface-2)" : "var(--ui-surface)",
-                        color: isLast ? "#CBD5E1" : "var(--ui-text-3)",
-                        display: "grid",
-                        placeItems: "center",
-                        cursor: isLast ? "not-allowed" : "pointer",
-                        padding: 0,
-                      }}
-                    >
-                      <ArrowDown size={13} />
-                    </button>
-                  </div>
-                </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
-
-        {/* Footer */}
-        <div
-          style={{
-            padding: "14px 22px",
-            borderTop: "1px solid var(--ui-muted)",
-            background: "var(--ui-surface-2)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 10,
-          }}
-        >
-          <button
-            type="button"
-            onClick={handleReset}
-            style={{
-              height: 36,
-              padding: "0 13px",
-              borderRadius: 10,
-              border: "1px solid var(--ui-border-strong)",
-              background: "var(--ui-surface)",
-              color: "var(--ui-text-3)",
-              fontSize: 12.5,
-              fontWeight: 600,
-              cursor: "pointer",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-            }}
-          >
-            <RotateCcw size={13} />
-            <span>Restablecer diseño original</span>
-          </button>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 4,
-                fontSize: 11.5,
-                color: "var(--ui-text-4)",
-                marginRight: 4,
-              }}
-            >
-              <Columns size={12} /> Guardado automático en este navegador
-            </span>
-
-            <button
-              type="button"
-              onClick={handleClose}
-              style={{
-                height: 36,
-                padding: "0 18px",
-                borderRadius: 10,
-                border: "none",
-                background: "var(--hb-accent)",
-                color: "#FFFFFF",
-                fontSize: 12.5,
-                fontWeight: 600,
-                cursor: "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                boxShadow: "0 2px 6px rgb(var(--hb-accent-rgb) / 0.28)",
-              }}
-            >
-              <Check size={14} />
-              <span>Listo</span>
-            </button>
-          </div>
+            </section>
+          ))}
         </div>
       </div>
     </div>

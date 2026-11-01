@@ -42,6 +42,7 @@ import type {
   Lead,
   LeadStage,
   Quote,
+  DashboardMetricId,
   DashboardWidgetConfig,
   DashboardWidgetId,
   DashboardWidgetSpan,
@@ -267,6 +268,7 @@ export interface HublyStoreState extends HublyWorkspaceData {
   reorderWidgets: (orderedIds: DashboardWidgetId[]) => void;
   moveWidget: (widgetId: DashboardWidgetId, direction: "up" | "down") => void;
   setWidgetSpan: (widgetId: DashboardWidgetId, span: DashboardWidgetSpan) => void;
+  setWidgetMetric: (widgetId: DashboardWidgetId, metric: DashboardMetricId) => void;
   resetWidgetsLayout: () => void;
   toggleOnboardingStep: (stepKey: OnboardingStepKey, forceValue?: boolean) => void;
   setOnboardingDismissed: (dismissed: boolean) => void;
@@ -1881,6 +1883,13 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   setWidgetSpan: (widgetId, span) => {
     set((s) => ({
       widgets: s.widgets.map((w) => (w.id === widgetId ? { ...w, span } : w)),
+    }));
+    persistWorkspaceState(get());
+  },
+
+  setWidgetMetric: (widgetId, metric) => {
+    set((s) => ({
+      widgets: s.widgets.map((w) => (w.id === widgetId ? { ...w, metric } : w)),
     }));
     persistWorkspaceState(get());
   },
