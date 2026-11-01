@@ -3,3 +3,9 @@
 
 # Archivos temporales de la CLI de Supabase (enlace local al proyecto)
 supabase/.temp/
+
+# Datos locales y secretos: nunca al repositorio
+.data/
+.env*
+!.env.example
+*.pem

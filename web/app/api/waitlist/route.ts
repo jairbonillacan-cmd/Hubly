@@ -1,13 +1,11 @@
+import { readJson } from "@/lib/api-guard";
+
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 // Reenvía cada registro a WAITLIST_WEBHOOK_URL (Zapier, Make, n8n, Google Apps Script...).
 export async function POST(request: Request) {
-  let payload: { email?: unknown; website?: unknown };
-  try {
-    payload = await request.json();
-  } catch {
-    return Response.json({ error: "invalid_request" }, { status: 400 });
-  }
+  const payload = await readJson<{ email?: unknown; website?: unknown }>(request, 2048);
+  if (!payload) return Response.json({ error: "invalid_request" }, { status: 400 });
 
   // Campo oculto: solo los bots lo rellenan, y se les responde como si nada.
   if (payload.website) {

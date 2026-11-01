@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useHublyStore } from "@/lib/store";
+import { safeNextPath } from "@/lib/supabase/config";
 import type { WorkspaceNotification } from "@/lib/types";
 import {
   HublyBellIcon as Bell,
@@ -95,7 +96,7 @@ export default function NotificacionesPage() {
                 <div style={{ fontSize: 13, color: "var(--ui-text-3)", marginTop: 2 }}>{n.body}</div>
                 <div style={{ display: "flex", gap: 14, marginTop: 8, fontSize: 12.5, fontWeight: 600 }}>
                   {n.actionUrl && (
-                    <Link href={n.actionUrl} onClick={() => markRead(n.id)} style={{ color: "var(--ui-accent-text-2)" }}>
+                    <Link href={safeNextPath(n.actionUrl, "/notificaciones")} onClick={() => markRead(n.id)} style={{ color: "var(--ui-accent-text-2)" }}>
                       Abrir
                     </Link>
                   )}

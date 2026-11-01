@@ -8,6 +8,9 @@ const DIR = path.join(process.cwd(), ".data", "media");
 const INDEX = path.join(DIR, "index.json");
 const ID = /^[0-9a-f-]{36}$/;
 
+/** El modo demo no tiene cuentas: publicado sin Supabase, cualquiera escribiría en el disco del servidor. */
+export const demoDiskEnabled = process.env.NODE_ENV !== "production";
+
 async function readIndex(): Promise<MediaRecord[]> {
   try {
     return JSON.parse(await fs.readFile(INDEX, "utf8")) as MediaRecord[];

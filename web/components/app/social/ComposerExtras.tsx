@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { localIsoDate } from "@/lib/date";
+import { safeLinkHref } from "@/lib/supabase/config";
 import { useHublyStore } from "@/lib/store";
 import type { BrandWorkspace, PostFormat, SocialNetwork, SocialPost } from "@/lib/types";
 import {
@@ -63,8 +64,8 @@ export function ManualResults({ post }: { post: SocialPost }) {
           <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Enlace al post (opcional)" aria-label="Enlace al post" style={{ ...field, flex: "1 1 200px" }} />
           <button type="submit" className="hbtn hbtn-secondary hbtn-sm">{published ? "Actualizar" : "Marcar como publicado"}</button>
         </div>
-        {post.publishedUrl && (
-          <a href={post.publishedUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12.5, color: "var(--ui-accent-text-2)", fontWeight: 600 }}>Abrir publicación</a>
+        {safeLinkHref(post.publishedUrl) && (
+          <a href={safeLinkHref(post.publishedUrl)} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12.5, color: "var(--ui-accent-text-2)", fontWeight: 600 }}>Abrir publicación</a>
         )}
       </form>
 

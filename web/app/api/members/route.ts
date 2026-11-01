@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readJson } from "@/lib/api-guard";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
@@ -23,7 +24,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   if (!backendEnabled) return NextResponse.json({ error: "backend_disabled" }, { status: 404 });
-  const body = (await request.json().catch(() => ({}))) as Record<string, string>;
+  const body = (await readJson<Record<string, string>>(request, 4096)) ?? {};
   const supabase = await createSupabaseServer();
   const { action, agencyId } = body;
   const call = () => {

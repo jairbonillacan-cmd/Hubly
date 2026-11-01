@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { readJson } from "@/lib/api-guard";
 import { MEDIA_BUCKET } from "@/lib/media";
-import { demoGet, demoRemove, demoUpdate } from "@/lib/media-demo-store";
+import { demoDiskEnabled, demoGet, demoRemove, demoUpdate } from "@/lib/media-demo-store";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
@@ -9,15 +10,15 @@ type Ctx = { params: Promise<{ id: string }> };
 /** Confirma una subida terminada, o mueve y renombra un archivo. */
 export async function PATCH(request: Request, { params }: Ctx) {
   const { id } = await params;
-  const body = (await request.json().catch(() => ({}))) as { status?: "ready"; folder?: string; name?: string };
+  const body = (await readJson<{ status?: "ready"; folder?: string; name?: string }>(request, 2048)) ?? {};
   const patch = {
     ...(body.status === "ready" ? { status: "ready" as const } : {}),
     ...(typeof body.folder === "string" ? { folder: body.folder.slice(0, 120) } : {}),
-    ...(body.name?.trim() ? { name: body.name.trim().slice(0, 255) } : {}),
+    ...(typeof body.name === "string" && body.name.trim() ? { name: body.name.trim().slice(0, 255) } : {}),
   };
 
   if (!backendEnabled) {
-    if (!(await demoGet(id))) return NextResponse.json({ error: "not_found" }, { status: 404 });
+    if (!demoDiskEnabled || !(await demoGet(id))) return NextResponse.json({ error: "not_found" }, { status: 404 });
     await demoUpdate(id, patch);
     return NextResponse.json({ ok: true });
   }
@@ -32,6 +33,7 @@ export async function PATCH(request: Request, { params }: Ctx) {
 export async function DELETE(_request: Request, { params }: Ctx) {
   const { id } = await params;
   if (!backendEnabled) {
+    if (!demoDiskEnabled) return NextResponse.json({ error: "not_found" }, { status: 404 });
     await demoRemove(id);
     return NextResponse.json({ ok: true });
   }

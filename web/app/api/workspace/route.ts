@@ -6,6 +6,7 @@ import {
   buildReferenceFixtureWorkspace,
   normalizeWorkspacePayload,
 } from "@/lib/workspace-repository";
+import { readBodyText } from "@/lib/api-guard";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import type { HublyWorkspaceData } from "@/lib/types";
@@ -14,11 +15,15 @@ const DATA_DIR = path.join(process.cwd(), ".data");
 const WORKSPACES_DIR = path.join(DATA_DIR, "workspaces");
 const LEGACY_DB_FILE = path.join(DATA_DIR, "hubly-db.json");
 
+// El modo demo no tiene cuentas: publicado sin Supabase, cualquiera escribiría en el disco del servidor.
+const demoDiskEnabled = process.env.NODE_ENV !== "production";
+
 function sanitizeWorkspaceId(rawId?: string | null): string {
   const cleaned = (rawId || "default")
     .trim()
     .toLowerCase()
-    .replace(/[^a-z0-9_-]/g, "-");
+    .replace(/[^a-z0-9_-]/g, "-")
+    .slice(0, 64);
   return cleaned || "default";
 }
 
@@ -159,14 +164,13 @@ async function liveGet(requestedAgency: string | null) {
 }
 
 async function livePost(request: Request) {
-  if (Number(request.headers.get("content-length") || 0) > MAX_BODY_BYTES) {
-    return NextResponse.json({ error: "too_large" }, { status: 413 });
-  }
-  const body = (await request.json().catch(() => null)) as {
+  const text = await readBodyText(request, MAX_BODY_BYTES).catch(() => null);
+  if (text === null) return NextResponse.json({ error: "too_large" }, { status: 413 });
+  const body = parseJson<{
     agencyId?: string;
     version?: number;
     data?: HublyWorkspaceData;
-  } | null;
+  }>(text);
   if (!body?.agencyId || typeof body.version !== "number" || !Array.isArray(body.data?.brands) || !Array.isArray(body.data?.posts)) {
     return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
   }
@@ -178,10 +182,21 @@ async function livePost(request: Request) {
     expected_version: body.version,
   });
   if (error) {
-    const status = error.message.includes("stale_version") ? 409 : error.message.includes("forbidden") ? 403 : 500;
-    return NextResponse.json({ error: error.message }, { status });
+    const known = { stale_version: 409, forbidden: 403, too_large: 413, invalid_payload: 400 } as const;
+    const code = (Object.keys(known) as (keyof typeof known)[]).find((k) => error.message.includes(k));
+    return code
+      ? NextResponse.json({ error: code }, { status: known[code] })
+      : NextResponse.json({ error: "save_failed" }, { status: 500 });
   }
   return NextResponse.json({ ok: true, version: data });
+}
+
+function parseJson<T>(text: string): T | null {
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    return null;
+  }
 }
 
 export async function GET(request: Request) {
@@ -197,15 +212,19 @@ export async function GET(request: Request) {
     return NextResponse.json(refData);
   }
 
+  if (!demoDiskEnabled) return NextResponse.json(createSeedWorkspaceData(workspaceId));
   const data = await readWorkspaceDb(workspaceId);
   return NextResponse.json(data);
 }
 
 export async function POST(request: Request) {
   if (backendEnabled) return livePost(request);
+  if (!demoDiskEnabled) return NextResponse.json({ error: "demo_read_only" }, { status: 503 });
   try {
     const { searchParams } = new URL(request.url);
-    const body = (await request.json()) as Partial<HublyWorkspaceData> & {
+    const text = await readBodyText(request, MAX_BODY_BYTES);
+    if (text === null) return NextResponse.json({ error: "too_large" }, { status: 413 });
+    const body = JSON.parse(text) as Partial<HublyWorkspaceData> & {
       action?: string;
     };
 
@@ -231,10 +250,7 @@ export async function POST(request: Request) {
       ok: true,
       workspaceId: saved.workspaceId,
     });
-  } catch (err) {
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Failed to save workspace" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ error: "Failed to save workspace" }, { status: 500 });
   }
 }

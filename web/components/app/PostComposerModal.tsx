@@ -32,6 +32,7 @@ import {
 } from "@/lib/post-draft";
 import { DEFAULT_WORKFLOW } from "@/lib/calendar-views";
 import { moveInList } from "@/lib/use-kanban-drag";
+import { safeLinkHref } from "@/lib/supabase/config";
 import type { CustomFieldDefinition, PlatformSettings, PostFormat, PostMedia, PostStatus, SocialNetwork, WorkflowStatus } from "@/lib/types";
 import {
   HublyArrowLeftIcon as ArrowLeft,
@@ -945,7 +946,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                       {draft.documents.filter((d) => (d.folder ?? "") === folder).map((doc) => (
                         <div key={doc.id} className="hubly-composer-doc">
                           <HublyDocumentIcon size={20} />
-                          <a href={doc.url} target="_blank" rel="noopener noreferrer">{doc.name}</a>
+                          <a href={safeLinkHref(doc.url)} target="_blank" rel="noopener noreferrer">{doc.name}</a>
                           {!readOnly && (
                             <button type="button" aria-label={`Quitar ${doc.name}`} onClick={() => syncExtras({ documents: draft.documents.filter((d) => d.id !== doc.id) })}>
                               <X size={14} />

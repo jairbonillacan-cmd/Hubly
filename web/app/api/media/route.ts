@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
+import { readJson } from "@/lib/api-guard";
 import { MEDIA_BUCKET, mediaKindFor, mediaRejection, safeFileName, type MediaRecord } from "@/lib/media";
-import { demoCreate, demoList, demoPurgePending } from "@/lib/media-demo-store";
+import { demoCreate, demoDiskEnabled, demoList, demoPurgePending } from "@/lib/media-demo-store";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
@@ -20,7 +21,7 @@ type Row = {
   created_at: string;
 };
 
-export const toRecord = (r: Row): MediaRecord => ({
+const toRecord = (r: Row): MediaRecord => ({
   id: r.id,
   brandId: r.brand_id,
   folder: r.folder,
@@ -38,6 +39,7 @@ export async function GET(request: Request) {
   if (!brandId) return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
 
   if (!backendEnabled) {
+    if (!demoDiskEnabled) return NextResponse.json({ items: [] }, noStore);
     await demoPurgePending(STALE_PENDING_MS);
     return NextResponse.json({ items: await demoList(brandId) }, noStore);
   }
@@ -73,24 +75,25 @@ export async function GET(request: Request) {
 
 /** Crea el registro y entrega dónde subir. El binario nunca pasa por el documento del workspace. */
 export async function POST(request: Request) {
-  const body = (await request.json().catch(() => null)) as {
+  const body = await readJson<{
     agencyId?: string;
     brandId?: string;
     folder?: string;
     name?: string;
     mime?: string;
     sizeBytes?: number;
-  } | null;
-  if (!body?.brandId || !body.name || !body.mime || typeof body.sizeBytes !== "number") {
+  }>(request, 4096);
+  if (!body?.brandId || !body.name || !body.mime || typeof body.brandId !== "string" || typeof body.name !== "string" || typeof body.mime !== "string" || typeof body.sizeBytes !== "number") {
     return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
   }
   const rejection = mediaRejection(body.mime, body.sizeBytes);
   const kind = mediaKindFor(body.mime);
   if (rejection || !kind) return NextResponse.json({ error: rejection }, { status: 422 });
   const name = body.name.slice(0, 255);
-  const folder = (body.folder ?? "").slice(0, 120);
+  const folder = typeof body.folder === "string" ? body.folder.slice(0, 120) : "";
 
   if (!backendEnabled) {
+    if (!demoDiskEnabled) return NextResponse.json({ error: "demo_read_only" }, { status: 503 });
     const record = await demoCreate({ brandId: body.brandId, folder, name, kind, mime: body.mime, sizeBytes: body.sizeBytes });
     return NextResponse.json({ record, upload: { url: `/api/media/${record.id}/file`, headers: {} } });
   }

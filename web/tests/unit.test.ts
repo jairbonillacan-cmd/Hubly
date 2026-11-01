@@ -5,7 +5,9 @@ import { addDays, dueLabelFor, localIsoDate } from "../lib/date";
 import { notebookPlainText, notebookTasks, notebookToHtml } from "../lib/notebook-content";
 import { buildCaptionSystemPrompt } from "../lib/ai-caption";
 import { buildMonthlyReport } from "../lib/reporting";
-import { safeNextPath } from "../lib/supabase/config";
+import { isCrossOriginWrite, rateLimitWait, readBodyText, readJson } from "../lib/api-guard";
+import { mediaKindFor } from "../lib/media";
+import { safeLinkHref, safeNextPath } from "../lib/supabase/config";
 import type { SocialPost } from "../lib/types";
 import { moveInList } from "../lib/use-kanban-drag";
 
@@ -65,6 +67,53 @@ test("safeNextPath bloquea redirecciones externas", () => {
   assert.equal(safeNextPath("https://evil.com"), "/dashboard");
   assert.equal(safeNextPath("/\\evil.com"), "/dashboard");
   assert.equal(safeNextPath(null, "/onboarding"), "/onboarding");
+  assert.equal(safeNextPath("/\t/evil.com"), "/dashboard");
+  assert.equal(safeNextPath("/\n/evil.com"), "/dashboard");
+  assert.equal(safeNextPath("/%09/evil.com"), "/%09/evil.com");
+});
+
+test("safeLinkHref solo deja web, correo y rutas internas", () => {
+  assert.equal(safeLinkHref("https://instagram.com/p/1"), "https://instagram.com/p/1");
+  assert.equal(safeLinkHref("/api/media/1/file"), "/api/media/1/file");
+  assert.equal(safeLinkHref("javascript:alert(1)"), undefined);
+  assert.equal(safeLinkHref(" JaVaScRiPt:alert(1)"), undefined);
+  assert.equal(safeLinkHref("data:text/html,<script>1</script>"), undefined);
+  assert.equal(safeLinkHref("//evil.com"), undefined);
+  assert.equal(safeLinkHref(""), undefined);
+});
+
+test("mediaKindFor no admite SVG ni tipos con parámetros", () => {
+  assert.equal(mediaKindFor("image/png"), "image");
+  assert.equal(mediaKindFor("image/svg+xml"), null);
+  assert.equal(mediaKindFor("image/svg+xml; charset=utf-8"), null);
+  assert.equal(mediaKindFor("image/SVG+XML"), null);
+  assert.equal(mediaKindFor("text/html"), null);
+});
+
+test("readBodyText corta aunque Content-Length falte", async () => {
+  const stream = () => new ReadableStream({ start(c) { c.enqueue(new TextEncoder().encode("a".repeat(100))); c.close(); } });
+  const post = (body: BodyInit) => new Request("http://x/", { method: "POST", body, duplex: "half" } as RequestInit);
+  assert.equal(await readBodyText(post(stream()), 10), null);
+  assert.equal((await readBodyText(post(stream()), 100))?.length, 100);
+  assert.deepEqual(await readJson(post('{"a":1}')), { a: 1 });
+  assert.equal(await readJson(post("no es json")), null);
+});
+
+test("rateLimitWait frena la ráfaga y se libera al pasar la ventana", () => {
+  const now = 1_000_000;
+  for (let i = 0; i < 5; i++) assert.equal(rateLimitWait("POST", "/api/waitlist", "1.1.1.1", now), 0);
+  assert.equal(rateLimitWait("POST", "/api/waitlist", "1.1.1.1", now), 600);
+  assert.equal(rateLimitWait("POST", "/api/waitlist", "2.2.2.2", now), 0);
+  assert.equal(rateLimitWait("POST", "/api/waitlist", "1.1.1.1", now + 600_000), 0);
+  assert.equal(rateLimitWait("GET", "/api/workspace", "1.1.1.1", now), 0);
+});
+
+test("isCrossOriginWrite solo bloquea escrituras de otro origen", () => {
+  assert.equal(isCrossOriginWrite("POST", "https://evil.com", "hubly.app"), true);
+  assert.equal(isCrossOriginWrite("POST", "null", "hubly.app"), true);
+  assert.equal(isCrossOriginWrite("POST", "https://hubly.app", "hubly.app"), false);
+  assert.equal(isCrossOriginWrite("POST", null, "hubly.app"), false);
+  assert.equal(isCrossOriginWrite("GET", "https://evil.com", "hubly.app"), false);
 });
 
 test("buildMonthlyReport solo cuenta publicados medidos del mes", () => {

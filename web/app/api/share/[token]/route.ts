@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readJson } from "@/lib/api-guard";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseServer } from "@/lib/supabase/server";
 
@@ -18,12 +19,12 @@ export async function GET(_request: Request, { params }: Ctx) {
 export async function POST(request: Request, { params }: Ctx) {
   if (!backendEnabled) return NextResponse.json({ error: "backend_disabled" }, { status: 404 });
   const { token } = await params;
-  const body = (await request.json().catch(() => ({}))) as {
+  const body = (await readJson<{
     postId?: string;
     decision?: string;
     comment?: string;
     signer?: string;
-  };
+  }>(request, 16 * 1024)) ?? {};
   const supabase = await createSupabaseServer();
   const { data, error } = await supabase.rpc("submit_share_decision", {
     raw_token: token,

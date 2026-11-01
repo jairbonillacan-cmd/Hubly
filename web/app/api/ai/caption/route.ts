@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
+import { readJson } from "@/lib/api-guard";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { buildCaptionSystemPrompt, type CaptionBrandContext } from "@/lib/ai-caption";
@@ -17,17 +18,21 @@ export async function POST(request: Request) {
     if (!auth.user) return NextResponse.json({ error: "not_authenticated" }, { status: 401 });
     const { data: rows } = await supabase.from("agency_members").select("role").eq("user_id", auth.user.id);
     if (!rows?.some((r) => r.role !== "viewer")) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+    // Cuota diaria en la base: el límite del proxy es por instancia y cualquiera puede crear su agencia.
+    // PGRST202: el proyecto aún no tiene la migración que define la función.
+    const { data: allowed, error } = await supabase.rpc("consume_ai_quota");
+    if (error ? error.code !== "PGRST202" : !allowed) return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   } else if (process.env.NODE_ENV === "production") {
     return NextResponse.json({ error: "ai_not_configured" }, { status: 503 });
   }
 
-  const body = (await request.json().catch(() => null)) as {
+  const body = await readJson<{
     brief?: string;
     network?: string;
     format?: string;
     brand?: CaptionBrandContext;
-  } | null;
-  const brief = body?.brief?.trim();
+  }>(request, 32 * 1024);
+  const brief = typeof body?.brief === "string" ? body.brief.trim() : "";
   if (!brief) return NextResponse.json({ error: "brief_required" }, { status: 400 });
   if (brief.length > MAX_BRIEF_CHARS) return NextResponse.json({ error: "brief_too_long" }, { status: 400 });
 
