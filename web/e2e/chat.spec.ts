@@ -145,6 +145,9 @@ test("manda elementos de Hubly desde el menú", async ({ page }) => {
   const title = (await first.locator(".hubly-chat-option-title").innerText()).trim();
   await first.click();
   await expect(lastMessage(page).locator(".hubly-chat-attachment")).toContainText(title);
+  // Una tarea abierta aparece como pendiente del chat.
+  await page.locator(".hubly-chat-pending-btn").click();
+  await expect(page.getByRole("menu", { name: "Pendientes de este chat" })).toContainText(title);
 });
 
 test("crea, renombra y elimina un canal; la lista fija y silencia", async ({ page }) => {

@@ -25,6 +25,7 @@ import {
   HublyChatIcon,
   HublyChevronDownIcon,
   HublyChevronRightIcon,
+  HublyClipboardIcon,
   HublyClockIcon,
   HublyCloseIcon,
   HublyHashIcon,
@@ -32,7 +33,9 @@ import {
   HublySearchIcon,
 } from "@/components/app/icons/DuotoneIcons";
 import { askText } from "@/components/app/AppDialogHost";
+import Link from "next/link";
 import { ChatAvatar } from "@/components/app/chat/ChatAvatar";
+import { PopMenu } from "@/components/app/chat/PopMenu";
 import { ChatComposer, type ChatComposerHandle, type ChatMentionOption } from "@/components/app/chat/ChatComposer";
 import { ChatDetails } from "@/components/app/chat/ChatDetails";
 import { ChatMessageRow } from "@/components/app/chat/ChatMessageRow";
@@ -102,6 +105,8 @@ export default function ChatPage() {
   const typing = useChatPresence((s) => s.typing);
   const hasOlder = useChatPresence((s) => s.hasOlder);
   const liveReady = useChatPresence((s) => s.ready);
+  const tasks = useHublyStore((s) => s.tasks);
+  const posts = useHublyStore((s) => s.posts);
 
   const myName = profile?.name || "Equipo";
   const myInitials = initialsOf(myName);
@@ -118,6 +123,8 @@ export default function ChatPage() {
   const [limit, setLimit] = useState(PAGE_SIZE);
   const [queueOpen, setQueueOpen] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [pendingOpen, setPendingOpen] = useState(false);
+  const closePending = useCallback(() => setPendingOpen(false), []);
   const [remoteResults, setRemoteResults] = useState<ChatMessage[]>([]);
   const keepScroll = useRef<number | null>(null);
   const [muted, toggleMutedId] = usePreferenceList(MUTED_KEY);
@@ -260,6 +267,11 @@ export default function ChatPage() {
     setLimit(PAGE_SIZE);
     setQueueOpen(false);
   }, []);
+
+  useEffect(() => {
+    useChatPresence.setState({ viewing: selectedId });
+    return () => useChatPresence.setState({ viewing: null });
+  }, [selectedId]);
 
   useEffect(() => {
     if (selectedId) markChatRead(selectedId);
@@ -422,6 +434,20 @@ export default function ChatPage() {
 
   const lastPinned = pinned[pinned.length - 1];
 
+  // Lo que se mandó a este chat y sigue abierto: tareas sin terminar y posts sin publicar.
+  const pending = roots.flatMap((m) => {
+    const a = m.attachment;
+    if (a?.kind === "task") {
+      const task = tasks.find((t) => t.id === a.id);
+      return task && !task.completed ? [a] : [];
+    }
+    if (a?.kind === "post") {
+      const post = posts.find((p) => p.id === a.id);
+      return post && post.status !== "published" ? [a] : [];
+    }
+    return [];
+  }).filter((a, i, list) => list.findIndex((o) => o.kind === a.kind && o.id === a.id) === i);
+
   return (
     <div className="hubly-chat" data-conversacion={selectedId ? "abierta" : "ninguna"} data-hilo={side && active ? "abierto" : "cerrado"}>
       <ChatSidebar
@@ -493,6 +519,22 @@ export default function ChatPage() {
                 )}
                 <h1>{active.name}</h1>
               </button>
+              {pending.length > 0 ? (
+                <span className="hubly-chat-tool-wrap hubly-chat-pending">
+                  <button type="button" className="hubly-chat-pending-btn" data-pop-trigger aria-expanded={pendingOpen} onClick={() => setPendingOpen((v) => !v)}>
+                    {pending.length === 1 ? "1 pendiente" : `${pending.length} pendientes`}
+                  </button>
+                  <PopMenu open={pendingOpen} onClose={closePending} label="Pendientes de este chat" className="hubly-chat-pending-pop">
+                    <div className="hubly-chat-pop-title">Sigue abierto</div>
+                    {pending.map((a) => (
+                      <Link key={`${a.kind}-${a.id}`} href={a.href} role="menuitem" className="hubly-chat-menuitem" onClick={closePending}>
+                        {a.kind === "task" ? <HublyClipboardIcon size={15} /> : <HublyHashIcon size={15} />}
+                        <span className="hubly-chat-details-clip">{a.title}</span>
+                      </Link>
+                    ))}
+                  </PopMenu>
+                </span>
+              ) : null}
               <div className="hubly-chat-header-actions">
                 <button
                   type="button"

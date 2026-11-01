@@ -11,7 +11,7 @@ import {
 import { selectAccountRecommendations } from "./domain-selectors";
 import { localIsoDate } from "./date";
 import { nextOccurrence, toggleReaction } from "./chat";
-import { chatRemote, newChatId, startChatLive } from "./chat-live";
+import { CHAT_NOTIFICATION_PREFIX, chatRemote, newChatId, startChatLive } from "./chat-live";
 import { moveInList } from "./use-kanban-drag";
 import { backendEnabled } from "./supabase/config";
 import { createAgent, duplicateAgent, isBlankAgent } from "./agents";
@@ -368,7 +368,7 @@ function extractWorkspaceData(state: HublyStoreState): HublyWorkspaceData {
     team: state.team,
     invitations: state.invitations,
     activityEvents: state.activityEvents,
-    notifications: state.notifications,
+    notifications: state.notifications.filter((n) => !n.id.startsWith(CHAT_NOTIFICATION_PREFIX)),
     widgets: state.widgets,
     onboarding: state.onboarding,
     dismissedRecommendationIds: state.dismissedRecommendationIds,

@@ -138,6 +138,10 @@ test("dos personas conversan en vivo y lo privado sigue privado", async ({ brows
   await composer(a).fill("revisa esto @Carla Paz");
   await composer(a).press("Enter");
   await expect(c.locator(".hubly-chat-item", { hasText: "General" }).locator(".hubly-chat-badge")).toContainText("@");
+  // El aviso le llega a Carla, que no está viendo el canal; Ana no recibe el suyo, porque sí lo veía.
+  await c.getByRole("button", { name: /notificaciones/i }).first().click();
+  await expect(c.getByText("Ana Ruiz te mencionó")).toBeVisible();
+  await c.keyboard.press("Escape");
 
   // Tarjeta de perfil.
   await open(c, "General");

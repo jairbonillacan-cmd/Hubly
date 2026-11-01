@@ -19,8 +19,9 @@ import {
 } from "@/lib/chat-rows";
 import { toggleReaction } from "@/lib/chat";
 import { createSupabaseBrowser } from "@/lib/supabase/browser";
-import type { ChatChannel, ChatMessage, ChatReminder, ChatScheduledMessage } from "@/lib/types";
+import type { ChatChannel, ChatMessage, ChatReminder, ChatScheduledMessage, WorkspaceNotification } from "@/lib/types";
 
+export const CHAT_NOTIFICATION_PREFIX = "chat-mencion-";
 const PAGE_SIZE = 50;
 const UNREAD_CAP = 100;
 const TYPING_MS = 4000;
@@ -34,7 +35,9 @@ export const useChatPresence = create<{
   hasOlder: Record<string, boolean>;
   /** Ya hay conexión con las tablas: se puede buscar y escribir en ellas. */
   ready: boolean;
-}>(() => ({ online: [], typing: {}, hasOlder: {}, ready: false }));
+  /** Chat abierto en esta pestaña: lo que llega ahí ya se está viendo y no se avisa. */
+  viewing: string | null;
+}>(() => ({ online: [], typing: {}, hasOlder: {}, ready: false, viewing: null }));
 
 export interface ChatBot {
   id: string;
@@ -47,6 +50,7 @@ interface ChatState {
   chatScheduled?: ChatScheduledMessage[];
   chatReminders?: ChatReminder[];
   team: { id: string; name: string }[];
+  notifications: WorkspaceNotification[];
   brands: { id: string; name: string }[];
   profile?: { id: string; name: string; avatarUrl?: string } | null;
 }
@@ -201,7 +205,25 @@ function subscribe(db: SupabaseClient, agencyId: string, me: string, input: Chat
         if (s.messages.some((m) => m.id === row.id)) return {};
         const fromOther = row.user_id !== me && !row.parent_id;
         const mentioned = fromOther && mentionsName(row.text, s.profile?.name ?? "");
+        const watching = useChatPresence.getState().viewing === row.channel_id && document.visibilityState === "visible";
         return {
+          // Personal: se queda en esta sesión y nunca entra al documento compartido.
+          ...(mentioned && !watching
+            ? {
+                notifications: [
+                  {
+                    id: `${CHAT_NOTIFICATION_PREFIX}${row.id}`,
+                    title: `${row.sender_name} te mencionó`,
+                    body: row.text,
+                    createdAt: row.created_at,
+                    read: false,
+                    kind: "comentario" as const,
+                    actionUrl: `/chat?c=${encodeURIComponent(row.channel_id)}&m=${encodeURIComponent(row.id)}`,
+                  },
+                  ...s.notifications,
+                ],
+              }
+            : {}),
           messages: [...s.messages, rowToMessage(row)],
           channels: fromOther
             ? s.channels.map((c) => (c.id === row.channel_id ? { ...c, unread: c.unread + 1, mentioned: c.mentioned || mentioned } : c))
