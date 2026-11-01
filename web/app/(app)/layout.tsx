@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState, useLayoutEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import "./hubly-saas.css";
 import "./app-base.css";
 import "./dashboard-polish.css";
@@ -21,6 +21,7 @@ import { FloatingAIDrawer } from "@/components/app/FloatingAIDrawer";
 import { AppDialogHost } from "@/components/app/AppDialogHost";
 import { SaveStatus } from "@/components/app/SaveStatus";
 import { backendEnabled } from "@/lib/supabase/config";
+import type { HublyAgent } from "@/lib/types";
 import { DescubreHublyWidget } from "@/components/app/DescubreHublyWidget";
 import { HublyCatAvatar, HublyRoughFilterDefs, BentoIcon, ChatBubbleIcon, HublyHomeIcon, NotebookIcon, CalendarFilledIcon, BrainFilledIcon, FolderFilledIcon, LayersFilledIcon, HashBoldIcon, BullseyeFilledIcon } from "@/components/app/icons/HublyIcons";
 import { HublyBrandLogo } from "@/components/brand/HublyBrandLogo";
@@ -71,6 +72,8 @@ const TIMEZONE_OPTIONS = [
   { value: "UTC", label: "UTC" },
 ];
 
+const NO_AGENTS: HublyAgent[] = [];
+
 const DEMO_WORKSPACES = [
   { id: "default", label: "Mi Agencia (Principal)", badge: "Principal" },
   { id: "workspace-b", label: "Agencia Norte (Workspace B)", badge: "Demo B" },
@@ -82,6 +85,7 @@ export default function SaaSAppLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname() || "/dashboard";
+  const router = useRouter();
 
   // Store selectors (100% reactive, zero hardcoded user or brand literals)
   const syncFromServer = useHublyStore((s) => s.syncFromServer);
@@ -115,6 +119,8 @@ export default function SaaSAppLayout({
   const aiDrawerOpen = useHublyStore((s) => s.aiDrawerOpen);
   const composerOpen = useHublyStore((s) => s.composerOpen);
   const setAiDrawerOpen = useHublyStore((s) => s.setAiDrawerOpen);
+  const agents = useHublyStore((s) => s.agents) ?? NO_AGENTS;
+  const addAgent = useHublyStore((s) => s.addAgent);
   const inviteModalOpen = useHublyStore((s) => s.inviteModalOpen);
   const setInviteModalOpen = useHublyStore((s) => s.setInviteModalOpen);
   const widgetConfigModalOpen = useHublyStore((s) => s.widgetConfigModalOpen);
@@ -132,7 +138,9 @@ export default function SaaSAppLayout({
   const [collapsed, setCollapsed] = useState(false);
   const [userToggledCollapse, setUserToggledCollapse] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-  const [sidebarTab, setSidebarTab] = useState<"inicio" | "hubi" | "chats">("inicio");
+  const [sidebarTab, setSidebarTab] = useState<"inicio" | "hubi" | "chats">(
+    pathname.startsWith("/agentes") ? "hubi" : "inicio"
+  );
   const { theme, toggleTheme } = useHublyTheme();
   const [brandMenuOpen, setBrandMenuOpen] = useState(false);
   const brandMenuPresence = useModalPresence(brandMenuOpen, 100);
@@ -291,6 +299,13 @@ export default function SaaSAppLayout({
       return `${baseHref}&${preservedQuerySuffix.slice(1)}`;
     }
     return `${baseHref}${preservedQuerySuffix}`;
+  };
+
+  const handleCreateAgent = () => {
+    const agent = addAgent();
+    if (!agent) return;
+    setMobileDrawerOpen(false);
+    router.push(withQuery(`/agentes/${agent.id}`));
   };
 
   const agencyNav = useMemo(
@@ -1395,14 +1410,35 @@ export default function SaaSAppLayout({
               <>
                 <div className="hubly-sidebar-panel-head">
                   <span>Agentes</span>
-                  <button type="button" aria-label="Crear agente con Hubi" onClick={() => setAiDrawerOpen(true)}>
+                  <button type="button" aria-label="Crear agente" title="Crear agente" onClick={handleCreateAgent}>
                     <Plus size={14} />
                   </button>
                 </div>
-                <button type="button" className="hubly-sidebar-empty" onClick={() => setAiDrawerOpen(true)}>
-                  <strong>Sin agentes</strong>
-                  <small>Crea tu primer agente</small>
-                </button>
+                {agents.length > 0 ? (
+                  <nav className="hubly-sidebar-agents" aria-label="Agentes">
+                    {agents.map((agent) => {
+                      const href = `/agentes/${agent.id}`;
+                      return (
+                        <Link
+                          key={agent.id}
+                          href={withQuery(href)}
+                          title={agent.name}
+                          aria-current={pathname === href ? "page" : undefined}
+                          className="hubly-sidebar-agent"
+                          onClick={() => setMobileDrawerOpen(false)}
+                        >
+                          <HublyCatAvatar size={22} />
+                          <span>{agent.name}</span>
+                        </Link>
+                      );
+                    })}
+                  </nav>
+                ) : (
+                  <button type="button" className="hubly-sidebar-empty" onClick={handleCreateAgent}>
+                    <strong>Sin agentes</strong>
+                    <small>Crea tu primer agente</small>
+                  </button>
+                )}
               </>
             ) : (
               <>

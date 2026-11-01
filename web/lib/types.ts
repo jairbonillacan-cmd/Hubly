@@ -620,6 +620,23 @@ export interface WorkspaceNotification {
   actionUrl?: string;
 }
 
+export interface HublyAgentMessage {
+  id: string;
+  role: "hubi" | "user";
+  text: string;
+}
+
+export interface HublyAgent {
+  id: string;
+  name: string;
+  templateId?: string;
+  purpose: string;
+  cadence: string;
+  notes: string[];
+  messages: HublyAgentMessage[];
+  createdAt: string;
+}
+
 export interface HublyWorkspaceData {
   /** Versión del documento; 2 introduce `media` y ajustes por red en los posts. */
   schemaVersion?: number;
@@ -635,6 +652,7 @@ export interface HublyWorkspaceData {
   leads?: Lead[];
   quotes?: Quote[];
   automations?: AutomationRule[];
+  agents?: HublyAgent[];
   tasks: AgencyTask[];
   taskLists?: TaskListDef[];
   calendarActivities?: unknown[];
