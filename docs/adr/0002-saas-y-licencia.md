@@ -10,5 +10,6 @@ El repositorio es público y el archivo `LICENSE` y la landing declaran AGPL-3.0
 
 ## Pendiente
 - Mantener AGPL y público, o cerrar el código.
-- Si se incorpora código AGPL de terceros, cerrar después deja de ser una opción simple. Decidir antes de copiar (ADR 0003).
+- No se incorpora código de Postiz (ADR 0003), para no limitar esta decisión.
+- Cerrar el código solo afecta versiones futuras: lo ya publicado sigue disponible bajo AGPL para quien lo tenga.
 - Cambiar la licencia del código ya publicado requiere revisión legal.

@@ -11,7 +11,7 @@ Prioridad: P0 riesgo de datos o legal · P1 impide el ciclo real o los cambios s
 | Etapa | Compuerta | Estado |
 |---|---|---|
 | 0. Decisiones y controles | CI obligatorio, migraciones aplicadas, `npm run dev:live` funcionando | En curso |
-| 1. Licencia y prueba del motor | Publicación real demostrada y vía de licencia por escrito | Pendiente |
+| 1. Prueba del motor | Publicación real demostrada desde la especificación propia (ADR 0003) | Pendiente |
 | 2. Datos reales por dominio | `/api/workspace` eliminado o reducido a preferencias; aislamiento por marca probado | Pendiente |
 | 3. Publicación real | Un post aprobado sale a tiempo, una sola vez, aun con reintento forzado | Pendiente |
 | 4. Ciclo completo con la agencia | Dos semanas con un cliente real sin volver a la herramienta anterior | Pendiente |
@@ -25,7 +25,7 @@ Revisado el 1 de noviembre de 2026 sobre el reporte de auditoría externo.
 
 | ID | P | Hallazgo | Evidencia | Etapa |
 |---|---|---|---|---|
-| H-02 | P0 | Licencia a largo plazo sin decidir antes de tomar código de Postiz | `LICENSE`, ADR 0002 y 0003 | 1 |
+| H-02 | P2 | Licencia a largo plazo sin decidir; ya no bloquea porque no se toma código de Postiz | `LICENSE`, ADR 0002 y 0003 | 7 |
 | D-01 | P1 | Casi todo vive en un documento JSONB con tope de 8 MB | `agency_workspaces`, `HublyWorkspaceData`, `app/api/workspace/route.ts` | 2 |
 | D-02 | P1 | Sin permisos por marca: `brandIds` no aparece en ninguna migración | `supabase/migrations` | 2 |
 | D-03 | P1 | Dos arquitecturas, demo y real | `backendEnabled` en 38 archivos | 2 |

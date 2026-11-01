@@ -24,6 +24,7 @@ El plan vigente está en [docs/ROADMAP.md](docs/ROADMAP.md) y las decisiones en 
 - No añadas una dependencia sin justificarla en el PR.
 - Las migraciones destructivas requieren aprobación del dueño.
 - Sin comentarios con nombres de capturas, chunks o agentes.
+- No copies, traduzcas ni adaptes código de Postiz. Solo se usa como inspiración, con el proceso del ADR 0003.
 - No hay pantalla nueva sin backend real, o con la etiqueta «Función prevista».
 - Antes de entregar corre, desde `web/`: `npm run lint`, `npm run check:ui`, `npx tsc --noEmit`, `npm test`, `npm run test:db` y `npm run build`.
 - No subas el tope de avisos de `npm run lint`. Solo puede bajar.
