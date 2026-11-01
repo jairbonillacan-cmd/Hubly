@@ -1,11 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import { AppDialogHost } from "@/components/app/AppDialogHost";
 import { ChatQueueRunner } from "@/components/app/chat/ChatQueueRunner";
 import { DescubreHublyWidget } from "@/components/app/DescubreHublyWidget";
 import { SaveStatus } from "@/components/app/SaveStatus";
 import { useHublyStore } from "@/lib/store";
+import "@/lib/live-merge-bridge";
 
 // Pesan mucho y casi nunca se abren al entrar: no van en el paquete inicial.
 const FloatingAIDrawer = dynamic(() => import("@/components/app/FloatingAIDrawer").then((m) => m.FloatingAIDrawer), { ssr: false });
@@ -19,6 +21,9 @@ const AutoSuggestionsModal = dynamic(() => import("@/components/app/AutoSuggesti
 
 /** Lo que flota sobre cualquier pantalla: ventanas, cajones y avisos. */
 export function AppSurfaces() {
+  // Solo existen en el navegador: montarlas tras hidratar evita que el servidor intente validarlas.
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []); // eslint-disable-line react-hooks/set-state-in-effect -- marca el fin de la hidratación
   const activeNotebookId = useHublyStore((s) => s.activeNotebookId);
   const setActiveNotebookId = useHublyStore((s) => s.setActiveNotebookId);
   const widgetConfigModalOpen = useHublyStore((s) => s.widgetConfigModalOpen);
@@ -32,14 +37,18 @@ export function AppSurfaces() {
       <AppDialogHost />
       <ChatQueueRunner />
       <SaveStatus />
-      <FloatingAIDrawer />
-      <PostComposerModal />
-      <NewBrandModal />
-      <CommandPaletteModal />
-      <InviteTeamModal />
-      <NotebookReaderModal open={Boolean(activeNotebookId)} notebookId={activeNotebookId} onClose={() => setActiveNotebookId(null)} />
-      <WidgetConfigModal open={widgetConfigModalOpen} onClose={() => setWidgetConfigModalOpen(false)} />
-      <AutoSuggestionsModal open={autoSuggestionsModalOpen} onClose={() => setAutoSuggestionsModalOpen(false)} />
+      {hydrated && (
+        <>
+          <FloatingAIDrawer />
+        <PostComposerModal />
+        <NewBrandModal />
+        <CommandPaletteModal />
+        <InviteTeamModal />
+        <NotebookReaderModal open={Boolean(activeNotebookId)} notebookId={activeNotebookId} onClose={() => setActiveNotebookId(null)} />
+        <WidgetConfigModal open={widgetConfigModalOpen} onClose={() => setWidgetConfigModalOpen(false)} />
+        <AutoSuggestionsModal open={autoSuggestionsModalOpen} onClose={() => setAutoSuggestionsModalOpen(false)} />
+        </>
+      )}
     </>
   );
 }

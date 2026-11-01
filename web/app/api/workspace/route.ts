@@ -119,7 +119,27 @@ async function liveGet(requestedAgency: string | null) {
 
   // El cliente de Supabase tipa esta relación como lista, aunque aquí devuelve una sola fila.
   const agency = membership.agencies as unknown as { name: string } | null;
-  const data = normalizeWorkspacePayload(row.data as Partial<HublyWorkspaceData>, membership.agency_id, { live: true });
+  // Con la tabla de marcas poblada, ella manda y aplica los permisos por marca. Sin filas, o sin
+  // la migración, se sigue con el documento. Va antes de normalizar: las filas reciben lo mismo que él.
+  const doc = { ...(row.data as Partial<HublyWorkspaceData>) };
+  const { data: brandRows, error: brandsError } = await supabase
+    .from("brands")
+    .select("id, name, slug, data")
+    .eq("agency_id", membership.agency_id)
+    .order("position");
+  if (!brandsError && brandRows?.length) {
+    doc.brands = (brandRows as BrandRow[]).map(brandFromRow);
+    // 0014 copia posts y tareas: una lista vacía es real, y volver al documento mostraría lo que no puede ver.
+    const [posts, tasks] = await Promise.all(
+      ["posts", "tasks"].map((table) =>
+        supabase.from(table).select("data").eq("agency_id", membership.agency_id).order("position")
+      )
+    );
+    if (!posts.error) doc.posts = (posts.data ?? []).map((item) => item.data);
+    if (!tasks.error) doc.tasks = (tasks.data ?? []).map((item) => item.data);
+  }
+
+  const data = normalizeWorkspacePayload(doc, membership.agency_id, { live: true });
   // El perfil es de cada persona: nunca se toma del documento compartido.
   const name = (auth.user.user_metadata?.name as string) || auth.user.email || "";
   data.agencyName = agency?.name || data.agencyName;
@@ -133,26 +153,6 @@ async function liveGet(requestedAgency: string | null) {
     avatarUrl: (auth.user.user_metadata?.avatar_url as string) || undefined,
     avatarSourceUrl: (auth.user.user_metadata?.avatar_source_url as string) || undefined,
   };
-  // Con la tabla de marcas poblada, ella manda y aplica los permisos por marca.
-  // Sin filas, o sin la migración aplicada, se sigue con el documento.
-  const { data: brandRows, error: brandsError } = await supabase
-    .from("brands")
-    .select("id, name, slug, data")
-    .eq("agency_id", membership.agency_id)
-    .order("position");
-  if (!brandsError && brandRows?.length) data.brands = (brandRows as BrandRow[]).map(brandFromRow);
-  // Con las marcas en tabla, posts y tareas también lo están (0014 los copia): una lista vacía es real,
-  // y volver al documento mostraría lo que esta persona no puede ver.
-  if (!brandsError && brandRows?.length) {
-    const [posts, tasks] = await Promise.all(
-      ["posts", "tasks"].map((table) =>
-        supabase.from(table).select("data").eq("agency_id", membership.agency_id).order("position")
-      )
-    );
-    if (!posts.error) data.posts = (posts.data ?? []).map((row) => row.data);
-    if (!tasks.error) data.tasks = (tasks.data ?? []).map((row) => row.data);
-  }
-
   const { data: members } = await supabase.rpc("list_members", { target_agency: membership.agency_id });
   const ROLE_LABEL: Record<string, string> = { owner: "Dueño", admin: "Administración", editor: "Edición", viewer: "Solo lectura" };
   data.team = ((members ?? []) as { user_id: string; role: string; email: string; name: string }[]).map((m) => {

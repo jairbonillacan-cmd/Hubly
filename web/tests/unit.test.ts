@@ -240,6 +240,8 @@ test("un 409 conserva el cambio hasta que la persona elige", async () => {
   const responses = [
     new Response(JSON.stringify({ data: { profile: { id: "u1" } }, version: 1, agencyId: "a1", role: "editor" })),
     new Response("{}", { status: 409 }),
+    // Antes de preguntar se intenta unir: aquí ambas personas cambiaron lo mismo, así que no se puede.
+    new Response(JSON.stringify({ data: { profile: { id: "u1" }, agencyName: "suya" }, version: 4 })),
     new Response(JSON.stringify({ version: 5 })),
     new Response(JSON.stringify({ version: 6 })),
   ];

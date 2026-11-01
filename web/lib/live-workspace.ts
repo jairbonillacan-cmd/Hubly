@@ -1,5 +1,6 @@
 import type { HublyWorkspaceData } from "./types";
 import { adoptLegacyKey } from "./account-scoped-storage";
+import { mergeWorkspace } from "./workspace-merge";
 
 export type SaveState = "idle" | "saving" | "saved" | "error" | "conflict" | "readonly";
 type LiveLoad =
@@ -11,6 +12,12 @@ type LiveLoad =
 const SAVE_DELAY_MS = 500;
 let agencyId: string | null = null;
 let version = 0;
+// Lo último que coincidió con el servidor: la base para unir cambios de otra persona.
+let base: HublyWorkspaceData | null = null;
+let onMerged: ((data: HublyWorkspaceData) => void) | null = null;
+export const onLiveMerge = (listener: (data: HublyWorkspaceData) => void) => {
+  onMerged = listener;
+};
 let pending: HublyWorkspaceData | null = null;
 let conflicted: HublyWorkspaceData | null = null;
 let timer: ReturnType<typeof setTimeout> | undefined;
@@ -89,12 +96,33 @@ export async function loadLiveWorkspace(): Promise<LiveLoad> {
     agencyId = json.agencyId;
     accountId = json.data.profile?.id ?? "";
     version = json.version;
+    base = json.data;
     role = json.role;
     readOnly = json.role === "viewer";
     if (!readOnly && !conflicted) restoreConflict();
     return { kind: "ok", data: json.data, agencyId: json.agencyId, role: json.role };
   } catch {
     return { kind: "error" };
+  }
+}
+
+/** Alguien guardó antes. Si no tocó lo mismo se unen los cambios; si no, decide la persona. */
+async function mergeWithTeam(sent: HublyWorkspaceData): Promise<boolean> {
+  if (!base || !agencyId) return false;
+  try {
+    const res = await fetch(`/api/workspace?agencyId=${encodeURIComponent(agencyId)}`, { cache: "no-store" });
+    if (!res.ok) return false;
+    const fresh = (await res.json()) as { data: HublyWorkspaceData; version: number };
+    const { merged, conflicts } = mergeWorkspace(base, pending ?? sent, fresh.data);
+    if (conflicts.length) return false;
+    version = fresh.version;
+    base = fresh.data;
+    pending = merged;
+    onMerged?.(merged);
+    void flush();
+    return true;
+  } catch {
+    return false;
   }
 }
 
@@ -112,6 +140,7 @@ async function flush() {
     });
     inFlight = false;
     if (res.status === 409) {
+      if (await mergeWithTeam(data)) return;
       keepConflict(pending ?? data);
       pending = null;
       emit("conflict");
@@ -123,6 +152,7 @@ async function flush() {
       return;
     }
     version = ((await res.json()) as { version: number }).version;
+    base = data;
     if (pending) void flush();
     else emit("saved");
   } catch {
@@ -169,6 +199,7 @@ export async function keepMyVersion() {
   }
   dropConflict();
   pending = mine;
+  base = null;
   await flush();
 }
 
