@@ -12,4 +12,4 @@ El dueño del proyecto indica que hay permiso de Henry para replicar su diseño 
 - Ninguna pantalla se da por terminada si solo se parece: necesita backend real o la etiqueta «Función prevista».
 
 ## Riesgo
-El alcance del permiso (diseño, marca, capturas en un repositorio público, uso comercial) no consta en este repositorio. Hasta tenerlo por escrito, conviene no exhibir capturas de Henry públicamente.
+El alcance del permiso (diseño, marca, capturas en un repositorio público, uso comercial) no consta en este repositorio. El dueño decidió el 1 de noviembre de 2026 dejar las capturas en el repositorio público, y acepta ese riesgo.
