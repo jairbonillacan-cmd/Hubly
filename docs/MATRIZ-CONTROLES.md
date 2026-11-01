@@ -4,7 +4,7 @@ Generada con `npm run audit:controles` en modo demo el 2026-11-01 (previo a la i
 
 **Qué significa:** «responde» indica que pulsar cambió la página (el detalle dice qué cambió) sin error; no prueba que el resultado sea correcto ni que persista, porque la auditoría bloquea las escrituras. La persistencia y los permisos se prueban en `e2e/` y `tests/`. «Ya activo» es una pestaña o filtro que ya estaba seleccionado, así que no cambia nada: es lo esperado. «Sin efecto visible» pide revisión manual: puede ser un botón muerto o un cambio que la auditoría no detecta. Los editores (compositor) se abren pero no se recorren aquí: los cubre `compositor.spec.ts`.
 
-**Totales:** 573 controles (258 en páginas, 315 dentro de ventanas) · 456 responden · 24 ya activos · 52 enlaces · 16 sin efecto visible · 20 deshabilitados · 0 con error · 4 sin poder probar · 1 omitidos.
+**Totales:** 574 controles (259 en páginas, 315 dentro de ventanas) · 455 responden · 24 ya activos · 53 enlaces · 17 sin efecto visible · 20 deshabilitados · 0 con error · 4 sin poder probar · 1 omitidos.
 
 Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/dashboard/salud-cuentas`, `/estrategia` → `/marca`.
 
@@ -37,9 +37,9 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | Nueva marca | Cancelar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | Nueva marca | Crear marca | deshabilitado |  |
 | `/dashboard` | Invitar a la agencia | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard` | Invitar a la agencia | Usuario existente | responde | cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | Invitar a la agencia | Por link | responde | cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | Invitar a la agencia | Por correo | ya activo | estaba seleccionado |
+| `/dashboard` | Invitar a la agencia | Usuario existente | responde | cambia un estado; cambia el texto |
 | `/dashboard` | Invitar a la agencia | Agregar otro | responde | cambia el texto; cambia un campo |
 | `/dashboard` | Invitar a la agencia | Crear invitación | responde | cambia el texto |
 | `/dashboard` | Resultados de búsqueda | Crear o programar post Abre el compositor de posts, Reels y  | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo (editor: lo cubre compositor.spec) |
@@ -215,9 +215,9 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard/equipo` | — | Ver perfil | responde | abre una ventana; cambia el texto |
 | `/dashboard/equipo` | — | Cómo funcionan los puntos · Se miden por esfuerzo, no por cl | responde | abre una ventana; cambia un estado; cambia el texto |
 | `/dashboard/equipo` | Invitar a la agencia | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard/equipo` | Invitar a la agencia | Usuario existente | responde | cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard/equipo` | Invitar a la agencia | Por link | responde | cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard/equipo` | Invitar a la agencia | Por correo | ya activo | estaba seleccionado |
+| `/dashboard/equipo` | Invitar a la agencia | Usuario existente | responde | cambia un estado; cambia el texto |
 | `/dashboard/equipo` | Invitar a la agencia | Agregar otro | responde | cambia el texto; cambia un campo |
 | `/dashboard/equipo` | Invitar a la agencia | Crear invitación | responde | cambia el texto |
 | `/dashboard/equipo` | hubly-dropdown | Mi vista (1) | ya activo | estaba seleccionado |
@@ -422,7 +422,8 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/archivos` | — | Inicio de la biblioteca | sin efecto visible |  |
 | `/archivos` | — | Carpeta | responde | cambia el texto; cambia un campo |
 | `/archivos` | — | Subir | responde | abre el selector de archivos |
-| `/archivos` | — | Subir archivos | responde | abre el selector de archivos |
+| `/archivos` | — | reintento-1793498251605.png 1 KB | enlace | /api/media/a607dcaa-2107-400e-8948-03c00d15686c/file |
+| `/archivos` | — | Eliminar reintento-1793498251605.png | sin efecto visible |  |
 | `/proyectos` | — | Buscar proyecto | responde | cambia el contenido; cambia un campo |
 | `/proyectos` | — | Filas | ya activo | estaba seleccionado |
 | `/proyectos` | — | Kanban | responde | cambia un estado; cambia el texto |
@@ -456,7 +457,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/parrillas` | — | Probar con datos de ejemplo | responde | cambia un estado; cambia el texto |
 | `/parrillas` | — | Abrir el chat | enlace | /chat |
 | `/parrillas` | Traer mi mes | Cerrar | responde | cierra una ventana; cambia el texto; cambia un campo |
-| `/parrillas` | Traer mi mes | Elegir archivo CSV o XLSX | responde | abre el selector de archivos |
+| `/parrillas` | Traer mi mes | Suelta tu archivo o haz clic para elegirlo XLSX · CSV · TSV  | responde | abre el selector de archivos |
 | `/parrillas` | Traer mi mes | Continuar con lo pegado | deshabilitado |  |
 | `/reportes` | — | Calendario | enlace | /parrillas?tab=calendario |
 | `/reportes` | — | Ideas | enlace | /parrillas?tab=ideas |
@@ -544,9 +545,9 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `(sidebar y Hubi)` | Seleccionar marca activa | CN Clínica Norte | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `(sidebar y Hubi)` | Seleccionar marca activa | Crear marca | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `(sidebar y Hubi)` | Invitar a la agencia | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `(sidebar y Hubi)` | Invitar a la agencia | Usuario existente | responde | cambia un estado; cambia el texto; cambia un campo |
 | `(sidebar y Hubi)` | Invitar a la agencia | Por link | responde | cambia un estado; cambia el texto; cambia un campo |
 | `(sidebar y Hubi)` | Invitar a la agencia | Por correo | ya activo | estaba seleccionado |
+| `(sidebar y Hubi)` | Invitar a la agencia | Usuario existente | responde | cambia un estado; cambia el texto |
 | `(sidebar y Hubi)` | Invitar a la agencia | Agregar otro | responde | cambia el texto; cambia un campo |
 | `(sidebar y Hubi)` | Invitar a la agencia | Crear invitación | responde | cambia el texto |
 | `(sidebar y Hubi)` | Hubi | Expandir el panel de Hubi | responde | cambia un estado |

@@ -582,7 +582,7 @@ export function CommandPaletteModal({
         onKeyDown={handleKeyDown}
       >
         <div className="hubly-command-search">
-          <Search size={22} />
+          <Search size={18} />
           <div className="hubly-command-field" data-typing={typedExample !== null || undefined}>
             <label id={titleId} htmlFor={`${listId}-input`}>Buscar en Hubly</label>
             <div className="hubly-command-input">

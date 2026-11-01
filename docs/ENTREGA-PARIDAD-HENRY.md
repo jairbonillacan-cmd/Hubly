@@ -24,6 +24,27 @@ Se miraron capturas de `/chat`, `/dashboard`, `/reportes` y `/anuncios`, la gale
 
 **«Avisar al publicar» aún no envía nada:** guarda a quién avisar, pero no hay envío conectado.
 
+## Comparación con Henry en vivo mediante REA
+
+Observado el 31 de octubre con REA sobre una sesión iniciada por el usuario, con las escrituras hacia Henry bloqueadas. Se compararon flujos y estructura, y se reimplementaron con código, tokens y textos propios: no se copió CSS, JS, texto ni imágenes de Henry.
+
+| Pantalla | Observado en Henry | Evidencia | Decisión en Hubly |
+|---|---|---|---|
+| Buscador | Cabecera de una línea, sin etiqueta visible ni caja alrededor del campo | `ev_67fdc557e74d27fcc9f06782d0ce37a387ac0739d69218359e4ee3ef7cfd2aa9` | Igualado. La etiqueta queda para lectores de pantalla y el foco lo marca la línea inferior |
+| Nueva marca | Modal más ancho, etiquetas en mayúscula inicial, pasos unidos y pie separado | `ev_602a4cd8672726f18d0aacf3100503cf5ee3ef34531dc6d7d5331685b7dbbf3c` | Igualado. Cruza la guía: 576 px en lugar de 480 |
+| Invitar | Rol arriba, control segmentado y link como opción inicial | `ev_0799aab17b6f2b132f0e74f0c7ec3241cb4cdd7f7b1bf1b4c299ccc58e8c2376` | Igualado, con link inicial solo con cuentas reales. Se conserva «Usuario existente» |
+| Importador | Zona para soltar archivo, texto pegado y lectura de Word, PDF, ZIP de Notion y capturas | `ev_3925269d3af7733aaed0cf5755a16f2df8d33d1f9e903d795e73c3342eaf0a61` | Zona para soltar añadida. Hubly sigue leyendo solo XLSX, CSV, TSV y TXT: leer documentos e imágenes requiere IA |
+| Galería de widgets | Mismos grupos, más «Errores», «Gráfica Social» y «Reportes» | `ev_5b8db059833b63666d713f85d1cad5401b5bcbeffc256d4907d3854bbcd87e83` | Sin cambios. «Errores» y «Gráfica Social» dependen de redes conectadas; «Reportes» queda como pendiente |
+| Hubi | Panel con la misma estructura; el compositor añade adjuntar, plantilla y contexto de página | `ev_fc84fba7b23d4e7c4fc7d522ea15d5c834d88b3c1fb50993fd12d87bacc0fe6e` | Sin cambios. Esos controles serían decorativos sin IA real |
+| Perfil | El botón del sidebar lleva a Configuración, donde está «Cerrar sesión» | `ev_8461b2b4ded2241c5d4a94d72b48af162cd9ff2e3aca32f0660fe5e2dc39c1fe` | Sin cambios. El popover de Hubly tiene zona horaria y espacio de trabajo, que no existen en Ajustes |
+| Compositor | Misma barra de Color y Avisar; aviso con botón para conectar redes | `ev_1c2c393bbe93f0890d482dd02cc307a1a6d3736012d77320f744a6cbc345b501` | Sin cambios. Solo se vio esa barra cerrada, no sus menús |
+
+**Sin resolver:** «Columnas por» y la opción «Pilar», porque la captura de Kanban se colgó y se descartó. Tampoco se confirmaron los límites de 20 y 100 MB ni se repitió la comparación de las ocho escenas.
+
+**Prueba intermitente nueva:** `archivos.spec.ts:57` falló una vez y pasó las 6 corridas siguientes. Sin causa confirmada; ese código no cambió en esta rama.
+
+Resultados sobre el código final: `check:ui` 1484 hallazgos, `tsc` sin errores, `npm test` 58, `test:db` 77, `build` compila y Playwright 93. `audit:controles` (574 controles, 0 con error) se corrió antes del último retoque del importador.
+
 ## Pruebas de esta entrega
 
 Ejecutadas el 31 de octubre en la rama de integración, con servidor propio en el puerto 3004, sobre el código final (tras las correcciones de la revisión visual). Una corrida completa, sin repeticiones.
