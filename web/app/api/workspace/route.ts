@@ -182,7 +182,7 @@ async function livePost(request: Request) {
     expected_version: body.version,
   });
   if (error) {
-    const known = { stale_version: 409, forbidden: 403, too_large: 413, invalid_payload: 400 } as const;
+    const known = { stale_version: 409, forbidden: 403, too_large: 413, too_deep: 413, invalid_payload: 400 } as const;
     const code = (Object.keys(known) as (keyof typeof known)[]).find((k) => error.message.includes(k));
     return code
       ? NextResponse.json({ error: code }, { status: known[code] })

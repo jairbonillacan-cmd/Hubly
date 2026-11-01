@@ -3,8 +3,11 @@ import type { NextConfig } from "next";
 const isDev = process.env.NODE_ENV !== "production";
 const supabaseOrigin = process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin : "";
 
-// Next inyecta scripts en línea en el esqueleto estático. Un nonce obligaría a renderizar
-// cada página en el servidor y es incompatible con el prerender parcial, así que quedan permitidos.
+// Next inyecta scripts en línea en el esqueleto estático (verificado con next build: 9 en /login).
+// Un nonce obligaría a renderizar cada página en el servidor y es incompatible con el prerender
+// parcial, así que quedan permitidos. SRI (abajo) no los cubre —solo recursos externos— pero
+// añade integridad a todos los archivos con src: una CDN comprometida no puede alterarlos.
+// Quitar 'unsafe-inline' rompe la app: NO hacerlo sin nonces por petición.
 const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
@@ -44,6 +47,8 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   devIndicators: false,
   poweredByHeader: false,
+  // Integridad (SRI) de scripts y estilos externos generados en build. Experimental en Next 16.
+  experimental: { sri: { algorithm: "sha384" } },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

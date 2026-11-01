@@ -272,7 +272,13 @@ function ClientSharePortalInner() {
             const isApproved =
               post.status === "approved" || post.status === "scheduled" || post.status === "published";
             const hasChanges = post.status === "changes";
-            const platform = networkToPlatform(post.network || post.networks[0]);
+            // El documento compartido puede traer formas inesperadas: nada de .map sobre lo que no es lista.
+            const networks = Array.isArray(post.networks) ? post.networks : [];
+            const comments = Array.isArray(post.comments)
+              ? post.comments.filter((c): c is (typeof post.comments)[number] =>
+                  typeof c === "object" && c !== null && typeof c.id === "string")
+              : [];
+            const platform = networkToPlatform(post.network || networks[0]);
 
             return (
               <div
@@ -352,7 +358,7 @@ function ClientSharePortalInner() {
                       <Calendar size={13} />
                       {post.scheduledDate} · {post.scheduledTime}
                     </span>
-                    <span>{post.networks.join(" · ")}</span>
+                    <span>{networks.join(" · ")}</span>
                   </div>
 
                   <h3 style={{ fontWeight: 700, fontSize: 16, margin: "0 0 8px" }}>{post.title}</h3>
@@ -368,7 +374,7 @@ function ClientSharePortalInner() {
                     {post.caption}
                   </p>
 
-                  {post.comments.length > 0 && (
+                  {comments.length > 0 && (
                     <div
                       style={{
                         padding: 10,
@@ -382,7 +388,7 @@ function ClientSharePortalInner() {
                         gap: 6,
                       }}
                     >
-                      {post.comments.map((c) => (
+                      {comments.map((c) => (
                         <div key={c.id}>
                           <strong>{c.author}:</strong> {c.text}{" "}
                           <span style={{ color: "var(--ink-muted)" }}>({c.createdAt})</span>

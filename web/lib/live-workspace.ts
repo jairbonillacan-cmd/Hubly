@@ -1,4 +1,5 @@
 import type { HublyWorkspaceData } from "./types";
+import { adoptLegacyKey } from "./account-scoped-storage";
 
 export type SaveState = "idle" | "saving" | "saved" | "error" | "conflict" | "readonly";
 export type LiveLoad =
@@ -18,7 +19,9 @@ let readOnly = false;
 let role: string | null = null;
 let agencies: { id: string; name: string }[] = [];
 const AGENCY_KEY = "hubly:agencia-activa";
-const conflictKey = (id: string) => `hubly:conflicto:${id}`;
+// La copia de conflicto es de quien la generó: otra cuenta en el mismo navegador no debe leerla.
+let accountId = "";
+const conflictKey = (id: string) => `hubly:conflicto:${id}:${accountId}`;
 
 export const liveAgencies = () => agencies;
 export function selectLiveAgency(id: string) {
@@ -62,6 +65,8 @@ function dropConflict() {
 function restoreConflict() {
   if (!agencyId) return;
   try {
+    // Clave antigua (solo agencia): se adopta para esta cuenta y se borra.
+    adoptLegacyKey(`hubly:conflicto:${agencyId}`, conflictKey(agencyId), localStorage);
     const saved = localStorage.getItem(conflictKey(agencyId));
     if (!saved) return;
     conflicted = JSON.parse(saved) as HublyWorkspaceData;
@@ -79,6 +84,7 @@ export async function loadLiveWorkspace(): Promise<LiveLoad> {
     const json = (await res.json()) as { data: HublyWorkspaceData; version: number; agencyId: string; role: string; agencies?: { id: string; name: string }[] };
     agencies = json.agencies ?? [];
     agencyId = json.agencyId;
+    accountId = json.data.profile?.id ?? "";
     version = json.version;
     role = json.role;
     readOnly = json.role === "viewer";

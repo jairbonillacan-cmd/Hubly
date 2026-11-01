@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { localIsoDate } from "@/lib/date";
+import { adoptLegacyKey } from "@/lib/account-scoped-storage";
 
 export const DELETE_UNDO_MS = 10_000;
 export const NEW_CHAT_TITLE = "Nueva conversación";
@@ -98,6 +99,12 @@ export const useHubiChats = create<HubiChatsState>((set, get) => {
       if (get().scope === scope) return;
       expiryTimers.forEach(clearTimeout);
       expiryTimers.clear();
+      // El scope es "agencia:cuenta". Si queda la clave antigua (solo agencia), se adopta
+      // para esa cuenta y se borra: así la conversación no se pierde ni queda legible por otra cuenta.
+      const sep = scope.indexOf(":");
+      if (sep > 0 && typeof localStorage !== "undefined") {
+        adoptLegacyKey(storageKey(scope.slice(0, sep)), storageKey(scope), localStorage);
+      }
       set({ scope, chats: readChats(scope), activeChatId: null, deleted: [] });
     },
 

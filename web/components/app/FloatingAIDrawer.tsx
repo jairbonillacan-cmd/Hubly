@@ -3,7 +3,6 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useHublyStore } from "@/lib/store";
-import { currentAgencyId } from "@/lib/live-workspace";
 import { useHubiChats, type HubiTurn } from "@/lib/hubi-chats";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { confirmDeleteChat, HubiChatUndoToasts } from "@/components/app/HubiChatList";
@@ -103,6 +102,10 @@ export function FloatingAIDrawer() {
   const pathname = usePathname();
   const hydrated = useHublyStore((s) => s.hydrated);
   const workspaceId = useHublyStore((s) => s.workspaceId);
+  // Los chats de Hubi se separan por agencia y por cuenta: otra cuenta en el mismo
+  // navegador no debe leer las conversaciones, ni seguir en la agencia anterior al cambiar.
+  const chatAgency = useHublyStore((s) => s.agency?.id) ?? workspaceId;
+  const chatAccount = useHublyStore((s) => s.profile?.id) ?? "";
   const activeChat = useHubiChats(
     (s) => s.chats.find((chat) => chat.id === s.activeChatId) ?? null
   );
@@ -122,8 +125,8 @@ export function FloatingAIDrawer() {
   };
 
   useEffect(() => {
-    if (hydrated) loadChats(currentAgencyId() ?? workspaceId);
-  }, [hydrated, workspaceId, loadChats]);
+    if (hydrated) loadChats(`${chatAgency}:${chatAccount}`);
+  }, [hydrated, chatAgency, chatAccount, loadChats]);
 
   // La vista completa ocupa la pantalla: se va al navegar o si borran su conversación.
   useEffect(() => {

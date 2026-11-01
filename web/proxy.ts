@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { isCrossOriginWrite, rateLimitWait } from "@/lib/api-guard";
+import { forwardedTrust, hostForOriginCheck, ipForRateLimit, isCrossOriginWrite, rateLimitWait } from "@/lib/api-guard";
+import { secureForProtocol } from "@/lib/supabase/cookie-options";
 import { backendEnabled, SUPABASE_KEY, SUPABASE_URL } from "@/lib/supabase/config";
 
 const PUBLIC_PATHS = ["/", "/login", "/register", "/recuperar", "/icon.svg"];
@@ -10,14 +11,20 @@ function isPublic(pathname: string) {
   return PUBLIC_PATHS.includes(pathname) || PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));
 }
 
+/** ¿Hay algo conocido (la plataforma o un proxy declarado) reescribiendo las cabeceras reenviadas? */
+function onTrustedPlatform(request: NextRequest) {
+  return Boolean(process.env.VERCEL) || request.headers.has("x-vercel-id");
+}
+
 function guardApi(request: NextRequest) {
   const { pathname } = request.nextUrl;
   if (!pathname.startsWith("/api/")) return null;
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  const trusted = forwardedTrust(process.env.TRUST_FORWARDED_HEADERS, onTrustedPlatform(request)) === "always";
+  const host = hostForOriginCheck(trusted, request.headers.get("x-forwarded-host"), request.headers.get("host"));
   if (isCrossOriginWrite(request.method, request.headers.get("origin"), host)) {
     return NextResponse.json({ error: "cross_origin" }, { status: 403 });
   }
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0].trim() || request.headers.get("x-real-ip") || "local";
+  const ip = ipForRateLimit(trusted, request.headers.get("x-forwarded-for"), request.headers.get("x-real-ip"));
   const wait = rateLimitWait(request.method, pathname, ip);
   if (wait) return NextResponse.json({ error: "rate_limited" }, { status: 429, headers: { "Retry-After": String(wait) } });
   return null;
@@ -30,6 +37,8 @@ export async function proxy(request: NextRequest) {
 
   let response = NextResponse.next({ request });
   const supabase = createServerClient(SUPABASE_URL, SUPABASE_KEY, {
+    // Secure solo bajo https: el desarrollo por http sigue funcionando.
+    cookieOptions: { secure: secureForProtocol(request.nextUrl.protocol) },
     cookies: {
       getAll: () => request.cookies.getAll(),
       setAll: (toSet, headers) => {

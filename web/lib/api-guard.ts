@@ -80,3 +80,30 @@ export function isCrossOriginWrite(method: string, origin: string | null, host: 
     return true;
   }
 }
+
+/**
+ * Confianza en las cabeceras reenviadas por un proxy. El cliente puede escribirlas,
+ * así que solo valen si algo conocido las reescribe antes:
+ * - TRUST_FORWARDED_HEADERS=1 → siempre (self-host detrás de un proxy que las pisa).
+ * - TRUST_FORWARDED_HEADERS=0 → nunca.
+ * - sin configurar → solo si la petición viene de la plataforma (Vercel), que las reescribe.
+ */
+export function forwardedTrust(env: string | undefined, onPlatform: boolean): "always" | "never" {
+  const value = env?.trim().toLowerCase();
+  if (value === "1" || value === "true" || value === "always") return "always";
+  if (value === "0" || value === "false" || value === "never") return "never";
+  return onPlatform ? "always" : "never";
+}
+
+/** Host para el control de origen: el reenviado solo si hay confianza; si no, la cabecera Host. */
+export function hostForOriginCheck(trusted: boolean, xForwardedHost: string | null, hostHeader: string | null): string {
+  return trusted && xForwardedHost ? xForwardedHost : hostHeader || "local";
+}
+
+/** IP para el límite de tasa. Sin confianza no hay IP fiable: cubo único de la instancia.
+ *  Con confianza vale el último salto que añadió el proxy, no el prefijo que escribe el cliente. */
+export function ipForRateLimit(trusted: boolean, xForwardedFor: string | null, xRealIp: string | null): string {
+  if (!trusted) return "local";
+  const last = xForwardedFor?.split(",").map((s) => s.trim()).filter(Boolean).pop();
+  return last || xRealIp?.trim() || "local";
+}
