@@ -16,6 +16,7 @@ import {
   HublySendIcon as Send,
   HublySmileIcon as Smile,
   HublySparkIcon as Sparkles,
+  HublyArrowLeftIcon,
 } from "@/components/app/icons/DuotoneIcons";
 
 interface LocalThreadMessage {
@@ -57,7 +58,7 @@ const INITIAL_LOCAL_MESSAGES: LocalThreadMessage[] = [
     senderInitials: "J",
     senderBg: "#E6F4FB",
     senderColor: "var(--hb-accent-text)",
-    text: "Notas rápidas: conectar las redes de Min y mandar el primer reporte mensual este viernes.",
+    text: "Notas rápidas: conectar las redes y mandar el primer reporte mensual este viernes.",
     time: "09:15",
   },
 ];
@@ -67,7 +68,7 @@ export default function ChatPage() {
   const storeMessages = useHublyStore((s) => s.messages);
   const sendChatMessage = useHublyStore((s) => s.sendChatMessage);
 
-  // Default to null so initial render matches 04-chat-1440.png 1:1 ("Selecciona una conversacion")
+  // Default to null so initial render matches 04-chat-1440.png 1:1 ("Selecciona una conversación")
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const myName = useHublyStore((st) => st.profile?.name) || "Equipo";
@@ -182,26 +183,23 @@ export default function ChatPage() {
 
   return (
     <div
+      className="hubly-chat"
+      data-conversacion={selectedId ? "abierta" : "ninguna"}
       style={{
         display: "flex",
         width: "100%",
-        minHeight: "calc(100vh - 48px)",
-        height: "calc(100vh - 48px)",
         background: "var(--ui-surface)",
         borderRadius: 16,
-        border: "1px solid #EEF2F6",
+        border: "1px solid var(--ui-border)",
         overflow: "hidden",
       }}
     >
       {/* Left Sidebar Panel (280px matching 04-chat-1440.png) */}
       <aside
+        className="hubly-chat-lista"
         style={{
-          width: 280,
           flexShrink: 0,
-          borderRight: "1px solid #EEF2F6",
           background: "var(--ui-surface)",
-          display: "flex",
-          flexDirection: "column",
           userSelect: "none",
         }}
       >
@@ -220,8 +218,8 @@ export default function ChatPage() {
               display: "flex",
               alignItems: "center",
               gap: 8,
-              background: "#F4F5F8",
-              border: "1px solid #ECEEF4",
+              background: "var(--ui-muted)",
+              border: "1px solid var(--ui-border)",
               borderRadius: 999,
               padding: "9px 14px",
               boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
@@ -254,8 +252,8 @@ export default function ChatPage() {
               width: 38,
               height: 38,
               borderRadius: 999,
-              background: "#D1FAE5",
-              color: "#047857",
+              background: "var(--hubly-success-bg)",
+              color: "var(--tinta-exito)",
               border: "none",
               fontWeight: 700,
               fontSize: 13,
@@ -502,7 +500,7 @@ export default function ChatPage() {
                       style={{
                         fontSize: 13,
                         fontWeight: 600,
-                        color: selectedId === "ch-general" ? "var(--hb-accent)" : "var(--ui-text-1)",
+                        color: selectedId === "ch-general" ? "var(--hb-accent-text)" : "var(--ui-text-1)",
                       }}
                     >
                       # General
@@ -624,9 +622,9 @@ export default function ChatPage() {
 
       {/* Right Main Area */}
       <section
+        className="hubly-chat-panel"
         style={{
           flex: 1,
-          display: "flex",
           flexDirection: "column",
           background: "var(--ui-surface)",
           minWidth: 0,
@@ -659,7 +657,7 @@ export default function ChatPage() {
                 letterSpacing: "-0.01em",
               }}
             >
-              Selecciona una conversacion
+              Selecciona una conversación
             </h2>
 
             <p
@@ -681,14 +679,23 @@ export default function ChatPage() {
             <header
               style={{
                 padding: "14px 22px",
-                borderBottom: "1px solid #EEF2F6",
+                borderBottom: "1px solid var(--ui-border)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 gap: 12,
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 11, minWidth: 0 }}>
+                <button
+                  type="button"
+                  className="hubly-cal-icon hubly-chat-volver"
+                  aria-label="Volver a conversaciones"
+                  title="Volver a conversaciones"
+                  onClick={() => setSelectedId(null)}
+                >
+                  <HublyArrowLeftIcon size={17} />
+                </button>
                 <span
                   style={{
                     width: 34,
@@ -740,7 +747,7 @@ export default function ChatPage() {
                 display: "flex",
                 flexDirection: "column",
                 gap: 16,
-                background: "#FAFBFC",
+                background: "var(--ui-surface-2)",
               }}
             >
               {threadMessages.length === 0 ? (
@@ -837,10 +844,10 @@ export default function ChatPage() {
 
             {/* Composer Footer */}
             <form
+              className="hubly-chat-form"
               onSubmit={handleSend}
               style={{
-                padding: "14px 20px",
-                borderTop: "1px solid #EEF2F6",
+                borderTop: "1px solid var(--ui-border)",
                 background: "var(--ui-surface)",
                 display: "flex",
                 alignItems: "center",
@@ -850,6 +857,7 @@ export default function ChatPage() {
               <div
                 style={{
                   flex: 1,
+                  minWidth: 0,
                   display: "flex",
                   alignItems: "center",
                   gap: 10,
@@ -867,6 +875,7 @@ export default function ChatPage() {
                   placeholder={`Escribe un mensaje en ${activeMeta.title}...`}
                   style={{
                     flex: 1,
+                    minWidth: 0,
                     border: "none",
                     background: "transparent",
                     outline: "none",
@@ -874,14 +883,16 @@ export default function ChatPage() {
                     color: "var(--ui-text)",
                   }}
                 />
-                <AtSign size={16} style={{ color: "var(--ui-text-5)", cursor: "pointer" }} />
-                <Smile size={16} style={{ color: "var(--ui-text-5)", cursor: "pointer" }} />
-                <Sparkles size={16} style={{ color: "var(--hb-accent-text)", cursor: "pointer" }} />
+                <AtSign className="hubly-chat-extra" size={16} style={{ color: "var(--ui-text-5)", cursor: "pointer" }} />
+                <Smile className="hubly-chat-extra" size={16} style={{ color: "var(--ui-text-5)", cursor: "pointer" }} />
+                <Sparkles className="hubly-chat-extra" size={16} style={{ color: "var(--hb-accent-text)", cursor: "pointer" }} />
               </div>
 
               <button
                 type="submit"
+                aria-label="Enviar"
                 style={{
+                  flexShrink: 0,
                   padding: "10px 16px",
                   borderRadius: 10,
                   border: "none",
@@ -896,7 +907,7 @@ export default function ChatPage() {
                 }}
               >
                 <Send size={14} />
-                <span>Enviar</span>
+                <span className="hubly-chat-enviar">Enviar</span>
               </button>
             </form>
           </>

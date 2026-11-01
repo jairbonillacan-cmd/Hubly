@@ -107,7 +107,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
   padding: 4px;
   border: none;
   border-radius: 14px;
-  background: #F1F1F6;
+  background: var(--ui-muted);
   max-width: 100%;
   overflow-x: auto;
   scrollbar-width: none;
@@ -123,7 +123,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
   border-radius: 10px;
   background: transparent;
   box-shadow: none;
-  color: #64748B;
+  color: var(--ui-text-3);
   font-size: 13px;
   font-weight: 600;
   line-height: 1;
@@ -147,7 +147,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
 /* 4. Hero operativo --------------------------------------------------------- */
 
 .hubly-hero { margin-bottom: 8px; }
-.hubly-hero-eyebrow { margin: 0 0 8px; color: #6B7886; font-size: 13px; font-weight: 600; }
+.hubly-hero-eyebrow { margin: 0 0 8px; color: var(--ui-text-4); font-size: 13px; font-weight: 600; }
 .hubly-hero-title {
   display: flex;
   align-items: center;
@@ -161,7 +161,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
   line-height: 1.15;
 }
 .hubly-weather { display: inline-flex; animation: hubly-weather 460ms cubic-bezier(0.22, 1, 0.36, 1) both; }
-.hubly-hero-date { margin: 6px 0 0; color: #6B7886; font-size: 13.5px; }
+.hubly-hero-date { margin: 6px 0 0; color: var(--ui-text-4); font-size: 13.5px; }
 .hubly-hero-pending { margin: 12px 0 20px; color: #42505E; font-size: 14px; }
 .hubly-pending-pill {
   display: inline-flex;
@@ -186,7 +186,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
 
 .hubly-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .hubly-hero-actions .hbtn { height: 36px; }
-.hubly-hero-actions .hbtn svg { width: 17px; height: 17px; color: #6B7886; }
+.hubly-hero-actions .hbtn svg { width: 17px; height: 17px; color: var(--ui-text-4); }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn.hbtn-gold { --hbtn-edge: #5BA9D2; border-color: var(--ui-sky); color: #111C27; }
 :is(.hubly-app-root, .hb-app-root) .hbtn.hbtn-gold:hover:not(:disabled) { background: var(--ui-sky-soft); border-color: var(--ui-sky); }
@@ -232,7 +232,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
   min-height: 30px;
   margin-bottom: 10px;
 }
-.is-editing .hb-widget-head { padding-right: 88px; }
+.is-editing .hb-widget-head { padding-right: 120px; }
 .hb-widget-title {
   display: inline-flex;
   align-items: center;
@@ -303,7 +303,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
   background: #F1F9FD;
 }
 .hb-empty-title { color: #111C27; font-size: 13.5px; font-weight: 700; }
-.hb-empty-desc { max-width: 280px; margin: 0; color: #6B7886; font-size: 12.5px; line-height: 1.45; }
+.hb-empty-desc { max-width: 280px; margin: 0; color: var(--ui-text-4); font-size: 12.5px; line-height: 1.45; }
 
 /* Tarea: fila + check */
 .hubly-task-row {
@@ -403,7 +403,7 @@ html:has(.hubly-sheet) :is([data-mision-pildora], [data-hb-fab]) { display: none
   border-radius: 8px;
   background: #FFFFFF;
   box-shadow: 0 2.5px 0 #D6DFE7;
-  color: #6B7886;
+  color: var(--ui-text-4);
   cursor: pointer;
   transition:
     transform 90ms cubic-bezier(0.4, 0, 0.2, 1),
@@ -552,7 +552,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   min-width: 60px;
   padding: 14px 8px 10px;
 }
-.hubly-sidebar :is(.hubly-section-label, .hb-section-label) { padding: 10px 10px 4px; font-size: 10px; color: #6B7886; }
+.hubly-sidebar :is(.hubly-section-label, .hb-section-label) { padding: 10px 10px 4px; font-size: 10px; color: var(--ui-text-4); }
 .hubly-app-root.hb-app-root .hubly-sidebar :is(.hubly-nav-item, .hb-nav-item) {
   gap: 9px;
   min-height: 32px;
@@ -610,7 +610,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
 }
 .hubly-cal-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 20px 0 10px; }
 .hubly-cal-title { margin: 0; font-size: 22px; font-weight: 700; line-height: 1.2; }
-.hubly-cal-subtitle { margin: 2px 0 0; color: #6B7886; font-size: 12.5px; }
+.hubly-cal-subtitle { margin: 2px 0 0; color: var(--ui-text-4); font-size: 12.5px; }
 .hubly-cal-reveal {
   display: flex;
   align-items: center;
@@ -619,7 +619,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   border: 1px solid #D6DFE7;
   border-radius: 10px;
   background: #FFFFFF;
-  color: #6B7886;
+  color: var(--ui-text-4);
   cursor: pointer;
   transition: background-color 150ms cubic-bezier(0.25, 0.1, 0.25, 1);
 }
@@ -649,7 +649,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #6B7886;
+  color: var(--ui-text-4);
   cursor: pointer;
   transition: background-color 150ms cubic-bezier(0.25, 0.1, 0.25, 1), color 150ms cubic-bezier(0.25, 0.1, 0.25, 1);
 }
@@ -679,7 +679,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #6B7886;
+  color: var(--ui-text-4);
   cursor: pointer;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -705,7 +705,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   box-shadow: 0 8px 24px rgba(26, 26, 46, 0.08);
 }
 .hubly-cal-filters h3 { margin: 0; font-size: 13px; font-weight: 700; }
-.hubly-cal-filter-label { margin-bottom: 6px; color: #6B7886; font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.hubly-cal-filter-label { margin-bottom: 6px; color: var(--ui-text-4); font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
 .hubly-cal-input {
   width: 100%;
   height: 34px;
@@ -764,7 +764,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   border: 1px solid #E3E9EF;
   border-radius: 12px;
   background: #FFFFFF;
-  color: #6B7886;
+  color: var(--ui-text-4);
   text-align: center;
 }
 .hubly-cal-date span { display: block; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
@@ -774,7 +774,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
 .hubly-cal-day-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; padding: 0 2px; font-size: 13px; font-weight: 600; }
 .hubly-cal-day-head .is-today { color: var(--hb-accent-text); }
 .hubly-cal-day-head em { padding: 1px 6px; border-radius: 999px; background: rgb(var(--hb-accent-rgb) / 0.08); color: var(--hb-accent-text); font-size: 11px; font-style: normal; font-weight: 700; text-transform: uppercase; }
-.hubly-cal-day-head small { color: #6B7886; font-size: 11px; font-weight: 400; }
+.hubly-cal-day-head small { color: var(--ui-text-4); font-size: 11px; font-weight: 400; }
 .hubly-cal-rows { overflow: hidden; border: 1px solid #E3E9EF; border-radius: 14px; background: #FFFFFF; }
 .hubly-cal-row { display: flex; align-items: center; gap: 12px; padding: 8px 12px; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
 .hubly-cal-row + .hubly-cal-row { border-top: 1px solid rgba(232, 232, 240, 0.6); }
@@ -782,15 +782,15 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
 .hubly-cal-row:hover { background: rgba(248, 248, 250, 0.7); }
 .hubly-cal-row-icon { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; }
 .hubly-cal-row-title { font-size: 13px; font-weight: 600; line-height: 1.35; }
-.hubly-cal-row-meta { display: flex; gap: 6px; margin-top: 2px; color: #6B7886; font-size: 11px; }
-.hubly-cal-row-time { flex-shrink: 0; color: #6B7886; font-size: 11px; font-variant-numeric: tabular-nums; }
-.hubly-cal-empty { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 72px 16px; color: #6B7886; font-size: 12.5px; text-align: center; }
+.hubly-cal-row-meta { display: flex; gap: 6px; margin-top: 2px; color: var(--ui-text-4); font-size: 11px; }
+.hubly-cal-row-time { flex-shrink: 0; color: var(--ui-text-4); font-size: 11px; font-variant-numeric: tabular-nums; }
+.hubly-cal-empty { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 72px 16px; color: var(--ui-text-4); font-size: 12.5px; text-align: center; }
 .hubly-cal-empty strong { color: #111C27; font-size: 14px; }
 
 .hubly-cal-month { overflow: hidden; border: 1px solid #E3E9EF; border-radius: 16px; background: #FFFFFF; box-shadow: 0 1px 4px rgb(var(--hb-accent-rgb) / 0.06); }
 .hubly-cal-weekdays, .hubly-cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .hubly-cal-weekdays { border-bottom: 1px solid #E3E9EF; background: rgba(248, 248, 250, 0.5); }
-.hubly-cal-weekdays div { padding: 10px 4px; color: #6B7886; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-align: center; text-transform: uppercase; }
+.hubly-cal-weekdays div { padding: 10px 4px; color: var(--ui-text-4); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-align: center; text-transform: uppercase; }
 .hubly-cal-cell {
   min-height: 136px;
   padding: 6px;
@@ -815,7 +815,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
   border: 1px solid #E3E9EF;
   border-radius: 6px;
   background: #FFFFFF;
-  color: #6B7886;
+  color: var(--ui-text-4);
   cursor: pointer;
   opacity: 0;
   transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -840,19 +840,19 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar,
 }
 .hubly-cal-chip-time { flex-shrink: 0; font-weight: 500; opacity: 0.8; font-variant-numeric: tabular-nums; }
 .hubly-cal-chip-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.hubly-cal-more { padding: 0 6px; color: #6B7886; font-size: 10.5px; font-weight: 600; }
+.hubly-cal-more { padding: 0 6px; color: var(--ui-text-4); font-size: 10.5px; font-weight: 600; }
 
 .hubly-cal-brands { overflow-x: auto; }
 .hubly-cal-brand-grid { display: grid; grid-template-columns: 150px repeat(7, minmax(112px, 1fr)); min-width: 934px; }
 .hubly-cal-brand-head { border-bottom: 1px solid #E3E9EF; background: rgba(248, 248, 250, 0.5); }
-.hubly-cal-brand-head div { padding: 10px; color: #6B7886; font-size: 11px; font-weight: 600; text-align: center; }
+.hubly-cal-brand-head div { padding: 10px; color: var(--ui-text-4); font-size: 11px; font-weight: 600; text-align: center; }
 .hubly-cal-brand-head div:first-child { text-align: left; }
 .hubly-cal-brand-head .is-today { color: var(--hb-accent-text); }
 .hubly-cal-brand-row { border-bottom: 1px solid rgba(232, 232, 240, 0.5); }
 .hubly-cal-brand-name { display: flex; align-items: center; gap: 8px; padding: 10px; font-size: 12.5px; font-weight: 600; }
 .hubly-cal-brand-cell { display: flex; flex-direction: column; gap: 4px; min-height: 72px; padding: 6px; border-left: 1px solid rgba(232, 232, 240, 0.5); cursor: pointer; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
 .hubly-cal-brand-cell:hover { background: rgb(var(--hb-accent-rgb) / 0.024); }
-.hubly-cal-more-brands { width: 100%; min-width: 934px; padding: 10px; border: none; background: transparent; color: #6B7886; font-size: 12px; font-weight: 600; text-align: left; cursor: pointer; }
+.hubly-cal-more-brands { width: 100%; min-width: 934px; padding: 10px; border: none; background: transparent; color: var(--ui-text-4); font-size: 12px; font-weight: 600; text-align: left; cursor: pointer; }
 .hubly-cal-more-brands:hover { color: var(--hb-accent-text); }
 
 .hubly-cal-overlay {
@@ -957,8 +957,8 @@ html.theme-switching, html.theme-switching *, html.theme-switching ::before, htm
     transition: margin-left 0.2s ease, margin-right 0.25s ease;
   }
   .hubly-app-root.hb-app-root:has(.hubly-sidebar.is-collapsed) .hubly-main.hb-main { margin-left: 92px; }
-  .hubly-app-root.hb-app-root:has([data-hubi-panel][data-state="open"]) .hubly-main.hb-main { margin-right: 444px; }
-  .hubly-app-root.hb-app-root:has([data-hubi-panel][data-state="open"][data-expanded="true"]) .hubly-main.hb-main { margin-right: 744px; }
+  .hubly-app-root.hb-app-root:has([data-hubi-panel][data-state="open"][data-view="panel"]) .hubly-main.hb-main { margin-right: 444px; }
+  .hubly-app-root.hb-app-root:has([data-hubi-panel][data-state="open"][data-view="panel"][data-expanded="true"]) .hubly-main.hb-main { margin-right: 744px; }
   .hubly-app-root.hb-app-root .hubly-page.hb-page { max-width: none; padding: 20px 32px 72px; }
   .hubly-cal { margin: -20px -32px -72px; }
 }
@@ -984,7 +984,7 @@ html.theme-switching, html.theme-switching *, html.theme-switching ::before, htm
 }
 .hubly-sidebar :is(.hubly-section-label, .hb-section-label) {
   padding: 12px 12px 8px;
-  color: #6B7886;
+  color: var(--ui-text-4);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.05em;
@@ -1001,7 +1001,7 @@ html.theme-switching, html.theme-switching *, html.theme-switching ::before, htm
   .hubly-app-root.hb-app-root .hubly-sidebar.hb-sidebar { overflow-y: auto; }
 }
 .hubly-app-root .hubly-hubi-composer input, .hubly-app-root .hubly-hubi-composer input:focus { outline: none !important; box-shadow: none !important; }
-html.dark .hubly-task-group { border-color: #2B3E50; }
+html.dark .hubly-task-group { border-color: var(--ui-border); }
 html.dark .hubly-cal-date.is-today { border-color: transparent; background: var(--hb-accent); color: rgba(255, 255, 255, 0.85); }
 html.dark .hubly-app-root [style*="rgba(226, 232, 240"] { border-color: #3A5064 !important; }
 
@@ -1036,14 +1036,14 @@ html.dark .hubly-app-root [style*="rgba(226, 232, 240"] { border-color: #3A5064 
   cursor: pointer;
 }
 .hubly-sidebar-brand i { flex-shrink: 0; width: 18px; height: 18px; border-radius: 5px; }
-.hubly-sidebar-brand svg { color: #6B7886; }
+.hubly-sidebar-brand svg { color: var(--ui-text-4); }
 .hubly-sidebar-panel { display: flex; flex-direction: column; flex: 1; min-height: 0; animation: hubly-fade-in 150ms ease both; }
 .hubly-sidebar-panel-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 8px 10px; }
-.hubly-sidebar-panel-head span { color: #6B7886; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+.hubly-sidebar-panel-head span { color: var(--ui-text-4); font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
 .hubly-sidebar-panel-head.is-chats { margin: 0 -12px 12px; padding: 12px 20px; border-bottom: 1px solid #E3E9EF; }
 .hubly-sidebar-panel-head.is-chats span { color: #111C27; font-size: 13px; letter-spacing: 0; text-transform: none; }
 .hubly-sidebar-panel-head button { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: none; border-radius: 7px; background: transparent; color: var(--hb-accent-text); cursor: pointer; }
-.hubly-sidebar-panel-head button:hover { background: #F5F8FB; }
+.hubly-sidebar-panel-head button:hover { background: var(--ui-muted); }
 .hubly-sidebar-empty {
   display: flex;
   flex-direction: column;
@@ -1059,7 +1059,7 @@ html.dark .hubly-app-root [style*="rgba(226, 232, 240"] { border-color: #3A5064 
 }
 .hubly-sidebar-empty:hover { border-color: var(--hb-accent); }
 .hubly-sidebar-empty strong { color: #42505E; font-size: 12px; font-weight: 600; }
-.hubly-sidebar-empty small { color: #6B7886; font-size: 11px; }
+.hubly-sidebar-empty small { color: var(--ui-text-4); font-size: 11px; }
 .hubly-sidebar-empty.is-large { gap: 6px; padding: 28px 18px; }
 .hubly-sidebar-empty.is-large strong { font-size: 13.5px; }
 .hubly-sidebar-empty.is-large small { font-size: 12.5px; line-height: 1.4; }
@@ -1112,10 +1112,11 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 }
 .hubly-hubi-panel[data-state="closing"] { animation: hubly-hubi-out 250ms cubic-bezier(0.4, 0, 1, 1) both; }
 .hubly-hubi-panel[data-expanded="true"] { width: min(720px, calc(100vw - 24px)); }
+.hubly-hubi-body { display: flex; flex: 1; flex-direction: column; gap: 14px; padding: 18px 16px; overflow-y: auto; }
 .hubly-hubi-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid #E3E9EF; }
 .hubly-hubi-head > div { display: flex; align-items: center; gap: 8px; }
 .hubly-hubi-head h2 { margin: 0; font-size: 14px; font-weight: 600; }
-.hubly-hubi-head button { display: grid; place-items: center; padding: 6px; border: none; border-radius: 8px; background: transparent; color: #6B7886; cursor: pointer; transition: background-color 150ms ease, color 150ms ease; }
+.hubly-hubi-head button { display: grid; place-items: center; padding: 6px; border: none; border-radius: 8px; background: transparent; color: var(--ui-text-4); cursor: pointer; transition: background-color 150ms ease, color 150ms ease; }
 .hubly-hubi-head button:hover { background: #F5F8FB; color: #111C27; }
 .hubly-hubi-intro { display: flex; flex-direction: column; gap: 8px; padding: 4px; text-align: center; }
 .hubly-hubi-avatar { position: relative; width: 48px; height: 48px; margin: 0 auto 2px; border-radius: 50%; }
@@ -1124,7 +1125,7 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 @keyframes hubly-hubi-pulse { 50% { opacity: 0.45; } }
 .hubly-hubi-intro > strong { font-size: 14px; font-weight: 600; letter-spacing: -0.02em; }
 .hubly-hubi-intro p { margin: 4px 4px 10px; font-size: 14px; line-height: 1.6; letter-spacing: -0.005em; }
-.hubly-hubi-intro > small { padding: 8px 4px 2px; color: #6B7886; font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-align: left; text-transform: uppercase; }
+.hubly-hubi-intro > small { padding: 8px 4px 2px; color: var(--ui-text-4); font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-align: left; text-transform: uppercase; }
 .hubly-hubi-action {
   display: flex;
   align-items: center;
@@ -1169,8 +1170,8 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 .hubly-hubi-composer:focus-within { border-color: var(--hb-accent); box-shadow: 0 0 0 3px rgb(var(--hb-accent-rgb) / 0.12); }
 .hubly-hubi-composer input { width: 100%; border: none; outline: none; background: transparent; color: #111C27; font-size: 14px; }
 .hubly-hubi-composer > div { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
-.hubly-hubi-composer span { flex: 1; color: #6B7886; font-size: 11px; }
-.hubly-hubi-composer button { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: none; border-radius: 50%; background: transparent; color: #6B7886; cursor: pointer; }
+.hubly-hubi-composer span { flex: 1; color: var(--ui-text-4); font-size: 11px; }
+.hubly-hubi-composer button { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: none; border-radius: 50%; background: transparent; color: var(--ui-text-4); cursor: pointer; }
 .hubly-hubi-composer button[type="submit"] { background: var(--hb-accent); color: #FFFFFF; transition: opacity 150ms ease; }
 .hubly-hubi-composer button:disabled { cursor: not-allowed; opacity: 0.45; }
 
@@ -1178,17 +1179,17 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 .hubly-cal-modal { max-width: 480px; max-height: calc(100dvh - 32px); padding: 24px 24px 18px; border-radius: 24px; }
 .hubly-cal-modal-head h2 { display: flex; align-items: center; gap: 10px; font-size: 18px; }
 .hubly-cal-modal-head h2 i { width: 12px; height: 12px; border-radius: 3px; }
-.hubly-cal-modal-close { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: none; border-radius: 8px; background: transparent; color: #6B7886; cursor: pointer; }
+.hubly-cal-modal-close { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: none; border-radius: 8px; background: transparent; color: var(--ui-text-4); cursor: pointer; }
 .hubly-cal-modal-close:hover { background: #F5F8FB; color: #111C27; }
 .hubly-cal-modal-scroll { display: flex; flex-direction: column; gap: 16px; min-height: 0; margin: 0 -4px; padding: 4px; overflow-y: auto; }
 .hubly-cal-field { display: flex; flex-direction: column; gap: 8px; }
-.hubly-cal-field > span { color: #6B7886; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
-.hubly-cal-field > small { color: #6B7886; font-size: 11.5px; }
+.hubly-cal-field > span { color: var(--ui-text-4); font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+.hubly-cal-field > small { color: var(--ui-text-4); font-size: 11.5px; }
 .hubly-cal-line { width: 100%; height: 40px; padding: 0 13px; border: 1px solid #D6DFE7; border-radius: 10px; outline: none; background: #FFFFFF; color: #111C27; font-size: 13.5px; transition: border-color 150ms ease, box-shadow 150ms ease; }
-.hubly-cal-line::placeholder { color: #C3CFDA; }
+.hubly-cal-line::placeholder { color: var(--ui-text-4); }
 .hubly-cal-line:focus { border-color: var(--hb-accent); box-shadow: 0 0 0 3px rgb(var(--hb-accent-rgb) / 0.12); }
 .hubly-cal-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.hubly-cal-types button { display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border: 1px solid #D6DFE7; border-radius: 10px; background: #FFFFFF; color: #6B7886; font-size: 12px; font-weight: 600; cursor: pointer; transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease; }
+.hubly-cal-types button { display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border: 1px solid #D6DFE7; border-radius: 10px; background: #FFFFFF; color: var(--ui-text-4); font-size: 12px; font-weight: 600; cursor: pointer; transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease; }
 .hubly-cal-types button[aria-checked="true"] { border-color: var(--hb-accent); background: rgb(var(--hb-accent-rgb) / 0.08); color: var(--hb-accent-text); }
 .hubly-cal-durations { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
 .hubly-cal-durations button { height: 24px; padding: 0 8px; border: 1px solid #D6DFE7; border-radius: 999px; background: #FFFFFF; color: #42505E; font-size: 11px; font-weight: 600; cursor: pointer; }
@@ -1204,23 +1205,23 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 /* Formulario de post */
 .hubly-composer-overlay { position: fixed; inset: 0; z-index: var(--layer-composer); display: flex; align-items: center; justify-content: center; padding: 24px 24px 24px var(--composer-left, 92px); pointer-events: none; transition: padding-left 220ms var(--ease-out); }
 .hubly-composer-overlay > .hubly-composer, .hubly-composer-overlay > .hubly-picker-scrim { pointer-events: auto; }
-.hubly-composer { display: flex; flex-direction: column; width: 100%; max-width: 1100px; height: min(756px, calc(100dvh - 48px)); overflow: hidden; border-radius: 22px; background: #FFFFFF; color: #111C27; box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22); }
+.hubly-composer { display: flex; flex-direction: column; width: 100%; max-width: 1100px; height: min(756px, calc(100dvh - 48px)); overflow: hidden; border: 1px solid var(--ui-border); border-radius: 22px; background: var(--ui-surface); color: var(--ui-text); box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22); }
 .hubly-composer-head { display: flex; align-items: flex-start; gap: 16px; padding: 20px 24px 14px; border-bottom: 1px solid #E3E9EF; }
 .hubly-composer-title { width: 100%; padding: 0; border: none; outline: none; background: transparent; color: #111C27; font-size: 21px; font-weight: 700; }
-.hubly-composer-title::placeholder { color: #C3CFDA; }
-.hubly-composer-badges { display: flex; gap: 6px; margin-top: 6px; }
-.hubly-composer-badges :is(span, em) { padding: 2px 8px; border-radius: 999px; font-size: 10.5px; font-style: normal; font-weight: 600; }
-.hubly-composer-badges span { background: #F1F1F6; color: #6B7886; }
+.hubly-composer-title::placeholder { color: var(--ui-text-4); }
+.hubly-composer-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+.hubly-composer-badges :is(span, em) { padding: 2px 8px; border-radius: 999px; font-size: 10.5px; font-style: normal; font-weight: 600; white-space: nowrap; }
+.hubly-composer-badges span { background: var(--ui-muted); color: var(--ui-text-4); }
 .hubly-composer-badges em { background: rgb(var(--hb-accent-rgb) / 0.1); color: var(--hb-accent-text); }
 .hubly-composer-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; padding: 9px 24px; border-bottom: 1px solid #E3E9EF; background: #FAFAFC; }
-.hubly-composer-meta > :is(button, label) { display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 10px; border: none; border-right: 1px solid #E3E9EF; background: transparent; color: #6B7886; font-size: 12.5px; cursor: pointer; }
+.hubly-composer-meta > :is(button, label) { display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 10px; border: none; border-right: 1px solid #E3E9EF; background: transparent; color: var(--ui-text-4); font-size: 12.5px; cursor: pointer; }
 .hubly-composer-meta > :last-child { border-right: none; }
 .hubly-composer-meta button:disabled { cursor: default; }
 .hubly-composer-meta button[aria-pressed="true"] { color: var(--hb-accent-text); }
 .hubly-composer-meta label i { width: 8px; height: 8px; border-radius: 50%; background: var(--hb-accent); }
 .hubly-composer-meta select { border: none; outline: none; background: transparent; color: #111C27; font: inherit; cursor: pointer; }
 .hubly-composer-tabs { display: flex; gap: 8px; padding: 0 20px; overflow-x: auto; border-bottom: 1px solid #E3E9EF; }
-.hubly-composer-tabs button { display: inline-flex; align-items: center; gap: 7px; height: 46px; padding: 0 12px; border: none; border-bottom: 2px solid transparent; background: transparent; color: #6B7886; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: color 150ms ease, border-color 150ms ease; }
+.hubly-composer-tabs button { display: inline-flex; align-items: center; gap: 7px; height: 46px; padding: 0 12px; border: none; border-bottom: 2px solid transparent; background: transparent; color: var(--ui-text-4); font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: color 150ms ease, border-color 150ms ease; }
 .hubly-composer-tabs button:hover { color: #42505E; }
 .hubly-composer-tabs button[aria-current] { border-bottom-color: var(--hb-accent); color: var(--hb-accent-text); }
 .hubly-composer-body { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0; }
@@ -1231,7 +1232,7 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 .hubly-composer-banner strong { font-size: 13.5px; font-weight: 600; }
 .hubly-composer-banner span { margin-top: 2px; color: #42505E; font-size: 12px; }
 .hubly-composer-networks { display: flex; flex-wrap: wrap; gap: 6px; }
-.hubly-composer-networks button { display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 1px solid transparent; border-radius: 50%; background: #F1F1F6; color: #6B7886; font-size: 14px; font-weight: 800; cursor: pointer; transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease; }
+.hubly-composer-networks button { display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 1px solid transparent; border-radius: 50%; background: #F1F1F6; color: var(--ui-text-4); font-size: 14px; font-weight: 800; cursor: pointer; transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease; }
 .hubly-composer-networks button:hover { color: #42505E; }
 .hubly-composer-networks button[aria-pressed="true"] { border-color: var(--hb-accent); background: rgb(var(--hb-accent-rgb) / 0.12); color: var(--hb-accent-text); }
 .hubly-composer-sources { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
@@ -1240,17 +1241,17 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 .hubly-composer-sources button:disabled { cursor: not-allowed; opacity: 0.6; }
 .hubly-composer-sources strong { font-size: 12.5px; font-weight: 500; line-height: 1.3; }
 .hubly-composer-sources b { color: var(--hb-accent-text); font-weight: 600; }
-.hubly-composer-sources small { display: block; color: #6B7886; font-size: 10.5px; }
+.hubly-composer-sources small { display: block; color: var(--ui-text-4); font-size: 10.5px; }
 .hubly-composer-chip { align-self: flex-start; padding: 5px 12px; border-radius: 999px; background: rgb(var(--hb-accent-rgb) / 0.18); color: var(--hb-accent-text); font-size: 12px; font-weight: 600; }
 .hubly-composer-caption { width: 100%; min-height: 130px; padding: 14px; border: 1px solid #E3E9EF; border-radius: 12px; outline: none; background: #F5F8FB; color: #111C27; font-size: 13.5px; line-height: 1.5; resize: vertical; transition: border-color 150ms ease; }
 .hubly-composer-caption:focus { border-color: var(--hb-accent); }
 .hubly-composer-schedule { display: flex; gap: 10px; }
-.hubly-composer-schedule label { flex: 1; color: #6B7886; font-size: 11px; font-weight: 600; }
+.hubly-composer-schedule label { flex: 1; color: var(--ui-text-4); font-size: 11px; font-weight: 600; }
 .hubly-composer-schedule input { margin-top: 4px; }
 .hubly-composer-todos { display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
 .hubly-composer-todos label { display: flex; align-items: center; gap: 8px; }
 .hubly-composer-preview { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 16px 24px; overflow-y: auto; border-left: 1px solid #E3E9EF; background: #FAFAFC; }
-.hubly-composer-preview > small { color: #C3CFDA; font-size: 11px; font-weight: 600; }
+.hubly-composer-preview > small { color: var(--ui-text-4); font-size: 11px; font-weight: 600; }
 .hubly-composer-network-pill { align-self: flex-start; padding: 4px 11px; border-radius: 999px; background: var(--hb-accent); color: #FFFFFF; font-size: 12px; font-weight: 600; }
 .hubly-composer-phone { position: relative; flex-shrink: 0; width: 196px; height: 412px; padding: 30px 0 12px; overflow: hidden; border: 3px solid #111C27; border-radius: 30px; background: #FFFFFF; color: #111C27; font-size: 9px; box-shadow: 0 18px 32px -20px rgba(26, 26, 46, 0.5); }
 .hubly-composer-notch { position: absolute; top: 7px; left: 50%; width: 54px; height: 14px; border-radius: 999px; background: #111C27; transform: translateX(-50%); }
@@ -1259,7 +1260,7 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 .hubly-composer-phone-user i { width: 20px; height: 20px; border: 1.5px solid var(--hb-accent); border-radius: 50%; }
 .hubly-composer-phone-media { display: grid; place-items: center; height: 232px; overflow: hidden; background: #F1F1F6; }
 .hubly-composer-phone-media img { width: 100%; height: 100%; object-fit: cover; }
-.hubly-composer-phone-media span { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #6B7886; }
+.hubly-composer-phone-media span { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--ui-text-4); }
 .hubly-composer-phone p { margin: 8px 10px 0; line-height: 1.35; overflow-wrap: anywhere; }
 .hubly-composer-foot { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 14px 24px; border-top: 1px solid #E3E9EF; }
 .hubly-composer-foot span { flex: 1; color: #DC2626; font-size: 12px; }
@@ -1284,16 +1285,16 @@ html.dark .hubly-app-root .hubly-sidebar :is(.hubly-nav-item, .hb-nav-item):hove
 html.dark .hubly-app-root .hubly-sidebar :is(.hubly-nav-item, .hb-nav-item):is(.active, .is-selected, [aria-current="page"]) { color: var(--ui-sky-text); }
 html.dark .hubly-sidebar :is(svg, img) { --dark-icon: 1; }
 html.dark .hubly-app-root :is(h1, h2, h3, h4, strong, b) { color: inherit; }
-html.dark .hubly-app-root .hbtn { background: #20303F; color: #DADAE2; }
-html.dark .hubly-app-root .hbtn:not(.hbtn-primary):not(.hbtn-ghost) { --hbtn-edge: #1E1E26; border-color: #3A5064; }
-html.dark .hubly-app-root .hbtn:not(.hbtn-primary):hover { background: #2B3E50; color: #FFFFFF; }
+html.dark .hubly-app-root .hbtn:not(.hbtn-danger) { background: #20303F; color: #DADAE2; }
+html.dark .hubly-app-root .hbtn:not(.hbtn-primary):not(.hbtn-ghost):not(.hbtn-danger) { --hbtn-edge: #1E1E26; border-color: #3A5064; }
+html.dark .hubly-app-root .hbtn:not(.hbtn-primary):not(.hbtn-danger):hover { background: #2B3E50; color: #FFFFFF; }
 html.dark .hubly-app-root .hbtn.hbtn-primary { background: var(--hb-accent); color: #FFFFFF; }
 html.dark .hubly-app-root .hbtn.hbtn-ghost { background: transparent; }
 html.dark .hubly-app-root .hbtn.hbtn-gold { border-color: var(--ui-sky); color: #FFFFFF; }
 html.dark :is(.hb-widget-body, .hubly-cal-header, .hubly-cal-rows, .hubly-cal-month, .hubly-cal-date, .hubly-cal-today, .hubly-cal-reveal, .hubly-cal-pill, .hubly-cal-filters, .hubly-cal-modal, .hubly-cal-line, .hubly-cal-types button, .hubly-cal-durations button, .hubly-cal-cell-add, .hubly-composer, .hubly-hubi-panel, .hubly-hubi-fab, .hubly-composer-phone) { border-color: #2B3E50; background: #172330; color: #FFFFFF; }
 html.dark :is(.hb-widget-title, .hb-empty-title, .hubly-task-title, .hubly-hero-title, .hubly-hero-pending, .hubly-pending-pill, .hubly-cal, .hubly-cal-title, .hubly-cal-period, .hubly-cal-date strong, .hubly-cal-empty strong, .hubly-composer-title, .hubly-composer-banner strong, .hubly-composer-meta select, .hubly-sidebar-panel-head.is-chats span, .hubly-hubi-head h2) { color: #FFFFFF; }
 html.dark :is(.hubly-hubi-action, .hubly-hubi-grid button) { color: #FFFFFF; }
-html.dark :is(.hubly-sidebar-brand, .hubly-sidebar-empty strong, .hubly-cal-today, .hubly-cal-pill, .hubly-cal-cell-num, .hubly-composer-banner span, .hubly-cal-durations label, .hubly-cal-durations button) { color: #DADAE2; }
+html.dark :is(.hubly-sidebar-brand, .hubly-sidebar-empty strong, .hubly-cal-today, .hubly-cal-pill, .hubly-cal-cell-num:not(.is-today), .hubly-composer-banner span, .hubly-cal-durations label, .hubly-cal-durations button) { color: #DADAE2; }
 html.dark :is(.hubly-cal-tabs, .hubly-cal-input, .hubly-hubi-composer, .hubly-composer-caption, .hubly-composer-meta, .hubly-composer-preview, .hubly-sidebar-empty i, .hubly-composer-networks button, .hubly-composer-sources button > span, .hubly-composer-phone-media) { background: #20303F; color: #DADAE2; }
 html.dark :is(.hubly-hubi-composer input, .hubly-cal-input, .hubly-composer-caption) { color: #FFFFFF; }
 html.dark .hubly-cal-tab[aria-selected="true"] { background: #2B3E50; box-shadow: none; color: #9AD4F1; }
@@ -1480,8 +1481,25 @@ html.dark {
 }
 html.dark :is(.hubly-sidebar, .hubly-mobile-tabbar) { --hi-soft: #4A4C66; --hi-strong: #9CA3D8; }
 html.dark :is(input, select, textarea):not([type="checkbox"]):not([type="radio"]) { color: var(--ui-text); }
-html.dark :is(input, textarea)::placeholder { color: var(--ui-text-5); }
-html.dark select option { background: #15202B; color: #ECECF1; }
+html.dark :is(input, textarea)::placeholder { color: var(--ui-text-4); }
+html.dark select option { background: var(--ui-surface); color: var(--ui-text); }
+/* Sin esto, los campos sin fondo propio toman el gris del navegador */
+:where(html.dark) :where(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"]), select, textarea) { background-color: var(--ui-surface); }
+html.dark .hb-widget-link:hover { color: var(--ui-sky-text); }
+html.dark .hubly-app-root .hbtn.hbtn-danger { --hbtn-edge: #991B1B; border-color: #B91C1C; background: #DC2626; }
+html.dark .hubly-app-root .hbtn.hbtn-danger:hover:not(:disabled):not([aria-disabled="true"]) { background: #B91C1C; }
+html.dark :is(.hubly-app-root, .hb-app-root) { --tinta-exito: #34D399; --hubly-success-text: #34D399; --hubly-success-bg: rgb(52 211 153 / 0.16); } /* ui-ok: el verde de estado no tiene token --ui-* */
+/* Pastillas con color en línea: el tinte pálido y su tinta se invierten en oscuro */
+html.dark .hubly-app-root :is([style*="background:#DCFCE7" i], [style*="background: rgb(220, 252, 231)"], [style*="background:#D1FAE5" i], [style*="background: rgb(209, 250, 229)"]) { background-color: var(--hubly-success-bg) !important; color: var(--tinta-exito) !important; } /* ui-ok: reasigna colores en línea heredados */
+html.dark .hubly-app-root :is([style*="background:#DBEAFE" i], [style*="background: rgb(219, 234, 254)"]) { background-color: var(--ui-sky-soft) !important; color: var(--ui-sky-text) !important; } /* ui-ok: reasigna colores en línea heredados */
+html.dark .hubly-app-root :is([style*="background:#FEE2E2" i], [style*="background: rgb(254, 226, 226)"], [style*="background:#FEF2F2" i], [style*="background: rgb(254, 242, 242)"]) { background-color: rgb(248 113 113 / 0.16) !important; color: #FCA5A5 !important; } /* ui-ok: reasigna colores en línea heredados */
+html.dark .hubly-app-root :is([style*="background:#FEF3C7" i], [style*="background: rgb(254, 243, 199)"]) { background-color: rgb(251 191 36 / 0.16) !important; color: #FCD34D !important; } /* ui-ok: reasigna colores en línea heredados */
+/* Tintas fijas en línea que en oscuro no se leen */
+html.dark .hubly-app-root :is([style^="color:#16324F" i], [style*=";color:#16324F" i], [style^="color: rgb(22, 50, 79)"], [style*=" color: rgb(22, 50, 79)"]) { color: var(--hb-accent-text) !important; } /* ui-ok: reasigna colores en línea heredados */
+html.dark .hubly-app-root :is([style^="color:#B91C1C" i], [style*=";color:#B91C1C" i], [style^="color: rgb(185, 28, 28)"], [style*=" color: rgb(185, 28, 28)"], [style^="color:#DC2626" i], [style*=";color:#DC2626" i], [style^="color: rgb(220, 38, 38)"], [style*=" color: rgb(220, 38, 38)"]) { color: #FCA5A5 !important; } /* ui-ok: reasigna colores en línea heredados */
+html.dark .hubly-app-root :is([style^="color:#15803D" i], [style*=";color:#15803D" i], [style^="color: rgb(21, 128, 61)"], [style*=" color: rgb(21, 128, 61)"]) { color: var(--tinta-exito) !important; } /* ui-ok: reasigna colores en línea heredados */
+html.dark .hubly-app-root :is([style^="color:#92400E" i], [style*=";color:#92400E" i], [style^="color: rgb(146, 64, 14)"], [style*=" color: rgb(146, 64, 14)"]) { color: #FCD34D !important; } /* ui-ok: reasigna colores en línea heredados */
+html.dark .hubly-app-root :is([style^="color:#1D4ED8" i], [style*=";color:#1D4ED8" i], [style^="color: rgb(29, 78, 216)"], [style*=" color: rgb(29, 78, 216)"]) { color: var(--ui-sky-text) !important; } /* ui-ok: reasigna colores en línea heredados */
 
 /* Las pantallas usan estilos en línea: en teléfono se reacomodan sus rejillas y barras */
 .linkedin-preview [style*="repeat(4, minmax(0, 1fr))"] button { min-width: 0; padding-inline: 2px; font-size: 11px; gap: 3px; }
@@ -1694,9 +1712,17 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-composer-menu > button[aria-pressed="true"] { font-weight: 700; }
 .hubly-composer-menu .is-create { color: var(--hb-accent-text); font-weight: 700; }
 .hubly-composer-menu small { padding: 6px 8px; color: var(--ui-text-3); font-size: 12px; }
-.hubly-composer-menu.is-swatches { flex-direction: row; flex-wrap: wrap; min-width: 180px; }
-.hubly-composer-menu.is-swatches > button:not(.is-clear) { width: 28px; min-height: 28px; padding: 0; border-radius: 50%; }
-.hubly-composer-menu.is-swatches > button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--ui-surface), 0 0 0 4px var(--hb-accent); }
+.hubly-composer-pop > button.is-on { color: var(--hb-accent-text); --hi-soft: var(--ui-sky-icon); --hi-strong: var(--hb-accent-text); }
+.hubly-composer-menu.is-colors { min-width: 150px; }
+.hubly-composer-menu.is-colors > button > i { width: 14px; height: 14px; }
+.hubly-composer-pop > button > i.is-none, .hubly-composer-menu > button > i.is-none { border: 1px dashed var(--ui-text-4); background: transparent; }
+.hubly-composer-menu:is(.is-colors, .is-people) > button[aria-pressed="true"] { color: var(--ui-text); font-weight: 400; }
+.hubly-composer-menu:is(.is-colors, .is-people) > button > svg { margin-left: auto; color: var(--hb-accent-text); }
+.hubly-composer-menu.is-people { max-height: 280px; overflow-y: auto; }
+.hubly-composer-menu.is-people .hubly-cal-input { flex-shrink: 0; margin-bottom: 4px; }
+.hubly-composer-avatar { display: grid; flex-shrink: 0; place-items: center; width: 24px; height: 24px; overflow: hidden; border-radius: 999px; color: var(--on-accent); font-size: 10px; font-weight: 700; }
+.hubly-composer-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.hubly-composer-person { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .hubly-composer-meta > .hubly-composer-field { gap: 6px; }
 .hubly-composer-field small { color: var(--ui-text-3); font-size: 11.5px; font-weight: 600; }
 .hubly-composer-field input:not([type="checkbox"]) { width: 110px; border: 0; outline: 0; background: transparent; color: inherit; font: inherit; }
@@ -1748,6 +1774,11 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-composer-pending p { margin: 0 0 16px; font-size: 13.5px; color: var(--ui-text-2); overflow-wrap: anywhere; }
 .hubly-composer-pending div { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
 @media (max-width: 767.98px) {
+  .hubly-composer-meta { position: relative; }
+  .hubly-composer-pop { position: static; }
+  .hubly-composer-menu { right: 12px; left: 12px; }
+  .hubly-composer-menu:is(.is-colors, .is-people) > button { min-height: 44px; }
+  .hubly-composer-menu.is-people .hubly-cal-input { height: 44px; }
   html:has(.hubly-composer) { --composer-left: 0px !important; }
   .hubly-composer-overlay { padding: 0; }
   .hubly-composer { height: 100dvh; max-width: none; border-radius: 0; }
@@ -1877,8 +1908,11 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .np-gb-coupon { margin: 6px 12px; padding: 8px; border: 1.5px dashed #5F6368; border-radius: 8px; font-size: 13px; text-align: center; }
 .np-gb-cta { display: block; margin: 8px 12px 0; padding: 9px; border-radius: 999px; background: #1A73E8; color: #FFFFFF; font-size: 14px; font-weight: 600; text-align: center; }
 .hubly-composer-tabs { position: relative; }
+.hubly-composer-tabs-scroll { display: contents; }
 @media (max-width: 860px) {
-  .hubly-composer-mobile-preview { display: inline-flex !important; position: sticky; right: 0; flex-shrink: 0; background: var(--ui-surface) !important; box-shadow: -12px 0 12px -8px rgb(8 15 24 / 0.15); color: var(--hb-accent-text) !important; }
+  .hubly-composer-tabs { overflow: visible; }
+  .hubly-composer-tabs-scroll { display: flex; flex: 1; gap: 8px; min-width: 0; overflow-x: auto; }
+  .hubly-composer-mobile-preview { display: inline-flex !important; flex-shrink: 0; border-left: 1px solid var(--ui-border) !important; background: var(--ui-surface) !important; color: var(--hb-accent-text) !important; }
   .hubly-composer-foot small { display: none; }
   .hubly-phone-host { min-height: 560px; }
 }
@@ -1931,7 +1965,7 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-social-badge[data-tone="info"] { background: rgb(var(--hb-accent-rgb) / 0.14); color: var(--hb-accent-text); }
 .hubly-social-badge[data-tone="ok"] { background: color-mix(in srgb, #10B981 18%, var(--ui-surface)); color: var(--ui-text-1); }
 .hubly-social-badge[data-tone="danger"] { background: color-mix(in srgb, #EF4444 16%, var(--ui-surface)); color: var(--ui-text-1); }
-.hubly-social-week { display: grid; grid-template-columns: repeat(7, minmax(170px, 1fr)); gap: 10px; min-width: 1190px; }
+.hubly-social-week { display: grid; grid-template-columns: repeat(7, minmax(140px, 1fr)); gap: 10px; min-width: 1000px; }
 .hubly-social-week-col { display: flex; flex-direction: column; gap: 8px; min-height: 420px; padding: 10px; border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-surface); }
 .hubly-social-week-col[data-today] { border-color: var(--hb-accent); }
 .hubly-social-week-col header { display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; font-weight: 700; color: var(--ui-text-2); }
@@ -1967,13 +2001,13 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-social-cell { max-width: 170px; height: 30px; padding: 0 6px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: var(--ui-text-1); font: inherit; font-size: 12.5px; }
 .hubly-social-cell:hover:not(:disabled), .hubly-social-cell:focus { border-color: var(--ui-border-strong); }
 .hubly-social-kanban-head label { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--ui-text-2); }
-.hubly-social-kanban-head .hubly-social-cell { border-color: var(--ui-border); }
+.hubly-social-kanban-head .hubly-social-cell { max-width: none; border-color: var(--ui-border); }
 .hubly-social-kanban { display: flex; gap: 10px; align-items: flex-start; padding-bottom: 6px; }
 .hubly-social-column { display: flex; flex-direction: column; flex-shrink: 0; gap: 8px; width: 272px; padding: 10px; border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-surface); }
 .hubly-social-column[data-locked] { opacity: 0.55; }
 .hubly-social-column header { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: var(--ui-text-1); }
 .hubly-social-column header i { width: 9px; height: 9px; border-radius: 50%; }
-.hubly-social-column header b { margin-left: auto; font-size: 12px; color: var(--ui-text-3); }
+.hubly-social-column header b { font-size: 12px; font-weight: 600; color: var(--ui-text-4); font-variant-numeric: tabular-nums; }
 .hubly-social-column > div { display: flex; flex-direction: column; gap: 8px; }
 .hubly-social-kanban-item { display: flex; flex-direction: column; gap: 3px; }
 .hubly-social-kanban-item .hubly-social-cell { max-width: none; width: 100%; height: 26px; color: var(--ui-text-3); font-size: 11.5px; }
@@ -1987,6 +2021,609 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-import-source > button { justify-self: start; }
 .hubly-import-skip { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; font-size: 13px; }
 @media (max-width: 767.98px) {
-  .hubly-social-period h2 { font-size: 17px; }
+  .hubly-social-period h2 { font-size: 16px; }
   .hubly-social-tools { width: 100%; }
+}
+
+/* Kanban compacto: columnas abiertas y tarjetas horizontales, como en la referencia */
+.hubly-social-column { padding: 0; border: 0; border-radius: 12px; background: transparent; }
+.hubly-social-column[data-over] { outline-offset: 4px; }
+.hubly-social-knew { display: inline-flex; align-items: center; gap: 5px; align-self: flex-start; height: 28px; padding: 0 4px; border: 0; background: transparent; color: var(--ui-text-3); font-size: 13px; cursor: pointer; }
+.hubly-social-knew:hover { color: var(--ui-text); }
+.hubly-social-knew.is-column { flex-shrink: 0; align-self: flex-start; margin-top: -2px; white-space: nowrap; }
+.hubly-social-kcard { border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-surface); }
+.hubly-social-kcard:hover { border-color: var(--ui-border-strong); }
+.hubly-social-kcard[data-dragging] { opacity: 0.4; }
+.hubly-social-kcard-open { display: flex; flex-direction: column; gap: 8px; width: 100%; padding: 10px 12px; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.hubly-social-kcard-top { display: flex; gap: 10px; min-width: 0; }
+.hubly-social-kcard-top > span:last-child { min-width: 0; }
+.hubly-social-kcard-top strong { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: 13px; font-weight: 500; line-height: 1.3; color: var(--ui-text-1); }
+.hubly-social-kcard-top small { display: block; margin-top: 3px; font-size: 11.5px; color: var(--ui-text-3); }
+.hubly-social-kcard-thumb { position: relative; display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 50px; border-radius: 6px; background: var(--ui-muted); overflow: hidden; text-align: center; }
+.hubly-social-kcard-thumb img, .hubly-social-kcard-thumb video { width: 100%; height: 100%; object-fit: cover; }
+.hubly-social-kcard-thumb { color: var(--ui-text-4); }
+.hubly-social-kcard-open em { font-size: 11px; font-style: normal; font-weight: 600; color: var(--hb-accent-text); }
+.hubly-social-kanban-item { position: relative; }
+.hubly-social-kanban-item > .hubly-social-cell { position: absolute; top: 4px; right: 4px; width: 22px !important; height: 22px !important; padding: 0; border-radius: 6px; opacity: 0; color: var(--ui-text-1); cursor: pointer; background: var(--ui-muted); }
+.hubly-social-kanban-item:hover > .hubly-social-cell, .hubly-social-kanban-item > .hubly-social-cell:focus { opacity: 1; width: auto !important; max-width: 170px; padding: 0 4px; }
+.hubly-project-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 14px 20px; border: 1px solid var(--ui-border); border-radius: 18px; background: var(--ui-surface); }
+.hubly-project-row[data-pinned] { border-color: var(--hb-accent); }
+.hubly-project-open { display: flex; align-items: center; gap: 14px; flex: 1 1 280px; min-width: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.hubly-project-open > span:last-child { min-width: 0; }
+.hubly-project-open strong { display: block; font-size: 15px; color: var(--ui-text); }
+.hubly-project-open small { display: block; overflow: hidden; font-size: 13px; color: var(--ui-text-3); white-space: nowrap; text-overflow: ellipsis; }
+.hubly-project-mark { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px; background: var(--ui-accent-soft); color: var(--hb-accent-text); font-size: 16px; font-weight: 700; }
+.hubly-project-meta { display: flex; align-items: center; gap: 12px; font-size: 12.5px; color: var(--ui-text-3); }
+.hubly-project-meta b { color: var(--ui-accent-text-2); }
+.hubly-project-bar { display: block; width: 82px; height: 6px; border-radius: 999px; background: var(--ui-muted); overflow: hidden; }
+.hubly-project-bar i { display: block; height: 100%; background: var(--hb-accent); }
+.hubly-project-actions { display: flex; gap: 2px; }
+.hubly-project-actions button { display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 8px; background: transparent; color: var(--ui-text-3); cursor: pointer; }
+.hubly-project-actions button:hover { background: var(--ui-muted); color: var(--ui-text); }
+.hubly-project-actions button[aria-pressed="true"] { color: var(--hb-accent-text); }
+.hubly-personas { display: flex; flex-direction: column; gap: 16px; }
+.hubly-personas > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.hubly-personas > header > div:last-child { display: flex; gap: 8px; flex-wrap: wrap; }
+.hubly-personas h3 { margin: 0 0 2px; font-size: 20px; font-weight: 800; color: var(--ui-text); }
+.hubly-personas header p { margin: 0; font-size: 13.5px; color: var(--ui-text-3); }
+.hubly-personas-list { display: flex; flex-direction: column; gap: 14px; }
+.hubly-personas-list article { padding: 18px; border: 1px solid var(--ui-border); border-radius: 16px; background: var(--ui-surface); }
+.hubly-personas-list article[data-accepted] { border-color: var(--hb-accent); }
+.hubly-personas-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.hubly-personas-head > span { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border-radius: 12px; background: var(--hb-accent); color: var(--on-accent); font-size: 14px; font-weight: 800; }
+.hubly-personas-head input { flex: 1 1 160px; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ui-text); font-size: 16px; font-weight: 800; }
+.hubly-personas-head button { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 10px; border: 1px solid var(--ui-border); border-radius: 999px; background: var(--ui-surface); color: var(--ui-text-2); font-size: 12px; font-weight: 600; cursor: pointer; }
+.hubly-personas-head button[aria-pressed="true"] { border-color: var(--hb-accent); background: rgb(var(--hb-accent-rgb) / 0.12); color: var(--hb-accent-text); }
+.hubly-personas-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+.hubly-personas-fields label { display: grid; gap: 4px; font-size: 11.5px; font-weight: 700; color: var(--ui-text-3); }
+.hubly-personas-fields :is(input, textarea) { width: 100%; padding: 8px 10px; border: 1px solid var(--ui-border); border-radius: 9px; background: var(--ui-surface-2); color: var(--ui-text-1); font: inherit; font-size: 13.5px; font-weight: 400; resize: vertical; }
+
+/* ===== Ajustes ===== */
+.hubly-ajustes { padding-bottom: 80px; color: var(--ui-text); }
+.hubly-ajustes-title { margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; color: var(--ui-text); }
+.hubly-ajustes-subtitle { margin: 4px 0 0; font-size: 12.5px; color: var(--ui-text-4); }
+.hubly-ajustes-grid { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 24px; align-items: start; margin-top: 20px; }
+.hubly-ajustes-nav { position: sticky; top: 16px; display: flex; flex-direction: column; gap: 2px; }
+.hubly-ajustes-tab { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 12px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: var(--ui-text-3); font-size: 13px; font-weight: 500; text-align: left; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-ajustes-tab svg { flex-shrink: 0; color: var(--ui-text-5); }
+.hubly-ajustes-tab:hover { background: var(--ui-surface-2); color: var(--ui-text); }
+.hubly-ajustes-tab[aria-current="page"] { border-color: var(--ui-sky-border); background: var(--ui-sky-soft); color: var(--ui-sky-text); font-weight: 600; }
+.hubly-ajustes-tab[aria-current="page"] svg { color: var(--hb-accent-text); }
+.hubly-ajustes-tab:focus-visible, .hubly-ajustes-avatar:focus-visible, .hubly-ajustes-switch:focus-visible, .hubly-ajustes-stage:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
+.hubly-ajustes-nav-sep { height: 1px; margin: 8px 0; background: var(--ui-border); }
+.hubly-ajustes-panel { display: flex; flex-direction: column; gap: 24px; padding: 24px; border: 1px solid var(--ui-border); border-radius: 20px; background: var(--ui-surface); }
+.hubly-ajustes-head { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.hubly-ajustes-head h2 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.01em; color: var(--ui-text); }
+.hubly-ajustes-head p { margin: 2px 0 0; font-size: 12.5px; color: var(--ui-text-4); }
+.hubly-ajustes-head-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.hubly-ajustes-section { display: flex; flex-direction: column; gap: 10px; }
+.hubly-ajustes-label { margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ui-text-4); }
+.hubly-ajustes-hint { margin: 0; font-size: 12px; color: var(--ui-text-4); }
+.hubly-ajustes-hint[role="alert"] { color: var(--ui-text); font-weight: 600; }
+.hubly-ajustes-list { overflow: hidden; border: 1px solid var(--ui-border); border-radius: 14px; }
+.hubly-ajustes-row { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding: 10px 12px; }
+.hubly-ajustes-row + .hubly-ajustes-row { border-top: 1px solid var(--ui-border); }
+.hubly-ajustes-row-text { flex: 1 1 180px; min-width: 0; }
+.hubly-ajustes-row-title { overflow: hidden; color: var(--ui-text); font-size: 13.5px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.hubly-ajustes-row-meta { color: var(--ui-text-4); font-size: 11.5px; }
+.hubly-ajustes-row-actions { display: flex; align-items: center; flex-shrink: 0; gap: 8px; }
+.hubly-ajustes-dot { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 10px; background: var(--ui-muted); color: var(--ui-text-3); font-size: 12px; font-weight: 700; }
+.hubly-ajustes-inline { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.hubly-ajustes-inline .hubly-cal-line { flex: 1 1 200px; min-width: 0; }
+.hubly-ajustes-select { width: auto; height: 34px; padding: 0 10px; border-radius: 8px; font-size: 13px; }
+.hubly-ajustes-profile { display: flex; align-items: center; gap: 16px; }
+.hubly-ajustes-avatar { display: grid; place-items: center; flex-shrink: 0; width: 72px; height: 72px; padding: 0; border: 0; border-radius: 999px; background: var(--hb-accent) center / cover no-repeat; color: var(--on-accent); font-size: 20px; font-weight: 700; cursor: pointer; }
+.hubly-ajustes-avatar:disabled { cursor: default; }
+.hubly-ajustes-name { color: var(--ui-text); font-size: 14px; font-weight: 600; }
+.hubly-ajustes-email { color: var(--ui-text-4); font-size: 12.5px; }
+.hubly-ajustes-tag { display: inline-block; padding: 2px 8px; border-radius: 999px; background: var(--ui-muted); color: var(--ui-text-3); font-size: 11px; font-weight: 600; }
+.hubly-ajustes-link { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: transparent; color: var(--hb-accent-text); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.hubly-ajustes-link:disabled { color: var(--ui-text-5); cursor: default; }
+.hubly-ajustes-switch { position: relative; flex-shrink: 0; width: 36px; height: 20px; padding: 2px; border: 0; border-radius: 999px; background: var(--ui-border-strong); cursor: pointer; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-ajustes-switch::after { content: ""; position: absolute; inset: -12px -4px; }
+.hubly-ajustes-switch span { display: block; width: 16px; height: 16px; border-radius: 999px; background: var(--on-accent); transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-ajustes-switch[aria-checked="true"] { background: var(--hb-accent); }
+.hubly-ajustes-switch[aria-checked="true"] span { transform: translateX(16px); }
+.hubly-ajustes-empty { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 32px 16px; border: 1px solid var(--ui-border); border-radius: 14px; text-align: center; }
+.hubly-ajustes-empty strong { color: var(--ui-text); font-size: 13.5px; }
+.hubly-ajustes-empty p { max-width: 360px; margin: 0; color: var(--ui-text-4); font-size: 12.5px; }
+.hubly-cal-types.is-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 320px; }
+.hubly-ajustes-viewer { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.hubly-ajustes-viewer img { max-width: min(92vw, 720px); max-height: 75vh; border-radius: 16px; object-fit: contain; }
+.hubly-ajustes-viewer-actions { display: flex; gap: 8px; }
+.hubly-ajustes-stage { position: relative; align-self: center; width: 280px; height: 280px; overflow: hidden; border-radius: 16px; background: var(--ui-muted); cursor: grab; touch-action: none; user-select: none; }
+.hubly-ajustes-stage img { position: absolute; top: 0; left: 0; max-width: none; pointer-events: none; }
+.hubly-ajustes-stage-mask { position: absolute; inset: 0; border: 2px solid var(--on-accent); border-radius: 999px; box-shadow: 0 0 0 9999px rgb(var(--hb-accent-rgb) / 0.55); pointer-events: none; }
+.hubly-ajustes-zoom { display: flex; align-items: center; gap: 8px; width: 280px; align-self: center; }
+.hubly-ajustes-zoom input { flex: 1; accent-color: var(--hb-accent); }
+.hubly-ajustes-check { display: flex; align-items: center; gap: 10px; padding: 8px 12px; color: var(--ui-text); font-size: 13px; }
+@media (max-width: 767.98px) {
+  .hubly-ajustes-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .hubly-ajustes-nav { position: static; flex-direction: row; overflow-x: auto; gap: 4px; padding-bottom: 4px; }
+  .hubly-ajustes-tab { flex-shrink: 0; min-height: 44px; white-space: nowrap; }
+  .hubly-ajustes-nav-sep { display: none; }
+  .hubly-ajustes-panel { padding: 16px; }
+  .hubly-ajustes-row-actions { flex: 1 1 100%; flex-wrap: wrap; }
+  .hubly-ajustes-row-actions .hubly-ajustes-select { flex: 1 1 140px; min-width: 0; }
+  .hubly-ajustes :is(.hbtn, .hubly-ajustes-link, .hubly-ajustes-select) { min-height: 44px; }
+  .hubly-ajustes .hbtn-ic { min-width: 44px; }
+}
+html.dark .hubly-cal-types button[aria-checked="true"] { border-color: var(--hb-accent); background: rgb(var(--hb-accent-rgb) / 0.14); color: var(--hb-accent-text); }
+
+/* Salud de cuentas ---------------------------------------------------------- */
+.hubly-salud { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 1240px; min-width: 0; margin: 0 auto; padding-bottom: 36px; }
+.hubly-salud-head { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-top: 8px; }
+.hubly-salud-head .hubly-cal-title { color: var(--ui-text); font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+.hubly-salud-head .hubly-cal-subtitle { color: var(--ui-text-4); }
+.hubly-salud-head .hubly-cal-subtitle strong { color: var(--ui-text); font-variant-numeric: tabular-nums; }
+.hubly-salud-notice { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 1px solid var(--ui-sky-border); border-radius: 14px; background: rgb(var(--hb-accent-rgb) / 0.08); color: var(--hb-accent-text); }
+.hubly-salud-notice p { display: flex; flex: 1; flex-direction: column; gap: 2px; min-width: 0; margin: 0; color: var(--ui-text-3); font-size: 12.5px; }
+.hubly-salud-notice strong { color: var(--ui-text); font-size: 13px; font-weight: 600; }
+.hubly-salud-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.hubly-salud-spacer { flex: 1; }
+.hubly-salud-search { width: 260px; }
+.hubly-salud-sort { width: 210px; }
+.hubly-cal-tabs.is-text { max-width: 100%; overflow-x: auto; }
+.hubly-cal-tabs.is-text .hubly-cal-tab { flex-shrink: 0; padding: 0 10px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.hubly-cal-tabs.is-text .hubly-cal-tab span { max-width: none; margin: 0; opacity: 1; }
+.hubly-salud-filters { align-items: center; }
+.hubly-salud-count { margin-left: 4px; color: var(--ui-text-4); font-variant-numeric: tabular-nums; }
+.hubly-salud-section { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.hubly-salud-section-head { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; }
+.hubly-salud-section-head h2 { margin: 0; color: var(--ui-text); font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+.hubly-salud-section-head p { margin: 2px 0 0; color: var(--ui-text-4); font-size: 12.5px; }
+.hubly-salud-actions { display: flex; align-items: center; flex-wrap: wrap; flex-shrink: 0; gap: 8px; }
+.hubly-salud-actions.is-end { justify-content: flex-end; }
+.hubly-salud-list { overflow: hidden; border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-surface); }
+.hubly-salud-rec { display: flex; align-items: center; gap: 12px; padding: 10px 12px; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-salud-rec:hover { background: var(--ui-surface-2); }
+.hubly-salud-rec + .hubly-salud-rec, .hubly-salud-more { border-top: 1px solid var(--ui-border); }
+.hubly-salud-rec-text { flex: 1; min-width: 0; }
+.hubly-salud-rec .hubly-cal-row-title { color: var(--ui-text); }
+.hubly-salud-rec-brand, .hubly-salud-handle { color: var(--ui-text-4); font-size: 12px; font-weight: 400; }
+.hubly-salud :is(.hubly-cal-row-meta) { color: var(--ui-text-4); }
+.hubly-salud-clamp { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.hubly-salud-more { display: block; width: 100%; padding: 10px; border-width: 1px 0 0; border-style: solid; border-color: var(--ui-border); background: transparent; color: var(--hb-accent-text); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.hubly-salud-more:hover { background: var(--ui-surface-2); }
+.hubly-salud-item { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; }
+.hubly-salud-item + .hubly-salud-item { border-top: 1px solid var(--ui-border); }
+.hubly-salud-item-head { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.hubly-salud-item-text { flex: 1 1 220px; min-width: 0; }
+.hubly-salud-item .hubly-cal-row-title { color: var(--ui-text); font-size: 14px; }
+.hubly-salud-status { display: inline-flex; align-items: center; gap: 6px; color: var(--ui-text); font-size: 12.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hubly-salud-status::before { content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--hb-accent); }
+.hubly-salud-status[data-tone="risk"]::before { background: var(--hubly-danger); }
+.hubly-salud-current { color: var(--ui-text-4); font-size: 12px; font-weight: 600; }
+.hubly-salud-total { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; color: var(--ui-text-3); font-size: 12.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hubly-salud-meter { height: 8px; overflow: hidden; border-radius: 999px; background: var(--ui-muted); }
+.hubly-salud-meter.is-thin { height: 5px; }
+.hubly-salud-meter i { display: block; height: 100%; border-radius: 999px; background: var(--hb-accent); }
+.hubly-salud-meter[data-tone="risk"] i { background: var(--hubly-danger); }
+.hubly-salud-deliverables { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.hubly-salud-deliverable { display: flex; flex-direction: column; gap: 6px; }
+.hubly-salud-deliverable > div:first-child { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; color: var(--ui-text-4); font-size: 12px; }
+.hubly-salud-deliverable strong { color: var(--ui-text); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.hubly-salud-metrics { margin: 0; color: var(--ui-text-3); font-size: 12px; }
+.hubly-salud-metrics span { margin-right: 8px; color: var(--ui-text-4); font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.hubly-salud-editor { display: flex; flex-direction: column; gap: 16px; padding: 16px; border: 1px solid var(--ui-border); border-radius: 12px; background: var(--ui-surface-2); }
+.hubly-salud-editor-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.hubly-salud-fieldset { display: flex; flex-direction: column; gap: 8px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.hubly-salud-fieldset legend { margin-bottom: 8px; padding: 0; color: var(--ui-text); font-size: 13px; font-weight: 600; }
+.hubly-salud-fieldset label, .hubly-salud-inline { display: flex; flex-direction: column; gap: 4px; color: var(--ui-text-4); font-size: 11.5px; }
+.hubly-salud-editor .hubly-cal-input { border-color: var(--ui-border-strong); background: var(--ui-surface); color: var(--ui-text); }
+.hubly-salud-paid { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 16px; }
+.hubly-salud-check { display: flex; align-items: center; gap: 8px; color: var(--ui-text); font-size: 13px; }
+.hubly-salud-check input { width: 16px; height: 16px; accent-color: var(--hb-accent); }
+.hubly-salud-metric-list { display: flex; flex-direction: column; margin: 0; padding: 0; overflow: hidden; border: 1px solid var(--ui-border); border-radius: 10px; list-style: none; }
+.hubly-salud-metric-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 10px; color: var(--ui-text); font-size: 12.5px; }
+.hubly-salud-metric-list li + li { border-top: 1px solid var(--ui-border); }
+.hubly-salud-add { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr) 90px minmax(0, 1fr) auto; align-items: center; gap: 8px; }
+.hubly-salud :is(.hbtn, .hubly-cal-pill, .hubly-cal-tab, .hubly-cal-input, .hubly-salud-more):focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
+@media (max-width: 767.98px) {
+  .hubly-salud-search, .hubly-salud-sort { width: 100%; }
+  .hubly-salud-spacer { display: none; }
+  .hubly-salud-deliverables, .hubly-salud-editor-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hubly-salud-add { grid-template-columns: minmax(0, 1fr); }
+  .hubly-salud-notice { flex-wrap: wrap; }
+  .hubly-salud-actions { flex-shrink: 1; max-width: 100%; }
+  .hubly-salud-item-head .hubly-salud-actions, .hubly-salud-section-head .hubly-salud-actions { flex: 1 1 100%; }
+  .hubly-salud-notice .hbtn { flex: 1 1 100%; }
+  .hubly-salud-rec { flex-wrap: wrap; }
+  .hubly-salud-rec .hubly-salud-actions { flex: 1 1 100%; justify-content: flex-end; }
+  .hubly-salud :is(.hbtn, .hubly-cal-pill, .hubly-cal-tab, .hubly-cal-input, .hubly-salud-more) { min-height: 44px; }
+  .hubly-salud-check input { width: 20px; height: 20px; }
+}
+/* Buscador global: campo, grupos de resultados y ayuda fija de teclado. */
+.hubly-command-overlay { align-items: flex-start; padding-top: min(12vh, 108px); }
+.hubly-cal-modal.hubly-command {
+  max-width: 672px;
+  max-height: min(640px, 80dvh);
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--ui-surface);
+  color: var(--ui-text);
+}
+.hubly-command-search { display: flex; align-items: center; gap: 16px; padding: 20px 24px; border-bottom: 1px solid var(--ui-border); color: var(--ui-text-4); flex-shrink: 0; }
+.hubly-command-search > svg { flex-shrink: 0; }
+.hubly-command-field { flex: 1; min-width: 0; }
+.hubly-command-field label { display: block; margin-bottom: 4px; color: var(--ui-text-4); font-size: 11px; font-weight: 500; }
+.hubly-command-field input { width: 100%; min-width: 0; padding: 4px 0; border: 0; border-radius: 6px; background: transparent; color: var(--ui-text); font-size: 16px; font-weight: 500; caret-color: var(--hb-accent-text); }
+.hubly-command-field input::placeholder { color: var(--ui-text-4); opacity: 1; }
+.hubly-command-input { position: relative; }
+.hubly-command-field[data-typing] input::placeholder { color: transparent; }
+.hubly-command-typed { position: absolute; top: 4px; right: 0; left: 0; overflow: hidden; color: var(--ui-text-4); font-size: 16px; font-weight: 500; white-space: nowrap; pointer-events: none; }
+.hubly-command-typed::after { content: ""; display: inline-block; width: 1px; height: 16px; margin-left: 2px; vertical-align: -2px; background: var(--hb-accent-text); }
+.hubly-command-field input:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
+.hubly-command kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; padding: 2px 6px; border: 0; border-radius: 6px; background: var(--ui-muted); color: var(--ui-text-4); font: inherit; font-size: 11px; white-space: nowrap; }
+.hubly-command-shortcut { flex-shrink: 0; }
+.hubly-command-results { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--ui-border-strong) transparent; padding: 8px 0 16px; }
+.hubly-command-group + .hubly-command-group { margin-top: 16px; }
+.hubly-command-heading { padding: 16px 24px 8px; color: var(--ui-text-4); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.hubly-command-option { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 12px 24px; cursor: pointer; color: var(--ui-text); transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-command-option[aria-selected="true"] { background: var(--ui-sky-soft); color: var(--ui-sky-text); }
+.hubly-command-icon { display: inline-grid; place-items: center; width: 36px; height: 36px; flex-shrink: 0; border-radius: 12px; color: var(--ui-text-3); background: var(--ui-muted); }
+.hubly-command-option[aria-selected="true"] .hubly-command-icon { color: var(--hb-accent-text); background: rgb(var(--hb-accent-rgb) / 0.08); }
+.hubly-command-copy { flex: 1; min-width: 0; }
+.hubly-command-label { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; line-height: 1.5; }
+.hubly-command-description { display: block; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; line-height: 1.5; color: var(--ui-text-4); }
+.hubly-command-meta { max-width: 100px; color: var(--ui-text-4); font-size: 11px; overflow-wrap: anywhere; }
+.hubly-command-chevron { flex-shrink: 0; color: var(--ui-text-4); }
+.hubly-command-option[aria-selected="true"] .hubly-command-chevron { color: var(--hb-accent-text); }
+.hubly-command-brand { width: 24px; height: 24px; border-radius: 8px; color: var(--on-accent); font-size: 11px; font-weight: 600; display: inline-grid; place-items: center; }
+.hubly-command-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-shrink: 0; padding: 10px 24px; border-top: 1px solid var(--ui-border); background: var(--ui-surface-2); color: var(--ui-text-4); font-size: 11px; }
+.hubly-command-hints { display: flex; gap: 16px; }
+.hubly-command-hints > span { display: inline-flex; align-items: center; gap: 4px; }
+.hubly-command-close { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px; border: 0; border-radius: 8px; background: transparent; color: var(--ui-text-4); font-size: 11px; cursor: pointer; }
+.hubly-command-close:hover { color: var(--hb-accent-text); background: var(--ui-muted); }
+.hubly-command-close:focus-visible, .hubly-command-option:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: -2px; }
+.hubly-command-touch-hint { display: none; }
+.hubly-command-empty { gap: 12px; min-height: 240px; padding: 32px 24px; overflow-y: auto; overflow-wrap: anywhere; }
+.hubly-command-empty strong { font-size: 13px; }
+.hubly-command-empty span { font-size: 11px; }
+.hubly-command-empty-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+@media (max-width: 767.98px) {
+  .hubly-command-search { gap: 12px; padding: 16px; }
+  .hubly-command-heading { padding-right: 16px; padding-left: 16px; }
+  .hubly-command-option { padding: 12px 16px; }
+  .hubly-command-label, .hubly-command-description { white-space: normal; overflow-wrap: anywhere; }
+  .hubly-command-meta { max-width: 64px; }
+  .hubly-command .hubly-command-shortcut, .hubly-command-hints { display: none; }
+  .hubly-command-touch-hint { display: block; }
+  .hubly-command-footer { gap: 8px; padding: 8px 16px; padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+  .hubly-command-close, .hubly-command-search .hubly-cal-modal-close { min-width: 44px; min-height: 44px; }
+}
+@media (max-width: 640px) {
+  .hubly-sheet.hubly-command { animation-duration: 180ms; animation-delay: 0ms; }
+  .hubly-sheet.hubly-command[data-state="closing"] { animation-duration: 150ms; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hubly-command-option { transition: none; }
+  .hubly-sheet.hubly-command { animation: none; }
+}
+
+/* Editor de post: formato visible y selector de resultados como interruptor */
+.hubly-composer-formats { display: flex; flex-direction: column; gap: 6px; }
+.hubly-composer-formatrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.hubly-composer-formatrow > span { margin-right: 4px; color: var(--ui-text-3); font-size: 12.5px; font-weight: 600; }
+.hubly-composer-formats .hubly-composer-hint { margin: 0; }
+.hubly-social-menuitem input[role="switch"] { appearance: none; position: relative; flex-shrink: 0; width: 36px; height: 20px; margin: 0; border-radius: 999px; background: var(--ui-border-strong); cursor: pointer; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-social-menuitem input[role="switch"]::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--ui-surface); transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-social-menuitem input[role="switch"]:checked { background: var(--hb-accent); }
+.hubly-social-menuitem input[role="switch"]:checked::after { transform: translateX(16px); }
+.hubly-social-menuitem input[role="switch"]:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .hubly-social-menuitem input[role="switch"], .hubly-social-menuitem input[role="switch"]::after { transition: none; }
+}
+.hubly-social-card-row .hubly-social-badge { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+
+/* 20. Rutas de parrillas y anuncios: dos columnas que apilan en móvil -------- */
+.hubly-parrillas-cols { display: grid; grid-template-columns: minmax(0, 480px) minmax(0, 560px); gap: 48px; align-items: start; justify-content: space-between; }
+.hubly-parrillas-builder { display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 32px; min-height: 680px; }
+@media (max-width: 767.98px) {
+  .hubly-parrillas-cols { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .hubly-parrillas-builder { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+}
+
+/* 21. Móvil: objetivos táctiles de 44px y espacio para el aviso flotante ------- */
+.hubly-sidebar.has-profile-popover .hubly-sidebar-collapse-btn.hb-sidebar-collapse-btn { z-index: 1; }
+@media (max-width: 767.98px) {
+  .hubly-mobile-topbar :is(button, a) { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+  .hubly-mobile-tabbar > * { align-self: stretch; }
+  html:has(.hubly-sidebar.is-mobile-drawer-open) [data-mision-pildora] { display: none; }
+  html:has([data-mision-pildora]) .hubly-main.hb-main { padding-bottom: 56px; }
+
+  .hubly-sidebar.is-mobile-drawer-open :is(a, button, [role="button"]) { min-height: 44px; }
+  .hubly-app-root.hb-app-root .hubly-sidebar.is-mobile-drawer-open :is(.hubly-nav-item, .hb-nav-item) { min-height: 44px; }
+  .hubly-sidebar.is-mobile-drawer-open :is(.hubly-icon-btn, .hubly-sidebar-tab, button:has(> svg:only-child)) { min-width: 44px; }
+  .hubly-composer :is(button, [role="button"], [role="tab"], select, textarea, input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"])) { min-height: 44px; }
+  .hubly-composer :is(.hubly-cal-icon, .hubly-composer-networks button, .hubly-composer-toolbar button, button:has(> svg:only-child)) { min-width: 44px; }
+  :is(.hubly-main, .hubly-touch, .hubly-cal, .hubly-dashboard-subnav-wrap) :is(button, [role="button"], [role="tab"], [role="checkbox"], [role="switch"], [role="radio"], select, summary, textarea, input:not([type="checkbox"], [type="radio"], [type="range"], [type="hidden"])) { min-height: 44px; }
+  :is(.hubly-main, .hubly-touch, .hubly-cal, .hubly-dashboard-subnav-wrap) :is(a[href], .hubly-subnav-tab) { display: inline-flex; align-items: center; min-height: 44px; }
+  :is(.hubly-main, .hubly-touch, .hubly-cal, .hubly-dashboard-subnav-wrap) :is(.hubly-icon-btn, .hubly-cal-icon, .hubly-cal-reveal, .hubly-cal-tab, .hubly-seg-pill, button:has(> svg:only-child)) { min-width: 44px; }
+  .hubly-main button[aria-label^="Tu cuenta"] { min-width: 44px; flex-shrink: 0; }
+  .hubly-main label:has(> input[type="checkbox"]) { display: inline-flex; align-items: center; min-height: 44px; }
+  /* La casilla de tarea conserva su circulo: el area de 44px va en un pseudoelemento. */
+  .hubly-main button[role="checkbox"][aria-label^="Completar "] { position: relative; min-height: 0; }
+  .hubly-main button[role="checkbox"][aria-label^="Completar "]::after { content: ""; position: absolute; inset: -13px; }
+}
+.hubly-pill-scroll > * { flex-shrink: 0; white-space: nowrap; }
+.hubly-cal-pill[aria-pressed="true"],
+html.dark .hubly-cal-pill[aria-pressed="true"] { border-color: var(--hb-accent); background: rgb(var(--hb-accent-rgb) / 0.14); color: var(--hb-accent-text); font-weight: 600; box-shadow: inset 0 0 0 1px var(--hb-accent); }
+.hubly-cal-tab { color: var(--ui-text-3); }
+.hubly-cal-tab[aria-selected="true"] { color: var(--hb-accent-text); }
+.hubly-cal-date.is-today span { color: var(--on-accent); }
+.hubly-cal-pill[aria-pressed="true"] .hubly-salud-count { color: var(--hb-accent-text); }
+
+/* 22. Chat: dos paneles en escritorio; en móvil, lista o conversación ------------ */
+.hubly-chat { height: calc(100vh - 48px); min-height: calc(100vh - 48px); }
+.hubly-chat-lista { display: flex; flex-direction: column; width: 280px; border-right: 1px solid var(--ui-border); }
+.hubly-chat-panel { display: flex; }
+.hubly-chat-volver { display: none; }
+.hubly-chat-form { padding: 14px 52px 14px 20px; } /* Deja libre la esquina del botón de Hubi */
+@media (max-width: 767.98px) {
+  .hubly-main.hb-main:has(.hubly-chat) { width: 100%; }
+  .hubly-chat { height: calc(100dvh - 196px); min-height: 420px; }
+  .hubly-chat-lista { width: 100%; border-right: 0; }
+  .hubly-chat[data-conversacion="ninguna"] .hubly-chat-panel,
+  .hubly-chat[data-conversacion="abierta"] .hubly-chat-lista { display: none; }
+  .hubly-chat-form { padding: 10px 12px; }
+  .hubly-chat-enviar, .hubly-chat-extra { display: none; }
+  .hubly-chat-volver { display: grid; place-items: center; flex-shrink: 0; }
+}
+
+/* 23. Aviso desplegado: deja llegar con scroll a lo que queda detrás ------------- */
+html:has([data-mision-pildora][data-desplegado]) .hubly-main.hb-main { padding-bottom: 340px; }
+
+/* 24. Cifras del reporte: cuatro columnas en escritorio, dos en móvil ------------ */
+.hubly-reporte-cifras { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 767.98px) {
+  .hubly-reporte-cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* 25. Nueva marca e invitaciones ---------------------------------------------- */
+.hubly-brand-menu-create { display: flex; align-items: center; gap: 8px; width: 100%; margin-top: 6px; padding: 10px 9px 4px; border: none; border-top: 1px solid var(--ui-border); background: transparent; color: var(--ui-text-2); font-family: inherit; font-size: 13px; font-weight: 500; text-align: left; cursor: pointer; transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-brand-menu-create:hover { color: var(--hb-accent-text); }
+.hubly-brand-menu-create:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
+
+.hubly-wizard-form { display: flex; flex-direction: column; flex: 1; gap: 12px; min-height: 0; }
+.hubly-wizard-title { min-width: 0; }
+.hubly-wizard-title p { overflow: hidden; margin: 2px 0 0; color: var(--ui-text-4); font-size: 12.5px; text-overflow: ellipsis; white-space: nowrap; }
+.hubly-wizard-stepper { position: relative; flex-shrink: 0; padding-top: 40px; }
+.hubly-wizard-hubi { position: absolute; top: 0; left: 0; display: flex; justify-content: center; width: 25%; pointer-events: none; transform: translateX(calc(var(--paso) * 100%)); transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1); }
+.hubly-wizard-stepper ol { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0 0 12px; border-bottom: 1px solid var(--ui-border); list-style: none; }
+.hubly-wizard-stepper li { display: flex; align-items: center; justify-content: center; gap: 6px; min-width: 0; height: 32px; border-radius: 10px; background: var(--ui-muted); color: var(--ui-text-4); font-size: 12px; font-weight: 600; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-wizard-stepper li[data-state="active"] { background: var(--ui-sky-soft); box-shadow: inset 0 0 0 1px var(--ui-sky-border); color: var(--ui-sky-text); }
+.hubly-wizard-stepper li[data-state="done"] { background: rgb(var(--hb-accent-rgb) / 0.14); color: var(--hb-accent-text); }
+.hubly-wizard-section { display: flex; flex-direction: column; gap: 8px; }
+.hubly-wizard-section + .hubly-wizard-section { padding-top: 14px; border-top: 1px solid var(--ui-border); }
+.hubly-wizard-section h3 { margin: 0; color: var(--ui-text); font-size: 13.5px; font-weight: 600; }
+.hubly-wizard-section > p { margin: 0; color: var(--ui-text-4); font-size: 12.5px; }
+.hubly-wizard-count { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--ui-text-4); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.hubly-wizard-count em { font-style: normal; }
+.hubly-wizard-scroll { max-height: 180px; overflow-y: auto; }
+.hubly-wizard-network { flex-wrap: nowrap; padding: 6px 12px; }
+.hubly-wizard-network .hbtn[aria-pressed="true"] { color: var(--hb-accent-text); }
+.hubly-wizard-input { position: relative; display: flex; align-items: center; }
+.hubly-wizard-input svg { position: absolute; left: 12px; color: var(--ui-text-4); pointer-events: none; }
+.hubly-wizard-input .hubly-cal-line { padding-left: 37px; }
+.hubly-wizard-textarea.hubly-cal-line { height: auto; padding: 10px 13px; line-height: 1.45; resize: vertical; }
+.hubly-wizard-back { margin-right: auto; }
+
+.hubly-invite-tabs { display: flex; flex-shrink: 0; gap: 16px; overflow-x: auto; border-bottom: 1px solid var(--ui-border); scrollbar-width: none; }
+.hubly-invite-tabs button { display: inline-flex; align-items: center; flex-shrink: 0; gap: 6px; height: 34px; margin-bottom: -1px; padding: 0 2px; border: none; border-bottom: 2px solid transparent; background: transparent; color: var(--ui-text-4); font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-invite-tabs button:hover { color: var(--ui-text); }
+.hubly-invite-tabs button[aria-selected="true"] { border-bottom-color: var(--hb-accent-text); color: var(--ui-text); }
+.hubly-invite-tabs button:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: -2px; }
+.hubly-invite-form { display: flex; flex-direction: column; gap: 12px; }
+.hubly-invite-form > .hbtn { width: 100%; }
+.hubly-invite-note { margin: 0; color: var(--ui-text-3); font-size: 12.5px; }
+.hubly-invite-error { margin: 0; color: #B91C1C; font-size: 12px; font-weight: 600; } /* ui-ok: rojo de STATUS_META.changes */
+html.dark .hubly-invite-error { color: #FCA5A5; } /* ui-ok: el rojo de estado no alcanza contraste en oscuro */
+.hubly-invite-search { position: relative; display: flex; align-items: center; }
+.hubly-invite-search svg { position: absolute; left: 12px; color: var(--ui-text-4); pointer-events: none; }
+.hubly-invite-search .hubly-cal-line { padding-left: 37px; }
+.hubly-invite-people { max-height: 220px; overflow-y: auto; }
+.hubly-invite-emails { display: flex; flex-direction: column; gap: 8px; }
+.hubly-invite-email, .hubly-invite-link { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.hubly-invite-email .hubly-cal-line, .hubly-invite-link .hubly-cal-line { flex: 1; min-width: 0; }
+.hubly-invite-link .hubly-cal-line { color: var(--ui-text-3); font-size: 12px; text-overflow: ellipsis; }
+.hubly-invite-link .hbtn, .hubly-invite-email .hbtn { flex-shrink: 0; }
+.hubly-invite-add { align-self: flex-start; }
+.hubly-ajustes-check .hubly-ajustes-row-text > span { display: block; }
+.hubly-ajustes-check + .hubly-ajustes-check { border-top: 1px solid var(--ui-border); }
+.hubly-invite-sent { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid var(--ui-border); }
+.hubly-invite-sent > div:not(.hubly-invite-link) { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.hubly-invite-sent p { margin: 0; color: var(--ui-text-4); font-size: 12px; }
+.hubly-invite-sent strong { overflow: hidden; color: var(--ui-text); font-size: 12.5px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 767.98px) {
+  .hubly-touch .hubly-cal-modal-close { min-width: 44px; min-height: 44px; }
+  .hubly-touch :is(.hubly-cal-line, select, .hubly-invite-tabs button, .hbtn) { min-height: 44px; }
+  .hubly-touch .hubly-ajustes-check { min-height: 44px; }
+  .hubly-brand-menu-create { min-height: 44px; padding-top: 4px; padding-bottom: 4px; }
+}
+@media (max-width: 640px) {
+  .hubly-wizard-stepper li svg { display: none; }
+  .hubly-wizard-stepper li[data-state="done"] svg { display: block; }
+  .hubly-wizard-stepper ol { gap: 4px; }
+  .hubly-wizard-stepper li { gap: 4px; font-size: 11.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hubly-wizard-hubi { transition: none; }
+}
+
+/* Botón de borde de Equipo: la clase existía sin regla y tomaba el borde del navegador */
+.hbtn-outline { border: 1px solid var(--ui-border-strong); }
+html.dark .hubly-salud-item .hubly-ajustes-dot { background-color: var(--ui-muted) !important; color: var(--ui-text) !important; }
+html.dark .hubly-app-root .saas-btn-secondary { border-color: var(--ui-border-strong); background: var(--ui-surface); color: var(--ui-text-2); }
+html.dark .hubly-app-root .saas-btn-secondary:hover:not(:disabled) { background: var(--ui-surface-2); color: var(--ui-text); }
+
+/* Galería de widgets y widgets añadidos -------------------------------------- */
+
+.hubly-edit-btn.is-width { width: auto; min-width: 28px; padding: 0 4px; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
+@media (max-width: 767.98px) { .hubly-edit-btn.is-width { display: none; } }
+
+.hubly-cal-modal.hubly-wgal { gap: 0; width: 100%; max-width: 880px; height: calc(100dvh - 64px); max-height: 820px; padding: 0; overflow: hidden; background: var(--ui-surface); }
+.hubly-wgal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 24px 24px 16px; border-bottom: 1px solid var(--ui-border); }
+.hubly-wgal-head h2 { margin: 0; color: var(--ui-text); font-size: 18px; font-weight: 700; }
+.hubly-wgal-head p { margin: 4px 0 0; color: var(--ui-text-4); font-size: 12.5px; }
+.hubly-wgal-aviso { padding: 8px 24px; border-bottom: 1px solid var(--ui-border); background: var(--ui-surface-2); color: var(--ui-text-2); font-size: 12.5px; font-weight: 600; }
+.hubly-wgal-scroll { display: flex; flex: 1; flex-direction: column; gap: 24px; min-height: 0; padding: 20px 24px 24px; overflow-y: auto; }
+h3.hubly-wgal-rotulo, .hubly-wgal-rotulo { margin: 0 0 10px; color: var(--ui-text-4); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+html.dark .hubly-app-root h3.hubly-wgal-rotulo { color: var(--ui-text-4); }
+.hubly-wgal-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.hubly-wgal-card {
+  position: relative;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 14px;
+  background: var(--ui-surface);
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hubly-wgal-card:hover { border-color: var(--ui-border-strong); background: var(--ui-surface-2); }
+.hubly-wgal-card.is-placed { border-color: var(--ui-sky-border); }
+.hubly-wgal-preview { height: 180px; overflow: hidden; border-radius: 10px; background: var(--ui-surface-2); pointer-events: none; }
+.hubly-wgal-zoom { height: 300px; padding: 16px; overflow: hidden; zoom: 0.6; }
+.hubly-wgal-zoom .hb-widget-body { min-height: 0; overflow: hidden; }
+.hubly-wgal-zoom .hubly-wgal-rotulo { margin: 4px 0; }
+.hubly-wgal-zoom .hubly-task-row { justify-content: flex-start; gap: 10px; }
+.hubly-wgal-toggle { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; width: 100%; padding: 10px 2px 0; border: none; outline: none; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.hubly-wgal-toggle::before { content: ""; position: absolute; inset: 0; border-radius: 14px; }
+.hubly-wgal-toggle:focus-visible::before { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
+.hubly-wgal-nombre { overflow: hidden; color: var(--ui-text); font-size: 13.5px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.hubly-wgal-estado { display: inline-flex; align-items: center; gap: 4px; color: var(--ui-text-4); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.hubly-wgal-card.is-placed .hubly-wgal-estado { color: var(--hb-accent-text); }
+.hubly-wgal-desc { grid-column: 1 / -1; color: var(--ui-text-4); font-size: 11.5px; }
+@media (max-width: 767.98px) {
+  .hubly-wgal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hubly-wgal-head .hbtn { min-height: 44px; }
+}
+@media (max-width: 640px) {
+  .hubly-cal-modal.hubly-wgal { height: 92dvh; }
+  .hubly-wgal-head { padding: 18px 16px 12px; }
+  .hubly-wgal-aviso { padding: 8px 16px; }
+  .hubly-wgal-scroll { padding: 16px 16px 24px; }
+  .hubly-wgal-grid { grid-template-columns: minmax(0, 1fr); }
+  .hubly-wgal-preview { height: 150px; }
+  .hubly-wgal-zoom { height: 250px; }
+}
+
+.hubly-wfilas { padding: 8px 12px; }
+.hubly-wfila { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px; }
+.hubly-wfila + .hubly-wfila { border-top: 1px solid var(--ui-border); }
+.hubly-wfila-texto { flex: 1; min-width: 0; }
+.hubly-wfila-titulo, .hubly-wfila-meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hubly-wfila-titulo { color: var(--ui-text); font-size: 13px; font-weight: 600; }
+.hubly-wfila-meta { margin-top: 2px; color: var(--ui-text-4); font-size: 11px; }
+.hubly-wfila-lado { flex-shrink: 0; color: var(--ui-text-4); font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hubly-wfilas-mas { padding: 8px; color: var(--ui-text-4); font-size: 11px; font-weight: 600; }
+.hubly-wpill { flex-shrink: 0; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.hubly-wmetrica { display: flex; flex-direction: column; justify-content: center; gap: 4px; padding: 16px 20px; }
+.hubly-wnumero { color: var(--ui-text); font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+.hubly-wnumero-rotulo { margin: 0; color: var(--ui-text-4); font-size: 12.5px; }
+.hb-widget-head:has(.hubly-wselect) .hb-widget-title { flex-shrink: 0; }
+.hubly-wselect { flex: 0 1 170px; min-width: 0; height: 30px; padding: 0 8px; border: 1px solid var(--ui-border-strong); border-radius: 8px; background: var(--ui-surface); color: var(--ui-text-2); font-size: 12px; }
+.hubly-wselect:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
+.hubly-wsemana { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 16px 20px; }
+.hubly-wsemana-dias { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.hubly-wsemana-dia { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 2px; border: 1px solid var(--ui-border); border-radius: 8px; color: var(--ui-text-4); font-size: 11px; font-variant-numeric: tabular-nums; }
+.hubly-wsemana-dia strong { color: var(--ui-text); font-size: 13px; font-weight: 600; }
+.hubly-wsemana-dia.is-today { border-color: var(--hb-accent); background: var(--hb-accent); color: var(--on-accent); }
+.hubly-wsemana-dia.is-today strong { color: var(--on-accent); }
+@media (max-width: 767.98px) { .hubly-wselect { min-height: 44px; } }
+
+/* Chats de Hubi en el sidebar */
+.hubly-chat-list { display: flex; flex: 1; flex-direction: column; gap: 2px; min-height: 0; margin: 0; padding: 0; overflow-y: auto; list-style: none; }
+.hubly-chat-row { position: relative; display: flex; flex-shrink: 0; align-items: center; border-radius: 10px; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-chat-row:hover, .hubly-chat-row:focus-within { background: var(--ui-muted); }
+.hubly-chat-row.is-active { background: var(--ui-sky-soft); }
+.hubly-chat-open { display: flex; flex: 1; align-items: center; gap: 8px; min-width: 0; height: 34px; padding: 0 10px; border: none; border-radius: 10px; background: transparent; font: inherit; text-align: left; cursor: pointer; }
+.hubly-chat-open:focus-visible, .hubly-chat-delete:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: -2px; }
+.hubly-chat-title { flex: 1; min-width: 0; overflow: hidden; color: var(--ui-text); font-size: 13px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+.hubly-chat-row.is-active .hubly-chat-title { color: var(--ui-sky-text); font-weight: 600; }
+.hubly-chat-time { flex-shrink: 0; color: var(--ui-text-4); font-size: 11px; font-variant-numeric: tabular-nums; transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-chat-delete { position: absolute; top: 5px; right: 5px; display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: none; border-radius: 8px; background: transparent; color: var(--ui-text-4); cursor: pointer; opacity: 0; transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1), background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-chat-row:hover .hubly-chat-delete, .hubly-chat-row:focus-within .hubly-chat-delete { opacity: 1; }
+.hubly-chat-row:hover .hubly-chat-time, .hubly-chat-row:focus-within .hubly-chat-time { opacity: 0; }
+.hubly-chat-delete:hover { background: var(--hubly-danger-bg); color: var(--hubly-danger-text); }
+
+.hubly-undo-stack { position: fixed; left: 50%; bottom: 28px; z-index: 90; display: flex; flex-direction: column; align-items: center; gap: 8px; translate: -50% 0; }
+.hubly-undo-stack .hubly-undo-toast { position: static; translate: none; white-space: nowrap; }
+.hubly-undo-seconds { min-width: 28px; color: rgba(255, 255, 255, 0.72); font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums; }
+
+/* Conversación a pantalla completa, junto al sidebar */
+.hubly-hubi-panel[data-view="full"] { top: 0; right: 0; bottom: 0; left: 280px; width: auto; border-radius: 0; background: var(--ui-surface); box-shadow: none; animation: hubly-fade-in 150ms ease both; }
+.hubly-hubi-panel[data-view="full"][data-state="closing"] { opacity: 0; animation: none; transition: opacity 150ms ease; }
+.hubly-app-root:has(.hubly-sidebar.is-collapsed) .hubly-hubi-panel[data-view="full"] { left: 92px; }
+.hubly-hubi-panel[data-view="full"] .hubly-hubi-body { padding: 32px max(24px, calc((100% - 760px) / 2)); }
+.hubly-hubi-panel[data-view="full"] .hubly-hubi-intro { width: min(480px, 100%); margin: auto; }
+.hubly-hubi-panel[data-view="full"] .hubly-hubi-composer { margin: 8px max(24px, calc((100% - 760px) / 2)) 20px; }
+
+@media (hover: none), (max-width: 767.98px) {
+  .hubly-chat-open { height: 44px; }
+  .hubly-chat-delete { position: static; flex-shrink: 0; width: 44px; height: 44px; opacity: 1; }
+  .hubly-chat-row:hover .hubly-chat-time, .hubly-chat-row:focus-within .hubly-chat-time { opacity: 1; }
+}
+
+@media (max-width: 767.98px) {
+  .hubly-sidebar-panel-head button { width: 44px; height: 44px; }
+  .hubly-undo-stack { bottom: 76px; }
+  .hubly-hubi-panel[data-view="full"], .hubly-app-root:has(.hubly-sidebar.is-collapsed) .hubly-hubi-panel[data-view="full"] { left: 0; bottom: 60px; }
+  .hubly-hubi-panel[data-view="full"] .hubly-hubi-body { padding: 20px 16px; }
+  .hubly-hubi-panel[data-view="full"] .hubly-hubi-composer { margin: 8px 12px 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hubly-chat-row, .hubly-chat-time, .hubly-chat-delete { transition: none; }
+  .hubly-hubi-panel[data-view="full"] { animation: none; transition: none; }
+}
+
+/* Agentes de Hubi: lista del sidebar y pantalla de configuración */
+.hubly-sidebar-agents { display: flex; flex-direction: column; gap: 2px; min-height: 0; overflow-y: auto; }
+.hubly-sidebar-agent { display: flex; align-items: center; gap: 8px; flex-shrink: 0; min-height: 36px; padding: 6px 8px; border-radius: 8px; color: var(--ui-text-2); font-size: 13px; font-weight: 500; text-decoration: none; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-sidebar-agent span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hubly-sidebar-agent:hover { background: var(--ui-surface-2); color: var(--ui-text); }
+.hubly-sidebar-agent[aria-current="page"] { background: var(--ui-sky-soft); color: var(--ui-sky-text); }
+.hubly-sidebar-agent:focus-visible, .hubly-agente-plantilla:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
+
+.hubly-agente { color: var(--ui-text); }
+.hubly-agente-head { align-items: center; padding-bottom: 12px; }
+.hubly-agente-identidad { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+.hubly-agente-avatar { display: inline-flex; flex-shrink: 0; }
+.hubly-agente-nombre { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hubly-agente-estado { flex-shrink: 0; padding: 2px 8px; border-radius: 999px; background: var(--ui-muted); color: var(--ui-text-3); font-size: 11px; font-weight: 600; }
+.hubly-agente-acciones { display: flex; align-items: center; flex-shrink: 0; gap: 8px; }
+.hubly-agente-cuerpo { display: flex; flex: 1; flex-direction: column; gap: 16px; width: 100%; max-width: 1040px; padding: 20px 32px 24px; }
+.hubly-agente-aviso { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--ui-text-4); font-size: 12.5px; }
+.hubly-agente-aviso svg { flex-shrink: 0; }
+.hubly-agente-chat { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 760px; }
+.hubly-agente-msg { margin: 0; color: var(--ui-text-2); font-size: 14px; line-height: 1.55; white-space: pre-line; overflow-wrap: anywhere; }
+.hubly-agente-msg strong { color: var(--ui-text); font-weight: 600; }
+.hubly-agente-msg.is-user { align-self: flex-end; max-width: 80%; padding: 8px 12px; border-radius: 14px; background: var(--ui-muted); color: var(--ui-text); }
+.hubly-agente-galeria { display: flex; flex-direction: column; gap: 12px; }
+.hubly-agente-plantillas { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 10px; }
+.hubly-agente-plantilla { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 12px 14px; border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-surface); color: var(--ui-text); text-align: left; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-agente-plantilla:hover { border-color: var(--ui-border-strong); background: var(--ui-surface-2); }
+.hubly-agente-plantilla-icono { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px; background: var(--ui-muted); color: var(--ui-text-3); }
+.hubly-agente-plantilla-texto { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.hubly-agente-plantilla-texto strong { font-size: 13.5px; font-weight: 600; }
+.hubly-agente-plantilla-texto small { color: var(--ui-text-4); font-size: 12px; line-height: 1.35; }
+.hubly-agente-cero { align-self: flex-start; }
+.hubly-agente-pie { position: sticky; bottom: 0; z-index: 20; padding: 12px 32px 16px; border-top: 1px solid var(--ui-border); background: var(--ui-surface); }
+.hubly-agente-form { display: flex; align-items: center; gap: 8px; max-width: 760px; }
+.hubly-agente-form .hubly-cal-line { flex: 1; min-width: 0; background: var(--ui-surface); color: var(--ui-text); border-color: var(--ui-border-strong); }
+.hubly-agente-form .hubly-cal-line::placeholder { color: var(--ui-text-4); }
+
+@media (max-width: 767.98px) {
+  .hubly-agente { min-height: calc(100dvh - 60px); }
+  .hubly-agente-head { flex-wrap: wrap; }
+  .hubly-agente-identidad { flex-basis: 100%; }
+  .hubly-agente-avatar { display: none; }
+  .hubly-agente-nombre { flex: 1; font-size: 20px; white-space: normal; overflow-wrap: anywhere; }
+  .hubly-agente-acciones { flex-wrap: wrap; }
+  .hubly-agente-cuerpo { padding: 16px 12px 88px; }
+  .hubly-agente-pie { position: fixed; right: 0; bottom: 60px; left: 0; padding: 10px 12px; }
+  .hubly-agente-plantillas { grid-template-columns: 1fr; }
 }

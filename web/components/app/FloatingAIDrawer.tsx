@@ -1,8 +1,12 @@
 "use client";
 
 import React, { useEffect, useId, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useHublyStore } from "@/lib/store";
+import { currentAgencyId } from "@/lib/live-workspace";
+import { useHubiChats, type HubiTurn } from "@/lib/hubi-chats";
 import { useModalPresence } from "@/lib/use-modal-presence";
+import { confirmDeleteChat, HubiChatUndoToasts } from "@/components/app/HubiChatList";
 import {
   selectAccountRecommendations,
   selectAccountsHealth,
@@ -30,15 +34,6 @@ export function HublyAvatarIllustration({ size = 34 }: { size?: number }) {
 
 // Backwards-compatible alias so any existing import of HublyAvatarIllustration renders the Hubly cat
 
-interface LocalAssistantTurn {
-  id: string;
-  role: "user" | "assistant";
-  text: string;
-  timestamp: string;
-  actionType?: "open_composer" | "open_suggestions" | "open_invite";
-  actionLabel?: string;
-}
-
 const QUICK_PROMPTS = [
   "¿Qué tareas vencen hoy o están vencidas?",
   "Resumen de salud de cuentas y sugerencias",
@@ -64,6 +59,8 @@ export function FloatingAIDrawer() {
 
   const aiDrawerOpen = useHublyStore((s) => s.aiDrawerOpen);
   const setAiDrawerOpen = useHublyStore((s) => s.setAiDrawerOpen);
+  const aiDrawerPrompt = useHublyStore((s) => s.aiDrawerPrompt);
+  const setAiDrawerPrompt = useHublyStore((s) => s.setAiDrawerPrompt);
   const brands = useHublyStore((s) => s.brands);
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
   const tasks = useHublyStore((s) => s.tasks);
@@ -103,14 +100,50 @@ export function FloatingAIDrawer() {
   const activeBrand =
     brands.find((b) => b.id === activeBrandId) || brands[0] || null;
 
+  const pathname = usePathname();
+  const hydrated = useHublyStore((s) => s.hydrated);
+  const workspaceId = useHublyStore((s) => s.workspaceId);
+  const activeChat = useHubiChats(
+    (s) => s.chats.find((chat) => chat.id === s.activeChatId) ?? null
+  );
+  const activeChatId = activeChat?.id ?? null;
+  const fullView = useHubiChats((s) => s.fullView);
+  const appendTurns = useHubiChats((s) => s.appendTurns);
+  const loadChats = useHubiChats((s) => s.loadChats);
+  const setFullView = useHubiChats((s) => s.setFullView);
+  const turns = activeChat?.turns ?? [];
+
   const [prompt, setPrompt] = useState("");
-  const [turns, setTurns] = useState<LocalAssistantTurn[]>([]);
   const [expanded, setExpanded] = useState(false);
-  const panelPresence = useModalPresence(aiDrawerOpen, 250);
+  const panelPresence = useModalPresence(aiDrawerOpen, fullView ? 150 : 250);
 
   const handleClose = () => {
     setAiDrawerOpen(false);
   };
+
+  useEffect(() => {
+    if (hydrated) loadChats(currentAgencyId() ?? workspaceId);
+  }, [hydrated, workspaceId, loadChats]);
+
+  // La vista completa ocupa la pantalla: se va al navegar o si borran su conversación.
+  useEffect(() => {
+    if (fullView) setAiDrawerOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  useEffect(() => {
+    if (fullView && aiDrawerOpen && !activeChatId) setAiDrawerOpen(false);
+  }, [fullView, aiDrawerOpen, activeChatId, setAiDrawerOpen]);
+
+  useEffect(() => {
+    if (!panelPresence.mounted) setFullView(false);
+  }, [panelPresence.mounted, setFullView]);
+
+  useEffect(() => {
+    setPrompt("");
+    if (aiDrawerOpen) inputRef.current?.focus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeChatId]);
 
   // Focus trap, Escape key, Initial focus & Scroll lock when drawer is open
   useEffect(() => {
@@ -130,6 +163,7 @@ export function FloatingAIDrawer() {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        if (document.querySelector('[role="alertdialog"]')) return;
         e.preventDefault();
         e.stopPropagation();
         handleClose();
@@ -155,7 +189,7 @@ export function FloatingAIDrawer() {
 
   const buildLocalDiagnosticAnswer = (
     question: string
-  ): Omit<LocalAssistantTurn, "id" | "role" | "timestamp"> => {
+  ): Omit<HubiTurn, "id" | "role" | "timestamp"> => {
     const q = question.toLowerCase();
     const brandLabel = activeBrand?.name || "tu marca activa";
 
@@ -325,7 +359,7 @@ export function FloatingAIDrawer() {
       minute: "2-digit",
     });
 
-    const userTurn: LocalAssistantTurn = {
+    const userTurn: HubiTurn = {
       id: `u-${Date.now()}`,
       role: "user",
       text: clean,
@@ -333,7 +367,7 @@ export function FloatingAIDrawer() {
     };
 
     const reply = buildLocalDiagnosticAnswer(clean);
-    const assistantTurn: LocalAssistantTurn = {
+    const assistantTurn: HubiTurn = {
       id: `a-${Date.now() + 1}`,
       role: "assistant",
       text: reply.text,
@@ -342,12 +376,20 @@ export function FloatingAIDrawer() {
       actionLabel: reply.actionLabel,
     };
 
-    setTurns((prev) => [...prev, userTurn, assistantTurn]);
+    appendTurns([userTurn, assistantTurn]);
     setPrompt("");
   };
 
+  // Una pregunta hecha desde el buscador llega ya respondida.
+  useEffect(() => {
+    if (!aiDrawerPrompt) return;
+    setAiDrawerPrompt(null);
+    handleSubmitPrompt(aiDrawerPrompt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [aiDrawerPrompt]);
+
   const handleTriggerTurnAction = (
-    actionType?: LocalAssistantTurn["actionType"]
+    actionType?: HubiTurn["actionType"]
   ) => {
     handleClose();
     window.requestAnimationFrame(() => {
@@ -377,6 +419,8 @@ export function FloatingAIDrawer() {
         </button>
       )}
 
+      <HubiChatUndoToasts />
+
       {/* Panel lateral de Hubi */}
       {panelPresence.mounted && (
           <aside
@@ -384,6 +428,7 @@ export function FloatingAIDrawer() {
             data-hubi-panel
             data-state={panelPresence.state}
             data-expanded={expanded}
+            data-view={fullView ? "full" : "panel"}
             className="hubly-hubi-panel"
             role="dialog"
             aria-labelledby={titleId}
@@ -394,21 +439,28 @@ export function FloatingAIDrawer() {
                 <h2 id={titleId}>Hubi</h2>
               </div>
               <div>
-                {turns.length > 0 && (
-                  <button type="button" onClick={() => setTurns([])} title="Nueva conversación" aria-label="Limpiar conversación">
+                {activeChat && (
+                  <button
+                    type="button"
+                    onClick={() => void confirmDeleteChat(activeChat.id, activeChat.title)}
+                    title="Eliminar conversación"
+                    aria-label="Eliminar conversación"
+                  >
                     <Trash2 size={14} />
                   </button>
                 )}
-                <button
-                  type="button"
-                  className="hubly-hubi-expand"
-                  onClick={() => setExpanded((v) => !v)}
-                  title="Expandir"
-                  aria-label="Expandir el panel de Hubi"
-                  aria-pressed={expanded}
-                >
-                  <Maximize2 size={14} />
-                </button>
+                {!fullView && (
+                  <button
+                    type="button"
+                    className="hubly-hubi-expand"
+                    onClick={() => setExpanded((v) => !v)}
+                    title="Expandir"
+                    aria-label="Expandir el panel de Hubi"
+                    aria-pressed={expanded}
+                  >
+                    <Maximize2 size={14} />
+                  </button>
+                )}
                 <button type="button" onClick={handleClose} title="Cerrar" aria-label="Cerrar Hubi">
                   <X size={16} />
                 </button>
@@ -416,16 +468,7 @@ export function FloatingAIDrawer() {
             </div>
 
             {/* Conversation Body */}
-            <div
-              style={{
-                flex: 1,
-                overflowY: "auto",
-                padding: "18px 16px",
-                display: "flex",
-                flexDirection: "column",
-                gap: 14,
-              }}
-            >
+            <div className="hubly-hubi-body">
               {turns.length === 0 ? (
                 <div className="hubly-hubi-intro">
                   <div className="hubly-hubi-avatar">
@@ -552,9 +595,7 @@ export function FloatingAIDrawer() {
                 aria-label="Escribe una consulta para Hubi"
               />
               <div>
-                <button type="button" aria-label="Adjuntar (función prevista)" title="Función prevista" disabled>
-                  <Paperclip size={15} />
-                </button>
+                
                 <span>Demo local con datos de tu workspace</span>
                 <button type="submit" aria-label="Enviar consulta a Hubi" disabled={!prompt.trim()}>
                   <ArrowUp size={15} />

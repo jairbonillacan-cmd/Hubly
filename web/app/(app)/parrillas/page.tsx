@@ -173,6 +173,7 @@ export default function ParrillasPage() {
 
   return (
     <div
+      className="hubly-touch"
       style={{
         color: "var(--ui-text)",
         minHeight: "calc(100vh - 64px)",
@@ -302,7 +303,7 @@ export default function ParrillasPage() {
                   height: 24,
                   borderRadius: 999,
                   background: "var(--ui-muted)",
-                  color: "var(--ui-text-5)",
+                  color: "var(--ui-text-3)",
                   fontSize: 12,
                   fontWeight: 700,
                   display: "inline-grid",
@@ -311,7 +312,7 @@ export default function ParrillasPage() {
               >
                 2
               </span>
-              <span style={{ fontSize: 13.5, fontWeight: 500, color: "var(--ui-text-5)" }}>
+              <span style={{ fontSize: 13.5, fontWeight: 500, color: "var(--ui-text-4)" }}>
                 Hubi arma tu reporte
               </span>
             </div>
@@ -325,7 +326,7 @@ export default function ParrillasPage() {
                   height: 24,
                   borderRadius: 999,
                   background: "var(--ui-muted)",
-                  color: "var(--ui-text-5)",
+                  color: "var(--ui-text-3)",
                   fontSize: 12,
                   fontWeight: 700,
                   display: "inline-grid",
@@ -334,7 +335,7 @@ export default function ParrillasPage() {
               >
                 3
               </span>
-              <span style={{ fontSize: 13.5, fontWeight: 500, color: "var(--ui-text-5)" }}>
+              <span style={{ fontSize: 13.5, fontWeight: 500, color: "var(--ui-text-4)" }}>
                 Tu primer post
               </span>
             </div>
@@ -343,7 +344,7 @@ export default function ParrillasPage() {
           {/* Grey Banner: Traer mi mes */}
           <section
             style={{
-              background: "#F4F5F8",
+              background: "var(--ui-surface-2)",
               borderRadius: 14,
               padding: "16px 22px",
               display: "flex",
@@ -380,15 +381,7 @@ export default function ParrillasPage() {
           </section>
 
           {/* 2-Column Main Area */}
-          <section
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 480px) minmax(0, 560px)",
-              gap: 48,
-              alignItems: "start",
-              justifyContent: "space-between",
-            }}
-          >
+          <section className="hubly-parrillas-cols">
             {/* Left Column */}
             <div>
               <h1
@@ -441,8 +434,8 @@ export default function ParrillasPage() {
                       width: 22,
                       height: 22,
                       borderRadius: 999,
-                      background: "#E6F4FB",
-                      color: "var(--ui-accent-text-2)",
+                      background: "var(--ui-muted)",
+                      color: "var(--ui-text-3)",
                       fontSize: 11.5,
                       fontWeight: 700,
                       display: "inline-grid",
@@ -463,8 +456,8 @@ export default function ParrillasPage() {
                       width: 22,
                       height: 22,
                       borderRadius: 999,
-                      background: "#EDE9FE",
-                      color: "#7C3AED",
+                      background: "var(--ui-muted)",
+                      color: "var(--ui-text-3)",
                       fontSize: 11.5,
                       fontWeight: 700,
                       display: "inline-grid",
@@ -568,7 +561,7 @@ export default function ParrillasPage() {
                     cursor: "pointer",
                   }}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#0F172A">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.592 2.592 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z" />
                   </svg>
                   <span>{connectingNet === "TikTok" ? "Conectando..." : "TikTok"}</span>
@@ -879,47 +872,10 @@ export default function ParrillasPage() {
               marginBottom: 48,
             }}
           >
-            <button
-              disabled
-              data-planned
-              title="Función prevista"
-              type="button"
-              style={{
-                width: 38,
-                height: 32,
-                borderRadius: 10,
-                border: "none",
-                background: "var(--ui-accent-soft)",
-                color: "var(--hb-accent-text)",
-                display: "grid",
-                placeItems: "center",
-                cursor: "pointer",
-              }}
-            >
-              <Home size={16} />
-            </button>
+            
 
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <button
-                disabled
-                data-planned
-                title="Función prevista"
-                type="button"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  background: "transparent",
-                  border: "none",
-                  color: "var(--ui-text-2)",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                <MessageCircle size={15} />
-                <span>Comentarios</span>
-              </button>
+              
 
               <div
                 style={{
@@ -930,43 +886,8 @@ export default function ParrillasPage() {
                   gap: 2,
                 }}
               >
-                <button
-                  disabled
-                  data-planned
-                  title="Función prevista"
-                  type="button"
-                  style={{
-                    width: 28,
-                    height: 26,
-                    borderRadius: 7,
-                    border: "none",
-                    background: "var(--ui-surface)",
-                    color: "var(--ui-text)",
-                    display: "grid",
-                    placeItems: "center",
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
-                  }}
-                >
-                  <LayoutGrid size={14} />
-                </button>
-                <button
-                  disabled
-                  data-planned
-                  title="Función prevista"
-                  type="button"
-                  style={{
-                    width: 28,
-                    height: 26,
-                    borderRadius: 7,
-                    border: "none",
-                    background: "transparent",
-                    color: "var(--ui-text-4)",
-                    display: "grid",
-                    placeItems: "center",
-                  }}
-                >
-                  <List size={14} />
-                </button>
+                
+                
               </div>
 
               <Link
@@ -1160,14 +1081,7 @@ export default function ParrillasPage() {
           </div>
 
           {/* 2-Column Bio-Link Builder Layout */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 390px",
-              gap: 32,
-              minHeight: 680,
-            }}
-          >
+          <div className="hubly-parrillas-builder">
             {/* Left Column: Builder */}
             <div style={{ paddingTop: 12 }}>
               {/* Underline Tabs: Contenido | Diseño | Números */}
@@ -1240,23 +1154,7 @@ export default function ParrillasPage() {
                     {lbl}
                   </button>
                 ))}
-                <button
-                  disabled
-                  data-planned
-                  title="Función prevista"
-                  type="button"
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    color: "var(--ui-text-4)",
-                    fontSize: 13,
-                    fontWeight: 500,
-                    cursor: "pointer",
-                    padding: 0,
-                  }}
-                >
-                  Más ▾
-                </button>
+                
               </div>
 
               {/* Cards List */}
@@ -1277,7 +1175,7 @@ export default function ParrillasPage() {
                   <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                     <span
                       style={{
-                        color: "var(--ui-text-5)",
+                        color: "var(--ui-text-4)",
                         fontSize: 15,
                         cursor: "grab",
                         userSelect: "none",
@@ -1290,29 +1188,14 @@ export default function ParrillasPage() {
                       <div style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>
                         Síguenos
                       </div>
-                      <div style={{ fontSize: 12, color: "var(--ui-text-5)", marginTop: 2 }}>
+                      <div style={{ fontSize: 12, color: "var(--ui-text-4)", marginTop: 2 }}>
                         Sitio y redes · 1 ícono
                       </div>
                     </div>
                   </div>
 
                   <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                    <button
-                      disabled
-                      data-planned
-                      title="Función prevista"
-                      type="button"
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        color: "var(--ui-text-4)",
-                        fontSize: 12.5,
-                        fontWeight: 500,
-                        cursor: "pointer",
-                      }}
-                    >
-                      Editar
-                    </button>
+                    
 
                     {/* Toggle ON */}
                     <button
@@ -1362,7 +1245,7 @@ export default function ParrillasPage() {
                   <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                     <span
                       style={{
-                        color: "var(--ui-text-5)",
+                        color: "var(--ui-text-4)",
                         fontSize: 15,
                         cursor: "grab",
                         userSelect: "none",
@@ -1389,7 +1272,7 @@ export default function ParrillasPage() {
                     </div>
 
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: 500, color: "var(--ui-text-5)" }}>
+                      <div style={{ fontSize: 14, fontWeight: 500, color: "var(--ui-text-4)" }}>
                         Escríbenos por WhatsApp
                       </div>
                       {editingWhatsapp ? (
@@ -1429,22 +1312,7 @@ export default function ParrillasPage() {
                   </div>
 
                   <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                    <button
-                      disabled
-                      data-planned
-                      title="Función prevista"
-                      type="button"
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        color: "var(--ui-text-4)",
-                        fontSize: 12.5,
-                        fontWeight: 500,
-                        cursor: "pointer",
-                      }}
-                    >
-                      Más
-                    </button>
+                    
 
                     {/* Toggle OFF */}
                     <button
@@ -1521,8 +1389,7 @@ export default function ParrillasPage() {
                     margin: "0 0 18px",
                   }}
                 >
-                  Mineralia USA vende minerales, cristales o piezas decorativas de origen natural —
-                  probablemente colecciones curadas para...
+                  {activeBrand?.core?.whatTheySell || "Agrega una descripción en Núcleo de marca."}
                 </p>
 
                 {siguenosEnabled && (
@@ -1564,7 +1431,7 @@ export default function ParrillasPage() {
                     marginTop: 20,
                     textAlign: "center",
                     fontSize: 12,
-                    color: "var(--ui-text-5)",
+                    color: "var(--ui-text-4)",
                   }}
                 >
                   hecho con{" "}
@@ -1573,7 +1440,7 @@ export default function ParrillasPage() {
                       fontFamily: "Georgia, serif",
                       fontSize: 14,
                       fontWeight: 700,
-                      color: "var(--ui-text-5)",
+                      color: "var(--ui-text-4)",
                     }}
                   >
                     hubly

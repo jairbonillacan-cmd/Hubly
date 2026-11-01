@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useEffect, useId, useMemo, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Copy, Eye, Pencil, Trash2 } from "lucide-react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useHublyStore } from "@/lib/store";
 import { backendEnabled } from "@/lib/supabase/config";
 import { currentAgencyId } from "@/lib/live-workspace";
@@ -26,27 +25,36 @@ import {
   formatFor,
   loadRecovery,
   mediaItemUrl,
+  postColorText,
   recoveryKey,
   saveRecovery,
   type PostDraft,
 } from "@/lib/post-draft";
+import { DEFAULT_WORKFLOW } from "@/lib/calendar-views";
 import { moveInList } from "@/lib/use-kanban-drag";
 import type { CustomFieldDefinition, PlatformSettings, PostFormat, PostMedia, PostStatus, SocialNetwork, WorkflowStatus } from "@/lib/types";
 import {
+  HublyArrowLeftIcon as ArrowLeft,
+  HublyArrowRightIcon as ArrowRight,
   HublyBellIcon,
   HublyChartIcon,
+  HublyCheckIcon,
   HublyChatIcon,
   HublyClipboardIcon,
   HublyCloseIcon as X,
   HublyCloudIcon,
+  HublyCopyIcon as Copy,
   HublyDocumentIcon,
+  HublyEyeIcon as Eye,
   HublyImageIcon,
   HublyLibraryIcon,
   HublyMemoIcon,
   HublyPaletteIcon,
+  HublyPencilIcon as Pencil,
   HublyPersonIcon,
   HublyPlusIcon as Plus,
   HublyPulseIcon,
+  HublyTrashIcon as Trash2,
   HublyUploadIcon,
 } from "@/components/app/icons/DuotoneIcons";
 
@@ -77,7 +85,7 @@ function BrandMark({ d }: { d: string }) {
   );
 }
 
-const GLYPHS: Record<SocialNetwork, React.ReactNode> = {
+export const GLYPHS: Record<SocialNetwork, React.ReactNode> = {
   Instagram: (
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -96,12 +104,15 @@ const GLYPHS: Record<SocialNetwork, React.ReactNode> = {
   "Google Business": <BrandMark d="M22 8.5 20.4 3H3.6L2 8.5a3.2 3.2 0 0 0 1 2.3V21h18V10.8a3.2 3.2 0 0 0 1-2.3ZM12 19H5v-7.2c.9 0 1.8-.4 2.5-1.1a3.4 3.4 0 0 0 4.5 0 3.4 3.4 0 0 0 4.5 0c.7.7 1.6 1.1 2.5 1.1V14h-5v5h-2Zm7 0h-3v-3h3v3Z" />,
 };
 
+const POST_FORMATS: PostFormat[] = ["Imagen", "Carrusel", "Reel / Video", "Story", "Texto"];
 const POST_COLORS = ["#16324F", "#2A76B0", "#0F766E", "#15803D", "#B45309", "#B91C1C", "#7C3AED", "#BE185D"];
-const DEFAULT_WORKFLOW: WorkflowStatus[] = [
-  { id: "pendiente", name: "Pendiente de revisión", color: "#F59E0B" },
-  { id: "diseno", name: "En diseño", color: "#2A76B0" },
-  { id: "copy", name: "Copy listo", color: "#0F766E" },
-  { id: "interno", name: "Aprobado interno", color: "#15803D" },
+const POST_PALETTE = [
+  { name: "Rosa", color: "#E98B8B" }, // ui-ok: dato guardado en el post, igual en ambos temas
+  { name: "Durazno", color: "#F4B26A" }, // ui-ok: dato guardado en el post, igual en ambos temas
+  { name: "Verde", color: "#7FD38C" }, // ui-ok: dato guardado en el post, igual en ambos temas
+  { name: "Azul", color: "#8FA8E0" }, // ui-ok: dato guardado en el post, igual en ambos temas
+  { name: "Lila", color: "#C9A0DC" }, // ui-ok: dato guardado en el post, igual en ambos temas
+  { name: "Aqua", color: "#6CC5BF" }, // ui-ok: dato guardado en el post, igual en ambos temas
 ];
 const FIELD_TYPES: { id: CustomFieldDefinition["type"]; label: string }[] = [
   { id: "text", label: "Texto" },
@@ -129,10 +140,9 @@ interface UploadSlot {
   handle?: UploadHandle;
 }
 
-type Popover = "assignee" | "color" | "workflow" | "field" | null;
+type Popover = "assignee" | "notify" | "color" | "workflow" | "field" | null;
 
 export function PostComposerModal({ open: openProp, onClose: onCloseProp, initialPostId, defaultBrandId }: PostComposerModalProps = {}) {
-  const titleId = useId();
   const fileRef = useRef<HTMLInputElement | null>(null);
   const sheetRef = useRef<HTMLDivElement | null>(null);
 
@@ -168,6 +178,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
   const [uploads, setUploads] = useState<UploadSlot[]>([]);
   const [pickerFor, setPickerFor] = useState<"media" | "documents" | null>(null);
   const [popover, setPopover] = useState<Popover>(null);
+  const [notifySearch, setNotifySearch] = useState("");
   const [copyNetwork, setCopyNetwork] = useState<SocialNetwork | "General">("General");
   const [previewNet, setPreviewNet] = useState<SocialNetwork | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -193,6 +204,10 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
       assignee: profile?.name || "",
       date: composerDefaultDate,
     });
+    if (!editingPost) {
+      const catalog = brands.find((b) => b.id === initial.brandId)?.workflowStatuses;
+      initial.workflowStatusId = (catalog?.length ? catalog : DEFAULT_WORKFLOW)[0].id;
+    }
     const recovered = readOnly ? null : loadRecovery(localStorage, recoveryKey(owner, initial.brandId, initial.postId));
     const useRecovered = recovered && !draftsEqual(recovered.draft, initial);
     /* eslint-disable react-hooks/set-state-in-effect -- abrir otro post reinicia toda la sesión de edición */
@@ -246,6 +261,15 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
     { deferTo: '.hubly-overlay:not(.hubly-composer-overlay), [role="dialog"][aria-modal="true"]' }
   );
 
+  useEffect(() => {
+    if (!popover) return;
+    const closeOutside = (e: MouseEvent) => {
+      if (!(e.target as Element).closest(".hubly-composer-pop")) setPopover(null);
+    };
+    document.addEventListener("mousedown", closeOutside);
+    return () => document.removeEventListener("mousedown", closeOutside);
+  }, [popover]);
+
   const update = (patch: Partial<PostDraft>) => setDraft((d) => (d ? { ...d, ...patch } : d));
   const updateSettings = (network: SocialNetwork, patch: Partial<PlatformSettings>) =>
     setDraft((d) => {
@@ -280,9 +304,13 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
     : networkSpec(copyTarget).maxChars;
   const level = captionLevel(copyValue.length, limit);
   const selectedAssignees = team.filter((m) => draft.assigneeIds.includes(m.id));
+  const notifyMembers = team.filter((m) => draft.notifyMemberIds.includes(m.id));
+  const notifyMatches = team.filter((m) => m.name.toLowerCase().includes(notifySearch.trim().toLowerCase()));
 
   const toggleNetwork = (network: SocialNetwork) => {
     if (locked) return;
+    // Al activar una red, la vista previa pasa a ella para ver cómo queda.
+    if (!draft.networks.includes(network)) setPreviewNet(network);
     update({
       networks: draft.networks.includes(network)
         ? draft.networks.length > 1
@@ -445,18 +473,17 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
     <>
       <div className="hubly-composer-scrim" data-state={presence.state} onMouseDown={handleClose} aria-hidden />
       <div className="hubly-overlay hubly-composer-overlay" data-state={presence.state}>
-        <div ref={sheetRef} className="hubly-sheet hubly-composer" data-state={presence.state} role="dialog" aria-modal="false" aria-labelledby={titleId}>
+        <div ref={sheetRef} className="hubly-sheet hubly-composer" data-state={presence.state} role="dialog" aria-modal="false" aria-label="Editor de post">
           <header className="hubly-composer-head">
             <div style={{ minWidth: 0, flex: 1 }}>
               <input
-                id={titleId}
                 className="hubly-composer-title"
                 value={draft.title}
                 disabled={locked}
                 onChange={(e) => update({ title: e.target.value })}
                 placeholder="Sin título"
                 aria-label="Título del post"
-                style={draft.color ? { color: draft.color } : undefined}
+                style={draft.color ? { color: postColorText(draft.color) } : undefined}
               />
               <div className="hubly-composer-badges">
                 <span title="Marca del post">{brand.name}</span>
@@ -516,21 +543,57 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                 </div>
               )}
             </div>
-            <button type="button" aria-pressed={draft.notifyOnPublish} disabled={locked} onClick={() => update({ notifyOnPublish: !draft.notifyOnPublish })}>
-              <HublyBellIcon size={17} />
-              <span>Avisar al publicar</span>
-            </button>
+            <div className="hubly-composer-pop">
+              <button type="button" className={draft.notifyOnPublish ? "is-on" : undefined} aria-expanded={popover === "notify"} disabled={locked} onClick={() => { setNotifySearch(""); setPopover(popover === "notify" ? null : "notify"); }}>
+                <HublyBellIcon size={17} />
+                <span>{notifyMembers.length ? `Avisar a ${notifyMembers.map((m) => m.name.split(" ")[0]).join(", ")}` : "Avisar al publicar"}</span>
+              </button>
+              {popover === "notify" && (
+                <div className="hubly-composer-menu is-people" role="group" aria-label="Avisar al publicar">
+                  <input className="hubly-cal-input" autoFocus value={notifySearch} onChange={(e) => setNotifySearch(e.target.value)} placeholder="Buscar…" aria-label="Buscar miembro" />
+                  {team.length === 0 && <small>Aún no hay miembros en el equipo.</small>}
+                  {team.length > 0 && notifyMatches.length === 0 && <small>Sin resultados</small>}
+                  {notifyMatches.map((member) => {
+                    const selected = draft.notifyMemberIds.includes(member.id);
+                    const photo = member.email === profile?.email ? profile?.avatarUrl : undefined;
+                    return (
+                      <button
+                        key={member.id}
+                        type="button"
+                        aria-pressed={selected}
+                        onClick={() => {
+                          const next = selected ? draft.notifyMemberIds.filter((id) => id !== member.id) : [...draft.notifyMemberIds, member.id];
+                          update({ notifyMemberIds: next, notifyOnPublish: next.length > 0 });
+                        }}
+                      >
+                        <span className="hubly-composer-avatar" style={{ background: member.avatarColor || "var(--hb-accent)" }}>
+                          {photo ? <img src={photo} alt="" /> : member.initials}
+                        </span>
+                        <span className="hubly-composer-person">{member.name}</span>
+                        {selected && <HublyCheckIcon size={14} />}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
             <div className="hubly-composer-pop">
               <button type="button" aria-expanded={popover === "color"} disabled={locked} onClick={() => setPopover(popover === "color" ? null : "color")}>
-                {draft.color ? <i style={{ background: draft.color }} /> : <HublyPaletteIcon size={17} />}
+                {draft.color ? <i style={{ background: draft.color }} /> : <i className="is-none" />}
                 <span>Color</span>
               </button>
               {popover === "color" && (
-                <div className="hubly-composer-menu is-swatches" role="group" aria-label="Color del post">
-                  {POST_COLORS.map((color) => (
-                    <button key={color} type="button" aria-label={`Color ${color}`} aria-pressed={draft.color === color} style={{ background: color }} onClick={() => { update({ color }); setPopover(null); }} />
+                <div className="hubly-composer-menu is-colors" role="group" aria-label="Color del post">
+                  <button type="button" aria-pressed={!draft.color} onClick={() => { update({ color: "" }); setPopover(null); }}>
+                    <i className="is-none" /> Sin color
+                    {!draft.color && <HublyCheckIcon size={14} />}
+                  </button>
+                  {POST_PALETTE.map(({ name, color }) => (
+                    <button key={color} type="button" aria-pressed={draft.color === color} onClick={() => { update({ color }); setPopover(null); }}>
+                      <i style={{ background: color }} /> {name}
+                      {draft.color === color && <HublyCheckIcon size={14} />}
+                    </button>
                   ))}
-                  <button type="button" className="is-clear" onClick={() => { update({ color: "" }); setPopover(null); }}>Quitar</button>
                 </div>
               )}
             </div>
@@ -600,12 +663,14 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
           </div>
 
           <nav className="hubly-composer-tabs" aria-label="Secciones del post">
-            {TABS.map(({ id, label, Icon }) => (
-              <button key={id} type="button" aria-current={tab === id ? "true" : undefined} onClick={() => { setTab(id); setMobilePane("editar"); }}>
-                <Icon size={20} />
-                <span>{label}</span>
-              </button>
-            ))}
+            <div className="hubly-composer-tabs-scroll">
+              {TABS.map(({ id, label, Icon }) => (
+                <button key={id} type="button" aria-current={tab === id ? "true" : undefined} onClick={() => { setTab(id); setMobilePane("editar"); }}>
+                  <Icon size={20} />
+                  <span>{label}</span>
+                </button>
+              ))}
+            </div>
             <button type="button" className="hubly-composer-mobile-preview" aria-pressed={mobilePane === "vista"} onClick={() => setMobilePane(mobilePane === "vista" ? "editar" : "vista")}>
               {mobilePane === "vista" ? <Pencil size={17} /> : <Eye size={17} />}
               <span>{mobilePane === "vista" ? "Editar" : "Vista previa"}</span>
@@ -734,8 +799,8 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                           <b>{index + 1}</b>
                           {!locked && (
                             <div>
-                              <button type="button" aria-label={`Mover ${item.name} antes`} disabled={index === 0} onClick={() => moveMedia(item.id, -1)}><ArrowLeft size={13} /></button>
-                              <button type="button" aria-label={`Mover ${item.name} después`} disabled={index === media.length - 1} onClick={() => moveMedia(item.id, 1)}><ArrowRight size={13} /></button>
+                              {media.length > 1 && <button type="button" aria-label={`Mover ${item.name} antes`} disabled={index === 0} onClick={() => moveMedia(item.id, -1)}><ArrowLeft size={13} /></button>}
+                              {media.length > 1 && <button type="button" aria-label={`Mover ${item.name} después`} disabled={index === media.length - 1} onClick={() => moveMedia(item.id, 1)}><ArrowRight size={13} /></button>}
                               <button type="button" aria-label={`Quitar ${item.name}`} onClick={() => update({ media: media.filter((m) => m.id !== item.id) })}><X size={13} /></button>
                             </div>
                           )}
@@ -743,6 +808,18 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                       ))}
                     </ol>
                   )}
+
+                  <div className="hubly-composer-formats">
+                    <div className="hubly-composer-formatrow" role="group" aria-label="Formato del post">
+                      <span aria-hidden>Formato</span>
+                      {POST_FORMATS.map((f) => (
+                        <button key={f} type="button" className="hubly-cal-pill" aria-pressed={draft.format === f} disabled={locked} onClick={() => update({ format: f })}>{f}</button>
+                      ))}
+                    </div>
+                    {draft.networks.length > 1 && (
+                      <p className="hubly-composer-hint">{draft.networks.map((n) => `${n}: ${formatFor(draft, n)}`).join(" · ")}</p>
+                    )}
+                  </div>
 
                   <div className="hubly-composer-copytabs" role="tablist" aria-label="Copy por red">
                     <button type="button" role="tab" aria-selected={copyTarget === "General"} onClick={() => setCopyNetwork("General")}>General</button>
@@ -780,15 +857,6 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
 
                   {copyTarget !== "General" && (
                     <NetworkSettings network={copyTarget} settings={draft.platformSettings[copyTarget] ?? {}} formats={networkFormats(copyTarget)} generalFormat={draft.format} disabled={locked} onChange={(patch) => updateSettings(copyTarget, patch)} />
-                  )}
-
-                  {copyTarget === "General" && (
-                    <label className="hubly-composer-inline">
-                      Formato
-                      <select className="hubly-cal-input" value={draft.format} disabled={locked} onChange={(e) => update({ format: e.target.value as PostFormat })}>
-                        {(["Imagen", "Carrusel", "Reel / Video", "Story", "Texto"] as PostFormat[]).map((f) => <option key={f} value={f}>{f}</option>)}
-                      </select>
-                    </label>
                   )}
 
                   {issues.length > 0 && (

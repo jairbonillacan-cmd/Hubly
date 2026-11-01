@@ -67,7 +67,7 @@ export function NotebooksSection() {
           >
             <span aria-hidden="true" style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 12, background: "rgba(0,0,0,0.22)", borderRadius: "6px 0 0 6px" }} />
             <span style={{ display: "block", width: "100%", background: "#F1F9FD", borderRadius: 10, padding: "12px 14px", border: "1px solid rgba(0,0,0,0.08)" }}>
-              <span style={{ display: "block", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--hb-accent-edge)", marginBottom: 4 }}>{nb.category}</span>
+              <span style={{ display: "block", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--hb-accent-text)", marginBottom: 4 }}>{nb.category}</span>
               <span style={{ display: "block", fontSize: 14, fontWeight: 700, color: "var(--ui-text-1)", lineHeight: 1.3 }}>{nb.title}</span>
             </span>
             <span style={{ display: "block", width: "100%" }}>

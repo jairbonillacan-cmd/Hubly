@@ -1,0 +1,53 @@
+{
+  "tool": "built-in image_gen",
+  "palette": {
+    "marino": "#16324F",
+    "marinoClaro": "#24496E",
+    "celeste": "#7CC8EE",
+    "celestePalido": "#DCEFF9",
+    "tinta": "#111C27",
+    "blanco": "#FFFFFF"
+  },
+  "proposals": [
+    {
+      "slug": "01-mosaico",
+      "title": "Mosaico",
+      "prompt": "Use case: logo-brand. Design ONE excellent original logo proposal for Hubly, a workspace for Spanish-speaking creative agencies to coordinate brands, content and approvals. Single horizontal lockup centered on a pure WHITE #FFFFFF landscape canvas, mark at left and exact lowercase wordmark 'hubly' at right. Very large readable logo occupying about 75% of the canvas width, generous breathing room. Sophisticated custom friendly geometric sans lettering, slightly rounded terminals, carefully kerned, black-ink #111C27. Symbol palette strictly navy #16324F and brand sky blue #7CC8EE; optional tiny pale blue #DCEFF9 only if structurally necessary. SOLID FLAT COLOR graphic design: perfectly smooth crisp edges, optical balance, memorable silhouette legible at 24px. No texture, gradients, lighting, shadows, 3D, mockup, stationery, explanatory labels, tagline, border, secondary logo or color swatches. Show only one logo. Refine the recognizable four-piece 2x2 Hubly mosaic into a beautifully balanced iconic symbol: three navy organic squared petals with subtly curved asymmetric outer corners; top-right sky-blue soft square offset upward by a precise small amount. Equal clean white channels create a quiet central cross. Sophisticated optical adjustments and immaculate spacing; confident restrained evolution of a four-tile mark, not a generic app icon. Wordmark in sturdy friendly rounded grotesk, distinctive gentle curve on the y.",
+      "source": "C:\\Users\\T490s\\.codex\\generated_images\\01a19267-96e4-74e1-a893-dbd2e1573017\\exec-7b667a58-778a-4c6b-8bfb-e475cbfd3534.png",
+      "file": "01-mosaico.png"
+    },
+    {
+      "slug": "02-h-modular",
+      "title": "H modular",
+      "prompt": "Use case: logo-brand. Design ONE excellent original logo proposal for Hubly, a workspace for Spanish-speaking creative agencies to coordinate brands, content and approvals. Single horizontal lockup centered on a pure WHITE #FFFFFF landscape canvas, mark at left and exact lowercase wordmark 'hubly' at right. Very large readable logo occupying about 75% of the canvas width, generous breathing room. Sophisticated custom friendly geometric sans lettering, slightly rounded terminals, carefully kerned, black-ink #111C27. Symbol palette strictly navy #16324F and brand sky blue #7CC8EE; optional tiny pale blue #DCEFF9 only if structurally necessary. SOLID FLAT COLOR graphic design: perfectly smooth crisp edges, optical balance, memorable silhouette legible at 24px. No texture, gradients, lighting, shadows, 3D, mockup, stationery, explanatory labels, tagline, border, secondary logo or color swatches. Show only one logo. Create a compact four-piece modular mosaic that reveals a lowercase h in the WHITE negative space between navy rounded blocks; one sky-blue upper-right tile acts as the connection point. Clever but instantly readable, strong geometric construction, nearly square silhouette, no enclosing container. The h discovery should feel natural and the four pieces should feel one system. Wordmark with broad contemporary geometric letters and a distinctive balanced h.",
+      "source": "C:\\Users\\T490s\\.codex\\generated_images\\01a19267-96e4-74e1-a893-dbd2e1573017\\exec-7ff6b425-79c9-452e-9ae7-9f5f40a1fa58.png",
+      "file": "02-h-modular.png"
+    },
+    {
+      "slug": "03-entrelazado",
+      "title": "Entrelazado",
+      "prompt": "Use case: logo-brand. Design ONE excellent original logo proposal for Hubly, a workspace for Spanish-speaking creative agencies to coordinate brands, content and approvals. Single horizontal lockup centered on a pure WHITE #FFFFFF landscape canvas, mark at left and exact lowercase wordmark 'hubly' at right. Very large readable logo occupying about 75% of the canvas width, generous breathing room. Sophisticated custom friendly geometric sans lettering, slightly rounded terminals, carefully kerned, black-ink #111C27. Symbol palette strictly navy #16324F and brand sky blue #7CC8EE; optional tiny pale blue #DCEFF9 only if structurally necessary. SOLID FLAT COLOR graphic design: perfectly smooth crisp edges, optical balance, memorable silhouette legible at 24px. No texture, gradients, lighting, shadows, 3D, mockup, stationery, explanatory labels, tagline, border, secondary logo or color swatches. Show only one logo. Create a memorable interlocking four-module mosaic knot, using softly squared navy ribbon-like forms that meet around one small diamond-shaped white negative-space hub. One upper-right module is sky blue. Flat continuous broad forms, no thin strokes, no gradients or overlap shading. A compact connected emblem that evokes teamwork and all brands in one place. Give the wordmark quiet warmth with rounded ink-black geometric lowercase lettering.",
+      "source": "C:\\Users\\T490s\\.codex\\generated_images\\01a19267-96e4-74e1-a893-dbd2e1573017\\exec-f7c500cf-35e9-4d13-b30f-1dfcd66caaef.png",
+      "file": "03-entrelazado.png"
+    },
+    {
+      "slug": "04-pestanas",
+      "title": "Pestañas",
+      "prompt": "Use case: logo-brand. Design ONE excellent original logo proposal for Hubly, a workspace for Spanish-speaking creative agencies to coordinate brands, content and approvals. Single horizontal lockup centered on a pure WHITE #FFFFFF landscape canvas, mark at left and exact lowercase wordmark 'hubly' at right. Very large readable logo occupying about 75% of the canvas width, generous breathing room. Sophisticated custom friendly geometric sans lettering, slightly rounded terminals, carefully kerned, black-ink #111C27. Symbol palette strictly navy #16324F and brand sky blue #7CC8EE; optional tiny pale blue #DCEFF9 only if structurally necessary. SOLID FLAT COLOR graphic design: perfectly smooth crisp edges, optical balance, memorable silhouette legible at 24px. No texture, gradients, lighting, shadows, 3D, mockup, stationery, explanatory labels, tagline, border, secondary logo or color swatches. Show only one logo. Design a clean original mosaic of four rounded folder-tab-inspired tiles, assembled compactly as a 2x2 emblem with a rhythm of small asymmetric notches. Three navy pieces, top-right sky-blue piece. The tab notches should be subtle enough to read as purposeful abstract geometry rather than four literal folders. A symbol of keeping creative work together. Bold yet elegant geometric sans 'hubly' with open counters and exact clean kerning.",
+      "source": "C:\\Users\\T490s\\.codex\\generated_images\\01a19267-96e4-74e1-a893-dbd2e1573017\\exec-37e30f0c-9d39-4980-9864-d5ee5f2af609.png",
+      "file": "04-pestanas.png"
+    },
+    {
+      "slug": "05-encuentro",
+      "title": "Encuentro",
+      "prompt": "Use case: logo-brand. Design ONE excellent original logo proposal for Hubly, a workspace for Spanish-speaking creative agencies to coordinate brands, content and approvals. Single horizontal lockup centered on a pure WHITE #FFFFFF landscape canvas, mark at left and exact lowercase wordmark 'hubly' at right. Very large readable logo occupying about 75% of the canvas width, generous breathing room. Sophisticated custom friendly geometric sans lettering, slightly rounded terminals, carefully kerned, black-ink #111C27. Symbol palette strictly navy #16324F and brand sky blue #7CC8EE; optional tiny pale blue #DCEFF9 only if structurally necessary. SOLID FLAT COLOR graphic design: perfectly smooth crisp edges, optical balance, memorable silhouette legible at 24px. No texture, gradients, lighting, shadows, 3D, mockup, stationery, explanatory labels, tagline, border, secondary logo or color swatches. Show only one logo. Create a compact distinctive pinwheel mosaic emblem: four broad rounded comma/petal modules turn toward a shared white square center, each module has one soft squared outer corner and one flowing inward curve. Three navy modules, top-right sky-blue module. Restrained sophisticated geometry, stable rather than spinning wildly, no extra decoration. It conveys ideas meeting at a hub and subtly recalls four conversation corners. Pair with a meticulously drawn approachable lowercase ink-black 'hubly'.",
+      "source": "C:\\Users\\T490s\\.codex\\generated_images\\01a19267-96e4-74e1-a893-dbd2e1573017\\exec-ff308143-8da4-4a19-b3fb-26d7fa4dda29.png",
+      "file": "05-encuentro.png"
+    }
+  ],
+  "hubi": {
+    "source": "C:\\Users\\T490s\\.codex\\generated_images\\01a19267-96e4-74e1-a893-dbd2e1573017\\exec-cec129da-10d9-42f2-bb4c-ca2263c5c130.png",
+    "file": "hubi-marino-celeste.png",
+    "prompt": "Use case: precise-object-edit. Edit target: the supplied existing Hubi cat mascot image. COLOR UPDATE ONLY. Preserve exactly this cat's silhouette, proportions, sitting pose, short rounded triangular ears, broad low rounded head, two pill-shaped front paws, right C-curled tail, two simple vertical oval eyes, and tiny w-shaped mouth. Do not redesign or move any feature. Replace green body, head, left ear and tail with uniform solid NAVY #16324F. Replace front paws with uniform LIGHT NAVY #24496E. Replace the yellow right ear with uniform BRAND SKY BLUE #7CC8EE. Replace both eyes and the w-shaped mouth with uniform PALE SKY BLUE #DCEFF9. Eyes remain simple solid small vertical ovals, no pupils or glints. Entirely flat 2D brand illustration, crisp clean antialiased edges, NO texture, gradients, shading, extra outlines, stray colored pixels, shadow, background scene, letters or accessories. Preserve genuine transparent alpha background. One full-body original Hubi only on a square transparent canvas with modest safe margins."
+  }
+}

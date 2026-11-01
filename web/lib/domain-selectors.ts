@@ -27,7 +27,7 @@ export interface GreetingAndDateResult {
   period: "morning" | "afternoon" | "night";
   weatherEmoji: "🌤️" | "☀️" | "🌙";
   dateFormatted: string; // ej. "domingo, 19 de abril"
-  dateTitleCase: string; // ej. "Domingo, 19 De Abril"
+  dateTitleCase: string; // ej. "Domingo, 19 de abril"
   isoDate: string; // YYYY-MM-DD en la zona horaria del perfil
   hour: number;
   timezone: string;
@@ -148,7 +148,7 @@ export function selectGreetingAndDate(
   }
 
   const dateFormatted = `${weekdayLong}, ${day} de ${monthLong}`;
-  const dateTitleCase = `${capitalizeWord(weekdayLong)}, ${day} De ${capitalizeWord(monthLong)}`;
+  const dateTitleCase = `${capitalizeWord(weekdayLong)}, ${day} de ${monthLong.toLowerCase()}`;
 
   return {
     greetingPrefix,
@@ -1304,7 +1304,7 @@ export function selectTeamProductivity(
       {
         id: "ach-2",
         title: "Ejecutor de tareas",
-        description: "Completa al menos 1 tarea pendiente desde el Dashboard o Mi Espacio.",
+        description: "Completa al menos 1 tarea pendiente desde el Dashboard o Mi espacio.",
         icon: "✅",
         unlocked: completedTasksCount >= 1,
         progress: Math.min(1, completedTasksCount),

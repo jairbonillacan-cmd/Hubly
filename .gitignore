@@ -1,2 +1,5 @@
 .claude/
 .impeccable/
+
+# Archivos temporales de la CLI de Supabase (enlace local al proyecto)
+supabase/.temp/

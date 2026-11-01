@@ -30,6 +30,7 @@ export interface PostDraft {
   color: string;
   customFields: Record<string, string | number | boolean | null>;
   notifyOnPublish: boolean;
+  notifyMemberIds: string[];
   scheduledDate: string;
   scheduledTime: string;
   notes: string;
@@ -59,6 +60,7 @@ export function draftFromPost(
     color: post?.color ?? "",
     customFields: post?.customFields ?? {},
     notifyOnPublish: post?.notifyOnPublish ?? false,
+    notifyMemberIds: post?.notifyMemberIds ?? [],
     scheduledDate: post?.scheduledDate ?? defaults.date ?? "",
     scheduledTime: post?.scheduledTime ?? "",
     notes: post?.notes ?? "",
@@ -90,6 +92,7 @@ export function draftToPost(draft: PostDraft, existing: SocialPost | null, fallb
     color: draft.color || undefined,
     customFields: draft.customFields,
     notifyOnPublish: draft.notifyOnPublish,
+    notifyMemberIds: draft.notifyMemberIds,
     notes: draft.notes,
     todos: draft.todos,
     documents: draft.documents,
@@ -114,6 +117,9 @@ export const formatFor = (draft: Pick<PostDraft, "format" | "platformSettings">,
 
 export const mediaItemUrl = (item: PostMedia, resolve: (assetId: string) => string = mediaFileUrl) =>
   item.assetId ? resolve(item.assetId) : item.url;
+
+/** Los colores de post son claros: mezclados con la tinta se leen como texto en ambos temas. */
+export const postColorText = (color: string) => `color-mix(in srgb, ${color} 50%, var(--ui-text))`;
 
 /** Primera imagen utilizable del post, para miniaturas de calendario y listas. */
 export function postThumbnail(post: Pick<SocialPost, "media" | "mediaUrl">): { url: string; kind: "image" | "video" } | null {
@@ -141,7 +147,10 @@ export function saveRecovery(storage: DraftStorage, key: string, draft: PostDraf
 export function loadRecovery(storage: DraftStorage, key: string): { draft: PostDraft; savedAt: string } | null {
   try {
     const raw = storage.getItem(key);
-    return raw ? (JSON.parse(raw) as { draft: PostDraft; savedAt: string }) : null;
+    if (!raw) return null;
+    const recovered = JSON.parse(raw) as { draft: PostDraft; savedAt: string };
+    // Un borrador guardado antes de elegir destinatarios no trae esta lista.
+    return { ...recovered, draft: { ...recovered.draft, notifyMemberIds: recovered.draft.notifyMemberIds ?? [] } };
   } catch {
     return null;
   }

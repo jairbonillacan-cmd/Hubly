@@ -66,6 +66,7 @@ export function AppDialogHost() {
       style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,23,42,0.45)", display: "grid", placeItems: "center", padding: 16 }}
     >
       <form
+        className="hubly-touch"
         role="alertdialog"
         aria-modal="true"
         aria-label={request.message}
@@ -73,7 +74,7 @@ export function AppDialogHost() {
           e.preventDefault();
           close(true);
         }}
-        style={{ width: "100%", maxWidth: 400, background: "var(--ui-surface)", color: "var(--ui-text)", borderRadius: 16, padding: 20, display: "grid", gap: 14 }}
+        style={{ width: "100%", maxWidth: 400, background: "var(--ui-surface)", color: "var(--ui-text)", border: "1px solid var(--ui-border)", borderRadius: 16, padding: 20, display: "grid", gap: 14 }}
       >
         <p style={{ margin: 0, fontSize: 14.5, fontWeight: 600, lineHeight: 1.45 }}>{request.message}</p>
         {request.kind === "text" && (
@@ -86,14 +87,10 @@ export function AppDialogHost() {
           />
         )}
         <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
-          <button type="button" onClick={() => close(false)} style={{ border: "1px solid var(--ui-border-strong)", background: "var(--ui-surface)", color: "var(--ui-text)", borderRadius: 9, padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+          <button type="button" className="hbtn hbtn-ghost" onClick={() => close(false)}>
             Cancelar
           </button>
-          <button
-            ref={confirmRef}
-            type="submit"
-            style={{ border: 0, background: request.kind === "confirm" && request.danger ? "#B91C1C" : "var(--hb-accent)", color: "#FFFFFF", borderRadius: 9, padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
-          >
+          <button ref={confirmRef} type="submit" className={`hbtn ${request.kind === "confirm" && request.danger ? "hbtn-danger" : "hbtn-primary"}`}>
             {request.confirmLabel}
           </button>
         </div>

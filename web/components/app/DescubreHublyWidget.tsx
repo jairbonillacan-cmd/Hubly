@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useSyncExternalStore } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useHublyStore } from "@/lib/store";
 import { selectOnboardingStatus } from "@/lib/domain-selectors";
@@ -18,6 +18,15 @@ import {
   HublySparkIcon as Sparkles,
 } from "@/components/app/icons/DuotoneIcons";
 
+const MOVIL = "(max-width: 767.98px)";
+const suscribirMovil = (cb: () => void) => {
+  const mq = window.matchMedia(MOVIL);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+};
+const esMovil = () => window.matchMedia(MOVIL).matches;
+const noMovil = () => false;
+
 export function DescubreHublyWidget() {
   const router = useRouter();
 
@@ -34,7 +43,9 @@ export function DescubreHublyWidget() {
   // Fuera del dashboard empieza plegado para no tapar calendarios y tableros.
   const pathname = usePathname();
   const [expandedHere, setExpandedHere] = React.useState(false);
-  const onDashboard = pathname === "/dashboard";
+  // En móvil también empieza plegado: desplegado cubriría el contenido de la pantalla.
+  const isMobile = useSyncExternalStore(suscribirMovil, esMovil, noMovil);
+  const onDashboard = pathname === "/dashboard" && !isMobile;
   const minimized = onDashboard ? onboarding.minimized : !expandedHere;
   const setMinimized = (next: boolean) => {
     if (onDashboard) setOnboardingMinimized(next);
@@ -125,9 +136,10 @@ export function DescubreHublyWidget() {
 
   return (
     <>
-      {!onboarding.dismissed && !anyModalOpen && (
+      {!onboarding.dismissed && !anyModalOpen && !(isMobile && pathname.startsWith("/agentes")) && (
         <aside
           data-mision-pildora
+          data-desplegado={minimized ? undefined : ""}
           aria-label="Checklist de inicio rápido Descubre Hubly"
           style={{
             position: "fixed",
@@ -137,7 +149,7 @@ export function DescubreHublyWidget() {
             background: "var(--ui-surface)",
             borderRadius: minimized ? 9999 : 16,
             border: "1px solid var(--ui-border)",
-            padding: minimized ? "7px 14px" : "14px 16px 14px",
+            padding: minimized ? (isMobile ? "0 2px 0 14px" : "7px 14px") : "14px 16px 14px",
             zIndex: 68,
             boxShadow:
               "0 10px 28px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(15, 23, 42, 0.03)",
@@ -162,6 +174,7 @@ export function DescubreHublyWidget() {
                   fontWeight: 700,
                   color: "var(--ui-text)",
                   fontFamily: "inherit",
+                  minHeight: isMobile ? 44 : undefined,
                 }}
               >
                 <HublyCatAvatar size={20} />
@@ -189,7 +202,9 @@ export function DescubreHublyWidget() {
                   border: "none",
                   background: "transparent",
                   color: "var(--ui-text-5)",
-                  padding: 2,
+                  padding: isMobile ? 0 : 2,
+                  width: isMobile ? 44 : undefined,
+                  height: isMobile ? 44 : undefined,
                   cursor: "pointer",
                   display: "grid",
                   placeItems: "center",
@@ -244,7 +259,10 @@ export function DescubreHublyWidget() {
                     style={{
                       background: "transparent",
                       border: "none",
-                      padding: 2,
+                      padding: isMobile ? 0 : 2,
+                      width: isMobile ? 44 : undefined,
+                      height: isMobile ? 44 : undefined,
+                      justifyContent: "center",
                       color: "var(--ui-text-5)",
                       cursor: "pointer",
                       display: "inline-flex",
@@ -261,7 +279,10 @@ export function DescubreHublyWidget() {
                     style={{
                       background: "transparent",
                       border: "none",
-                      padding: 2,
+                      padding: isMobile ? 0 : 2,
+                      width: isMobile ? 44 : undefined,
+                      height: isMobile ? 44 : undefined,
+                      justifyContent: "center",
                       color: "var(--ui-text-5)",
                       cursor: "pointer",
                       display: "inline-flex",
@@ -334,16 +355,10 @@ export function DescubreHublyWidget() {
                             toggleOnboardingStep(step.key, !step.completed)
                           }
                           style={{
-                            width: 16,
-                            height: 16,
-                            borderRadius: 9999,
-                            border: step.completed
-                              ? "none"
-                              : "1.5px solid #CBD5E1",
-                            background: step.completed
-                              ? "var(--hb-accent)"
-                              : "transparent",
-                            color: "#FFFFFF",
+                            width: isMobile ? 44 : 16,
+                            height: isMobile ? 44 : 16,
+                            border: "none",
+                            background: "transparent",
                             display: "inline-flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -352,7 +367,25 @@ export function DescubreHublyWidget() {
                             cursor: "pointer",
                           }}
                         >
-                          {step.completed && <Check size={10} />}
+                          <span
+                            style={{
+                              width: 16,
+                              height: 16,
+                              borderRadius: 9999,
+                              border: step.completed
+                                ? "none"
+                                : "1.5px solid var(--ui-border-strong)",
+                              background: step.completed
+                                ? "var(--hb-accent)"
+                                : "transparent",
+                              color: "var(--on-accent)",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            {step.completed && <Check size={10} />}
+                          </span>
                         </button>
 
                         <button
@@ -365,7 +398,7 @@ export function DescubreHublyWidget() {
                             textAlign: "left",
                             fontSize: 12.5,
                             fontWeight: 500,
-                            color: step.completed ? "var(--ui-text-5)" : "var(--ui-text-2)",
+                            color: step.completed ? "var(--ui-text-4)" : "var(--ui-text-2)",
                             textDecoration: step.completed
                               ? "line-through"
                               : "none",
@@ -374,6 +407,7 @@ export function DescubreHublyWidget() {
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             whiteSpace: "nowrap",
+                            minHeight: isMobile ? 44 : undefined,
                           }}
                         >
                           {meta.title}
@@ -393,6 +427,8 @@ export function DescubreHublyWidget() {
                           fontWeight: 700,
                           cursor: "pointer",
                           flexShrink: 0,
+                          minHeight: isMobile ? 44 : undefined,
+                          minWidth: isMobile ? 44 : undefined,
                         }}
                       >
                         {meta.ctaLabel}

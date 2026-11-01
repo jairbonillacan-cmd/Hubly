@@ -17,11 +17,30 @@ const abrirEditor = async (page: Page, ruta = "/calendario") => {
 const editor = (page: Page) => page.locator(".hubly-composer");
 
 test.beforeEach(async ({ page }) => {
+  // El guardado va por POST /api/workspace: se intercepta para que las pruebas no alteren los datos demo guardados.
+  await page.route("**/api/workspace**", (route) =>
+    route.request().method() === "GET"
+      ? route.continue()
+      : route.fulfill({ status: 200, contentType: "application/json", body: "{\"ok\":true}" })
+  );
   await page.addInitScript(() => {
     if (sessionStorage.getItem("e2e-limpio")) return;
     sessionStorage.setItem("e2e-limpio", "1");
     Object.keys(localStorage).filter((k) => k.startsWith("hubly:borrador:")).forEach((k) => localStorage.removeItem(k));
   });
+});
+
+// La subida de archivos sí llega a /api/media: se borran por nombre, también si la prueba falla.
+test.afterEach(async ({ request }) => {
+  const ws = (await (await request.get("/api/workspace")).json()) as { brands: { id: string }[] };
+  for (const marca of ws.brands ?? []) {
+    const res = await request.get(`/api/media?brandId=${encodeURIComponent(marca.id)}`);
+    if (!res.ok()) continue;
+    const { items } = (await res.json()) as { items: { id: string; name: string }[] };
+    for (const item of items.filter((x) => x.name === "a.png" || x.name === "b.png")) {
+      await request.delete(`/api/media/${item.id}`);
+    }
+  }
 });
 
 test("el sidebar funciona con el editor abierto y el borrador conserva su marca", async ({ page }) => {

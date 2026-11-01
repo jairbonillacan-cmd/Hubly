@@ -67,6 +67,8 @@ export interface SocialPost {
   publishedUrl?: string;
   metricsSource?: "manual";
   notifyOnPublish?: boolean;
+  /** Miembros elegidos en «Avisar al publicar». */
+  notifyMemberIds?: string[];
   notes?: string;
   todos?: PostTodo[];
   documents?: PostDocument[];
@@ -427,6 +429,8 @@ export interface BrandProject {
   status: "En curso" | "Revisión" | "Completado";
   dueDate: string;
   deliverablesCount: number;
+  pinned?: boolean;
+  archived?: boolean;
 }
 
 export interface AdCreative {
@@ -551,7 +555,22 @@ export type DashboardWidgetId =
   | "aprobaciones"
   | "grafica_ads"
   | "ads_activos"
-  | "proyectos_criticos";
+  | "proyectos_criticos"
+  | "metrica"
+  | "posts"
+  | "feed"
+  | "semana"
+  | "mensajes"
+  | "actividad"
+  | "equipo";
+
+export type DashboardMetricId =
+  | "publicados"
+  | "programados"
+  | "aprobaciones"
+  | "gasto"
+  | "resultados"
+  | "ctr";
 
 export type DashboardWidgetSpan = 1 | 2 | 3;
 
@@ -564,6 +583,7 @@ export interface DashboardWidgetConfig {
   order: number;
   column: "left" | "right";
   span?: DashboardWidgetSpan;
+  metric?: DashboardMetricId;
 }
 
 export interface OnboardingProgress {
@@ -587,6 +607,7 @@ export interface WorkspaceProfile {
   role: string;
   avatarInitial: string;
   avatarUrl?: string;
+  avatarSourceUrl?: string; // original reducido, para reencuadrar la foto
   timezone: string; // ej. "America/Mexico_City"
   locale: string; // ej. "es-MX"
   theme?: "claro" | "oscuro";
@@ -617,6 +638,23 @@ export interface WorkspaceNotification {
   actionUrl?: string;
 }
 
+export interface HublyAgentMessage {
+  id: string;
+  role: "hubi" | "user";
+  text: string;
+}
+
+export interface HublyAgent {
+  id: string;
+  name: string;
+  templateId?: string;
+  purpose: string;
+  cadence: string;
+  notes: string[];
+  messages: HublyAgentMessage[];
+  createdAt: string;
+}
+
 export interface HublyWorkspaceData {
   /** Versión del documento; 2 introduce `media` y ajustes por red en los posts. */
   schemaVersion?: number;
@@ -632,6 +670,7 @@ export interface HublyWorkspaceData {
   leads?: Lead[];
   quotes?: Quote[];
   automations?: AutomationRule[];
+  agents?: HublyAgent[];
   tasks: AgencyTask[];
   taskLists?: TaskListDef[];
   calendarActivities?: unknown[];

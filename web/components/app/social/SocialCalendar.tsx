@@ -1,13 +1,30 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowDown, ArrowUp, BarChart3, CalendarDays, ChevronLeft, ChevronRight, Filter, LayoutGrid, MoreHorizontal, Play, Plus, Upload, X } from "lucide-react";
+import {
+  HublyArrowDownIcon as ArrowDown,
+  HublyArrowUpIcon as ArrowUp,
+  HublyBentoIcon as LayoutGrid,
+  HublyCalendarIcon as CalendarDays,
+  HublyChartIcon as BarChart3,
+  HublyChevronLeftIcon as ChevronLeft,
+  HublyChevronRightIcon as ChevronRight,
+  HublyCloseIcon as X,
+  HublyFilterIcon as Filter,
+  HublyImageIcon,
+  HublyMoreIcon as MoreHorizontal,
+  HublyPlayIcon as Play,
+  HublyPlusIcon as Plus,
+  HublyUploadIcon as Upload,
+} from "@/components/app/icons/DuotoneIcons";
 import { useHublyStore } from "@/lib/store";
+import { askText } from "@/components/app/AppDialogHost";
 import { Cover } from "@/components/Cover";
 import { networkSpec, NETWORKS } from "@/lib/network-catalog";
-import { hasRecovery, postThumbnail } from "@/lib/post-draft";
+import { hasRecovery, postColorText, postThumbnail } from "@/lib/post-draft";
 import { useLayer } from "@/lib/use-layer";
 import {
+  DEFAULT_WORKFLOW,
   EMPTY_FILTERS,
   filterPosts,
   FORMAT_COLUMNS,
@@ -71,12 +88,13 @@ function Dots({ post }: { post: SocialPost }) {
 
 function PublicationBadge({ post, today }: { post: SocialPost; today: string }) {
   const { label, tone } = publicationLabel(post, today);
-  return <span className="hubly-social-badge" data-tone={tone}>{label}</span>;
+  return <span className="hubly-social-badge" data-tone={tone} title={label}>{label}</span>;
 }
 
 export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorkspace; posts: SocialPost[]; onCopyLink: () => void }) {
   const openComposer = useHublyStore((s) => s.openComposer);
   const movePost = useHublyStore((s) => s.movePost);
+  const updateBrand = useHublyStore((s) => s.updateBrand);
   const updatePostFields = useHublyStore((s) => s.updatePostFields);
   const updatePostStatus = useHublyStore((s) => s.updatePostStatus);
   const team = useHublyStore((s) => s.team);
@@ -128,15 +146,10 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
     } catch {}
   };
 
-  const workflow: WorkflowStatus[] = brand.workflowStatuses?.length
-    ? brand.workflowStatuses
-    : [
-        { id: "pendiente", name: "Pendiente de revisión", color: "#F59E0B" },
-        { id: "diseno", name: "En diseño", color: "#2A76B0" },
-        { id: "copy", name: "Copy listo", color: "#0F766E" },
-        { id: "interno", name: "Aprobado interno", color: "#15803D" },
-      ];
+  const workflow: WorkflowStatus[] = brand.workflowStatuses?.length ? brand.workflowStatuses : DEFAULT_WORKFLOW;
   const workflowName = (id?: string | null) => workflow.find((w) => w.id === id)?.name ?? "";
+  const pillars = [...new Set([...(brand.core?.pillars ?? []), ...posts.map((p) => p.pillar || "General")])];
+  const hasPillars = (brand.core?.pillars?.length ?? 0) > 0;
   const customSelects = (brand.customFieldDefinitions ?? []).filter((f) => f.type === "select");
   const customFields = brand.customFieldDefinitions ?? [];
 
@@ -194,7 +207,7 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
     <article key={post.id} className="hubly-social-card" data-variant={variant} data-dragging={dragId === post.id || undefined} {...cardDrag(post)}>
       <button type="button" className="hubly-social-card-open" onClick={() => openComposer(post.id)}>
         <span className="hubly-social-card-media"><Thumb post={post} /></span>
-        <strong style={post.color ? { color: post.color } : undefined}>{post.title}</strong>
+        <strong style={post.color ? { color: postColorText(post.color) } : undefined}>{post.title}</strong>
         <span className="hubly-social-card-meta">
           {post.scheduledDate ? `${post.scheduledDate.slice(8)}/${post.scheduledDate.slice(5, 7)}${post.scheduledTime ? ` · ${post.scheduledTime}` : ""}` : "Sin fecha"}
         </span>
@@ -210,6 +223,31 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
       </button>
     </article>
   );
+
+  const kanbanCard = (post: SocialPost) => (
+    <article key={post.id} className="hubly-social-kcard" data-dragging={dragId === post.id || undefined} {...cardDrag(post)}>
+      <button type="button" className="hubly-social-kcard-open" onClick={() => openComposer(post.id)}>
+        <span className="hubly-social-kcard-top">
+          <span className="hubly-social-kcard-thumb">{postThumbnail(post) ? <Thumb post={post} /> : <HublyImageIcon size={18} title="Sin diseño" />}</span>
+          <span>
+            <strong style={post.color ? { color: postColorText(post.color) } : undefined}>{post.title && post.title !== "Sin título" ? post.title : post.caption.trim() || "Sin copy todavía"}</strong>
+            <small>{post.scheduledDate ? `${post.scheduledDate.slice(8)}/${post.scheduledDate.slice(5, 7)}${post.scheduledTime ? ` · ${post.scheduledTime}` : ""}` : "Sin fecha"}</small>
+          </span>
+        </span>
+        <span className="hubly-social-card-row">
+          <Dots post={post} />
+          <PublicationBadge post={post} today={today} />
+        </span>
+        {hasRecovery(post.id) && <em>Cambios sin guardar en este navegador</em>}
+      </button>
+    </article>
+  );
+
+  const addWorkflowStatus = async () => {
+    const name = await askText("Nombre del nuevo estatus", "", "Crear");
+    if (!name?.trim()) return;
+    updateBrand(brand.id, { workflowStatuses: [...workflow, { id: `wf-${Date.now()}`, name: name.trim(), color: ["#2A76B0", "#0F766E", "#7C3AED", "#BE185D"][workflow.length % 4] }] });
+  };
 
   const renderUndated = () =>
     undated.length > 0 && showUndated && (
@@ -353,7 +391,12 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
   };
 
   const kanbanColumns = (): { id: string; label: string; color?: string; lockedDrop?: boolean }[] => {
-    if (group === "estatus") return [{ id: NO_VALUE, label: "Sin estatus" }, ...workflow.map((w) => ({ id: w.id, label: w.name, color: w.color }))];
+    if (group === "estatus") {
+      const columns = workflow.map((w) => ({ id: w.id, label: w.name, color: w.color }));
+      // Solo aparece si hay posts anteriores al catálogo o sin estatus.
+      return filtered.some((p) => columnOf(p) === NO_VALUE) ? [{ id: NO_VALUE, label: "Sin estatus" }, ...columns] : columns;
+    }
+    if (group === "pilar") return pillars.map((p) => ({ id: p, label: p }));
     if (group === "formato") return FORMAT_COLUMNS.map((f) => ({ id: f, label: f }));
     if (group === "responsable") return [{ id: NO_VALUE, label: "Sin asignar" }, ...team.map((m) => ({ id: m.id, label: m.name }))];
     if (group === "publicacion") return PUBLICATION_COLUMNS.map((s) => ({ id: s, label: STATUS_NAMES[s], lockedDrop: s === "published" }));
@@ -366,6 +409,7 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
     if (group === "formato") return post.format;
     if (group === "responsable") return post.assigneeIds?.[0] ?? NO_VALUE;
     if (group === "publicacion") return post.status;
+    if (group === "pilar") return post.pillar || "General";
     return String(post.customFields?.[group.slice(6)] ?? NO_VALUE);
   };
 
@@ -374,6 +418,7 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
     const value = column === NO_VALUE ? null : column;
     if (group === "estatus") updatePostFields(post.id, { workflowStatusId: value });
     else if (group === "formato") updatePostFields(post.id, { format: column as PostFormat });
+    else if (group === "pilar") updatePostFields(post.id, { pillar: column });
     else if (group === "responsable") updatePostFields(post.id, { assigneeIds: value ? [value] : [], assignee: team.find((m) => m.id === value)?.name ?? "" });
     else if (group === "publicacion") {
       // Arrastrar nunca marca un post como publicado: eso se registra con enlace y fecha reales.
@@ -398,10 +443,11 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
           <label>
             Columnas por
             <select className="hubly-social-cell" value={group} onChange={(e) => chooseGroup(e.target.value as KanbanGroup)}>
-              <option value="estatus">Estatus</option>
-              <option value="formato">Formato</option>
-              <option value="responsable">Responsable</option>
-              <option value="publicacion">Publicación</option>
+              <option value="estatus">Estatus — el flujo de tu equipo</option>
+              <option value="formato">Formato — reel, carrusel, imagen…</option>
+              <option value="responsable">Responsable — qué tiene cada quien</option>
+              <option value="publicacion">Publicación — borrador, planificado, publicado</option>
+              {hasPillars && <option value="pilar">Pilar</option>}
               {customSelects.map((f) => <option key={f.id} value={`campo:${f.id}`}>{f.name}</option>)}
             </select>
           </label>
@@ -435,10 +481,13 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
                   <span>{column.label}</span>
                   <b>{columnCards.length}</b>
                 </header>
+                {!readOnly && group !== "publicacion" && (
+                  <button type="button" className="hubly-social-knew" onClick={() => openComposer(null, null)}><Plus size={13} aria-hidden /> Nuevo</button>
+                )}
                 <div>
                   {columnCards.map((post) => (
                     <div key={post.id} className="hubly-social-kanban-item">
-                      {postCard(post, "kanban")}
+                      {kanbanCard(post)}
                       {!readOnly && (
                         <select
                           className="hubly-social-cell"
@@ -452,12 +501,12 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
                     </div>
                   ))}
                 </div>
-                {!readOnly && group !== "publicacion" && (
-                  <button type="button" className="hubly-social-add" onClick={() => openComposer(null, null)}><Plus size={13} aria-hidden /> Nuevo post</button>
-                )}
               </section>
             );
           })}
+          {!readOnly && group === "estatus" && (
+            <button type="button" className="hubly-social-knew is-column" onClick={() => void addWorkflowStatus()}><Plus size={14} aria-hidden /> Agregar estatus</button>
+          )}
         </div>
       </>
     );
@@ -483,7 +532,7 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
           </div>
           <div className="hubly-social-iconset">
             <button type="button" aria-label={`Filtros${activeFilters ? ` (${activeFilters} activos)` : ""}`} aria-expanded={filterOpen} data-active={activeFilters > 0 || undefined} onClick={() => { setFilterOpen(!filterOpen); setMenuOpen(false); }}>
-              <Filter size={16} />
+              <Filter size={20} />
             </button>
             <button type="button" aria-label="Más opciones" aria-expanded={menuOpen} onClick={() => { setMenuOpen(!menuOpen); setFilterOpen(false); }}>
               <MoreHorizontal size={17} />

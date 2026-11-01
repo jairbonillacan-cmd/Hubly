@@ -2,13 +2,14 @@
 
 import React, { useEffect, useMemo, useRef, useState, useLayoutEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import "./hubly-saas.css";
 import "./app-base.css";
 import "./dashboard-polish.css";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { useHublyTheme } from "@/lib/theme";
 import { useHublyStore } from "@/lib/store";
+import { useHubiChats } from "@/lib/hubi-chats";
 import { useLayer } from "@/lib/use-layer";
 import { PostComposerModal } from "@/components/app/PostComposerModal";
 import { NewBrandModal } from "@/components/app/NewBrandModal";
@@ -18,9 +19,11 @@ import { NotebookReaderModal } from "@/components/app/NotebookReaderModal";
 import { WidgetConfigModal } from "@/components/app/WidgetConfigModal";
 import { AutoSuggestionsModal } from "@/components/app/AutoSuggestionsModal";
 import { FloatingAIDrawer } from "@/components/app/FloatingAIDrawer";
+import { HubiChatList } from "@/components/app/HubiChatList";
 import { AppDialogHost } from "@/components/app/AppDialogHost";
 import { SaveStatus } from "@/components/app/SaveStatus";
 import { backendEnabled } from "@/lib/supabase/config";
+import type { HublyAgent } from "@/lib/types";
 import { DescubreHublyWidget } from "@/components/app/DescubreHublyWidget";
 import { HublyCatAvatar, HublyRoughFilterDefs, BentoIcon, ChatBubbleIcon, HublyHomeIcon, NotebookIcon, CalendarFilledIcon, BrainFilledIcon, FolderFilledIcon, LayersFilledIcon, HashBoldIcon, BullseyeFilledIcon } from "@/components/app/icons/HublyIcons";
 import { HublyBrandLogo } from "@/components/brand/HublyBrandLogo";
@@ -50,8 +53,6 @@ import {
 
 // Flexible wrappers so shared modals work seamlessly whether they read state from
 // useHublyStore internally or accept explicit open/onClose props.
-const InviteTeamModalSurface =
-  InviteTeamModal as unknown as React.ComponentType<Record<string, unknown>>;
 const NotebookReaderModalSurface =
   NotebookReaderModal as unknown as React.ComponentType<Record<string, unknown>>;
 const WidgetConfigModalSurface =
@@ -71,6 +72,8 @@ const TIMEZONE_OPTIONS = [
   { value: "UTC", label: "UTC" },
 ];
 
+const NO_AGENTS: HublyAgent[] = [];
+
 const DEMO_WORKSPACES = [
   { id: "default", label: "Mi Agencia (Principal)", badge: "Principal" },
   { id: "workspace-b", label: "Agencia Norte (Workspace B)", badge: "Demo B" },
@@ -82,6 +85,7 @@ export default function SaaSAppLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname() || "/dashboard";
+  const router = useRouter();
 
   // Store selectors (100% reactive, zero hardcoded user or brand literals)
   const syncFromServer = useHublyStore((s) => s.syncFromServer);
@@ -115,6 +119,8 @@ export default function SaaSAppLayout({
   const aiDrawerOpen = useHublyStore((s) => s.aiDrawerOpen);
   const composerOpen = useHublyStore((s) => s.composerOpen);
   const setAiDrawerOpen = useHublyStore((s) => s.setAiDrawerOpen);
+  const agents = useHublyStore((s) => s.agents) ?? NO_AGENTS;
+  const addAgent = useHublyStore((s) => s.addAgent);
   const inviteModalOpen = useHublyStore((s) => s.inviteModalOpen);
   const setInviteModalOpen = useHublyStore((s) => s.setInviteModalOpen);
   const widgetConfigModalOpen = useHublyStore((s) => s.widgetConfigModalOpen);
@@ -132,7 +138,9 @@ export default function SaaSAppLayout({
   const [collapsed, setCollapsed] = useState(false);
   const [userToggledCollapse, setUserToggledCollapse] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-  const [sidebarTab, setSidebarTab] = useState<"inicio" | "hubi" | "chats">("inicio");
+  const [sidebarTab, setSidebarTab] = useState<"inicio" | "hubi" | "chats">(
+    pathname.startsWith("/agentes") ? "hubi" : "inicio"
+  );
   const { theme, toggleTheme } = useHublyTheme();
   const [brandMenuOpen, setBrandMenuOpen] = useState(false);
   const brandMenuPresence = useModalPresence(brandMenuOpen, 100);
@@ -293,6 +301,13 @@ export default function SaaSAppLayout({
     return `${baseHref}${preservedQuerySuffix}`;
   };
 
+  const handleCreateAgent = () => {
+    const agent = addAgent();
+    if (!agent) return;
+    setMobileDrawerOpen(false);
+    router.push(withQuery(`/agentes/${agent.id}`));
+  };
+
   const agencyNav = useMemo(
     () => [
       {
@@ -309,7 +324,7 @@ export default function SaaSAppLayout({
       },
       {
         href: "/tareas",
-        label: "Mi Espacio",
+        label: "Mi espacio",
         icon: NotebookIcon,
         badge: pendingTasksCount > 0 ? pendingTasksCount : undefined,
       },
@@ -343,7 +358,7 @@ export default function SaaSAppLayout({
 
   const brandNav = useMemo(
     () => [
-      { href: "/marca", label: "Núcleo de Marca", icon: BrainFilledIcon },
+      { href: "/marca", label: "Núcleo de marca", icon: BrainFilledIcon },
       {
         href: "/archivos",
         label: "Content Manager",
@@ -415,7 +430,8 @@ export default function SaaSAppLayout({
     setCollapsed((prev) => !prev);
   };
 
-  const targetCollapsed = ((composerOpen ? !composerSidebarOpen : collapsed) || aiDrawerOpen) && !mobileDrawerOpen;
+  const hubiFullView = useHubiChats((s) => s.fullView);
+  const targetCollapsed = ((composerOpen ? !composerSidebarOpen : collapsed) || (aiDrawerOpen && !hubiFullView)) && !mobileDrawerOpen;
   const [isEffectiveCollapsed, setRenderedCollapsed] = useState(targetCollapsed);
   const [sidebarMotion, setSidebarMotion] = useState<"" | "collapsing" | "expanding">("");
   const sidebarRef = useRef<HTMLElement | null>(null);
@@ -612,8 +628,8 @@ export default function SaaSAppLayout({
             type="button"
             onClick={() => setCmdkOpen(true)}
             className="hubly-icon-btn hb-icon-btn"
-            aria-label="Buscar (⌘K)"
-            title="Buscar (⌘K)"
+            aria-label="Buscar"
+            title="Buscar"
             style={{ width: 32, height: 32 }}
           >
             <Search size={15} />
@@ -645,8 +661,11 @@ export default function SaaSAppLayout({
         aria-label="Navegación principal de Hubly"
         className={`hubly-sidebar hb-sidebar ${
           targetCollapsed ? "is-collapsed" : ""
-        } ${sidebarMotion ? `is-animating is-${sidebarMotion}` : ""} ${mobileDrawerOpen ? "is-mobile-drawer-open" : ""}`.trim()}
+        } ${sidebarMotion ? `is-animating is-${sidebarMotion}` : ""} ${mobileDrawerOpen ? "is-mobile-drawer-open" : ""} ${profileMenuOpen ? "has-profile-popover" : ""}`.trim()}
         data-sidebar-tab={activeSidebarTab}
+        onClickCapture={(e) => {
+          if (hubiFullView && (e.target as HTMLElement).closest("a[href]")) setAiDrawerOpen(false);
+        }}
         style={{
           transition:
             "width 200ms cubic-bezier(0.4, 0, 0.2, 1), min-width 200ms cubic-bezier(0.4, 0, 0.2, 1), padding 200ms cubic-bezier(0.4, 0, 0.2, 1)",
@@ -1075,7 +1094,7 @@ export default function SaaSAppLayout({
                         height: 18,
                         padding: "0 6px",
                         borderRadius: 9999,
-                        background: active ? "#BFE2F4" : "var(--ui-muted)",
+                        background: active ? "var(--ui-sky-border)" : "var(--ui-muted)",
                         color: active ? "var(--ui-accent-text)" : "var(--ui-text-3)",
                         fontSize: 11,
                         fontWeight: 700,
@@ -1186,7 +1205,7 @@ export default function SaaSAppLayout({
                 <ChevronDown size={12} style={{ color: "var(--ui-text-5)", flexShrink: 0 }} />
               </button>
 
-              {/* Right: Dynamic User Initials Circle + Dashed + Button (Nueva marca) */}
+              {/* Right: Dynamic User Initials Circle + Dashed + Button (Invitar a la agencia) */}
               <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                 <span
                   title={profile.name}
@@ -1194,7 +1213,7 @@ export default function SaaSAppLayout({
                     width: 20,
                     height: 20,
                     borderRadius: 9999,
-                    background: "var(--hb-accent)",
+                    background: profile.avatarUrl ? `var(--hb-accent) center / cover url(${profile.avatarUrl})` : "var(--hb-accent)",
                     color: "#FFFFFF",
                     fontSize: 8.5,
                     fontWeight: 700,
@@ -1203,14 +1222,14 @@ export default function SaaSAppLayout({
                     justifyContent: "center",
                   }}
                 >
-                  {profile.avatarInitial}
+                  {profile.avatarUrl ? null : profile.avatarInitial}
                 </span>
 
                 <button
                   type="button"
-                  onClick={() => setNewBrandModalOpen(true)}
-                  aria-label="Nueva marca"
-                  title="Nueva marca"
+                  onClick={() => setInviteModalOpen(true)}
+                  aria-label="Invitar a la agencia"
+                  title="Invitar a la agencia"
                   style={{
                     width: 20,
                     height: 20,
@@ -1273,8 +1292,8 @@ export default function SaaSAppLayout({
                           padding: "7px 9px",
                           borderRadius: 8,
                           border: "none",
-                          background: isCurrent ? "#F1F9FD" : "transparent",
-                          color: isCurrent ? "var(--ui-accent-text)" : "var(--ui-text-2)",
+                          background: isCurrent ? "rgb(var(--hb-accent-rgb) / 0.08)" : "transparent",
+                          color: isCurrent ? "var(--hb-accent-text)" : "var(--ui-text-2)",
                           cursor: "pointer",
                           textAlign: "left",
                           fontSize: 13,
@@ -1294,12 +1313,9 @@ export default function SaaSAppLayout({
                               width: 20,
                               height: 20,
                               borderRadius: 6,
-                              background:
-                                b.id === "brand-min"
-                                  ? "#16324F"
-                                  : b.color || "#16324F",
-                              color: "#FFFFFF",
-                              fontSize: 9.5,
+                              background: b.color || "var(--hb-accent)",
+                              color: "var(--on-accent)",
+                              fontSize: 10,
                               fontWeight: 700,
                               display: "inline-flex",
                               alignItems: "center",
@@ -1321,7 +1337,7 @@ export default function SaaSAppLayout({
                           </span>
                         </span>
                         {isCurrent && (
-                          <Check size={13} style={{ color: "var(--ui-accent-text-2)", flexShrink: 0 }} />
+                          <Check size={15} style={{ color: "var(--hb-accent-text)", flexShrink: 0 }} />
                         )}
                       </button>
                     );
@@ -1329,29 +1345,13 @@ export default function SaaSAppLayout({
 
                 <button
                   type="button"
+                  className="hubly-brand-menu-create"
                   onClick={() => {
                     setBrandMenuOpen(false);
                     setNewBrandModalOpen(true);
                   }}
-                  style={{
-                    width: "100%",
-                    marginTop: 4,
-                    padding: "7px 9px",
-                    borderRadius: 8,
-                    border: "1px dashed var(--ui-border-strong)",
-                    background: "transparent",
-                    color: "var(--hb-accent-text)",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 5,
-                    fontFamily: "inherit",
-                  }}
                 >
-                  <Plus size={12} /> Nueva marca
+                  <Plus size={15} /> Crear marca
                 </button>
               </div>
             )}
@@ -1395,29 +1395,38 @@ export default function SaaSAppLayout({
               <>
                 <div className="hubly-sidebar-panel-head">
                   <span>Agentes</span>
-                  <button type="button" aria-label="Crear agente con Hubi" onClick={() => setAiDrawerOpen(true)}>
+                  <button type="button" aria-label="Crear agente" title="Crear agente" onClick={handleCreateAgent}>
                     <Plus size={14} />
                   </button>
                 </div>
-                <button type="button" className="hubly-sidebar-empty" onClick={() => setAiDrawerOpen(true)}>
-                  <strong>Sin agentes</strong>
-                  <small>Crea tu primer agente</small>
-                </button>
+                {agents.length > 0 ? (
+                  <nav className="hubly-sidebar-agents" aria-label="Agentes">
+                    {agents.map((agent) => {
+                      const href = `/agentes/${agent.id}`;
+                      return (
+                        <Link
+                          key={agent.id}
+                          href={withQuery(href)}
+                          title={agent.name}
+                          aria-current={pathname === href ? "page" : undefined}
+                          className="hubly-sidebar-agent"
+                          onClick={() => setMobileDrawerOpen(false)}
+                        >
+                          <HublyCatAvatar size={22} />
+                          <span>{agent.name}</span>
+                        </Link>
+                      );
+                    })}
+                  </nav>
+                ) : (
+                  <button type="button" className="hubly-sidebar-empty" onClick={handleCreateAgent}>
+                    <strong>Sin agentes</strong>
+                    <small>Crea tu primer agente</small>
+                  </button>
+                )}
               </>
             ) : (
-              <>
-                <div className="hubly-sidebar-panel-head is-chats">
-                  <span>Chats</span>
-                  <button type="button" aria-label="Nueva conversación" onClick={() => setAiDrawerOpen(true)}>
-                    <Plus size={14} />
-                  </button>
-                </div>
-                <button type="button" className="hubly-sidebar-empty is-large" onClick={() => setAiDrawerOpen(true)}>
-                  <i><Plus size={16} /></i>
-                  <strong>Inicia una conversación</strong>
-                  <small>Pregunta, crea copies, pasa links…</small>
-                </button>
-              </>
+              <HubiChatList onOpen={() => setMobileDrawerOpen(false)} />
             )}
           </div>
         )}
@@ -1481,8 +1490,8 @@ export default function SaaSAppLayout({
               type="button"
               onClick={() => setCmdkOpen(true)}
               className="hubly-icon-btn hb-icon-btn"
-              aria-label="Buscar (⌘K)"
-              title="Buscar (⌘K)"
+              aria-label="Buscar"
+              title="Buscar"
             >
               <Search size={18} />
             </button>
@@ -1532,7 +1541,7 @@ export default function SaaSAppLayout({
                   width: 32,
                   height: 32,
                   borderRadius: 9999,
-                  background: "var(--hb-accent)",
+                  background: profile.avatarUrl ? `var(--hb-accent) center / cover url(${profile.avatarUrl})` : "var(--hb-accent)",
                   color: "#FFFFFF",
                   fontWeight: 700,
                   fontSize: 12,
@@ -1542,7 +1551,7 @@ export default function SaaSAppLayout({
                   flexShrink: 0,
                 }}
               >
-                {profile.avatarInitial}
+                {profile.avatarUrl ? null : profile.avatarInitial}
               </div>
 
               {!isEffectiveCollapsed && (
@@ -1601,7 +1610,7 @@ export default function SaaSAppLayout({
                 position: "absolute",
                 bottom: "calc(100% + 10px)",
                 left: 0,
-                width: 276,
+                width: 236,
                 background: "var(--ui-surface)",
                 border: "1px solid var(--ui-border)",
                 borderRadius: 16,
@@ -1814,7 +1823,7 @@ export default function SaaSAppLayout({
       </div>
 
       {/* =====================================================================
-          MOBILE BOTTOM TABBAR (< 768px): Mi Espacio, Social, Hubi, Ads, Más
+          MOBILE BOTTOM TABBAR (< 768px): Mi espacio, Social, Hubi, Ads, Más
          ===================================================================== */}
       <nav
         aria-label="Barra de navegación inferior móvil"
@@ -1825,7 +1834,7 @@ export default function SaaSAppLayout({
           left: 0,
           right: 0,
           height: 60,
-          background: "rgba(255, 255, 255, 0.96)",
+          background: "var(--ui-surface)",
           backdropFilter: "blur(12px)",
           borderTop: "1px solid var(--ui-border)",
           display: "grid",
@@ -1851,7 +1860,7 @@ export default function SaaSAppLayout({
           }}
         >
           <NotebookIcon active={isNavActive("/tareas")} />
-          <span>Mi Espacio</span>
+          <span>Mi espacio</span>
         </Link>
 
         <Link
@@ -1963,10 +1972,7 @@ export default function SaaSAppLayout({
       <PostComposerModal />
       <NewBrandModal />
       <CommandPaletteModal />
-      <InviteTeamModalSurface
-        open={inviteModalOpen}
-        onClose={() => setInviteModalOpen(false)}
-      />
+      <InviteTeamModal />
       <NotebookReaderModalSurface
         open={Boolean(activeNotebookId)}
         notebookId={activeNotebookId}

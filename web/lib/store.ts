@@ -12,6 +12,7 @@ import { selectAccountRecommendations } from "./domain-selectors";
 import { localIsoDate } from "./date";
 import { moveInList } from "./use-kanban-drag";
 import { backendEnabled } from "./supabase/config";
+import { createAgent, duplicateAgent, isBlankAgent } from "./agents";
 import { currentAgencyId, loadLiveWorkspace, queueLiveSave } from "./live-workspace";
 import {
   buildReferenceFixtureWorkspace,
@@ -42,11 +43,13 @@ import type {
   Lead,
   LeadStage,
   Quote,
+  DashboardMetricId,
   DashboardWidgetConfig,
   DashboardWidgetId,
   DashboardWidgetSpan,
   HublyWorkspaceData,
   MediaAsset,
+  HublyAgent,
   NotebookItem,
   PeriodCommitmentSnapshot,
   PostExtrasPatch,
@@ -119,6 +122,7 @@ export interface HublyStoreState extends HublyWorkspaceData {
   editingPostId: string | null;
   cmdkOpen: boolean;
   aiDrawerOpen: boolean;
+  aiDrawerPrompt: string | null;
   newBrandModalOpen: boolean;
   inviteModalOpen: boolean;
   widgetConfigModalOpen: boolean;
@@ -138,6 +142,7 @@ export interface HublyStoreState extends HublyWorkspaceData {
   closeComposer: () => void;
   setCmdkOpen: (open: boolean) => void;
   setAiDrawerOpen: (open: boolean) => void;
+  setAiDrawerPrompt: (prompt: string | null) => void;
   setNewBrandModalOpen: (open: boolean) => void;
   setInviteModalOpen: (open: boolean) => void;
   setWidgetConfigModalOpen: (open: boolean) => void;
@@ -187,7 +192,7 @@ export interface HublyStoreState extends HublyWorkspaceData {
   ) => void;
   approveAllBrandPosts: (brandId: string, authorName?: string, role?: "client" | "agency") => void;
   /** Cambio puntual desde tabla o Kanban; el estado de publicación va por updatePostStatus. */
-  updatePostFields: (postId: string, patch: Partial<Pick<SocialPost, "workflowStatusId" | "format" | "assigneeIds" | "assignee" | "customFields">>) => void;
+  updatePostFields: (postId: string, patch: Partial<Pick<SocialPost, "workflowStatusId" | "format" | "assigneeIds" | "assignee" | "customFields" | "pillar">>) => void;
   deletePost: (postId: string) => void;
   /** Devuelve el id de la copia, que nace como borrador sin fecha ni resultados. */
   duplicatePost: (postId: string) => string | null;
@@ -218,6 +223,12 @@ export interface HublyStoreState extends HublyWorkspaceData {
   addTaskList: (brandId: string, name: string) => void;
   renameTaskList: (brandId: string, oldName: string, newName: string) => void;
   deleteTaskList: (brandId: string, name: string) => void;
+
+  // Agent Actions
+  addAgent: () => HublyAgent;
+  updateAgent: (agentId: string, patch: Partial<HublyAgent>) => void;
+  duplicateAgent: (agentId: string) => HublyAgent | undefined;
+  deleteAgent: (agentId: string) => void;
 
   // Notebook Actions
   addNotebook: (input: {
@@ -267,6 +278,7 @@ export interface HublyStoreState extends HublyWorkspaceData {
   reorderWidgets: (orderedIds: DashboardWidgetId[]) => void;
   moveWidget: (widgetId: DashboardWidgetId, direction: "up" | "down") => void;
   setWidgetSpan: (widgetId: DashboardWidgetId, span: DashboardWidgetSpan) => void;
+  setWidgetMetric: (widgetId: DashboardWidgetId, metric: DashboardMetricId) => void;
   resetWidgetsLayout: () => void;
   toggleOnboardingStep: (stepKey: OnboardingStepKey, forceValue?: boolean) => void;
   setOnboardingDismissed: (dismissed: boolean) => void;
@@ -281,6 +293,8 @@ export interface HublyStoreState extends HublyWorkspaceData {
   addAsset: (asset: Omit<MediaAsset, "id" | "uploadedAt" | "usedInPosts">) => void;
   addProject: (project: Omit<BrandProject, "id">) => void;
   moveProject: (projectId: string, status: BrandProject["status"], beforeId: string | null) => void;
+  updateProject: (projectId: string, patch: Partial<Omit<BrandProject, "id" | "brandId">>) => void;
+  deleteProject: (projectId: string) => void;
   sendChatMessage: (
     channelId: string,
     text: string,
@@ -313,6 +327,7 @@ function extractWorkspaceData(state: HublyStoreState): HublyWorkspaceData {
     leads: state.leads,
     quotes: state.quotes,
     automations: state.automations,
+    agents: state.agents,
     tasks: state.tasks,
     taskLists: state.taskLists,
     calendarActivities: state.calendarActivities,
@@ -440,6 +455,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   composerPending: null,
   cmdkOpen: false,
   aiDrawerOpen: false,
+  aiDrawerPrompt: null,
   newBrandModalOpen: false,
   inviteModalOpen: false,
   widgetConfigModalOpen: false,
@@ -494,6 +510,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   },
   setCmdkOpen: (open) => set({ cmdkOpen: open }),
   setAiDrawerOpen: (open) => set({ aiDrawerOpen: open }),
+  setAiDrawerPrompt: (prompt) => set({ aiDrawerPrompt: prompt }),
   setNewBrandModalOpen: (open) => set({ newBrandModalOpen: open }),
   setInviteModalOpen: (open) => set({ inviteModalOpen: open }),
   setWidgetConfigModalOpen: (open) => set({ widgetConfigModalOpen: open }),
@@ -846,7 +863,6 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
           brandCreatedOrSelected: true,
         },
         activityEvents: [event, ...s.activityEvents],
-        newBrandModalOpen: false,
       };
     });
     persistWorkspaceState(get());
@@ -1255,6 +1271,34 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
 
   removeAutomation: (ruleId) => {
     set((s) => ({ automations: (s.automations || []).filter((r) => r.id !== ruleId) }));
+    persistWorkspaceState(get());
+  },
+
+  addAgent: () => {
+    const blank = (get().agents || []).find(isBlankAgent);
+    if (blank) return blank;
+    const created = createAgent();
+    set((s) => ({ agents: [created, ...(s.agents || [])] }));
+    persistWorkspaceState(get());
+    return created;
+  },
+
+  updateAgent: (agentId, patch) => {
+    set((s) => ({ agents: (s.agents || []).map((a) => (a.id === agentId ? { ...a, ...patch } : a)) }));
+    persistWorkspaceState(get());
+  },
+
+  duplicateAgent: (agentId) => {
+    const source = (get().agents || []).find((a) => a.id === agentId);
+    if (!source) return undefined;
+    const copy = duplicateAgent(source);
+    set((s) => ({ agents: [copy, ...(s.agents || [])] }));
+    persistWorkspaceState(get());
+    return copy;
+  },
+
+  deleteAgent: (agentId) => {
+    set((s) => ({ agents: (s.agents || []).filter((a) => a.id !== agentId) }));
     persistWorkspaceState(get());
   },
 
@@ -1884,6 +1928,13 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     persistWorkspaceState(get());
   },
 
+  setWidgetMetric: (widgetId, metric) => {
+    set((s) => ({
+      widgets: s.widgets.map((w) => (w.id === widgetId ? { ...w, metric } : w)),
+    }));
+    persistWorkspaceState(get());
+  },
+
   resetWidgetsLayout: () => {
     set({
       widgets: DEFAULT_WIDGETS_CONFIG.map((w) => ({ ...w })),
@@ -1982,6 +2033,16 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     persistWorkspaceState(get());
   },
 
+  updateProject: (projectId, patch) => {
+    set((s) => ({ projects: s.projects.map((p) => (p.id === projectId ? { ...p, ...patch } : p)) }));
+    persistWorkspaceState(get());
+  },
+
+  deleteProject: (projectId) => {
+    set((s) => ({ projects: s.projects.filter((p) => p.id !== projectId) }));
+    persistWorkspaceState(get());
+  },
+
   moveProject: (projectId, status, beforeId) => {
     set((s) => ({
       projects: moveInList(s.projects, projectId, beforeId, (p) => ({ ...p, status })),
@@ -2038,6 +2099,7 @@ const VIEWER_ACTIONS = new Set<string>([
   "resolveComposerPending",
   "setCmdkOpen",
   "setAiDrawerOpen",
+  "setAiDrawerPrompt",
   "setNewBrandModalOpen",
   "setInviteModalOpen",
   "setWidgetConfigModalOpen",

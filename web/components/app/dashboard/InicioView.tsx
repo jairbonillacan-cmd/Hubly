@@ -17,6 +17,7 @@ import type {
   TaskPriority,
 } from "@/lib/types";
 import { KraftNotebookCard } from "@/components/app/KraftNotebookCard";
+import { ExtraWidget, selectCriticalProjects } from "@/components/app/dashboard/ExtraWidgets";
 import { PendientesModal } from "@/components/app/dashboard/PendientesModal";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { HublyCatAvatar, HublySunWeatherIcon, HublyClipboardIcon, HublyNotebookIcon, HublyCalendarIcon, HublyBellIcon } from "@/components/app/icons/HublyIcons";
@@ -248,18 +249,7 @@ export function InicioView() {
     return ordered.filter((w) => w.visible);
   }, [dragOrder, sortedWidgets]);
 
-  const criticalProjects = useMemo(() => {
-    const statusWeight = { Revisión: 0, "En curso": 1, Completado: 2 } as const;
-    return projects
-      .filter((p) => p.status !== "Completado")
-      .sort(
-        (a, b) =>
-          statusWeight[a.status] - statusWeight[b.status] ||
-          a.dueDate.localeCompare(b.dueDate) ||
-          a.progress - b.progress
-      )
-      .slice(0, 5);
-  }, [projects]);
+  const criticalProjects = useMemo(() => selectCriticalProjects(projects), [projects]);
 
   useEffect(() => {
     if (!hiddenWidget) return;
@@ -304,6 +294,13 @@ export function InicioView() {
     } catch {
       setLayoutCopied(false);
     }
+  };
+
+  const handleCycleSpan = (id: DashboardWidgetId, span: DashboardWidgetSpan) => {
+    const grid = gridRef.current;
+    if (!grid) return;
+    const maxCols = getComputedStyle(grid).gridTemplateColumns.split(" ").length;
+    setWidgetSpan(id, (span >= maxCols ? 1 : span + 1) as DashboardWidgetSpan);
   };
 
   const handleResizeStart = (
@@ -653,7 +650,7 @@ export function InicioView() {
                         fontWeight: 700,
                         letterSpacing: "0.08em",
                         textTransform: "uppercase",
-                        color: group.bucket === "overdue" ? "#EF4444" : "var(--ui-text-5)",
+                        color: group.bucket === "overdue" ? "#EF4444" : "var(--ui-text-4)",
                         marginBottom: 8,
                       }}
                     >
@@ -796,7 +793,7 @@ export function InicioView() {
                             <span
                               style={{
                                 fontSize: 12.5,
-                                color: "var(--ui-text-5)",
+                                color: "var(--ui-text-4)",
                                 textDecoration: "line-through",
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
@@ -828,7 +825,7 @@ export function InicioView() {
               )}
               <div className="hb-widget-footer">
                 <Link href="/tareas" className="hb-widget-link">
-                  Mi Espacio →
+                  Mi espacio →
                 </Link>
               </div>
             </div>
@@ -986,8 +983,8 @@ export function InicioView() {
                             fontWeight: 600,
                             padding: "3px 8px",
                             borderRadius: 999,
-                            background: "#ECFDF5",
-                            color: "#059669",
+                            background: "var(--hubly-success-bg)",
+                            color: "var(--tinta-exito)",
                             flexShrink: 0,
                           }}
                         >
@@ -1257,7 +1254,7 @@ export function InicioView() {
                   <div style={{ fontSize: 11, color: "var(--ui-text-4)", fontWeight: 600 }}>
                     CTR PROMEDIO
                   </div>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: "#059669", marginTop: 4 }}>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: "var(--tinta-exito)", marginTop: 4 }}>
                     {avgCtr}%
                   </div>
                 </div>
@@ -1325,8 +1322,8 @@ export function InicioView() {
                         fontWeight: 700,
                         padding: "2px 8px",
                         borderRadius: 999,
-                        background: "#ECFDF5",
-                        color: "#059669",
+                        background: "var(--hubly-success-bg)",
+                        color: "var(--tinta-exito)",
                       }}
                     >
                       Click {camp.clickScore}
@@ -1386,7 +1383,7 @@ export function InicioView() {
       }
 
       default:
-        return null;
+        return <ExtraWidget id={widgetId} />;
     }
   };
 
@@ -1495,6 +1492,9 @@ export function InicioView() {
                   {editWidgetsMode && (
                     <>
                       <div className="hubly-edit-controls">
+                        <button type="button" className="hubly-edit-btn is-width" onClick={() => handleCycleSpan(w.id, span)} aria-label={`Cambiar ancho de ${w.title}, ahora ${span} ${span === 1 ? "columna" : "columnas"}`} title="Cambiar ancho">
+                          {span}×
+                        </button>
                         <button type="button" className="hubly-edit-btn" onClick={() => moveWidget(w.id, "up")} aria-label={`Mover ${w.title} antes`} title="Mover antes">
                           <ArrowLeft size={13} />
                         </button>
@@ -1609,7 +1609,7 @@ export function InicioView() {
                     NUEVA LIBRETA KRAFT
                   </span>
                   <h3 style={{ fontSize: 16, fontWeight: 800, color: "#2C1A0B", margin: 0 }}>
-                    Crear nota en Mi Espacio
+                    Crear nota en Mi espacio
                   </h3>
                 </div>
               </div>

@@ -38,6 +38,15 @@ const limpiar = async (page: Page, prefijo: string) => {
   await page.waitForLoadState("networkidle");
 };
 
+// El guardado va por POST /api/workspace: se intercepta para que las pruebas no alteren los datos demo guardados.
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/workspace**", (route) =>
+    route.request().method() === "GET"
+      ? route.continue()
+      : route.fulfill({ status: 200, contentType: "application/json", body: "{\"ok\":true}" })
+  );
+});
+
 test("las cuatro vistas comparten posts, filtros y período", async ({ page }) => {
   await abrir(page);
   await crear(page, TITULO, hoy());
@@ -101,8 +110,8 @@ test("Kanban: mover cambia el atributo y nunca marca como publicado", async ({ p
   expect(estado).toBe("approved");
   for (const grupo of ["estatus", "formato", "responsable"]) await page.getByLabel("Columnas por").selectOption(grupo);
   await page.getByLabel("Columnas por").selectOption("estatus");
-  await page.getByLabel(`Mover ${TITULO} a otra columna`).selectOption("diseno");
-  await expect(page.getByRole("region", { name: "En diseño" }).getByText(TITULO)).toBeVisible();
+  await page.getByLabel(`Mover ${TITULO} a otra columna`).selectOption("pendiente");
+  await expect(page.getByRole("region", { name: "Pendiente de revisión" }).getByText(TITULO)).toBeVisible();
   await limpiar(page, TITULO);
 });
 

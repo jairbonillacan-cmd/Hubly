@@ -111,7 +111,13 @@ export function publicationLabel(post: Pick<SocialPost, "status" | "scheduledDat
   }
 }
 
-export type KanbanGroup = "estatus" | "formato" | "responsable" | "publicacion" | `campo:${string}`;
+export type KanbanGroup = "estatus" | "formato" | "responsable" | "publicacion" | "pilar" | `campo:${string}`;
+/** Catálogo inicial de una marca; igual al que Henry trae de fábrica. Es editable. */
+export const DEFAULT_WORKFLOW = [
+  { id: "pendiente", name: "Pendiente de revisión", color: "#F59E0B" },
+  { id: "aprobado", name: "Aprobado", color: "#15803D" },
+  { id: "rechazado", name: "Rechazado", color: "#B91C1C" },
+];
 export const PUBLICATION_COLUMNS: PostStatus[] = ["draft", "pending", "changes", "approved", "scheduled", "published"];
 export const FORMAT_COLUMNS: PostFormat[] = ["Imagen", "Carrusel", "Reel / Video", "Story", "Texto"];
 
