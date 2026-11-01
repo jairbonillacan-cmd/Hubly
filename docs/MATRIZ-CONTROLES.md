@@ -1,6 +1,6 @@
 # Matriz de controles de Hubly
 
-Generada con `npm run audit:controles` en modo demo el 2026-10-31 (previo a la integración). Cubre botones, enlaces y pestañas visibles al cargar cada ruta, la barra lateral y el botón de Hubi, y los controles dentro de cada menú, modal o panel que abre un control de la página (una ronda de profundidad).
+Generada con `npm run audit:controles` en modo demo el 2026-11-01 (previo a la integración). Cubre botones, enlaces y pestañas visibles al cargar cada ruta, la barra lateral y el botón de Hubi, y los controles dentro de cada menú, modal o panel que abre un control de la página (una ronda de profundidad).
 
 **Qué significa:** «responde» indica que pulsar cambió la página (el detalle dice qué cambió) sin error; no prueba que el resultado sea correcto ni que persista, porque la auditoría bloquea las escrituras. La persistencia y los permisos se prueban en `e2e/` y `tests/`. «Ya activo» es una pestaña o filtro que ya estaba seleccionado, así que no cambia nada: es lo esperado. «Sin efecto visible» pide revisión manual: puede ser un botón muerto o un cambio que la auditoría no detecta. Los editores (compositor) se abren pero no se recorren aquí: los cubre `compositor.spec.ts`.
 
@@ -453,9 +453,9 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/marcas` | — | Tabla | responde | cambia un estado; cambia el texto |
 | `/marcas` | — | Por usuario | responde | cambia un estado; cambia el texto |
 | `/marcas` | — | Ver archivadas (0) | responde | cambia el texto |
-| `/marcas` | — | Café Bruma | responde | navega a /marca; cambia un estado; intenta guardar (bloqueado) |
+| `/marcas` | — | Café Bruma | responde | cambia el texto; intenta guardar (bloqueado) |
 | `/marcas` | — | Archivar Café Bruma | responde | cambia el texto; intenta guardar (bloqueado) |
-| `/marcas` | — | Min | responde | intenta guardar (bloqueado) |
+| `/marcas` | — | Min | responde | navega a /marca; cambia un estado; intenta guardar (bloqueado) |
 | `/marcas` | — | Archivar Min | deshabilitado |  |
 | `/marcas` | — | Clínica Norte | responde | navega a /marca; cambia un estado; intenta guardar (bloqueado) |
 | `/marcas` | — | Archivar Clínica Norte | responde | cambia el texto; intenta guardar (bloqueado) |

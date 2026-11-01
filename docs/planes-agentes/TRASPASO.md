@@ -1,6 +1,6 @@
 # Traspaso de la sesión del agente A
 
-31 de octubre de 2026. Este documento manda sobre los pendientes de `docs/ENTREGA-PARIDAD-HENRY.md`, que aún no recoge el último commit de `agente/integracion`.
+31 de octubre de 2026. **Superado:** la corrida final, la revisión visual y los pendientes actuales están en `docs/ENTREGA-PARIDAD-HENRY.md`, que ahora manda. Este documento queda como registro.
 
 ## Dónde está cada cosa
 
