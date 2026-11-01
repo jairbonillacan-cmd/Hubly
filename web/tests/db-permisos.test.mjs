@@ -456,5 +456,29 @@ ok("otra agencia intacta", (await db.query(`select version from public.agency_wo
   ok("posts: no se pisa lo oculto enviándolo", (await db.query(`select data->>'title' t from public.posts where agency_id = $1 and id = 'p2'`, [ag])).rows[0].t === "dos");
   ok("posts: otra persona sin agencia no ve", (await as(C, "authenticated", `select id from public.posts where agency_id = $1`, [ag])).length === 0);
 }
+// --- Colecciones con marca ---
+{
+  const ag = (await as(A, "authenticated", `select public.create_agency('Colecciones') id`))[0].id;
+  await db.query(`insert into public.agency_members values ($1,$2,'editor')`, [ag, B]);
+  const guardar = async (who, extra) => {
+    const { version } = (await db.query(`select version from public.agency_workspaces where agency_id = $1`, [ag])).rows[0];
+    return as(who, "authenticated", `select public.save_workspace($1,$2,$3) v`, [ag, JSON.stringify({ brands: [{ id: "ca", name: "A" }, { id: "cb", name: "B" }], posts: [], ...extra }), version]);
+  };
+  await guardar(A, { notebooks: [{ id: "n1", brandId: "ca", title: "uno" }, { id: "n2", brandId: "cb", title: "dos" }], notifications: [{ id: "x1", text: "sin marca" }] });
+  const ver = async (who) => (await as(who, "authenticated", `select id from public.workspace_items where agency_id = $1 order by collection, position`, [ag])).map((x) => x.id).join();
+  ok("colecciones: se copian al guardar", (await ver(A)) === "n1,n2,x1");
+  await as(A, "authenticated", `insert into public.brand_members (agency_id, brand_id, user_id) values ($1,'ca',$2)`, [ag, B]);
+  ok("colecciones: el asignado ve lo suyo y lo sin marca", (await ver(B)) === "n1,x1");
+  await errs("colecciones: no se escriben directo", () => as(A, "authenticated", `delete from public.workspace_items where agency_id = $1 returning id`, [ag]), "permission");
+  await guardar(B, { notebooks: [{ id: "n1", brandId: "ca", title: "uno por B" }, { id: "n2", brandId: "cb", title: "robado" }], notifications: [] });
+  const rows = (await db.query(`select id, data->>'title' t from public.workspace_items where agency_id = $1 and collection = 'notebooks' order by id`, [ag])).rows;
+  ok("colecciones: lo oculto no se pisa", rows.find((x) => x.id === "n2").t === "dos");
+  ok("colecciones: lo visible cambia", rows.find((x) => x.id === "n1").t === "uno por B");
+  await guardar(B, { notebooks: [], notifications: [] });
+  ok("colecciones: lo oculto no se borra", (await ver(A)) === "n2");
+  await guardar(A, { posts: [] });
+  ok("colecciones: una colección ausente no se borra", (await ver(A)) === "n2");
+  await errs("colecciones: anon no lee", () => as(null, "anon", `select * from public.workspace_items`), "permission");
+}
 console.log(`\n${pass} ok, ${fail} fallos`);
 process.exit(fail ? 1 : 0);

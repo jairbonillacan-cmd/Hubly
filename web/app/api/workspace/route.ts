@@ -7,7 +7,7 @@ import {
   normalizeWorkspacePayload,
 } from "@/lib/workspace-repository";
 import { readBodyText } from "@/lib/api-guard";
-import { brandFromRow, type BrandRow } from "@/lib/brand-rows";
+import { brandFromRow, groupWorkspaceItems, type BrandRow, type WorkspaceItemRow } from "@/lib/brand-rows";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import type { HublyWorkspaceData } from "@/lib/types";
@@ -137,6 +137,13 @@ async function liveGet(requestedAgency: string | null) {
     );
     if (!posts.error) doc.posts = (posts.data ?? []).map((item) => item.data);
     if (!tasks.error) doc.tasks = (tasks.data ?? []).map((item) => item.data);
+    // Sin la migración 0015 la consulta falla y estas colecciones siguen saliendo del documento.
+    const { data: items, error: itemsError } = await supabase
+      .from("workspace_items")
+      .select("collection, data")
+      .eq("agency_id", membership.agency_id)
+      .order("position");
+    if (!itemsError) Object.assign(doc, groupWorkspaceItems(items as WorkspaceItemRow[]));
   }
 
   const data = normalizeWorkspacePayload(doc, membership.agency_id, { live: true });
