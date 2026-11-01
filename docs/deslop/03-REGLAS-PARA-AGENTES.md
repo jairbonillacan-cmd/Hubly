@@ -14,11 +14,13 @@ Obligatorias. Complementan [AGENTS.md](../../AGENTS.md), [CODE_STANDARDS.md](../
    cd ../Hubly-wt/<id>/web && npm ci
    ```
 
-4. Elige un puerto libre del 3100 al 3199. **Nunca uses ni apagues el 3000: es el servidor del dueño.**
+4. Elige un puerto libre del 3100 al 3199. **Nunca uses ni apagues el 3000: es el servidor del dueño.** Para este plan, esto prevalece sobre «si `localhost:3000` responde, úsalo»: ese servidor ejecuta otra carpeta, no tu rama. Pasa siempre `E2E_PORT`, también en `npm run test:visual`. Sin él, Playwright reutiliza el 3000 y las pruebas pasan contra el código equivocado.
 
 ## Mientras trabajas
 
-- Una tarea, un PR. Máximo 500 líneas cambiadas de lógica; si no alcanza, parte la tarea y dilo.
+- Una tarea, un PR. Máximo 500 líneas de lógica nueva o modificada; el código solo movido no cuenta, si va en su propio commit. Si no alcanza, parte la tarea y dilo.
+- Rama corta: si `main` avanzó, actualiza con `git merge origin/main` antes de pedir revisión y vuelve a correr las comprobaciones. Si tu PR lleva más de dos días abierto, avisa.
+- No cambies la forma de los datos guardados, ni el nombre de sus campos. Hay espacios de trabajo reales en Supabase.
 - Primero mover sin cambiar lógica, en un commit. Después simplificar, en otro.
 - No cambies comportamiento en un refactor. Si encuentras un fallo, anótalo en tu PR o arréglalo en otro PR.
 - Busca antes de crear. No dupliques componentes, tokens ni funciones.
@@ -31,12 +33,34 @@ Obligatorias. Complementan [AGENTS.md](../../AGENTS.md), [CODE_STANDARDS.md](../
 - Respeta el fin de línea del archivo. Compara con `git diff --ignore-cr-at-eol`.
 - Guarda scripts fuera del repositorio.
 
+### Si mueves o partes un archivo con deuda
+
+`check:ui` y `check:size` guardan la deuda por archivo, así que la ruta nueva falla aunque no empeore nada. Este es el único caso, además de reducir deuda, en que se actualiza una base:
+
+1. Antes de mover, anota el total por regla y el de `node scripts/medir-deslop.mjs`.
+2. Mueve en un commit propio, sin otros cambios. Usa `git mv`.
+3. Corre `npm run check:ui -- --update` y, si aplica, `npm run check:size -- --update`.
+4. Corre `node scripts/check-deuda.mjs origin/main`. Debe pasar: ningún total por regla sube.
+5. Revisa el diff de la base: las entradas solo deben cambiar de ruta, o bajar. Si una entrada sube, es deuda nueva y se corrige.
+6. Explícalo en el PR, con el total de antes y después.
+
+Un archivo nuevo sobre 400 líneas no se resuelve con la base: se parte.
+
+### Si dos PR chocan
+
+- **Bases de deuda:** no resuelvas el conflicto a mano. Toma la versión de `main` y regenera con `--update` tras fusionar; `check-deuda` valida el total.
+- **`SEGUIMIENTO.md`:** no lo edites; lo actualiza quien coordina.
+- **Código:** quien llegó después resuelve, y vuelve a correr todo.
+
 ## Lo que nunca se hace
 
 | Prohibido | Por qué |
 |---|---|
 | Apagar o reiniciar el servidor del 3000 | Es del dueño |
-| `check:ui -- --update` o `check:size -- --update` para que algo pase | Solo tras reducir o mover deuda; `check-deuda.mjs` lo vigila |
+| `check:ui -- --update` o `check:size -- --update` para que algo pase | Solo tras reducir deuda, o con el protocolo de movimiento |
+| Callar un chequeo con `ui-ok:` o `eslint-disable` nuevos | Corrige la causa. Si hay motivo real, escríbelo y dilo en el PR |
+| Editar `store.contract.test.ts` durante F1 | Es la prueba de que nada cambió. Si parece equivocada, detente y pregunta |
+| Cambiar la forma de datos guardados en un refactor | Puede destruir datos reales |
 | Regenerar capturas sin mirarlas | Una captura aceptada a ciegas oculta regresiones |
 | Debilitar o saltar una prueba sin explicar por qué era incorrecta | Oculta fallos |
 | Aplicar migraciones a Supabase | Solo con autorización del dueño, en cada caso |
@@ -100,7 +124,11 @@ E2E_LIVE=1 E2E_PORT=3110 E2E_MOCK_PORT=54410 npx playwright test e2e/fusion-live
 
 Lee el total: si dice `skipped`, esas specs **no corrieron**.
 
+Si la tarea tiene una regla nueva o mueve lógica, comprueba que la prueba sirve: rompe el código a propósito, confirma que falla y restáuralo.
+
 ### Pruebas visuales
+
+Corren solo en Windows y no en CI, así que el PR debe decir el resultado: `E2E_PORT=3100 npm run test:visual`, con `passed`, `failed` y `skipped`.
 
 - Sin cambio visual intencional, las capturas no deben cambiar.
 - Si cambian: abre `*-actual.png` y `*-expected.png`. Si es una regresión, corrígela. Si es una mejora querida, actualiza solo esas capturas y dilo en el PR.
@@ -114,7 +142,7 @@ Título en español, en imperativo. Usa la plantilla y añade:
 ```markdown
 Tarea: F1-2
 ## Antes y después
-`store.ts`: 2,303 → 2,010 líneas
+`store.ts`: 2,304 → 2,010 líneas
 ## Comprobado
 (comando y cifra real)
 ## Sin comprobar
@@ -128,7 +156,14 @@ Después:
 1. Espera a que `web`, `secretos` y `flujos-con-cuentas` pasen.
 2. Atiende los comentarios de revisión. Evalúalos: pueden equivocarse. Responde en el hilo.
 3. **Fusiona solo si quien coordina te lo autorizó.** Si no, deja el PR listo y avisa.
-4. Actualiza tu fila en [SEGUIMIENTO.md](SEGUIMIENTO.md) y las medidas con `node scripts/medir-deslop.mjs`, en el mismo PR.
+4. Incluye en tu entrega la salida de `node scripts/medir-deslop.mjs`. Quien coordina actualiza [SEGUIMIENTO.md](SEGUIMIENTO.md).
+
+## Si algo se rompe tras fusionar
+
+1. Se detiene la fase: nadie fusiona otro PR de ella.
+2. Si la causa no es evidente en 30 minutos, se revierte: `git revert -m 1 <commit de fusión>`, en un PR propio. Revertir no es un fracaso. No se arregla con parches encima.
+3. Si puede haber datos dañados, avisa al dueño de inmediato y no intentes repararlos.
+4. Añade una prueba que habría detectado el fallo, y anota la causa en el registro de [SEGUIMIENTO.md](SEGUIMIENTO.md).
 
 ## Cuándo detenerse y preguntar
 
@@ -151,6 +186,7 @@ PR: <enlace>
 Estado de CI: <checks>
 Cambié: <una o dos frases>
 Comprobado: <comandos y cifras>
+Medidas: <salida de medir-deslop>
 Sin comprobar: <o «nada»>
 Pendiente o riesgos: <o «nada»>
 ```

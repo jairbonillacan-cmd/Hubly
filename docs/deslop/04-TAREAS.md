@@ -6,15 +6,13 @@ Cada tarea es un PR. **Riesgo:** B bajo, M medio, A alto. **Sin cambios visibles
 
 Va primero, un agente a la vez.
 
-### F0-1 Script de medición · B
-- **Crea:** `web/scripts/medir-deslop.mjs`.
-- **Hace:** imprime en Markdown las medidas de [SEGUIMIENTO.md](SEGUIMIENTO.md): líneas de `store.ts`, archivos sobre 400, componentes con `view`, `style={{`, deuda de `check:ui`, `!important`, `eslint-disable` y `as unknown as`.
-- **Acepta:** coincide con las cifras de partida, o explica por qué no.
+### F0-1 Script de medición · Hecha
+`web/scripts/medir-deslop.mjs` define e imprime las medidas. Si una definición cambia, cambia también la cifra de partida en [SEGUIMIENTO.md](SEGUIMIENTO.md), en el mismo PR.
 
 ### F0-2 Chequeo de capas · M
 - **Depende de:** F0-1.
 - **Crea:** `web/scripts/check-capas.mjs`, `npm run check:capas`, paso en `web` de CI.
-- **Hace:** verifica las reglas de dependencia de [02-ARQUITECTURA-OBJETIVO.md](02-ARQUITECTURA-OBJETIVO.md). Lo que ya viola la regla va a `scripts/check-capas-baseline.json`, que solo baja. No añade dependencias: usa la API de TypeScript.
+- **Hace:** verifica las reglas de dependencia de [02-ARQUITECTURA-OBJETIVO.md](02-ARQUITECTURA-OBJETIVO.md). Lo que ya viola la regla va a `scripts/check-capas-baseline.json`, que solo baja. No añade dependencias: usa la API de TypeScript. Hoy se esperan pocas violaciones: `lib/types.ts` → `components/Cover`, `compositor` → `social` (6), `dashboard` → `social` (1) y `shell` → `chat` (1). Si salen muchas más, revisa el chequeo antes de crear la base.
 - **Extiende** `check-deuda.mjs` para vigilar esa base.
 - **Acepta:** un `import` prohibido nuevo hace fallar la comprobación, probado con una prueba unitaria.
 
@@ -23,28 +21,51 @@ Va primero, un agente a la vez.
 - **Archivos:** `web/scripts/check-ui.mjs`, base, `check-deuda.mjs`.
 - **Hace:** añade `style-inline`, `important`, `view-prop` y `use-store-sin-selector` como reglas con base. La última parte de 1 hallazgo, en `useInicioView.tsx`, y llega a 0 en F1-6.
 - **Además:** alinea `docs/ARCHITECTURE.md` y `docs/CODE_STANDARDS.md` con este plan.
+- **Rutas sin vigilar:** `check:ui` solo revisa `app/(app)` y `components/app`. Añade `app/share`, `app/reporte`, `app/cotizacion`, `app/invitacion`, `app/login`, `app/register`, `app/recuperar`, `app/nueva-clave`, `app/onboarding` y `app/page.tsx` con una **base separada**, también vigilada por `check-deuda`. Si se suman a la base actual, sube el total de cada regla y `check-deuda` falla.
+- **Exenciones:** `check-deuda` también falla si sube el total de `ui-ok:` o de `eslint-disable`, salvo cuando un archivo se mueve sin cambiar ese total.
 - **Acepta:** añadir un `style={{` en un archivo nuevo falla; `check-deuda` no cuenta las reglas nuevas como empeorar.
 
 ### F0-4 Cobertura de los flujos críticos · M
 - **Crea:** `web/e2e/critico-live.spec.ts`, añadido al job `flujos-con-cuentas`.
 - **Cubre, con cuentas:** crear marca, crear y editar un post, mover un post, crear y completar una tarea, crear una libreta, recargar y ver que siguió ahí.
 - **Por qué:** F1 reescribe lo que estos flujos usan, y hoy solo se prueban en modo demo.
-- **Acepta:** pasa en CI. Para probar que detecta fallos, rompe una acción en local y confirma que falla.
+- **Acepta:** pasa en CI. Para probar que detecta fallos, rompe una acción en local y confirma que falla. La lista de specs del job está escrita a mano en `ci.yml`: confirma en el log que la nueva corrió y no aparece como `skipped`.
+
+### F0-5 Contrato del store · M
+- **Crea:** `web/lib/store.contract.test.ts`. Debe pasar **antes** de mover nada y seguir sin cambios durante toda F1.
+- **Fija tres cosas:**
+  1. La lista ordenada de las claves de `useHublyStore.getState()` (hoy 125 en la interfaz). Si dos slices definen la misma clave, la última gana en silencio; esta prueba es la que lo detecta.
+  2. Una secuencia de acciones de todos los dominios, con reloj y datos fijos, cuyo resultado se compara con una foto. Normaliza los ids generados.
+  3. Qué se guarda: la forma del documento que recibe `saveWorkspaceToStorage`, y qué acciones provocan guardar. Un campo que deje de guardarse es pérdida de datos, y ninguna prueba visual lo vería.
+- **Acepta:** quitar un campo de `extractWorkspaceData`, o el `persistWorkspaceState` de una acción, hace fallar la prueba.
+
+### F0-6 Compuerta de F1 · B · la activa el dueño
+- **Hace:** con D4 respondida, `flujos-con-cuentas` pasa a ser obligatorio en `main`. Hoy solo lo son `web` y `secretos`, así que un PR de F1 podría fusionarse con esos flujos en rojo.
 
 ## F1: Store por dominio
 
-**Un solo agente en toda la fase.** Solo mover: sin cambiar lógica ni estado. Requiere F0 completa. Cada tarea corre los flujos con cuentas. Se hace en este orden: de menos a más acoplado.
+**Un solo agente en toda la fase.** Solo mover: sin cambiar lógica ni estado. Requiere F0 completa. Cada tarea corre los flujos con cuentas y `store.contract.test.ts`, que no se edita. Se hace en este orden: de menos a más acoplado.
+
+Las 125 claves de la interfaz quedan asignadas abajo, salvo errores: antes de cada tarea, compara con `lib/store.ts`. Lo que no tenga dueño se pregunta, no se improvisa.
+
+**Trampas comprobadas:**
+- `...INITIAL_WORKSPACE_DATA` se queda como primer spread en `store.ts`. Un slice no declara datos guardados como `tasks: []`, porque pisaría los datos iniciales. Solo declara estado que no se guarda, y sus acciones.
+- `teamMembers` y `dashboardWidgets` se derivan de los datos iniciales: se calculan en `store.ts` o en su slice, y la prueba de contrato debe seguir igual.
+- Los slices importan el tipo con `import type`. `sync.ts` no importa valores de `store.ts`, para no crear un ciclo al cargar.
+- `lib/invitaciones.ts` y `lib/live-merge-bridge.ts` usan `useHublyStore` directamente, igual que las specs mediante `__hubly`. No cambies esa forma.
+- `createActivityItem` (11 usos), `withPostLog` (10), `runAutomations` (3) y `STATUS_TO_LABEL` (3) cruzan dominios. Van en F1-1 a `lib/domain/activity.ts`, `lib/domain/posts.ts` y `lib/domain/automations.ts`, tal cual.
+- Ningún archivo nuevo puede superar 400 líneas. Por eso marcas se parte en dos slices.
 
 | Tarea | Crea | Mueve | Riesgo |
 |---|---|---|---|
-| **F1-1** Armazón y sincronización | `lib/store/sync.ts`, `lib/store/ui.slice.ts` | `extractWorkspaceData`, `persistWorkspaceState`, `syncFromServer`, `switchWorkspace`, modales, `cmdkOpen`, `aiDrawer*`, `composer*`, `editWidgetsMode` | A |
+| **F1-1** Armazón, sesión y ventanas | `lib/store/sync.ts`, `lib/store/session.slice.ts`, `lib/store/ui.slice.ts` | `extractWorkspaceData`, `persistWorkspaceState`, ayudas compartidas, `syncFromServer`, `switchWorkspace`, `hydrated`, `role`, `isReferenceFixture`, `applyReferenceFixture`, `setTestClock`, `resetDemoData`, `updateProfile`, `updateAgency`, modales, `cmdkOpen`, `aiDrawer*`, `composer*`, `editWidgetsMode` | A |
 | **F1-2** Simples | `agents`, `automations`, `crm`, `projects`, `assets`, `notebooks` | `*Agent`, `*Automation`, `*Lead`, `*Quote`, `*Project`, `addAsset`, `*Notebook*` | M |
 | **F1-3** Tareas | `tasks.slice.ts` | `addTask`, `updateTask`, `toggleTaskStatus`, `deleteTask`, `moveTask`, `*TaskList` | M |
 | **F1-4** Equipo y tablero | `team.slice.ts`, `dashboard.slice.ts` | `*TeamMember`, `*TeamInvitation`, `recordActivityEvent`, `*Widget*`, `*Onboarding*`, `*Notification*` | M |
-| **F1-5** Marcas | `brands.slice.ts` | `addBrand`, `updateBrand*`, `togglePersonaAccepted`, `setBrandCustomMetrics`, `*Recommendation*`, `setActiveBrand`, `updateProfile`, `updateAgency` | M |
+| **F1-5** Marcas | `brands.slice.ts`, `brandStrategy.slice.ts` | Marcas: `addBrand` (165 líneas), `updateBrand` y datos básicos, `setActiveBrand`. Estrategia: `updateBrandCommitments`, `togglePersonaAccepted`, `setBrandCustomMetrics`, `*Recommendation*` | A |
 | **F1-6** Posts y chat | `posts.slice.ts`, `chat.slice.ts` | `savePost`, `updatePost*`, `approveAllBrandPosts`, `deletePost`, `duplicatePost`, `movePost`, `patchPost`, `addPostComment`, `*Idea*`, `recordPublication`, `setPostResults`, `setCalendarActivities`, `*Chat*`, `flushChatQueue`, `scheduleChatMessage` | A |
 
-**F1-6 también:** elimina el único `useHublyStore()` sin selector.
+**F1-6 también:** elimina el único `useHublyStore()` sin selector, en `useInicioView.tsx`.
 
 **Acepta F1:** `lib/store.ts` tiene menos de 150 líneas y solo compone. Ningún archivo consumidor cambió su import. `lib/live-merge-bridge.ts` y `__hubly` siguen funcionando. Toda la suite, los flujos con cuentas y las capturas pasan sin diferencias.
 
@@ -96,18 +117,39 @@ Archivos grandes sin `view`, que se parten igual:
 | **F3-9** | `(app)/chat/page.tsx` → `components/app/chat/` | M |
 | **F3-10** | `(app)/layout.tsx`: animación del sidebar a `useSidebarMotion`, navegación a `shell/` | A |
 | **F3-11** | Rutas sueltas: `crm`, `reportes`, `marca`, `marcas`, `ajustes`, `tareas`. Una tarea por ruta | M |
+| **F3-12** | Componentes grandes: `TaskBoard`, `SocialCalendar`, `ArchivosYProyectosView`, `CommandPaletteModal`, `FloatingAIDrawer`, `ChatComposer`, `ChatMessageRow`, `ExtraWidgets`, `DescubreHublyWidget`, `NewBrandModal`. Una tarea por archivo | M |
+| **F3-13** | Rutas restantes: `ia`, `automatizaciones`, `notificaciones`, `onboarding`, `register`, `cotizacion`, `invitacion` | B |
+| **F3-14** | Vistas públicas: `share/[token]`, `reporte/[brandId]`. Quien las abre no tiene sesión: prueba sin sesión y con un enlace inválido | M |
+| **F3-15** | `app/page.tsx` y `lib/chat-live.ts`. El segundo mantiene tiempo real: corre `chat-live.spec.ts` | M |
+
+`chat/page` también recibe `view` en parte: F3-9 lo elimina.
 
 **Acepta F3:** ningún componente recibe `view`. `page.tsx` bajo 80 líneas. Sin carpetas `_vista` ni `partes`. Capturas sin diferencias.
+
+### Cobertura de los archivos grandes
+
+Los 44 archivos de `check-size-baseline.json` tienen destino:
+
+| Destino | Archivos |
+|---|---|
+| F1 | `lib/store.ts` |
+| F2 | `lib/domain-selectors.ts`, `lib/seed-data.ts`, `lib/types.ts` |
+| F3-1 a F3-11 | `EquipoCabecera`, `EquipoLogrosRanking`, `ComposerContenido`, `usePostComposerModal`, `SugerenciasCuerpo`, `NotebookReaderModal`, `SaludCuentasView`, `calendario/page`, `chat/page`, `(app)/layout`, `reportes/page`, `ParrillasCalendario`, `ParrillasLinks` |
+| F3-12 a F3-15 | `TaskBoard`, `SocialCalendar`, `ArchivosYProyectosView`, `CommandPaletteModal`, `FloatingAIDrawer`, `ChatComposer`, `ChatMessageRow`, `ExtraWidgets`, `DescubreHublyWidget`, `NewBrandModal`, `share/[token]/page`, `app/page`, `lib/chat-live.ts` |
+| F4 | `dashboard-polish.css`, `hubly-saas.css`, `globals.css`, `app-base.css` |
+| F5-3 | `lib/workspace-repository.ts` |
+| Excepción por ADR 0005 | `components/previews/*` (6 archivos), `SocialIcons`, `DuotoneIcons`, `HublyIcons` |
 
 ## F4: CSS y estilos en línea
 
 Puede correr en paralelo con F1 a F3, **sin tocar los mismos archivos**. Coordina en [SEGUIMIENTO.md](SEGUIMIENTO.md).
 
 ### F4-1 Tokens en un solo lugar · M
-- **Crea:** `app/(app)/tokens.css`.
-- **Mueve:** todas las definiciones `--ui-*`, `--hb-*` desde `globals.css`, `hubly-saas.css`, `app-base.css` y `dashboard-polish.css`.
+- **Crea:** `app/tokens.css`, importado primero en `app/layout.tsx`, para que también lo tengan las rutas fuera de `(app)`.
+- **Mueve:** las 253 definiciones de variables desde `globals.css` (40), `hubly-saas.css` (148), `app-base.css` (51) y `dashboard-polish.css` (14).
+- **Primero:** lista los tokens definidos más de una vez con distinto valor o selector. Para cada uno, anota cuál gana hoy en la app, en la landing y en `share`. Conserva ese resultado, aunque haga falta un selector de alcance.
 - **Quita** los duplicados y los tokens prohibidos sin uso.
-- **Cuidado:** el orden de los imports decide qué valor gana; `app/layout.tsx` y `(app)/layout.tsx` cargan cada uno los suyos, y `globals.css` también sirve a la landing.
+- **Cuidado:** el orden de los imports decide qué valor gana. `app/not-found.tsx` y `app/reporte/[brandId]/page.tsx` importan estos CSS directamente: revísalos con las capturas, porque `visual.spec.ts` podría no cubrirlos.
 - **Acepta:** capturas sin diferencias en las 66 vistas.
 
 ### F4-2 Tokens de estado · M
@@ -117,6 +159,9 @@ Puede correr en paralelo con F1 a F3, **sin tocar los mismos archivos**. Coordin
 
 ### F4-3 Partir `dashboard-polish.css` · A
 - **Hace:** reparte sus 3,112 líneas entre el `<dominio>.css` de cada dominio. Un PR por dominio, de menor a mayor. Conserva el orden relativo, porque de él dependen muchas reglas.
+- **Carga:** cada `<dominio>.css` se importa en `(app)/layout.tsx`, en lista y orden fijos, en el lugar que ocupaba `dashboard-polish.css`. **No lo importes desde la pantalla:** Next ordena el CSS por chunk, y la cascada podría cambiar al navegar sin recargar. Las capturas abren cada ruta de cero, así que no lo detectarían.
+- **Actualiza** los imports de `app/not-found.tsx` y `app/reporte/[brandId]/page.tsx`, que hoy cargan el archivo directamente.
+- **Comprueba además:** navega con clics, sin recargar, entre `/dashboard`, `/calendario` y `/parrillas`, y compara con la carga directa.
 - **Acepta:** el archivo desaparece. Capturas sin diferencias.
 
 ### F4-4 Partir `hubly-saas.css` y unir duplicados · A

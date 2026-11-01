@@ -28,4 +28,4 @@ Antes de programar lee [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) y [docs/CODE
 - No hay pantalla nueva sin backend real, o con la etiqueta «Función prevista».
 - Antes de entregar corre, desde `web/`: `npm run lint`, `npm run check:ui`, `npm run check:size`, `npx tsc --noEmit`, `npm test`, `npm run test:db` y `npm run build`.
 - Las bases de deuda y el tope de avisos de `npm run lint` solo pueden bajar.
-- Si refactorizas, corre `npm run test:visual`. Regenera sus capturas solo con un cambio visual intencional, y dilo en el PR.
+- Si refactorizas desde un worktree, corre `npm run test:visual` con `E2E_PORT` en un puerto libre: sin él prueba el servidor del 3000. Regenera sus capturas solo con un cambio visual intencional, y dilo en el PR.
