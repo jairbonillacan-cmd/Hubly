@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/app/ui/Button";
+import "@/components/app/ui/ui-kit.css";
 import { useCallback, useEffect, useState } from "react";
 import { useHublyStore } from "@/lib/store";
 import { currentAgencyId, liveAgencies, selectLiveAgency } from "@/lib/live-workspace";
@@ -19,6 +20,25 @@ const ERRORS: Record<string, string> = {
 };
 const fmt = (iso: string) => new Date(iso).toLocaleDateString("es-MX", { day: "numeric", month: "short", year: "numeric" });
 
+/** Sin marcas elegidas, la persona ve todas: así no pierde acceso quien aún no tiene asignación. */
+function MemberBrands({ email, brands, assigned, onChange }: { email: string; brands: { id: string; name: string }[]; assigned: string[]; onChange: (brandIds: string[]) => void }) {
+  return (
+    <div className="hubly-member-brands" role="group" aria-label={`Marcas de ${email}`}>
+      <span>{assigned.length ? `Ve ${assigned.length} de ${brands.length} marcas` : "Ve todas las marcas"}</span>
+      <div className="hubly-cal-pills">
+        {brands.map((b) => {
+          const on = assigned.includes(b.id);
+          return (
+            <button key={b.id} type="button" className="hubly-cal-pill" aria-pressed={on} onClick={() => onChange(on ? assigned.filter((id) => id !== b.id) : [...assigned, b.id])}>
+              {b.name}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function AccessPanel() {
   const profile = useHublyStore((s) => s.profile);
   const brands = useHublyStore((s) => s.brands);
@@ -28,6 +48,7 @@ export function AccessPanel() {
   const [members, setMembers] = useState<Member[]>([]);
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [links, setLinks] = useState<ShareLink[]>([]);
+  const [assignments, setAssignments] = useState<{ brand_id: string; user_id: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -38,6 +59,7 @@ export function AccessPanel() {
     setMembers(json.members);
     setInvitations(json.invitations);
     setLinks(json.links);
+    setAssignments(json.assignments ?? []);
   }, [agencyId]);
 
   // También al cerrar el modal: puede haber creado invitaciones.
@@ -45,7 +67,7 @@ export function AccessPanel() {
     if (!inviteModalOpen) void load(); // eslint-disable-line react-hooks/set-state-in-effect -- carga de datos
   }, [load, inviteModalOpen]);
 
-  const act = async (body: Record<string, string>) => {
+  const act = async (body: Record<string, string | string[]>) => {
     setError(null);
     const res = await fetch("/api/members", {
       method: "POST",
@@ -114,6 +136,14 @@ export function AccessPanel() {
                 >
                   Quitar
                 </button>
+              )}
+              {canManage && (m.role === "editor" || m.role === "viewer") && (
+                <MemberBrands
+                  email={m.email}
+                  brands={brands}
+                  assigned={assignments.filter((a) => a.user_id === m.user_id).map((a) => a.brand_id)}
+                  onChange={(brandIds) => void act({ action: "setBrands", userId: m.user_id, brandIds })}
+                />
               )}
             </li>
           ))}

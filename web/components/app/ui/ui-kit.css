@@ -11,3 +11,7 @@
 
 /* Portada neutra de los anuncios de ejemplo */
 .hubly-anuncio-portada { display: grid; place-items: center; height: 100%; background: var(--ui-muted); color: var(--ui-text-5); }
+
+/* Marcas de un miembro, en el panel de acceso */
+.hubly-member-brands { display: grid; flex-basis: 100%; gap: 6px; }
+.hubly-member-brands > span { color: var(--ui-text-4); font-size: 12px; }
