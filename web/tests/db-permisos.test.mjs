@@ -241,6 +241,27 @@ ok("otra agencia intacta", (await db.query(`select version from public.agency_wo
   await db.query(`insert into public.chat_messages (id, channel_id, agency_id, user_id, bot_id, sender_name, sender_initials, text) select gen_random_uuid(), channel_id, agency_id, id, id, name, 'V', 'x' from public.chat_bots, generate_series(1,30)`);
   await errs("chat: el bot tiene límite por minuto", () => as(null, "anon", `select public.chat_bot_post($1,'otra')`, [token]), "rate_limited");
 
+  // 0009: avisos, viendo, eventos firmados.
+  await db.query(`update auth.users set raw_user_meta_data='{"name":"Beto Luna"}' where id=$1`, [B]);
+  await as(A, "authenticated", ...msg(uuid(7), canal, ag, "oye @beto luna"));
+  ok("chat: la mención crea un aviso", (await as(B, "authenticated", `select * from public.chat_notifications`)).length === 1);
+  ok("chat: el aviso es privado", (await as(A, "authenticated", `select * from public.chat_notifications`)).length === 0);
+  await as(B, "authenticated", `insert into public.chat_preferences (channel_id, viewing_at) values ($1, now()) on conflict (channel_id, user_id) do update set viewing_at = now()`, [canal]);
+  await as(A, "authenticated", ...msg(uuid(8), canal, ag, "otra vez @beto luna"));
+  ok("chat: si lo está viendo no se avisa", (await as(B, "authenticated", `select * from public.chat_notifications`)).length === 1);
+  await as(A, "authenticated", `insert into public.chat_reminders (channel_id, message_id, text, remind_at) values ($1,$2,'revisar',now() - interval '1 minute')`, [canal, uuid(7)]);
+  await as(B, "authenticated", `select public.chat_flush_due()`);
+  ok("chat: el recordatorio llega aunque lo dispare otro", (await as(A, "authenticated", `select title from public.chat_notifications`)).some((n) => n.title === "Recordatorio del chat"));
+  const bot = (await as(A, "authenticated", `select id from public.chat_bots limit 1`))[0].id;
+  const secreto = (await as(A, "authenticated", `select public.chat_configure_bot($1,'https://ejemplo.test/x',array['canal','boton']) s`, [bot]))[0].s;
+  await errs("chat: otro no configura el bot", () => as(B, "authenticated", `select public.chat_configure_bot($1,'https://mala.test',array['canal'])`, [bot]), "forbidden");
+  await errs("chat: no se lee el secreto", () => as(A, "authenticated", `select events_secret from public.chat_bots`), "permission");
+  const entrega = (await as(A, "authenticated", `select * from public.chat_bot_deliveries($1)`, [uuid(8)]))[0];
+  const { createHmac } = await import("node:crypto");
+  ok("chat: la firma es un HMAC-SHA256 verificable", entrega.signature === createHmac("sha256", secreto).update(entrega.payload).digest("hex"), entrega.signature);
+  await errs("chat: no se pide entrega de mensaje ajeno", () => as(B, "authenticated", `select * from public.chat_bot_deliveries($1)`, [uuid(8)]), "forbidden");
+  await errs("chat: anon no pide entregas", () => as(null, "anon", `select * from public.chat_bot_deliveries($1)`, [uuid(8)]), "permission");
+
   await as(B, "authenticated", `delete from public.chat_messages where id=$1`, [uuid(1)]);
   ok("chat: un editor no borra lo ajeno", (await as(A, "authenticated", `select * from public.chat_messages where id=$1`, [uuid(1)])).length === 1);
   await errs("chat: el canal general no se borra", async () => {

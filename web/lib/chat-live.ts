@@ -8,10 +8,12 @@ import {
   rowToChannel,
   rowToMessage,
   rowToReminder,
+  rowToNotification,
   rowToScheduled,
   unreadCount,
   type ChannelRow,
   type MessageRow,
+  type NotificationRow,
   type PreferenceRow,
   type ReactionRow,
   type ReminderRow,
@@ -35,13 +37,17 @@ export const useChatPresence = create<{
   hasOlder: Record<string, boolean>;
   /** Ya hay conexión con las tablas: se puede buscar y escribir en ellas. */
   ready: boolean;
+  /** La migración 0009 está aplicada: avisos, viendo y bots con eventos viven en el servidor. */
+  serverFeatures: boolean;
   /** Chat abierto en esta pestaña: lo que llega ahí ya se está viendo y no se avisa. */
   viewing: string | null;
-}>(() => ({ online: [], typing: {}, hasOlder: {}, ready: false, viewing: null }));
+}>(() => ({ online: [], typing: {}, hasOlder: {}, ready: false, serverFeatures: false, viewing: null }));
 
 export interface ChatBot {
   id: string;
   name: string;
+  events_url?: string | null;
+  events?: string[];
 }
 
 interface ChatState {
@@ -77,6 +83,10 @@ export interface ChatRemote {
   listBots: (channelId: string) => Promise<ChatBot[]>;
   createBot: (channelId: string, name: string) => Promise<string | null>;
   deleteBot: (id: string) => Promise<void>;
+  configureBot: (id: string, url: string, events: string[]) => Promise<string | null>;
+  pressButton: (messageId: string, buttonId: string) => Promise<string | null>;
+  markNotificationRead: (id: string) => void;
+  setViewing: (channelId: string, viewing: boolean) => void;
   deleteChannel: (id: string) => void;
   schedule: (q: ChatScheduledMessage) => void;
   cancelScheduled: (id: string) => void;
@@ -208,7 +218,7 @@ function subscribe(db: SupabaseClient, agencyId: string, me: string, input: Chat
         const watching = useChatPresence.getState().viewing === row.channel_id && document.visibilityState === "visible";
         return {
           // Personal: se queda en esta sesión y nunca entra al documento compartido.
-          ...(mentioned && !watching
+          ...(mentioned && !watching && !useChatPresence.getState().serverFeatures
             ? {
                 notifications: [
                   {
@@ -267,6 +277,10 @@ function subscribe(db: SupabaseClient, agencyId: string, me: string, input: Chat
     .on("postgres_changes", { event: "DELETE", schema: "public", table: "chat_channels" }, (e) => {
       const id = (e.old as { id?: string }).id;
       if (id) set((s) => ({ channels: s.channels.filter((c) => c.id !== id), messages: s.messages.filter((m) => m.channelId !== id) }));
+    })
+    .on("postgres_changes", { event: "INSERT", schema: "public", table: "chat_notifications", filter: `user_id=eq.${me}` }, (e) => {
+      const notification = rowToNotification(e.new as NotificationRow, CHAT_NOTIFICATION_PREFIX);
+      set((s) => (s.notifications.some((n) => n.id === notification.id) ? {} : { notifications: [notification, ...s.notifications] }));
     })
     .on("presence", { event: "sync" }, () => {
       useChatPresence.setState({ online: Object.keys(channel.presenceState()) });
@@ -336,6 +350,14 @@ async function connect(input: ChatLiveInput): Promise<boolean> {
     return false;
   }
 
+  const notices = await db.from("chat_notifications").select("*").is("read_at", null).order("created_at", { ascending: false }).limit(50);
+  if (!notices.error) {
+    useChatPresence.setState({ serverFeatures: true });
+    const rows = (notices.data ?? []) as NotificationRow[];
+    set((s) => ({
+      notifications: [...rows.map((r) => rowToNotification(r, CHAT_NOTIFICATION_PREFIX)), ...s.notifications.filter((n) => !n.id.startsWith(CHAT_NOTIFICATION_PREFIX))],
+    }));
+  }
   const reload = () => void load(db, agencyId, me, input);
   const channel = subscribe(db, agencyId, me, input, reload, () => void loadChannels(db, agencyId, me, input));
   // En orden: un mensaje o una lectura no pueden adelantarse a la creación de su canal.
@@ -352,7 +374,16 @@ async function connect(input: ChatLiveInput): Promise<boolean> {
   let lastTyping = 0;
 
   remote = {
-    sendMessage: (m) => void check(db.from("chat_messages").insert(messageToRow(m, agencyId, me))),
+    sendMessage: (m) => {
+      check(db.from("chat_messages").insert(messageToRow(m, agencyId, me)));
+      // Tras guardarlo: el servidor avisa a los bots del canal.
+      if (useChatPresence.getState().serverFeatures) {
+        // Sin esperar la respuesta: un bot lento no debe frenar los mensajes siguientes.
+        writes = writes.then(() => {
+          void fetch("/api/chat/events", { method: "POST", keepalive: true, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messageId: m.id }) }).catch(() => {});
+        });
+      }
+    },
     editMessage: (id, text) => void check(db.from("chat_messages").update({ text, edited_at: new Date().toISOString() }).eq("id", id)),
     deleteMessage: (id) => void check(db.from("chat_messages").delete().eq("id", id)),
     react: (messageId, emoji, on, who) =>
@@ -420,8 +451,11 @@ async function connect(input: ChatLiveInput): Promise<boolean> {
       });
     },
     listBots: async (channelId) => {
-      const { data } = await db.from("chat_bots").select("id, name").eq("channel_id", channelId);
-      return (data ?? []) as ChatBot[];
+      const { data } = await db
+        .from("chat_bots")
+        .select(useChatPresence.getState().serverFeatures ? "id, name, events_url, events" : "id, name")
+        .eq("channel_id", channelId);
+      return (data ?? []) as unknown as ChatBot[];
     },
     createBot: async (channelId, name) => {
       const { data, error } = await db.rpc("chat_create_bot", { target_channel: channelId, bot_name: name });
@@ -430,6 +464,26 @@ async function connect(input: ChatLiveInput): Promise<boolean> {
     deleteBot: async (id) => {
       const { error } = await db.from("chat_bots").delete().eq("id", id);
       if (error) failed();
+    },
+    configureBot: async (id, url, events) => {
+      const { data, error } = await db.rpc("chat_configure_bot", { target_bot: id, url, wanted: events });
+      return error ? null : (data as string);
+    },
+    pressButton: async (messageId, buttonId) => {
+      try {
+        const res = await fetch("/api/chat/events", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messageId, buttonId }) });
+        if (res.ok) return null;
+        return ((await res.json().catch(() => ({}))) as { error?: string }).error ?? "El bot no respondió";
+      } catch {
+        return "No pudimos enviar. Revisa tu conexión.";
+      }
+    },
+    markNotificationRead: (id) => {
+      check(db.from("chat_notifications").update({ read_at: new Date().toISOString() }).eq("id", id.slice(CHAT_NOTIFICATION_PREFIX.length)));
+    },
+    setViewing: (channelId, viewing) => {
+      if (!useChatPresence.getState().serverFeatures) return;
+      check(db.from("chat_preferences").upsert({ channel_id: channelId, user_id: me, viewing_at: viewing ? new Date().toISOString() : null }, { onConflict: "channel_id,user_id" }));
     },
     typing: (channelId) => {
       if (Date.now() - lastTyping < TYPING_SEND_MS) return;

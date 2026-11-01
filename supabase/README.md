@@ -23,6 +23,8 @@ Sin estas claves, Hubly corre en modo demo: datos locales y sin cuentas.
 
 Para que los mensajes programados salgan sin ninguna sesión abierta, activa la extensión `pg_cron` **antes** de ejecutar esa migración. Sin ella se envían cuando alguien de la agencia tiene la app abierta.
 
+`0009_chat_bots_y_avisos.sql` añade avisos persistentes, «viendo», y bots con eventos firmados y botones. Sin ella, el chat funciona y esas funciones quedan ocultas.
+
 ## Probar sin un proyecto de Supabase
 
 Corre el esquema en un Postgres local dentro de Node:

@@ -1,5 +1,5 @@
 import { timeLabel } from "@/lib/chat";
-import type { ChatAttachment, ChatChannel, ChatMessage, ChatReminder, ChatScheduledMessage } from "@/lib/types";
+import type { ChatAttachment, ChatChannel, ChatMessage, ChatReminder, ChatScheduledMessage, WorkspaceNotification } from "@/lib/types";
 
 export interface ChannelRow {
   id: string;
@@ -20,6 +20,7 @@ export interface MessageRow {
   agency_id: string;
   user_id: string;
   bot_id?: string | null;
+  buttons?: { id: string; texto: string; estilo?: string }[] | null;
   sender_name: string;
   sender_initials: string;
   sender_avatar: string | null;
@@ -85,6 +86,7 @@ export function rowToMessage(row: MessageRow, reactions: ReactionRow[] = []): Ch
     senderId: row.user_id,
     senderAvatar: row.sender_avatar ?? undefined,
     ...(row.bot_id ? { isBot: true } : {}),
+    ...(row.buttons?.length ? { botButtons: row.buttons } : {}),
     text: row.text,
     time: timeLabel(new Date(createdAt)),
     createdAt,
@@ -138,6 +140,43 @@ export function rowToChannel(row: ChannelRow, me: string, team: Person[], pref: 
     listPinned: pref?.pinned ?? false,
     hidden: pref?.hidden ?? false,
   };
+}
+
+export interface NotificationRow {
+  id: string;
+  message_id: string | null;
+  channel_id: string | null;
+  title: string;
+  body: string;
+  read_at: string | null;
+  created_at: string;
+}
+
+export function rowToNotification(row: NotificationRow, prefix: string): WorkspaceNotification {
+  return {
+    id: `${prefix}${row.id}`,
+    title: row.title,
+    body: row.body,
+    createdAt: row.created_at,
+    read: Boolean(row.read_at),
+    kind: "comentario",
+    ...(row.channel_id ? { actionUrl: `/chat?c=${encodeURIComponent(row.channel_id)}${row.message_id ? `&m=${encodeURIComponent(row.message_id)}` : ""}` } : {}),
+  };
+}
+
+/** Solo botones bien formados y como máximo cinco: los manda un sistema externo. */
+export function cleanButtons(raw: unknown): { id: string; texto: string; estilo: string }[] {
+  if (!Array.isArray(raw)) return [];
+  const seen = new Set<string>();
+  const out: { id: string; texto: string; estilo: string }[] = [];
+  for (const item of raw) {
+    const id = typeof item?.id === "string" ? item.id.trim().slice(0, 40) : "";
+    const texto = typeof item?.texto === "string" ? item.texto.trim().slice(0, 40) : "";
+    if (!/^[a-zA-Z0-9_.:-]+$/.test(id) || !texto || seen.has(id) || out.length >= 5) continue;
+    seen.add(id);
+    out.push({ id, texto, estilo: item.estilo === "principal" || item.estilo === "peligro" ? item.estilo : "normal" });
+  }
+  return out;
 }
 
 export const mentionsName = (text: string, name: string) =>

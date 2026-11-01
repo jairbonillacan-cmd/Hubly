@@ -14,6 +14,7 @@ const children = [
       NEXT_PUBLIC_SUPABASE_URL: `http://localhost:${mockPort}`,
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "clave-de-prueba",
       ANTHROPIC_API_KEY: "clave-de-prueba",
+      CHAT_BOTS_ALLOW_LOCAL: "1",
       ANTHROPIC_BASE_URL: `http://localhost:${mockPort}`,
     },
   }),

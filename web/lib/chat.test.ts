@@ -17,7 +17,8 @@ import {
   scheduleChoices,
   toggleReaction,
 } from "@/lib/chat";
-import { directKey, isMissingTable, rowToChannel, rowToMessage, unreadCount, type ChannelRow, type MessageRow } from "@/lib/chat-rows";
+import { cleanButtons, directKey, isMissingTable, rowToChannel, rowToMessage, unreadCount, type ChannelRow, type MessageRow } from "@/lib/chat-rows";
+import { isAllowedTarget, isPrivateAddress } from "@/lib/chat-bot-delivery";
 import type { ChatMessage } from "@/lib/types";
 
 const at = (iso: string) => new Date(`${iso}:00`).getTime();
@@ -164,4 +165,23 @@ test("distingue tablas ausentes de otros errores", () => {
   assert.equal(isMissingTable({ code: "42P01" }), true);
   assert.equal(isMissingTable({ code: "42501", message: "denied" }), false);
   assert.equal(isMissingTable(null), false);
+});
+
+test("los botones de un bot se limpian antes de guardarse", () => {
+  assert.deepEqual(cleanButtons([{ id: "si", texto: "Sí", estilo: "principal" }, { id: "si", texto: "otra" }, { id: "mal id", texto: "x" }, { id: "b" }, "x"]), [{ id: "si", texto: "Sí", estilo: "principal" }]);
+  assert.deepEqual(cleanButtons("nada"), []);
+  assert.equal(cleanButtons(Array.from({ length: 9 }, (_, i) => ({ id: `b${i}`, texto: "t" }))).length, 5);
+});
+
+test("un bot no puede alcanzar la red interna", async () => {
+  for (const ip of ["127.0.0.1", "10.0.0.8", "192.168.1.1", "172.16.0.1", "169.254.169.254", "100.64.0.1", "::1", "fd00::1", "fe80::1", "::ffff:10.0.0.1", "0.0.0.0"]) {
+    assert.equal(isPrivateAddress(ip), true, ip);
+  }
+  assert.equal(isPrivateAddress("8.8.8.8"), false);
+  assert.equal(await isAllowedTarget("http://8.8.8.8/x", false), false);
+  assert.equal(await isAllowedTarget("https://169.254.169.254/latest", false), false);
+  assert.equal(await isAllowedTarget("https://user:pw@8.8.8.8/", false), false);
+  assert.equal(await isAllowedTarget("http://localhost:1/x", false), false);
+  assert.equal(await isAllowedTarget("no es url", false), false);
+  assert.equal(await isAllowedTarget("https://8.8.8.8/x", false), true);
 });

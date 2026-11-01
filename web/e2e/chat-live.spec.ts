@@ -1,4 +1,6 @@
 import { expect, test, type Browser, type Page } from "@playwright/test";
+import { createHmac } from "node:crypto";
+import { createServer } from "node:http";
 
 // Dos personas en dos navegadores contra el Supabase simulado: `npm run dev:live` y
 // E2E_LIVE=1 E2E_PORT=3200 npx playwright test e2e/chat-live.spec.ts
@@ -37,6 +39,7 @@ async function enter(browser: Browser, email: string): Promise<Page> {
   return page;
 }
 
+const b2Row = (page: Page) => page.locator(".hubly-chat-msg", { hasText: "¿Lo apruebas?" });
 const open = (page: Page, name: string) => page.locator(".hubly-chat-item", { hasText: name }).click();
 const composer = (page: Page) => page.locator(".hubly-chat-panel .hubly-chat-input").last();
 
@@ -131,6 +134,39 @@ test("dos personas conversan en vivo y lo privado sigue privado", async ({ brows
   await expect(a.locator(".hubly-chat-msg").last()).toContainText("venta nueva");
   await expect(a.locator(".hubly-chat-msg").last()).toContainText("Bot");
   expect((await a.request.post(`${url}x`, { data: { text: "no" } })).status()).toBe(401);
+
+  // Bot con eventos firmados: recibe una mención y un clic, y contesta en el hilo con botones.
+  const received: { body: string; firma: string }[] = [];
+  const receiver = createServer((req, res) => {
+    let body = "";
+    req.on("data", (c) => (body += c));
+    req.on("end", () => {
+      received.push({ body, firma: String(req.headers["x-hubly-firma"]) });
+      res.end("ok");
+    });
+  });
+  await new Promise<void>((resolve) => receiver.listen(54403, resolve));
+  await a.locator(".hubly-chat-botevents summary").click();
+  await a.getByLabel("URL de eventos").fill("http://localhost:54403/eventos");
+  await a.getByRole("button", { name: "Guardar eventos" }).click();
+  const secret = await a.locator(".hubly-chat-botevents .hubly-chat-boturl-value").innerText();
+  await composer(a).fill("hola @Ventas");
+  await composer(a).press("Enter");
+  await expect.poll(() => received.length).toBe(1);
+  expect(JSON.parse(received[0].body).evento).toBe("mencion");
+  expect(received[0].firma).toBe(`sha256=${createHmac("sha256", secret).update(received[0].body).digest("hex")}`);
+  const parentId = JSON.parse(received[0].body).mensaje_id;
+
+  expect((await a.request.post(url, { data: { text: "¿Lo apruebas?", botones: [{ id: "si", texto: "Aprobar", estilo: "principal" }, { id: "mal id!", texto: "x" }] } })).status()).toBe(200);
+  const withButton = b2Row(a);
+  await expect(withButton.getByRole("button", { name: "Aprobar" })).toBeVisible();
+  await expect(withButton.locator(".hubly-chat-botbuttons button")).toHaveCount(1);
+  await withButton.getByRole("button", { name: "Aprobar" }).click();
+  await expect.poll(() => received.length).toBe(2);
+  expect(JSON.parse(received[1].body)).toMatchObject({ evento: "boton", boton_id: "si" });
+  expect((await a.request.post(url, { data: { text: "listo en hilo", responder_a: parentId } })).status()).toBe(200);
+  await expect(a.locator(".hubly-chat-msg", { hasText: "hola @Ventas" }).getByRole("button", { name: "1 respuesta" })).toBeVisible();
+  receiver.close();
   await a.getByRole("button", { name: "Cerrar detalles" }).click();
 
   // Mención sin leer para quien no está mirando.
@@ -142,9 +178,22 @@ test("dos personas conversan en vivo y lo privado sigue privado", async ({ brows
   await c.getByRole("button", { name: /notificaciones/i }).first().click();
   await expect(c.getByText("Ana Ruiz te mencionó")).toBeVisible();
   await c.keyboard.press("Escape");
+  // Persiste: al recargar, el aviso sigue ahí porque vive en el servidor.
+  await c.reload();
+  await c.getByRole("button", { name: /notificaciones/i }).first().click();
+  await expect(c.getByText("Ana Ruiz te mencionó")).toBeVisible();
+  await c.keyboard.press("Escape");
+  // Beto no está; Ana, que mira General, tampoco debe recibir aviso de su propio canal abierto.
+  await open(c, "General");
+  await c.waitForTimeout(500);
+  await composer(a).fill("sigo aquí @Carla Paz");
+  await composer(a).press("Enter");
+  await expect(c.locator(".hubly-chat-msg").last()).toContainText("sigo aquí");
+  await c.getByRole("button", { name: /notificaciones/i }).first().click();
+  await expect(c.getByText("Ana Ruiz te mencionó")).toHaveCount(1);
+  await c.keyboard.press("Escape");
 
   // Tarjeta de perfil.
-  await open(c, "General");
   await c.locator(".hubly-chat-msg-namebtn", { hasText: "Ana Ruiz" }).first().click();
   await expect(c.getByRole("menu", { name: "Perfil de Ana Ruiz" })).toContainText("En línea");
   await c.keyboard.press("Escape");
@@ -169,6 +218,7 @@ test("dos personas conversan en vivo y lo privado sigue privado", async ({ brows
     await composer(a).press("Enter");
   }
   await expect(a.locator(".hubly-chat-msg").last()).toContainText("relleno 54");
+  await a.waitForLoadState("networkidle");
   await a.reload();
   await open(a, "General");
   await expect(a.locator(".hubly-chat-msg").last()).toContainText("relleno 54");

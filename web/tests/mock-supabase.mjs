@@ -210,7 +210,7 @@ async function write(user, req, table, body, url, whereSql, params) {
 
 // Realtime mínimo: el protocolo Phoenix de Supabase, con RLS aplicada a cada suscriptor.
 const sockets = new Set();
-const PRIMARY = { chat_channels: ["id"], chat_messages: ["id"], chat_reactions: ["message_id", "user_id", "emoji"] };
+const PRIMARY = { chat_channels: ["id"], chat_messages: ["id"], chat_reactions: ["message_id", "user_id", "emoji"], chat_notifications: ["id"] };
 
 function frame(ws, joinRef, ref, topic, event, payload) {
   const out = ws.vsn2 ? JSON.stringify([joinRef, ref, topic, event, payload]) : JSON.stringify({ join_ref: joinRef, ref, topic, event, payload });
@@ -220,6 +220,12 @@ function frame(ws, joinRef, ref, topic, event, payload) {
 function emitChange(table, type, row) {
   const keys = PRIMARY[table];
   if (!keys) return;
+  // El disparador de avisos no pasa por REST: se publica aquí lo que haya creado.
+  if (table === "chat_messages" && type === "INSERT") {
+    db.query(`select * from public.chat_notifications where message_id = $1`, [row.id]).then((r) => {
+      for (const notice of r.rows) emitChange("chat_notifications", "INSERT", notice);
+    });
+  }
   const record = type === "DELETE" ? {} : row;
   // Como Supabase con RLS: un borrado solo trae la llave primaria.
   const old_record = type === "DELETE" ? Object.fromEntries(keys.map((k) => [k, row[k]])) : {};

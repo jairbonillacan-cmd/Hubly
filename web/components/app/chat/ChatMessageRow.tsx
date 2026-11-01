@@ -3,6 +3,7 @@
 import React, { useCallback, useState } from "react";
 import Link from "next/link";
 import { askConfirm } from "@/components/app/AppDialogHost";
+import { chatRemote } from "@/lib/chat-live";
 import { MORE_REACTIONS, QUICK_REACTIONS, messageSegments, messageTime, reminderChoices } from "@/lib/chat";
 import type { ChatMessage } from "@/lib/types";
 import {
@@ -147,6 +148,31 @@ function Attachment({ attachment: a }: { attachment: NonNullable<ChatMessage["at
     return <a href={a.href} className="hubly-chat-attachment" target="_blank" rel="noreferrer noopener" download={a.title}>{body}</a>;
   }
   return <Link href={a.href} className="hubly-chat-attachment">{body}</Link>;
+}
+
+function BotButtons({ messageId, buttons, onNotice }: { messageId: string; buttons: NonNullable<ChatMessage["botButtons"]>; onNotice: (text: string) => void }) {
+  const [busy, setBusy] = useState<string | null>(null);
+  const press = async (id: string) => {
+    setBusy(id);
+    const problem = await chatRemote()?.pressButton(messageId, id);
+    setBusy(null);
+    onNotice(problem ?? "Enviado al bot");
+  };
+  return (
+    <div className="hubly-chat-botbuttons">
+      {buttons.map((b) => (
+        <button
+          key={b.id}
+          type="button"
+          className={`hbtn hbtn-xs ${b.estilo === "peligro" ? "hbtn-danger" : b.estilo === "principal" ? "hbtn-primary" : "hbtn-secondary"}`}
+          disabled={busy !== null}
+          onClick={() => press(b.id)}
+        >
+          {busy === b.id ? "Enviando…" : b.texto}
+        </button>
+      ))}
+    </div>
+  );
 }
 
 export function ChatMessageRow({
@@ -294,6 +320,8 @@ export function ChatMessageRow({
         ) : null}
 
         {m.attachment ? <Attachment attachment={m.attachment} /> : null}
+
+        {m.botButtons?.length ? <BotButtons messageId={m.id} buttons={m.botButtons} onNotice={onNotice} /> : null}
 
         {reactions.length > 0 ? (
           <div className="hubly-chat-reactions">

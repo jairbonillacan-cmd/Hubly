@@ -491,6 +491,7 @@ export interface ChatMessage {
   senderId?: string;
   senderAvatar?: string;
   isBot?: boolean;
+  botButtons?: { id: string; texto: string; estilo?: string }[];
   text: string;
   time: string;
   /** Marca de tiempo en ms. Los mensajes de ejemplo no la tienen y cuentan como de hoy. */

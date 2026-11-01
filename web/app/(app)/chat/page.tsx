@@ -268,10 +268,21 @@ export default function ChatPage() {
     setQueueOpen(false);
   }, []);
 
+  // «Viendo»: mientras la pestaña esté visible, una mención aquí no genera aviso.
   useEffect(() => {
     useChatPresence.setState({ viewing: selectedId });
-    return () => useChatPresence.setState({ viewing: null });
-  }, [selectedId]);
+    if (!selectedId || !liveReady) return () => useChatPresence.setState({ viewing: null });
+    const beat = () => chatRemote()?.setViewing(selectedId, document.visibilityState === "visible");
+    beat();
+    const timer = window.setInterval(beat, 20_000);
+    document.addEventListener("visibilitychange", beat);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", beat);
+      chatRemote()?.setViewing(selectedId, false);
+      useChatPresence.setState({ viewing: null });
+    };
+  }, [selectedId, liveReady]);
 
   useEffect(() => {
     if (selectedId) markChatRead(selectedId);

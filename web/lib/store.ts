@@ -11,7 +11,7 @@ import {
 import { selectAccountRecommendations } from "./domain-selectors";
 import { localIsoDate } from "./date";
 import { nextOccurrence, toggleReaction } from "./chat";
-import { CHAT_NOTIFICATION_PREFIX, chatRemote, newChatId, startChatLive } from "./chat-live";
+import { CHAT_NOTIFICATION_PREFIX, chatRemote, newChatId, startChatLive, useChatPresence } from "./chat-live";
 import { moveInList } from "./use-kanban-drag";
 import { backendEnabled } from "./supabase/config";
 import { createAgent, duplicateAgent, isBlankAgent } from "./agents";
@@ -2013,6 +2013,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
   },
 
   markNotificationRead: (notificationId) => {
+    if (notificationId.startsWith(CHAT_NOTIFICATION_PREFIX) && useChatPresence.getState().serverFeatures) chatRemote()?.markNotificationRead(notificationId);
     set((s) => ({
       notifications: s.notifications.map((n) =>
         n.id === notificationId ? { ...n, read: true } : n
@@ -2213,9 +2214,15 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     if (dueMessages.length === 0 && dueReminders.length === 0) return;
     const remote = chatRemote();
     // Con tablas, el servidor envía cada uno una sola vez aunque haya varias sesiones abiertas.
-    if (remote && dueMessages.length > 0) remote.flushDue();
+    // Con la 0009, los recordatorios también los resuelve el servidor y llegan como aviso propio.
+    const serverReminders = Boolean(remote) && useChatPresence.getState().serverFeatures;
+    if (remote && (dueMessages.length > 0 || (serverReminders && dueReminders.length > 0))) remote.flushDue();
+    if (serverReminders && dueMessages.length === 0) {
+      set((s) => ({ chatReminders: (s.chatReminders || []).filter((r) => !dueReminders.some((d) => d.id === r.id)) }));
+      return;
+    }
     if (!remote) for (const q of dueMessages) get().sendChatMessage(q.channelId, q.text, q.sender, q.senderInitials);
-    for (const r of dueReminders) {
+    for (const r of serverReminders ? [] : dueReminders) {
       get().addNotification({
         title: "Recordatorio del chat",
         body: r.text,
@@ -2232,7 +2239,9 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
       }),
       chatReminders: (s.chatReminders || []).filter((r) => !remindedIds.has(r.id)),
     }));
-    if (remote) for (const r of dueReminders) remote.removeReminder(r.id);
+    if (remote) {
+      if (!serverReminders) for (const r of dueReminders) remote.removeReminder(r.id);
+    }
     else persistWorkspaceState(get());
   },
 
