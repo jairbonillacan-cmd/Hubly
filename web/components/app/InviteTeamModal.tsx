@@ -462,7 +462,7 @@ function DemoInviteTeamModal({
               gap: 10,
               fontSize: 12,
               lineHeight: 1.45,
-              color: "var(--hb-accent-edge)",
+              color: "var(--hb-accent-text)",
             }}
           >
             <Info

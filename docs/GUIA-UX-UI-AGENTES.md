@@ -99,7 +99,6 @@ Son defectos conocidos. Se corrigen al tocarlos y no se replican.
 | Filas con `style={{}}` larguísimos y hex sueltos | Todo `InicioView` | Clases con tokens ([§9](#9-componentes)) |
 | Celda del mes clicable sin rol ni teclado | `.hubly-cal-cell` | `button` o `role="button"` con `tabIndex` y `Enter` |
 | Modal sin `useLayer` | Modal del calendario | Usa `useLayer` ([§9.9](#99-modal)) |
-| `.hbtn-danger` pierde el rojo en modo oscuro | Regla `html.dark .hbtn` de `dashboard-polish.css` | Hasta corregirlo, el texto del botón debe decir la acción sin ambigüedad: «Eliminar marca» |
 
 ---
 

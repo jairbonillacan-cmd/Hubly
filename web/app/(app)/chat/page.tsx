@@ -220,8 +220,8 @@ export default function ChatPage() {
               display: "flex",
               alignItems: "center",
               gap: 8,
-              background: "#F4F5F8",
-              border: "1px solid #ECEEF4",
+              background: "var(--ui-muted)",
+              border: "1px solid var(--ui-border)",
               borderRadius: 999,
               padding: "9px 14px",
               boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
@@ -254,8 +254,8 @@ export default function ChatPage() {
               width: 38,
               height: 38,
               borderRadius: 999,
-              background: "#D1FAE5",
-              color: "#047857",
+              background: "var(--hubly-success-bg)",
+              color: "var(--tinta-exito)",
               border: "none",
               fontWeight: 700,
               fontSize: 13,
@@ -740,7 +740,7 @@ export default function ChatPage() {
                 display: "flex",
                 flexDirection: "column",
                 gap: 16,
-                background: "#FAFBFC",
+                background: "var(--ui-surface-2)",
               }}
             >
               {threadMessages.length === 0 ? (

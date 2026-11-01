@@ -224,7 +224,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
   const avatar = (task: AgencyTask) => (
     <span
       title={`Responsable: ${task.assigneeName || task.assignee}`}
-      style={{ width: 26, height: 26, flexShrink: 0, borderRadius: 999, background: "#DCEFF9", color: "var(--ui-accent-text)", fontSize: 11, fontWeight: 700, display: "grid", placeItems: "center" }}
+      style={{ width: 26, height: 26, flexShrink: 0, borderRadius: 999, background: "var(--ui-sky-soft)", color: "var(--ui-sky-text)", fontSize: 11, fontWeight: 700, display: "grid", placeItems: "center" }}
     >
       {task.assigneeInitial || (task.assigneeName || "?").slice(0, 1)}
     </span>
@@ -568,7 +568,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
               label: task.title,
               title: `${task.title} · ${task.assigneeName || task.assignee}`,
               bg: status === "done" ? "#F1F5F9" : status === "in_progress" ? "#FEF3C7" : "#E6F4FB",
-              color: status === "done" ? "var(--ui-text-3)" : status === "in_progress" ? "#92400E" : "var(--hb-accent-edge)",
+              color: status === "done" ? "var(--ui-text-3)" : status === "in_progress" ? "#92400E" : "var(--hb-accent-text)",
               strike: status === "done",
             };
           })}
