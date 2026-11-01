@@ -16,7 +16,7 @@ No apagues ni reinicies el servidor de desarrollo: el usuario ve los cambios en 
 
 ## Trabajo
 
-Antes de programar lee [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) y [docs/CODE_STANDARDS.md](docs/CODE_STANDARDS.md), y busca lo que ya exista. El plan vigente está en [docs/ROADMAP.md](docs/ROADMAP.md) y las decisiones en [docs/adr/](docs/adr/). Lo que esté en `docs/archivo/` es historia, no instrucciones.
+Antes de programar lee [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) y [docs/CODE_STANDARDS.md](docs/CODE_STANDARDS.md), y busca lo que ya exista. El plan vigente está en [docs/ROADMAP.md](docs/ROADMAP.md), la limpieza del código en [docs/deslop/](docs/deslop/README.md) y las decisiones en [docs/adr/](docs/adr/). Lo que esté en `docs/archivo/` es historia, no instrucciones.
 
 - Un solo agente escribe en cada dominio a la vez; sin ramas paralelas sobre los mismos archivos.
 - Cada PR tiene un solo objetivo, incluye evidencia de pruebas y dice qué no se comprobó.
