@@ -19,6 +19,7 @@ Partir archivos por tamaño no bastó: las secciones siguen acopladas por un obj
 - **CSS Modules o Tailwind en toda la app:** hay miles de líneas que migrar sin que cambie el problema real, que es no tener dueño ni tokens únicos.
 
 ## Consecuencias
-- `components/previews/` queda fuera de las metas de color y `style`, porque imita a otras apps.
+- `components/previews/` y `components/app/icons/` quedan fuera de las metas de tamaño, color y `style`, porque imitan a otras apps o son dibujos.
+- Los `<dominio>.css` se cargan en una lista fija en `(app)/layout.tsx`, para no depender del orden de los chunks de Next.
 - Durante F1 a F4 conviven ambas formas; `check:capas` y las bases impiden retroceder.
 - El guardado por fila y el modo demo se deciden aparte, porque su riesgo es de datos, no de orden.

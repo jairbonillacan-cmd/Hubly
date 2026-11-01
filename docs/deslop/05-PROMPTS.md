@@ -44,17 +44,23 @@ y di con claridad lo que no comprobaste.
 Coordinas el plan de deslop de Hubly. Lee docs/deslop/README.md y SEGUIMIENTO.md.
 
 Tu trabajo:
-1. Dime qué tareas se pueden iniciar ahora, según sus dependencias y sin solape de archivos.
-2. Prepara para cada una el prompt de docs/deslop/05-PROMPTS.md.
+1. Dime qué tareas se pueden iniciar ahora, según sus dependencias, las compuertas del README
+   y sin solape de archivos.
+2. Márcalas En curso en SEGUIMIENTO.md, y prepara para cada una el prompt de docs/deslop/05-PROMPTS.md.
 3. Cuando un agente entregue, revisa su PR antes de aceptarlo:
    - El diff coincide con la tarea y no tiene cambios ajenos.
    - El CI está en verde. Los tres checks: web, secretos y flujos-con-cuentas.
-   - No se debilitó ninguna prueba ni se subió ninguna base.
+   - No se debilitó ninguna prueba ni se subió ninguna base. Si una base cambió, el diff solo
+     muestra rutas movidas o cifras menores. No hay ui-ok ni eslint-disable nuevos sin motivo.
+   - store.contract.test.ts no cambió durante F1.
+   - La corrida visual se hizo con E2E_PORT y cita passed, failed y skipped.
    - Si cambió una captura, mira la imagen.
    - No confíes en el resumen: comprueba al menos una afirmación importante.
 4. Actualiza SEGUIMIENTO.md y decide si se fusiona o se devuelve.
 
-Lleva a mí solo las decisiones D1, D2 y D3, las migraciones y lo que cambie alcance.
+Si algo se rompe tras fusionar, aplica la sección «Si algo se rompe tras fusionar» de las reglas.
+Lleva a mí solo las decisiones D1 a D4, los puntos de control, las migraciones, los posibles daños
+a datos y lo que cambie alcance.
 No implementes tareas tú mismo.
 ```
 
@@ -66,7 +72,8 @@ No confíes en su descripción. Lee el diff.
 
 Busca, en este orden:
 1. Cambios de comportamiento en lo que debía ser un refactor.
-2. Reglas perdidas o invertidas al mover código, y efectos que cambiaron de orden.
+2. Reglas perdidas o invertidas al mover código, efectos que cambiaron de orden, y datos que
+   dejan de guardarse.
 3. Permisos o validación debilitados.
 4. Pruebas debilitadas, bases subidas o capturas actualizadas sin motivo.
 5. Duplicados de algo existente, o violaciones de docs/deslop/02-ARQUITECTURA-OBJETIVO.md.

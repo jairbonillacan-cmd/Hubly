@@ -1,6 +1,6 @@
 # Plan de deslop de Hubly
 
-Medido el 1 de noviembre de 2026 sobre `f96c42e`. Es el plan vigente para dejar de ser código vibecodeado. Lo ejecutan agentes, una tarea a la vez, y cada tarea termina en un PR.
+Medido el 1 de noviembre de 2026. Es el plan vigente para dejar de ser código vibecodeado. Lo ejecutan agentes, una tarea a la vez, y cada tarea termina en un PR.
 
 **Meta:** que cualquier persona o agente pueda cambiar una función tocando pocos archivos, entendiendo de dónde vienen sus datos, sin miedo a romper otra pantalla.
 
@@ -57,18 +57,22 @@ Ningún agente las decide. Si una tarea las necesita, se detiene y pregunta.
 | D1 | ¿Las cifras de ejemplo de `/anuncios` se quedan, o se quita la pantalla hasta tener backend? | F5-1 |
 | D2 | ¿Los logros y XP se implementan, se ocultan o se eliminan? | F5-2 |
 | D3 | ¿Se conserva un modo demo público, o solo el simulador para desarrollo? | F5-3 |
+| D4 | ¿`flujos-con-cuentas` pasa a ser obligatorio en `main`? Recomendado | F1 |
+
+## Compuertas entre fases
+
+Una fase no empieza sin la compuerta de la anterior. La revisa quien coordina, con evidencia.
+
+| Antes de | Debe cumplirse |
+|---|---|
+| **F1** | F0 hecha. `store.contract.test.ts` y `critico-live.spec.ts` pasan en CI. D4 respondida. Capturas estables en dos corridas seguidas |
+| **F2** | `store.ts` bajo 150 líneas. Contrato sin editar desde F0-5. Las medidas bajaron |
+| **F3** | F2-2 hecha |
+| **F5** | D1, D2 y D3 respondidas |
+| **F6** | `medir-deslop` en metas, salvo lo que F6 cierra. El dueño usó la app con su cuenta sin hallar regresiones |
+
+**Punto de control:** al terminar F1 y F3, el dueño prueba en `localhost:3000` con dos cuentas. Las pruebas no sustituyen este paso, porque trabajan con datos de prueba y no con los suyos.
 
 ## Definición de terminado de todo el plan
 
-Se cumple cuando [SEGUIMIENTO.md](SEGUIMIENTO.md) muestra todas las metas alcanzadas, medidas con `node scripts/medir-deslop.mjs` (lo crea F0-1):
-
-| Medida | Meta |
-|---|---|
-| `lib/store.ts` | Menos de 150 líneas, solo compone |
-| Archivos sobre 400 líneas, CSS incluido | 0, salvo excepciones escritas en un ADR |
-| Componentes que reciben `view` | 0 |
-| `style={{` | Menos de 150, solo valores dinámicos |
-| Deuda de `check:ui` | Menos de 100 |
-| `!important` en CSS de la app | Menos de 10 |
-| `eslint-disable` | Menos de 25, cada uno con motivo |
-| `as unknown as` | 2 o menos, con motivo |
+Se cumple cuando [SEGUIMIENTO.md](SEGUIMIENTO.md) muestra todas las metas alcanzadas, medidas con `node scripts/medir-deslop.mjs`, la auditoría F6-4 no deja hallazgos confirmados sin atender, y el dueño confirma su prueba. La tabla de metas está en [SEGUIMIENTO.md](SEGUIMIENTO.md).
