@@ -14,7 +14,7 @@ import { useModalPresence } from "@/lib/use-modal-presence";
 import { useLayer } from "@/lib/use-layer";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import { PhonePreview, type PhoneMedia } from "@/components/previews/phone/PhonePreview";
-import { CanvaIcon, DriveIcon, FacebookIcon, LinkedInIcon, TikTokIcon } from "@/components/previews/SocialIcons";
+import { GLYPHS } from "@/components/previews/NetworkMarks";
 import { formatBytes, mediaFileUrl, MAX_MEDIA_PER_POST, mediaKindFor, type MediaRecord } from "@/lib/media";
 import { hevcWarning, uploadMedia, type UploadHandle } from "@/lib/media-client";
 import { captionLevel, NETWORKS, networkFormatLabel, networkIssues, networkSpec } from "@/lib/network-catalog";
@@ -87,32 +87,7 @@ const TABS: { id: ComposerTab; label: string; Icon: typeof HublyImageIcon }[] = 
   { id: "actividad", label: "Actividad", Icon: HublyPulseIcon },
 ];
 
-function BrandMark({ d }: { d: string }) {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d={d} />
-    </svg>
-  );
-}
-
-export const GLYPHS: Record<SocialNetwork, React.ReactNode> = {
-  Instagram: (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="5" />
-      <circle cx="12" cy="12" r="4" />
-      <circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none" />
-    </svg>
-  ),
-  Facebook: <FacebookIcon size={17} />,
-  TikTok: <TikTokIcon size={17} />,
-  LinkedIn: <LinkedInIcon size={17} />,
-  YouTube: <BrandMark d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2C.5 9.1.5 12 .5 12s0 2.9.5 4.8a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-4.8.5-4.8s0-2.9-.5-4.8ZM9.8 15.5v-7l6 3.5-6 3.5Z" />,
-  X: <BrandMark d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />,
-  Threads: <BrandMark d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z" />,
-  Pinterest: <BrandMark d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z" />,
-  Reddit: <BrandMark d="M12 0a12 12 0 1 0 0 24 12 12 0 0 0 0-24Zm6.67 13.4c.03.2.05.41.05.62 0 3.15-3.67 5.7-8.2 5.7s-8.2-2.55-8.2-5.7c0-.21.02-.42.05-.62a1.75 1.75 0 1 1 1.93-2.86 10 10 0 0 1 5.4-1.71l1-4.74a.4.4 0 0 1 .48-.31l3.3.7a1.25 1.25 0 1 1-.14.66l-2.95-.63-.9 4.31a9.9 9.9 0 0 1 5.3 1.71 1.75 1.75 0 1 1 1.88 2.87ZM8.5 13.25a1.25 1.25 0 1 0 2.5 0 1.25 1.25 0 0 0-2.5 0Zm7 3.3a.33.33 0 0 0-.47-.46c-.72.72-2.32.78-3.03.78s-2.31-.06-3.03-.78a.33.33 0 1 0-.47.47c.92.91 2.66.98 3.5.98s2.58-.07 3.5-.99Zm-.25-2.05a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5Z" />,
-  "Google Business": <BrandMark d="M22 8.5 20.4 3H3.6L2 8.5a3.2 3.2 0 0 0 1 2.3V21h18V10.8a3.2 3.2 0 0 0 1-2.3ZM12 19H5v-7.2c.9 0 1.8-.4 2.5-1.1a3.4 3.4 0 0 0 4.5 0 3.4 3.4 0 0 0 4.5 0c.7.7 1.6 1.1 2.5 1.1V14h-5v5h-2Zm7 0h-3v-3h3v3Z" />,
-};
+export { GLYPHS };
 
 const FORMAT_LABEL: Record<PostFormat, string> = { Imagen: "Imagen", Carrusel: "Carrusel", "Reel / Video": "Video", Story: "Story", Texto: "Solo texto" };
 type PublishMode = "guardar" | "programar" | "publicar";
@@ -899,12 +874,14 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                       {media.length === 0 && <small>Archivos ya subidos de la marca</small>}
                     </button>
                     <button type="button" disabled title="Función prevista: aún no se conecta con Canva">
-                      <i><CanvaIcon size={18} /></i>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <i><img src="/logos/redes/canva.svg" width={24} height={24} alt="" /></i>
                       <strong>Traer de <b>Canva</b></strong>
                       {media.length === 0 && <small>Función prevista</small>}
                     </button>
                     <button type="button" disabled title="Función prevista: aún no se conecta con Drive">
-                      <i><DriveIcon size={18} /></i>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <i><img src="/logos/redes/google-drive.png" width={24} height={24} alt="" /></i>
                       <strong>Traer de <b>Drive</b></strong>
                       {media.length === 0 && <small>Función prevista</small>}
                     </button>

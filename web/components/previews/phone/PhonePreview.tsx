@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import {
   ArrowBigDown,
   ArrowBigUp,
@@ -30,6 +30,8 @@ import {
   Video,
 } from "lucide-react";
 import type { CoverKind } from "@/components/Cover";
+import { NetworkMark } from "@/components/previews/NetworkMarks";
+import { BookmarkIcon, CommentIcon, HeartIcon, ShareIcon, ThumbsUpIcon } from "@/components/previews/SocialIcons";
 import { feedCutIndex } from "@/lib/network-catalog";
 import type { PlatformSettings, PostFormat, SocialNetwork } from "@/lib/types";
 
@@ -68,7 +70,8 @@ export function PhoneFrame({ children, dark = false }: { children: ReactNode; da
     const host = hostRef.current;
     if (!host) return;
     const measure = () => {
-      const { width, height } = host.getBoundingClientRect();
+      // clientWidth ignora la animación de apertura: con el rectángulo real el teléfono nacía más chico.
+      const { clientWidth: width, clientHeight: height } = host;
       if (width > 0) setScale(Math.min(width / (WIDTH + 12), height > 0 ? height / (HEIGHT + 12) : 1, 1));
     };
     measure();
@@ -80,7 +83,7 @@ export function PhoneFrame({ children, dark = false }: { children: ReactNode; da
   return (
     <div ref={hostRef} className="hubly-phone-host">
       <div className="hubly-phone-scaled" style={{ width: (WIDTH + 12) * scale, height: (HEIGHT + 12) * scale }}>
-        <div className="hubly-phone" data-dark={dark || undefined} style={{ width: WIDTH + 12, height: HEIGHT + 12, transform: `scale(${scale})` }}>
+        <div className="hubly-phone" data-dark={dark || undefined} style={{ width: WIDTH + 12, height: HEIGHT + 12, transform: `scale(${scale})`, "--phone-scale": scale } as CSSProperties}>
           <i className="hubly-phone-btn is-action" />
           <i className="hubly-phone-btn is-up" />
           <i className="hubly-phone-btn is-down" />
@@ -113,6 +116,8 @@ function Avatar({ post, size = 36, ring }: { post: PhonePost; size?: number; rin
 
 function MediaView({ post, ratio, fit = "cover", rounded = 0 }: { post: PhonePost; ratio?: string; fit?: "cover" | "contain"; rounded?: number }) {
   const [index, setIndex] = useState(post.activeIndex ?? 0);
+  const [playing, setPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const items = post.media;
   const current = items[Math.min(index, Math.max(items.length - 1, 0))];
   const style = { aspectRatio: ratio, borderRadius: rounded };
@@ -127,7 +132,26 @@ function MediaView({ post, ratio, fit = "cover", rounded = 0 }: { post: PhonePos
   return (
     <div className="np-media" style={style}>
       {current.kind === "video" ? (
-        <video key={current.id} src={current.url} poster={current.poster} controls={!isImmersive(post)} autoPlay={isImmersive(post)} muted={isImmersive(post)} loop={isImmersive(post)} playsInline preload="metadata" style={{ objectFit: fit }} aria-label={current.name || "Video del post"} />
+        <>
+          {/* El teléfono no se mueve solo: el video queda en su portada hasta que lo tocas. */}
+          <video ref={videoRef} key={current.id} src={current.url ? `${current.url}#t=0.1` : undefined} poster={current.poster} playsInline preload="metadata" style={{ objectFit: fit }} aria-label={current.name || "Video del post"} onEnded={() => setPlaying(false)} />
+          <button
+            type="button"
+            className="np-play"
+            data-playing={playing || undefined}
+            aria-label={playing ? "Pausar video" : "Reproducir video"}
+            onClick={() => {
+              if (playing) {
+                videoRef.current?.pause();
+                setPlaying(false);
+              } else {
+                videoRef.current?.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+              }
+            }}
+          >
+            {!playing && <span><Play size={22} fill="currentColor" /></span>}
+          </button>
+        </>
       ) : (
         // Vista previa de un archivo privado: next/image no puede optimizar la URL firmada.
         // eslint-disable-next-line @next/next/no-img-element
@@ -135,10 +159,10 @@ function MediaView({ post, ratio, fit = "cover", rounded = 0 }: { post: PhonePos
       )}
       {items.length > 1 && (
         <>
-          <button type="button" className="np-nav is-prev" aria-label="Archivo anterior" disabled={index === 0} onClick={() => setIndex((i) => i - 1)}>
+          <button type="button" className="np-nav is-prev" aria-label="Archivo anterior" disabled={index === 0} onClick={() => { setPlaying(false); setIndex((i) => i - 1); }}>
             <ChevronLeft size={18} />
           </button>
-          <button type="button" className="np-nav is-next" aria-label="Archivo siguiente" disabled={index >= items.length - 1} onClick={() => setIndex((i) => i + 1)}>
+          <button type="button" className="np-nav is-next" aria-label="Archivo siguiente" disabled={index >= items.length - 1} onClick={() => { setPlaying(false); setIndex((i) => i + 1); }}>
             <ChevronRight size={18} />
           </button>
           <span className="np-count">{index + 1}/{items.length}</span>
@@ -175,7 +199,7 @@ function InstagramScreen({ post }: { post: PhonePost }) {
         <div className="np-story-bars" aria-hidden>{(post.media.length ? post.media : [{ id: "0" }]).map((m) => <i key={m.id} />)}</div>
         <div className="np-story-head"><Avatar post={post} size={30} /><b>{post.handle}</b><span>Ahora</span></div>
         <MediaView post={post} />
-        <div className="np-story-reply"><span>Enviar mensaje…</span><Heart size={22} /><Send size={22} /></div>
+        <div className="np-story-reply"><span>Enviar mensaje…</span><HeartIcon size={22} /><ShareIcon size={22} /></div>
       </div>
     );
   }
@@ -183,7 +207,7 @@ function InstagramScreen({ post }: { post: PhonePost }) {
     return (
       <div className="np-immersive">
         <MediaView post={post} />
-        <div className="np-rail"><Heart size={26} /><MessageCircle size={26} /><Send size={26} /><MoreHorizontal size={24} /></div>
+        <div className="np-rail"><HeartIcon size={26} /><CommentIcon size={26} /><ShareIcon size={26} /><MoreHorizontal size={24} /></div>
         <div className="np-reel-info"><span className="np-row"><Avatar post={post} size={30} /><b>{post.handle}</b></span><Caption post={post} className="np-caption is-light" /><span className="np-row"><Music2 size={13} /> Audio original</span></div>
       </div>
     );
@@ -191,10 +215,10 @@ function InstagramScreen({ post }: { post: PhonePost }) {
   const collaborators = post.settings?.collaborators ?? [];
   return (
     <div className="np-column">
-      <div className="np-ig-top"><strong>Instagram</strong><span className="np-row"><Heart size={22} /><Send size={22} /></span></div>
+      <div className="np-ig-top"><NetworkMark network="Instagram" size={26} minPx={29} /><span className="np-row"><HeartIcon size={22} /><ShareIcon size={22} /></span></div>
       <div className="np-post-head"><Avatar post={post} size={32} ring="#E4405F" /><div><b>{post.handle}{collaborators.length > 0 && ` y ${collaborators.length === 1 ? collaborators[0] : `${collaborators.length} más`}`}</b>{post.settings?.location && <small>{post.settings.location}</small>}</div><MoreHorizontal size={18} /></div>
       <MediaView post={post} ratio="4 / 5" />
-      <div className="np-actions"><Heart size={24} /><MessageCircle size={24} /><Send size={24} /><Bookmark size={24} style={{ marginLeft: "auto" }} /></div>
+      <div className="np-actions"><HeartIcon size={24} /><CommentIcon size={24} /><ShareIcon size={24} /><BookmarkIcon size={24} style={{ marginLeft: "auto" }} /></div>
       <Caption post={post} strongName={post.handle} />
       {post.settings?.firstComment && <p className="np-caption np-muted">Primer comentario: {post.settings.firstComment}</p>}
       <Bar><Home size={24} /><Search size={24} /><Plus size={24} /><Video size={24} /><User size={24} /></Bar>
@@ -205,11 +229,11 @@ function InstagramScreen({ post }: { post: PhonePost }) {
 function FacebookScreen({ post }: { post: PhonePost }) {
   return (
     <div className="np-column np-fb">
-      <div className="np-fb-top"><strong>facebook</strong><span className="np-row"><i><Plus size={16} /></i><i><Search size={16} /></i><i><MessageCircle size={16} /></i></span></div>
+      <div className="np-fb-top"><NetworkMark network="Facebook" size={30} minPx={16} /><span className="np-row"><i><Plus size={16} /></i><i><Search size={16} /></i><i><MessageCircle size={16} /></i></span></div>
       <div className="np-post-head"><Avatar post={post} size={38} /><div><b>{post.brandName}</b><small className="np-row">Ahora · <Globe size={11} /></small></div><MoreHorizontal size={18} /></div>
       <Caption post={post} />
       <MediaView post={post} ratio="1 / 1" />
-      <div className="np-fb-actions"><span><ThumbsUp size={17} /> Me gusta</span><span><MessageCircle size={17} /> Comentar</span><span><Share2 size={17} /> Compartir</span></div>
+      <div className="np-fb-actions"><span><ThumbsUpIcon size={17} /> Me gusta</span><span><CommentIcon size={17} variant="facebook" /> Comentar</span><span><ShareIcon size={17} variant="facebook" /> Compartir</span></div>
       <Bar color="#65676B"><Home size={23} color="#1877F2" /><Video size={23} /><User size={23} /><Bell size={23} /></Bar>
     </div>
   );
@@ -222,7 +246,7 @@ function TikTokScreen({ post }: { post: PhonePost }) {
       <div className="np-tt-tabs"><span>Siguiendo</span><b>Para ti</b></div>
       <div className="np-rail">
         <span className="np-tt-avatar"><Avatar post={post} size={42} /><i><Plus size={12} /></i></span>
-        <Heart size={30} fill="#fff" /><MessageCircle size={30} fill="#fff" /><Bookmark size={28} fill="#fff" /><Share2 size={28} />
+        <HeartIcon size={30} filled color="#fff" /><CommentIcon size={30} variant="tiktok" /><BookmarkIcon size={28} filled /><ShareIcon size={28} variant="tiktok" />
         <span className="np-tt-disc"><Music2 size={14} /></span>
       </div>
       <div className="np-reel-info"><b>@{post.handle}</b><Caption post={post} className="np-caption is-light" /><span className="np-row"><Music2 size={13} /> Sonido original</span></div>
@@ -257,7 +281,7 @@ function YouTubeScreen({ post }: { post: PhonePost }) {
   }
   return (
     <div className="np-column">
-      <div className="np-yt-top"><span className="np-yt-logo"><i />YouTube</span><span className="np-row"><Bell size={20} /><Search size={20} /></span></div>
+      <div className="np-yt-top"><span className="np-yt-logo"><NetworkMark network="YouTube" size={28} /></span><span className="np-row"><Bell size={20} /><Search size={20} /></span></div>
       <MediaView post={post} ratio="16 / 9" />
       <div className="np-post-head"><Avatar post={post} size={36} /><div><b>{title}</b><small>{post.brandName}</small></div></div>
     </div>
@@ -267,7 +291,7 @@ function YouTubeScreen({ post }: { post: PhonePost }) {
 function XScreen({ post }: { post: PhonePost }) {
   return (
     <div className="np-column np-x">
-      <div className="np-x-top"><Avatar post={post} size={28} /><strong>𝕏</strong><span /></div>
+      <div className="np-x-top"><Avatar post={post} size={28} /><NetworkMark network="X" size={22} /><span /></div>
       <div className="np-x-tweet">
         <Avatar post={post} size={40} />
         <div>
@@ -285,7 +309,7 @@ function XScreen({ post }: { post: PhonePost }) {
 function ThreadsScreen({ post }: { post: PhonePost }) {
   return (
     <div className="np-column np-th">
-      <div className="np-th-top">@</div>
+      <div className="np-th-top"><NetworkMark network="Threads" size={26} /></div>
       <div className="np-th-post">
         <div className="np-th-rail"><Avatar post={post} size={36} /><i /></div>
         <div>
@@ -303,7 +327,7 @@ function ThreadsScreen({ post }: { post: PhonePost }) {
 function PinterestScreen({ post }: { post: PhonePost }) {
   return (
     <div className="np-column np-pin">
-      <div className="np-pin-top">Pinterest</div>
+      <div className="np-pin-top"><NetworkMark network="Pinterest" size={26} /></div>
       <div className="np-pin-card">
         <MediaView post={post} rounded={24} ratio="3 / 4" />
         <span className="np-pin-save">Guardar</span>
@@ -322,7 +346,7 @@ function RedditScreen({ post }: { post: PhonePost }) {
   const community = post.settings?.subreddit ? post.settings.subreddit.replace(/^r\//, "") : "comunidad";
   return (
     <div className="np-column np-rd">
-      <div className="np-rd-top"><span className="np-rd-logo">reddit</span><Search size={20} /></div>
+      <div className="np-rd-top"><span className="np-rd-logo"><NetworkMark network="Reddit" size={28} /></span><Search size={20} /></div>
       <div className="np-rd-post">
         <p className="np-rd-meta"><b>r/{community}</b> · u/{post.handle}</p>
         {post.settings?.flair && <span className="np-rd-flair">{post.settings.flair}</span>}
