@@ -183,14 +183,6 @@
   "components/app/chat/ChatMessageRow.tsx": {
     "hbtn-directo": 2
   },
-  "components/app/dashboard/EquipoView.tsx": {
-    "color-fijo": 53,
-    "degradado": 1,
-    "emoji": 41,
-    "exclamacion": 1,
-    "rgb-fijo": 6,
-    "tamano-fuente": 3
-  },
   "components/app/dashboard/InicioView.tsx": {
     "color-fijo": 31,
     "exclamacion": 1,
@@ -208,6 +200,37 @@
   },
   "components/app/dashboard/SaludCuentasView.tsx": {
     "hbtn-directo": 16
+  },
+  "components/app/dashboard/team/EquipoCabecera.tsx": {
+    "color-fijo": 4,
+    "rgb-fijo": 3
+  },
+  "components/app/dashboard/team/EquipoCatalogo.tsx": {
+    "color-fijo": 2,
+    "rgb-fijo": 1
+  },
+  "components/app/dashboard/team/EquipoLogrosRanking.tsx": {
+    "color-fijo": 7,
+    "emoji": 3
+  },
+  "components/app/dashboard/team/EquipoMiembros.tsx": {
+    "color-fijo": 10,
+    "exclamacion": 1
+  },
+  "components/app/dashboard/team/EquipoProgreso.tsx": {
+    "color-fijo": 4,
+    "degradado": 1,
+    "tamano-fuente": 1
+  },
+  "components/app/dashboard/team/EquipoResumen.tsx": {
+    "color-fijo": 2,
+    "rgb-fijo": 1,
+    "tamano-fuente": 2
+  },
+  "components/app/dashboard/team/equipoView-shared.tsx": {
+    "color-fijo": 24,
+    "emoji": 38,
+    "rgb-fijo": 1
   },
   "components/app/media/MediaLibrary.tsx": {
     "color-fijo": 1,
