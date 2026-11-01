@@ -32,10 +32,8 @@ Revisado el 1 de noviembre de 2026 sobre el reporte de auditoría externo.
 | D-04 | P1 | Estado de sincronización en variables globales | `lib/live-workspace.ts` | 2 |
 | P-01 | P1 | No se publica en ninguna red | Sin motor ni cola | 3 |
 | P-02 | P1 | «Avisar al publicar» solo guarda la referencia | `lib/post-draft.ts`, compositor | 3 |
-| F-01 | P1 | `/ia` en demo solo repite plantillas | `app/(app)/ia/page.tsx` | 4 |
-| F-02 | P1 | `/anuncios` usa datos fijos | `SAMPLE_ADS` | 4 |
+| F-02 | P1 | `/anuncios` usa cifras de ejemplo, ya sin dibujos falsos | `SAMPLE_ADS` | 4 |
 | F-03 | P2 | Los logros y XP no se persisten en servidor | `EquipoView.tsx` | 4 |
-| F-04 | P2 | Cifras del dashboard de equipo ajustadas para parecerse a una captura | `domain-selectors.ts`, `EquipoView.tsx` | 5 |
 | C-01 | P2 | Archivos gigantes: `EquipoView` 3,195, `store` 2,303, `layout` 1,996, `InicioView` 1,784, `parrillas` 1,552, `PostComposerModal` 1,535 | `wc -l` | 5 |
 | C-03 | P2 | 13 usos de `as unknown as` y alias de tipos | `layout.tsx`, `lib/types.ts` | 5 |
 | C-04 | P2 | Deuda de UI congelada en 1,437 hallazgos | `scripts/check-ui-baseline.json` | 5 |

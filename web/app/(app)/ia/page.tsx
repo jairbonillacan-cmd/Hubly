@@ -36,7 +36,8 @@ function DemoHublyAIPage() {
   const activeBrand = brands.find((b) => b.id === activeBrandId) || brands[0];
 
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<{ id: string; replyBody: string }[]>([]);
+  const setAiDrawerOpen = useHublyStore((s) => s.setAiDrawerOpen);
+  const setAiDrawerPrompt = useHublyStore((s) => s.setAiDrawerPrompt);
 
   if (!activeBrand) return null;
 
@@ -44,15 +45,8 @@ function DemoHublyAIPage() {
     const clean = promptText.trim();
     if (!clean) return;
 
-    const personas = activeBrand.core.personas.map((p) => p.name).filter(Boolean);
-    const pillars = activeBrand.core.pillars.filter(Boolean);
-    const lines = [
-      `Tu mensaje: ${clean}`,
-      `Marca: ${activeBrand.name}`,
-      `Personas: ${personas.length ? personas.join(", ") : "sin personas definidas"}`,
-      `Pilares: ${pillars.length ? pillars.join(", ") : "sin pilares definidos"}`,
-    ];
-    setMessages((prev) => [{ id: `hb-msg-${Date.now()}`, replyBody: lines.join("\n") }, ...prev]);
+    setAiDrawerPrompt(clean);
+    setAiDrawerOpen(true);
     setInput("");
   };
 
@@ -179,46 +173,6 @@ function DemoHublyAIPage() {
           ))}
         </div>
 
-        {messages.length > 0 && (
-          <div
-            style={{
-              width: "100%",
-              maxWidth: 480,
-              display: "flex",
-              flexDirection: "column",
-              gap: 12,
-              marginTop: 8,
-            }}
-          >
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                style={{
-                  border: "1px solid var(--ui-border)",
-                  borderRadius: 14,
-                  padding: 16,
-                  background: "var(--ui-surface)",
-                }}
-              >
-                <div style={{ fontSize: 13.5, fontWeight: 600, color: "var(--ui-text)", marginBottom: 6 }}>
-                  Ejemplo de formato
-                </div>
-                <p
-                  style={{
-                    fontSize: 13,
-                    color: "var(--ui-text-2)",
-                    whiteSpace: "pre-line",
-                    lineHeight: 1.55,
-                    margin: 0,
-                    overflowWrap: "anywhere",
-                  }}
-                >
-                  {m.replyBody}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
 
       <form
