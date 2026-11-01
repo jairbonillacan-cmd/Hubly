@@ -1,918 +1,395 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useHublyStore } from "@/lib/store";
-import { backendEnabled } from "@/lib/supabase/config";
 import {
-  HublyAtIcon as AtSign,
-  HublyChatIcon as MessageSquarePlus,
-  HublyCheckIcon as CheckCheck,
-  HublyChevronDownIcon as ChevronDown,
-  HublyChevronRightIcon as ChevronRight,
-  HublyHashIcon as Hash,
-  HublyPaperclipIcon as Paperclip,
-  HublyPlusIcon as Plus,
-  HublySearchIcon as Search,
-  HublySendIcon as Send,
-  HublySmileIcon as Smile,
-  HublySparkIcon as Sparkles,
+  GENERAL_CHANNEL_ID,
+  SELF_CHANNEL_ID,
+  channelRoots,
+  continuesPrevious,
+  groupByDay,
+  initialsOf,
+  matchesQuery,
+  repliesOf,
+  replyCounts,
+} from "@/lib/chat";
+import { dueLabelFor, localIsoDate } from "@/lib/date";
+import type { ChatAttachment, ChatMessage } from "@/lib/types";
+import {
   HublyArrowLeftIcon,
+  HublyBellIcon,
+  HublyBellOffIcon,
+  HublyChatIcon,
+  HublyCloseIcon,
+  HublyPinIcon,
+  HublySearchIcon,
 } from "@/components/app/icons/DuotoneIcons";
+import { ChatSidebar, type ChatListItem } from "@/components/app/chat/ChatSidebar";
+import { ChatMessageRow } from "@/components/app/chat/ChatMessageRow";
+import { ChatComposer } from "@/components/app/chat/ChatComposer";
 
-interface LocalThreadMessage {
-  id: string;
-  targetId: string;
-  sender: string;
-  senderInitials: string;
-  senderBg: string;
-  senderColor: string;
-  text: string;
-  time: string;
+const MUTED_KEY = "hubly-chat-muted";
+const PINNED_KEY = "hubly-chat-pinned";
+
+function readIds(key: string): string[] {
+  try {
+    const raw = window.localStorage.getItem(key);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed.filter((v): v is string => typeof v === "string") : [];
+  } catch {
+    return [];
+  }
 }
 
-const INITIAL_LOCAL_MESSAGES: LocalThreadMessage[] = [
-  {
-    id: "m-min-1",
-    targetId: "ch-min",
-    sender: "Diego Morales",
-    senderInitials: "DM",
-    senderBg: "#EAF6FC",
-    senderColor: "var(--hb-accent)",
-    text: "Subimos los 3 cortes del taller en Guadalajara y la parrilla de noviembre para revisión.",
-    time: "10:42",
-  },
-  {
-    id: "m-min-2",
-    targetId: "ch-min",
-    sender: "Jair",
-    senderInitials: "JA",
-    senderBg: "#E6F4FB",
-    senderColor: "var(--hb-accent-edge)",
-    text: "Excelente, en cuanto Raúl apruebe el carrusel Goodyear welt programamos toda la semana.",
-    time: "11:05",
-  },
-  {
-    id: "m-jair-1",
-    targetId: "dm-jair",
-    sender: "Jair (tú)",
-    senderInitials: "J",
-    senderBg: "#E6F4FB",
-    senderColor: "var(--hb-accent-text)",
-    text: "Notas rápidas: conectar las redes y mandar el primer reporte mensual este viernes.",
-    time: "09:15",
-  },
-];
+function writeIds(key: string, ids: string[]) {
+  try {
+    window.localStorage.setItem(key, JSON.stringify(ids));
+  } catch {
+    /* Sin almacenamiento: el aviso se queda solo en esta sesión. */
+  }
+}
+
+function preview(m: ChatMessage | undefined): string {
+  if (!m) return "Sin mensajes";
+  if (m.text) return m.text;
+  return m.attachment ? m.attachment.title : "Sin mensajes";
+}
 
 export default function ChatPage() {
   const channels = useHublyStore((s) => s.channels);
-  const storeMessages = useHublyStore((s) => s.messages);
+  const messages = useHublyStore((s) => s.messages);
+  const brands = useHublyStore((s) => s.brands);
+  const activeBrandId = useHublyStore((s) => s.activeBrandId);
+  const profileName = useHublyStore((s) => s.profile?.name);
   const sendChatMessage = useHublyStore((s) => s.sendChatMessage);
+  const editChatMessage = useHublyStore((s) => s.editChatMessage);
+  const deleteChatMessage = useHublyStore((s) => s.deleteChatMessage);
+  const toggleChatReaction = useHublyStore((s) => s.toggleChatReaction);
+  const toggleChatPin = useHublyStore((s) => s.toggleChatPin);
+  const markChatRead = useHublyStore((s) => s.markChatRead);
+  const addTask = useHublyStore((s) => s.addTask);
 
-  // Default to null so initial render matches 04-chat-1440.png 1:1 ("Selecciona una conversación")
+  const myName = profileName || "Equipo";
+  const myInitials = initialsOf(myName);
+
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const myName = useHublyStore((st) => st.profile?.name) || "Equipo";
-  const brandLabel = useHublyStore((st) => st.brands.find((b) => b.id === st.activeBrandId)?.name) || "Marca";
-  const [dmOpen, setDmOpen] = useState(true);
-  const [minExpanded, setMinExpanded] = useState(false);
-  const [draft, setDraft] = useState("");
-  const [localMessages, setLocalMessages] = useState<LocalThreadMessage[]>(backendEnabled ? [] : INITIAL_LOCAL_MESSAGES);
+  const [listQuery, setListQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [channelQuery, setChannelQuery] = useState("");
+  const [threadId, setThreadId] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [focusId, setFocusId] = useState<string | null>(null);
+  const [muted, setMuted] = useState<string[]>([]);
+  const [pinnedChats, setPinnedChats] = useState<string[]>([]);
+  const endRef = useRef<HTMLDivElement>(null);
 
-  const minSubChannels = [
-    { id: "ch-min", name: "general", subtitle: `Canal principal · ${brandLabel}` },
-    { id: "ch-min-contenido", name: "contenido", subtitle: "Parrillas y entregables" },
-    { id: "ch-min-aprobaciones", name: "aprobaciones", subtitle: "Feedback de cliente" },
-  ];
+  useEffect(() => {
+    setMuted(readIds(MUTED_KEY));
+    setPinnedChats(readIds(PINNED_KEY));
+    const params = new URLSearchParams(window.location.search);
+    const channel = params.get("c");
+    if (channel) {
+      setSelectedId(channel);
+      setFocusId(params.get("m"));
+    }
+  }, []);
 
-  const activeMeta = useMemo(() => {
-    if (!selectedId) return null;
-    if (selectedId === "ch-general") {
-      return {
-        id: "ch-general",
-        title: "# General",
-        subtitle: "Canal general de la agencia · Sin mensajes aún",
-        badgeText: "#",
-        badgeBg: "#F1F5F9",
-        badgeColor: "#475569",
-      };
-    }
-    if (selectedId === "dm-jair") {
-      return {
-        id: "dm-jair",
-        title: `${myName} (tú)`,
-        subtitle: "Espacio personal · Notas, borradores y recordatorios",
-        badgeText: "J",
-        badgeBg: "#E6F4FB",
-        badgeColor: "var(--hb-accent-text)",
-      };
-    }
-    if (selectedId.startsWith("ch-min")) {
-      const sub = minSubChannels.find((c) => c.id === selectedId) || minSubChannels[0];
-      return {
-        id: selectedId,
-        title: `${brandLabel} · # ${sub.name}`,
-        subtitle: sub.subtitle,
-        badgeText: "M",
-        badgeBg: "var(--hb-accent)",
-        badgeColor: "#FFFFFF",
-      };
-    }
-    const found = channels.find((c) => c.id === selectedId);
-    if (found) {
-      return {
-        id: found.id,
-        title: found.name,
-        subtitle: found.type === "brand" ? "Canal de marca" : "Mensaje directo",
-        badgeText: found.type === "brand" ? "#" : found.name.slice(0, 1).toUpperCase(),
-        badgeBg: "#EAF6FC",
-        badgeColor: "var(--hb-accent)",
-      };
-    }
-    return null;
-  }, [selectedId, channels]);
+  useEffect(() => {
+    if (!notice) return;
+    const timer = window.setTimeout(() => setNotice(null), 3500);
+    return () => window.clearTimeout(timer);
+  }, [notice]);
 
-  const threadMessages = useMemo(() => {
-    if (!selectedId) return [];
-    const fromStore = storeMessages
-      .filter((m) => m.channelId === selectedId)
-      .map((m) => ({
-        id: m.id,
-        targetId: m.channelId,
-        sender: m.sender,
-        senderInitials: m.senderInitials,
-        senderBg: "#EAF6FC",
-        senderColor: "var(--hb-accent)",
-        text: m.text,
-        time: m.time,
-      }));
-    const fromLocal = localMessages.filter((m) => m.targetId === selectedId);
-    return [...fromLocal, ...fromStore];
-  }, [selectedId, storeMessages, localMessages]);
+  // Canales: los del espacio de trabajo más el general de la agencia y las notas propias.
+  const items = useMemo<ChatListItem[]>(() => {
+    const lastOf = (id: string) => channelRoots(messages, id).at(-1);
+    const base: ChatListItem[] = [
+      { id: GENERAL_CHANNEL_ID, name: "General", group: "agencia", preview: preview(lastOf(GENERAL_CHANNEL_ID)), unread: 0, muted: false, pinned: false, initials: "#" },
+      { id: SELF_CHANNEL_ID, name: `${myName} (tú)`, group: "directos", preview: preview(lastOf(SELF_CHANNEL_ID)), unread: 0, muted: false, pinned: false, initials: myInitials },
+    ];
+    const fromStore = channels.map<ChatListItem>((c) => ({
+      id: c.id,
+      name: c.name.replace(/^#\s*/, ""),
+      group: c.type === "brand" ? "marcas" : "directos",
+      preview: preview(lastOf(c.id)),
+      unread: c.unread,
+      muted: false,
+      pinned: false,
+      initials: initialsOf(c.name.replace(/\s*\(.*\)$/, "")),
+    }));
+    return [...base, ...fromStore].map((i) => ({ ...i, muted: muted.includes(i.id), pinned: pinnedChats.includes(i.id) }));
+  }, [channels, messages, muted, pinnedChats, myName, myInitials]);
 
-  const handleSend = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!draft.trim() || !selectedId) return;
-    const now = new Date();
-    const time = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+  const visibleItems = useMemo(() => {
+    const q = listQuery.trim();
+    if (!q) return items;
+    return items.filter(
+      (i) => matchesQuery({ text: i.name, sender: "" }, q) || messages.some((m) => m.channelId === i.id && matchesQuery(m, q))
+    );
+  }, [items, listQuery, messages]);
 
-    const isStoreChannel = channels.some((c) => c.id === selectedId);
-    if (isStoreChannel) {
-      sendChatMessage(selectedId, draft.trim(), myName, myName.slice(0, 2).toUpperCase());
-    } else {
-      setLocalMessages((prev) => [
-        ...prev,
-        {
-          id: `local-${Date.now()}`,
-          targetId: selectedId,
-          sender: myName,
-          senderInitials: "JA",
-          senderBg: "#E6F4FB",
-          senderColor: "var(--hb-accent-text)",
-          text: draft.trim(),
-          time,
-        },
-      ]);
+  const active = items.find((i) => i.id === selectedId) ?? null;
+  const isMuted = active ? muted.includes(active.id) : false;
+  const brandName = (id?: string) => brands.find((b) => b.id === id)?.name;
+
+  const roots = useMemo(() => (selectedId ? channelRoots(messages, selectedId) : []), [messages, selectedId]);
+  const counts = useMemo(() => replyCounts(messages), [messages]);
+  const shown = useMemo(() => roots.filter((m) => matchesQuery(m, channelQuery)), [roots, channelQuery]);
+  const days = useMemo(() => groupByDay(shown), [shown]);
+  const pinned = useMemo(() => roots.filter((m) => m.pinned), [roots]);
+  const threadRoot = threadId ? messages.find((m) => m.id === threadId) ?? null : null;
+  const replies = useMemo(() => (threadId ? repliesOf(messages, threadId) : []), [messages, threadId]);
+
+  const select = useCallback(
+    (id: string | null) => {
+      setSelectedId(id);
+      setThreadId(null);
+      setSearchOpen(false);
+      setChannelQuery("");
+      setFocusId(null);
+      if (id) markChatRead(id);
+    },
+    [markChatRead]
+  );
+
+  // Al abrir una liga a un mensaje, el canal queda leído y el mensaje se muestra.
+  useEffect(() => {
+    if (selectedId) markChatRead(selectedId);
+  }, [selectedId, markChatRead]);
+
+  useEffect(() => {
+    if (focusId) {
+      const el = document.getElementById(`msg-${focusId}`);
+      if (el) {
+        el.scrollIntoView({ block: "center" });
+        return;
+      }
     }
-    setDraft("");
+    if (!channelQuery) endRef.current?.scrollIntoView({ block: "end" });
+  }, [selectedId, roots.length, focusId, channelQuery]);
+
+  const toggleMuteOf = (id: string) => {
+    const was = muted.includes(id);
+    const next = was ? muted.filter((m) => m !== id) : [...muted, id];
+    setMuted(next);
+    writeIds(MUTED_KEY, next);
+    setNotice(was ? "Volverás a recibir avisos de este chat" : "Dejarás de recibir avisos de este chat");
   };
 
-  const q = searchQuery.trim().toLowerCase();
-  const showGeneral = !q || "general agencia".includes(q);
-  const showMin = !q || "min marcas general contenido aprobaciones".includes(q);
-  const showJair = !q || `${myName} tu mensajes directos`.toLowerCase().includes(q);
+  const togglePinOf = (id: string) => {
+    const next = pinnedChats.includes(id) ? pinnedChats.filter((p) => p !== id) : [...pinnedChats, id];
+    setPinnedChats(next);
+    writeIds(PINNED_KEY, next);
+  };
+
+  const toggleMute = () => {
+    if (active) toggleMuteOf(active.id);
+  };
+
+  const send = (text: string, attachment?: ChatAttachment, parentId?: string) => {
+    if (!selectedId) return;
+    sendChatMessage(selectedId, text, myName, myInitials, { parentId, attachment });
+  };
+
+  const createTask = (m: ChatMessage) => {
+    const channel = channels.find((c) => c.id === m.channelId);
+    const today = localIsoDate();
+    const title = (m.text || m.attachment?.title || "Tarea desde el chat").slice(0, 90);
+    addTask({
+      brandId: channel?.brandId ?? activeBrandId,
+      title,
+      description: m.text,
+      dueDate: today,
+      dueLabel: dueLabelFor(today, today),
+      assignee: myName,
+      listName: "Chat",
+      status: "pendiente",
+      priority: "Media",
+    });
+    setNotice("Tarea creada en Tareas");
+  };
+
+  const rowFor = (m: ChatMessage, prev: ChatMessage | undefined, inThread: boolean) => (
+    <ChatMessageRow
+      key={m.id}
+      message={m}
+      myName={myName}
+      compact={continuesPrevious(prev, m)}
+      replyCount={counts.get(m.id) ?? 0}
+      canReply={!inThread}
+      query={inThread ? "" : channelQuery}
+      highlighted={m.id === focusId}
+      onReply={() => setThreadId(m.id)}
+      onEdit={(text) => editChatMessage(m.id, text)}
+      onDelete={() => {
+        if (threadId === m.id) setThreadId(null);
+        deleteChatMessage(m.id);
+      }}
+      onPin={() => toggleChatPin(m.id)}
+      onReact={(emoji) => toggleChatReaction(m.id, emoji, myName)}
+      onCreateTask={() => createTask(m)}
+      onNotice={setNotice}
+    />
+  );
+
+  const subtitle = active
+    ? active.group === "marcas"
+      ? `Canal de ${brandName(channels.find((c) => c.id === active.id)?.brandId) ?? "la marca"}`
+      : active.id === SELF_CHANNEL_ID
+        ? "Notas, borradores y recordatorios"
+        : active.group === "agencia"
+          ? "Todo el equipo"
+          : "Mensaje directo"
+    : "";
 
   return (
-    <div
-      className="hubly-chat"
-      data-conversacion={selectedId ? "abierta" : "ninguna"}
-      style={{
-        display: "flex",
-        width: "100%",
-        background: "var(--ui-surface)",
-        borderRadius: 16,
-        border: "1px solid var(--ui-border)",
-        overflow: "hidden",
-      }}
-    >
-      {/* Left Sidebar Panel (280px matching 04-chat-1440.png) */}
-      <aside
-        className="hubly-chat-lista"
-        style={{
-          flexShrink: 0,
-          background: "var(--ui-surface)",
-          userSelect: "none",
-        }}
-      >
-        {/* Top Search & Online Avatar Row */}
-        <div
-          style={{
-            padding: "14px 14px 10px",
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-          }}
-        >
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              background: "var(--ui-muted)",
-              border: "1px solid var(--ui-border)",
-              borderRadius: 999,
-              padding: "9px 14px",
-              boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
-            }}
-          >
-            <Search size={14} style={{ color: "var(--ui-text-5)", flexShrink: 0 }} />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar en el chat"
-              style={{
-                border: "none",
-                background: "transparent",
-                outline: "none",
-                fontSize: 13,
-                color: "var(--ui-text-1)",
-                width: "100%",
-              }}
-            />
-          </div>
+    <div className="hubly-chat" data-conversacion={selectedId ? "abierta" : "ninguna"} data-hilo={threadRoot ? "abierto" : "cerrado"}>
+      <ChatSidebar items={visibleItems} selectedId={selectedId} query={listQuery} onQuery={setListQuery} onSelect={select} onTogglePin={togglePinOf} onToggleMute={toggleMuteOf} onMarkRead={markChatRead} />
 
-          {/* Online Avatar Button "J" matching 04-chat-1440.png */}
-          <button
-            type="button"
-            onClick={() => setSelectedId("dm-jair")}
-            title="Tu cuenta · En línea"
-            aria-label="Tu cuenta · en línea"
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: 999,
-              background: "var(--hubly-success-bg)",
-              color: "var(--tinta-exito)",
-              border: "none",
-              fontWeight: 700,
-              fontSize: 13,
-              display: "grid",
-              placeItems: "center",
-              position: "relative",
-              cursor: "pointer",
-              flexShrink: 0,
-            }}
-          >
-            J
-            <span
-              style={{
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                width: 10,
-                height: 10,
-                borderRadius: 999,
-                background: "#4ADE80",
-                border: "2px solid var(--ui-surface)",
-              }}
-            />
-          </button>
-        </div>
-
-        {/* Subheader: Chat title + New Chat '+' button */}
-        <div
-          style={{
-            padding: "4px 16px 8px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <span
-            style={{
-              fontSize: 17,
-              fontWeight: 700,
-              color: "var(--ui-text)",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Chat
-          </span>
-          <button
-            type="button"
-            onClick={() => setSelectedId("ch-general")}
-            title="Nueva conversación"
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 8,
-              background: "var(--ui-accent-soft)",
-              color: "var(--hb-accent-text)",
-              border: "none",
-              display: "grid",
-              placeItems: "center",
-              cursor: "pointer",
-            }}
-          >
-            <Plus size={15} strokeWidth={2.4} />
-          </button>
-        </div>
-
-        {/* Empty channels notice matching 04-chat-1440.png */}
-        <div
-          style={{
-            padding: "4px 22px 14px",
-            fontSize: 12,
-            color: "var(--ui-text-5)",
-            lineHeight: 1.45,
-            borderBottom: "1px solid var(--ui-muted)",
-          }}
-        >
-          Todavía no hay canales con conversación.
-        </div>
-
-        {/* Scrollable Navigation Sections */}
-        <div
-          style={{
-            flex: 1,
-            overflowY: "auto",
-            padding: "10px 10px 16px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 14,
-          }}
-        >
-          {/* Direct Messages Section (exact match to 04-chat-1440.png) */}
-          <div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "4px 8px",
-                marginBottom: 4,
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => setDmOpen(!dmOpen)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: "transparent",
-                  border: "none",
-                  padding: 0,
-                  cursor: "pointer",
-                  color: "var(--ui-text-2)",
-                  fontSize: 12.5,
-                  fontWeight: 600,
-                }}
-              >
-                {/* Speech bubbles mini icon */}
-                <MessageSquarePlus size={18} />
-                <span>Mensajes directos</span>
-                <span style={{ color: "var(--ui-text-5)", fontWeight: 500, fontSize: 12 }}>1</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setDmOpen(!dmOpen)}
-                aria-label="Cerrar Mensajes directos"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  color: "var(--ui-text-5)",
-                  cursor: "pointer",
-                  padding: 2,
-                  display: "grid",
-                  placeItems: "center",
-                }}
-              >
-                {dmOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-              </button>
-            </div>
-
-            {dmOpen && showJair && (
-              <button
-                type="button"
-                onClick={() => setSelectedId("dm-jair")}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "7px 10px",
-                  borderRadius: 10,
-                  border: "none",
-                  background: selectedId === "dm-jair" ? "var(--ui-accent-soft)" : "transparent",
-                  cursor: "pointer",
-                  textAlign: "left",
-                  transition: "background 0.15s ease",
-                }}
-              >
-                <span
-                  style={{
-                    width: 26,
-                    height: 26,
-                    borderRadius: 999,
-                    background: "#E6F4FB",
-                    color: "var(--ui-accent-text)",
-                    fontSize: 11.5,
-                    fontWeight: 700,
-                    display: "grid",
-                    placeItems: "center",
-                    position: "relative",
-                    flexShrink: 0,
-                  }}
-                >
-                  J
-                  <span
-                    style={{
-                      position: "absolute",
-                      bottom: -1,
-                      right: -1,
-                      width: 8,
-                      height: 8,
-                      borderRadius: 999,
-                      background: "#4ADE80",
-                      border: "1.5px solid var(--ui-surface)",
-                    }}
-                  />
-                </span>
-                <span style={{ fontSize: 13, color: "var(--ui-text-1)", fontWeight: 500 }}>
-                  {myName} <span style={{ color: "var(--ui-text-5)", fontWeight: 400 }}>(tú)</span>
-                </span>
-              </button>
-            )}
-          </div>
-
-          {/* AGENCIA Section */}
-          {showGeneral && (
-            <div>
-              <div
-                style={{
-                  fontSize: 10.5,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  color: "var(--ui-text-5)",
-                  padding: "2px 8px 6px",
-                }}
-              >
-                AGENCIA
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setSelectedId("ch-general")}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "8px 10px",
-                  borderRadius: 10,
-                  border: "none",
-                  background: selectedId === "ch-general" ? "var(--ui-accent-soft)" : "transparent",
-                  cursor: "pointer",
-                  textAlign: "left",
-                }}
-              >
-                <span style={{ display: "flex", alignItems: "center", gap: 9, minWidth: 0 }}>
-                  <span
-                    style={{
-                      width: 26,
-                      height: 26,
-                      borderRadius: 8,
-                      background: "var(--ui-muted)",
-                      color: "var(--ui-text-3)",
-                      display: "grid",
-                      placeItems: "center",
-                      flexShrink: 0,
-                    }}
-                  >
-                    <Hash size={14} />
-                  </span>
-                  <span style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-                    <span
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 600,
-                        color: selectedId === "ch-general" ? "var(--hb-accent-text)" : "var(--ui-text-1)",
-                      }}
-                    >
-                      # General
-                    </span>
-                    <span style={{ fontSize: 11, color: "var(--ui-text-5)" }}>Sin mensajes aún</span>
-                  </span>
-                </span>
-              </button>
-            </div>
-          )}
-
-          {/* MARCAS Section */}
-          {showMin && (
-            <div>
-              <div
-                style={{
-                  fontSize: 10.5,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  color: "var(--ui-text-5)",
-                  padding: "2px 8px 6px",
-                }}
-              >
-                MARCAS
-              </div>
-
-              {/* Collapsible Brand Group: Min (3 canales) */}
-              <button
-                type="button"
-                onClick={() => {
-                  setMinExpanded(!minExpanded);
-                  setSelectedId("ch-min");
-                }}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "8px 10px",
-                  borderRadius: 10,
-                  border: "none",
-                  background:
-                    selectedId?.startsWith("ch-min") && !minExpanded ? "var(--ui-accent-soft)" : "transparent",
-                  cursor: "pointer",
-                  textAlign: "left",
-                }}
-              >
-                <span style={{ display: "flex", alignItems: "center", gap: 9 }}>
-                  <span
-                    style={{
-                      width: 26,
-                      height: 26,
-                      borderRadius: 7,
-                      background: "var(--hb-accent)",
-                      color: "#FFFFFF",
-                      fontSize: 11.5,
-                      fontWeight: 700,
-                      display: "grid",
-                      placeItems: "center",
-                      flexShrink: 0,
-                    }}
-                  >
-                    M
-                  </span>
-                  <span style={{ display: "flex", flexDirection: "column" }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: "var(--ui-text-1)" }}>{brandLabel}</span>
-                    <span style={{ fontSize: 11, color: "var(--ui-text-5)" }}>3 canales</span>
-                  </span>
-                </span>
-                <span style={{ color: "var(--ui-text-5)" }}>
-                  {minExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                </span>
-              </button>
-
-              {minExpanded && (
-                <div
-                  style={{
-                    paddingLeft: 18,
-                    marginTop: 4,
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 2,
-                  }}
-                >
-                  {minSubChannels.map((sub) => {
-                    const isSubActive = selectedId === sub.id;
-                    return (
-                      <button
-                        key={sub.id}
-                        type="button"
-                        onClick={() => setSelectedId(sub.id)}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 7,
-                          padding: "6px 10px",
-                          borderRadius: 8,
-                          border: "none",
-                          background: isSubActive ? "var(--ui-accent-soft)" : "transparent",
-                          color: isSubActive ? "var(--hb-accent-text)" : "var(--ui-text-3)",
-                          fontWeight: isSubActive ? 600 : 500,
-                          fontSize: 12.5,
-                          cursor: "pointer",
-                          textAlign: "left",
-                        }}
-                      >
-                        <Hash size={13} />
-                        <span>{sub.name}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </aside>
-
-      {/* Right Main Area */}
-      <section
-        className="hubly-chat-panel"
-        style={{
-          flex: 1,
-          flexDirection: "column",
-          background: "var(--ui-surface)",
-          minWidth: 0,
-        }}
-      >
-        {!activeMeta ? (
-          /* Centered Empty State matching 04-chat-1440.png 1:1 */
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 32,
-              textAlign: "center",
-            }}
-          >
-            {/* Overlapping Speech Bubbles Illustration matching 04-chat-1440.png */}
-            <div style={{ marginBottom: 14 }}>
-              <MessageSquarePlus size={48} />
-            </div>
-
-            <h2
-              style={{
-                fontSize: 16,
-                fontWeight: 700,
-                color: "var(--ui-text-1)",
-                margin: "0 0 6px",
-                letterSpacing: "-0.01em",
-              }}
-            >
-              Selecciona una conversación
-            </h2>
-
-            <p
-              style={{
-                fontSize: 13,
-                color: "var(--ui-text-5)",
-                margin: 0,
-                maxWidth: 235,
-                lineHeight: 1.5,
-              }}
-            >
-              Elige un canal o mensaje directo para comenzar.
-            </p>
+      <section className="hubly-chat-panel" aria-label={active ? `Conversación ${active.name}` : "Conversación"}>
+        {!active ? (
+          <div className="hubly-chat-vacio">
+            <HublyChatIcon size={40} />
+            <h1 className="hubly-chat-vacio-title">Chat</h1>
+            <p>Elige un canal o un mensaje directo para empezar.</p>
           </div>
         ) : (
-          /* Active Conversation Thread */
           <>
-            {/* Thread Header */}
-            <header
-              style={{
-                padding: "14px 22px",
-                borderBottom: "1px solid var(--ui-border)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 11, minWidth: 0 }}>
+            <header className="hubly-chat-header">
+              <button type="button" className="hubly-cal-icon hubly-chat-volver" aria-label="Volver a conversaciones" title="Volver a conversaciones" onClick={() => select(null)}>
+                <HublyArrowLeftIcon size={17} />
+              </button>
+              <div className="hubly-chat-header-title">
+                <h1>{active.name}</h1>
+                <span>{subtitle}</span>
+              </div>
+              <div className="hubly-chat-header-actions">
                 <button
                   type="button"
-                  className="hubly-cal-icon hubly-chat-volver"
-                  aria-label="Volver a conversaciones"
-                  title="Volver a conversaciones"
-                  onClick={() => setSelectedId(null)}
-                >
-                  <HublyArrowLeftIcon size={17} />
-                </button>
-                <span
-                  style={{
-                    width: 34,
-                    height: 34,
-                    borderRadius: 10,
-                    background: activeMeta.badgeBg,
-                    color: activeMeta.badgeColor,
-                    fontWeight: 700,
-                    fontSize: 14,
-                    display: "grid",
-                    placeItems: "center",
-                    flexShrink: 0,
+                  className="hubly-cal-icon"
+                  aria-label="Buscar en este canal"
+                  title="Buscar en este canal"
+                  aria-pressed={searchOpen}
+                  onClick={() => {
+                    setSearchOpen((v) => !v);
+                    setChannelQuery("");
                   }}
                 >
-                  {activeMeta.badgeText}
-                </span>
-                <div>
-                  <div style={{ fontSize: 14.5, fontWeight: 700, color: "var(--ui-text)" }}>
-                    {activeMeta.title}
-                  </div>
-                  <div style={{ fontSize: 12, color: "var(--ui-text-5)" }}>{activeMeta.subtitle}</div>
-                </div>
+                  <HublySearchIcon size={17} />
+                </button>
+                <button
+                  type="button"
+                  className="hubly-cal-icon"
+                  aria-label={isMuted ? "Volver a avisarme aquí" : "Dejar de avisarme aquí"}
+                  title={isMuted ? "Volver a avisarme aquí" : "Dejar de avisarme aquí"}
+                  aria-pressed={isMuted}
+                  onClick={toggleMute}
+                >
+                  {isMuted ? <HublyBellOffIcon size={17} /> : <HublyBellIcon size={17} />}
+                </button>
               </div>
-
-              <button
-                type="button"
-                onClick={() => setSelectedId(null)}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: 8,
-                  border: "1px solid var(--ui-border)",
-                  background: "var(--ui-surface)",
-                  color: "var(--ui-text-4)",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                Cerrar vista
-              </button>
             </header>
 
-            {/* Messages Body */}
-            <div
-              style={{
-                flex: 1,
-                padding: "24px 26px",
-                overflowY: "auto",
-                display: "flex",
-                flexDirection: "column",
-                gap: 16,
-                background: "var(--ui-surface-2)",
-              }}
-            >
-              {threadMessages.length === 0 ? (
-                <div
-                  style={{
-                    margin: "auto",
-                    textAlign: "center",
-                    maxWidth: 320,
-                    padding: 24,
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 44,
-                      height: 44,
-                      borderRadius: 12,
-                      background: "var(--ui-accent-soft)",
-                      color: "var(--hb-accent-text)",
-                      display: "grid",
-                      placeItems: "center",
-                      margin: "0 auto 12px",
-                    }}
-                  >
-                    <MessageSquarePlus size={20} />
-                  </div>
-                  <div style={{ fontSize: 14.5, fontWeight: 700, color: "var(--ui-text)", marginBottom: 4 }}>
-                    Comienza la conversación en {activeMeta.title}
-                  </div>
-                  <div style={{ fontSize: 12.5, color: "var(--ui-text-5)", lineHeight: 1.5 }}>
-                    Sin mensajes aún. Escribe el primer mensaje abajo para coordinar con tu equipo.
-                  </div>
-                </div>
-              ) : (
-                threadMessages.map((m) => (
-                  <div
-                    key={m.id}
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 12,
-                    }}
-                  >
-                    <span
-                      style={{
-                        width: 34,
-                        height: 34,
-                        borderRadius: 999,
-                        background: m.senderBg,
-                        color: m.senderColor,
-                        fontSize: 12,
-                        fontWeight: 700,
-                        display: "grid",
-                        placeItems: "center",
-                        flexShrink: 0,
-                      }}
-                    >
-                      {m.senderInitials}
-                    </span>
-
-                    <div style={{ maxWidth: 620 }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                          marginBottom: 4,
-                        }}
-                      >
-                        <span style={{ fontSize: 13, fontWeight: 700, color: "var(--ui-text)" }}>
-                          {m.sender}
-                        </span>
-                        <span style={{ fontSize: 11, color: "var(--ui-text-5)" }}>{m.time}</span>
-                        <CheckCheck size={13} style={{ color: "var(--hb-accent-text)" }} />
-                      </div>
-                      <div
-                        style={{
-                          padding: "10px 14px",
-                          borderRadius: "4px 14px 14px 14px",
-                          background: "var(--ui-surface)",
-                          border: "1px solid var(--ui-border)",
-                          fontSize: 13.5,
-                          color: "var(--ui-text-1)",
-                          lineHeight: 1.5,
-                          boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
-                        }}
-                      >
-                        {m.text}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            {/* Composer Footer */}
-            <form
-              className="hubly-chat-form"
-              onSubmit={handleSend}
-              style={{
-                borderTop: "1px solid var(--ui-border)",
-                background: "var(--ui-surface)",
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-              }}
-            >
-              <div
-                style={{
-                  flex: 1,
-                  minWidth: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  background: "var(--ui-surface-2)",
-                  border: "1px solid var(--ui-border)",
-                  borderRadius: 12,
-                  padding: "9px 14px",
-                }}
-              >
-                <Paperclip size={16} style={{ color: "var(--ui-text-5)", cursor: "pointer" }} />
+            {searchOpen ? (
+              <div className="hubly-chat-findbar">
+                <HublySearchIcon size={15} />
                 <input
-                  type="text"
-                  value={draft}
-                  onChange={(e) => setDraft(e.target.value)}
-                  placeholder={`Escribe un mensaje en ${activeMeta.title}...`}
-                  style={{
-                    flex: 1,
-                    minWidth: 0,
-                    border: "none",
-                    background: "transparent",
-                    outline: "none",
-                    fontSize: 13.5,
-                    color: "var(--ui-text)",
+                  type="search"
+                  autoFocus
+                  value={channelQuery}
+                  placeholder="Buscar en este canal"
+                  aria-label="Buscar en este canal"
+                  onChange={(e) => setChannelQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") {
+                      setSearchOpen(false);
+                      setChannelQuery("");
+                    }
                   }}
                 />
-                <AtSign className="hubly-chat-extra" size={16} style={{ color: "var(--ui-text-5)", cursor: "pointer" }} />
-                <Smile className="hubly-chat-extra" size={16} style={{ color: "var(--ui-text-5)", cursor: "pointer" }} />
-                <Sparkles className="hubly-chat-extra" size={16} style={{ color: "var(--hb-accent-text)", cursor: "pointer" }} />
+                <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar búsqueda" onClick={() => { setSearchOpen(false); setChannelQuery(""); }}>
+                  <HublyCloseIcon size={14} />
+                </button>
               </div>
+            ) : null}
 
+            {pinned.length > 0 && !searchOpen ? (
               <button
-                type="submit"
-                aria-label="Enviar"
-                style={{
-                  flexShrink: 0,
-                  padding: "10px 16px",
-                  borderRadius: 10,
-                  border: "none",
-                  background: "var(--hb-accent)",
-                  color: "#FFFFFF",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  cursor: "pointer",
-                }}
+                type="button"
+                className="hubly-chat-pinbar"
+                onClick={() => document.getElementById(`msg-${pinned[pinned.length - 1].id}`)?.scrollIntoView({ block: "center" })}
               >
-                <Send size={14} />
-                <span className="hubly-chat-enviar">Enviar</span>
+                <HublyPinIcon size={14} />
+                <span className="hubly-chat-pinbar-text">{preview(pinned[pinned.length - 1])}</span>
+                <span className="hubly-chat-pinbar-count">{pinned.length === 1 ? "1 fijado" : `${pinned.length} fijados`}</span>
               </button>
-            </form>
+            ) : null}
+
+            <div className="hubly-chat-scroll">
+              {roots.length === 0 ? (
+                <div className="hubly-chat-vacio">
+                  <h2 className="hubly-chat-vacio-title">Sin mensajes</h2>
+                  <p>Escribe el primero para coordinar con tu equipo.</p>
+                </div>
+              ) : shown.length === 0 ? (
+                <div className="hubly-chat-vacio">
+                  <h2 className="hubly-chat-vacio-title">Sin resultados</h2>
+                  <p>Ningún mensaje coincide con «{channelQuery.trim()}».</p>
+                  <button type="button" className="hbtn hbtn-sm hbtn-secondary" onClick={() => setChannelQuery("")}>Limpiar búsqueda</button>
+                </div>
+              ) : (
+                days.map((day) => (
+                  <section key={day.day} className="hubly-chat-day" aria-label={day.label}>
+                    <h2 className="hubly-chat-day-label"><span>{day.label}</span></h2>
+                    {day.messages.map((m, i) => rowFor(m, day.messages[i - 1], false))}
+                  </section>
+                ))
+              )}
+              <div ref={endRef} />
+            </div>
+
+            {notice ? <div className="hubly-chat-notice" role="status">{notice}</div> : null}
+
+            <div className="hubly-chat-foot">
+              <ChatComposer
+                key={active.id}
+                label={`Mensaje en ${active.name}`}
+                placeholder={active.id === SELF_CHANNEL_ID ? "Anota algo…" : `Escribe en ${active.name}…`}
+                onSend={(text, attachment) => send(text, attachment)}
+              />
+            </div>
           </>
         )}
       </section>
+
+      {threadRoot ? (
+        <aside className="hubly-chat-hilo" aria-label="Hilo">
+          <header className="hubly-chat-hilo-head">
+            <h2>Hilo</h2>
+            <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar hilo" onClick={() => setThreadId(null)}>
+              <HublyCloseIcon size={14} />
+            </button>
+          </header>
+          <div className="hubly-chat-hilo-scroll">
+            {rowFor(threadRoot, undefined, true)}
+            {replies.length === 0 ? (
+              <p className="hubly-chat-hilo-vacio">Aún no hay respuestas.</p>
+            ) : (
+              <div className="hubly-chat-hilo-replies">
+                {replies.map((m, i) => rowFor(m, replies[i - 1], true))}
+              </div>
+            )}
+          </div>
+          <div className="hubly-chat-foot">
+            <ChatComposer
+              key={threadRoot.id}
+              label="Responder en el hilo"
+              placeholder="Responder en el hilo…"
+              onSend={(text, attachment) => send(text, attachment, threadRoot.id)}
+            />
+          </div>
+        </aside>
+      ) : null}
     </div>
   );
 }

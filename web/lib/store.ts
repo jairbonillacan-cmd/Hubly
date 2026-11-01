@@ -10,6 +10,7 @@ import {
 } from "./seed-data";
 import { selectAccountRecommendations } from "./domain-selectors";
 import { localIsoDate } from "./date";
+import { toggleReaction } from "./chat";
 import { moveInList } from "./use-kanban-drag";
 import { backendEnabled } from "./supabase/config";
 import { createAgent, duplicateAgent, isBlankAgent } from "./agents";
@@ -35,6 +36,7 @@ import type {
   AgencyInfo,
   AgencyTask,
   BrandCore,
+  ChatAttachment,
   BrandProject,
   BrandWorkspace,
   AutomationRule,
@@ -300,8 +302,15 @@ export interface HublyStoreState extends HublyWorkspaceData {
     channelId: string,
     text: string,
     sender?: string,
-    senderInitials?: string
+    senderInitials?: string,
+    options?: { parentId?: string; attachment?: ChatAttachment }
   ) => void;
+  editChatMessage: (messageId: string, text: string) => void;
+  /** Borra el mensaje y sus respuestas. */
+  deleteChatMessage: (messageId: string) => void;
+  toggleChatReaction: (messageId: string, emoji: string, who: string) => void;
+  toggleChatPin: (messageId: string) => void;
+  markChatRead: (channelId: string) => void;
 }
 
 const STATUS_TO_LABEL: Record<PostStatus, PostStatusLabel> = {
@@ -2054,25 +2063,62 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     persistWorkspaceState(get());
   },
 
-  sendChatMessage: (channelId, text, sender = "Jair Bonilla", senderInitials = "JB") => {
-    if (!text.trim()) return;
+  sendChatMessage: (channelId, text, sender = "Jair Bonilla", senderInitials = "JB", options) => {
+    const body = text.trim();
+    if (!body && !options?.attachment) return;
     const now = new Date();
-    const time = `${String(now.getHours()).padStart(2, "0")}:${String(
-      now.getMinutes()
-    ).padStart(2, "0")}`;
     set((s) => ({
       messages: [
         ...s.messages,
         {
-          id: `msg-${Date.now()}`,
+          id: `msg-${now.getTime()}-${s.messages.length}`,
           channelId,
           sender,
           senderInitials,
-          text: text.trim(),
-          time,
+          text: body,
+          time: `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`,
+          createdAt: now.getTime(),
+          ...(options?.parentId ? { parentId: options.parentId } : {}),
+          ...(options?.attachment ? { attachment: options.attachment } : {}),
         },
       ],
     }));
+    persistWorkspaceState(get());
+  },
+
+  editChatMessage: (messageId, text) => {
+    const body = text.trim();
+    if (!body) return;
+    set((s) => ({
+      messages: s.messages.map((m) => (m.id === messageId ? { ...m, text: body, editedAt: Date.now() } : m)),
+    }));
+    persistWorkspaceState(get());
+  },
+
+  deleteChatMessage: (messageId) => {
+    set((s) => ({ messages: s.messages.filter((m) => m.id !== messageId && m.parentId !== messageId) }));
+    persistWorkspaceState(get());
+  },
+
+  toggleChatReaction: (messageId, emoji, who) => {
+    set((s) => ({
+      messages: s.messages.map((m) =>
+        m.id === messageId ? { ...m, reactions: toggleReaction(m.reactions, emoji, who) } : m
+      ),
+    }));
+    persistWorkspaceState(get());
+  },
+
+  toggleChatPin: (messageId) => {
+    set((s) => ({
+      messages: s.messages.map((m) => (m.id === messageId ? { ...m, pinned: !m.pinned } : m)),
+    }));
+    persistWorkspaceState(get());
+  },
+
+  markChatRead: (channelId) => {
+    if (!get().channels.some((c) => c.id === channelId && c.unread > 0)) return;
+    set((s) => ({ channels: s.channels.map((c) => (c.id === channelId ? { ...c, unread: 0 } : c)) }));
     persistWorkspaceState(get());
   },
 

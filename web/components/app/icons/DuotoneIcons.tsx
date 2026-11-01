@@ -805,3 +805,28 @@ export const HublyLogOutIcon = createDuotoneIcon("HublyLogOutIcon", () => (
 export const HublyPlayIcon = createDuotoneIcon("HublyPlayIcon", () => (
   <path fill={STRONG} d="M7 4.6c0-1.3 1.4-2.1 2.5-1.4l11 7.4c1 .7 1 2.1 0 2.8l-11 7.4c-1.1.7-2.5-.1-2.5-1.4V4.6Z" />
 ));
+
+export const HublyBellOffIcon = createDuotoneIcon("HublyBellOffIcon", () => (
+  <>
+    <path
+      fill={SOFT}
+      d="M12 2.8a6.6 6.6 0 0 0-6.6 6.6c0 4.2-1.3 5.7-2 6.7a.9.9 0 0 0 .74 1.4h15.72a.9.9 0 0 0 .74-1.4c-.7-1-2-2.5-2-6.7A6.6 6.6 0 0 0 12 2.8Z"
+    />
+    <path fill={STRONG} d="M9.3 19.1a2.8 2.8 0 0 0 5.4 0H9.3Z" />
+    <path stroke={STRONG} strokeWidth="2.6" strokeLinecap="round" d="M4.2 4.2l15.6 15.6" />
+  </>
+));
+
+export const HublyMicIcon = createDuotoneIcon("HublyMicIcon", () => (
+  <>
+    <rect x="8.2" y="2.8" width="7.6" height="12.6" rx="3.8" fill={STRONG} />
+    <path fill={SOFT} d="M4.6 11.2a1.2 1.2 0 0 1 2.4 0 5 5 0 0 0 10 0 1.2 1.2 0 0 1 2.4 0 7.4 7.4 0 0 1-6.2 7.3V20.6a1.2 1.2 0 0 1-2.4 0v-2.1a7.4 7.4 0 0 1-6.2-7.3Z" />
+  </>
+));
+
+export const HublyReplyIcon = createDuotoneIcon("HublyReplyIcon", () => (
+  <>
+    <path fill={SOFT} d="M9.6 4.2v3.6c5.4 0 10.4 2.6 10.4 9.2 0 .8-.1 1.5-.3 2.2-1.6-3.5-4.8-5-10.1-5v3.6a.8.8 0 0 1-1.3.6L2.5 12.6a.8.8 0 0 1 0-1.2L8.3 3.6a.8.8 0 0 1 1.3.6Z" />
+    <path fill={STRONG} d="M8.3 3.6 2.5 11.4a.8.8 0 0 0 0 1.2l5.8 7.8a.8.8 0 0 0 1.3-.6v-3.6L5.5 12l4.1-4.2V4.2a.8.8 0 0 0-1.3-.6Z" />
+  </>
+));
