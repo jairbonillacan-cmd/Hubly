@@ -252,7 +252,7 @@ test.describe("Destinos del buscador", () => {
     { titulo: "Crear marca", dialogo: /^Nueva marca/ },
     { titulo: "Invitar al equipo", dialogo: /^Invitar miembro al equipo/ },
     { titulo: "Revisar sugerencias", dialogo: /^Sugerencias automáticas/ },
-    { titulo: "Configurar widgets", dialogo: /^Configurar widgets/ },
+    { titulo: "Configurar widgets", dialogo: /^Widgets/ },
     { titulo: "Pregúntale a Hubi", dialogo: "Hubi" },
   ];
 

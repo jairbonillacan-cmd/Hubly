@@ -553,7 +553,22 @@ export type DashboardWidgetId =
   | "aprobaciones"
   | "grafica_ads"
   | "ads_activos"
-  | "proyectos_criticos";
+  | "proyectos_criticos"
+  | "metrica"
+  | "posts"
+  | "feed"
+  | "semana"
+  | "mensajes"
+  | "actividad"
+  | "equipo";
+
+export type DashboardMetricId =
+  | "publicados"
+  | "programados"
+  | "aprobaciones"
+  | "gasto"
+  | "resultados"
+  | "ctr";
 
 export type DashboardWidgetSpan = 1 | 2 | 3;
 
@@ -566,6 +581,7 @@ export interface DashboardWidgetConfig {
   order: number;
   column: "left" | "right";
   span?: DashboardWidgetSpan;
+  metric?: DashboardMetricId;
 }
 
 export interface OnboardingProgress {

@@ -17,6 +17,7 @@ import type {
   TaskPriority,
 } from "@/lib/types";
 import { KraftNotebookCard } from "@/components/app/KraftNotebookCard";
+import { ExtraWidget, selectCriticalProjects } from "@/components/app/dashboard/ExtraWidgets";
 import { PendientesModal } from "@/components/app/dashboard/PendientesModal";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { HublyCatAvatar, HublySunWeatherIcon, HublyClipboardIcon, HublyNotebookIcon, HublyCalendarIcon, HublyBellIcon } from "@/components/app/icons/HublyIcons";
@@ -248,18 +249,7 @@ export function InicioView() {
     return ordered.filter((w) => w.visible);
   }, [dragOrder, sortedWidgets]);
 
-  const criticalProjects = useMemo(() => {
-    const statusWeight = { Revisión: 0, "En curso": 1, Completado: 2 } as const;
-    return projects
-      .filter((p) => p.status !== "Completado")
-      .sort(
-        (a, b) =>
-          statusWeight[a.status] - statusWeight[b.status] ||
-          a.dueDate.localeCompare(b.dueDate) ||
-          a.progress - b.progress
-      )
-      .slice(0, 5);
-  }, [projects]);
+  const criticalProjects = useMemo(() => selectCriticalProjects(projects), [projects]);
 
   useEffect(() => {
     if (!hiddenWidget) return;
@@ -304,6 +294,13 @@ export function InicioView() {
     } catch {
       setLayoutCopied(false);
     }
+  };
+
+  const handleCycleSpan = (id: DashboardWidgetId, span: DashboardWidgetSpan) => {
+    const grid = gridRef.current;
+    if (!grid) return;
+    const maxCols = getComputedStyle(grid).gridTemplateColumns.split(" ").length;
+    setWidgetSpan(id, (span >= maxCols ? 1 : span + 1) as DashboardWidgetSpan);
   };
 
   const handleResizeStart = (
@@ -1386,7 +1383,7 @@ export function InicioView() {
       }
 
       default:
-        return null;
+        return <ExtraWidget id={widgetId} />;
     }
   };
 
@@ -1495,6 +1492,9 @@ export function InicioView() {
                   {editWidgetsMode && (
                     <>
                       <div className="hubly-edit-controls">
+                        <button type="button" className="hubly-edit-btn is-width" onClick={() => handleCycleSpan(w.id, span)} aria-label={`Cambiar ancho de ${w.title}, ahora ${span} ${span === 1 ? "columna" : "columnas"}`} title="Cambiar ancho">
+                          {span}×
+                        </button>
                         <button type="button" className="hubly-edit-btn" onClick={() => moveWidget(w.id, "up")} aria-label={`Mover ${w.title} antes`} title="Mover antes">
                           <ArrowLeft size={13} />
                         </button>
