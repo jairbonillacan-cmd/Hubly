@@ -2,7 +2,7 @@
 
 Rama: `agente/glm-logica` (worktree `C:\Users\jairb\Desktop\Hubly-wt\glm-logica`, base `4bb99df`).
 Servidor propio: `localhost:3023`, quedó encendido. No se tocó el de 3000 ni los puertos 3002/3006/3007/3017/3022.
-Alcance del commit: solo `web/lib/{date,calculator,reporting,domain-selectors,notebook-content,network-catalog}.test.ts` (nuevos), `web/lib/{calculator,reporting}.ts` (arreglos mínimos) y este informe. El comando de propiedad del plan no imprimió nada.
+Alcance del commit: solo `web/lib/{date,calculator,reporting,domain-selectors,notebook-content,network-catalog}.test.ts` (nuevos), `web/lib/{calculator,reporting}.ts` (arreglos mínimos), `web/lib/store.test.ts` (nuevas, solo casos que pasan) y este informe. El comando de propiedad del plan no imprimió nada.
 
 ## Punto de partida (en `4bb99df`, antes de cambiar nada)
 
@@ -42,13 +42,17 @@ Prueba identificada por el síntoma: «las cuatro vistas comparten posts, filtro
 2. Recompilación forzada: se agregó un comentario temporal a `web/lib/date.ts` (archivo propio), el servidor recompiló, y se revirtió al estado commiteado; `/dashboard` siguió en 200.
 3. Mismo comando con `--repeat-each=10` → **10 pasaron (33.8s), 0 fallos**, exit 0.
 
-**Total: 30 corridas, 30 pasaron, 0 fallos.** No se encontró la causa (el síntoma «post duplicado» de 2/5 no reapareció) y, como indica el plan, la prueba no se tocó. Hipótesis etiquetada como tal (sin evidencia directa): la colisión de ids por milisegundo de E3 puede producir posts fantasma/duplicados ante creaciones muy rápidas; ver Cola.
+**Total: 30 corridas, 30 pasaron, 0 fallos.** No se encontró la causa en vivo y, como indica el plan, la prueba no se tocó.
+
+Explicación probable (reconstruida con historia git, no reproducida): el bloqueo de escrituras al workspace demo en las pruebas (`**/api/workspace**` responde sin llegar al servidor) lo introdujo el agente C en `3d4af19`, que **es ancestro de esta base** (`git merge-base --is-ancestor 3d4af19 4bb99df` → cierto; además es el último cambio de `calendario.spec.ts` antes de `4bb99df`). El «post duplicado 2 de 5» se reportó contra un estado anterior, cuando las corridas sí escribían los posts E2E en el workspace demo compartido del servidor, donde podían quedar residuos de corridas previas. Con la escritura bloqueada y cada contexto de navegador empezando limpio, ese mecanismo desaparece, lo que cuadra con las 30 corridas limpias. La colisión de ids por milisegundo de E3 sigue como segundo sospechoso para creaciones muy rápidas.
 
 ## E3 — Auditoría de `web/lib/store.ts` (solo lectura) ✅
 
 Revisadas las 2130 líneas. Hallazgos por gravedad (ninguno editado en `store.ts`):
 
-**ALTA — ids que pueden repetirse (demostrado con prueba, no commitada).** Las entidades usan `Date.now()` sin sufijo aleatorio: `post-` (savePost, línea 1130; duplicatePost, 1351), `task-` (addTask, 1501), `msg-` (sendChatMessage, 2063), `notif-` (2004), `asset-` (2019), `proj-` (2031), `list-` (1642 y 1655), `brand-` (713) y `tm-` (1780). Dos creaciones en el mismo milisegundo comparten id: borrar o actualizar uno toca todos; React recibe claves duplicadas. Repro sin trucos: dos `savePost` síncronos seguidos. Esperado: 2 ids únicos; obtenido: `new Set(ids).size === 1` (los dos posts con el mismo id). Igual para `addTask` y `sendChatMessage` — las tres pruebas de `store.test.ts` fallaron (3/3), así que el archivo **no se commitó** según lo instruido y el caso queda aquí. Curiosamente otras partes del mismo archivo ya evitan el problema con sufijo aleatorio (`createActivityItem` en 431, `withPostLog` en 366, `addNotebook` en 1674, la invitación en 1762) y `hubi-chats.ts:47` usa `crypto.randomUUID()`. Cambio exacto sugerido: helper `const freshId = (p: string) => \`${p}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}\`;` aplicado en los diez puntos anteriores.
+**ALTA — ids que pueden repetirse (demostrado con pruebas; los casos que fallan no se commitan).** Las entidades usan `Date.now()` sin sufijo aleatorio: `post-` (savePost, línea 1130; duplicatePost, 1351), `task-` (addTask, 1501), `msg-` (sendChatMessage, 2063), `lead-` (saveLead, 1218), `notif-` (2004), `asset-` (2019), `proj-` (2031), `list-` (1642 y 1655), `brand-` (713) y `tm-` (1780). Dos creaciones en el mismo milisegundo comparten id: borrar o actualizar uno toca todos; React recibe claves duplicadas. Repro sin trucos: dos `savePost` síncronos seguidos. Esperado: 2 ids únicos; obtenido: `new Set(ids).size === 1` (los dos posts con el mismo id). Igual para `addTask` y `sendChatMessage`. El mismo defecto apareció por sorpresa al probar leads: dos `saveLead` seguidos dieron a ambos leads el mismo `lead-…` y `deleteLead` borró los dos leads y las dos cotizaciones (esperado quedar `["Cotización de Dos"]`, obtenido `[]`); ese borrador fallido no se commitó y suma `lead-` a la lista. Curiosamente otras partes del mismo archivo ya evitan el problema con sufijo aleatorio (`createActivityItem` en 431, `withPostLog` en 366, `addNotebook` en 1674, la invitación en 1762) y `hubi-chats.ts:47` usa `crypto.randomUUID()`. Cambio exacto sugerido: helper `const freshId = (p: string) => \`${p}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}\`;` aplicado en los once puntos anteriores.
+
+`web/lib/store.test.ts` quedó commitado con los cuatro casos demostrables **que pasan** de la auditoría (guardar un post existente conserva id/comentarios y deja bitácora; `updateBrand` sincroniza redes y etiqueta de pauta; descartar recomendación dos veces no la duplica; alternar tarea con reloj de prueba fija `completedAt` y lo limpia al reabrir). Los casos que fallan por el defecto de ids (posts, tareas, mensajes y leads) no entraron al archivo: siguen documentados aquí y en la Cola.
 
 **MEDIA — actualizaciones perdidas en la carga inicial.** `syncFromServer` modo demo (líneas 592-611): si el GET del servidor tarda, todo lo que la persona cree durante esa ventana se descarta cuando llega la respuesta, porque `set({ ...normalizedServer, ... })` reemplaza el estado completo. Repro: `syncFromServer` con el GET pendiente + `savePost` antes de resolver → el post desaparece al resolver. Esperado: conservar lo creado local (fusión o descartar la respuesta si hubo escritura); obtenido: estado pisado.
 
@@ -69,7 +73,7 @@ Verificaciones que pasaron (sin prueba nueva que commitear): el lector `viewer` 
 | --- | --- |
 | `npm run check:ui` | `Chequeo de UI correcto. Deuda heredada sin empeorar: 1484 hallazgos.` (igual al punto de partida) |
 | `npx tsc --noEmit` | sin salida, 0 errores |
-| `npm test` | `ℹ tests 96 / ℹ pass 96 / ℹ fail 0` |
+| `npm test` | `ℹ tests 100 / ℹ pass 100 / ℹ fail 0` |
 | `npm run test:db` | `77 ok, 0 fallos` |
 | `npx playwright test` | `93 passed (2.5m)`, exit 0 |
 | `npm run build` | exit 0 (tabla de rutas completa; no chocó con el servidor del 3023, no hubo que apagarlo) |
@@ -79,14 +83,13 @@ Ningún fallo nuevo respecto al punto de partida.
 
 ## Lo no verificado
 
-- La causa del fallo histórico 2/5 de la prueba de calendario: no se reprodujo en 30 corridas y no se inventó.
 - Solo se corrieron las pruebas con el canal Chrome configurado por el proyecto; otros navegadores no se probaron.
-- El modo backend real (`backendEnabled`) queda sin ejercitar: la carpeta corre en modo demo (no se leyó `web/.env.local`).
+- El modo backend real (`backendEnabled`) no es ejercitable dentro de las reglas de esta tarea: se activa con credenciales que viven en `web/.env.local`, que no debo leer (regla 4), y no hay forma legítima de encenderlo sin ellas. La carpeta corre en modo demo.
 
 ## Cola
 
 1. **`app/(app)/chat/page.tsx:93` y `:508` — «Sin mensajes aún» fijo tras enviar mensajes.** El hilo (líneas 751-789) sí muestra lo enviado; los dos subtítulos son literales: en la línea 93 `subtitle: "Canal general de la agencia · Sin mensajes aún"` del encabezado de `ch-general`, y en la línea 508 el `<span>` del canal «# General» de la barra lateral. Repro: `/chat` → abrir «# General» → enviar un mensaje → el mensaje aparece en el hilo, pero el encabezado y la lista siguen diciendo «Sin mensajes aún». Cambio exacto (fuera de mi alcance, es pantalla): derivar ambos textos de `storeMessages.some((m) => m.channelId === "ch-general") || localMessages.some((m) => m.targetId === "ch-general")` y usar «Sin mensajes aún» solo cuando sea falso.
-2. **`web/lib/store.ts` — colisión de ids por `Date.now()` (ALTA).** Detalle, repro, esperado/obtenido y cambio exacto en E3. Con la prueba que lo demuestra lista para rescatar de este informe (3 pruebas que fallan: posts, tareas y mensajes creados en el mismo milisegundo comparten id).
+2. **`web/lib/store.ts` — colisión de ids por `Date.now()` (ALTA).** Detalle, repro, esperado/obtenido y cambio exacto en E3 (once puntos: posts, duplicados, tareas, mensajes, leads, notificaciones, assets, proyectos, listas, marcas y miembros). Las pruebas que lo demuestran no se commitan hasta arreglar el defecto; los cuatro casos que sí pasan están en `web/lib/store.test.ts`.
 3. **`web/lib/store.ts:592-611` — carrera de `syncFromServer` que pisa cambios locales (MEDIA).** Detalle en E3.
 4. **Hallazgos BAJA de `store.ts`** (invitación sin marca activa, evento de actividad atribuido a la marca activa cuando el post no existe, canales duplicados por slug repetido, `switchWorkspace` sin push al API): detalle en E3.
 5. **`web/lib/domain-selectors.ts:1446-1447` — `activeMember` `undefined` con lista de miembros vacía (INFO).** Requiere cambiar la firma de retorno; prohibido por la regla 7 de esta tarea.
