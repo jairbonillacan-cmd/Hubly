@@ -12,6 +12,7 @@ import { selectAccountRecommendations } from "./domain-selectors";
 import { localIsoDate } from "./date";
 import { moveInList } from "./use-kanban-drag";
 import { backendEnabled } from "./supabase/config";
+import { createAgent, duplicateAgent, isBlankAgent } from "./agents";
 import { currentAgencyId, loadLiveWorkspace, queueLiveSave } from "./live-workspace";
 import {
   buildReferenceFixtureWorkspace,
@@ -48,6 +49,7 @@ import type {
   DashboardWidgetSpan,
   HublyWorkspaceData,
   MediaAsset,
+  HublyAgent,
   NotebookItem,
   PeriodCommitmentSnapshot,
   PostExtrasPatch,
@@ -222,6 +224,12 @@ export interface HublyStoreState extends HublyWorkspaceData {
   renameTaskList: (brandId: string, oldName: string, newName: string) => void;
   deleteTaskList: (brandId: string, name: string) => void;
 
+  // Agent Actions
+  addAgent: () => HublyAgent;
+  updateAgent: (agentId: string, patch: Partial<HublyAgent>) => void;
+  duplicateAgent: (agentId: string) => HublyAgent | undefined;
+  deleteAgent: (agentId: string) => void;
+
   // Notebook Actions
   addNotebook: (input: {
     title: string;
@@ -319,6 +327,7 @@ function extractWorkspaceData(state: HublyStoreState): HublyWorkspaceData {
     leads: state.leads,
     quotes: state.quotes,
     automations: state.automations,
+    agents: state.agents,
     tasks: state.tasks,
     taskLists: state.taskLists,
     calendarActivities: state.calendarActivities,
@@ -1262,6 +1271,34 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
 
   removeAutomation: (ruleId) => {
     set((s) => ({ automations: (s.automations || []).filter((r) => r.id !== ruleId) }));
+    persistWorkspaceState(get());
+  },
+
+  addAgent: () => {
+    const blank = (get().agents || []).find(isBlankAgent);
+    if (blank) return blank;
+    const created = createAgent();
+    set((s) => ({ agents: [created, ...(s.agents || [])] }));
+    persistWorkspaceState(get());
+    return created;
+  },
+
+  updateAgent: (agentId, patch) => {
+    set((s) => ({ agents: (s.agents || []).map((a) => (a.id === agentId ? { ...a, ...patch } : a)) }));
+    persistWorkspaceState(get());
+  },
+
+  duplicateAgent: (agentId) => {
+    const source = (get().agents || []).find((a) => a.id === agentId);
+    if (!source) return undefined;
+    const copy = duplicateAgent(source);
+    set((s) => ({ agents: [copy, ...(s.agents || [])] }));
+    persistWorkspaceState(get());
+    return copy;
+  },
+
+  deleteAgent: (agentId) => {
+    set((s) => ({ agents: (s.agents || []).filter((a) => a.id !== agentId) }));
     persistWorkspaceState(get());
   },
 

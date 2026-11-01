@@ -431,6 +431,7 @@ export function normalizeWorkspacePayload(
     leads: Array.isArray(sanitized.leads) ? sanitized.leads : [],
     quotes: Array.isArray(sanitized.quotes) ? sanitized.quotes : [],
     automations: Array.isArray(sanitized.automations) ? sanitized.automations : [],
+    agents: Array.isArray(sanitized.agents) ? sanitized.agents : [],
     tasks,
     taskLists: Array.isArray(sanitized.taskLists) ? sanitized.taskLists : [],
     calendarActivities: Array.isArray(sanitized.calendarActivities) ? sanitized.calendarActivities : [],

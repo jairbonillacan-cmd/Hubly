@@ -136,7 +136,7 @@ export function DescubreHublyWidget() {
 
   return (
     <>
-      {!onboarding.dismissed && !anyModalOpen && (
+      {!onboarding.dismissed && !anyModalOpen && !(isMobile && pathname.startsWith("/agentes")) && (
         <aside
           data-mision-pildora
           data-desplegado={minimized ? undefined : ""}
