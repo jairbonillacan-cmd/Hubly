@@ -350,5 +350,25 @@ ok("otra agencia intacta", (await db.query(`select version from public.agency_wo
     if (r.length === 0) throw new Error("row-level: sin filas");
   }, "row-level");
 }
+// --- Motor de publicación (docs/publicacion/ESPECIFICACION.md) ---
+{
+  const ag = (await as(A, "authenticated", `select public.create_agency('Motor') id`))[0].id;
+  const cuenta = (await db.query(`insert into public.social_accounts (agency_id, brand_id, network, external_id) values ($1,'m','instagram','ig-1') returning id`, [ag])).rows[0].id;
+  await db.query(`insert into public.social_account_secrets (account_id, encrypted_token) values ($1,'x')`, [cuenta]);
+  await db.query(`insert into public.publish_jobs (agency_id, account_id, post_id, run_at) values ($1,$2,'p1', now() - interval '1 minute')`, [ag, cuenta]);
+  await errs("motor: un post no se encola dos veces", () => db.query(`insert into public.publish_jobs (agency_id, account_id, post_id, run_at) values ($1,$2,'p1', now())`, [ag, cuenta]), "unique");
+  await errs("motor: nadie lee los tokens", () => as(A, "authenticated", `select * from public.social_account_secrets`), "permission");
+  await errs("motor: un miembro no reserva trabajos", () => as(A, "authenticated", `select * from public.claim_publish_jobs()`), "permission");
+  await errs("motor: un miembro no escribe en la cola", () => as(A, "authenticated", `update public.publish_jobs set status = 'published'`), "permission");
+  ok("motor: el dueño ve su cola", (await as(A, "authenticated", `select id from public.publish_jobs where agency_id = $1`, [ag])).length === 1);
+  ok("motor: otra agencia no ve la cola", (await as(B, "authenticated", `select id from public.publish_jobs where agency_id = $1`, [ag])).length === 0);
+  ok("motor: se reserva una vez", (await db.query(`select * from public.claim_publish_jobs()`)).rows.length === 1);
+  ok("motor: no se reserva dos veces", (await db.query(`select * from public.claim_publish_jobs()`)).rows.length === 0);
+  await db.query(`update public.publish_jobs set locked_at = now() - interval '1 hour'`);
+  ok("motor: lo atascado no se repite", (await db.query(`select public.expire_stuck_publish_jobs() n`)).rows[0].n === 1 && (await db.query(`select status from public.publish_jobs where post_id = 'p1'`)).rows[0].status === "unconfirmed");
+  await db.query(`insert into public.publish_jobs (agency_id, account_id, post_id, run_at) values ($1,$2,'p2', now() - interval '1 minute')`, [ag, cuenta]);
+  await db.query(`update public.social_accounts set needs_reconnect = true where id = $1`, [cuenta]);
+  ok("motor: un canal por reconectar no publica", (await db.query(`select * from public.claim_publish_jobs()`)).rows.length === 0);
+}
 console.log(`\n${pass} ok, ${fail} fallos`);
 process.exit(fail ? 1 : 0);
