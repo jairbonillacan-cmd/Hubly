@@ -250,7 +250,7 @@ test.describe("Destinos del buscador", () => {
   const ACCIONES: Array<{ titulo: string; dialogo?: RegExp | string }> = [
     { titulo: "Crear o programar post" },
     { titulo: "Crear marca", dialogo: /^Nueva marca/ },
-    { titulo: "Invitar al equipo", dialogo: /^Invitar miembro al equipo/ },
+    { titulo: "Invitar al equipo", dialogo: /^Invitar a la agencia/ },
     { titulo: "Revisar sugerencias", dialogo: /^Sugerencias automáticas/ },
     { titulo: "Configurar widgets", dialogo: /^Configurar widgets/ },
     { titulo: "Pregúntale a Hubi", dialogo: "Hubi" },

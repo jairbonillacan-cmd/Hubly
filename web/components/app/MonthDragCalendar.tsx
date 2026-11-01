@@ -109,7 +109,7 @@ export function MonthDragCalendar({
                     flexDirection: "column",
                     gap: 4,
                     minWidth: 0,
-                    background: drag?.overCol === key ? "var(--ui-accent-soft)" : inMonth ? "var(--ui-surface)" : "#FAFBFC",
+                    background: drag?.overCol === key ? "var(--ui-accent-soft)" : inMonth ? "var(--ui-surface)" : "var(--ui-surface-2)",
                     boxShadow: drag?.overCol === key ? "inset 0 0 0 1.5px var(--hb-accent)" : undefined,
                   }}
                 >

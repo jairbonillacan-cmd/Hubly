@@ -1001,7 +1001,7 @@ html.theme-switching, html.theme-switching *, html.theme-switching ::before, htm
   .hubly-app-root.hb-app-root .hubly-sidebar.hb-sidebar { overflow-y: auto; }
 }
 .hubly-app-root .hubly-hubi-composer input, .hubly-app-root .hubly-hubi-composer input:focus { outline: none !important; box-shadow: none !important; }
-html.dark .hubly-task-group { border-color: #2B3E50; }
+html.dark .hubly-task-group { border-color: var(--ui-border); }
 html.dark .hubly-cal-date.is-today { border-color: transparent; background: var(--hb-accent); color: rgba(255, 255, 255, 0.85); }
 html.dark .hubly-app-root [style*="rgba(226, 232, 240"] { border-color: #3A5064 !important; }
 
@@ -1185,7 +1185,7 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 .hubly-cal-field > span { color: var(--ui-text-4); font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
 .hubly-cal-field > small { color: var(--ui-text-4); font-size: 11.5px; }
 .hubly-cal-line { width: 100%; height: 40px; padding: 0 13px; border: 1px solid #D6DFE7; border-radius: 10px; outline: none; background: #FFFFFF; color: #111C27; font-size: 13.5px; transition: border-color 150ms ease, box-shadow 150ms ease; }
-.hubly-cal-line::placeholder { color: #C3CFDA; }
+.hubly-cal-line::placeholder { color: var(--ui-text-4); }
 .hubly-cal-line:focus { border-color: var(--hb-accent); box-shadow: 0 0 0 3px rgb(var(--hb-accent-rgb) / 0.12); }
 .hubly-cal-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .hubly-cal-types button { display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border: 1px solid #D6DFE7; border-radius: 10px; background: #FFFFFF; color: var(--ui-text-4); font-size: 12px; font-weight: 600; cursor: pointer; transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease; }
@@ -1284,16 +1284,16 @@ html.dark .hubly-app-root .hubly-sidebar :is(.hubly-nav-item, .hb-nav-item):hove
 html.dark .hubly-app-root .hubly-sidebar :is(.hubly-nav-item, .hb-nav-item):is(.active, .is-selected, [aria-current="page"]) { color: var(--ui-sky-text); }
 html.dark .hubly-sidebar :is(svg, img) { --dark-icon: 1; }
 html.dark .hubly-app-root :is(h1, h2, h3, h4, strong, b) { color: inherit; }
-html.dark .hubly-app-root .hbtn { background: #20303F; color: #DADAE2; }
-html.dark .hubly-app-root .hbtn:not(.hbtn-primary):not(.hbtn-ghost) { --hbtn-edge: #1E1E26; border-color: #3A5064; }
-html.dark .hubly-app-root .hbtn:not(.hbtn-primary):hover { background: #2B3E50; color: #FFFFFF; }
+html.dark .hubly-app-root .hbtn:not(.hbtn-danger) { background: #20303F; color: #DADAE2; }
+html.dark .hubly-app-root .hbtn:not(.hbtn-primary):not(.hbtn-ghost):not(.hbtn-danger) { --hbtn-edge: #1E1E26; border-color: #3A5064; }
+html.dark .hubly-app-root .hbtn:not(.hbtn-primary):not(.hbtn-danger):hover { background: #2B3E50; color: #FFFFFF; }
 html.dark .hubly-app-root .hbtn.hbtn-primary { background: var(--hb-accent); color: #FFFFFF; }
 html.dark .hubly-app-root .hbtn.hbtn-ghost { background: transparent; }
 html.dark .hubly-app-root .hbtn.hbtn-gold { border-color: var(--ui-sky); color: #FFFFFF; }
 html.dark :is(.hb-widget-body, .hubly-cal-header, .hubly-cal-rows, .hubly-cal-month, .hubly-cal-date, .hubly-cal-today, .hubly-cal-reveal, .hubly-cal-pill, .hubly-cal-filters, .hubly-cal-modal, .hubly-cal-line, .hubly-cal-types button, .hubly-cal-durations button, .hubly-cal-cell-add, .hubly-composer, .hubly-hubi-panel, .hubly-hubi-fab, .hubly-composer-phone) { border-color: #2B3E50; background: #172330; color: #FFFFFF; }
 html.dark :is(.hb-widget-title, .hb-empty-title, .hubly-task-title, .hubly-hero-title, .hubly-hero-pending, .hubly-pending-pill, .hubly-cal, .hubly-cal-title, .hubly-cal-period, .hubly-cal-date strong, .hubly-cal-empty strong, .hubly-composer-title, .hubly-composer-banner strong, .hubly-composer-meta select, .hubly-sidebar-panel-head.is-chats span, .hubly-hubi-head h2) { color: #FFFFFF; }
 html.dark :is(.hubly-hubi-action, .hubly-hubi-grid button) { color: #FFFFFF; }
-html.dark :is(.hubly-sidebar-brand, .hubly-sidebar-empty strong, .hubly-cal-today, .hubly-cal-pill, .hubly-cal-cell-num, .hubly-composer-banner span, .hubly-cal-durations label, .hubly-cal-durations button) { color: #DADAE2; }
+html.dark :is(.hubly-sidebar-brand, .hubly-sidebar-empty strong, .hubly-cal-today, .hubly-cal-pill, .hubly-cal-cell-num:not(.is-today), .hubly-composer-banner span, .hubly-cal-durations label, .hubly-cal-durations button) { color: #DADAE2; }
 html.dark :is(.hubly-cal-tabs, .hubly-cal-input, .hubly-hubi-composer, .hubly-composer-caption, .hubly-composer-meta, .hubly-composer-preview, .hubly-sidebar-empty i, .hubly-composer-networks button, .hubly-composer-sources button > span, .hubly-composer-phone-media) { background: #20303F; color: #DADAE2; }
 html.dark :is(.hubly-hubi-composer input, .hubly-cal-input, .hubly-composer-caption) { color: #FFFFFF; }
 html.dark .hubly-cal-tab[aria-selected="true"] { background: #2B3E50; box-shadow: none; color: #9AD4F1; }
@@ -1480,8 +1480,25 @@ html.dark {
 }
 html.dark :is(.hubly-sidebar, .hubly-mobile-tabbar) { --hi-soft: #4A4C66; --hi-strong: #9CA3D8; }
 html.dark :is(input, select, textarea):not([type="checkbox"]):not([type="radio"]) { color: var(--ui-text); }
-html.dark :is(input, textarea)::placeholder { color: var(--ui-text-5); }
-html.dark select option { background: #15202B; color: #ECECF1; }
+html.dark :is(input, textarea)::placeholder { color: var(--ui-text-4); }
+html.dark select option { background: var(--ui-surface); color: var(--ui-text); }
+/* Sin esto, los campos sin fondo propio toman el gris del navegador */
+:where(html.dark) :where(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"]), select, textarea) { background-color: var(--ui-surface); }
+html.dark .hb-widget-link:hover { color: var(--ui-sky-text); }
+html.dark .hubly-app-root .hbtn.hbtn-danger { --hbtn-edge: #991B1B; border-color: #B91C1C; background: #DC2626; }
+html.dark .hubly-app-root .hbtn.hbtn-danger:hover:not(:disabled):not([aria-disabled="true"]) { background: #B91C1C; }
+html.dark :is(.hubly-app-root, .hb-app-root) { --tinta-exito: #34D399; --hubly-success-text: #34D399; --hubly-success-bg: rgb(52 211 153 / 0.16); } /* ui-ok: el verde de estado no tiene token --ui-* */
+/* Pastillas con color en línea: el tinte pálido y su tinta se invierten en oscuro */
+html.dark .hubly-app-root :is([style*="background:#DCFCE7" i], [style*="background: rgb(220, 252, 231)"], [style*="background:#D1FAE5" i], [style*="background: rgb(209, 250, 229)"]) { background-color: var(--hubly-success-bg) !important; color: var(--tinta-exito) !important; } /* ui-ok: reasigna colores en línea heredados */
+html.dark .hubly-app-root :is([style*="background:#DBEAFE" i], [style*="background: rgb(219, 234, 254)"]) { background-color: var(--ui-sky-soft) !important; color: var(--ui-sky-text) !important; } /* ui-ok: reasigna colores en línea heredados */
+html.dark .hubly-app-root :is([style*="background:#FEE2E2" i], [style*="background: rgb(254, 226, 226)"], [style*="background:#FEF2F2" i], [style*="background: rgb(254, 242, 242)"]) { background-color: rgb(248 113 113 / 0.16) !important; color: #FCA5A5 !important; } /* ui-ok: reasigna colores en línea heredados */
+html.dark .hubly-app-root :is([style*="background:#FEF3C7" i], [style*="background: rgb(254, 243, 199)"]) { background-color: rgb(251 191 36 / 0.16) !important; color: #FCD34D !important; } /* ui-ok: reasigna colores en línea heredados */
+/* Tintas fijas en línea que en oscuro no se leen */
+html.dark .hubly-app-root :is([style^="color:#16324F" i], [style*=";color:#16324F" i], [style^="color: rgb(22, 50, 79)"], [style*=" color: rgb(22, 50, 79)"]) { color: var(--hb-accent-text) !important; } /* ui-ok: reasigna colores en línea heredados */
+html.dark .hubly-app-root :is([style^="color:#B91C1C" i], [style*=";color:#B91C1C" i], [style^="color: rgb(185, 28, 28)"], [style*=" color: rgb(185, 28, 28)"], [style^="color:#DC2626" i], [style*=";color:#DC2626" i], [style^="color: rgb(220, 38, 38)"], [style*=" color: rgb(220, 38, 38)"]) { color: #FCA5A5 !important; } /* ui-ok: reasigna colores en línea heredados */
+html.dark .hubly-app-root :is([style^="color:#15803D" i], [style*=";color:#15803D" i], [style^="color: rgb(21, 128, 61)"], [style*=" color: rgb(21, 128, 61)"]) { color: var(--tinta-exito) !important; } /* ui-ok: reasigna colores en línea heredados */
+html.dark .hubly-app-root :is([style^="color:#92400E" i], [style*=";color:#92400E" i], [style^="color: rgb(146, 64, 14)"], [style*=" color: rgb(146, 64, 14)"]) { color: #FCD34D !important; } /* ui-ok: reasigna colores en línea heredados */
+html.dark .hubly-app-root :is([style^="color:#1D4ED8" i], [style*=";color:#1D4ED8" i], [style^="color: rgb(29, 78, 216)"], [style*=" color: rgb(29, 78, 216)"]) { color: var(--ui-sky-text) !important; } /* ui-ok: reasigna colores en línea heredados */
 
 /* Las pantallas usan estilos en línea: en teléfono se reacomodan sus rejillas y barras */
 .linkedin-preview [style*="repeat(4, minmax(0, 1fr))"] button { min-width: 0; padding-inline: 2px; font-size: 11px; gap: 3px; }
@@ -2344,3 +2361,81 @@ html:has([data-mision-pildora][data-desplegado]) .hubly-main.hb-main { padding-b
 @media (max-width: 767.98px) {
   .hubly-reporte-cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* 25. Nueva marca e invitaciones ---------------------------------------------- */
+.hubly-brand-menu-create { display: flex; align-items: center; gap: 8px; width: 100%; margin-top: 6px; padding: 10px 9px 4px; border: none; border-top: 1px solid var(--ui-border); background: transparent; color: var(--ui-text-2); font-family: inherit; font-size: 13px; font-weight: 500; text-align: left; cursor: pointer; transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-brand-menu-create:hover { color: var(--hb-accent-text); }
+.hubly-brand-menu-create:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
+
+.hubly-wizard-form { display: flex; flex-direction: column; flex: 1; gap: 12px; min-height: 0; }
+.hubly-wizard-title { min-width: 0; }
+.hubly-wizard-title p { overflow: hidden; margin: 2px 0 0; color: var(--ui-text-4); font-size: 12.5px; text-overflow: ellipsis; white-space: nowrap; }
+.hubly-wizard-stepper { position: relative; flex-shrink: 0; padding-top: 40px; }
+.hubly-wizard-hubi { position: absolute; top: 0; left: 0; display: flex; justify-content: center; width: 25%; pointer-events: none; transform: translateX(calc(var(--paso) * 100%)); transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1); }
+.hubly-wizard-stepper ol { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0 0 12px; border-bottom: 1px solid var(--ui-border); list-style: none; }
+.hubly-wizard-stepper li { display: flex; align-items: center; justify-content: center; gap: 6px; min-width: 0; height: 32px; border-radius: 10px; background: var(--ui-muted); color: var(--ui-text-4); font-size: 12px; font-weight: 600; transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-wizard-stepper li[data-state="active"] { background: var(--ui-sky-soft); box-shadow: inset 0 0 0 1px var(--ui-sky-border); color: var(--ui-sky-text); }
+.hubly-wizard-stepper li[data-state="done"] { background: rgb(var(--hb-accent-rgb) / 0.14); color: var(--hb-accent-text); }
+.hubly-wizard-section { display: flex; flex-direction: column; gap: 8px; }
+.hubly-wizard-section + .hubly-wizard-section { padding-top: 14px; border-top: 1px solid var(--ui-border); }
+.hubly-wizard-section h3 { margin: 0; color: var(--ui-text); font-size: 13.5px; font-weight: 600; }
+.hubly-wizard-section > p { margin: 0; color: var(--ui-text-4); font-size: 12.5px; }
+.hubly-wizard-count { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--ui-text-4); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.hubly-wizard-count em { font-style: normal; }
+.hubly-wizard-scroll { max-height: 180px; overflow-y: auto; }
+.hubly-wizard-network { flex-wrap: nowrap; padding: 6px 12px; }
+.hubly-wizard-network .hbtn[aria-pressed="true"] { color: var(--hb-accent-text); }
+.hubly-wizard-input { position: relative; display: flex; align-items: center; }
+.hubly-wizard-input svg { position: absolute; left: 12px; color: var(--ui-text-4); pointer-events: none; }
+.hubly-wizard-input .hubly-cal-line { padding-left: 37px; }
+.hubly-wizard-textarea.hubly-cal-line { height: auto; padding: 10px 13px; line-height: 1.45; resize: vertical; }
+.hubly-wizard-back { margin-right: auto; }
+
+.hubly-invite-tabs { display: flex; flex-shrink: 0; gap: 16px; overflow-x: auto; border-bottom: 1px solid var(--ui-border); scrollbar-width: none; }
+.hubly-invite-tabs button { display: inline-flex; align-items: center; flex-shrink: 0; gap: 6px; height: 34px; margin-bottom: -1px; padding: 0 2px; border: none; border-bottom: 2px solid transparent; background: transparent; color: var(--ui-text-4); font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1); }
+.hubly-invite-tabs button:hover { color: var(--ui-text); }
+.hubly-invite-tabs button[aria-selected="true"] { border-bottom-color: var(--hb-accent-text); color: var(--ui-text); }
+.hubly-invite-tabs button:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: -2px; }
+.hubly-invite-form { display: flex; flex-direction: column; gap: 12px; }
+.hubly-invite-form > .hbtn { width: 100%; }
+.hubly-invite-note { margin: 0; color: var(--ui-text-3); font-size: 12.5px; }
+.hubly-invite-error { margin: 0; color: #B91C1C; font-size: 12px; font-weight: 600; } /* ui-ok: rojo de STATUS_META.changes */
+html.dark .hubly-invite-error { color: #FCA5A5; } /* ui-ok: el rojo de estado no alcanza contraste en oscuro */
+.hubly-invite-search { position: relative; display: flex; align-items: center; }
+.hubly-invite-search svg { position: absolute; left: 12px; color: var(--ui-text-4); pointer-events: none; }
+.hubly-invite-search .hubly-cal-line { padding-left: 37px; }
+.hubly-invite-people { max-height: 220px; overflow-y: auto; }
+.hubly-invite-emails { display: flex; flex-direction: column; gap: 8px; }
+.hubly-invite-email, .hubly-invite-link { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.hubly-invite-email .hubly-cal-line, .hubly-invite-link .hubly-cal-line { flex: 1; min-width: 0; }
+.hubly-invite-link .hubly-cal-line { color: var(--ui-text-3); font-size: 12px; text-overflow: ellipsis; }
+.hubly-invite-link .hbtn, .hubly-invite-email .hbtn { flex-shrink: 0; }
+.hubly-invite-add { align-self: flex-start; }
+.hubly-ajustes-check .hubly-ajustes-row-text > span { display: block; }
+.hubly-ajustes-check + .hubly-ajustes-check { border-top: 1px solid var(--ui-border); }
+.hubly-invite-sent { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid var(--ui-border); }
+.hubly-invite-sent > div:not(.hubly-invite-link) { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.hubly-invite-sent p { margin: 0; color: var(--ui-text-4); font-size: 12px; }
+.hubly-invite-sent strong { overflow: hidden; color: var(--ui-text); font-size: 12.5px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 767.98px) {
+  .hubly-touch .hubly-cal-modal-close { min-width: 44px; min-height: 44px; }
+  .hubly-touch :is(.hubly-cal-line, select, .hubly-invite-tabs button, .hbtn) { min-height: 44px; }
+  .hubly-touch .hubly-ajustes-check { min-height: 44px; }
+  .hubly-brand-menu-create { min-height: 44px; padding-top: 4px; padding-bottom: 4px; }
+}
+@media (max-width: 640px) {
+  .hubly-wizard-stepper li svg { display: none; }
+  .hubly-wizard-stepper li[data-state="done"] svg { display: block; }
+  .hubly-wizard-stepper ol { gap: 4px; }
+  .hubly-wizard-stepper li { gap: 4px; font-size: 11.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hubly-wizard-hubi { transition: none; }
+}
+
+/* Botón de borde de Equipo: la clase existía sin regla y tomaba el borde del navegador */
+.hbtn-outline { border: 1px solid var(--ui-border-strong); }
+html.dark .hubly-salud-item .hubly-ajustes-dot { background-color: var(--ui-muted) !important; color: var(--ui-text) !important; }
+html.dark .hubly-app-root .saas-btn-secondary { border-color: var(--ui-border-strong); background: var(--ui-surface); color: var(--ui-text-2); }
+html.dark .hubly-app-root .saas-btn-secondary:hover:not(:disabled) { background: var(--ui-surface-2); color: var(--ui-text); }

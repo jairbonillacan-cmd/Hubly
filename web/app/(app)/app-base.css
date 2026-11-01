@@ -518,14 +518,14 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .saas-btn-secondary {
-  background: #FFFFFF;
-  color: #334155;
-  border: 1px solid #CBD5E1;
+  background: var(--ui-surface);
+  color: var(--ui-text-2);
+  border: 1px solid var(--ui-border-strong);
 }
 
 .saas-btn-secondary:hover:not(:disabled) {
-  background: #F8FAFC;
-  color: #0F172A;
+  background: var(--ui-surface-2);
+  color: var(--ui-text);
 }
 
 .saas-btn-ghost {

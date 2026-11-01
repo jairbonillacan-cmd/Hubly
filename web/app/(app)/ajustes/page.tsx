@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { askConfirm } from "@/components/app/AppDialogHost";
 import { CuentaPanel } from "@/components/app/ajustes/CuentaPanel";
 import { EquipoPanel } from "@/components/app/ajustes/EquipoPanel";
 import { IntegracionesPanel } from "@/components/app/ajustes/IntegracionesPanel";
@@ -84,6 +85,7 @@ export default function AjustesPage() {
   };
 
   const logout = async () => {
+    if (!(await askConfirm("¿Seguro que quieres cerrar sesión?", "Cerrar sesión"))) return;
     if (backendEnabled) {
       clearAllRecoveries(localStorage);
       await createSupabaseBrowser().auth.signOut();

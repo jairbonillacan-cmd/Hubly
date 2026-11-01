@@ -945,7 +945,7 @@ function DemoAnunciosPage() {
                       }}
                     />
                   </div>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "#059669" }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: "var(--tinta-exito)" }}>
                     {ad.clickScore}
                   </span>
                 </div>
@@ -1137,7 +1137,7 @@ function DemoAnunciosPage() {
                       padding: "12px 16px",
                       textAlign: "right",
                       fontWeight: 700,
-                      color: "#059669",
+                      color: "var(--tinta-exito)",
                     }}
                   >
                     {ad.clickScore}
@@ -1252,7 +1252,7 @@ function DemoAnunciosPage() {
             >
               <div>
                 <div style={{ color: "var(--ui-text-4)" }}>Click Score</div>
-                <div style={{ fontWeight: 800, color: "#059669", fontSize: 15 }}>
+                <div style={{ fontWeight: 800, color: "var(--tinta-exito)", fontSize: 15 }}>
                   {selectedAd.clickScore}/100
                 </div>
               </div>

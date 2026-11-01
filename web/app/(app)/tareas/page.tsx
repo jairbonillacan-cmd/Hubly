@@ -69,7 +69,7 @@ export default function TareasPage() {
               borderRadius: 9,
               border: "none",
               background: topSection === "listas" ? "var(--ui-surface)" : "transparent",
-              color: topSection === "listas" ? "var(--hb-accent)" : "var(--ui-text-4)",
+              color: topSection === "listas" ? "var(--hb-accent-text)" : "var(--ui-text-4)",
               fontWeight: 600,
               fontSize: 13.5,
               boxShadow:
@@ -108,7 +108,7 @@ export default function TareasPage() {
               borderRadius: 9,
               border: "none",
               background: topSection === "libretas" ? "var(--ui-surface)" : "transparent",
-              color: topSection === "libretas" ? "var(--hb-accent)" : "var(--ui-text-4)",
+              color: topSection === "libretas" ? "var(--hb-accent-text)" : "var(--ui-text-4)",
               fontWeight: 600,
               fontSize: 13.5,
               boxShadow:
@@ -132,7 +132,7 @@ export default function TareasPage() {
               borderRadius: 9,
               border: "none",
               background: topSection === "contenido" ? "var(--ui-surface)" : "transparent",
-              color: topSection === "contenido" ? "var(--hb-accent)" : "var(--ui-text-4)",
+              color: topSection === "contenido" ? "var(--hb-accent-text)" : "var(--ui-text-4)",
               fontWeight: 600,
               fontSize: 13.5,
               boxShadow:

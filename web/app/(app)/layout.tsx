@@ -50,8 +50,6 @@ import {
 
 // Flexible wrappers so shared modals work seamlessly whether they read state from
 // useHublyStore internally or accept explicit open/onClose props.
-const InviteTeamModalSurface =
-  InviteTeamModal as unknown as React.ComponentType<Record<string, unknown>>;
 const NotebookReaderModalSurface =
   NotebookReaderModal as unknown as React.ComponentType<Record<string, unknown>>;
 const WidgetConfigModalSurface =
@@ -1075,7 +1073,7 @@ export default function SaaSAppLayout({
                         height: 18,
                         padding: "0 6px",
                         borderRadius: 9999,
-                        background: active ? "#BFE2F4" : "var(--ui-muted)",
+                        background: active ? "var(--ui-sky-border)" : "var(--ui-muted)",
                         color: active ? "var(--ui-accent-text)" : "var(--ui-text-3)",
                         fontSize: 11,
                         fontWeight: 700,
@@ -1186,7 +1184,7 @@ export default function SaaSAppLayout({
                 <ChevronDown size={12} style={{ color: "var(--ui-text-5)", flexShrink: 0 }} />
               </button>
 
-              {/* Right: Dynamic User Initials Circle + Dashed + Button (Nueva marca) */}
+              {/* Right: Dynamic User Initials Circle + Dashed + Button (Invitar a la agencia) */}
               <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                 <span
                   title={profile.name}
@@ -1208,9 +1206,9 @@ export default function SaaSAppLayout({
 
                 <button
                   type="button"
-                  onClick={() => setNewBrandModalOpen(true)}
-                  aria-label="Nueva marca"
-                  title="Nueva marca"
+                  onClick={() => setInviteModalOpen(true)}
+                  aria-label="Invitar a la agencia"
+                  title="Invitar a la agencia"
                   style={{
                     width: 20,
                     height: 20,
@@ -1273,8 +1271,8 @@ export default function SaaSAppLayout({
                           padding: "7px 9px",
                           borderRadius: 8,
                           border: "none",
-                          background: isCurrent ? "#F1F9FD" : "transparent",
-                          color: isCurrent ? "var(--ui-accent-text)" : "var(--ui-text-2)",
+                          background: isCurrent ? "rgb(var(--hb-accent-rgb) / 0.08)" : "transparent",
+                          color: isCurrent ? "var(--hb-accent-text)" : "var(--ui-text-2)",
                           cursor: "pointer",
                           textAlign: "left",
                           fontSize: 13,
@@ -1294,12 +1292,9 @@ export default function SaaSAppLayout({
                               width: 20,
                               height: 20,
                               borderRadius: 6,
-                              background:
-                                b.id === "brand-min"
-                                  ? "#16324F"
-                                  : b.color || "#16324F",
-                              color: "#FFFFFF",
-                              fontSize: 9.5,
+                              background: b.color || "var(--hb-accent)",
+                              color: "var(--on-accent)",
+                              fontSize: 10,
                               fontWeight: 700,
                               display: "inline-flex",
                               alignItems: "center",
@@ -1321,7 +1316,7 @@ export default function SaaSAppLayout({
                           </span>
                         </span>
                         {isCurrent && (
-                          <Check size={13} style={{ color: "var(--ui-accent-text-2)", flexShrink: 0 }} />
+                          <Check size={15} style={{ color: "var(--hb-accent-text)", flexShrink: 0 }} />
                         )}
                       </button>
                     );
@@ -1329,29 +1324,13 @@ export default function SaaSAppLayout({
 
                 <button
                   type="button"
+                  className="hubly-brand-menu-create"
                   onClick={() => {
                     setBrandMenuOpen(false);
                     setNewBrandModalOpen(true);
                   }}
-                  style={{
-                    width: "100%",
-                    marginTop: 4,
-                    padding: "7px 9px",
-                    borderRadius: 8,
-                    border: "1px dashed var(--ui-border-strong)",
-                    background: "transparent",
-                    color: "var(--hb-accent-text)",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 5,
-                    fontFamily: "inherit",
-                  }}
                 >
-                  <Plus size={12} /> Nueva marca
+                  <Plus size={15} /> Crear marca
                 </button>
               </div>
             )}
@@ -1825,7 +1804,7 @@ export default function SaaSAppLayout({
           left: 0,
           right: 0,
           height: 60,
-          background: "rgba(255, 255, 255, 0.96)",
+          background: "var(--ui-surface)",
           backdropFilter: "blur(12px)",
           borderTop: "1px solid var(--ui-border)",
           display: "grid",
@@ -1963,10 +1942,7 @@ export default function SaaSAppLayout({
       <PostComposerModal />
       <NewBrandModal />
       <CommandPaletteModal />
-      <InviteTeamModalSurface
-        open={inviteModalOpen}
-        onClose={() => setInviteModalOpen(false)}
-      />
+      <InviteTeamModal />
       <NotebookReaderModalSurface
         open={Boolean(activeNotebookId)}
         notebookId={activeNotebookId}

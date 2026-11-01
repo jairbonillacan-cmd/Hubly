@@ -1314,8 +1314,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-badge-success) {
-  background: #ECFDF5;
-  color: #059669;
+  background: var(--hubly-success-bg);
+  color: var(--hubly-success-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-badge-amber, .saas-badge-amber, .saas-status-pending) {

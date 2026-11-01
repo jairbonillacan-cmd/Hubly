@@ -4,9 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useHublyStore } from "@/lib/store";
 import { currentAgencyId, liveAgencies, selectLiveAgency } from "@/lib/live-workspace";
 import { askConfirm } from "@/components/app/AppDialogHost";
+import { HublyPlusIcon } from "@/components/app/icons/DuotoneIcons";
 
 interface Member { user_id: string; role: string; email: string; name: string }
-interface Invitation { id: string; email: string; role: string; expires_at: string; accepted_at: string | null; revoked_at: string | null }
+interface Invitation { id: string; email: string | null; role: string; expires_at: string; accepted_at: string | null; revoked_at: string | null }
 interface ShareLink { id: string; brand_id: string; expires_at: string; revoked_at: string | null; created_at: string }
 
 const ROLES: Record<string, string> = { owner: "Dueño", admin: "Administración", editor: "Edición", viewer: "Solo lectura" };
@@ -20,13 +21,12 @@ const fmt = (iso: string) => new Date(iso).toLocaleDateString("es-MX", { day: "n
 export function AccessPanel() {
   const profile = useHublyStore((s) => s.profile);
   const brands = useHublyStore((s) => s.brands);
+  const inviteModalOpen = useHublyStore((s) => s.inviteModalOpen);
+  const setInviteModalOpen = useHublyStore((s) => s.setInviteModalOpen);
   const agencyId = currentAgencyId();
   const [members, setMembers] = useState<Member[]>([]);
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [links, setLinks] = useState<ShareLink[]>([]);
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("editor");
-  const [inviteLink, setInviteLink] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -39,9 +39,10 @@ export function AccessPanel() {
     setLinks(json.links);
   }, [agencyId]);
 
+  // También al cerrar el modal: puede haber creado invitaciones.
   useEffect(() => {
-    void load();
-  }, [load]);
+    if (!inviteModalOpen) void load();
+  }, [load, inviteModalOpen]);
 
   const act = async (body: Record<string, string>) => {
     setError(null);
@@ -120,38 +121,17 @@ export function AccessPanel() {
 
       {canManage && (
         <section>
-          <h2 style={h2}>Invitar</h2>
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              setInviteLink(null);
-              const res = await act({ action: "invite", email: email.trim(), role });
-              if (res?.token) {
-                setInviteLink(`${window.location.origin}/invitacion/${res.token}`);
-                setEmail("");
-              }
-            }}
-            style={{ display: "flex", gap: 8, flexWrap: "wrap" }}
-          >
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="correo@agencia.com" aria-label="Correo a invitar" style={{ ...field, flex: "1 1 200px" }} />
-            <select aria-label="Rol de la invitación" value={role} onChange={(e) => setRole(e.target.value)} style={field}>
-              <option value="admin">Administración</option>
-              <option value="editor">Edición</option>
-              <option value="viewer">Solo lectura</option>
-            </select>
-            <button type="submit" style={primary}>Crear invitación</button>
-          </form>
-          {inviteLink && (
-            <p role="status" style={{ fontSize: 12.5, margin: "8px 0 0", wordBreak: "break-all" }}>
-              Comparte este enlace, caduca en 7 días y solo se muestra ahora: <code>{inviteLink}</code>{" "}
-              <button type="button" onClick={() => navigator.clipboard?.writeText(inviteLink).catch(() => {})} style={linkBtn}>Copiar</button>
-            </p>
-          )}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 10 }}>
+            <h2 style={{ ...h2, margin: 0 }}>Invitaciones ({openInvites.length})</h2>
+            <button type="button" className="hbtn hbtn-secondary hbtn-sm" onClick={() => setInviteModalOpen(true)}>
+              <HublyPlusIcon size={15} /> Invitar
+            </button>
+          </div>
           {openInvites.length > 0 && (
-            <ul style={{ ...list, marginTop: 10 }}>
+            <ul style={list}>
               {openInvites.map((i) => (
                 <li key={i.id} style={row}>
-                  <span style={{ flex: "1 1 180px", fontSize: 13 }}>{i.email} · {ROLES[i.role]}</span>
+                  <span style={{ flex: "1 1 180px", fontSize: 13 }}>{i.email ?? "Link de invitación"} · {ROLES[i.role]}</span>
                   <span style={muted}>Caduca {fmt(i.expires_at)}</span>
                   <button type="button" style={danger} onClick={() => void act({ action: "revokeInvitation", id: i.id })}>Revocar</button>
                 </li>
@@ -186,6 +166,4 @@ const list = { listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8
 const row = { display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", border: "1px solid var(--ui-border)", borderRadius: 12, padding: "10px 12px" } as const;
 const muted = { fontSize: 12, color: "var(--ui-text-4)" } as const;
 const field = { border: "1px solid var(--ui-border-strong)", borderRadius: 9, padding: "7px 9px", fontSize: 13, background: "var(--ui-surface)", minWidth: 0 } as const;
-const primary = { border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" } as const;
 const danger = { border: "1px solid #FECACA", background: "#FEF2F2", color: "#B91C1C", borderRadius: 8, padding: "5px 10px", fontSize: 12, fontWeight: 600, cursor: "pointer" } as const;
-const linkBtn = { border: 0, background: "transparent", color: "var(--ui-accent-text-2)", fontWeight: 600, cursor: "pointer", padding: 0 } as const;

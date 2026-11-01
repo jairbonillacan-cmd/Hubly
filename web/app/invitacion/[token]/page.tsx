@@ -9,7 +9,7 @@ const ROLE_LABEL: Record<string, string> = { admin: "Administración", editor: "
 
 function InvitacionView() {
   const token = useParams<{ token: string }>()?.token || "";
-  const [invite, setInvite] = useState<{ agency: string; email: string; role: string } | null>(null);
+  const [invite, setInvite] = useState<{ agency: string; email: string | null; role: string } | null>(null);
   const [state, setState] = useState<"loading" | "ready" | "invalid" | "mismatch">("loading");
 
   useEffect(() => {
@@ -49,7 +49,9 @@ function InvitacionView() {
           <>
             <h1 style={title}>Es para otro correo</h1>
             <p style={text}>
-              Esta invitación es para {invite?.email}. Entra con ese correo, ya confirmado, para aceptarla.
+              {invite?.email
+                ? `Esta invitación es para ${invite.email}. Entra con ese correo, ya confirmado, para aceptarla.`
+                : "Confirma tu correo para aceptar esta invitación."}
             </p>
             <Link href={`/login?next=${next}`}>Cambiar de cuenta</Link>
           </>
@@ -57,7 +59,9 @@ function InvitacionView() {
         {state === "ready" && invite && (
           <>
             <h1 style={title}>Te invitaron a {invite.agency}</h1>
-            <p style={text}>Para {invite.email}, con acceso de {ROLE_LABEL[invite.role] || invite.role}.</p>
+            <p style={text}>
+              {invite.email ? `Para ${invite.email}, con acceso` : "Con acceso"} de {ROLE_LABEL[invite.role] || invite.role}.
+            </p>
             <button type="button" onClick={accept} style={{ border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "10px 16px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
               Aceptar invitación
             </button>

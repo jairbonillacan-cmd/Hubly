@@ -1,1084 +1,357 @@
 "use client";
 
-import React, { useEffect, useId, useRef, useState } from "react";
-import { useHublyStore } from "@/lib/store";
-import { LiveInviteRedirect } from "@/components/app/LiveUnavailable";
-import { backendEnabled } from "@/lib/supabase/config";
-import { useModalPresence } from "@/lib/use-modal-presence";
-import type { TeamInvitation } from "@/lib/types";
+import React, { useEffect, useRef, useState } from "react";
+import { HublyCheckIcon, HublyCloseIcon, HublyCopyIcon, HublyLinkIcon, HublyMailIcon, HublyPlusIcon, HublySearchIcon } from "@/components/app/icons/DuotoneIcons";
 import {
-  HublyCheckIcon as Check,
-  HublyCloseIcon as X,
-  HublyCopyIcon as Copy,
-  HublyInfoIcon as Info,
-  HublyLinkIcon as Link2,
-  HublyPersonIcon as UserPlus,
-  HublyShieldIcon as Shield,
-  HublyTrashIcon as Trash2,
-} from "@/components/app/icons/DuotoneIcons";
+  alreadyMember,
+  canInvite,
+  createInviteLink,
+  DEFAULT_INVITE_ROLE,
+  EMAIL_REGEX,
+  INVITE_ROLES,
+  inviteByEmail,
+  loadKnownPeople,
+  type KnownPerson,
+} from "@/lib/invitaciones";
+import { useHublyStore } from "@/lib/store";
+import { backendEnabled } from "@/lib/supabase/config";
+import { useFocusTrap } from "@/lib/use-focus-trap";
+import { useLayer } from "@/lib/use-layer";
+import { useModalPresence } from "@/lib/use-modal-presence";
 
-export type TeamMemberRole =
-  | "Admin"
-  | "Content Manager"
-  | "Diseñador"
-  | "Copywriter"
-  | "Trafficker"
-  | "Cliente"
-  | string;
+type Tab = "existente" | "link" | "correo";
+type Sent = { email: string; link: string };
 
-export interface InviteTeamModalProps {
-  open?: boolean;
-  onClose?: () => void;
-  defaultRole?: TeamMemberRole;
-  isFallbackMount?: boolean;
-}
-
-const ROLE_OPTIONS: Array<{
-  value: TeamMemberRole;
-  label: string;
-  description: string;
-}> = [
-  {
-    value: "Admin",
-    label: "Admin / Dueño",
-    description: "Acceso total a marcas, equipo, métricas y configuración.",
-  },
-  {
-    value: "Content Manager",
-    label: "Content Manager (Miembro)",
-    description: "Gestiona parrillas, calendario, tareas y libretas.",
-  },
-  {
-    value: "Diseñador",
-    label: "Diseñador (Miembro)",
-    description: "Sube creativos, edita piezas visuales y cierra entregables.",
-  },
-  {
-    value: "Copywriter",
-    label: "Copywriter (Miembro)",
-    description: "Redacta copies, guiones de Reels y notas de marca.",
-  },
-  {
-    value: "Trafficker",
-    label: "Trafficker / Media Buyer",
-    description: "Administra campañas de Ads, presupuestos y ROAS.",
-  },
-  {
-    value: "Cliente",
-    label: "Cliente / Invitado",
-    description: "Revisa y aprueba entregables en las marcas asignadas.",
-  },
+const TABS: Array<{ id: Tab; label: string; icon?: React.ReactNode }> = [
+  { id: "existente", label: "Usuario existente" },
+  { id: "link", label: "Por link", icon: <HublyLinkIcon size={15} /> },
+  { id: "correo", label: "Por correo", icon: <HublyMailIcon size={15} /> },
 ];
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-let primaryInviteModalMounts = 0;
-
-function getFocusableElements(container: HTMLElement | null): HTMLElement[] {
-  if (!container) return [];
-  const nodes = container.querySelectorAll<HTMLElement>(
-    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-  );
-  return Array.from(nodes).filter(
-    (el) => !el.hasAttribute("disabled") && el.offsetParent !== null
+/** El enlace ya creado, listo para copiar. El token solo se conoce en este momento. */
+export function InviteLinkRow({ link, label }: { link: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    await navigator.clipboard?.writeText(link).catch(() => {});
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <div className="hubly-invite-link">
+      <input className="hubly-cal-line" readOnly value={link} aria-label={label} onFocus={(e) => e.currentTarget.select()} />
+      <button type="button" className="hbtn hbtn-secondary" onClick={() => void copy()}>
+        {copied ? <HublyCheckIcon size={17} /> : <HublyCopyIcon size={17} />}
+        <span role="status">{copied ? "Copiado" : "Copiar"}</span>
+      </button>
+    </div>
   );
 }
 
-export function InviteTeamModal(props: InviteTeamModalProps = {}) {
-  return backendEnabled ? <LiveInviteRedirect open={props.open} /> : <DemoInviteTeamModal {...props} />;
+function RoleField({ value, onChange, options }: { value: string; onChange: (role: string) => void; options: typeof INVITE_ROLES }) {
+  return (
+    <label className="hubly-cal-field">
+      <span>Rol</span>
+      <select className="hubly-cal-line" value={value} onChange={(e) => onChange(e.target.value)}>
+        {options.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
+      </select>
+    </label>
+  );
 }
 
-function DemoInviteTeamModal({
-  open: openProp,
-  onClose: onCloseProp,
-  defaultRole = "Content Manager",
-  isFallbackMount = false,
-}: InviteTeamModalProps = {}) {
-  const titleId = useId();
-  const dialogRef = useRef<HTMLDivElement | null>(null);
-  const emailInputRef = useRef<HTMLInputElement | null>(null);
-  const previousActiveElementRef = useRef<HTMLElement | null>(null);
+function SentList({ sent }: { sent: Sent[] }) {
+  if (sent.length === 0) return null;
+  return (
+    <div className="hubly-invite-sent" role="status">
+      <p>Comparte cada enlace con su persona. Caduca en 7 días y solo se muestra ahora.</p>
+      {sent.map((s) => (
+        <div key={s.email}>
+          <strong title={s.email}>{s.email}</strong>
+          <InviteLinkRow link={s.link} label={`Enlace de invitación para ${s.email}`} />
+        </div>
+      ))}
+    </div>
+  );
+}
 
-  const [suppressedAsFallback, setSuppressedAsFallback] = useState(false);
+function ExistenteTab() {
+  const [people, setPeople] = useState<KnownPerson[] | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState<string | null>(null);
+  const [role, setRole] = useState(DEFAULT_INVITE_ROLE);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [sent, setSent] = useState<Sent[]>([]);
 
   useEffect(() => {
-    if (!isFallbackMount) {
-      primaryInviteModalMounts += 1;
-      return () => {
-        primaryInviteModalMounts = Math.max(0, primaryInviteModalMounts - 1);
-      };
-    } else {
-      setSuppressedAsFallback(primaryInviteModalMounts > 0);
-    }
-  }, [isFallbackMount]);
+    let active = true;
+    loadKnownPeople()
+      .then((list) => {
+        if (!active) return;
+        setPeople(list);
+        setFailed(false);
+      })
+      .catch(() => active && setFailed(true));
+    return () => {
+      active = false;
+    };
+  }, [attempt]);
 
-  const inviteModalOpen = useHublyStore((s) => s.inviteModalOpen);
-  const setInviteModalOpen = useHublyStore((s) => s.setInviteModalOpen);
-  const inviteTeamMember = useHublyStore((s) => s.inviteTeamMember);
-  const cancelTeamInvitation = useHublyStore((s) => s.cancelTeamInvitation);
-  const teamInvitations = useHublyStore((s) => s.invitations);
-  const teamMembers = useHublyStore((s) => s.team);
-  const brands = useHublyStore((s) => s.brands);
-  const activeBrandId = useHublyStore((s) => s.activeBrandId);
+  const q = query.trim().toLowerCase();
+  const visible = (people ?? []).filter((p) => !q || p.name.toLowerCase().includes(q) || p.email.includes(q));
 
-  const isOpen =
-    !suppressedAsFallback &&
-    (openProp !== undefined ? openProp : inviteModalOpen);
-
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [role, setRole] = useState<TeamMemberRole>(defaultRole);
-  const [selectedBrandIds, setSelectedBrandIds] = useState<string[]>([]);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [createdInvitation, setCreatedInvitation] =
-    useState<TeamInvitation | null>(null);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-
-  const handleClose = () => {
-    setErrorMsg(null);
-    setCreatedInvitation(null);
-    if (onCloseProp) {
-      onCloseProp();
-    } else {
-      setInviteModalOpen(false);
-    }
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selected) return;
+    setSending(true);
+    setError(null);
+    const result = await inviteByEmail(selected, role);
+    setSending(false);
+    if ("error" in result) return setError(result.error);
+    setSent((cur) => [{ email: selected, link: result.link }, ...cur.filter((s) => s.email !== selected)]);
+    setPeople((cur) => cur?.filter((p) => p.email !== selected) ?? null);
+    setSelected(null);
   };
 
-  useEffect(() => {
-    if (!isOpen) return;
-    setEmail("");
-    setName("");
-    setRole(defaultRole);
-    setSelectedBrandIds(
-      activeBrandId
-        ? [activeBrandId]
-        : brands[0]?.id
-        ? [brands[0].id]
-        : []
+  return (
+    <form className="hubly-invite-form" onSubmit={submit}>
+      <label className="hubly-invite-search">
+        <HublySearchIcon size={17} />
+        <input className="hubly-cal-line" autoFocus value={query} placeholder="Buscar por nombre o correo" aria-label="Buscar persona" onChange={(e) => setQuery(e.target.value)} />
+      </label>
+      {failed ? (
+        <div className="hubly-ajustes-empty" role="alert">
+          <strong>No pudimos cargar tu lista</strong>
+          <p>Revisa tu conexión e inténtalo otra vez.</p>
+          <button type="button" className="hbtn hbtn-secondary hbtn-sm" onClick={() => setAttempt((n) => n + 1)}>Reintentar</button>
+        </div>
+      ) : people === null ? (
+        <p className="hubly-invite-note">Cargando…</p>
+      ) : visible.length === 0 ? (
+        <div className="hubly-ajustes-empty">
+          <strong>{q ? "Sin resultados" : "Sin personas por agregar"}</strong>
+          <p>{q ? "Prueba con otro nombre o correo." : "Aquí verás a quienes trabajan contigo en otras agencias."}</p>
+        </div>
+      ) : (
+        <div className="hubly-ajustes-list hubly-invite-people" role="radiogroup" aria-label="Personas">
+          {visible.map((p) => (
+            <label key={p.email} className="hubly-ajustes-check">
+              <input type="radio" name="persona" checked={selected === p.email} onChange={() => setSelected(p.email)} />
+              <span className="hubly-ajustes-row-text">
+                <span className="hubly-ajustes-row-title" title={p.name}>{p.name}</span>
+                <span className="hubly-ajustes-row-meta">{p.email} · {p.agency}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+      )}
+      {(people?.length ?? 0) > 0 && (
+        <>
+          <RoleField value={role} onChange={setRole} options={INVITE_ROLES} />
+          {error && <p className="hubly-invite-error" role="alert">{error}</p>}
+          <button type="submit" className="hbtn hbtn-primary" disabled={!selected || sending}>
+            {sending ? "Creando…" : "Crear invitación"}
+          </button>
+        </>
+      )}
+      <SentList sent={sent} />
+    </form>
+  );
+}
+
+function LinkTab() {
+  const [role, setRole] = useState(DEFAULT_INVITE_ROLE);
+  const [link, setLink] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  if (!backendEnabled) {
+    return (
+      <div className="hubly-ajustes-empty">
+        <strong>Disponible con cuentas reales</strong>
+        <p>En modo demo no hay cuentas que puedan abrir un link.</p>
+      </div>
     );
-    setErrorMsg(null);
-    setCreatedInvitation(null);
-  }, [isOpen, defaultRole, activeBrandId, brands]);
+  }
 
-  // Focus trap, Escape key, Initial focus & Scroll lock
+  const generate = async () => {
+    setSending(true);
+    setError(null);
+    const result = await createInviteLink(role);
+    setSending(false);
+    if ("error" in result) return setError(result.error);
+    setLink(result.link);
+  };
+
+  return (
+    <div className="hubly-invite-form">
+      <p className="hubly-invite-note">Cualquier persona con el link y un correo verificado entra a la agencia.</p>
+      <RoleField value={role} onChange={setRole} options={INVITE_ROLES.slice(1)} />
+      {error && <p className="hubly-invite-error" role="alert">{error}</p>}
+      <button type="button" className="hbtn hbtn-primary" disabled={sending} onClick={() => void generate()}>
+        {sending ? "Generando…" : link ? "Generar otro link" : "Generar link"}
+      </button>
+      {link && (
+        <div className="hubly-invite-sent" role="status">
+          <InviteLinkRow link={link} label="Link de invitación" />
+          <p>Caduca en 7 días y solo se muestra ahora. Puedes revocarlo en Ajustes, Equipo.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CorreoTab() {
+  const [emails, setEmails] = useState([""]);
+  const [role, setRole] = useState(DEFAULT_INVITE_ROLE);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [sent, setSent] = useState<Sent[]>([]);
+  const firstRef = useRef<HTMLInputElement | null>(null);
+
+  const setAt = (index: number, value: string) => {
+    setEmails((cur) => cur.map((email, i) => (i === index ? value : email)));
+    setError(null);
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const clean = [...new Set(emails.map((m) => m.trim().toLowerCase()).filter(Boolean))];
+    const wrong = clean.find((m) => !EMAIL_REGEX.test(m));
+    const member = clean.find(alreadyMember);
+    if (clean.length === 0 || wrong) {
+      firstRef.current?.focus();
+      return setError(wrong ? `Revisa el correo «${wrong}».` : "Escribe al menos un correo.");
+    }
+    if (member) return setError(`${member} ya forma parte de la agencia.`);
+
+    setSending(true);
+    setError(null);
+    const results = await Promise.all(clean.map(async (email) => ({ email, result: await inviteByEmail(email, role) })));
+    setSending(false);
+    const ok = results.flatMap((r) => ("link" in r.result ? [{ email: r.email, link: r.result.link }] : []));
+    const failed = results.filter((r) => "error" in r.result);
+    setSent((cur) => [...ok, ...cur.filter((s) => !ok.some((o) => o.email === s.email))]);
+    setEmails(failed.length > 0 ? failed.map((r) => r.email) : [""]);
+    const first = failed[0]?.result;
+    if (first && "error" in first) setError(first.error);
+  };
+
+  return (
+    <form className="hubly-invite-form" onSubmit={submit} noValidate>
+      <p className="hubly-invite-note">Hubly aún no envía correos: crea un enlace personal y compártelo tú.</p>
+      <div className="hubly-invite-emails">
+        {emails.map((email, index) => (
+          <div key={index} className="hubly-invite-email">
+            <input
+              ref={index === 0 ? firstRef : undefined}
+              className="hubly-cal-line"
+              type="email"
+              autoFocus={index === 0}
+              value={email}
+              placeholder="correo@agencia.com"
+              aria-label={`Correo ${index + 1}`}
+              aria-invalid={Boolean(error)}
+              onChange={(e) => setAt(index, e.target.value)}
+            />
+            {emails.length > 1 && (
+              <button type="button" className="hubly-cal-modal-close" aria-label={`Quitar correo ${index + 1}`} onClick={() => setEmails((cur) => cur.filter((_, i) => i !== index))}>
+                <HublyCloseIcon size={14} />
+              </button>
+            )}
+          </div>
+        ))}
+        <button type="button" className="hbtn hbtn-ghost hbtn-sm hubly-invite-add" onClick={() => setEmails((cur) => [...cur, ""])}>
+          <HublyPlusIcon size={15} /> Agregar otro
+        </button>
+      </div>
+      <RoleField value={role} onChange={setRole} options={INVITE_ROLES} />
+      {error && <p className="hubly-invite-error" role="alert">{error}</p>}
+      <button type="submit" className="hbtn hbtn-primary" disabled={sending}>
+        {sending ? "Creando…" : emails.length > 1 ? "Crear invitaciones" : "Crear invitación"}
+      </button>
+      <SentList sent={sent} />
+    </form>
+  );
+}
+
+export function InviteTeamModal() {
+  const open = useHublyStore((s) => s.inviteModalOpen);
+  const setOpen = useHublyStore((s) => s.setInviteModalOpen);
+  const [tab, setTab] = useState<Tab>("correo");
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const tabRefs = useRef<Partial<Record<Tab, HTMLButtonElement | null>>>({});
+
+  const close = () => setOpen(false);
+  const presence = useModalPresence(open);
+  useLayer(open, close);
+  useFocusTrap(dialogRef, open);
+
   useEffect(() => {
-    if (!isOpen) return;
+    if (open) setTab("correo"); // eslint-disable-line react-hooks/set-state-in-effect
+  }, [open]);
 
-    previousActiveElementRef.current =
-      document.activeElement as HTMLElement | null;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    const rafId = window.requestAnimationFrame(() => {
-      if (emailInputRef.current) {
-        emailInputRef.current.focus();
-      } else {
-        const focusables = getFocusableElements(dialogRef.current);
-        focusables[0]?.focus();
-      }
-    });
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        e.stopPropagation();
-        handleClose();
-        return;
-      }
-
-      if (e.key === "Tab") {
-        const focusables = getFocusableElements(dialogRef.current);
-        if (focusables.length === 0) {
-          e.preventDefault();
-          return;
-        }
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        const active = document.activeElement as HTMLElement | null;
-
-        if (e.shiftKey) {
-          if (!active || active === first || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (!active || active === last || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown, true);
-
-    return () => {
-      window.cancelAnimationFrame(rafId);
-      document.removeEventListener("keydown", handleKeyDown, true);
-      const remainingDialogs = document.querySelectorAll(
-        '[role="dialog"][aria-modal="true"]'
-      );
-      if (remainingDialogs.length <= 1) {
-        document.body.style.overflow = prevOverflow || "";
-      }
-      const prevEl = previousActiveElementRef.current;
-      if (prevEl && document.body.contains(prevEl)) {
-        window.requestAnimationFrame(() => {
-          prevEl.focus();
-        });
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
-
-  const presence = useModalPresence(isOpen);
   if (!presence.mounted) return null;
 
-  const toggleBrandSelection = (brandId: string) => {
-    setSelectedBrandIds((prev) =>
-      prev.includes(brandId)
-        ? prev.filter((id) => id !== brandId)
-        : [...prev, brandId]
-    );
-    if (errorMsg) setErrorMsg(null);
-  };
-
-  const toggleSelectAllBrands = () => {
-    if (selectedBrandIds.length === brands.length) {
-      setSelectedBrandIds([]);
-    } else {
-      setSelectedBrandIds(brands.map((b) => b.id));
-    }
-    if (errorMsg) setErrorMsg(null);
-  };
-
-  const buildDemoInviteUrl = (inv: TeamInvitation) => {
-    if (inv.inviteLink) return inv.inviteLink;
-    const origin =
-      typeof window !== "undefined" && window.location?.origin
-        ? window.location.origin
-        : "http://localhost:3001";
-    return `${origin}/dashboard/equipo?invite=${inv.id}`;
-  };
-
-  const handleCopyInviteLink = async (inv: TeamInvitation) => {
-    const link = buildDemoInviteUrl(inv);
-    try {
-      await navigator.clipboard.writeText(link);
-    } catch {
-      // Fallback if clipboard permission is restricted
-    }
-    setCopiedId(inv.id);
-    window.setTimeout(() => {
-      setCopiedId((prev) => (prev === inv.id ? null : prev));
-    }, 2200);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const moveTab = (e: React.KeyboardEvent) => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     e.preventDefault();
-    const cleanEmail = email.trim().toLowerCase();
-
-    if (!cleanEmail) {
-      setErrorMsg("Ingresa el correo electrónico de la persona a invitar.");
-      emailInputRef.current?.focus();
-      return;
-    }
-
-    if (!EMAIL_REGEX.test(cleanEmail)) {
-      setErrorMsg(
-        "Ingresa un correo electrónico válido (ejemplo: nombre@agencia.mx)."
-      );
-      emailInputRef.current?.focus();
-      return;
-    }
-
-    const alreadyMember = teamMembers.some(
-      (m) => m.email.trim().toLowerCase() === cleanEmail
-    );
-    if (alreadyMember) {
-      setErrorMsg("Este correo ya forma parte activa del equipo en Hubly.");
-      emailInputRef.current?.focus();
-      return;
-    }
-
-    if (selectedBrandIds.length === 0) {
-      setErrorMsg("Asigna al menos una marca para esta invitación.");
-      return;
-    }
-
-    const derivedName =
-      name.trim() ||
-      cleanEmail
-        .split("@")[0]
-        .replace(/[._-]+/g, " ")
-        .replace(/\b\w/g, (l) => l.toUpperCase());
-
-    const invitation = inviteTeamMember({
-      email: cleanEmail,
-      name: derivedName,
-      role,
-      brandIds: selectedBrandIds,
-    });
-
-    setCreatedInvitation(invitation);
-    setEmail("");
-    setName("");
-    setErrorMsg(null);
+    const index = TABS.findIndex((t) => t.id === tab);
+    const next = TABS[(index + (e.key === "ArrowRight" ? 1 : TABS.length - 1)) % TABS.length].id;
+    setTab(next);
+    tabRefs.current[next]?.focus();
   };
-
-  const pendingInvitations = teamInvitations.filter(
-    (inv) => inv.status === "Pendiente"
-  );
 
   return (
     <div
-      className="hubly-overlay"
+      className="hubly-overlay hubly-cal-overlay"
       data-state={presence.state}
       onMouseDown={(e) => {
-        if (e.target === e.currentTarget) handleClose();
-      }}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 110,
-        background: "rgba(15, 23, 42, 0.45)",
-        backdropFilter: "blur(4px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 16,
+        if (e.target === e.currentTarget) close();
       }}
     >
-      <div
-        ref={dialogRef}
-        className="hubly-sheet"
-        data-state={presence.state}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        style={{
-          width: "100%",
-          maxWidth: 620,
-          maxHeight: "92vh",
-          background: "var(--ui-surface)",
-          borderRadius: 20,
-          border: "1px solid var(--ui-border)",
-          boxShadow: "0 24px 60px rgba(15, 23, 42, 0.22)",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-          color: "var(--ui-text)",
-        }}
-      >
-        {/* Header */}
-        <div
-          style={{
-            padding: "16px 22px",
-            borderBottom: "1px solid var(--ui-muted)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 12,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: 10,
-                background: "var(--ui-accent-soft)",
-                color: "var(--hb-accent-text)",
-                display: "grid",
-                placeItems: "center",
-                flexShrink: 0,
-              }}
-            >
-              <UserPlus size={18} />
-            </div>
-            <div>
-              <h2
-                id={titleId}
-                style={{
-                  margin: 0,
-                  fontSize: 16,
-                  fontWeight: 700,
-                  color: "var(--ui-text)",
-                }}
-              >
-                Invitar miembro al equipo
-              </h2>
-              <p
-                style={{
-                  margin: "2px 0 0",
-                  fontSize: 12,
-                  color: "var(--ui-text-4)",
-                }}
-              >
-                Asigna rol operativo y acceso por marca dentro de Hubly
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleClose}
-            aria-label="Cerrar modal de invitación"
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 9999,
-              border: "1px solid var(--ui-border)",
-              background: "var(--ui-surface-2)",
-              color: "var(--ui-text-4)",
-              display: "grid",
-              placeItems: "center",
-              cursor: "pointer",
-            }}
-          >
-            <X size={15} />
+      <div ref={dialogRef} className="hubly-sheet hubly-cal-modal hubly-touch" data-state={presence.state} role="dialog" aria-modal="true" aria-label="Invitar a la agencia">
+        <div className="hubly-cal-modal-head">
+          <h2>Invitar a la agencia</h2>
+          <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar" onClick={close}>
+            <HublyCloseIcon size={14} />
           </button>
         </div>
-
-        {/* Body */}
-        <div
-          style={{
-            padding: "18px 22px",
-            overflowY: "auto",
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-          }}
-        >
-          {/* Honest Local Demo Banner */}
-          <div
-            style={{
-              padding: "10px 14px",
-              borderRadius: 12,
-              background: "#F1F9FD",
-              border: "1px solid #BFE2F4",
-              display: "flex",
-              alignItems: "flex-start",
-              gap: 10,
-              fontSize: 12,
-              lineHeight: 1.45,
-              color: "var(--hb-accent-edge)",
-            }}
-          >
-            <Info
-              size={15}
-              style={{ color: "var(--ui-accent-text-2)", flexShrink: 0, marginTop: 1 }}
-            />
-            <div>
-              <strong style={{ fontWeight: 700 }}>
-                Invitación local demo:
-              </strong>{" "}
-              Al crear la invitación se registra localmente en tu workspace con
-              estado <strong>Pendiente</strong> y se genera un enlace local
-              copiable. No se envía ningún correo electrónico externo.
-            </div>
-          </div>
-
-          {/* Newly Created Local Invitation Card */}
-          {createdInvitation && (
-            <div
-              role="status"
-              style={{
-                padding: 14,
-                borderRadius: 14,
-                background: "var(--ui-accent-soft)",
-                border: "1px solid #BFE2F4",
-                display: "flex",
-                flexDirection: "column",
-                gap: 10,
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: 8,
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span
-                    style={{
-                      width: 24,
-                      height: 24,
-                      borderRadius: 9999,
-                      background: "var(--hb-accent)",
-                      color: "#FFFFFF",
-                      display: "grid",
-                      placeItems: "center",
-                    }}
-                  >
-                    <Check size={13} />
-                  </span>
-                  <div>
-                    <div
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 700,
-                        color: "var(--ui-text)",
-                      }}
-                    >
-                      Invitación local creada para {createdInvitation.name} (
-                      {createdInvitation.email})
-                    </div>
-                    <div style={{ fontSize: 11.5, color: "var(--hb-accent-text)" }}>
-                      Rol: <strong>{createdInvitation.role}</strong> · Estado:{" "}
-                      <strong>Pendiente</strong> (guardada en este navegador)
-                    </div>
-                  </div>
-                </div>
-
-                <span
-                  style={{
-                    padding: "2px 8px",
-                    borderRadius: 9999,
-                    background: "#E6F4FB",
-                    color: "var(--ui-accent-text)",
-                    fontSize: 11,
-                    fontWeight: 700,
-                  }}
-                >
-                  Pendiente
-                </span>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  background: "var(--ui-surface)",
-                  padding: "7px 10px",
-                  borderRadius: 10,
-                  border: "1px solid #BFE2F4",
-                }}
-              >
-                <Link2 size={14} style={{ color: "var(--hb-accent-text)", flexShrink: 0 }} />
-                <input
-                  type="text"
-                  readOnly
-                  value={buildDemoInviteUrl(createdInvitation)}
-                  aria-label="Enlace local de invitación demo"
-                  onFocus={(e) => e.currentTarget.select()}
-                  style={{
-                    flex: 1,
-                    border: "none",
-                    background: "transparent",
-                    fontSize: 12,
-                    color: "var(--ui-text-2)",
-                    outline: "none",
-                    fontFamily: "monospace",
-                  }}
-                />
+        {canInvite() ? (
+          <>
+            <div className="hubly-invite-tabs" role="tablist" aria-label="Forma de invitar" onKeyDown={moveTab}>
+              {TABS.map((t) => (
                 <button
+                  key={t.id}
+                  ref={(el) => {
+                    tabRefs.current[t.id] = el;
+                  }}
                   type="button"
-                  onClick={() => handleCopyInviteLink(createdInvitation)}
-                  style={{
-                    padding: "5px 11px",
-                    borderRadius: 8,
-                    border: "none",
-                    background:
-                      copiedId === createdInvitation.id ? "#16A34A" : "var(--hb-accent)",
-                    color: "#FFFFFF",
-                    fontSize: 11.5,
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 5,
-                    flexShrink: 0,
-                  }}
+                  role="tab"
+                  id={`invitar-${t.id}`}
+                  aria-selected={tab === t.id}
+                  aria-controls="invitar-panel"
+                  tabIndex={tab === t.id ? 0 : -1}
+                  onClick={() => setTab(t.id)}
                 >
-                  {copiedId === createdInvitation.id ? (
-                    <>
-                      <Check size={12} />
-                      <span>¡Copiado!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy size={12} />
-                      <span>Copiar enlace demo</span>
-                    </>
-                  )}
+                  {t.icon}
+                  {t.label}
                 </button>
-              </div>
+              ))}
             </div>
-          )}
-
-          {/* Form */}
-          <form
-            id="invite-team-form"
-            onSubmit={handleSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: 14 }}
-          >
-            {errorMsg && (
-              <div
-                role="alert"
-                style={{
-                  padding: "10px 14px",
-                  borderRadius: 10,
-                  background: "#FEF2F2",
-                  border: "1px solid #FECACA",
-                  color: "#B91C1C",
-                  fontSize: 12.5,
-                  fontWeight: 600,
-                }}
-              >
-                {errorMsg}
-              </div>
-            )}
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1.3fr 1fr",
-                gap: 10,
-              }}
-            >
-              <div>
-                <label
-                  htmlFor="invite-email"
-                  style={{
-                    display: "block",
-                    fontSize: 11,
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: "var(--ui-text-3)",
-                    marginBottom: 5,
-                  }}
-                >
-                  Correo electrónico *
-                </label>
-                <input
-                  ref={emailInputRef}
-                  id="invite-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (errorMsg) setErrorMsg(null);
-                  }}
-                  placeholder="ej. camila@hubly.agency"
-                  style={{
-                    width: "100%",
-                    height: 38,
-                    padding: "0 12px",
-                    borderRadius: 10,
-                    border: "1px solid var(--ui-border-strong)",
-                    fontSize: 13,
-                    color: "var(--ui-text)",
-                  }}
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="invite-name"
-                  style={{
-                    display: "block",
-                    fontSize: 11,
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: "var(--ui-text-3)",
-                    marginBottom: 5,
-                  }}
-                >
-                  Nombre (opcional)
-                </label>
-                <input
-                  id="invite-name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Ej. Camila Ortega"
-                  style={{
-                    width: "100%",
-                    height: 38,
-                    padding: "0 12px",
-                    borderRadius: 10,
-                    border: "1px solid var(--ui-border-strong)",
-                    fontSize: 13,
-                    color: "var(--ui-text)",
-                  }}
-                />
-              </div>
+            <div id="invitar-panel" className="hubly-cal-modal-scroll" role="tabpanel" aria-labelledby={`invitar-${tab}`}>
+              {tab === "existente" && <ExistenteTab />}
+              {tab === "link" && <LinkTab />}
+              {tab === "correo" && <CorreoTab />}
             </div>
-
-            {/* Role Selector */}
-            <div>
-              <label
-                htmlFor="invite-role"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 5,
-                  fontSize: 11,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color: "var(--ui-text-3)",
-                  marginBottom: 5,
-                }}
-              >
-                <Shield size={12} />
-                <span>Rol en el workspace</span>
-              </label>
-              <select
-                id="invite-role"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                style={{
-                  width: "100%",
-                  height: 38,
-                  padding: "0 12px",
-                  borderRadius: 10,
-                  border: "1px solid var(--ui-border-strong)",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: "var(--ui-text)",
-                  background: "var(--ui-surface)",
-                }}
-              >
-                {ROLE_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label} — {opt.description}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Brand Assignment Checklist */}
-            <div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: 6,
-                }}
-              >
-                <label
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: "var(--ui-text-3)",
-                  }}
-                >
-                  Marcas asignadas ({selectedBrandIds.length} de {brands.length}
-                  ) *
-                </label>
-                <button
-                  type="button"
-                  onClick={toggleSelectAllBrands}
-                  style={{
-                    border: "none",
-                    background: "transparent",
-                    color: "var(--hb-accent-text)",
-                    fontSize: 11.5,
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    padding: 0,
-                  }}
-                >
-                  {selectedBrandIds.length === brands.length
-                    ? "Deseleccionar todas"
-                    : "Seleccionar todas"}
-                </button>
-              </div>
-
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))",
-                  gap: 8,
-                }}
-              >
-                {brands.map((b) => {
-                  const checked = selectedBrandIds.includes(b.id);
-                  return (
-                    <button
-                      key={b.id}
-                      type="button"
-                      onClick={() => toggleBrandSelection(b.id)}
-                      aria-pressed={checked}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: 8,
-                        padding: "8px 10px",
-                        borderRadius: 10,
-                        border: checked
-                          ? "1px solid var(--hb-accent)"
-                          : "1px solid #E2E8F0",
-                        background: checked ? "var(--ui-accent-soft)" : "var(--ui-surface)",
-                        cursor: "pointer",
-                        textAlign: "left",
-                      }}
-                    >
-                      <span
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                          minWidth: 0,
-                        }}
-                      >
-                        <span
-                          style={{
-                            width: 22,
-                            height: 22,
-                            borderRadius: 6,
-                            background: b.color,
-                            color: "#FFFFFF",
-                            fontSize: 10,
-                            fontWeight: 700,
-                            display: "grid",
-                            placeItems: "center",
-                            flexShrink: 0,
-                          }}
-                        >
-                          {b.initials}
-                        </span>
-                        <span
-                          style={{
-                            fontSize: 12.5,
-                            fontWeight: 600,
-                            color: "var(--ui-text)",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {b.name}
-                        </span>
-                      </span>
-
-                      <span
-                        style={{
-                          width: 17,
-                          height: 17,
-                          borderRadius: 5,
-                          border: checked
-                            ? "none"
-                            : "1.5px solid #CBD5E1",
-                          background: checked ? "var(--hb-accent)" : "var(--ui-surface)",
-                          color: "#FFFFFF",
-                          display: "grid",
-                          placeItems: "center",
-                          flexShrink: 0,
-                        }}
-                      >
-                        {checked && <Check size={11} />}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </form>
-
-          {/* Pending Invitations List */}
-          {pendingInvitations.length > 0 && (
-            <div
-              style={{
-                borderTop: "1px solid var(--ui-muted)",
-                paddingTop: 12,
-                display: "flex",
-                flexDirection: "column",
-                gap: 8,
-              }}
-            >
-              <span
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color: "var(--ui-text-4)",
-                }}
-              >
-                Invitaciones locales pendientes ({pendingInvitations.length})
-              </span>
-
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 6,
-                  maxHeight: 150,
-                  overflowY: "auto",
-                }}
-              >
-                {pendingInvitations.map((inv) => (
-                  <div
-                    key={inv.id}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      gap: 10,
-                      padding: "8px 12px",
-                      borderRadius: 10,
-                      background: "var(--ui-surface-2)",
-                      border: "1px solid var(--ui-border)",
-                      fontSize: 12,
-                    }}
-                  >
-                    <div style={{ minWidth: 0 }}>
-                      <div
-                        style={{
-                          fontWeight: 600,
-                          color: "var(--ui-text)",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 6,
-                        }}
-                      >
-                        <span>{inv.name}</span>
-                        <span style={{ color: "var(--ui-text-4)", fontWeight: 400 }}>
-                          ({inv.email})
-                        </span>
-                        <span
-                          style={{
-                            padding: "1px 7px",
-                            borderRadius: 9999,
-                            background: "#E6F4FB",
-                            color: "var(--ui-accent-text)",
-                            fontSize: 10.5,
-                            fontWeight: 700,
-                          }}
-                        >
-                          {inv.status}
-                        </span>
-                      </div>
-                      <div style={{ fontSize: 11, color: "var(--ui-text-4)" }}>
-                        {inv.role} · {inv.brandIds.length} marca(s)
-                      </div>
-                    </div>
-
-                    <div
-                      style={{ display: "flex", alignItems: "center", gap: 6 }}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => handleCopyInviteLink(inv)}
-                        style={{
-                          padding: "4px 9px",
-                          borderRadius: 7,
-                          border: "1px solid var(--ui-border-strong)",
-                          background: "var(--ui-surface)",
-                          color: "var(--ui-text-2)",
-                          fontSize: 11,
-                          fontWeight: 600,
-                          cursor: "pointer",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 4,
-                        }}
-                      >
-                        <Copy size={11} />
-                        <span>
-                          {copiedId === inv.id ? "Copiado" : "Copiar link"}
-                        </span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => cancelTeamInvitation(inv.id)}
-                        aria-label={`Revocar invitación de ${inv.email}`}
-                        title="Revocar invitación"
-                        style={{
-                          width: 26,
-                          height: 26,
-                          borderRadius: 7,
-                          border: "1px solid #FECACA",
-                          background: "#FEF2F2",
-                          color: "#DC2626",
-                          display: "grid",
-                          placeItems: "center",
-                          cursor: "pointer",
-                          padding: 0,
-                        }}
-                      >
-                        <Trash2 size={12} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Footer */}
-        <div
-          style={{
-            padding: "14px 22px",
-            borderTop: "1px solid var(--ui-muted)",
-            background: "var(--ui-surface-2)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 10,
-          }}
-        >
-          <span style={{ fontSize: 12, color: "var(--ui-text-4)" }}>
-            Se reflejará de inmediato en{" "}
-            <strong style={{ color: "var(--ui-text-2)" }}>Dashboard · Equipo</strong>
-          </span>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <button
-              type="button"
-              onClick={handleClose}
-              style={{
-                height: 36,
-                padding: "0 14px",
-                borderRadius: 10,
-                border: "1px solid var(--ui-border-strong)",
-                background: "var(--ui-surface)",
-                color: "var(--ui-text-3)",
-                fontSize: 12.5,
-                fontWeight: 600,
-                cursor: "pointer",
-              }}
-            >
-              Cerrar
-            </button>
-
-            <button
-              type="submit"
-              form="invite-team-form"
-              style={{
-                height: 36,
-                padding: "0 16px",
-                borderRadius: 10,
-                border: "none",
-                background: "var(--hb-accent)",
-                color: "#FFFFFF",
-                fontSize: 12.5,
-                fontWeight: 600,
-                cursor: "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                boxShadow: "0 2px 6px rgb(var(--hb-accent-rgb) / 0.28)",
-              }}
-            >
-              <UserPlus size={14} />
-              <span>Generar invitación local</span>
-            </button>
+          </>
+        ) : (
+          <div className="hubly-ajustes-empty">
+            <strong>Tu rol no permite invitar</strong>
+            <p>Pídeselo a quien administra la agencia.</p>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
