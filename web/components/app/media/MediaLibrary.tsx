@@ -198,7 +198,7 @@ export function MediaLibrary({ brandId, selectable = false, accept, maxSelection
 
       <div className="hubly-media-toolbar">
         <nav className="hubly-media-crumbs" aria-label="Ubicación">
-          <button type="button" aria-label="Inicio de la biblioteca" onClick={() => setFolder("")}>
+          <button type="button" aria-label="Inicio de la biblioteca" aria-current={!folder ? "page" : undefined} onClick={() => setFolder("")}>
             <Home size={16} />
           </button>
           {folder && (

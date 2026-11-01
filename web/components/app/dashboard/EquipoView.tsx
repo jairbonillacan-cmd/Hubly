@@ -1235,6 +1235,7 @@ export function EquipoView() {
                 <button
                   key={p.id}
                   type="button"
+                  aria-pressed={active}
                   onClick={() => setTeamPeriod(p.id)}
                   className="hubly-seg-pill"
                   style={{
@@ -1459,6 +1460,7 @@ export function EquipoView() {
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12 }}>
                 <button
                   type="button"
+                  aria-pressed={brandFilterId === "all"}
                   onClick={() => setBrandFilterId("all")}
                   style={{
                     padding: "4px 9px",
@@ -1480,6 +1482,7 @@ export function EquipoView() {
                   <button
                     key={b.id}
                     type="button"
+                    aria-pressed={brandFilterId === b.id}
                     onClick={() => setBrandFilterId(b.id)}
                     style={{
                       padding: "4px 9px",
@@ -1910,6 +1913,7 @@ export function EquipoView() {
                     <button
                       key={b.id}
                       type="button"
+                      aria-pressed={isAssigned}
                       onClick={() => handleToggleBrandForMember(b.id)}
                       style={{
                         display: "flex",
@@ -1969,6 +1973,9 @@ export function EquipoView() {
           marginBottom: 18,
         }}
       >
+        <span style={{ fontSize: 11.5, fontWeight: 600, color: "var(--ui-text-4)" }}>
+          {teamPeriod === "7d" ? "Últimos 7 días" : teamPeriod === "90d" ? "Últimos 90 días" : "Últimos 30 días"}
+        </span>
         {/* TAREAS */}
         <div
           style={{
@@ -2338,6 +2345,7 @@ export function EquipoView() {
                   <button
                     key={r}
                     type="button"
+                    aria-pressed={active}
                     onClick={() => setActivityRange(r)}
                     style={{
                       border: "none",
@@ -2655,6 +2663,7 @@ export function EquipoView() {
                   <button
                     key={r}
                     type="button"
+                    aria-pressed={active}
                     onClick={() => setRankingRange(r)}
                     className="hubly-seg-pill"
                     style={{
@@ -2699,6 +2708,7 @@ export function EquipoView() {
                   key={member.id}
                   onClick={() => setSelectedMemberId(member.id)}
                   role="button"
+                  aria-pressed={isSelected}
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {

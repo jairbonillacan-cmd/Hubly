@@ -116,3 +116,24 @@ test("/reportes avisa cuando muestra cifras de ejemplo", async ({ page }) => {
   await expect(nota).toContainText("Datos de ejemplo.");
   await expect(page.getByText("Ejemplo", { exact: true }).first()).toBeVisible();
 });
+
+test("/dashboard/equipo refleja el periodo seleccionado y el estado activo de sus controles", async ({ page }) => {
+  await page.goto("/dashboard/equipo");
+  await page.waitForLoadState("networkidle");
+
+  const btn7d = page.getByRole("button", { name: "7 días", exact: true });
+  const btn30d = page.getByRole("button", { name: "30 días", exact: true });
+  const btn90d = page.getByRole("button", { name: "90 días", exact: true });
+
+  await expect(btn30d).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText(/Últimos 30 días/)).toBeVisible();
+
+  await btn7d.click();
+  await expect(btn7d).toHaveAttribute("aria-pressed", "true");
+  await expect(btn30d).toHaveAttribute("aria-pressed", "false");
+  await expect(page.getByText(/Últimos 7 días/)).toBeVisible();
+
+  await btn90d.click();
+  await expect(btn90d).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText(/Últimos 90 días/)).toBeVisible();
+});

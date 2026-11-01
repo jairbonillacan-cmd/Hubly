@@ -622,6 +622,7 @@ export function AutoSuggestionsModal({
             <button
               ref={firstActionRef}
               type="button"
+              aria-pressed={activeView === "reglas"}
               onClick={() => setActiveView("reglas")}
               style={{
                 padding: "5px 12px",
@@ -643,6 +644,7 @@ export function AutoSuggestionsModal({
             </button>
             <button
               type="button"
+              aria-pressed={activeView === "metricas"}
               onClick={() => setActiveView("metricas")}
               style={{
                 padding: "5px 12px",

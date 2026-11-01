@@ -735,6 +735,7 @@ function DemoAnunciosPage() {
             <button
               type="button"
               aria-label="Cards"
+              aria-pressed={viewMode === "cards"}
               title="Vista visual con creatividades"
               onClick={() => setViewMode("cards")}
               style={{
@@ -755,6 +756,7 @@ function DemoAnunciosPage() {
             <button
               type="button"
               aria-label="Tabla"
+              aria-pressed={viewMode === "table"}
               title="Comparación numérica completa"
               onClick={() => setViewMode("table")}
               style={{
@@ -775,6 +777,7 @@ function DemoAnunciosPage() {
             <button
               type="button"
               aria-label="Funnels"
+              aria-pressed={viewMode === "funnels"}
               title="Funnel: dónde caen las conversiones"
               onClick={() => setViewMode("funnels")}
               style={{
