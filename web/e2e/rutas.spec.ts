@@ -86,26 +86,27 @@ for (const esquema of ["light", "dark"] as const) {
 test("/chat y /anuncios muestran su encabezado principal h1", async ({ page }) => {
   await page.goto("/chat");
   await page.waitForLoadState("networkidle");
-  await expect(page.getByRole("heading", { level: 1, name: "Chat" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Elige una conversación" })).toBeVisible();
 
   await page.goto("/anuncios");
   await page.waitForLoadState("networkidle");
   await expect(page.getByRole("heading", { level: 1, name: "Anuncios" })).toBeVisible();
 });
 
-test("/chat actualiza el estado vacío tras enviar un mensaje en # General", async ({ page }) => {
+test("/chat quita el estado vacío tras enviar un mensaje en General", async ({ page }) => {
+  await page.route("**/api/workspace*", (route) =>
+    route.request().method() === "GET" ? route.continue() : route.fulfill({ json: { ok: true, version: 1 } })
+  );
   await page.goto("/chat");
   await page.waitForLoadState("networkidle");
-  await page.getByRole("button", { name: /# General/ }).click();
-  await expect(page.getByText(/Sin mensajes aún/).first()).toBeVisible();
+  await page.getByRole("button", { name: "General" }).first().click();
+  await expect(page.getByRole("heading", { name: "Sin mensajes" })).toBeVisible();
 
-  const input = page.getByPlaceholder("Escribe un mensaje en # General...");
-  await input.fill("Hola equipo, revisemos la parrilla");
-  await page.getByRole("button", { name: "Enviar" }).click();
+  await page.locator(".hubly-chat-composer textarea, .hubly-chat-composer [contenteditable]").first().fill("Hola equipo, revisemos la parrilla");
+  await page.keyboard.press("Enter");
 
   await expect(page.getByText("Hola equipo, revisemos la parrilla").first()).toBeVisible();
-  await expect(page.getByText(/Sin mensajes aún/)).toHaveCount(0);
-  await expect(page.getByText("Todavía no hay canales con conversación.")).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Sin mensajes" })).toHaveCount(0);
 });
 
 test("/reportes avisa cuando muestra cifras de ejemplo", async ({ page }) => {

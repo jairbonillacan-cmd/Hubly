@@ -24,8 +24,10 @@ test("Salud de cuentas: un h1, búsqueda, filtros, orden y vacío por filtro", a
 
   await page.getByTestId("filter-pill-en_riesgo").click();
   await expect(page.getByTestId("filter-pill-en_riesgo")).toHaveAttribute("aria-pressed", "true");
-  await expect(tarjetas).toHaveCount(1);
-  await expect(page.locator(".hubly-cal-subtitle")).toContainText(`1 de ${total} cuentas`);
+  // Cuántas están en riesgo depende de la fecha: el cumplimiento baja al empezar el mes.
+  await expect.poll(() => tarjetas.count()).toBeLessThan(total);
+  const enRiesgo = await tarjetas.count();
+  await expect(page.locator(".hubly-cal-subtitle")).toContainText(`${enRiesgo} de ${total} cuentas`);
   await page.getByTestId("filter-pill-todas").click();
 
   await page.getByLabel("Ordenar cuentas").selectOption("name_asc");
