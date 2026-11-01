@@ -107,9 +107,7 @@
     "tamano-fuente": 1
   },
   "components/app/AutoSuggestionsModal.tsx": {
-    "color-fijo": 19,
-    "rgb-fijo": 4,
-    "tamano-fuente": 1
+    "rgb-fijo": 1
   },
   "components/app/DescubreHublyWidget.tsx": {
     "rgb-fijo": 1,
@@ -254,6 +252,20 @@
     "radio": 1
   },
   "components/app/social/SocialCalendar.tsx": {
+    "color-fijo": 1
+  },
+  "components/app/sugerencias/AutoSuggestionsModal-shared.tsx": {
+    "color-fijo": 8
+  },
+  "components/app/sugerencias/SugerenciasCabecera.tsx": {
+    "rgb-fijo": 2,
+    "tamano-fuente": 1
+  },
+  "components/app/sugerencias/SugerenciasCuerpo.tsx": {
+    "color-fijo": 10,
+    "rgb-fijo": 1
+  },
+  "components/app/sugerencias/SugerenciasPie.tsx": {
     "color-fijo": 1
   },
   "components/app/tasks/NotebooksSection.tsx": {
