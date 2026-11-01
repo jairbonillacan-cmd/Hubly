@@ -64,6 +64,8 @@ export function FloatingAIDrawer() {
 
   const aiDrawerOpen = useHublyStore((s) => s.aiDrawerOpen);
   const setAiDrawerOpen = useHublyStore((s) => s.setAiDrawerOpen);
+  const aiDrawerPrompt = useHublyStore((s) => s.aiDrawerPrompt);
+  const setAiDrawerPrompt = useHublyStore((s) => s.setAiDrawerPrompt);
   const brands = useHublyStore((s) => s.brands);
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
   const tasks = useHublyStore((s) => s.tasks);
@@ -345,6 +347,14 @@ export function FloatingAIDrawer() {
     setTurns((prev) => [...prev, userTurn, assistantTurn]);
     setPrompt("");
   };
+
+  // Una pregunta hecha desde el buscador llega ya respondida.
+  useEffect(() => {
+    if (!aiDrawerPrompt) return;
+    setAiDrawerPrompt(null);
+    handleSubmitPrompt(aiDrawerPrompt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [aiDrawerPrompt]);
 
   const handleTriggerTurnAction = (
     actionType?: LocalAssistantTurn["actionType"]

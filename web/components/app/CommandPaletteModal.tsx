@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useHublyStore } from "@/lib/store";
 import { useLayer } from "@/lib/use-layer";
 import { useModalPresence } from "@/lib/use-modal-presence";
+import { useTypedText } from "@/lib/use-typed-text";
 import { dueLabelFor, localIsoDate } from "@/lib/date";
 import { STATUS_META } from "@/components/app/social/status-meta";
 import { openNotebookModal } from "@/components/app/NotebookReaderModal";
@@ -44,6 +45,47 @@ interface CommandItem {
   badge?: string;
   icon: React.ReactNode;
   action: () => void;
+}
+
+// Todas salen de lo que Hubi ya sabe responder o de lo que la paleta ya encuentra.
+const TYPED_EXAMPLES = [
+  "¿Qué tareas vencen hoy?",
+  "¿Qué posts esperan aprobación?",
+  "Salud de cuentas",
+  "Crear o programar post",
+  "Ideas de copy para mi marca",
+];
+
+function normalize(value: string): string {
+  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
+// Menor es mejor; null si falta alguna palabra de la búsqueda.
+function scoreItem(item: CommandItem, words: string[], phrase: string): number | null {
+  const label = normalize(item.label);
+  const rest = normalize([item.sublabel, item.group, item.badge].filter(Boolean).join(" "));
+  if (!words.every((word) => label.includes(word) || rest.includes(word))) return null;
+  if (label.startsWith(phrase)) return 0;
+  if (label.includes(` ${phrase}`)) return 1;
+  return label.includes(phrase) ? 2 : 3;
+}
+
+function rankItems(items: CommandItem[], query: string): CommandItem[] {
+  const phrase = normalize(query);
+  const words = phrase.split(/\s+/);
+  const scored = items.flatMap((item) => {
+    const score = scoreItem(item, words, phrase);
+    return score === null ? [] : [{ item, score }];
+  });
+  // Cada grupo se mantiene junto para que las flechas recorran la lista en el orden en que se ve.
+  const groupScore = new Map<string, number>();
+  scored.forEach(({ item, score }) => {
+    groupScore.set(item.group, Math.min(score, groupScore.get(item.group) ?? score));
+  });
+  const groupOrder = [...groupScore.keys()].sort((a, b) => groupScore.get(a)! - groupScore.get(b)!);
+  return scored
+    .sort((a, b) => groupOrder.indexOf(a.item.group) - groupOrder.indexOf(b.item.group) || a.score - b.score)
+    .map(({ item }) => item);
 }
 
 function dueText(iso: string): string {
@@ -98,6 +140,7 @@ export function CommandPaletteModal({
     (s) => s.setAutoSuggestionsModalOpen
   );
   const setAiDrawerOpen = useHublyStore((s) => s.setAiDrawerOpen);
+  const setAiDrawerPrompt = useHublyStore((s) => s.setAiDrawerPrompt);
 
   const isOpen = openProp !== undefined ? openProp : cmdkOpen;
 
@@ -136,10 +179,18 @@ export function CommandPaletteModal({
     }
   }, [isOpen]);
 
+  const askHubi = useCallback((question: string) => {
+    handleClose();
+    window.requestAnimationFrame(() => {
+      setAiDrawerPrompt(question);
+      setAiDrawerOpen(true);
+    });
+  }, [handleClose, setAiDrawerOpen, setAiDrawerPrompt]);
+
   const allItems = useMemo<CommandItem[]>(() => {
     // Cerrada no arma resultados: así el render del servidor no lee la fecha actual.
     if (!isOpen) return [];
-    const q = query.trim().toLowerCase();
+    const q = query.trim();
 
     const quickActions: CommandItem[] = [
       {
@@ -419,13 +470,19 @@ export function CommandPaletteModal({
       ];
     }
 
-    return combined.filter(
-      (item) =>
-        item.label.toLowerCase().includes(q) ||
-        (item.sublabel && item.sublabel.toLowerCase().includes(q)) ||
-        item.group.toLowerCase().includes(q) ||
-        (item.badge && item.badge.toLowerCase().includes(q))
-    );
+    const results = rankItems(combined, q);
+    if (!/[¿?]/.test(q)) return results;
+    return [
+      {
+        id: "ask-hubi",
+        group: "Hubi",
+        label: `Preguntar a Hubi: ${q}`,
+        sublabel: "Responde con tus tareas, posts y marcas",
+        icon: <HublyCatAvatar size={24} />,
+        action: () => askHubi(q),
+      },
+      ...results,
+    ];
   }, [
     isOpen,
     query,
@@ -435,7 +492,7 @@ export function CommandPaletteModal({
     posts,
     notebooks,
     teamMembers,
-    router, handleClose, openComposer, setActiveBrand, setNewBrandModalOpen,
+    router, handleClose, askHubi, openComposer, setActiveBrand, setNewBrandModalOpen,
     setInviteModalOpen, setAutoSuggestionsModalOpen, setWidgetConfigModalOpen, setAiDrawerOpen,
   ]);
 
@@ -491,6 +548,7 @@ export function CommandPaletteModal({
     }
   };
 
+  const typedExample = useTypedText(TYPED_EXAMPLES, isOpen && !query);
   const presence = useModalPresence(isOpen);
   if (!presence.mounted) return null;
 
@@ -525,23 +583,26 @@ export function CommandPaletteModal({
       >
         <div className="hubly-command-search">
           <Search size={22} />
-          <div className="hubly-command-field">
+          <div className="hubly-command-field" data-typing={typedExample !== null || undefined}>
             <label id={titleId} htmlFor={`${listId}-input`}>Buscar en Hubly</label>
-            <input
-              id={`${listId}-input`}
-              ref={inputRef}
-              type="text"
-              role="combobox"
-              aria-expanded={isOpen}
-              aria-controls={listId}
-              aria-autocomplete="list"
-              aria-activedescendant={allItems[activeIndex] ? `${listId}-${allItems[activeIndex].id}` : undefined}
-              autoComplete="off"
-              spellCheck={false}
-              value={query}
-              onChange={(e) => updateQuery(e.target.value)}
-              placeholder="Busca una acción, página o marca…"
-            />
+            <div className="hubly-command-input">
+              <input
+                id={`${listId}-input`}
+                ref={inputRef}
+                type="text"
+                role="combobox"
+                aria-expanded={isOpen}
+                aria-controls={listId}
+                aria-autocomplete="list"
+                aria-activedescendant={allItems[activeIndex] ? `${listId}-${allItems[activeIndex].id}` : undefined}
+                autoComplete="off"
+                spellCheck={false}
+                value={query}
+                onChange={(e) => updateQuery(e.target.value)}
+                placeholder="Busca una acción, página o marca…"
+              />
+              {typedExample !== null && <span className="hubly-command-typed" aria-hidden="true">{typedExample}</span>}
+            </div>
           </div>
           {query && (
             <button type="button" className="hubly-cal-modal-close" aria-label="Limpiar búsqueda" title="Limpiar búsqueda"
@@ -586,7 +647,10 @@ export function CommandPaletteModal({
             <Search size={22} aria-hidden="true" />
             <strong>Sin resultados para «{query}»</strong>
             <span>Prueba con otro nombre o limpia la búsqueda.</span>
-            <button type="button" className="hbtn hbtn-secondary" onClick={() => { updateQuery(""); inputRef.current?.focus(); }}>Limpiar búsqueda</button>
+            <div className="hubly-command-empty-actions">
+              <button type="button" className="hbtn hbtn-secondary" onClick={() => { updateQuery(""); inputRef.current?.focus(); }}>Limpiar búsqueda</button>
+              <button type="button" className="hbtn hbtn-secondary" onClick={() => askHubi(query.trim())}>Preguntar a Hubi</button>
+            </div>
           </div>
         )}
         <span className="sr-only" role="status">{allItems.length ? `${allItems.length} resultados` : ""}</span>

@@ -118,6 +118,71 @@ test.describe("Buscador en escritorio", () => {
     await expect(paleta(page)).toHaveCount(0);
   });
 
+  test("texto animado: se escribe solo, desaparece al teclear y vuelve al borrar", async ({ page }) => {
+    await abrirApp(page);
+    await abrirConAtajo(page);
+    const animado = paleta(page).locator(".hubly-command-typed");
+    await expect(animado).toContainText("¿Qué tareas vencen hoy?");
+    await expect(animado).toHaveAttribute("aria-hidden", "true");
+    await expect(campo(page)).toHaveAttribute("placeholder", "Busca una acción, página o marca…");
+
+    await campo(page).fill("cal");
+    await expect(animado).toHaveCount(0);
+    await campo(page).fill("");
+    await expect(animado).toContainText("¿Qué");
+  });
+
+  test("texto animado: con movimiento reducido queda el placeholder fijo", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await abrirApp(page);
+    await abrirConAtajo(page);
+    await expect(paleta(page).locator(".hubly-command-typed")).toHaveCount(0);
+    const color = await campo(page).evaluate((el) => getComputedStyle(el, "::placeholder").color);
+    expect(color).not.toBe("rgba(0, 0, 0, 0)");
+  });
+
+  test("búsqueda: ignora acentos, acepta palabras sueltas y pone primero el título", async ({ page }) => {
+    await abrirApp(page);
+    await abrirConAtajo(page);
+    await campo(page).fill("nucleo");
+    await expect(opcion(page, "Núcleo de marca").first()).toBeVisible();
+    await campo(page).fill("programar crear");
+    await expect(opcion(page, "Crear o programar post")).toBeVisible();
+
+    await campo(page).fill("chat");
+    await expect(page.getByRole("option").first().locator(".hubly-command-label")).toHaveText("Chat");
+
+    // Las flechas siguen el orden visible: la selección nunca salta hacia atrás.
+    await campo(page).fill("a");
+    const posiciones: number[] = [];
+    for (let i = 0; i < 6; i++) {
+      posiciones.push(await page.getByRole("option").evaluateAll((els) => els.findIndex((el) => el.getAttribute("aria-selected") === "true")));
+      await campo(page).press("ArrowDown");
+    }
+    expect(posiciones).toEqual([0, 1, 2, 3, 4, 5]);
+  });
+
+  test("una pregunta llega a Hubi con su respuesta", async ({ page }) => {
+    await abrirApp(page, "/calendario");
+    await abrirConAtajo(page);
+    await campo(page).fill("¿Qué tareas vencen hoy?");
+    await expect(page.getByRole("option").first().locator(".hubly-command-label")).toHaveText("Preguntar a Hubi: ¿Qué tareas vencen hoy?");
+    await campo(page).press("Enter");
+    await expect(paleta(page)).toHaveCount(0);
+    const hubi = page.getByRole("dialog", { name: "Hubi" });
+    await expect(hubi).toContainText("¿Qué tareas vencen hoy?");
+    await expect(hubi).toContainText("Estado de tareas en");
+  });
+
+  test("sin resultados también se le puede preguntar a Hubi", async ({ page }) => {
+    await abrirApp(page, "/calendario");
+    await abrirConAtajo(page);
+    await campo(page).fill("resumen semanal zzzz");
+    await paleta(page).getByRole("button", { name: "Preguntar a Hubi" }).click();
+    await expect(paleta(page)).toHaveCount(0);
+    await expect(page.getByRole("dialog", { name: "Hubi" })).toContainText("resumen semanal zzzz");
+  });
+
   test("modo oscuro: abre con foco y el texto largo sin resultados no desborda", async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem("hubly-theme", "dark"));
     await abrirApp(page);
