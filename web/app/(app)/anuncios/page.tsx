@@ -1,11 +1,11 @@
 "use client";
 
+import { Modal } from "@/components/app/ui/Modal";
 import { LiveUnavailable } from "@/components/app/LiveUnavailable";
 import { backendEnabled } from "@/lib/supabase/config";
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useLayer } from "@/lib/use-layer";
 import {
   HublyBentoIcon as LayoutGrid,
   HublyCloseIcon as X,
@@ -487,7 +487,6 @@ function DemoAnunciosPage() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAd, setSelectedAd] = useState<SampleAdCard | null>(null);
-  useLayer(selectedAd !== null, () => setSelectedAd(null));
 
   const visibleAds = SAMPLE_ADS.filter((ad) =>
     searchQuery.trim()
@@ -1170,111 +1169,85 @@ function DemoAnunciosPage() {
 
       {/* Modal: Analizar Creativo con Hubi */}
       {selectedAd && (
-        <div
-          onClick={() => setSelectedAd(null)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(15, 23, 42, 0.45)",
-            display: "grid",
-            placeItems: "center",
-            zIndex: 100,
-            padding: 16,
-          }}
-        >
+        <Modal open onClose={() => setSelectedAd(null)} label="Ejemplo de diagnóstico">
           <div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Ejemplo de diagnóstico"
-            onClick={(e) => e.stopPropagation()}
             style={{
-              width: "100%",
-              maxWidth: 480,
-              background: "var(--ui-surface)",
-              borderRadius: 18,
-              padding: 24,
-              boxShadow: "0 24px 48px rgba(15, 23, 42, 0.22)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: 12,
             }}
           >
-            <div
+            <span
               style={{
-                display: "flex",
+                display: "inline-flex",
                 alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: 12,
-              }}
-            >
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  background: "var(--ui-accent-soft)",
-                  color: "var(--hb-accent-text)",
-                  fontSize: 12,
-                  fontWeight: 700,
-                  padding: "4px 10px",
-                  borderRadius: 999,
-                }}
-              >
-                <Sparkles size={13} /> Ejemplo de diagnóstico
-              </span>
-              <button
-                type="button"
-                aria-label="Cerrar"
-                title="Cerrar"
-                onClick={() => setSelectedAd(null)}
-                style={{ background: "none", border: "none", cursor: "pointer", color: "var(--ui-text-4)" }}
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <p style={{ fontSize: 12.5, color: "var(--ui-text-4)", margin: "0 0 10px" }}>
-              Hubi todavía no analiza anuncios.
-            </p>
-
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--ui-text)", margin: "0 0 10px" }}>
-              {selectedAd.title}
-            </h3>
-
-            <p style={{ fontSize: 13.5, color: "var(--ui-text-2)", lineHeight: 1.55, marginBottom: 16 }}>
-              {selectedAd.aiInsight}
-            </p>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 10,
-                background: "var(--ui-surface-2)",
-                padding: 12,
-                borderRadius: 12,
-                border: "1px solid var(--ui-border)",
+                gap: 6,
+                background: "var(--ui-accent-soft)",
+                color: "var(--hb-accent-text)",
                 fontSize: 12,
+                fontWeight: 700,
+                padding: "4px 10px",
+                borderRadius: 999,
               }}
             >
-              <div>
-                <div style={{ color: "var(--ui-text-4)" }}>Click Score</div>
-                <div style={{ fontWeight: 800, color: "var(--tinta-exito)", fontSize: 15 }}>
-                  {selectedAd.clickScore}/100
-                </div>
+              <Sparkles size={13} /> Ejemplo de diagnóstico
+            </span>
+            <button
+              type="button"
+              aria-label="Cerrar"
+              title="Cerrar"
+              onClick={() => setSelectedAd(null)}
+              style={{ background: "none", border: "none", cursor: "pointer", color: "var(--ui-text-4)" }}
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          <p style={{ fontSize: 12.5, color: "var(--ui-text-4)", margin: "0 0 10px" }}>
+            Hubi todavía no analiza anuncios.
+          </p>
+
+          <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--ui-text)", margin: "0 0 10px" }}>
+            {selectedAd.title}
+          </h3>
+
+          <p style={{ fontSize: 13.5, color: "var(--ui-text-2)", lineHeight: 1.55, marginBottom: 16 }}>
+            {selectedAd.aiInsight}
+          </p>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 10,
+              background: "var(--ui-surface-2)",
+              padding: 12,
+              borderRadius: 12,
+              border: "1px solid var(--ui-border)",
+              fontSize: 12,
+            }}
+          >
+            <div>
+              <div style={{ color: "var(--ui-text-4)" }}>Click Score</div>
+              <div style={{ fontWeight: 800, color: "var(--tinta-exito)", fontSize: 15 }}>
+                {selectedAd.clickScore}/100
               </div>
-              <div>
-                <div style={{ color: "var(--ui-text-4)" }}>Resultados</div>
-                <div style={{ fontWeight: 800, color: "var(--ui-text)", fontSize: 15 }}>
-                  {selectedAd.resultados}
-                </div>
+            </div>
+            <div>
+              <div style={{ color: "var(--ui-text-4)" }}>Resultados</div>
+              <div style={{ fontWeight: 800, color: "var(--ui-text)", fontSize: 15 }}>
+                {selectedAd.resultados}
               </div>
-              <div>
-                <div style={{ color: "var(--ui-text-4)" }}>Costo/Res.</div>
-                <div style={{ fontWeight: 800, color: "var(--ui-text)", fontSize: 15 }}>
-                  {selectedAd.costoResultado}
-                </div>
+            </div>
+            <div>
+              <div style={{ color: "var(--ui-text-4)" }}>Costo/Res.</div>
+              <div style={{ fontWeight: 800, color: "var(--ui-text)", fontSize: 15 }}>
+                {selectedAd.costoResultado}
               </div>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

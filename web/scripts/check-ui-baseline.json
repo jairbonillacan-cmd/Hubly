@@ -6,7 +6,7 @@
     "color-fijo": 88,
     "degradado": 1,
     "emoji": 3,
-    "rgb-fijo": 8,
+    "rgb-fijo": 6,
     "tamano-fuente": 1
   },
   "app/(app)/app-base.css": {
@@ -29,7 +29,6 @@
   "app/(app)/crm/page.tsx": {
     "color-fijo": 6,
     "radio": 1,
-    "rgb-fijo": 1,
     "tamano-fuente": 3
   },
   "app/(app)/dashboard-polish.css": {

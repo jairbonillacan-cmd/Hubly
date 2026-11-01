@@ -1,7 +1,7 @@
 {
-  "app/(app)/anuncios/page.tsx": 1282,
+  "app/(app)/anuncios/page.tsx": 1255,
   "app/(app)/app-base.css": 758,
-  "app/(app)/calendario/page.tsx": 822,
+  "app/(app)/calendario/page.tsx": 805,
   "app/(app)/chat/page.tsx": 776,
   "app/(app)/dashboard-polish.css": 3113,
   "app/(app)/hubly-saas.css": 1673,
@@ -15,7 +15,7 @@
   "components/app/AutoSuggestionsModal.tsx": 1210,
   "components/app/chat/ChatComposer.tsx": 590,
   "components/app/chat/ChatMessageRow.tsx": 488,
-  "components/app/CommandPaletteModal.tsx": 671,
+  "components/app/CommandPaletteModal.tsx": 661,
   "components/app/dashboard/EquipoView.tsx": 2625,
   "components/app/dashboard/ExtraWidgets.tsx": 522,
   "components/app/dashboard/InicioView.tsx": 1749,
