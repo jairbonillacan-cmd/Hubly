@@ -2652,9 +2652,33 @@ html.dark .hubly-app-root h3.hubly-wgal-rotulo { color: var(--ui-text-4); }
 }
 
 /* Pantalla de carga con Hubi */
-.hubly-carga { position: fixed; inset: 0; z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: var(--ui-surface); color: var(--ui-text-3); font-size: 14px; }
-.hubly-carga-hubi { transform-origin: center bottom; animation: hubly-hubi-balanceo 2.4s ease-in-out infinite; }
-@keyframes hubly-hubi-balanceo { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-6px) rotate(3deg); } }
+.hubly-carga { position: fixed; inset: 0; z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 32px 16px; background: var(--ui-surface); color: var(--ui-text); }
+.hubly-carga-hubi { position: relative; z-index: 1; transform-origin: center bottom; animation: hubly-hubi-balanceo 2.4s ease-in-out infinite; }
+.hubly-carga-hubi::before, .hubly-carga-hubi::after { content: ""; position: absolute; top: 50%; left: 50%; z-index: -1; width: 240px; height: 240px; margin: -120px 0 0 -120px; border: 3px solid var(--ui-sky); border-radius: 999px; opacity: 0; animation: hubly-hubi-onda 2.8s ease-out infinite; }
+.hubly-carga-hubi::after { animation-delay: 1.4s; }
+.hubly-carga-texto { position: relative; z-index: 1; display: flex; align-items: baseline; margin: -16px 0 0; font-size: clamp(30px, 4vw, 52px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; text-align: center; }
+.hubly-carga-puntos { display: inline-flex; gap: 6px; margin-left: 8px; }
+.hubly-carga-puntos i { width: 0.16em; height: 0.16em; border-radius: 999px; background: var(--ui-sky); animation: hubly-hubi-punto 1.2s ease-in-out infinite; }
+.hubly-carga-puntos i:nth-child(2) { animation-delay: 0.15s; }
+.hubly-carga-puntos i:nth-child(3) { animation-delay: 0.3s; }
+.hubly-carga-barra { position: relative; z-index: 1; width: min(560px, 82vw); height: 10px; margin-top: 24px; overflow: hidden; border-radius: 999px; background: var(--ui-muted); }
+.hubly-carga-barra::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 40%; border-radius: 999px; background: var(--ui-sky); animation: hubly-hubi-barra 1.6s ease-in-out infinite; }
+.hubly-carga-iconos { position: absolute; inset: 0; color: var(--hb-accent-text); }
+.hubly-carga-iconos span { position: absolute; display: flex; animation: hubly-hubi-flota 3.2s ease-in-out infinite alternate; }
+.hubly-carga-iconos svg { width: clamp(38px, 8vmin, 84px); height: clamp(38px, 8vmin, 84px); }
+.hubly-carga-iconos span:nth-child(1) { top: 13%; left: 11%; }
+.hubly-carga-iconos span:nth-child(2) { top: 8%; left: 37%; animation-delay: -0.5s; }
+.hubly-carga-iconos span:nth-child(3) { top: 9%; right: 33%; animation-delay: -1s; }
+.hubly-carga-iconos span:nth-child(4) { top: 15%; right: 10%; animation-delay: -1.5s; }
+.hubly-carga-iconos span:nth-child(5) { bottom: 15%; left: 9%; animation-delay: -2s; }
+.hubly-carga-iconos span:nth-child(6) { bottom: 8%; left: 35%; animation-delay: -2.5s; }
+.hubly-carga-iconos span:nth-child(7) { bottom: 9%; right: 34%; animation-delay: -0.8s; }
+.hubly-carga-iconos span:nth-child(8) { bottom: 14%; right: 11%; animation-delay: -1.8s; }
+@keyframes hubly-hubi-balanceo { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-10px) rotate(3deg); } }
+@keyframes hubly-hubi-onda { 0% { opacity: 0.6; transform: scale(0.7); } 100% { opacity: 0; transform: scale(1.7); } }
+@keyframes hubly-hubi-flota { from { transform: translateY(10px) rotate(-6deg); } to { transform: translateY(-14px) rotate(6deg); } }
+@keyframes hubly-hubi-punto { 0%, 60%, 100% { opacity: 0.35; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-0.18em); } }
+@keyframes hubly-hubi-barra { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
 @media (prefers-reduced-motion: reduce) {
-  .hubly-carga-hubi { animation: none; }
+  .hubly-carga-hubi, .hubly-carga-hubi::before, .hubly-carga-hubi::after, .hubly-carga-puntos i, .hubly-carga-barra::after, .hubly-carga-iconos span { animation: none; }
 }
