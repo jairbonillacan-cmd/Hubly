@@ -16,6 +16,7 @@ Sin estas claves, Hubly corre en modo demo: datos locales y sin cuentas.
 4. En **Authentication > URL Configuration**, define el Site URL y agrega como Redirect URL `http://localhost:3000/auth/callback`, más la de producción.
 5. Para entrar con Google, activa el proveedor en **Authentication > Providers** con tus credenciales de Google.
 6. Reinicia `npm run dev` en `web/`. Registrarse lleva al onboarding, que crea la agencia.
+7. Antes de publicar, revisa los ajustes de **Authentication** y de la clave de IA en [la auditoría de seguridad](../docs/auditoria-seguridad-2026-10-31.md#lo-que-debes-hacer-en-persona).
 
 ## Chat en vivo
 
