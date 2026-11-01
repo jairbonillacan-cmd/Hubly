@@ -23,7 +23,7 @@ test("asignar una marca limita lo que recibe el miembro y guardar no borra lo oc
     headers: auth,
     body: JSON.stringify({
       target_agency: agencyId,
-      new_data: { brands: [brand("m1", "Marca Uno"), brand("m2", "Marca Dos")], posts: [{ id: "p1", brandId: "m1", title: "Post uno" }, { id: "p2", brandId: "m2", title: "Post dos" }], tasks: [] },
+      new_data: { brands: [brand("m1", "Marca Uno"), brand("m2", "Marca Dos")], posts: [{ id: "p1", brandId: "m1", title: "Post uno" }, { id: "p2", brandId: "m2", title: "Post dos" }], tasks: [], notebooks: [{ id: "n1", brandId: "m1", title: "Libreta uno" }, { id: "n2", brandId: "m2", title: "Libreta dos" }] },
       expected_version: 1,
     }),
   });
@@ -42,7 +42,7 @@ test("asignar una marca limita lo que recibe el miembro y guardar no borra lo oc
   const leer = (page: Awaited<ReturnType<typeof enter>>) =>
     page.evaluate(async () => {
       const res = await fetch("/api/workspace");
-      return (await res.json()) as { version: number; agencyId: string; data: { brands: { id: string }[]; posts: { id: string; title: string }[]; tasks: unknown[] } };
+      return (await res.json()) as { version: number; agencyId: string; data: { brands: { id: string }[]; posts: { id: string; title: string }[]; tasks: unknown[]; notebooks: { id: string }[] } };
     });
 
   const a = await enter(anaMail);
@@ -57,6 +57,7 @@ test("asignar una marca limita lo que recibe el miembro y guardar no borra lo oc
   const visto = await leer(b);
   expect(visto.data.brands.map((x) => x.id)).toEqual(["m1"]);
   expect(visto.data.posts.map((p) => p.id)).toEqual(["p1"]);
+  expect(visto.data.notebooks.map((n) => n.id)).toEqual(["n1"]);
 
   // Beto guarda lo único que recibe: lo de la otra marca debe seguir ahí.
   const saved = await b.evaluate(async (w) => {
@@ -64,7 +65,9 @@ test("asignar una marca limita lo que recibe el miembro y guardar no borra lo oc
     return res.status;
   }, visto);
   expect(saved).toBe(200);
-  expect((await leer(a)).data.posts.map((p) => p.id).sort()).toEqual(["p1", "p2"]);
+  const dueña = (await leer(a)).data;
+  expect(dueña.posts.map((p) => p.id).sort()).toEqual(["p1", "p2"]);
+  expect(dueña.notebooks.map((n) => n.id).sort()).toEqual(["n1", "n2"]);
 
   await marcas.getByRole("button", { name: "Marca Uno" }).click();
   await expect(marcas).toContainText("Ve todas las marcas");
