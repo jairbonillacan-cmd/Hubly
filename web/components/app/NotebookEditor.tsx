@@ -4,7 +4,7 @@ import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TaskItem } from "@tiptap/extension-task-item";
 import { TaskList } from "@tiptap/extension-task-list";
-import { Bold, Heading2, Italic, ListOrdered } from "lucide-react";
+import { Bold, Heading2, Italic, ListOrdered } from "lucide-react"; // ui-ok: letras del editor de texto, excepción §6 de la guía
 import { notebookToHtml } from "@/lib/notebook-content";
 import {
   HublyClipboardIcon as CheckSquare,

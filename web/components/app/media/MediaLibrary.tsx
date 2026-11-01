@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronRight, FileText, Folder, FolderPlus, Home, Play, RotateCcw, Search, Trash2, Upload, X } from "lucide-react";
+import { HublyChevronRightIcon as ChevronRight, HublyDocumentIcon as FileText, HublyFolderIcon as Folder, HublyFolderIcon as FolderPlus, HublyHomeIcon as Home, HublyPlayIcon as Play, HublyRefreshIcon as RotateCcw, HublySearchIcon as Search, HublyTrashIcon as Trash2, HublyUploadIcon as Upload, HublyCloseIcon as X } from "@/components/app/icons/DuotoneIcons";
+import { askConfirm } from "@/components/app/AppDialogHost";
 import { useHublyStore } from "@/lib/store";
 import { formatBytes, MAX_IMAGE_BYTES, MAX_VIDEO_BYTES, mediaFileUrl, type MediaKind, type MediaRecord } from "@/lib/media";
 import { hevcWarning, listMedia, removeMedia, updateMedia, uploadMedia, type UploadHandle } from "@/lib/media-client";
@@ -152,7 +153,7 @@ export function MediaLibrary({ brandId, selectable = false, accept, maxSelection
   };
 
   const remove = async (item: MediaRecord) => {
-    if (!window.confirm(`¿Eliminar «${item.name}»? Los posts que lo usan dejarán de mostrarlo.`)) return;
+    if (!(await askConfirm(`¿Eliminar «${item.name}»? Los posts que lo usan dejarán de mostrarlo.`))) return;
     try {
       await removeMedia(item.id);
       setItems((current) => current.filter((i) => i.id !== item.id));

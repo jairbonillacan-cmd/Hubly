@@ -2,7 +2,7 @@
 
 import { Modal } from "@/components/app/ui/Modal";
 import { useMemo, useRef, useState } from "react";
-import { X } from "lucide-react";
+import { HublyCloseIcon as X } from "@/components/app/icons/DuotoneIcons";
 import { HublyUploadIcon } from "@/components/app/icons/DuotoneIcons";
 import { useHublyStore } from "@/lib/store";
 import { inPeriod, periodLabel } from "@/lib/calendar-views";

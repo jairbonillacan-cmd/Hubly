@@ -129,9 +129,6 @@
   "components/app/NewBrandModal.tsx": {
     "color-fijo": 1
   },
-  "components/app/NotebookEditor.tsx": {
-    "lucide": 1
-  },
   "components/app/NotebookReaderModal.tsx": {
     "color-fijo": 65,
     "rgb-fijo": 2,
@@ -211,12 +208,7 @@
     "rgb-fijo": 1
   },
   "components/app/media/MediaLibrary.tsx": {
-    "color-fijo": 1,
-    "dialogo-nativo": 1,
-    "lucide": 1
-  },
-  "components/app/media/MediaPickerModal.tsx": {
-    "lucide": 1
+    "color-fijo": 1
   },
   "components/app/reports/MonthlyReport.tsx": {
     "color-fijo": 1,
@@ -249,8 +241,7 @@
     "tamano-fuente": 1
   },
   "components/app/social/CalendarModals.tsx": {
-    "color-fijo": 1,
-    "lucide": 1
+    "color-fijo": 1
   },
   "components/app/social/ComposerExtras.tsx": {
     "color-fijo": 2
