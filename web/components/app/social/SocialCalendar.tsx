@@ -137,13 +137,17 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
       // La preferencia es por marca y se lee al cambiar de marca.
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setGroup((saved as KanbanGroup | null) ?? "estatus");
-    } catch {}
+    } catch {
+      // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
+    }
   }, [brand.id]);
   const chooseGroup = (next: KanbanGroup) => {
     setGroup(next);
     try {
       localStorage.setItem(`hubly:kanban-agrupar:${brand.id}`, next);
-    } catch {}
+    } catch {
+      // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
+    }
   };
 
   const workflow: WorkflowStatus[] = brand.workflowStatuses?.length ? brand.workflowStatuses : DEFAULT_WORKFLOW;

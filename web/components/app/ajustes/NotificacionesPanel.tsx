@@ -22,7 +22,9 @@ export function NotificacionesPanel() {
     try {
       const raw = localStorage.getItem(KEY);
       if (raw) setPrefs({ ...defaults(), ...JSON.parse(raw) });
-    } catch {}
+    } catch {
+      // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
+    }
   }, []);
 
   const set = (id: string, on: boolean) =>
@@ -30,7 +32,9 @@ export function NotificacionesPanel() {
       const next = { ...p, [id]: on };
       try {
         localStorage.setItem(KEY, JSON.stringify(next));
-      } catch {}
+      } catch {
+        // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
+      }
       return next;
     });
 

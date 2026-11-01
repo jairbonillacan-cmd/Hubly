@@ -43,6 +43,7 @@ export function uploadMedia(
   let recordId: string | null = null;
 
   const cleanUp = () => {
+    // Limpieza de un registro a medias: si falla, el servidor lo purga por antiguo.
     if (recordId) void fetch(`/api/media/${recordId}`, { method: "DELETE" }).catch(() => {});
   };
 

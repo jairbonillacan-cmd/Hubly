@@ -29,7 +29,7 @@
   "components/app/NewBrandModal.tsx": 420,
   "components/app/NotebookReaderModal.tsx": 933,
   "components/app/PostComposerModal.tsx": 1534,
-  "components/app/social/SocialCalendar.tsx": 623,
+  "components/app/social/SocialCalendar.tsx": 627,
   "components/app/tasks/TaskBoard.tsx": 664,
   "components/previews/FacebookPreview.tsx": 588,
   "components/previews/InstagramPreview.tsx": 857,
@@ -38,10 +38,10 @@
   "components/previews/phone/PhonePreview.tsx": 409,
   "components/previews/SocialIcons.tsx": 669,
   "components/previews/TikTokPreview.tsx": 573,
-  "lib/chat-live.ts": 498,
+  "lib/chat-live.ts": 499,
   "lib/domain-selectors.ts": 1601,
   "lib/seed-data.ts": 1541,
-  "lib/store.ts": 2304,
+  "lib/store.ts": 2308,
   "lib/types.ts": 769,
-  "lib/workspace-repository.ts": 648
+  "lib/workspace-repository.ts": 652
 }

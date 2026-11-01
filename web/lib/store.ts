@@ -495,7 +495,9 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     if (backendEnabled) {
       try {
         localStorage.setItem(`hubly:marca-activa:${currentAgencyId()}`, brandId);
-      } catch {}
+      } catch {
+        // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
+      }
     }
     set((s) => {
       const exists = s.brands.some((b) => b.id === brandId);
@@ -565,7 +567,9 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
         try {
           const saved = localStorage.getItem(`hubly:marca-activa:${loaded.agencyId}`);
           if (saved && loaded.data.brands.some((b) => b.id === saved)) activeBrandId = saved;
-        } catch {}
+        } catch {
+          // El almacenamiento del navegador puede estar lleno o bloqueado: seguir sin él no rompe nada.
+        }
         set({ ...loaded.data, activeBrandId, activeNotebookId: null, hydrated: true, role: loaded.role });
         void startChatLive({ agencyId: loaded.agencyId, get: () => get(), set: (patch) => set((s) => patch(s) as Partial<HublyStoreState>) });
       } else if (loaded.kind === "unauthenticated") {
