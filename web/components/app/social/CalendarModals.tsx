@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import { X } from "lucide-react";
+import { HublyUploadIcon } from "@/components/app/icons/DuotoneIcons";
 import { useHublyStore } from "@/lib/store";
 import { useLayer } from "@/lib/use-layer";
 import { inPeriod, periodLabel } from "@/lib/calendar-views";
@@ -118,6 +119,7 @@ export function ImportMonthModal({ brand, posts, onClose }: { brand: BrandWorksp
   const [skipDuplicates, setSkipDuplicates] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [imported, setImported] = useState(0);
+  const [dragging, setDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const headers = table[0] ?? [];
@@ -204,7 +206,19 @@ export function ImportMonthModal({ brand, posts, onClose }: { brand: BrandWorksp
 
       {step === "origen" && (
         <div className="hubly-import-source">
-          <button type="button" className="hubly-media-ghost" onClick={() => fileRef.current?.click()}>Elegir archivo CSV o XLSX</button>
+          <button
+            type="button"
+            className="hubly-import-drop"
+            data-dragging={dragging || undefined}
+            onClick={() => fileRef.current?.click()}
+            onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+            onDragLeave={() => setDragging(false)}
+            onDrop={(e) => { e.preventDefault(); setDragging(false); void readFile(e.dataTransfer.files[0]); }}
+          >
+            <HublyUploadIcon size={22} />
+            <strong>Suelta tu archivo o haz clic para elegirlo</strong>
+            <small>XLSX · CSV · TSV · TXT</small>
+          </button>
           <input ref={fileRef} type="file" hidden accept=".csv,.tsv,.txt,.xlsx" aria-label="Archivo a importar" onChange={(e) => { void readFile(e.target.files?.[0]); e.target.value = ""; }} />
           <label>
             O pega tu tabla desde Excel, Sheets o Notion

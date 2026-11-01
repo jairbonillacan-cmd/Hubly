@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { HublyCheckIcon, HublyCloseIcon, HublyCopyIcon, HublyLinkIcon, HublyMailIcon, HublyPlusIcon, HublySearchIcon } from "@/components/app/icons/DuotoneIcons";
+import { HublyCheckIcon, HublyCloseIcon, HublyCopyIcon, HublyPlusIcon, HublySearchIcon } from "@/components/app/icons/DuotoneIcons";
 import {
   alreadyMember,
   canInvite,
@@ -22,11 +22,13 @@ import { useModalPresence } from "@/lib/use-modal-presence";
 type Tab = "existente" | "link" | "correo";
 type Sent = { email: string; link: string };
 
-const TABS: Array<{ id: Tab; label: string; icon?: React.ReactNode }> = [
+const TABS: Array<{ id: Tab; label: string }> = [
+  { id: "link", label: "Por link" },
+  { id: "correo", label: "Por correo" },
   { id: "existente", label: "Usuario existente" },
-  { id: "link", label: "Por link", icon: <HublyLinkIcon size={15} /> },
-  { id: "correo", label: "Por correo", icon: <HublyMailIcon size={15} /> },
 ];
+
+const TAB_INICIAL: Tab = backendEnabled ? "link" : "correo";
 
 /** El enlace ya creado, listo para copiar. El token solo se conoce en este momento. */
 export function InviteLinkRow({ link, label }: { link: string; label: string }) {
@@ -49,8 +51,8 @@ export function InviteLinkRow({ link, label }: { link: string; label: string }) 
 
 function RoleField({ value, onChange, options }: { value: string; onChange: (role: string) => void; options: typeof INVITE_ROLES }) {
   return (
-    <label className="hubly-cal-field">
-      <span>Rol</span>
+    <label className="hubly-invite-rol">
+      <span>Rol de quien entra</span>
       <select className="hubly-cal-line" value={value} onChange={(e) => onChange(e.target.value)}>
         {options.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
       </select>
@@ -73,13 +75,12 @@ function SentList({ sent }: { sent: Sent[] }) {
   );
 }
 
-function ExistenteTab() {
+function ExistenteTab({ role }: { role: string }) {
   const [people, setPeople] = useState<KnownPerson[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
-  const [role, setRole] = useState(DEFAULT_INVITE_ROLE);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState<Sent[]>([]);
@@ -148,7 +149,6 @@ function ExistenteTab() {
       )}
       {(people?.length ?? 0) > 0 && (
         <>
-          <RoleField value={role} onChange={setRole} options={INVITE_ROLES} />
           {error && <p className="hubly-invite-error" role="alert">{error}</p>}
           <button type="submit" className="hbtn hbtn-primary" disabled={!selected || sending}>
             {sending ? "Creando…" : "Crear invitación"}
@@ -160,8 +160,7 @@ function ExistenteTab() {
   );
 }
 
-function LinkTab() {
-  const [role, setRole] = useState(DEFAULT_INVITE_ROLE);
+function LinkTab({ role }: { role: string }) {
   const [link, setLink] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -187,7 +186,6 @@ function LinkTab() {
   return (
     <div className="hubly-invite-form">
       <p className="hubly-invite-note">Cualquier persona con el link y un correo verificado entra a la agencia.</p>
-      <RoleField value={role} onChange={setRole} options={INVITE_ROLES.slice(1)} />
       {error && <p className="hubly-invite-error" role="alert">{error}</p>}
       <button type="button" className="hbtn hbtn-primary" disabled={sending} onClick={() => void generate()}>
         {sending ? "Generando…" : link ? "Generar otro link" : "Generar link"}
@@ -202,9 +200,8 @@ function LinkTab() {
   );
 }
 
-function CorreoTab() {
+function CorreoTab({ role }: { role: string }) {
   const [emails, setEmails] = useState([""]);
-  const [role, setRole] = useState(DEFAULT_INVITE_ROLE);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState<Sent[]>([]);
@@ -266,7 +263,6 @@ function CorreoTab() {
           <HublyPlusIcon size={15} /> Agregar otro
         </button>
       </div>
-      <RoleField value={role} onChange={setRole} options={INVITE_ROLES} />
       {error && <p className="hubly-invite-error" role="alert">{error}</p>}
       <button type="submit" className="hbtn hbtn-primary" disabled={sending}>
         {sending ? "Creando…" : emails.length > 1 ? "Crear invitaciones" : "Crear invitación"}
@@ -279,7 +275,8 @@ function CorreoTab() {
 export function InviteTeamModal() {
   const open = useHublyStore((s) => s.inviteModalOpen);
   const setOpen = useHublyStore((s) => s.setInviteModalOpen);
-  const [tab, setTab] = useState<Tab>("correo");
+  const [tab, setTab] = useState<Tab>(TAB_INICIAL);
+  const [role, setRole] = useState(DEFAULT_INVITE_ROLE);
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const tabRefs = useRef<Partial<Record<Tab, HTMLButtonElement | null>>>({});
 
@@ -289,10 +286,16 @@ export function InviteTeamModal() {
   useFocusTrap(dialogRef, open);
 
   useEffect(() => {
-    if (open) setTab("correo"); // eslint-disable-line react-hooks/set-state-in-effect
+    if (!open) return;
+    setTab(TAB_INICIAL); // eslint-disable-line react-hooks/set-state-in-effect
+    setRole(DEFAULT_INVITE_ROLE);
   }, [open]);
 
   if (!presence.mounted) return null;
+
+  // El link nunca ofreció Administración; ese rol solo se da a personas concretas.
+  const roles = tab === "link" ? INVITE_ROLES.slice(1) : INVITE_ROLES;
+  const rolActivo = roles.some((r) => r.value === role) ? role : DEFAULT_INVITE_ROLE;
 
   const moveTab = (e: React.KeyboardEvent) => {
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
@@ -320,6 +323,7 @@ export function InviteTeamModal() {
         </div>
         {canInvite() ? (
           <>
+            <RoleField value={rolActivo} onChange={setRole} options={roles} />
             <div className="hubly-invite-tabs" role="tablist" aria-label="Forma de invitar" onKeyDown={moveTab}>
               {TABS.map((t) => (
                 <button
@@ -335,15 +339,14 @@ export function InviteTeamModal() {
                   tabIndex={tab === t.id ? 0 : -1}
                   onClick={() => setTab(t.id)}
                 >
-                  {t.icon}
                   {t.label}
                 </button>
               ))}
             </div>
             <div id="invitar-panel" className="hubly-cal-modal-scroll" role="tabpanel" aria-labelledby={`invitar-${tab}`}>
-              {tab === "existente" && <ExistenteTab />}
-              {tab === "link" && <LinkTab />}
-              {tab === "correo" && <CorreoTab />}
+              {tab === "existente" && <ExistenteTab role={rolActivo} />}
+              {tab === "link" && <LinkTab role={rolActivo} />}
+              {tab === "correo" && <CorreoTab role={rolActivo} />}
             </div>
           </>
         ) : (
