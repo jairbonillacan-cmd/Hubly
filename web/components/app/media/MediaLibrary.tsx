@@ -50,7 +50,12 @@ export function MediaLibrary({ brandId, selectable = false, accept, maxSelection
     setLoading(true);
     setLoadError(null);
     try {
-      setItems(await listMedia(brandId));
+      const fetched = await listMedia(brandId);
+      setItems((current) => {
+        const fetchedIds = new Set(fetched.map((i) => i.id));
+        const localOnly = current.filter((i) => i.brandId === brandId && !fetchedIds.has(i.id));
+        return [...localOnly, ...fetched];
+      });
     } catch (error) {
       setLoadError(error instanceof Error ? error.message : "No se pudo cargar la biblioteca.");
     } finally {

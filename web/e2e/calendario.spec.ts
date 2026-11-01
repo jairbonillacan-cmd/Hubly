@@ -74,7 +74,9 @@ test("las cuatro vistas comparten posts, filtros y período", async ({ page }) =
 
   // Título y columnas de la semana salen del mismo intervalo.
   await page.getByRole("tab", { name: "Semana", exact: true }).click();
-  const columnas = await page.locator(".hubly-social-week-col").evaluateAll((c) => c.map((x) => x.getAttribute("aria-label")));
+  const weekCols = page.locator(".hubly-social-week-col");
+  await expect(weekCols).toHaveCount(7);
+  const columnas = await weekCols.evaluateAll((c) => c.map((x) => x.getAttribute("aria-label")));
   expect(columnas).toHaveLength(7);
   expect(new Date(`${columnas[0]}T12:00:00Z`).getUTCDay()).toBe(1);
   const dia = String(Number(columnas[0]!.slice(8)));

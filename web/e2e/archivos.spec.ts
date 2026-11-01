@@ -58,6 +58,7 @@ test("un fallo de subida ofrece reintentar", async ({ page }) => {
   const nombre = `reintento-${Date.now()}.png`;
   await page.goto("/archivos");
   await page.waitForLoadState("networkidle");
+  await expect(page.getByText("Cargando biblioteca…")).toHaveCount(0);
   let fallar = true;
   await page.route("**/api/media/*/file", async (route) => {
     if (route.request().method() === "PUT" && fallar) {
@@ -70,8 +71,9 @@ test("un fallo de subida ofrece reintentar", async ({ page }) => {
   await page.getByTestId("media-input").setInputFiles({ name: nombre, mimeType: "image/png", buffer: PNG });
   subidos.push(nombre);
   await expect(page.locator(".hubly-media-queue")).toContainText("Se perdió la conexión");
-  await page.getByRole("button", { name: "Reintentar" }).click();
+  await page.locator(".hubly-media-queue").getByRole("button", { name: "Reintentar" }).click();
   await expect(page.locator(".hubly-media-file", { hasText: nombre })).toBeVisible();
   page.once("dialog", (d) => d.accept());
   await page.getByRole("button", { name: `Eliminar ${nombre}` }).click();
+  await expect(page.locator(".hubly-media-file", { hasText: nombre })).toHaveCount(0);
 });

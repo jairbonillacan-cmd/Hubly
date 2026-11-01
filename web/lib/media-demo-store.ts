@@ -32,7 +32,7 @@ function exclusive<T>(task: () => Promise<T>): Promise<T> {
 export const demoFilePath = (id: string) => (ID.test(id) ? path.join(DIR, id) : null);
 
 export async function demoList(brandId: string) {
-  return (await readIndex()).filter((r) => r.brandId === brandId && r.status === "ready");
+  return exclusive(async () => (await readIndex()).filter((r) => r.brandId === brandId && r.status === "ready"));
 }
 
 export async function demoCreate(input: Omit<MediaRecord, "id" | "status" | "createdAt">) {
@@ -42,7 +42,7 @@ export async function demoCreate(input: Omit<MediaRecord, "id" | "status" | "cre
 }
 
 export async function demoGet(id: string) {
-  return (await readIndex()).find((r) => r.id === id) ?? null;
+  return exclusive(async () => (await readIndex()).find((r) => r.id === id) ?? null);
 }
 
 export async function demoUpdate(id: string, patch: Partial<Pick<MediaRecord, "status" | "folder" | "name">>) {
@@ -57,8 +57,12 @@ export async function demoRemove(id: string) {
 
 /** Limpieza diferida: lo que empezó a subirse y nunca se confirmó. */
 export async function demoPurgePending(olderThanMs: number) {
-  const records = await readIndex();
-  const limit = Date.now() - olderThanMs;
-  const stale = records.filter((r) => r.status === "pending" && Date.parse(r.createdAt) < limit);
-  await Promise.all(stale.map((r) => demoRemove(r.id)));
+  const stale = await exclusive(async () => {
+    const records = await readIndex();
+    const limit = Date.now() - olderThanMs;
+    return records.filter((r) => r.status === "pending" && Date.parse(r.createdAt) < limit);
+  });
+  for (const r of stale) {
+    await demoRemove(r.id);
+  }
 }
