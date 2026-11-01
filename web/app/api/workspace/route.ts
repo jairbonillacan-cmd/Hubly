@@ -141,6 +141,17 @@ async function liveGet(requestedAgency: string | null) {
     .eq("agency_id", membership.agency_id)
     .order("position");
   if (!brandsError && brandRows?.length) data.brands = (brandRows as BrandRow[]).map(brandFromRow);
+  // Con las marcas en tabla, posts y tareas también lo están (0014 los copia): una lista vacía es real,
+  // y volver al documento mostraría lo que esta persona no puede ver.
+  if (!brandsError && brandRows?.length) {
+    const [posts, tasks] = await Promise.all(
+      ["posts", "tasks"].map((table) =>
+        supabase.from(table).select("data").eq("agency_id", membership.agency_id).order("position")
+      )
+    );
+    if (!posts.error) data.posts = (posts.data ?? []).map((row) => row.data);
+    if (!tasks.error) data.tasks = (tasks.data ?? []).map((row) => row.data);
+  }
 
   const { data: members } = await supabase.rpc("list_members", { target_agency: membership.agency_id });
   const ROLE_LABEL: Record<string, string> = { owner: "Dueño", admin: "Administración", editor: "Edición", viewer: "Solo lectura" };

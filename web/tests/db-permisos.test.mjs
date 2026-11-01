@@ -430,5 +430,31 @@ ok("otra agencia intacta", (await db.query(`select version from public.agency_wo
     await guardar(B, []);
   }, "forbidden");
 }
+// --- Posts y tareas en tabla ---
+{
+  const ag = (await as(A, "authenticated", `select public.create_agency('Posts') id`))[0].id;
+  await db.query(`insert into public.agency_members values ($1,$2,'editor')`, [ag, B]);
+  const guardar = async (who, doc) => {
+    const { version } = (await db.query(`select version from public.agency_workspaces where agency_id = $1`, [ag])).rows[0];
+    return as(who, "authenticated", `select public.save_workspace($1,$2,$3) v`, [ag, JSON.stringify(doc), version]);
+  };
+  const brands = [{ id: "pa", name: "A" }, { id: "pb", name: "B" }];
+  await guardar(A, { brands, posts: [{ id: "p1", brandId: "pa", title: "uno" }, { id: "p2", brandId: "pb", title: "dos" }], tasks: [{ id: "t1", brandId: "pb" }, { id: "t2" }] });
+  const ver = async (who, tabla) => (await as(who, "authenticated", `select id from public.${tabla} where agency_id = $1 order by position`, [ag])).map((x) => x.id).join();
+  ok("posts: se copian al guardar", (await ver(A, "posts")) === "p1,p2");
+  ok("tareas: se copian al guardar", (await ver(A, "tasks")) === "t1,t2");
+  await as(A, "authenticated", `insert into public.brand_members (agency_id, brand_id, user_id) values ($1,'pa',$2)`, [ag, B]);
+  ok("posts: el asignado solo ve los suyos", (await ver(B, "posts")) === "p1");
+  ok("tareas: ve las suyas y las sin marca", (await ver(B, "tasks")) === "t2");
+  await errs("posts: no se escriben directo", () => as(A, "authenticated", `delete from public.posts where agency_id = $1 returning id`, [ag]), "permission");
+  await guardar(B, { brands: [{ id: "pa", name: "A" }], posts: [{ id: "p1", brandId: "pa", title: "uno por B" }], tasks: [] });
+  const posts = (await db.query(`select id, data->>'title' t from public.posts where agency_id = $1 order by id`, [ag])).rows;
+  ok("posts: lo oculto sobrevive", posts.find((x) => x.id === "p2")?.t === "dos");
+  ok("posts: lo visible cambia", posts.find((x) => x.id === "p1").t === "uno por B");
+  ok("tareas: lo oculto sobrevive y lo visible se borra", (await ver(A, "tasks")) === "t1");
+  await guardar(B, { brands: [{ id: "pa", name: "A" }], posts: [{ id: "p2", brandId: "pb", title: "robado" }, { id: "p1", brandId: "pa" }], tasks: [] });
+  ok("posts: no se pisa lo oculto enviándolo", (await db.query(`select data->>'title' t from public.posts where agency_id = $1 and id = 'p2'`, [ag])).rows[0].t === "dos");
+  ok("posts: otra persona sin agencia no ve", (await as(C, "authenticated", `select id from public.posts where agency_id = $1`, [ag])).length === 0);
+}
 console.log(`\n${pass} ok, ${fail} fallos`);
 process.exit(fail ? 1 : 0);
