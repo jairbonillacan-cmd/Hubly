@@ -61,12 +61,28 @@
   "app/(app)/notificaciones/page.tsx": {
     "tamano-fuente": 1
   },
-  "app/(app)/parrillas/page.tsx": {
-    "color-fijo": 18,
-    "exclamacion": 2,
+  "app/(app)/parrillas/_vista/ParrillasCalendario.tsx": {
+    "color-fijo": 9,
+    "exclamacion": 1,
+    "tamano-fuente": 1
+  },
+  "app/(app)/parrillas/_vista/ParrillasDemo.tsx": {
+    "color-fijo": 3
+  },
+  "app/(app)/parrillas/_vista/ParrillasIdeas.tsx": {
+    "color-fijo": 1,
+    "rgb-fijo": 2,
+    "tamano-fuente": 1
+  },
+  "app/(app)/parrillas/_vista/ParrillasLinks.tsx": {
+    "color-fijo": 5,
+    "exclamacion": 1,
     "radio": 1,
-    "rgb-fijo": 6,
-    "tamano-fuente": 3,
+    "rgb-fijo": 3,
+    "tamano-fuente": 1
+  },
+  "app/(app)/parrillas/_vista/ParrillasNav.tsx": {
+    "rgb-fijo": 1,
     "transition-all": 1
   },
   "app/(app)/reportes/page.tsx": {
