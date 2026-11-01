@@ -298,6 +298,7 @@ function normalizePost(post: Partial<SocialPost>): SocialPost {
     publishedUrl: post.publishedUrl,
     metricsSource: post.metricsSource,
     notifyOnPublish: post.notifyOnPublish,
+    notifyMemberIds: post.notifyMemberIds,
     notes: post.notes,
     todos: post.todos,
     documents: post.documents,

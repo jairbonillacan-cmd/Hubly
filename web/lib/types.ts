@@ -67,6 +67,8 @@ export interface SocialPost {
   publishedUrl?: string;
   metricsSource?: "manual";
   notifyOnPublish?: boolean;
+  /** Miembros elegidos en «Avisar al publicar». */
+  notifyMemberIds?: string[];
   notes?: string;
   todos?: PostTodo[];
   documents?: PostDocument[];

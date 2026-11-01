@@ -1712,9 +1712,17 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-composer-menu > button[aria-pressed="true"] { font-weight: 700; }
 .hubly-composer-menu .is-create { color: var(--hb-accent-text); font-weight: 700; }
 .hubly-composer-menu small { padding: 6px 8px; color: var(--ui-text-3); font-size: 12px; }
-.hubly-composer-menu.is-swatches { flex-direction: row; flex-wrap: wrap; min-width: 180px; }
-.hubly-composer-menu.is-swatches > button:not(.is-clear) { width: 28px; min-height: 28px; padding: 0; border-radius: 50%; }
-.hubly-composer-menu.is-swatches > button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--ui-surface), 0 0 0 4px var(--hb-accent); }
+.hubly-composer-pop > button.is-on { color: var(--hb-accent-text); --hi-soft: var(--ui-sky-icon); --hi-strong: var(--hb-accent-text); }
+.hubly-composer-menu.is-colors { min-width: 150px; }
+.hubly-composer-menu.is-colors > button > i { width: 14px; height: 14px; }
+.hubly-composer-pop > button > i.is-none, .hubly-composer-menu > button > i.is-none { border: 1px dashed var(--ui-text-4); background: transparent; }
+.hubly-composer-menu:is(.is-colors, .is-people) > button[aria-pressed="true"] { color: var(--ui-text); font-weight: 400; }
+.hubly-composer-menu:is(.is-colors, .is-people) > button > svg { margin-left: auto; color: var(--hb-accent-text); }
+.hubly-composer-menu.is-people { max-height: 280px; overflow-y: auto; }
+.hubly-composer-menu.is-people .hubly-cal-input { flex-shrink: 0; margin-bottom: 4px; }
+.hubly-composer-avatar { display: grid; flex-shrink: 0; place-items: center; width: 24px; height: 24px; overflow: hidden; border-radius: 999px; color: var(--on-accent); font-size: 10px; font-weight: 700; }
+.hubly-composer-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.hubly-composer-person { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .hubly-composer-meta > .hubly-composer-field { gap: 6px; }
 .hubly-composer-field small { color: var(--ui-text-3); font-size: 11.5px; font-weight: 600; }
 .hubly-composer-field input:not([type="checkbox"]) { width: 110px; border: 0; outline: 0; background: transparent; color: inherit; font: inherit; }
@@ -1766,6 +1774,11 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-composer-pending p { margin: 0 0 16px; font-size: 13.5px; color: var(--ui-text-2); overflow-wrap: anywhere; }
 .hubly-composer-pending div { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
 @media (max-width: 767.98px) {
+  .hubly-composer-meta { position: relative; }
+  .hubly-composer-pop { position: static; }
+  .hubly-composer-menu { right: 12px; left: 12px; }
+  .hubly-composer-menu:is(.is-colors, .is-people) > button { min-height: 44px; }
+  .hubly-composer-menu.is-people .hubly-cal-input { height: 44px; }
   html:has(.hubly-composer) { --composer-left: 0px !important; }
   .hubly-composer-overlay { padding: 0; }
   .hubly-composer { height: 100dvh; max-width: none; border-radius: 0; }

@@ -25,6 +25,7 @@ import {
   formatFor,
   loadRecovery,
   mediaItemUrl,
+  postColorText,
   recoveryKey,
   saveRecovery,
   type PostDraft,
@@ -37,6 +38,7 @@ import {
   HublyArrowRightIcon as ArrowRight,
   HublyBellIcon,
   HublyChartIcon,
+  HublyCheckIcon,
   HublyChatIcon,
   HublyClipboardIcon,
   HublyCloseIcon as X,
@@ -104,6 +106,14 @@ export const GLYPHS: Record<SocialNetwork, React.ReactNode> = {
 
 const POST_FORMATS: PostFormat[] = ["Imagen", "Carrusel", "Reel / Video", "Story", "Texto"];
 const POST_COLORS = ["#16324F", "#2A76B0", "#0F766E", "#15803D", "#B45309", "#B91C1C", "#7C3AED", "#BE185D"];
+const POST_PALETTE = [
+  { name: "Rosa", color: "#E98B8B" }, // ui-ok: dato guardado en el post, igual en ambos temas
+  { name: "Durazno", color: "#F4B26A" }, // ui-ok: dato guardado en el post, igual en ambos temas
+  { name: "Verde", color: "#7FD38C" }, // ui-ok: dato guardado en el post, igual en ambos temas
+  { name: "Azul", color: "#8FA8E0" }, // ui-ok: dato guardado en el post, igual en ambos temas
+  { name: "Lila", color: "#C9A0DC" }, // ui-ok: dato guardado en el post, igual en ambos temas
+  { name: "Aqua", color: "#6CC5BF" }, // ui-ok: dato guardado en el post, igual en ambos temas
+];
 const FIELD_TYPES: { id: CustomFieldDefinition["type"]; label: string }[] = [
   { id: "text", label: "Texto" },
   { id: "number", label: "Número" },
@@ -130,7 +140,7 @@ interface UploadSlot {
   handle?: UploadHandle;
 }
 
-type Popover = "assignee" | "color" | "workflow" | "field" | null;
+type Popover = "assignee" | "notify" | "color" | "workflow" | "field" | null;
 
 export function PostComposerModal({ open: openProp, onClose: onCloseProp, initialPostId, defaultBrandId }: PostComposerModalProps = {}) {
   const fileRef = useRef<HTMLInputElement | null>(null);
@@ -168,6 +178,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
   const [uploads, setUploads] = useState<UploadSlot[]>([]);
   const [pickerFor, setPickerFor] = useState<"media" | "documents" | null>(null);
   const [popover, setPopover] = useState<Popover>(null);
+  const [notifySearch, setNotifySearch] = useState("");
   const [copyNetwork, setCopyNetwork] = useState<SocialNetwork | "General">("General");
   const [previewNet, setPreviewNet] = useState<SocialNetwork | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -250,6 +261,15 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
     { deferTo: '.hubly-overlay:not(.hubly-composer-overlay), [role="dialog"][aria-modal="true"]' }
   );
 
+  useEffect(() => {
+    if (!popover) return;
+    const closeOutside = (e: MouseEvent) => {
+      if (!(e.target as Element).closest(".hubly-composer-pop")) setPopover(null);
+    };
+    document.addEventListener("mousedown", closeOutside);
+    return () => document.removeEventListener("mousedown", closeOutside);
+  }, [popover]);
+
   const update = (patch: Partial<PostDraft>) => setDraft((d) => (d ? { ...d, ...patch } : d));
   const updateSettings = (network: SocialNetwork, patch: Partial<PlatformSettings>) =>
     setDraft((d) => {
@@ -284,6 +304,8 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
     : networkSpec(copyTarget).maxChars;
   const level = captionLevel(copyValue.length, limit);
   const selectedAssignees = team.filter((m) => draft.assigneeIds.includes(m.id));
+  const notifyMembers = team.filter((m) => draft.notifyMemberIds.includes(m.id));
+  const notifyMatches = team.filter((m) => m.name.toLowerCase().includes(notifySearch.trim().toLowerCase()));
 
   const toggleNetwork = (network: SocialNetwork) => {
     if (locked) return;
@@ -461,7 +483,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                 onChange={(e) => update({ title: e.target.value })}
                 placeholder="Sin título"
                 aria-label="Título del post"
-                style={draft.color ? { color: draft.color } : undefined}
+                style={draft.color ? { color: postColorText(draft.color) } : undefined}
               />
               <div className="hubly-composer-badges">
                 <span title="Marca del post">{brand.name}</span>
@@ -521,21 +543,57 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                 </div>
               )}
             </div>
-            <button type="button" aria-pressed={draft.notifyOnPublish} disabled={locked} onClick={() => update({ notifyOnPublish: !draft.notifyOnPublish })}>
-              <HublyBellIcon size={17} />
-              <span>Avisar al publicar</span>
-            </button>
+            <div className="hubly-composer-pop">
+              <button type="button" className={draft.notifyOnPublish ? "is-on" : undefined} aria-expanded={popover === "notify"} disabled={locked} onClick={() => { setNotifySearch(""); setPopover(popover === "notify" ? null : "notify"); }}>
+                <HublyBellIcon size={17} />
+                <span>{notifyMembers.length ? `Avisar a ${notifyMembers.map((m) => m.name.split(" ")[0]).join(", ")}` : "Avisar al publicar"}</span>
+              </button>
+              {popover === "notify" && (
+                <div className="hubly-composer-menu is-people" role="group" aria-label="Avisar al publicar">
+                  <input className="hubly-cal-input" autoFocus value={notifySearch} onChange={(e) => setNotifySearch(e.target.value)} placeholder="Buscar…" aria-label="Buscar miembro" />
+                  {team.length === 0 && <small>Aún no hay miembros en el equipo.</small>}
+                  {team.length > 0 && notifyMatches.length === 0 && <small>Sin resultados</small>}
+                  {notifyMatches.map((member) => {
+                    const selected = draft.notifyMemberIds.includes(member.id);
+                    const photo = member.email === profile?.email ? profile?.avatarUrl : undefined;
+                    return (
+                      <button
+                        key={member.id}
+                        type="button"
+                        aria-pressed={selected}
+                        onClick={() => {
+                          const next = selected ? draft.notifyMemberIds.filter((id) => id !== member.id) : [...draft.notifyMemberIds, member.id];
+                          update({ notifyMemberIds: next, notifyOnPublish: next.length > 0 });
+                        }}
+                      >
+                        <span className="hubly-composer-avatar" style={{ background: member.avatarColor || "var(--hb-accent)" }}>
+                          {photo ? <img src={photo} alt="" /> : member.initials}
+                        </span>
+                        <span className="hubly-composer-person">{member.name}</span>
+                        {selected && <HublyCheckIcon size={14} />}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
             <div className="hubly-composer-pop">
               <button type="button" aria-expanded={popover === "color"} disabled={locked} onClick={() => setPopover(popover === "color" ? null : "color")}>
-                {draft.color ? <i style={{ background: draft.color }} /> : <HublyPaletteIcon size={17} />}
+                {draft.color ? <i style={{ background: draft.color }} /> : <i className="is-none" />}
                 <span>Color</span>
               </button>
               {popover === "color" && (
-                <div className="hubly-composer-menu is-swatches" role="group" aria-label="Color del post">
-                  {POST_COLORS.map((color) => (
-                    <button key={color} type="button" aria-label={`Color ${color}`} aria-pressed={draft.color === color} style={{ background: color }} onClick={() => { update({ color }); setPopover(null); }} />
+                <div className="hubly-composer-menu is-colors" role="group" aria-label="Color del post">
+                  <button type="button" aria-pressed={!draft.color} onClick={() => { update({ color: "" }); setPopover(null); }}>
+                    <i className="is-none" /> Sin color
+                    {!draft.color && <HublyCheckIcon size={14} />}
+                  </button>
+                  {POST_PALETTE.map(({ name, color }) => (
+                    <button key={color} type="button" aria-pressed={draft.color === color} onClick={() => { update({ color }); setPopover(null); }}>
+                      <i style={{ background: color }} /> {name}
+                      {draft.color === color && <HublyCheckIcon size={14} />}
+                    </button>
                   ))}
-                  <button type="button" className="is-clear" onClick={() => { update({ color: "" }); setPopover(null); }}>Quitar</button>
                 </div>
               )}
             </div>

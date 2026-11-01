@@ -21,7 +21,7 @@ import { useHublyStore } from "@/lib/store";
 import { askText } from "@/components/app/AppDialogHost";
 import { Cover } from "@/components/Cover";
 import { networkSpec, NETWORKS } from "@/lib/network-catalog";
-import { hasRecovery, postThumbnail } from "@/lib/post-draft";
+import { hasRecovery, postColorText, postThumbnail } from "@/lib/post-draft";
 import { useLayer } from "@/lib/use-layer";
 import {
   DEFAULT_WORKFLOW,
@@ -207,7 +207,7 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
     <article key={post.id} className="hubly-social-card" data-variant={variant} data-dragging={dragId === post.id || undefined} {...cardDrag(post)}>
       <button type="button" className="hubly-social-card-open" onClick={() => openComposer(post.id)}>
         <span className="hubly-social-card-media"><Thumb post={post} /></span>
-        <strong style={post.color ? { color: post.color } : undefined}>{post.title}</strong>
+        <strong style={post.color ? { color: postColorText(post.color) } : undefined}>{post.title}</strong>
         <span className="hubly-social-card-meta">
           {post.scheduledDate ? `${post.scheduledDate.slice(8)}/${post.scheduledDate.slice(5, 7)}${post.scheduledTime ? ` · ${post.scheduledTime}` : ""}` : "Sin fecha"}
         </span>
@@ -230,7 +230,7 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
         <span className="hubly-social-kcard-top">
           <span className="hubly-social-kcard-thumb">{postThumbnail(post) ? <Thumb post={post} /> : <HublyImageIcon size={18} title="Sin diseño" />}</span>
           <span>
-            <strong style={post.color ? { color: post.color } : undefined}>{post.title && post.title !== "Sin título" ? post.title : post.caption.trim() || "Sin copy todavía"}</strong>
+            <strong style={post.color ? { color: postColorText(post.color) } : undefined}>{post.title && post.title !== "Sin título" ? post.title : post.caption.trim() || "Sin copy todavía"}</strong>
             <small>{post.scheduledDate ? `${post.scheduledDate.slice(8)}/${post.scheduledDate.slice(5, 7)}${post.scheduledTime ? ` · ${post.scheduledTime}` : ""}` : "Sin fecha"}</small>
           </span>
         </span>
