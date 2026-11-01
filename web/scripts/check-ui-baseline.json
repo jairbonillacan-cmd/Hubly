@@ -3,7 +3,7 @@
     "hbtn-directo": 1
   },
   "app/(app)/anuncios/page.tsx": {
-    "color-fijo": 88,
+    "color-fijo": 9,
     "degradado": 1,
     "emoji": 3,
     "rgb-fijo": 6,
