@@ -41,7 +41,7 @@ export function AccessPanel() {
 
   // También al cerrar el modal: puede haber creado invitaciones.
   useEffect(() => {
-    if (!inviteModalOpen) void load();
+    if (!inviteModalOpen) void load(); // eslint-disable-line react-hooks/set-state-in-effect -- carga de datos
   }, [load, inviteModalOpen]);
 
   const act = async (body: Record<string, string>) => {

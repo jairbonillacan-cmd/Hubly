@@ -114,7 +114,7 @@ export default function SaaSAppLayout({
 
   // Close mobile drawer and transient menus on route change
   useEffect(() => {
-    setMobileDrawerOpen(false);
+    setMobileDrawerOpen(false); // eslint-disable-line react-hooks/set-state-in-effect -- cierra menús al navegar
     setBrandMenuOpen(false);
     setNotificationsOpen(false);
   }, [pathname]);

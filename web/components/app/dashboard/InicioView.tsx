@@ -187,7 +187,7 @@ export function InicioView() {
 
   useEffect(() => {
     if (activeNotebook) {
-      setIsCreatingNotebook(false);
+      setIsCreatingNotebook(false); // eslint-disable-line react-hooks/set-state-in-effect -- reinicia el formulario al cambiar de libreta
       setNbTitle(activeNotebook.title);
       setNbSubtitle(activeNotebook.subtitle || "");
       setNbCategory(activeNotebook.category || "Guía");

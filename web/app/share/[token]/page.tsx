@@ -68,7 +68,7 @@ function ClientSharePortalInner() {
   const [openCommentBox, setOpenCommentBox] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    if (backendEnabled) void loadLive();
+    if (backendEnabled) void loadLive(); // eslint-disable-line react-hooks/set-state-in-effect -- carga de datos al montar
     else syncFromServer();
   }, [syncFromServer, loadLive]);
 

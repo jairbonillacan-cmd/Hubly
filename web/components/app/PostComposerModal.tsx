@@ -301,7 +301,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
   const fields = brand?.customFieldDefinitions ?? [];
   const media = useMemo(() => draft?.media ?? [], [draft?.media]);
   const previewMedia: PhoneMedia[] = useMemo(
-    () => media.map((m) => ({ id: m.id, kind: m.kind, name: m.name, url: mediaItemUrl(m), poster: m.kind === "video" && draft?.coverAssetId ? mediaFileUrl(draft.coverAssetId) : undefined })),
+    () => media.map((m) => ({ id: m.id, kind: m.kind, name: m.name, url: mediaItemUrl(m), poster: m.kind === "video" && draft?.coverAssetId ? mediaFileUrl(draft.coverAssetId) : undefined })), // eslint-disable-line react-hooks/preserve-manual-memoization -- la portada es la dependencia que importa
     [media, draft?.coverAssetId]
   );
 
@@ -550,7 +550,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
   const addFieldOption = async (field: CustomFieldDefinition) => {
     const label = await askText(`Nueva opción para «${field.name}»`, "", "Agregar");
     if (!label?.trim()) return;
-    const option = { id: `op-${Date.now()}`, label: label.trim(), color: POST_COLORS[(field.options?.length ?? 0) % POST_COLORS.length] };
+    const option = { id: `op-${Date.now()}`, label: label.trim(), color: POST_COLORS[(field.options?.length ?? 0) % POST_COLORS.length] }; // eslint-disable-line react-hooks/purity -- corre en un manejador, no al renderizar
     updateBrand(brand.id, {
       customFieldDefinitions: fields.map((f) => (f.id === field.id ? { ...f, options: [...(f.options ?? []), option] } : f)),
     });

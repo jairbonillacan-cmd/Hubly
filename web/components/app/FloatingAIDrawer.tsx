@@ -139,7 +139,7 @@ export function FloatingAIDrawer() {
   }, [panelPresence.mounted, setFullView]);
 
   useEffect(() => {
-    setPrompt("");
+    setPrompt(""); // eslint-disable-line react-hooks/set-state-in-effect -- responde a un cambio externo de conversación
     if (aiDrawerOpen) inputRef.current?.focus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeChatId]);
@@ -383,7 +383,7 @@ export function FloatingAIDrawer() {
   useEffect(() => {
     if (!aiDrawerPrompt) return;
     setAiDrawerPrompt(null);
-    handleSubmitPrompt(aiDrawerPrompt);
+    handleSubmitPrompt(aiDrawerPrompt); // eslint-disable-line react-hooks/set-state-in-effect -- responde a un cambio externo de conversación
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [aiDrawerPrompt]);
 

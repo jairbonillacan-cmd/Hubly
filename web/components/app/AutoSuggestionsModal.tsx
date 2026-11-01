@@ -39,7 +39,6 @@ interface AutoSuggestionsModalProps {
   onClose?: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onApply?: (payload: any[]) => void;
-  isFallbackMount?: boolean;
 }
 
 const DEFAULT_METRICS: SuggestedMetricItem[] = [
@@ -111,7 +110,6 @@ function mapMetricKeyToCommitmentPatch(
   return { adCampaignsCommitted: value };
 }
 
-let primaryAutoSuggestionsMounts = 0;
 
 function getFocusableElements(container: HTMLElement | null): HTMLElement[] {
   if (!container) return [];
@@ -168,28 +166,12 @@ export function AutoSuggestionsModal({
   open: openProp,
   onClose: onCloseProp,
   onApply,
-  isFallbackMount = false,
 }: AutoSuggestionsModalProps = {}) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const firstActionRef = useRef<HTMLButtonElement | null>(null);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
-  const [suppressedAsFallback, setSuppressedAsFallback] = useState(false);
-
-  useEffect(() => {
-    if (!isFallbackMount) {
-      primaryAutoSuggestionsMounts += 1;
-      return () => {
-        primaryAutoSuggestionsMounts = Math.max(
-          0,
-          primaryAutoSuggestionsMounts - 1
-        );
-      };
-    } else {
-      setSuppressedAsFallback(primaryAutoSuggestionsMounts > 0);
-    }
-  }, [isFallbackMount]);
 
   const brands = useHublyStore((s) => s.brands);
   const tasks = useHublyStore((s) => s.tasks);
@@ -223,7 +205,7 @@ export function AutoSuggestionsModal({
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
     if (params.get("modal") === "sugerencias") {
-      setExplicitlyUnlocked(true);
+      setExplicitlyUnlocked(true); // eslint-disable-line react-hooks/set-state-in-effect -- la URL y el store abren la ventana
       setAutoSuggestionsModalOpen(true);
       return;
     }
@@ -261,7 +243,7 @@ export function AutoSuggestionsModal({
   // Unlock if openProp transitions from false -> true or store flag becomes true
   useEffect(() => {
     if (autoSuggestionsModalOpen) {
-      setExplicitlyUnlocked(true);
+      setExplicitlyUnlocked(true); // eslint-disable-line react-hooks/set-state-in-effect -- la URL y el store abren la ventana
     } else if (prevOpenPropRef.current === false && openProp === true) {
       setExplicitlyUnlocked(true);
     }
@@ -272,7 +254,7 @@ export function AutoSuggestionsModal({
     openProp !== undefined
       ? openProp || autoSuggestionsModalOpen
       : autoSuggestionsModalOpen;
-  const isOpen = !suppressedAsFallback && explicitlyUnlocked && rawOpen;
+  const isOpen = explicitlyUnlocked && rawOpen;
 
   const [activeView, setActiveView] = useState<"reglas" | "metricas">("reglas");
   const [customValues, setCustomValues] = useState<Record<string, number>>({});

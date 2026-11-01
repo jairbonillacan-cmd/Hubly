@@ -64,7 +64,7 @@ export function ChatBots({ channelId, onNotice }: { channelId: string; onNotice:
   }, [channelId]);
 
   useEffect(() => {
-    void refresh();
+    void refresh(); // eslint-disable-line react-hooks/set-state-in-effect -- carga de datos
   }, [refresh]);
 
   const create = async () => {

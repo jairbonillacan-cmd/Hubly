@@ -66,7 +66,7 @@ function writeIds(key: string, ids: string[]) {
 
 function usePreferenceList(key: string) {
   const [ids, setIds] = useState<string[]>([]);
-  useEffect(() => setIds(readIds(key)), [key]);
+  useEffect(() => setIds(readIds(key)), [key]); // eslint-disable-line react-hooks/set-state-in-effect -- dato del navegador o de la red tras hidratar
   const toggle = useCallback((id: string) => {
     setIds((prev) => {
       const next = prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id];
@@ -137,7 +137,7 @@ export default function ChatPage() {
     const params = new URLSearchParams(window.location.search);
     const channel = params.get("c");
     if (channel) {
-      setSelectedId(channel);
+      setSelectedId(channel); // eslint-disable-line react-hooks/set-state-in-effect -- dato del navegador o de la red tras hidratar
       setFocusId(params.get("m"));
     }
   }, []);
@@ -159,7 +159,7 @@ export default function ChatPage() {
   const mentionNames = useMemo(() => [myName, ...people.map((p) => p.name)], [myName, people]);
 
   const items = useMemo<ChatListItem[]>(() => {
-    const now = Date.now();
+    const now = Date.now(); // eslint-disable-line react-hooks/purity -- se recalcula con los datos, no necesita ser puro al segundo
     const hasGeneral = channels.some((c) => c.type === "general");
     const base = hasGeneral
       ? []
@@ -211,7 +211,7 @@ export default function ChatPage() {
     const q = listQuery.trim();
     const search = chatRemote()?.search;
     if (q.length < 2 || !search) {
-      setRemoteResults([]);
+      setRemoteResults([]); // eslint-disable-line react-hooks/set-state-in-effect -- dato del navegador o de la red tras hidratar
       return;
     }
     const timer = window.setTimeout(() => void search(q).then(setRemoteResults), 250);
@@ -255,7 +255,7 @@ export default function ChatPage() {
   useEffect(() => {
     const real =
       selectedId === GENERAL_CHANNEL_ID ? channels.find((c) => c.type === "general") : selectedId === SELF_CHANNEL_ID ? channels.find((c) => c.type === "self") : undefined;
-    if (real) setSelectedId(real.id);
+    if (real) setSelectedId(real.id); // eslint-disable-line react-hooks/set-state-in-effect -- dato del navegador o de la red tras hidratar
   }, [selectedId, channels]);
 
   const select = useCallback((id: string | null) => {

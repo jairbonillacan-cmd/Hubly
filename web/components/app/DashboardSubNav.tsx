@@ -84,7 +84,7 @@ export function DashboardSubNav({
   const [locationSearch, setLocationSearch] = useState<string>("");
 
   useEffect(() => {
-    setLocationSearch(window.location.search);
+    setLocationSearch(window.location.search); // eslint-disable-line react-hooks/set-state-in-effect -- la URL solo existe en el navegador
   }, [pathname, isReferenceFixture]);
 
   const preservedQuery = useMemo(

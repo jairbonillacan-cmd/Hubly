@@ -171,7 +171,7 @@ export function ChatComposer({ ref, label, placeholder, brandId, mentions, onSen
 
   const schedule = (at: number) => {
     if (!onSchedule || !draft.trim()) return;
-    if (at <= Date.now()) {
+    if (at <= Date.now()) { // eslint-disable-line react-hooks/purity -- corre en un manejador, no al renderizar
       setError("Elige una hora que todavía no pase.");
       return;
     }

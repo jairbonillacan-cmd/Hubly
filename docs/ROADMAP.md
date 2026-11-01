@@ -39,7 +39,6 @@ Revisado el 1 de noviembre de 2026 sobre el reporte de auditoría externo.
 | C-01 | P2 | Archivos gigantes: `EquipoView` 3,195, `store` 2,303, `layout` 1,996, `InicioView` 1,784, `parrillas` 1,552, `PostComposerModal` 1,535 | `wc -l` | 5 |
 | C-03 | P2 | 13 usos de `as unknown as` y alias de tipos | `layout.tsx`, `lib/types.ts` | 5 |
 | C-04 | P2 | Deuda de UI congelada en 1,437 hallazgos | `scripts/check-ui-baseline.json` | 5 |
-| C-05 | P2 | 37 errores de `react-hooks` degradados a avisos, y 12 avisos más, con tope de 49 | `web/eslint.config.mjs` | 5 |
 
 **Corregido respecto al reporte:** el chat ya tiene tablas propias, `0007` ahora es `0010` y aún no hay producción. Los mensajes y canales siguen en el tipo del documento para el modo demo.
 

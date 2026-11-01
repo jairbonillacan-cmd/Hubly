@@ -16,7 +16,7 @@ export function PerfilPanel() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    if (profile?.name) setName(profile.name);
+    if (profile?.name) setName(profile.name); // eslint-disable-line react-hooks/set-state-in-effect -- el nombre llega después de montar
   }, [profile?.name]);
 
   const clean = name.trim();

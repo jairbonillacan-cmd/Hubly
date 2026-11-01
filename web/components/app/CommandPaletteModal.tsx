@@ -157,7 +157,7 @@ export function CommandPaletteModal({
 
   // Global Cmd+K / Ctrl+K shortcut
   useEffect(() => {
-    setShortcut(/Mac|iPhone|iPad/.test(navigator.platform) ? "⌘ K" : "Ctrl K");
+    setShortcut(/Mac|iPhone|iPad/.test(navigator.platform) ? "⌘ K" : "Ctrl K"); // eslint-disable-line react-hooks/set-state-in-effect -- plataforma del navegador o reinicio al abrir
     const onGlobalKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
@@ -172,7 +172,7 @@ export function CommandPaletteModal({
   // Reset search query when opened
   useEffect(() => {
     if (isOpen) {
-      setQuery("");
+      setQuery(""); // eslint-disable-line react-hooks/set-state-in-effect -- plataforma del navegador o reinicio al abrir
       setSelectedIndex(0);
     }
   }, [isOpen]);

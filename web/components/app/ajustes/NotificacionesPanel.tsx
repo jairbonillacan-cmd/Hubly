@@ -21,7 +21,7 @@ export function NotificacionesPanel() {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(KEY);
-      if (raw) setPrefs({ ...defaults(), ...JSON.parse(raw) });
+      if (raw) setPrefs({ ...defaults(), ...JSON.parse(raw) }); // eslint-disable-line react-hooks/set-state-in-effect -- localStorage solo tras hidratar
     } catch { /* Almacenamiento lleno o bloqueado: se sigue sin él. */ }
   }, []);
 

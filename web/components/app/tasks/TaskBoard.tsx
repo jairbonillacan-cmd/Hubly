@@ -78,7 +78,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
 
   useEffect(() => {
     if (newListSignal > 0) {
-      setSubView("cards");
+      setSubView("cards"); // eslint-disable-line react-hooks/set-state-in-effect -- señal externa para crear lista
       setCreatingList(true);
     }
   }, [newListSignal]);

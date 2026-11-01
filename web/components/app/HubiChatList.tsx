@@ -98,7 +98,7 @@ export function HubiChatUndoToasts() {
 
   useEffect(() => {
     if (deleted.length === 0) return;
-    setNow(Date.now());
+    setNow(Date.now()); // eslint-disable-line react-hooks/set-state-in-effect -- reloj de la cuenta atrás
     const interval = window.setInterval(() => setNow(Date.now()), 250);
     return () => window.clearInterval(interval);
   }, [deleted.length]);

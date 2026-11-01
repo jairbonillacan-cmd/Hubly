@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --max-warnings 49",
+    "lint": "eslint . --max-warnings 0",
     "check:muerto": "knip",
     "check:ui": "node scripts/check-ui.mjs",
     "check:size": "node scripts/check-size.mjs",

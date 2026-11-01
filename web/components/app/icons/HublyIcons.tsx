@@ -302,7 +302,7 @@ export function HublyCatAvatar({
         {useSvgFallback || imgError ? (
           <HublyCatInlineSvg size={size} rough={rough} title={title ?? alt} />
         ) : (
-          <img
+          <img // eslint-disable-line @next/next/no-img-element -- logo local con respaldo SVG si falla
             src="/brand/hubly-gato.png?v=marino-celeste"
             alt={alt}
             width={size}

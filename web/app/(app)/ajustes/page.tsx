@@ -70,7 +70,7 @@ export default function AjustesPage() {
   useEffect(() => {
     const raw = new URLSearchParams(window.location.search).get("tab") || "";
     const id = ALIAS[raw] ?? raw;
-    if (TABS.some((t) => t.id === id)) setTab(id as TabId);
+    if (TABS.some((t) => t.id === id)) setTab(id as TabId); // eslint-disable-line react-hooks/set-state-in-effect -- la URL solo existe en el navegador
   }, []);
 
   useEffect(() => {

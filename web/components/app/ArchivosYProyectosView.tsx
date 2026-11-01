@@ -56,7 +56,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
 
   useEffect(() => {
     if (tabParam === "proyectos") {
-      setMode("proyectos");
+      setMode("proyectos"); // eslint-disable-line react-hooks/set-state-in-effect -- la pestaña la manda la URL
     } else {
       setMode("content");
     }

@@ -29,7 +29,7 @@ export function MarcasPanel() {
   const [archived, setArchived] = useState(false);
 
   useEffect(() => {
-    if (agency?.name) setName(agency.name);
+    if (agency?.name) setName(agency.name); // eslint-disable-line react-hooks/set-state-in-effect -- el nombre llega después de montar
   }, [agency?.name]);
 
   const dirty =
