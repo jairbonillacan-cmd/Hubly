@@ -15,6 +15,7 @@ import type {
   AccountRecommendation,
 } from "@/lib/types";
 import {
+  HublyPinIcon,
   HublyPlusIcon,
   HublyCheckIcon,
   HublySparkIcon,
@@ -193,13 +194,13 @@ export function SaludCuentasView() {
       sortBy,
       referenceNow: testClock,
     });
-    if (sortBy === "name_asc") {
-      return {
-        ...result,
-        accounts: [...result.accounts].sort((a, b) => a.brand.name.localeCompare(b.brand.name, "es")),
-      };
-    }
-    return result;
+    const base = sortBy === "name_asc"
+      ? [...result.accounts].sort((a, b) => a.brand.name.localeCompare(b.brand.name, "es"))
+      : [...result.accounts];
+    return {
+      ...result,
+      accounts: base.sort((a, b) => Number(Boolean(b.brand.pinned)) - Number(Boolean(a.brand.pinned))),
+    };
   }, [brands, tasks, posts, period, activeFilter, searchQuery, sortBy, testClock]);
 
   const recommendations = useMemo(
@@ -346,7 +347,9 @@ export function SaludCuentasView() {
   const subtitle =
     summary.totalAccounts === 0
       ? "Cumplimiento de cada marca frente a lo que comprometiste."
-      : `${summary.totalAccounts} ${summary.totalAccounts === 1 ? "cuenta" : "cuentas"} · ${periodLabel}`;
+      : hasActiveFilters
+        ? `${accounts.length} de ${summary.totalAccounts} ${summary.totalAccounts === 1 ? "cuenta" : "cuentas"} · ${periodLabel}`
+        : `${summary.totalAccounts} ${summary.totalAccounts === 1 ? "cuenta" : "cuentas"} · ${periodLabel}`;
 
   return (
     <div className="hubly-salud hubly-touch" data-testid="salud-cuentas-view">
@@ -606,6 +609,16 @@ export function SaludCuentasView() {
                     </div>
                   </div>
                   <div className="hubly-salud-actions">
+                    <button
+                      type="button"
+                      className="hbtn hbtn-ghost hbtn-sm"
+                      aria-label={`${brand.pinned ? "Soltar" : "Fijar"} ${brand.name}`}
+                      aria-pressed={Boolean(brand.pinned)}
+                      title={brand.pinned ? "Soltar cuenta" : "Fijar cuenta arriba"}
+                      onClick={() => updateBrand(brand.id, { pinned: !brand.pinned })}
+                    >
+                      <HublyPinIcon size={15} />
+                    </button>
                     <span className="hubly-salud-status" data-tone={tone} data-testid={`account-health-badge-${brand.id}`}>
                       {STATUS_LABEL[account.healthStatus] ?? "En progreso"} · {account.healthScore}%
                     </span>

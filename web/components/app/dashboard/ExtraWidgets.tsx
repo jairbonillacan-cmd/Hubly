@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import Link from "next/link";
 import { useHublyStore } from "@/lib/store";
 import { addDaysToIsoDate, resolveDateInTimezone } from "@/lib/domain-selectors";
+import { buildMonthlyReport } from "@/lib/reporting";
 import { backendEnabled } from "@/lib/supabase/config";
 import { STATUS_META } from "@/components/app/social/status-meta";
 import {
@@ -448,6 +449,54 @@ function EquipoWidget() {
   );
 }
 
+function ReportesWidget() {
+  const brands = useHublyStore((s) => s.brands);
+  const posts = useHublyStore((s) => s.posts);
+  const hoy = useHoyIso();
+  const mes = hoy.slice(0, 7);
+  const filas = useMemo(
+    () =>
+      brands
+        .filter((b) => !b.archived)
+        .slice(0, FILAS_MAX)
+        .map((brand) => ({
+          brand,
+          report: buildMonthlyReport(
+            posts.filter((p) => p.brandId === brand.id),
+            mes
+          ),
+        })),
+    [brands, mes, posts]
+  );
+
+  return (
+    <WidgetShell
+      icon={<HublyChartIcon size={18} />}
+      title="Reportes"
+      action={<Link href="/reportes" className="hb-widget-link">Ver reportes →</Link>}
+    >
+      {filas.length === 0 ? (
+        <WidgetVacio
+          icon={<HublyChartIcon size={26} />}
+          title="Sin reportes aún"
+          text="Aquí verás los últimos reportes de tus marcas."
+        />
+      ) : (
+        <div className="hb-widget-body hubly-wfilas">
+          {filas.map(({ brand, report }) => (
+            <WidgetFila
+              key={brand.id}
+              title={brand.name}
+              meta={`${report.published} ${report.published === 1 ? "publicado" : "publicados"} · ${mes}`}
+              side={<span className="hubly-wfila-lado">{report.reach.toLocaleString("es-MX")} de alcance</span>}
+            />
+          ))}
+        </div>
+      )}
+    </WidgetShell>
+  );
+}
+
 export function ExtraWidget({ id }: { id: DashboardWidgetId }) {
   switch (id) {
     case "metrica":
@@ -464,6 +513,8 @@ export function ExtraWidget({ id }: { id: DashboardWidgetId }) {
       return <ActividadWidget />;
     case "equipo":
       return <EquipoWidget />;
+    case "reportes":
+      return <ReportesWidget />;
     default:
       return null;
   }

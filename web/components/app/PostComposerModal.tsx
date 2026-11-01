@@ -325,6 +325,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
   const notifyMembers = team.filter((m) => draft.notifyMemberIds.includes(m.id));
   const photoFor = (member: { email?: string }) => (member.email === profile?.email ? profile?.avatarUrl : undefined);
   const todosDone = draft.todos.filter((t) => t.done).length;
+  const selectedPalette = POST_PALETTE.find((p) => p.color === draft.color);
 
   const toggleNetwork = (network: SocialNetwork) => {
     if (locked) return;
@@ -648,6 +649,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
               <X size={18} />
             </button>
           </header>
+          {draft.color && <div className="hubly-composer-colorbar" style={{ background: draft.color }} aria-hidden />}
 
           {recoveredAt && (
             <div className="hubly-composer-recovered" role="status">
@@ -678,13 +680,14 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
               )}
             </div>
             <div className="hubly-composer-pop">
-              <button type="button" className={draft.notifyOnPublish ? "is-on" : undefined} aria-expanded={popover === "notify"} disabled={locked} onClick={() => setPopover(popover === "notify" ? null : "notify")}>
+              <button type="button" className={draft.notifyOnPublish ? "is-on" : undefined} title="Se guarda en el post como referencia; aún no envía avisos automáticos" aria-expanded={popover === "notify"} disabled={locked} onClick={() => setPopover(popover === "notify" ? null : "notify")}>
                 <HublyBellIcon size={17} />
                 <span>{notifyMembers.length ? `Avisar a ${notifyMembers.map((m) => m.name.split(" ")[0]).join(", ")}` : "Avisar al publicar"}</span>
               </button>
               {popover === "notify" && (
                 <PeopleMenu
                   label="Avisar al publicar"
+                  note="Se guarda en el post como referencia; aún no envía avisos automáticos."
                   team={team}
                   selected={draft.notifyMemberIds}
                   photoFor={photoFor}
@@ -692,13 +695,18 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                     const next = draft.notifyMemberIds.includes(id) ? draft.notifyMemberIds.filter((x) => x !== id) : [...draft.notifyMemberIds, id];
                     update({ notifyMemberIds: next, notifyOnPublish: next.length > 0 });
                   }}
+                  clearLabel="Quitar aviso"
+                  onClear={() => {
+                    update({ notifyMemberIds: [], notifyOnPublish: false });
+                    setPopover(null);
+                  }}
                 />
               )}
             </div>
             <div className="hubly-composer-pop">
-              <button type="button" aria-expanded={popover === "color"} disabled={locked} onClick={() => setPopover(popover === "color" ? null : "color")}>
+              <button type="button" aria-label="Color del post" aria-expanded={popover === "color"} disabled={locked} onClick={() => setPopover(popover === "color" ? null : "color")}>
                 {draft.color ? <i style={{ background: draft.color }} /> : <i className="is-none" />}
-                <span>Color</span>
+                <span>{selectedPalette ? selectedPalette.name : "Color"}</span>
               </button>
               {popover === "color" && (
                 <div className="hubly-composer-menu is-colors" role="group" aria-label="Color del post">
@@ -848,6 +856,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                     <button
                       type="button"
                       data-drop={dropActive || undefined}
+                      title="Imágenes hasta 20 MB y videos hasta 100 MB"
                       disabled={locked || media.length + uploads.length >= MAX_MEDIA_PER_POST}
                       onClick={() => fileRef.current?.click()}
                       onDragOver={(e) => { e.preventDefault(); setDropActive(true); }}
@@ -1484,6 +1493,7 @@ function NetworkSettings({
   );
   return (
     <div className="hubly-composer-netsettings">
+      <strong className="hubly-composer-nethead">Ajustes de {network}</strong>
       <label>
         Formato en {network}
         <select className="hubly-cal-input" disabled={disabled} value={settings.format ?? ""} onChange={(e) => onChange({ format: (e.target.value || undefined) as PostFormat | undefined })}>

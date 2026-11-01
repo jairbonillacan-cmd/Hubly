@@ -3,6 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 type Store = {
   getState: () => {
     activeBrandId: string;
+    brands: { id: string; core?: { pillars?: string[] } }[];
     posts: { id: string; title: string; status: string; scheduledDate: string; brandId: string }[];
     savePost: (p: unknown) => void;
     deletePost: (id: string) => void;
@@ -74,7 +75,9 @@ test("las cuatro vistas comparten posts, filtros y período", async ({ page }) =
 
   // Título y columnas de la semana salen del mismo intervalo.
   await page.getByRole("tab", { name: "Semana", exact: true }).click();
-  const columnas = await page.locator(".hubly-social-week-col").evaluateAll((c) => c.map((x) => x.getAttribute("aria-label")));
+  const weekCols = page.locator(".hubly-social-week-col");
+  await expect(weekCols).toHaveCount(7);
+  const columnas = await weekCols.evaluateAll((c) => c.map((x) => x.getAttribute("aria-label")));
   expect(columnas).toHaveLength(7);
   expect(new Date(`${columnas[0]}T12:00:00Z`).getUTCDay()).toBe(1);
   const dia = String(Number(columnas[0]!.slice(8)));
@@ -108,6 +111,14 @@ test("Kanban: mover cambia el atributo y nunca marca como publicado", async ({ p
   await expect(page.getByRole("region", { name: "Aprobado" }).getByText(TITULO)).toBeVisible();
   const estado = await page.evaluate((t) => (window as unknown as { __hubly: Store }).__hubly.getState().posts.find((p) => p.title === t)?.status, TITULO);
   expect(estado).toBe("approved");
+  await page.getByLabel("Columnas por").selectOption("pilar");
+  const primerPilar = await page.evaluate(() => {
+    const s = (window as unknown as { __hubly: Store }).__hubly.getState();
+    const b = s.brands.find((br) => br.id === s.activeBrandId) ?? s.brands[0];
+    return b?.core?.pillars?.[0] ?? "General";
+  });
+  await page.getByLabel(`Mover ${TITULO} a otra columna`).selectOption(primerPilar);
+  await expect(page.getByRole("region", { name: primerPilar }).getByText(TITULO)).toBeVisible();
   for (const grupo of ["estatus", "formato", "responsable"]) await page.getByLabel("Columnas por").selectOption(grupo);
   await page.getByLabel("Columnas por").selectOption("estatus");
   await page.getByLabel(`Mover ${TITULO} a otra columna`).selectOption("pendiente");

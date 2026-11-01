@@ -346,6 +346,7 @@ export interface BrandWorkspace {
   healthStatus: BrandHealthStatus;
   healthScore: number;
   status?: string;
+  pinned?: boolean;
   archived?: boolean;
   commitments: AccountCommitment;
   core: BrandCore;
@@ -639,7 +640,8 @@ export type DashboardWidgetId =
   | "semana"
   | "mensajes"
   | "actividad"
-  | "equipo";
+  | "equipo"
+  | "reportes";
 
 export type DashboardMetricId =
   | "publicados"

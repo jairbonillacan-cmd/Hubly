@@ -53,6 +53,7 @@ const CATALOGO: Array<{
   {
     grupo: "Ads",
     items: [
+      { id: "reportes", title: "Reportes", description: "Los últimos reportes de tus marcas" },
       { id: "grafica_ads", title: "Gráfica de Ads", description: "Inversión acumulada y CTR" },
       { id: "ads_activos", title: "Ads activos", description: "Campañas en circulación y sus resultados" },
     ],

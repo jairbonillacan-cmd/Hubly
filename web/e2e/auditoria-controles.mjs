@@ -8,6 +8,13 @@ const BASE = process.env.E2E_BASE || "http://localhost:3000";
 const RUTAS = ["/dashboard", "/dashboard/equipo", "/dashboard/salud-cuentas", "/calendario", "/tareas", "/chat", "/notificaciones", "/ia", "/marcas", "/marca", "/archivos", "/proyectos", "/parrillas", "/reportes", "/anuncios", "/crm", "/automatizaciones", "/ajustes"];
 const ALIAS = { "/equipo": "/dashboard/equipo", "/salud": "/dashboard/salud-cuentas", "/estrategia": "/marca" };
 const SALTAR = /cerrar sesi|eliminar cuenta|salir/i;
+// Falsos positivos verificados: botones de envío de formulario que requieren escribir antes en un campo obligatorio vacío.
+const FALSOS_POSITIVOS = new Map([
+  ["/dashboard|Nueva libreta Kraft|Crear libreta", "requiere escribir título en el formulario antes de enviar"],
+  ["/calendario|Nueva actividad|Crear actividad", "requiere escribir título de la actividad antes de enviar"],
+  ["/crm|Nuevo prospecto|Guardar", "requiere escribir nombre del prospecto antes de enviar"],
+  ["/automatizaciones||Crear regla", "requiere escribir nombre y texto de la regla antes de enviar"],
+]);
 const PARALELO = Number(process.env.AUDIT_PARALELO || 4);
 const SHELL = "(sidebar y Hubi)";
 
@@ -209,7 +216,10 @@ async function pulsar(page, estado, ambito, c, ruta, camino, filas, ventanaNombr
       if (nueva && !nueva.editor && porExplorar) porExplorar.push({ ambito: "ventana", control: c, etiqueta: nueva.etiqueta, camino: [...camino, { ambito, control: c }] });
       if (nueva?.editor) fila.detalle += " (editor: lo cubre compositor.spec)";
     } else if (c.activo) { fila.resultado = "ya activo"; fila.detalle = "estaba seleccionado"; }
-    else { fila.resultado = "sin efecto visible"; }
+    else if (FALSOS_POSITIVOS.has(`${ruta}|${ventanaNombre}|${c.nombre}`)) {
+      fila.resultado = "omitido";
+      fila.detalle = `falso positivo (${FALSOS_POSITIVOS.get(`${ruta}|${ventanaNombre}|${c.nombre}`)})`;
+    } else { fila.resultado = "sin efecto visible"; }
   } catch (e) {
     fila.resultado = "no se pudo pulsar";
     fila.detalle = String(e.message).split("\n")[0].slice(0, 140);

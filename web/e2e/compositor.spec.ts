@@ -153,6 +153,7 @@ test("varios archivos, orden, copy por red y guardado sin fecha", async ({ page 
   await page.getByRole("tab", { name: "Pinterest" }).click();
   await expect(page.getByLabel("Copy de Pinterest")).toHaveValue("Copy común");
   await expect(page.getByText("Lo que cambies aquí solo sale en Pinterest")).toBeVisible();
+  await expect(page.getByText("Ajustes de Pinterest")).toBeVisible();
   await page.getByLabel("Copy de Pinterest").fill("Solo Pinterest");
   await expect(page.locator(".hubly-phone-app")).toContainText("Solo Pinterest");
   await expect(page.locator(".np-pin-save")).toHaveText("Guardar");
@@ -289,4 +290,23 @@ test("cada una de las diez redes tiene su propia interfaz en el teléfono", asyn
     await expect(page.locator(".hubly-phone .hubly-phone-island")).toBeVisible();
     await expect(page.locator(`.hubly-phone-app`).locator(senas[nombre]).first()).toBeVisible();
   }
+});
+
+test("Avisar al publicar indica que se guarda como referencia sin enviar avisos automáticos", async ({ page }) => {
+  await abrirEditor(page);
+  await page.getByRole("button", { name: "Avisar al publicar" }).click();
+  const menu = page.getByRole("group", { name: "Avisar al publicar" });
+  await expect(menu).toBeVisible();
+  await expect(menu.getByRole("note")).toContainText("Se guarda en el post como referencia; aún no envía avisos automáticos.");
+  await menu.locator("button").first().click();
+  await expect(menu.getByRole("button", { name: "Quitar aviso" })).toBeVisible();
+  await menu.getByRole("button", { name: "Quitar aviso" }).click();
+  await expect(page.getByRole("button", { name: "Avisar al publicar" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Color del post" }).click();
+  const colorMenu = page.getByRole("group", { name: "Color del post" });
+  await expect(colorMenu).toBeVisible();
+  await colorMenu.getByRole("button", { name: "Rosa" }).click();
+  await expect(page.getByRole("button", { name: "Color del post" })).toContainText("Rosa");
+  await expect(page.locator(".hubly-composer-colorbar")).toBeVisible();
 });

@@ -159,6 +159,14 @@ export const DEFAULT_WIDGETS_CONFIG: DashboardWidgetConfig[] = [
     order: 15,
     column: "right",
   },
+  {
+    id: "reportes",
+    title: "Reportes",
+    description: "Los últimos reportes de tus marcas.",
+    visible: false,
+    order: 16,
+    column: "left",
+  },
 ];
 
 export const DEFAULT_NOTEBOOKS: NotebookItem[] = [

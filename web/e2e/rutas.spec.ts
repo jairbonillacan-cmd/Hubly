@@ -82,3 +82,107 @@ for (const esquema of ["light", "dark"] as const) {
     });
   }
 }
+
+test("/chat y /anuncios muestran su encabezado principal h1", async ({ page }) => {
+  await page.goto("/chat");
+  await page.waitForLoadState("networkidle");
+  await expect(page.getByRole("heading", { level: 1, name: "Chat" })).toBeVisible();
+
+  await page.goto("/anuncios");
+  await page.waitForLoadState("networkidle");
+  await expect(page.getByRole("heading", { level: 1, name: "Anuncios" })).toBeVisible();
+});
+
+test("/chat actualiza el estado vacío tras enviar un mensaje en # General", async ({ page }) => {
+  await page.goto("/chat");
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: /# General/ }).click();
+  await expect(page.getByText(/Sin mensajes aún/).first()).toBeVisible();
+
+  const input = page.getByPlaceholder("Escribe un mensaje en # General...");
+  await input.fill("Hola equipo, revisemos la parrilla");
+  await page.getByRole("button", { name: "Enviar" }).click();
+
+  await expect(page.getByText("Hola equipo, revisemos la parrilla").first()).toBeVisible();
+  await expect(page.getByText(/Sin mensajes aún/)).toHaveCount(0);
+  await expect(page.getByText("Todavía no hay canales con conversación.")).toHaveCount(0);
+});
+
+test("/reportes avisa cuando muestra cifras de ejemplo", async ({ page }) => {
+  await page.goto("/reportes");
+  await page.waitForLoadState("networkidle");
+  const nota = page.getByRole("note");
+  await expect(nota).toBeVisible();
+  await expect(nota).toContainText("Datos de ejemplo.");
+  await expect(page.getByText("Ejemplo", { exact: true }).first()).toBeVisible();
+});
+
+test("/dashboard/equipo refleja el periodo seleccionado y el estado activo de sus controles", async ({ page }) => {
+  await page.goto("/dashboard/equipo");
+  await page.waitForLoadState("networkidle");
+
+  const btn7d = page.getByRole("button", { name: "7 días", exact: true });
+  const btn30d = page.getByRole("button", { name: "30 días", exact: true });
+  const btn90d = page.getByRole("button", { name: "90 días", exact: true });
+
+  await expect(btn30d).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText(/Últimos 30 días/)).toBeVisible();
+
+  await btn7d.click();
+  await expect(btn7d).toHaveAttribute("aria-pressed", "true");
+  await expect(btn30d).toHaveAttribute("aria-pressed", "false");
+  await expect(page.getByText(/Últimos 7 días/)).toBeVisible();
+
+  await btn90d.click();
+  await expect(btn90d).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText(/Últimos 90 días/)).toBeVisible();
+});
+
+test("ventanas abiertas a 390 y modo oscuro mantienen contraste, foco y ocultan la píldora flotante", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem("hubly-theme", "dark");
+    } catch {}
+  });
+  await page.emulateMedia({ colorScheme: "dark" });
+
+  await page.goto("/calendario");
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: "Filtros" }).click();
+  await expect(page.locator(".hubly-cal-filters")).toBeVisible();
+  expect(await contrasteBajo(page)).toEqual([]);
+  await expect(page.locator("[data-mision-pildora]")).toBeHidden();
+
+  const brandOpt = page.locator(".hubly-cal-brand-option").first();
+  await page.keyboard.press("Tab");
+  await brandOpt.focus();
+  const outlineStyle = await brandOpt.evaluate((el) => getComputedStyle(el).outlineStyle);
+  expect(outlineStyle).not.toBe("none");
+});
+
+test("controles de calendario conservan contraste en hover en modo oscuro", async ({ page }) => {
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem("hubly-theme", "dark");
+    } catch {}
+  });
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/calendario");
+  await page.waitForLoadState("networkidle");
+  const btnHoy = page.getByRole("button", { name: /Hoy|Ir a hoy/ }).first();
+  await btnHoy.hover();
+  expect(await contrasteBajo(page)).toEqual([]);
+});
+
+test("la galería de widgets incluye Reportes y permite colocarlo en el dashboard", async ({ page }) => {
+  await page.goto("/dashboard");
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: "+ Widget", exact: true }).click();
+  const dialogo = page.getByRole("dialog", { name: "Widgets" });
+  await expect(dialogo).toBeVisible();
+  await expect(dialogo.getByText("Los últimos reportes de tus marcas")).toBeVisible();
+  await dialogo.getByRole("button", { name: /Reportes.*Los últimos reportes de tus marcas/ }).click();
+  await dialogo.getByRole("button", { name: "Listo", exact: true }).click();
+  await expect(page.getByRole("link", { name: "Ver reportes →" })).toBeVisible();
+});

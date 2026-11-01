@@ -589,6 +589,13 @@ function DemoAnunciosPage() {
         </div>
       </div>
 
+      <div className="hubly-cal-title-row" style={{ paddingTop: 0, paddingBottom: 14 }}>
+        <div style={{ minWidth: 0 }}>
+          <h1 className="hubly-cal-title">Anuncios</h1>
+          <p className="hubly-cal-subtitle">Campañas y piezas promocionadas de tu marca.</p>
+        </div>
+      </div>
+
       <div
         role="note"
         style={{
@@ -728,6 +735,7 @@ function DemoAnunciosPage() {
             <button
               type="button"
               aria-label="Cards"
+              aria-pressed={viewMode === "cards"}
               title="Vista visual con creatividades"
               onClick={() => setViewMode("cards")}
               style={{
@@ -748,6 +756,7 @@ function DemoAnunciosPage() {
             <button
               type="button"
               aria-label="Tabla"
+              aria-pressed={viewMode === "table"}
               title="Comparación numérica completa"
               onClick={() => setViewMode("table")}
               style={{
@@ -768,6 +777,7 @@ function DemoAnunciosPage() {
             <button
               type="button"
               aria-label="Funnels"
+              aria-pressed={viewMode === "funnels"}
               title="Funnel: dónde caen las conversiones"
               onClick={() => setViewMode("funnels")}
               style={{

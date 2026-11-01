@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Next.js (elección del usuario). Landing y prototipo de la aplicación con datos de ejemplo, sin backend. Sin hosting decidido: el código vive en el repo y no se publica todavía.
+Next.js 16 (App Router), React 19, TypeScript 5, Tailwind CSS 4, Zustand 5, Tiptap 3, Supabase (`@supabase/ssr`, PostgreSQL con RLS y Storage privado `brand-media`) y SDK de Anthropic (`@anthropic-ai/sdk`) opcional para redacción de copy en el compositor. Funciona en modo demostración con persistencia local (`web/.data/`) o conectado a Supabase. Sin hosting oficial decidido: el código vive en el repositorio para autoalojamiento o despliegue propio.
 
 ## Users
 
@@ -24,15 +24,15 @@ Es de código abierto: la agencia puede alojarlo en su propia infraestructura, c
 
 ## Capabilities and Constraints
 
-Todavía no hay producto funcional, solo un prototipo sin cuentas ni conexión con redes: todas las funciones son previstas y deben presentarse como tales. Funciones previstas: programación multired, parrillas, aprobación del cliente por enlace sin cuenta, reportes, panel de anuncios y asistente de IA con la voz de cada marca. La licencia es AGPL-3.0. Ideas sin compromiso (se presentan como tales): biblioteca de recursos, bandeja de comentarios y mensajes, permisos por rol, enlace en la biografía, importar desde Canva y Drive, plantillas de reportes, app móvil y API pública. Sin decidir: precios, versión alojada de pago, redes concretas soportadas, fecha de lanzamiento.
+La aplicación cuenta hoy con: cuentas, agencias, marcas e invitaciones con permisos por rol (`owner`, `admin`, `editor`, `viewer`) respaldados por RLS en PostgreSQL; calendario editorial (`/calendario` con vistas de mes, semana, agenda, tabla y kanban) y compositor con vista previa móvil para 10 redes (Instagram, Facebook, TikTok, LinkedIn, YouTube, X, Threads, Pinterest, Reddit y Google Business); parrillas por marca (`/parrillas`) e importación de lotes desde CSV, Excel (`.xlsx`) o tablas pegadas; enlaces compartibles para revisión y aprobación del cliente sin cuenta (`/share/[token]`); biblioteca privada de medios (`Content Manager`, `/archivos`, límite de 20 MB en imágenes/documentos y 100 MB en videos); tareas, proyectos, CRM, salud de cuentas (`/dashboard/salud-cuentas`), equipo (`/dashboard/equipo`), chat interno (`/chat`), reportes mensuales con métricas registradas manualmente (`/reportes`, `/reporte/[brandId]`) y generación de propuestas de copy con IA en el compositor (`POST /api/ai/caption` con `ANTHROPIC_API_KEY`). Limitaciones actuales y funciones previstas: no publica automáticamente en redes sociales ni sincroniza métricas desde sus APIs (la publicación ocurre fuera de Hubly y los resultados se registran manualmente); «Avisar al publicar» guarda en el post a quién avisar como referencia pero aún no envía notificaciones automáticas; el panel de anuncios (`/anuncios`) y las cifras de ejemplo del informe ejecutivo en modo demo muestran datos demostrativos etiquetados como `Ejemplo`; el asistente integral de marca (`/ia`), la bandeja unificada de comentarios/mensajes de redes y la importación desde Canva o Drive siguen previstos. La licencia es AGPL-3.0. Sin decidir: precios, versión alojada de pago, app móvil, API pública y fecha de lanzamiento.
 
 ## Brand Commitments
 
-Nombre: Hubly. Idioma de la landing: español. Tono: directo y cercano. La identidad, los textos y el diseño son propios; ningún contenido se copia de otros productos.
+Nombre: Hubly. Idioma de la landing y la aplicación: español. Tono: directo y cercano. La identidad, los textos y el diseño son propios; ningún contenido se copia de otros productos.
 
 ## Evidence on Hand
 
-Ninguna todavía. No hay clientes, testimonios, cifras, capturas reales ni logos: no se inventan. Los datos de demostración se etiquetan como ejemplo. Enlace real: https://github.com/jairbonillacan-cmd/Hubly
+No hay clientes públicos, testimonios ni logos externos: no se inventan. Los datos de demostración se etiquetan como ejemplo. Enlace real: https://github.com/jairbonillacan-cmd/Hubly
 
 ## Product Principles
 

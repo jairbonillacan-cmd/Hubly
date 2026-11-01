@@ -50,7 +50,12 @@ export function MediaLibrary({ brandId, selectable = false, accept, maxSelection
     setLoading(true);
     setLoadError(null);
     try {
-      setItems(await listMedia(brandId));
+      const fetched = await listMedia(brandId);
+      setItems((current) => {
+        const fetchedIds = new Set(fetched.map((i) => i.id));
+        const localOnly = current.filter((i) => i.brandId === brandId && !fetchedIds.has(i.id));
+        return [...localOnly, ...fetched];
+      });
     } catch (error) {
       setLoadError(error instanceof Error ? error.message : "No se pudo cargar la biblioteca.");
     } finally {
@@ -193,7 +198,7 @@ export function MediaLibrary({ brandId, selectable = false, accept, maxSelection
 
       <div className="hubly-media-toolbar">
         <nav className="hubly-media-crumbs" aria-label="Ubicación">
-          <button type="button" aria-label="Inicio de la biblioteca" onClick={() => setFolder("")}>
+          <button type="button" aria-label="Inicio de la biblioteca" aria-current={!folder ? "page" : undefined} onClick={() => setFolder("")}>
             <Home size={16} />
           </button>
           {folder && (
@@ -364,7 +369,9 @@ export function MediaLibrary({ brandId, selectable = false, accept, maxSelection
               </div>
             ) : null}
             <p className="hubly-media-hint">
-              Imágenes hasta {MAX_IMAGE_BYTES / (1024 * 1024)} MB y videos hasta {MAX_VIDEO_BYTES / (1024 * 1024)} MB. También puedes arrastrarlos aquí.
+              {!accept || accept.includes("pdf") || accept.includes("doc")
+                ? `Imágenes y documentos hasta ${MAX_IMAGE_BYTES / (1024 * 1024)} MB y videos hasta ${MAX_VIDEO_BYTES / (1024 * 1024)} MB. También puedes arrastrarlos aquí.`
+                : `Imágenes hasta ${MAX_IMAGE_BYTES / (1024 * 1024)} MB y videos hasta ${MAX_VIDEO_BYTES / (1024 * 1024)} MB. También puedes arrastrarlos aquí.`}
             </p>
           </>
         )}

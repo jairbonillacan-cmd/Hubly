@@ -325,12 +325,13 @@ export function CoverPicker({ videoUrl, brandId, onCancel, onSaved }: { videoUrl
 }
 
 /** Menú de personas con búsqueda: responsables y «Avisar al publicar». */
-export function PeopleMenu({ label, team, selected, photoFor, onToggle }: { label: string; team: TeamMember[]; selected: string[]; photoFor: (member: TeamMember) => string | undefined; onToggle: (id: string) => void }) {
+export function PeopleMenu({ label, note, team, selected, photoFor, onToggle, clearLabel, onClear }: { label: string; note?: string; team: TeamMember[]; selected: string[]; photoFor: (member: TeamMember) => string | undefined; onToggle: (id: string) => void; clearLabel?: string; onClear?: () => void }) {
   const [search, setSearch] = useState("");
   const matches = team.filter((m) => m.name.toLowerCase().includes(search.trim().toLowerCase()));
   return (
     <div className="hubly-composer-menu is-people" role="group" aria-label={label}>
       <input className="hubly-cal-input" autoFocus value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Buscar…" aria-label="Buscar miembro" />
+      {note && <small role="note">{note}</small>}
       {team.length === 0 && <small>Aún no hay miembros en el equipo.</small>}
       {team.length > 0 && matches.length === 0 && <small>Sin resultados</small>}
       {matches.map((member) => {
@@ -347,6 +348,9 @@ export function PeopleMenu({ label, team, selected, photoFor, onToggle }: { labe
           </button>
         );
       })}
+      {clearLabel && onClear && selected.length > 0 && (
+        <button type="button" className="is-clear" onClick={onClear}>{clearLabel}</button>
+      )}
     </div>
   );
 }

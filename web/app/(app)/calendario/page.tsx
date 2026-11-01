@@ -150,14 +150,14 @@ export default function CalendarioPage() {
   const [draftRepeat, setDraftRepeat] = useState<RepeatMode>("none");
   const [draftColor, setDraftColor] = useState<string | null>(null);
   const [draftPlace, setDraftPlace] = useState("");
-  const [draftBrandId, setDraftBrandId] = useState(activeBrandId);
+  const [draftBrandId, setDraftBrandId] = useState(activeBrandId); const [activeEntryId, setActiveEntryId] = useState<string | null>(null);
   const lastOpenDate = useRef(todayIso);
   const filtersRef = useRef<HTMLDivElement | null>(null);
   const filtersPresence = useModalPresence(filtersOpen, 100);
   const modalPresence = useModalPresence(newActivityDate !== null);
   const storageKey = `hubly:calendar-activities:${workspaceId}`;
 
-  useEffect(() => setAnchorIso(todayIso), [todayIso]);
+  useEffect(() => { setAnchorIso(todayIso); router.prefetch("/tareas"); router.prefetch("/parrillas"); }, [router, todayIso]);
 
   const sharedActivities = useHublyStore((s) => s.calendarActivities);
   const setSharedActivities = useHublyStore((s) => s.setCalendarActivities);
@@ -298,7 +298,7 @@ export default function CalendarioPage() {
 
   const openEntry = (entry: CalendarEntry) => {
     if (entry.kind === "post") openComposer(entry.sourceId);
-    if (entry.kind === "tarea") router.push("/tareas");
+    setActiveEntryId(entry.id); if (entry.kind === "tarea") router.push("/tareas");
   };
 
   const openNewActivity = (isoDate: string) => {
@@ -411,7 +411,7 @@ export default function CalendarioPage() {
             <button type="button" className="hubly-cal-icon" aria-label="Siguiente" onClick={() => move(1)}>
               <ChevronRight size={15} />
             </button>
-            <button type="button" className="hubly-cal-today" title="Volver al día de hoy" onClick={() => setAnchorIso(todayIso)}>
+            <button type="button" className="hubly-cal-today" aria-current={anchorIso === todayIso ? "date" : undefined} title="Volver al día de hoy" onClick={() => setAnchorIso(todayIso)}>
               Ir a hoy
             </button>
           </div>
@@ -564,7 +564,7 @@ export default function CalendarioPage() {
                               key={entry.id}
                               className="hubly-cal-row"
                               title={`${entry.label} · ${entry.title}`}
-                              role={entry.kind === "actividad" ? undefined : "button"}
+                              role={entry.kind === "actividad" ? undefined : "button"} aria-current={activeEntryId === entry.id ? "true" : undefined}
                               tabIndex={entry.kind === "actividad" ? undefined : 0}
                               onClick={() => openEntry(entry)}
                               onKeyDown={(e) => {
