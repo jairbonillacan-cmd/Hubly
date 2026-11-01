@@ -15,7 +15,7 @@ Prioridad: P0 riesgo de datos o legal · P1 impide el ciclo real o los cambios s
 | 2. Datos reales por dominio | `/api/workspace` eliminado o reducido a preferencias; aislamiento por marca probado | En curso: marcas, posts y tareas en tablas, aplicadas en desarrollo. Falta portal, libretas, notificaciones, CRM y guardar por fila. Adelantada a la etapa 1 por decisión del dueño |
 | 3. Publicación real | Un post aprobado sale a tiempo, una sola vez, aun con reintento forzado | Pendiente |
 | 4. Ciclo completo con la agencia | Dos semanas con un cliente real sin volver a la herramienta anterior | Pendiente |
-| 5. Código y diseño mantenibles | Continua: la deuda solo baja | En curso, adelantada |
+| 5. Código y diseño mantenibles | Continua: la deuda solo baja | En curso, adelantada. Plan y tareas en [deslop/](deslop/README.md) |
 | 6. Paridad con Henry | Matriz con estado real, parcial o prevista | Pendiente |
 | 7. Preparación para otras agencias | `docs/RELEASE-READINESS.md` con restauración de respaldo probada | Pendiente |
 
