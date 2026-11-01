@@ -563,7 +563,8 @@ export type DashboardWidgetId =
   | "semana"
   | "mensajes"
   | "actividad"
-  | "equipo";
+  | "equipo"
+  | "reportes";
 
 export type DashboardMetricId =
   | "publicados"

@@ -174,3 +174,15 @@ test("controles de calendario conservan contraste en hover en modo oscuro", asyn
   await btnHoy.hover();
   expect(await contrasteBajo(page)).toEqual([]);
 });
+
+test("la galería de widgets incluye Reportes y permite colocarlo en el dashboard", async ({ page }) => {
+  await page.goto("/dashboard");
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: "+ Widget", exact: true }).click();
+  const dialogo = page.getByRole("dialog", { name: "Widgets" });
+  await expect(dialogo).toBeVisible();
+  await expect(dialogo.getByText("Los últimos reportes de tus marcas")).toBeVisible();
+  await dialogo.getByRole("button", { name: /Reportes.*Los últimos reportes de tus marcas/ }).click();
+  await dialogo.getByRole("button", { name: "Listo", exact: true }).click();
+  await expect(page.getByRole("link", { name: "Ver reportes →" })).toBeVisible();
+});
