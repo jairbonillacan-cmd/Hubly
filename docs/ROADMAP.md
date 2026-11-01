@@ -11,7 +11,7 @@ Prioridad: P0 riesgo de datos o legal · P1 impide el ciclo real o los cambios s
 | Etapa | Compuerta | Estado |
 |---|---|---|
 | 0. Decisiones y controles | CI obligatorio, migraciones aplicadas, `npm run dev:live` funcionando | En curso |
-| 1. Prueba del motor | Publicación real demostrada desde la especificación propia (ADR 0003) | Pendiente |
+| 1. Prueba del motor | Publicación real demostrada desde la especificación propia (ADR 0003) | En curso: especificación y núcleo listos; falta probar con Meta |
 | 2. Datos reales por dominio | `/api/workspace` eliminado o reducido a preferencias; aislamiento por marca probado | Pendiente |
 | 3. Publicación real | Un post aprobado sale a tiempo, una sola vez, aun con reintento forzado | Pendiente |
 | 4. Ciclo completo con la agencia | Dos semanas con un cliente real sin volver a la herramienta anterior | Pendiente |
