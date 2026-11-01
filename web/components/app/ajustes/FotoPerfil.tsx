@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { Modal } from "@/components/app/ui/Modal";
 import { useRef, useState } from "react";
 import { HublyCameraIcon, HublyMinusIcon, HublyPlusIcon, HublyCloseIcon } from "@/components/app/icons/DuotoneIcons";
@@ -122,9 +123,9 @@ function Reencuadre({ src, busy, error, onCancel, onSave }: { src: string; busy:
         <div className="hubly-ajustes-stage-mask" />
       </div>
       <div className="hubly-ajustes-zoom">
-        <button type="button" className="hbtn hbtn-ghost hbtn-sm hbtn-ic" aria-label="Alejar" onClick={() => zoomTo(pose.zoom - 0.25)}><HublyMinusIcon size={15} /></button>
+        <Button variant="ghost" size="sm" iconOnly aria-label="Alejar" onClick={() => zoomTo(pose.zoom - 0.25)}><HublyMinusIcon size={15} /></Button>
         <input type="range" min={1} max={4} step={0.01} value={pose.zoom} aria-label="Zoom" onChange={(e) => zoomTo(Number(e.target.value))} />
-        <button type="button" className="hbtn hbtn-ghost hbtn-sm hbtn-ic" aria-label="Acercar" onClick={() => zoomTo(pose.zoom + 0.25)}><HublyPlusIcon size={15} /></button>
+        <Button variant="ghost" size="sm" iconOnly aria-label="Acercar" onClick={() => zoomTo(pose.zoom + 0.25)}><HublyPlusIcon size={15} /></Button>
       </div>
       {error && <p role="alert" className="hubly-ajustes-hint">{error}</p>}
     </AjustesModal>
@@ -137,10 +138,10 @@ function Visor({ open, src, canAdjust, onClose, onAdjust, onChange, onRemove }: 
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={src} alt="Foto de perfil" />
       <div className="hubly-ajustes-viewer-actions">
-        {canAdjust && <button type="button" className="hbtn hbtn-secondary" onClick={onAdjust}>Ajustar encuadre</button>}
-        <button type="button" className="hbtn hbtn-primary" onClick={onChange}>Cambiar foto</button>
-        <button type="button" className="hbtn hbtn-secondary" onClick={onRemove}>Quitar foto</button>
-        <button type="button" className="hbtn hbtn-ghost hbtn-ic" aria-label="Cerrar" onClick={onClose}><HublyCloseIcon size={15} /></button>
+        {canAdjust && <Button variant="secondary" onClick={onAdjust}>Ajustar encuadre</Button>}
+        <Button variant="primary" onClick={onChange}>Cambiar foto</Button>
+        <Button variant="secondary" onClick={onRemove}>Quitar foto</Button>
+        <Button variant="ghost" iconOnly aria-label="Cerrar" onClick={onClose}><HublyCloseIcon size={15} /></Button>
       </div>
     </Modal>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import React, { useCallback, useState } from "react";
 import Link from "next/link";
 import { askConfirm } from "@/components/app/AppDialogHost";
@@ -30,7 +31,6 @@ import {
 } from "@/components/app/icons/DuotoneIcons";
 import { ChatAvatar } from "./ChatAvatar";
 import { PopMenu } from "./PopMenu";
-
 const ATTACHMENT_ICON = {
   post: HublyHashIcon,
   grid: HublyCalendarIcon,
@@ -308,8 +308,8 @@ export function ChatMessageRow({
               }}
             />
             <div className="hubly-chat-edit-actions">
-              <button type="button" className="hbtn hbtn-xs hbtn-ghost" onClick={() => setEditing(null)}>Cancelar</button>
-              <button type="button" className="hbtn hbtn-xs hbtn-secondary" onClick={saveEdit}>Guardar</button>
+              <Button variant="ghost" size="xs" onClick={() => setEditing(null)}>Cancelar</Button>
+              <Button variant="secondary" size="xs" onClick={saveEdit}>Guardar</Button>
             </div>
           </div>
         ) : m.text ? (

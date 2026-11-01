@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { PanelHead, Previsto } from "./Panel";
 
 const ITEMS = [
@@ -19,7 +20,7 @@ export function IntegracionesPanel() {
               <div className="hubly-ajustes-row-title">{i.name}</div>
               <div className="hubly-ajustes-row-meta">{i.text}</div>
             </div>
-            <button type="button" className="hbtn hbtn-secondary hbtn-sm" disabled data-planned title="Función prevista">Conectar</button>
+            <Button variant="secondary" size="sm" disabled data-planned title="Función prevista">Conectar</Button>
           </div>
         ))}
       </div>

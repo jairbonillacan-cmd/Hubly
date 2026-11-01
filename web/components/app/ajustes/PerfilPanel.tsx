@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { useEffect, useState } from "react";
 import { HublyCheckIcon, HublyMailIcon, HublyPencilIcon } from "@/components/app/icons/DuotoneIcons";
 import { useHublyStore } from "@/lib/store";
@@ -41,10 +42,10 @@ export function PerfilPanel() {
           <span>Nombre completo</span>
           <div className="hubly-ajustes-inline">
             <input className="hubly-cal-line" value={name} placeholder="Tu nombre" onChange={(e) => { setName(e.target.value); setSaved(false); }} />
-            <button type="submit" className="hbtn hbtn-secondary" disabled={!dirty}>
+            <Button type="submit" variant="secondary" disabled={!dirty}>
               {saved ? <HublyCheckIcon size={17} /> : <HublyPencilIcon size={17} />}
               {saved ? "Guardado" : "Guardar"}
-            </button>
+            </Button>
           </div>
         </label>
         <span role="status" className="hubly-ajustes-hint" hidden={!saved}>Tu nombre se actualizó.</span>

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useId, useRef, useState } from "react";
 import { useHublyStore } from "@/lib/store";
@@ -105,9 +106,9 @@ export function WidgetConfigModal({ open, onClose }: WidgetConfigModalProps) {
           <h2 id={titleId}>Widgets</h2>
           <p>Toca uno para agregarlo a Inicio o quitarlo. Para acomodarlos o cambiar su ancho, usa Editar.</p>
         </div>
-        <button ref={doneRef} type="button" className="hbtn hbtn-primary hbtn-sm" onClick={handleClose}>
+        <Button ref={doneRef} variant="primary" size="sm" onClick={handleClose}>
           Listo
-        </button>
+        </Button>
       </div>
 
       {notice && <div className="hubly-wgal-aviso" role="status">{notice}</div>}

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { copyText } from "@/lib/clipboard";
 import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useRef, useState } from "react";
@@ -40,10 +41,10 @@ export function InviteLinkRow({ link, label }: { link: string; label: string }) 
   return (
     <div className="hubly-invite-link">
       <input className="hubly-cal-line" readOnly value={link} aria-label={label} onFocus={(e) => e.currentTarget.select()} />
-      <button type="button" className="hbtn hbtn-secondary" onClick={() => void copy()}>
+      <Button variant="secondary" onClick={() => void copy()}>
         {copied ? <HublyCheckIcon size={17} /> : <HublyCopyIcon size={17} />}
         <span role="status">{copied ? "Copiado" : "Copiar"}</span>
-      </button>
+      </Button>
     </div>
   );
 }
@@ -124,7 +125,7 @@ function ExistenteTab({ role }: { role: string }) {
         <div className="hubly-ajustes-empty" role="alert">
           <strong>No pudimos cargar tu lista</strong>
           <p>Revisa tu conexión e inténtalo otra vez.</p>
-          <button type="button" className="hbtn hbtn-secondary hbtn-sm" onClick={() => setAttempt((n) => n + 1)}>Reintentar</button>
+          <Button variant="secondary" size="sm" onClick={() => setAttempt((n) => n + 1)}>Reintentar</Button>
         </div>
       ) : people === null ? (
         <p className="hubly-invite-note">Cargando…</p>
@@ -149,9 +150,9 @@ function ExistenteTab({ role }: { role: string }) {
       {(people?.length ?? 0) > 0 && (
         <>
           {error && <p className="hubly-invite-error" role="alert">{error}</p>}
-          <button type="submit" className="hbtn hbtn-primary" disabled={!selected || sending}>
+          <Button type="submit" variant="primary" disabled={!selected || sending}>
             {sending ? "Creando…" : "Crear invitación"}
-          </button>
+          </Button>
         </>
       )}
       <SentList sent={sent} />
@@ -186,9 +187,9 @@ function LinkTab({ role }: { role: string }) {
     <div className="hubly-invite-form">
       <p className="hubly-invite-note">Cualquier persona con el link y un correo verificado entra a la agencia.</p>
       {error && <p className="hubly-invite-error" role="alert">{error}</p>}
-      <button type="button" className="hbtn hbtn-primary" disabled={sending} onClick={() => void generate()}>
+      <Button variant="primary" disabled={sending} onClick={() => void generate()}>
         {sending ? "Generando…" : link ? "Generar otro link" : "Generar link"}
-      </button>
+      </Button>
       {link && (
         <div className="hubly-invite-sent" role="status">
           <InviteLinkRow link={link} label="Link de invitación" />
@@ -258,14 +259,14 @@ function CorreoTab({ role }: { role: string }) {
             )}
           </div>
         ))}
-        <button type="button" className="hbtn hbtn-ghost hbtn-sm hubly-invite-add" onClick={() => setEmails((cur) => [...cur, ""])}>
+        <Button variant="ghost" size="sm" className="hubly-invite-add" onClick={() => setEmails((cur) => [...cur, ""])}>
           <HublyPlusIcon size={15} /> Agregar otro
-        </button>
+        </Button>
       </div>
       {error && <p className="hubly-invite-error" role="alert">{error}</p>}
-      <button type="submit" className="hbtn hbtn-primary" disabled={sending}>
+      <Button type="submit" variant="primary" disabled={sending}>
         {sending ? "Creando…" : emails.length > 1 ? "Crear invitaciones" : "Crear invitación"}
-      </button>
+      </Button>
       <SentList sent={sent} />
     </form>
   );

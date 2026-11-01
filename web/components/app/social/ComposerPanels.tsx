@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { addCollaborators, bestHours, hourLabel, MAX_COLLABORATORS, nextWeekday, type StoryRepeat } from "@/lib/composer-rules";
 import { localIsoDate } from "@/lib/date";
@@ -240,8 +241,8 @@ export function ConfirmPublish({
         </ul>
         {programar && <small className="hubly-composer-hint">Hubly aún no publica solo: a esa hora te toca subirlo a la red.</small>}
         <div>
-          <button type="button" autoFocus className="hbtn hbtn-ghost" onClick={onCancel}>Cancelar</button>
-          <button type="button" className="hbtn hbtn-primary" onClick={onConfirm}>{programar ? "Confirmar y programar" : "Sí, marcar como publicado"}</button>
+          <Button autoFocus variant="ghost" onClick={onCancel}>Cancelar</Button>
+          <Button variant="primary" onClick={onConfirm}>{programar ? "Confirmar y programar" : "Sí, marcar como publicado"}</Button>
         </div>
       </div>
     </div>
@@ -315,9 +316,9 @@ export function CoverPicker({ videoUrl, brandId, onCancel, onSaved }: { videoUrl
         {error && <small role="alert" className="hubly-composer-fielderror">{error}</small>}
         <input ref={fileRef} type="file" accept="image/*" hidden aria-label="Subir imagen de portada" onChange={(e) => { const f = e.target.files?.[0]; if (f) void upload(f); }} />
         <div>
-          <button type="button" className="hbtn hbtn-ghost" onClick={onCancel}>Cancelar</button>
-          <button type="button" className="hbtn hbtn-secondary" disabled={busy} onClick={() => fileRef.current?.click()}>Subir imagen</button>
-          <button type="button" className="hbtn hbtn-primary" disabled={busy || !duration} onClick={useFrame}>{busy ? "Guardando…" : "Usar este cuadro"}</button>
+          <Button variant="ghost" onClick={onCancel}>Cancelar</Button>
+          <Button variant="secondary" disabled={busy} onClick={() => fileRef.current?.click()}>Subir imagen</Button>
+          <Button variant="primary" disabled={busy || !duration} onClick={useFrame}>{busy ? "Guardando…" : "Usar este cuadro"}</Button>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -136,9 +137,9 @@ function MembersStep({ brandId, selected, onToggle }: { brandId: string; selecte
                 setError(null);
               }}
             />
-            <button type="submit" className="hbtn hbtn-secondary" disabled={sending || !email.trim()}>
+            <Button type="submit" variant="secondary" disabled={sending || !email.trim()}>
               {sending ? "Creando…" : "Invitar"}
-            </button>
+            </Button>
           </div>
           {error && <p className="hubly-invite-error" role="alert">{error}</p>}
           {sent.map((s) => (
@@ -170,10 +171,10 @@ function NetworksStep({ networks, onToggle }: { networks: SocialNetwork[]; onTog
               <div className="hubly-ajustes-row-text">
                 <div className="hubly-ajustes-row-title">{network}</div>
               </div>
-              <button type="button" className="hbtn hbtn-secondary hbtn-sm" aria-pressed={active} aria-label={`${active ? "Quitar" : "Agregar"} ${network}`} onClick={() => onToggle(network)}>
+              <Button variant="secondary" size="sm" aria-pressed={active} aria-label={`${active ? "Quitar" : "Agregar"} ${network}`} onClick={() => onToggle(network)}>
                 {active && <HublyCheckIcon size={15} />}
                 {active ? "Agregada" : "Agregar"}
-              </button>
+              </Button>
             </div>
           );
         })}
@@ -275,14 +276,14 @@ export function NewBrandModal() {
     setMemberIds((cur) => (cur.includes(id) ? cur.filter((m) => m !== id) : [...cur, id]));
 
   const back = step > 1 && (
-    <button type="button" className="hbtn hbtn-ghost hubly-wizard-back" onClick={() => setStep(step - 1)}>
+    <Button variant="ghost" className="hubly-wizard-back" onClick={() => setStep(step - 1)}>
       <HublyChevronLeftIcon size={15} /> Atrás
-    </button>
+    </Button>
   );
   const skip = (
-    <button type="button" className="hbtn hbtn-ghost" onClick={() => (step === 3 ? close() : setStep(step + 1))}>
+    <Button variant="ghost" onClick={() => (step === 3 ? close() : setStep(step + 1))}>
       Omitir por ahora
-    </button>
+    </Button>
   );
 
   return (
@@ -343,10 +344,10 @@ export function NewBrandModal() {
             </label>
           </div>
           <div className="hubly-cal-modal-actions">
-            <button type="button" className="hbtn hbtn-ghost" onClick={close}>Cancelar</button>
-            <button type="submit" className="hbtn hbtn-primary" disabled={!name.trim()}>
+            <Button variant="ghost" onClick={close}>Cancelar</Button>
+            <Button type="submit" variant="primary" disabled={!name.trim()}>
               Crear marca <HublyChevronRightIcon size={15} />
-            </button>
+            </Button>
           </div>
         </form>
       )}
@@ -358,9 +359,9 @@ export function NewBrandModal() {
           </div>
           <div className="hubly-cal-modal-actions">
             {skip}
-            <button type="button" className="hbtn hbtn-primary" onClick={saveMembers}>
+            <Button variant="primary" onClick={saveMembers}>
               Continuar <HublyChevronRightIcon size={15} />
-            </button>
+            </Button>
           </div>
         </>
       )}
@@ -373,9 +374,9 @@ export function NewBrandModal() {
           <div className="hubly-cal-modal-actions">
             {back}
             {skip}
-            <button type="button" className="hbtn hbtn-primary" onClick={saveNetworks}>
+            <Button variant="primary" onClick={saveNetworks}>
               Continuar <HublyChevronRightIcon size={15} />
-            </button>
+            </Button>
           </div>
         </>
       )}
@@ -407,13 +408,12 @@ export function NewBrandModal() {
           <div className="hubly-cal-modal-actions">
             {back}
             {skip}
-            <button type="submit" className="hbtn hbtn-primary">
+            <Button type="submit" variant="primary">
               <HublySparkIcon size={17} /> Abrir Núcleo
-            </button>
+            </Button>
           </div>
         </form>
       )}
     </Modal>
   );
 }
-

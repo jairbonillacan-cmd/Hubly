@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { useState } from "react";
 import { addDays, localIsoDate } from "@/lib/date";
 import {
@@ -109,11 +110,10 @@ export function ComposerDatePicker({
         {stepper("minutos", minutes, MINUTE_STEP)}
       </div>
       <div className="hubly-datepick-foot">
-        <button type="button" className="hbtn hbtn-ghost hbtn-sm" onClick={() => onChange("", "")}>Borrar</button>
+        <Button variant="ghost" size="sm" onClick={() => onChange("", "")}>Borrar</Button>
         <span />
-        <button
-          type="button"
-          className="hbtn hbtn-ghost hbtn-sm"
+        <Button
+          variant="ghost" size="sm"
           onClick={() => {
             const now = new Date();
             onChange(localIsoDate(now), `${pad(now.getHours())}:${pad(now.getMinutes())}`);
@@ -121,8 +121,8 @@ export function ComposerDatePicker({
           }}
         >
           Ahora
-        </button>
-        <button type="button" className="hbtn hbtn-primary hbtn-sm" onClick={onClose}>Listo</button>
+        </Button>
+        <Button variant="primary" size="sm" onClick={onClose}>Listo</Button>
       </div>
     </div>
   );

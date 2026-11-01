@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { useState } from "react";
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseBrowser } from "@/lib/supabase/browser";
@@ -32,15 +33,15 @@ export function ChangePassword() {
     <div className="hubly-ajustes-inline">
       {open ? (
         <>
-          <button type="button" className="hbtn hbtn-primary" disabled={busy} onClick={() => void send()}>
+          <Button variant="primary" disabled={busy} onClick={() => void send()}>
             {busy ? "Enviando…" : "Enviar correo de restablecimiento"}
-          </button>
-          <button type="button" className="hbtn hbtn-ghost" disabled={busy} onClick={() => setOpen(false)}>Cancelar</button>
+          </Button>
+          <Button variant="ghost" disabled={busy} onClick={() => setOpen(false)}>Cancelar</Button>
         </>
       ) : (
-        <button type="button" className="hbtn hbtn-secondary" onClick={() => { setMessage(null); setOpen(true); }}>
+        <Button variant="secondary" onClick={() => { setMessage(null); setOpen(true); }}>
           <HublyLockIcon size={17} /> Cambiar contraseña
-        </button>
+        </Button>
       )}
       {message && <p role={message.ok ? "status" : "alert"} className="hubly-ajustes-hint">{message.text}</p>}
     </div>

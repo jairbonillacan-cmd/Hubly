@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { chatRemote, useChatPresence } from "@/lib/chat-live";
 import { useHublyStore } from "@/lib/store";
@@ -618,14 +619,13 @@ export default function ChatPage() {
                 <div className="hubly-chat-vacio">
                   <h2 className="hubly-chat-vacio-title">Sin resultados</h2>
                   <p>Ningún mensaje coincide con «{channelQuery.trim()}».</p>
-                  <button type="button" className="hbtn hbtn-sm hbtn-secondary" onClick={() => setChannelQuery("")}>Limpiar búsqueda</button>
+                  <Button variant="secondary" size="sm" onClick={() => setChannelQuery("")}>Limpiar búsqueda</Button>
                 </div>
               ) : (
                 <>
                   {hiddenCount > 0 || (selectedId && hasOlder[selectedId] && !channelQuery) ? (
-                    <button
-                      type="button"
-                      className="hbtn hbtn-xs hbtn-ghost hubly-chat-older"
+                    <Button
+                      variant="ghost" size="xs" className="hubly-chat-older"
                       onClick={() => {
                         const el = scrollRef.current;
                         if (el) keepScroll.current = el.scrollHeight - el.scrollTop;
@@ -634,7 +634,7 @@ export default function ChatPage() {
                       }}
                     >
                       Ver mensajes anteriores
-                    </button>
+                    </Button>
                   ) : null}
                   {days.map((day) => (
                     <section key={day.day} aria-label={day.label}>

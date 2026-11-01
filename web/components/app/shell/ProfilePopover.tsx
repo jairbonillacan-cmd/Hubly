@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { useState } from "react";
 import {
   HublyBuildingIcon as Building2,
@@ -185,9 +186,9 @@ export function ProfilePopover({ onClose }: { onClose: () => void }) {
           </select>
         </label>
 
-        <button
+        <Button
           type="submit"
-          className="hbtn hbtn-primary hbtn-sm"
+          variant="primary" size="sm"
           style={{
             width: "100%",
             marginTop: 2,
@@ -198,7 +199,7 @@ export function ProfilePopover({ onClose }: { onClose: () => void }) {
           }}
         >
           {profileSavedToast ? "¡Perfil actualizado!" : "Guardar perfil"}
-        </button>
+        </Button>
       </form>
 
       {/* Los espacios de ejemplo solo existen en modo demo: con cuentas reales pisarían los datos de la agencia. */}

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import { useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { askConfirm } from "@/components/app/AppDialogHost";
@@ -109,9 +110,9 @@ export default function AjustesPage() {
             </button>
           ))}
           <div className="hubly-ajustes-nav-sep" />
-          <button type="button" className="hbtn hbtn-secondary hbtn-sm" onClick={() => void logout()}>
+          <Button variant="secondary" size="sm" onClick={() => void logout()}>
             <HublyLogOutIcon size={15} /> Cerrar sesión
-          </button>
+          </Button>
         </nav>
         <div>{panel(tab)}</div>
       </div>

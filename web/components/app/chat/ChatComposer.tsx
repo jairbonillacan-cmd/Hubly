@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/app/ui/Button";
 import React, { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { insertMention, matchesQuery, mentionQuery, scheduleChoices } from "@/lib/chat";
 import { formatBytes, mediaFileUrl } from "@/lib/media";
@@ -360,10 +361,10 @@ export function ChatComposer({ ref, label, placeholder, brandId, mentions, onSen
           <button type="button" className="hubly-chat-round" aria-label="Descartar la grabación" data-tip="Descartar" onClick={() => finishRecording(false)}>
             <HublyTrashIcon size={17} />
           </button>
-          <button type="button" className="hbtn hbtn-sm hbtn-secondary" onClick={() => finishRecording(true)}>
+          <Button variant="secondary" size="sm" onClick={() => finishRecording(true)}>
             <HublySendIcon size={15} />
             <span>Enviar nota</span>
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -559,21 +560,20 @@ export function ChatComposer({ ref, label, placeholder, brandId, mentions, onSen
                         <option value="monthly">Cada mes</option>
                       </select>
                     </label>
-                    <button
-                      type="button"
-                      className="hbtn hbtn-sm hbtn-secondary hubly-chat-schedule-go"
+                    <Button
+                      variant="secondary" size="sm" className="hubly-chat-schedule-go"
                       disabled={!customAt}
                       onClick={() => schedule(new Date(customAt).getTime())}
                     >
                       Programar mensaje
-                    </button>
+                    </Button>
                   </PopMenu>
                 </div>
               ) : null}
-              <button type="button" className="hbtn hbtn-sm hbtn-secondary hubly-chat-send" disabled={!hasContent || uploading} onClick={submit}>
+              <Button variant="secondary" size="sm" className="hubly-chat-send" disabled={!hasContent || uploading} onClick={submit}>
                 <HublySendIcon size={15} />
                 <span>{uploading ? "Subiendo…" : "Enviar"}</span>
-              </button>
+              </Button>
             </>
           ) : (
             <button type="button" className="hubly-chat-round" aria-label="Grabar una nota de voz" data-tip="Nota de voz" data-tip-end onClick={startRecording}>
