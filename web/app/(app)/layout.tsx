@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import "./hubly-saas.css";
 import "./app-base.css";
 import "./dashboard-polish.css";
+import "./ui-kit.css";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { useHublyTheme } from "@/lib/theme";
 import { useHublyStore } from "@/lib/store";
