@@ -1,5 +1,6 @@
 "use client";
 
+import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
@@ -19,7 +20,6 @@ import type {
 import { KraftNotebookCard } from "@/components/app/KraftNotebookCard";
 import { ExtraWidget, selectCriticalProjects } from "@/components/app/dashboard/ExtraWidgets";
 import { PendientesModal } from "@/components/app/dashboard/PendientesModal";
-import { useModalPresence } from "@/lib/use-modal-presence";
 import { HublyCatAvatar, HublySunWeatherIcon, HublyClipboardIcon, HublyNotebookIcon, HublyCalendarIcon, HublyBellIcon } from "@/components/app/icons/HublyIcons";
 import {
   HublyArrowLeftIcon as ArrowLeft,
@@ -127,7 +127,6 @@ export function InicioView() {
   const [hiddenWidget, setHiddenWidget] = useState<{ id: DashboardWidgetId; title: string } | null>(null);
   const [layoutCopied, setLayoutCopied] = useState<boolean>(false);
   const gridRef = useRef<HTMLDivElement | null>(null);
-  const notebookPresence = useModalPresence(isCreatingNotebook);
 
   const activeBrand = useMemo(
     () => brands.find((b) => b.id === activeBrandId) || brands[0],
@@ -1514,234 +1513,212 @@ export function InicioView() {
           (Los modales de Invitar equipo, Configurar widgets y Lector de libreta
           están montados globalmente en app/(app)/layout.tsx)
           ==================================================================== */}
-      {notebookPresence.mounted && (
+      <Modal
+        open={isCreatingNotebook}
+        onClose={() => setIsCreatingNotebook(false)}
+        label="Nueva libreta Kraft"
+        className="hubly-sheet"
+        style={{
+          width: "100%",
+          maxWidth: 540,
+          borderRadius: 22,
+          background: "#FDF8EE",
+          border: "2px solid #8B572A",
+          boxShadow: "0 24px 48px rgba(44, 26, 11, 0.28)",
+          padding: "22px 24px",
+        }}
+      >
         <div
-          className="hubly-overlay"
-          data-state={notebookPresence.state}
-          onClick={() => {
-            setIsCreatingNotebook(false);
-          }}
           style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 85,
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            padding: 16,
-            background: "rgba(15, 23, 42, 0.38)",
+            justifyContent: "space-between",
+            gap: 12,
+            paddingBottom: 14,
+            borderBottom: "1px dashed #D6BC94",
           }}
         >
-          <div
-            role="dialog"
-            className="hubly-sheet"
-            data-state={notebookPresence.state}
-            aria-modal="true"
-            aria-label="Nueva libreta Kraft"
-            onClick={(e) => e.stopPropagation()}
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <HublyCatAvatar size={42} />
+            <div>
+              <span
+                style={{
+                  fontSize: 10.5,
+                  fontWeight: 800,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "#8B572A",
+                }}
+              >
+                NUEVA LIBRETA KRAFT
+              </span>
+              <h3 style={{ fontSize: 16, fontWeight: 800, color: "#2C1A0B", margin: 0 }}>
+                Crear nota en Mi espacio
+              </h3>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setIsCreatingNotebook(false);
+            }}
+            aria-label="Cerrar libreta"
             style={{
-              width: "100%",
-              maxWidth: 540,
-              borderRadius: 22,
-              background: "#FDF8EE",
-              border: "2px solid #8B572A",
-              boxShadow: "0 24px 48px rgba(44, 26, 11, 0.28)",
-              padding: "22px 24px",
+              width: 30,
+              height: 30,
+              borderRadius: 8,
+              border: "1px solid #D6BC94",
+              background: "var(--ui-surface)",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              color: "#5C3A1B",
             }}
           >
-            <div
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        <form
+          onSubmit={handleSaveNotebook}
+          style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 12 }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 140px",
+              gap: 10,
+            }}
+          >
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: 11.5,
+                  fontWeight: 700,
+                  color: "#5C3A1B",
+                  marginBottom: 4,
+                }}
+              >
+                Título de la libreta
+              </label>
+              <input
+                type="text"
+                required
+                value={nbTitle}
+                onChange={(e) => setNbTitle(e.target.value)}
+                placeholder="Ej. IDEAS DE CONTENIDO Q4"
+                style={{
+                  width: "100%",
+                  padding: "8px 12px",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  borderRadius: 10,
+                  border: "1px solid #C8A97E",
+                  background: "var(--ui-surface)",
+                  color: "#2C1A0B",
+                }}
+              />
+            </div>
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: 11.5,
+                  fontWeight: 700,
+                  color: "#5C3A1B",
+                  marginBottom: 4,
+                }}
+              >
+                Categoría
+              </label>
+              <select
+                value={nbCategory}
+                onChange={(e) => setNbCategory(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "8px 10px",
+                  fontSize: 13,
+                  borderRadius: 10,
+                  border: "1px solid #C8A97E",
+                  background: "var(--ui-surface)",
+                  color: "#2C1A0B",
+                }}
+              >
+                <option value="Guía">Guía</option>
+                <option value="Idea">Idea</option>
+                <option value="Brief">Brief</option>
+                <option value="Minuta">Minuta</option>
+                <option value="Checklist">Checklist</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-                paddingBottom: 14,
-                borderBottom: "1px dashed #D6BC94",
+                display: "block",
+                fontSize: 11.5,
+                fontWeight: 700,
+                color: "#5C3A1B",
+                marginBottom: 4,
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <HublyCatAvatar size={42} />
-                <div>
-                  <span
-                    style={{
-                      fontSize: 10.5,
-                      fontWeight: 800,
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                      color: "#8B572A",
-                    }}
-                  >
-                    NUEVA LIBRETA KRAFT
-                  </span>
-                  <h3 style={{ fontSize: 16, fontWeight: 800, color: "#2C1A0B", margin: 0 }}>
-                    Crear nota en Mi espacio
-                  </h3>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsCreatingNotebook(false);
-                }}
-                aria-label="Cerrar libreta"
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 8,
-                  border: "1px solid #D6BC94",
-                  background: "var(--ui-surface)",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  color: "#5C3A1B",
-                }}
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <form
-              onSubmit={handleSaveNotebook}
-              style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 12 }}
-            >
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 140px",
-                  gap: 10,
-                }}
-              >
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      fontSize: 11.5,
-                      fontWeight: 700,
-                      color: "#5C3A1B",
-                      marginBottom: 4,
-                    }}
-                  >
-                    Título de la libreta
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={nbTitle}
-                    onChange={(e) => setNbTitle(e.target.value)}
-                    placeholder="Ej. IDEAS DE CONTENIDO Q4"
-                    style={{
-                      width: "100%",
-                      padding: "8px 12px",
-                      fontSize: 13,
-                      fontWeight: 600,
-                      borderRadius: 10,
-                      border: "1px solid #C8A97E",
-                      background: "var(--ui-surface)",
-                      color: "#2C1A0B",
-                    }}
-                  />
-                </div>
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      fontSize: 11.5,
-                      fontWeight: 700,
-                      color: "#5C3A1B",
-                      marginBottom: 4,
-                    }}
-                  >
-                    Categoría
-                  </label>
-                  <select
-                    value={nbCategory}
-                    onChange={(e) => setNbCategory(e.target.value)}
-                    style={{
-                      width: "100%",
-                      padding: "8px 10px",
-                      fontSize: 13,
-                      borderRadius: 10,
-                      border: "1px solid #C8A97E",
-                      background: "var(--ui-surface)",
-                      color: "#2C1A0B",
-                    }}
-                  >
-                    <option value="Guía">Guía</option>
-                    <option value="Idea">Idea</option>
-                    <option value="Brief">Brief</option>
-                    <option value="Minuta">Minuta</option>
-                    <option value="Checklist">Checklist</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label
-                  style={{
-                    display: "block",
-                    fontSize: 11.5,
-                    fontWeight: 700,
-                    color: "#5C3A1B",
-                    marginBottom: 4,
-                  }}
-                >
-                  Contenido y notas
-                </label>
-                <NotebookEditor
-                  key={activeNotebook?.id || "nueva"}
-                  initialContent={activeNotebook?.content || ""}
-                  onChange={setNbContent}
-                />
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  gap: 8,
-                  marginTop: 4,
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsCreatingNotebook(false);
-                  }}
-                  style={{
-                    padding: "8px 14px",
-                    fontSize: 12.5,
-                    fontWeight: 600,
-                    borderRadius: 10,
-                    border: "1px solid #C8A97E",
-                    background: "var(--ui-surface)",
-                    color: "#5C3A1B",
-                    cursor: "pointer",
-                  }}
-                >
-                  Cerrar
-                </button>
-                <button
-                  type="submit"
-                  style={{
-                    padding: "8px 16px",
-                    fontSize: 12.5,
-                    fontWeight: 700,
-                    borderRadius: 10,
-                    border: "none",
-                    background: "#8B572A",
-                    color: "#FFFFFF",
-                    cursor: "pointer",
-                  }}
-                >
-                  Crear libreta
-                </button>
-              </div>
-            </form>
+              Contenido y notas
+            </label>
+            <NotebookEditor
+              key={activeNotebook?.id || "nueva"}
+              initialContent={activeNotebook?.content || ""}
+              onChange={setNbContent}
+            />
           </div>
-        </div>
-      )}
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              gap: 8,
+              marginTop: 4,
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => {
+                setIsCreatingNotebook(false);
+              }}
+              style={{
+                padding: "8px 14px",
+                fontSize: 12.5,
+                fontWeight: 600,
+                borderRadius: 10,
+                border: "1px solid #C8A97E",
+                background: "var(--ui-surface)",
+                color: "#5C3A1B",
+                cursor: "pointer",
+              }}
+            >
+              Cerrar
+            </button>
+            <button
+              type="submit"
+              style={{
+                padding: "8px 16px",
+                fontSize: 12.5,
+                fontWeight: 700,
+                borderRadius: 10,
+                border: "none",
+                background: "#8B572A",
+                color: "#FFFFFF",
+                cursor: "pointer",
+              }}
+            >
+              Crear libreta
+            </button>
+          </div>
+        </form>
+      </Modal>
     </MotionConfig>
   );
 }
