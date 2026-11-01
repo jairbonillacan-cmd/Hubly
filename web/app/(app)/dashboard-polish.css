@@ -2652,33 +2652,34 @@ html.dark .hubly-app-root h3.hubly-wgal-rotulo { color: var(--ui-text-4); }
 }
 
 /* Pantalla de carga con Hubi */
-.hubly-carga { position: fixed; inset: 0; z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 32px 16px; background: var(--ui-surface); color: var(--ui-text); }
-.hubly-carga-hubi { position: relative; z-index: 1; transform-origin: center bottom; animation: hubly-hubi-balanceo 2.4s ease-in-out infinite; }
-.hubly-carga-hubi::before, .hubly-carga-hubi::after { content: ""; position: absolute; top: 50%; left: 50%; z-index: -1; width: 240px; height: 240px; margin: -120px 0 0 -120px; border: 3px solid var(--ui-sky); border-radius: 999px; opacity: 0; animation: hubly-hubi-onda 2.8s ease-out infinite; }
-.hubly-carga-hubi::after { animation-delay: 1.4s; }
-.hubly-carga-texto { position: relative; z-index: 1; display: flex; align-items: baseline; margin: -16px 0 0; font-size: clamp(30px, 4vw, 52px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; text-align: center; }
-.hubly-carga-puntos { display: inline-flex; gap: 6px; margin-left: 8px; }
-.hubly-carga-puntos i { width: 0.16em; height: 0.16em; border-radius: 999px; background: var(--ui-sky); animation: hubly-hubi-punto 1.2s ease-in-out infinite; }
-.hubly-carga-puntos i:nth-child(2) { animation-delay: 0.15s; }
-.hubly-carga-puntos i:nth-child(3) { animation-delay: 0.3s; }
-.hubly-carga-barra { position: relative; z-index: 1; width: min(560px, 82vw); height: 10px; margin-top: 24px; overflow: hidden; border-radius: 999px; background: var(--ui-muted); }
-.hubly-carga-barra::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 40%; border-radius: 999px; background: var(--ui-sky); animation: hubly-hubi-barra 1.6s ease-in-out infinite; }
-.hubly-carga-iconos { position: absolute; inset: 0; color: var(--hb-accent-text); }
-.hubly-carga-iconos span { position: absolute; display: flex; animation: hubly-hubi-flota 3.2s ease-in-out infinite alternate; }
-.hubly-carga-iconos svg { width: clamp(38px, 8vmin, 84px); height: clamp(38px, 8vmin, 84px); }
-.hubly-carga-iconos span:nth-child(1) { top: 13%; left: 11%; }
-.hubly-carga-iconos span:nth-child(2) { top: 8%; left: 37%; animation-delay: -0.5s; }
-.hubly-carga-iconos span:nth-child(3) { top: 9%; right: 33%; animation-delay: -1s; }
-.hubly-carga-iconos span:nth-child(4) { top: 15%; right: 10%; animation-delay: -1.5s; }
-.hubly-carga-iconos span:nth-child(5) { bottom: 15%; left: 9%; animation-delay: -2s; }
-.hubly-carga-iconos span:nth-child(6) { bottom: 8%; left: 35%; animation-delay: -2.5s; }
-.hubly-carga-iconos span:nth-child(7) { bottom: 9%; right: 34%; animation-delay: -0.8s; }
-.hubly-carga-iconos span:nth-child(8) { bottom: 14%; right: 11%; animation-delay: -1.8s; }
-@keyframes hubly-hubi-balanceo { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-10px) rotate(3deg); } }
-@keyframes hubly-hubi-onda { 0% { opacity: 0.6; transform: scale(0.7); } 100% { opacity: 0; transform: scale(1.7); } }
-@keyframes hubly-hubi-flota { from { transform: translateY(10px) rotate(-6deg); } to { transform: translateY(-14px) rotate(6deg); } }
-@keyframes hubly-hubi-punto { 0%, 60%, 100% { opacity: 0.35; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-0.18em); } }
-@keyframes hubly-hubi-barra { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
+.hubly-carga { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; overflow: hidden; padding: 0 clamp(16px, 7vw, 120px); background: var(--ui-surface); color: var(--ui-text); }
+.hubly-carga-texto { position: relative; z-index: 1; max-width: 9em; margin: 0 0 12vh; font-size: clamp(36px, 6vw, 84px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; }
+.hubly-carga-hubi { position: absolute; z-index: 1; right: clamp(-40px, 3vw, 72px); bottom: -150px; transform-origin: right bottom; animation: hubly-hubi-asoma 2.8s ease-in-out infinite alternate; }
+.hubly-carga-lluvia { position: absolute; inset: 0; color: var(--hb-accent-text); }
+.hubly-carga-lluvia span { position: absolute; top: -96px; display: flex; animation: hubly-hubi-cae 3.6s cubic-bezier(0.45, 0, 0.9, 0.6) infinite; }
+.hubly-carga-lluvia svg { width: clamp(44px, 7vmin, 72px); height: clamp(44px, 7vmin, 72px); }
+.hubly-carga-lluvia span:nth-child(1) { left: 4%; animation-delay: -0.4s; animation-duration: 3.4s; }
+.hubly-carga-lluvia span:nth-child(2) { left: 18%; animation-delay: -2.6s; animation-duration: 4.2s; }
+.hubly-carga-lluvia span:nth-child(3) { left: 32%; animation-delay: -1.3s; animation-duration: 3.2s; }
+.hubly-carga-lluvia span:nth-child(4) { left: 46%; animation-delay: -3.4s; animation-duration: 3.8s; }
+.hubly-carga-lluvia span:nth-child(5) { left: 60%; animation-delay: -0.9s; animation-duration: 4.4s; }
+.hubly-carga-lluvia span:nth-child(6) { left: 74%; animation-delay: -1.9s; animation-duration: 3.9s; }
+.hubly-carga-lluvia span:nth-child(7) { left: 88%; animation-delay: -2.2s; animation-duration: 3.5s; }
+.hubly-carga-lluvia span:nth-child(8) { left: 11%; animation-delay: -3.0s; animation-duration: 4.0s; }
+.hubly-carga-lluvia span:nth-child(9) { left: 25%; animation-delay: -0.2s; animation-duration: 3.6s; }
+.hubly-carga-lluvia span:nth-child(10) { left: 39%; animation-delay: -1.6s; animation-duration: 4.3s; }
+.hubly-carga-lluvia span:nth-child(11) { left: 53%; animation-delay: -2.9s; animation-duration: 3.3s; }
+.hubly-carga-lluvia span:nth-child(12) { left: 67%; animation-delay: -1.1s; animation-duration: 3.7s; }
+.hubly-carga-lluvia span:nth-child(13) { left: 81%; animation-delay: -3.7s; animation-duration: 4.1s; }
+.hubly-carga-lluvia span:nth-child(14) { left: 94%; animation-delay: -2.4s; animation-duration: 3.2s; }
+@keyframes hubly-hubi-cae { from { transform: translateY(0) rotate(-12deg); } to { transform: translateY(calc(100vh + 96px)) rotate(14deg); } }
+@keyframes hubly-hubi-asoma { from { transform: translateY(44px); } to { transform: translateY(0); } }
+@media (max-width: 767.98px) {
+  .hubly-carga-texto { margin-bottom: 30vh; }
+  .hubly-carga-hubi { bottom: -100px; scale: 0.66; }
+  .hubly-carga-lluvia span:nth-child(n + 8) { display: none; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .hubly-carga-hubi, .hubly-carga-hubi::before, .hubly-carga-hubi::after, .hubly-carga-puntos i, .hubly-carga-barra::after, .hubly-carga-iconos span { animation: none; }
+  .hubly-carga-hubi { animation: none; }
+  .hubly-carga-lluvia { display: none; }
 }

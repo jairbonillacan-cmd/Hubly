@@ -9,7 +9,6 @@ import {
   HublyClipboardIcon,
   HublyHashIcon,
   HublyImageIcon,
-  HublyPeopleIcon,
 } from "@/components/app/icons/DuotoneIcons";
 import { HublyBrandLogo } from "@/components/brand/HublyBrandLogo";
 import { useHublyStore } from "@/lib/store";
@@ -18,31 +17,19 @@ import { hasPendingSave, keepMyVersion, retryLiveSave, discardMyVersion, type Sa
 
 const bannerButton = { border: "1px solid #FFFFFF", background: "transparent", color: "#FFFFFF", borderRadius: 7, padding: "2px 8px", cursor: "pointer", fontWeight: 600 } as const;
 
-const ICONOS_CARGA = [
-  HublyCalendarIcon,
-  HublyHashIcon,
-  HublyImageIcon,
-  HublyChatIcon,
-  HublyBellIcon,
-  HublyChartIcon,
-  HublyClipboardIcon,
-  HublyPeopleIcon,
-];
+const ICONOS_BASE = [HublyCalendarIcon, HublyHashIcon, HublyImageIcon, HublyChatIcon, HublyBellIcon, HublyChartIcon, HublyClipboardIcon];
+const ICONOS_CARGA = [...ICONOS_BASE, ...ICONOS_BASE];
 
 export function HubiCargando() {
   return (
     <div role="status" className="hubly-carga">
-      <div className="hubly-carga-iconos" aria-hidden="true">
+      <div className="hubly-carga-lluvia" aria-hidden="true">
         {ICONOS_CARGA.map((Icono, i) => (
           <span key={i}><Icono size={64} /></span>
         ))}
       </div>
-      <span className="hubly-carga-hubi"><HublyBrandLogo kind="isotipo" height={260} alt="" /></span>
-      <p className="hubly-carga-texto">
-        Cargando tu agencia
-        <span className="hubly-carga-puntos" aria-hidden="true"><i /><i /><i /></span>
-      </p>
-      <span className="hubly-carga-barra" aria-hidden="true" />
+      <p className="hubly-carga-texto">Cargando tu agencia…</p>
+      <span className="hubly-carga-hubi"><HublyBrandLogo kind="isotipo" height={560} alt="" /></span>
     </div>
   );
 }
