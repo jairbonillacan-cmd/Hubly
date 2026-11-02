@@ -40,7 +40,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F0-1 Medición | — | `scripts/` | Hecha | | este plan |
 | F0-2 Capas | — | `scripts/`, CI | En revisión | `impl-f0-2` | #36 |
 | F0-3 Reglas `check:ui` | — | `scripts/`, docs | Pendiente | | |
-| F0-4 Flujos críticos | — | `e2e/`, CI | Pendiente | | |
+| F0-4 Flujos críticos | — | `e2e/`, CI | En curso | `impl-f0-4` | — |
 | F0-5 Contrato del store | — | `lib/store.contract.test.ts` | En revisión | `impl-f0-5` | #37 |
 | F0-6 Compuerta de F1 | F0-4, D4 | Ajuste en GitHub | Bloqueada | | |
 | F1-1 Armazón, sesión y ventanas | F0 | `lib/store*`, `lib/domain/` | Pendiente | | |
