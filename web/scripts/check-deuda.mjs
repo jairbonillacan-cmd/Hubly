@@ -2,7 +2,7 @@
 /*
  * Impide que un PR suba las bases de deuda para que un chequeo pase.
  * Compara contra la rama indicada: node scripts/check-deuda.mjs origin/main
- * --root apunta a otro árbol; lo usan las pruebas.
+ * --root apunta a otro árbol del mismo repositorio; lo usan las pruebas.
  */
 import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
@@ -108,7 +108,8 @@ for (const [path, measure] of measures) {
 }
 
 // Silenciar un chequeo con `ui-ok:` o `eslint-disable` es otra forma de subir la
-// deuda. Se comparan los totales: mover un archivo sin cambiar sus líneas pasa.
+// deuda. Se comparan los totales de las mismas carpetas que mide medir-deslop:
+// mover un archivo sin cambiar sus líneas pasa.
 const EXENCIONES = [
   { nombre: "ui-ok", patron: /ui-ok:/g },
   { nombre: "eslint-disable", patron: /eslint-disable/g },
