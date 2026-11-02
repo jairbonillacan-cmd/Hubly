@@ -217,3 +217,38 @@ Esta parte **no la hice yo**. Según el usuario, la hizo GPT 6 en otra sesión; 
 3. Mirar el diálogo en 1440 claro, 1440 oscuro y 390 (`npm run check:ui`, foco y hover).
 4. Algunos destinos de las acciones apuntan a `/dashboard?tab=cuentas` y `/dashboard?tab=equipo`, mientras que las pantallas reales son `/dashboard/salud-cuentas` y `/dashboard/equipo`. Conviene comprobarlo.
 5. Los textos de las acciones y páginas siguen en tono mixto («Ajustes del Workspace», «Libretas Kraft», «ROAS»); la guía pide español de México y vocabulario fijo.
+
+
+---
+
+## Traspaso de la sesión del 2 de noviembre (tarde): sincronización con `origin/paridad-henry` (`5f25230`) y auditorías
+
+### 1. Qué pasó en esta sesión
+
+- Esta máquina (`T490s`) había quedado en el commit `73bf591` (previo a los 36 commits integrados en `origin/paridad-henry` hasta `5f25230`, donde ya se fusionaron `agente/glm-calidad`, `agente/gemini-flujos`, `agente/opus-diseno` y `agente/integracion`).
+- Se sincronizó la rama local `paridad-henry` con `origin/paridad-henry` (`5f25230`) y se limpió `web/.data/media/` dejando únicamente el archivo real (`d165a776-2899-4137-baee-fd957f514082`, `WhatsApp Image 2026-10-27 at 09.57.42.jpeg`).
+- Verificación sobre el código sincronizado (`5f25230`):
+  - `npm run check:ui`: **Correcto** (`1571 hallazgos`, sin empeorar).
+  - `npx tsc --noEmit`: **Sin errores**.
+- Nota sobre el servidor local: el proceso Node en `localhost:3000` (PID 23144) quedó con el event loop bloqueado (acepta TCP pero no responde HTTP); siguiendo `AGENTS.md` no se mató el proceso. Al retomar, basta con reiniciar `npm run dev` en `web/`.
+
+### 2. Qué queda pendiente a partir de `5f25230` (para la siguiente sesión)
+
+Combinando la sección **«Pendiente tras la integración»** (líneas 36–47 de este documento) con los hallazgos de las auditorías de foco, escenas y móvil de hoy:
+
+1. **Honestidad en `/reportes` (`web/app/(app)/reportes/page.tsx`):**
+   - Muestra cifras fijas («+24.2% vs semana previa», «Top 5% del sector», «Gasto Total $2,231.21») sin cintillo `role="note"` ni etiqueta `Ejemplo`, a diferencia de `/anuncios`.
+2. **Encabezado `h1` en `/chat` y `/anuncios`:**
+   - Ambas pantallas carecen de un `<h1>` único como pide la guía.
+3. **Estado de `/chat` tras enviar mensaje (`web/app/(app)/chat/page.tsx`):**
+   - Al enviar un mensaje, la lista lateral y la cabecera siguen mostrando «Sin mensajes aún».
+   - En móvil (`390×844`), revisar el reparto de ancho entre la columna de canales y la conversación activa.
+4. **Foco visible (`:focus-visible`) y estados interactivos (`audit:estados`):**
+   - `BUTTON «Marcar como leída»` en `web/app/(app)/notificaciones/page.tsx:106` usa `all: "unset"` en línea (sin anillo `:focus-visible`).
+   - Revisar inputs con `outline: none` en `.hubly-hubi-composer input`, `.hubly-composer-field input` y buscadores en línea (`/parrillas`, `/tareas`, `/marca`, `/reportes`, `/anuncios`, `/chat`) para asegurar reemplazo visible con `var(--hb-accent)`.
+5. **Barra inferior móvil `.hubly-mobile-tabbar` en modo oscuro (`web/app/(app)/layout.tsx`):**
+   - Comprobar en `390×844` oscuro que ningún estilo en línea (`background: "rgba(255,255,255,0.92)"` o `#fff` en el menú «Más») pise la regla oscura de `dashboard-polish.css`.
+6. **Contraste de verde en modo oscuro:**
+   - Definir token semántico para sustituir `#059669` en `/anuncios` y `/reportes` (actualmente < 4.5:1 en oscuro).
+7. **Controles sin efecto visible en `/dashboard/equipo` (`EquipoView.tsx`):**
+   - Verificar si «7 días», «30 días», «90 días» y «Semana» deben filtrar datos o retirarse, y revisar la clase del botón «Reasignar tareas».
