@@ -38,6 +38,8 @@ const SHARED = new Set(["ui", "icons"]);
 const IMPURE_PACKAGE = /^(react|react-dom|zustand|@supabase(\/|$))/;
 const IMPURE_PATH = /^(lib\/store(\/|\.ts$)|lib\/(supabase|server)\/)/;
 const PURE_NAMES = new Set(["window", "document", "localStorage", "sessionStorage", "fetch"]);
+const GLOBAL_OBJECTS = new Set(["globalThis", "self"]);
+const GLOBAL_MEMBERS = new Set(["fetch", "window", "document", "localStorage", "sessionStorage", "XMLHttpRequest", "WebSocket", "EventSource", "navigator"]);
 
 const toPosix = (path) => path.split(sep).join("/");
 const domainOf = (path) => path.match(/^components\/app\/([^/]+)\//)?.[1] ?? null;
@@ -64,6 +66,9 @@ function importsOf(source) {
     }
   }
   const visit = (node) => {
+    if (ts.isImportTypeNode(node) && ts.isLiteralTypeNode(node.argument) && ts.isStringLiteral(node.argument.literal)) {
+      found.push({ line: lineOf(node.argument.literal), specifier: node.argument.literal.text });
+    }
     if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword && node.arguments.length === 1 && ts.isStringLiteral(node.arguments[0])) {
       found.push({ line: lineOf(node.arguments[0]), specifier: node.arguments[0].text });
     }
@@ -116,6 +121,9 @@ function impureUsage(source) {
     }
     if (ts.isIdentifier(node) && PURE_NAMES.has(node.text) && !isName(node)) {
       found.push({ line: source.getLineAndCharacterOfPosition(node.getStart(source)).line + 1, name: node.text });
+    }
+    if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.expression) && GLOBAL_OBJECTS.has(node.expression.text) && GLOBAL_MEMBERS.has(node.name.text)) {
+      found.push({ line: source.getLineAndCharacterOfPosition(node.getStart(source)).line + 1, name: `${node.expression.text}.${node.name.text}` });
     }
     ts.forEachChild(node, visit);
   };
@@ -192,8 +200,8 @@ for (const [file, rules] of Object.entries(counts)) {
     const allowed = baseline[file]?.[id] ?? 0;
     if (count > allowed) {
       worse += 1;
-      const lines = found[file][id].map(({ line }) => line);
-      console.error(`✗ ${file}: ${why[id]}\n  ${count} hallazgos, permitidos ${allowed}. Líneas: ${lines.join(", ")}`);
+      const hits = found[file][id].map(({ line, detail }) => `${line} (${detail})`);
+      console.error(`✗ ${file}: ${why[id]}\n  ${count} hallazgos, permitidos ${allowed}. Líneas: ${hits.join(", ")}`);
     } else if (args.includes("--list")) {
       const hits = found[file][id].map(({ line, detail }) => `${line} → ${detail}`);
       console.log(`· ${file} [${id}] ${hits.join(", ")}`);

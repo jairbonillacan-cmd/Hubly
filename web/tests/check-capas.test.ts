@@ -60,6 +60,14 @@ test("un import de lib/ a components/ hace fallar el chequeo", () => {
   falla(run(root), "lib/util.ts", "lib-importa-arriba", "1 hallazgos, permitidos 0");
 });
 
+test("un import de tipo en línea también cuenta", () => {
+  const root = tree({
+    "components/Cover.tsx": "export type T = string;\n",
+    "lib/util.ts": 'export type Vista = import("@/components/Cover").T;\n',
+  });
+  falla(run(root), "lib/util.ts", "lib-importa-arriba", "1 hallazgos, permitidos 0");
+});
+
 test("un árbol sin violaciones pasa", () => {
   const root = tree({ "lib/util.ts": "export const uno = 1;\n" });
   const result = run(root);
@@ -100,6 +108,13 @@ test("lib/domain/ es puro: sin React, store, red ni window", () => {
     "lib/domain/posts.ts": 'import { useState } from "react";\nexport const visible = typeof window !== "undefined";\n',
   });
   falla(run(root), "lib/domain/posts.ts", "dominio-impuro", "2 hallazgos");
+});
+
+test("globalThis no cuela red ni DOM en lib/domain", () => {
+  const root = tree({
+    "lib/domain/posts.ts": 'const r = globalThis.fetch("/api/x");\nconst w = globalThis.window;\nconst s = self.fetch;\nexport const x = [r, w, s];\n',
+  });
+  falla(run(root), "lib/domain/posts.ts", "dominio-impuro", "3 hallazgos, permitidos 0", "globalThis.fetch", "globalThis.window", "self.fetch");
 });
 
 test("un slice no importa otro slice", () => {
