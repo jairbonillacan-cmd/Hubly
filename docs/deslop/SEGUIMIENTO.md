@@ -41,7 +41,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F0-2 Capas | — | `scripts/`, CI | En revisión | `impl-f0-2` | #36 |
 | F0-3 Reglas `check:ui` | — | `scripts/`, docs | Pendiente | | |
 | F0-4 Flujos críticos | — | `e2e/`, CI | Pendiente | | |
-| F0-5 Contrato del store | — | `lib/store.contract.test.ts` | En curso | `impl-f0-5` | — |
+| F0-5 Contrato del store | — | `lib/store.contract.test.ts` | En revisión | `impl-f0-5` | #37 |
 | F0-6 Compuerta de F1 | F0-4, D4 | Ajuste en GitHub | Bloqueada | | |
 | F1-1 Armazón, sesión y ventanas | F0 | `lib/store*`, `lib/domain/` | Pendiente | | |
 | F1-2 Dominios simples | F1-1 | `lib/store*` | Pendiente | | |
@@ -94,3 +94,4 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 |---|---|---|
 | 2026-11-01 | Plan | Comprobado contra el código: inventario del store, topes al mover archivos, carga de CSS y puertos de prueba |
 | 2026-11-01 | F0-2, F0-5 | En curso en worktrees `Hubly-wt/f0-2` y `Hubly-wt/f0-5`, ramas `deslop/f0-2` y `deslop/f0-5`, desde `01665df`. Archivos disjuntos: `scripts/` + CI frente a `lib/`. Esfuerzo del harness: MAX. |
+| 2026-11-01 | F0-5 | **El estado prístino del store tiene 148 claves**, no las 125 que citan este plan y `01-ESTADO-ACTUAL.md`. La prueba entregada fijaba 158 porque `reiniciar()` inyectaba 10 por `setState` (`agents`, `automations`, `calendarActivities`, `chatReminders`, `chatScheduled`, `ideas`, `leads`, `quotes`, `schemaVersion`, `taskLists`), lo que enmascaraba su pérdida. Devuelta para afirmar sobre el estado prístino. |
