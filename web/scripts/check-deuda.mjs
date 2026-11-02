@@ -28,7 +28,7 @@ const total = (value) =>
 const maxWarnings = (text) => Number(JSON.parse(text).scripts.lint.match(/--max-warnings (\d+)/)?.[1] ?? 0);
 
 // Por regla: una regla nueva añade deuda ya existente sin que nadie haya empeorado nada.
-const uiRules = (text) => {
+const byRule = (text) => {
   const rules = {};
   for (const counts of Object.values(JSON.parse(text))) {
     for (const [id, count] of Object.entries(counts)) rules[id] = (rules[id] ?? 0) + count;
@@ -40,14 +40,16 @@ const measures = [
   ["scripts/check-size-baseline.json", (text) => total(JSON.parse(text))],
   ["package.json", maxWarnings],
 ];
+const guarded = ["scripts/check-ui-baseline.json", "scripts/check-capas-baseline.json"];
 
 let failed = false;
-const uiBefore = previous("scripts/check-ui-baseline.json");
-if (uiBefore !== null) {
-  const was = uiRules(uiBefore);
-  for (const [id, now] of Object.entries(uiRules(current("scripts/check-ui-baseline.json")))) {
+for (const path of guarded) {
+  const before = previous(path);
+  if (before === null) continue;
+  const was = byRule(before);
+  for (const [id, now] of Object.entries(byRule(current(path)))) {
     if (id in was && now > was[id]) {
-      console.error(`check-ui-baseline.json: la regla ${id} subió de ${was[id]} a ${now}`);
+      console.error(`${path}: la regla ${id} subió de ${was[id]} a ${now}`);
       failed = true;
     }
   }

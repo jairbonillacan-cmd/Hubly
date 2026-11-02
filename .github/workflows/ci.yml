@@ -29,6 +29,7 @@ jobs:
       - run: npm run check:muerto
       - run: npm run check:ui
       - run: npm run check:size
+      - run: npm run check:capas
       - if: github.event_name == 'pull_request'
         run: node scripts/check-deuda.mjs origin/${{ github.base_ref }}
       - run: npm run build

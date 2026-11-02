@@ -9,6 +9,7 @@
     "lint": "eslint . --max-warnings 0",
     "check:muerto": "knip",
     "check:ui": "node scripts/check-ui.mjs",
+    "check:capas": "node scripts/check-capas.mjs",
     "check:size": "node scripts/check-size.mjs",
     "test:db": "node tests/db-permisos.test.mjs",
     "dev:live": "node tests/dev-live.mjs",
