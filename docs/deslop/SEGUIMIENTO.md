@@ -31,7 +31,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | D1 | Cifras de ejemplo de `/anuncios` | Pendiente |
 | D2 | Logros y XP | Pendiente |
 | D3 | Modo demo público | Pendiente |
-| D4 | Hacer obligatorio `flujos-con-cuentas` en `main` | Pendiente |
+| D4 | Hacer obligatorio `flujos-con-cuentas` en `main` | **Sí.** Lo activa el dueño cuando `critico-live.spec.ts` corra en `main`. Ningún agente cambia ajustes de GitHub. |
 
 ## Tareas
 
