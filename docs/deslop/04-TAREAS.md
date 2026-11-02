@@ -65,9 +65,11 @@ Antes de cada tarea, compara la tabla con `lib/store.ts`. Lo que no tenga dueño
 | **F1-1** Armazón, sesión y ventanas | `lib/store/sync.ts`, `lib/store/session.slice.ts`, `lib/store/ui.slice.ts` | `extractWorkspaceData`, `persistWorkspaceState`, ayudas compartidas, `syncFromServer`, `switchWorkspace`, `hydrated`, `role`, `isReferenceFixture`, `applyReferenceFixture`, `setTestClock`, `resetDemoData`, `updateProfile`, `updateAgency`, modales, `cmdkOpen`, `aiDrawer*`, `composer*`, `editingPostId`, `editWidgetsMode` | A |
 | **F1-2** Simples | `agents`, `automations`, `crm`, `projects`, `assets`, `notebooks` | `*Agent`, `*Automation`, `*Lead`, `*Quote`, `*Project`, `addAsset`, `*Notebook*` | M |
 | **F1-3** Tareas | `tasks.slice.ts` | `addTask`, `updateTask`, `toggleTaskStatus`, `deleteTask`, `moveTask`, `*TaskList` | M |
-| **F1-4** Equipo y tablero | `team.slice.ts`, `dashboard.slice.ts` | `*TeamMember`, `*TeamInvitation`, `recordActivityEvent`, `*Widget*`, `*Onboarding*`, `*Notification*` | M |
+| **F1-4** Equipo y tablero | `team.slice.ts`, `dashboard.slice.ts` | `*TeamMember`, `*TeamInvitation`, `recordActivityEvent`, `*Widget*` (solo acciones y datos del tablero, ver nota), `*Onboarding*`, `*Notification*` | M |
 | **F1-5** Marcas | `brands.slice.ts`, `brandStrategy.slice.ts` | Marcas: `addBrand` (165 líneas), `updateBrand` y datos básicos, `setActiveBrand`. Estrategia: `updateBrandCommitments`, `togglePersonaAccepted`, `setBrandCustomMetrics`, `*Recommendation*` | A |
 | **F1-6** Posts y chat | `posts.slice.ts`, `chat.slice.ts` | `savePost`, `updatePost*`, `approveAllBrandPosts`, `deletePost`, `duplicatePost`, `movePost`, `patchPost`, `addPostComment`, `*Idea*`, `recordPublication`, `setPostResults`, `setCalendarActivities`, `*Chat*`, `flushChatQueue`, `scheduleChatMessage` | A |
+
+**`*Widget*` en F1-4:** son las acciones y el dato del tablero (`toggleWidgetVisibility`, `setWidgetVisibility`, `reorderWidgets`, `moveWidget`, `setWidgetSpan`, `setWidgetMetric`, `resetWidgetsLayout` y `dashboardWidgets`). Los flags de edición y los modales son estado de interfaz y quedan en F1-1: `editWidgetsMode`, `setEditWidgetsMode`, `widgetConfigModalOpen` y `setWidgetConfigModalOpen`. Así ninguna de las cuatro queda con dos dueños.
 
 **F1-6 también:** elimina el único `useHublyStore()` sin selector, en `useInicioView.tsx`.
 
