@@ -38,10 +38,10 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | Tarea | Depende de | Archivos principales | Estado | Agente | PR |
 |---|---|---|---|---|---|
 | F0-1 Medición | — | `scripts/` | Hecha | | este plan |
-| F0-2 Capas | — | `scripts/`, CI | Pendiente | | |
+| F0-2 Capas | — | `scripts/`, CI | En revisión | `impl-f0-2` | #36 |
 | F0-3 Reglas `check:ui` | — | `scripts/`, docs | Pendiente | | |
-| F0-4 Flujos críticos | — | `e2e/`, CI | Pendiente | | |
-| F0-5 Contrato del store | — | `lib/store.contract.test.ts` | Pendiente | | |
+| F0-4 Flujos críticos | — | `e2e/`, CI | En curso | `impl-f0-4` | — |
+| F0-5 Contrato del store | — | `lib/store.contract.test.ts` | En revisión | `impl-f0-5` | #37 |
 | F0-6 Compuerta de F1 | F0-4, D4 | Ajuste en GitHub | Bloqueada | | |
 | F1-1 Armazón, sesión y ventanas | F0 | `lib/store*`, `lib/domain/` | Pendiente | | |
 | F1-2 Dominios simples | F1-1 | `lib/store*` | Pendiente | | |
@@ -93,3 +93,7 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 | Fecha | Tarea | Nota |
 |---|---|---|
 | 2026-11-01 | Plan | Comprobado contra el código: inventario del store, topes al mover archivos, carga de CSS y puertos de prueba |
+| 2026-11-01 | F0-2, F0-5 | En curso en worktrees `Hubly-wt/f0-2` y `Hubly-wt/f0-5`, ramas `deslop/f0-2` y `deslop/f0-5`, desde `01665df`. Archivos disjuntos: `scripts/` + CI frente a `lib/`. Esfuerzo del harness: MAX. |
+| 2026-11-01 | F0-5 | **El estado prístino del store tiene 148 claves**, no las 125 que citan este plan y `01-ESTADO-ACTUAL.md`. Las 10 restantes (`schemaVersion`, `ideas`, `leads`, `quotes`, `automations`, `agents`, `taskLists`, `calendarActivities`, `chatScheduled`, `chatReminders`) solo existen tras hidratar un documento. El reparto por tareas de F1 debe cubrirlas todas. |
+| 2026-11-01 | F0-2 | Revisión del delta: **aprobada, sin bloqueantes.** El agujero de `check-deuda` con reglas en 0 queda cerrado (reproducido por coordinación y por el revisor: `dominio-impuro` 0→1 → exit 1). Observaciones menores que pasan a F0-3: la prueba negativa de `check-ui` no discrimina, y `--root` produce un falso verde local porque `previous()` lee git del cwd y no del árbol apuntado. Pendiente de fusión por el dueño. |
+| 2026-11-01 | F0-5 | Tercera revisión (delta `88968f2` + merge `4d00a9b`): **aprobada, sin bloqueantes.** Los tres huecos quedaron cerrados y comprobados: los cuatro sabotajes de persistencia fallan solo por la llamada de guardado; la hidratación pasa por `syncFromServer` → `loadWorkspaceFromStorage` → `normalizeWorkspacePayload` (verificado con `ideas`); el mensaje editado/reaccionado/fijado es el que sobrevive. El revisor instrumentó `persistWorkspaceState` y observó **86 de 86** llamadas. Pendiente de fusión. Observaciones de alcance para F1: la prueba de hidratación se acopla al literal `hubly:workspace:v3:` y las filas de acciones con nombre duplicado colapsan a la última ocurrencia (el total sí cubre la suma). |
