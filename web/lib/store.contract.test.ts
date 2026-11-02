@@ -25,6 +25,9 @@ import type {
 
 // La foto incluye fechas y horas locales: se fija la zona antes de cargar el store.
 process.env.TZ = "UTC";
+// Modo demo: sin claves, `persistWorkspaceState` guarda en almacenamiento y API.
+delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+delete process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 /** Reloj de la secuencia. Todo lo que el store fecha depende de él. */
 const RELOJ = "2026-05-14T10:00:00.000Z";
@@ -149,7 +152,7 @@ function marca(): BrandWorkspace {
       websiteUrl: "https://marca-uno.ejemplo", toneOfVoice: "Cercano",
       pillars: ["Producto"], doWords: ["calidad"], dontWords: ["spam"],
       personas: [{
-        id: "persona-uno", name: "Cliente", ageRange: "30â€“40", occupation: "Oficina",
+        id: "persona-uno", name: "Cliente", ageRange: "30-40", occupation: "Oficina",
         painPoints: "Poco tiempo", motivation: "Café bueno", accepted: false,
       }],
     },
@@ -305,24 +308,29 @@ function ejecutarSecuencia(store: Store): Paso[] {
   );
   paso("removeIdea", () => s().removeIdea(s().ideas?.[0]?.id ?? ""));
 
-  paso("saveLead", () =>
+  const lead = paso("saveLead", () => {
     s().saveLead({
       name: "Cliente Fijo", company: "Compra Fija", stage: "nuevo", email: "cliente@ejemplo.com",
       phone: "555", value: 1000, notes: "Nota", source: "Sitio",
-    })
-  );
-  paso("moveLead", () => s().moveLead(s().leads?.[0]?.id ?? "", "contactado", null));
+    });
+    return s().leads?.[0]?.id ?? "";
+  });
+  paso("moveLead", () => s().moveLead(lead, "contactado", null));
   paso("saveQuote", () =>
-    s().saveQuote({
-      leadId: s().leads?.[0]?.id ?? "", title: "COT-1", status: "Borrador", items: [],
-    })
+    s().saveQuote({ leadId: lead, title: "COT-1", status: "Borrador", items: [] })
   );
   paso("deleteQuote", () => s().deleteQuote(s().quotes?.[0]?.id ?? ""));
   paso("saveQuote", () =>
-    s().saveQuote({
-      leadId: s().leads?.[0]?.id ?? "", title: "COT-2", status: "Borrador", items: [],
-    })
+    s().saveQuote({ leadId: lead, title: "COT-2", status: "Borrador", items: [] })
   );
+  const leadBorrado = paso("saveLead", () => {
+    s().saveLead({
+      name: "Cliente Borrado", company: "Compra Borrada", stage: "nuevo",
+      email: "borrado@ejemplo.com", phone: "556", value: 500, notes: "", source: "Sitio",
+    });
+    return s().leads?.[0]?.id ?? "";
+  });
+  paso("deleteLead", () => s().deleteLead(leadBorrado));
   paso("addAutomation", () =>
     s().addAutomation({ name: "Segunda", trigger: "post_approved", action: "notify", text: "Ok {post}" })
   );
@@ -394,48 +402,72 @@ function ejecutarSecuencia(store: Store): Paso[] {
       sizeLabel: "1 MB", aiTags: [], folder: "General",
     })
   );
-  paso("addProject", () =>
+  const proyecto = paso("addProject", () => {
     s().addProject({
       brandId: "marca-uno", title: "Proyecto", description: "", progress: 10,
       status: "En curso", dueDate: HOY, deliverablesCount: 1,
-    })
-  );
-  paso("updateProject", () => s().updateProject(s().projects[0].id, { progress: 50 }));
-  paso("moveProject", () => s().moveProject(s().projects[0].id, "Revisión", null));
+    });
+    return s().projects[0].id;
+  });
+  const proyectoBorrado = paso("addProject", () => {
+    s().addProject({
+      brandId: "marca-uno", title: "Proyecto que se borra", description: "", progress: 0,
+      status: "En curso", dueDate: HOY, deliverablesCount: 0,
+    });
+    return s().projects[0].id;
+  });
+  paso("updateProject", () => s().updateProject(proyecto, { progress: 50 }));
+  paso("moveProject", () => s().moveProject(proyecto, "Revisión", null));
+  paso("deleteProject", () => s().deleteProject(proyectoBorrado));
 
-  const canal = paso("addChatChannel", () => s().addChatChannel({ name: "Equipo", type: "agency" }));
+  const canal = paso("addChatChannel", () =>
+    s().addChatChannel({ name: "Equipo", type: "agency", unread: 2 })
+  );
   const canalBorrado = paso("addChatChannel", () =>
     s().addChatChannel({ name: "Temporal", type: "agency" })
   );
   paso("sendChatMessage", () => s().sendChatMessage(canal.id, "Hola", "Ana Ruiz", "AR"));
-  paso("sendChatMessage", () => s().sendChatMessage(canal.id, "Adiós", "Ana Ruiz", "AR"));
-  paso("editChatMessage", () => s().editChatMessage(s().messages[0].id, "Adiós a todos"));
-  paso("toggleChatReaction", () => s().toggleChatReaction(s().messages[0].id, "ðŸ‘", "Ana"));
-  paso("toggleChatPin", () => s().toggleChatPin(s().messages[0].id));
+  const mensajeSobrevive = paso("sendChatMessage", () => {
+    s().sendChatMessage(canal.id, "Adiós", "Ana Ruiz", "AR");
+    return s().messages.at(-1)?.id ?? "";
+  });
+  const mensajeBorrado = paso("sendChatMessage", () => {
+    s().sendChatMessage(canal.id, "Temporal", "Ana Ruiz", "AR");
+    return s().messages.at(-1)?.id ?? "";
+  });
   paso("markChatRead", () => s().markChatRead(canal.id));
+  paso("editChatMessage", () => s().editChatMessage(mensajeSobrevive, "Adiós a todos"));
+  paso("toggleChatReaction", () => s().toggleChatReaction(mensajeSobrevive, "pulgar", "Ana"));
+  paso("toggleChatPin", () => s().toggleChatPin(mensajeSobrevive));
   paso("updateChatChannel", () => s().updateChatChannel(canal.id, { name: "Equipo dos" }));
   paso("setChatPreference", () => s().setChatPreference(canal.id, { muted: true }));
   paso("scheduleChatMessage", () =>
     s().scheduleChatMessage({
-      channelId: canal.id, text: "Programado", sendAt: MOMENTO + 60_000, repeat: "none",
+      channelId: canal.id, text: "Vencido", sendAt: MOMENTO - 1_000, repeat: "none",
+      authorId: "perfil-uno", sender: "Ana Ruiz", senderInitials: "AR",
+    })
+  );
+  paso("addChatReminder", () =>
+    s().addChatReminder({
+      channelId: canal.id, messageId: mensajeSobrevive, text: "Recordar",
+      remindAt: MOMENTO - 1_000, authorId: "perfil-uno",
+    })
+  );
+  paso("flushChatQueue", () => s().flushChatQueue(MOMENTO));
+  paso("scheduleChatMessage", () =>
+    s().scheduleChatMessage({
+      channelId: canal.id, text: "Programado", sendAt: MOMENTO + 90_000, repeat: "weekly",
       authorId: "perfil-uno", sender: "Ana Ruiz", senderInitials: "AR",
     })
   );
   paso("scheduleChatMessage", () =>
     s().scheduleChatMessage({
-      channelId: canal.id, text: "Programado dos", sendAt: MOMENTO + 90_000, repeat: "weekly",
+      channelId: canal.id, text: "Programado dos", sendAt: MOMENTO + 120_000, repeat: "weekly",
       authorId: "perfil-uno", sender: "Ana Ruiz", senderInitials: "AR",
     })
   );
   paso("cancelChatScheduled", () => s().cancelChatScheduled(s().chatScheduled?.[0]?.id ?? ""));
-  paso("addChatReminder", () =>
-    s().addChatReminder({
-      channelId: canal.id, messageId: s().messages[0].id, text: "Recordar",
-      remindAt: MOMENTO + 120_000, authorId: "perfil-uno",
-    })
-  );
-  paso("flushChatQueue", () => s().flushChatQueue(MOMENTO));
-  paso("deleteChatMessage", () => s().deleteChatMessage(s().messages[0].id));
+  paso("deleteChatMessage", () => s().deleteChatMessage(mensajeBorrado));
   paso("deleteChatChannel", () => s().deleteChatChannel(canalBorrado.id));
 
   paso("openComposer", () => s().openComposer(null, HOY));
@@ -543,17 +575,31 @@ function foto(estado: Estado): unknown {
 }
 
 test("las claves del estado son las mismas", async () => {
-  const { useHublyStore } = await cargar();
+  await cargar();
+  const { backendEnabled } = await import("./supabase/config");
+  // El contrato cubre el modo demo: con claves, el guardado se encola en vivo.
+  assert.equal(backendEnabled, false);
   // Sobre el estado prístino, sin `reiniciar()`: si se reiniciara antes, `setState`
   // repondría las claves que falten y el contrato no vería la pérdida.
   assert.deepEqual(clavesPristinas, CLAVES);
-  // Al hidratar un documento completo entran las claves opcionales del documento,
-  // que el store no declara. F1 tampoco las puede perder.
-  reiniciar(useHublyStore);
-  assert.deepEqual(
-    Object.keys(useHublyStore.getState()).sort(),
-    [...CLAVES, ...OPCIONALES].sort()
+});
+
+test("hidratar un documento completo añade las claves opcionales", async () => {
+  const { useHublyStore } = await cargar();
+  // Arranca del estado prístino: si otra prueba lo hubiera tocado, `setState` ya
+  // habría repuesto esas claves y la comprobación no vería nada.
+  assert.deepEqual(Object.keys(useHublyStore.getState()).sort(), CLAVES);
+  // Vía real de la app: `syncFromServer` → `loadWorkspaceFromStorage` →
+  // `normalizeWorkspacePayload`.
+  almacen.set(
+    "hubly:workspace:v3:hidratado",
+    JSON.stringify({ brands: [{ id: "marca-uno", name: "Marca Uno" }] })
   );
+  await useHublyStore.getState().syncFromServer("hidratado");
+  const estado = useHublyStore.getState();
+  assert.equal(estado.workspaceId, "hidratado");
+  assert.equal(estado.hydrated, true);
+  assert.deepEqual(Object.keys(estado).sort(), [...CLAVES, ...OPCIONALES].sort());
 });
 
 test("la secuencia de todos los dominios deja el estado en la foto", async () => {
@@ -587,10 +633,11 @@ test("el documento guardado lleva todos los campos de siempre", async () => {
   reiniciar(useHublyStore);
   ejecutarSecuencia(useHublyStore);
   const documento = guardados[guardados.length - 1];
-  assert.deepEqual(Object.keys(documento), DOCUMENTO);
+  // El orden del literal no es parte de la forma.
+  assert.deepEqual(Object.keys(documento).sort(), [...DOCUMENTO].sort());
   assert.equal(documento.schemaVersion, 2);
   assert.equal(documento.workspaceId, "prueba");
-  assert.equal((documento.notifications as unknown[]).length, 2);
+  assert.equal((documento.notifications as unknown[]).length, 3);
 });
 
 test("addBrand crea la marca con su canal, su evento y un solo guardado", async () => {
@@ -685,26 +732,26 @@ const GUARDADOS: Record<string, number> = {
   recordPublication: 1, setPostResults: 1, duplicatePost: 1, deletePost: 1,
   setCalendarActivities: 1, addIdea: 1, convertIdeaToPost: 1, removeIdea: 1,
   saveLead: 1, moveLead: 1, saveQuote: 1, deleteQuote: 1,
-  toggleAutomation: 1, removeAutomation: 1, addTask: 1, addTaskList: 1,
-  renameTaskList: 1, updateTask: 1, toggleTaskStatus: 1, moveTask: 1,
-  deleteTask: 1, deleteTaskList: 1, addAgent: 1, updateAgent: 1,
-  duplicateAgent: 1, deleteAgent: 1, addNotebook: 1, updateNotebook: 1,
-  toggleNotebookPinned: 1, deleteNotebook: 1, inviteTeamMember: 1, acceptTeamInvitation: 1,
-  cancelTeamInvitation: 1, updateTeamMember: 1, recordActivityEvent: 1, toggleWidgetVisibility: 1,
-  setWidgetVisibility: 1, reorderWidgets: 1, moveWidget: 1, setWidgetSpan: 1,
-  setWidgetMetric: 1, toggleOnboardingStep: 1, setOnboardingDismissed: 1, setOnboardingMinimized: 1,
-  addNotification: 1, markNotificationRead: 1, markAllNotificationsRead: 1, addAsset: 1,
-  addProject: 1, updateProject: 1, moveProject: 1, addChatChannel: 1,
-  sendChatMessage: 1, editChatMessage: 1, toggleChatReaction: 1, toggleChatPin: 1,
-  markChatRead: 0, updateChatChannel: 1, setChatPreference: 0, scheduleChatMessage: 1,
-  cancelChatScheduled: 1, addChatReminder: 1, flushChatQueue: 0, deleteChatMessage: 1,
-  deleteChatChannel: 1, openComposer: 0, setComposerDirty: 0, closeComposer: 0,
-  setCmdkOpen: 0, setAiDrawerOpen: 0, setAiDrawerPrompt: 0, setNewBrandModalOpen: 0,
-  setInviteModalOpen: 0, setWidgetConfigModalOpen: 0, setAutoSuggestionsModalOpen: 0, setEditWidgetsMode: 0,
-  setActiveNotebookId: 0,
+  deleteLead: 1, toggleAutomation: 1, removeAutomation: 1, addTask: 1,
+  addTaskList: 1, renameTaskList: 1, updateTask: 1, toggleTaskStatus: 1,
+  moveTask: 1, deleteTask: 1, deleteTaskList: 1, addAgent: 1,
+  updateAgent: 1, duplicateAgent: 1, deleteAgent: 1, addNotebook: 1,
+  updateNotebook: 1, toggleNotebookPinned: 1, deleteNotebook: 1, inviteTeamMember: 1,
+  acceptTeamInvitation: 1, cancelTeamInvitation: 1, updateTeamMember: 1, recordActivityEvent: 1,
+  toggleWidgetVisibility: 1, setWidgetVisibility: 1, reorderWidgets: 1, moveWidget: 1,
+  setWidgetSpan: 1, setWidgetMetric: 1, toggleOnboardingStep: 1, setOnboardingDismissed: 1,
+  setOnboardingMinimized: 1, addNotification: 1, markNotificationRead: 1, markAllNotificationsRead: 1,
+  addAsset: 1, addProject: 1, updateProject: 1, moveProject: 1,
+  deleteProject: 1, addChatChannel: 1, sendChatMessage: 1, markChatRead: 1,
+  editChatMessage: 1, toggleChatReaction: 1, toggleChatPin: 1, updateChatChannel: 1,
+  setChatPreference: 0, scheduleChatMessage: 1, addChatReminder: 1, flushChatQueue: 3,
+  cancelChatScheduled: 1, deleteChatMessage: 1, deleteChatChannel: 1, openComposer: 0,
+  setComposerDirty: 0, closeComposer: 0, setCmdkOpen: 0, setAiDrawerOpen: 0,
+  setAiDrawerPrompt: 0, setNewBrandModalOpen: 0, setInviteModalOpen: 0, setWidgetConfigModalOpen: 0,
+  setAutoSuggestionsModalOpen: 0, setEditWidgetsMode: 0, setActiveNotebookId: 0,
 };
 
-const TOTAL_GUARDADOS = 92;
+const TOTAL_GUARDADOS = 102;
 
 const DOCUMENTO: string[] = [
   "schemaVersion", "workspaceId", "agencyName", "profile",
@@ -752,7 +799,7 @@ const FOTO: unknown = JSON.parse(String.raw`
  "agents": [
   {
    "cadence": "",
-   "createdAt": "2026-05-14T10:00:00.047Z",
+   "createdAt": "2026-05-14T10:00:00.049Z",
    "id": "<id:6>",
    "messages": [],
    "name": "Nuevo agente",
@@ -856,29 +903,21 @@ const FOTO: unknown = JSON.parse(String.raw`
   },
   {
    "id": "<id:9>",
+   "mentioned": false,
    "muted": true,
    "name": "Equipo dos",
    "type": "agency",
    "unread": 0
   }
  ],
- "chatReminders": [
-  {
-   "authorId": "perfil-uno",
-   "channelId": "<id:9>",
-   "id": "<id:10>",
-   "messageId": "<id:11>",
-   "remindAt": 1778752920000,
-   "text": "Recordar"
-  }
- ],
+ "chatReminders": [],
  "chatScheduled": [
   {
    "authorId": "perfil-uno",
    "channelId": "<id:9>",
-   "id": "<id:12>",
+   "id": "<id:10>",
    "repeat": "weekly",
-   "sendAt": 1778752890000,
+   "sendAt": 1778752920000,
    "sender": "Ana Ruiz",
    "senderInitials": "AR",
    "text": "Programado dos"
@@ -898,9 +937,9 @@ const FOTO: unknown = JSON.parse(String.raw`
  "ideas": [
   {
    "brandId": "marca-uno",
-   "convertedPostId": "<id:13>",
+   "convertedPostId": "<id:11>",
    "createdAt": "2026-05-14T10:00:00.026Z",
-   "id": "<id:14>",
+   "id": "<id:12>",
    "notes": "Notas",
    "pillar": "Producto",
    "title": "Idea fija"
@@ -911,10 +950,10 @@ const FOTO: unknown = JSON.parse(String.raw`
    "brandIds": [
     "marca-uno"
    ],
-   "createdAt": "2026-05-14T10:00:00.056Z",
+   "createdAt": "2026-05-14T10:00:00.058Z",
    "email": "nueva@agencia.demo",
-   "id": "<id:15>",
-   "inviteLink": "https://hubly.cm/invite/mp5bhohk",
+   "id": "<id:13>",
+   "inviteLink": "https://hubly.cm/invite/mp5bhohm",
    "name": "Nueva",
    "role": "Editor",
    "status": "Aceptada"
@@ -927,7 +966,7 @@ const FOTO: unknown = JSON.parse(String.raw`
    "company": "Compra Fija",
    "createdAt": "2026-05-14T10:00:00.030Z",
    "email": "cliente@ejemplo.com",
-   "id": "<id:16>",
+   "id": "<id:14>",
    "name": "Cliente Fijo",
    "notes": "Nota",
    "phone": "555",
@@ -939,11 +978,36 @@ const FOTO: unknown = JSON.parse(String.raw`
  "messages": [
   {
    "channelId": "<id:9>",
-   "createdAt": 1778752800081,
+   "createdAt": 1778752800084,
+   "id": "<id:15>",
+   "sender": "Ana Ruiz",
+   "senderInitials": "AR",
+   "text": "Hola",
+   "time": "10:00"
+  },
+  {
+   "channelId": "<id:9>",
+   "createdAt": 1778752800085,
+   "editedAt": 1778752800088,
+   "id": "<id:16>",
+   "pinned": true,
+   "reactions": {
+    "pulgar": [
+     "Ana"
+    ]
+   },
+   "sender": "Ana Ruiz",
+   "senderInitials": "AR",
+   "text": "Adiós a todos",
+   "time": "10:00"
+  },
+  {
+   "channelId": "<id:9>",
+   "createdAt": 1778752800095,
    "id": "<id:17>",
    "sender": "Ana Ruiz",
    "senderInitials": "AR",
-   "text": "Adiós",
+   "text": "Vencido",
    "time": "10:00"
   }
  ],
@@ -960,16 +1024,25 @@ const FOTO: unknown = JSON.parse(String.raw`
    "stamp": "N° 01 · OCT 26",
    "subtitle": "N° 01 · OCT 26",
    "title": "LIBRETA FIJA",
-   "updatedAt": "2026-05-14T10:00:00.053Z",
+   "updatedAt": "2026-05-14T10:00:00.055Z",
    "updatedBy": "Beto Lara",
    "variant": "space"
   }
  ],
  "notifications": [
   {
-   "body": "Cuerpo",
+   "actionUrl": "/chat?c=<id:9>&m=<id:16>",
+   "body": "Recordar",
    "createdAt": "Ahora mismo",
    "id": "<id:18>",
+   "kind": "sistema",
+   "read": false,
+   "title": "Recordatorio del chat"
+  },
+  {
+   "body": "Cuerpo",
+   "createdAt": "Ahora mismo",
+   "id": "<id:19>",
    "kind": "sistema",
    "read": true,
    "title": "Aviso"
@@ -979,7 +1052,7 @@ const FOTO: unknown = JSON.parse(String.raw`
    "body": "Revisar Post de prueba",
    "brandId": "marca-uno",
    "createdAt": "Ahora mismo",
-   "id": "<id:19>",
+   "id": "<id:20>",
    "kind": "sistema",
    "read": true,
    "title": "Aviso al enviar"
@@ -1011,7 +1084,7 @@ const FOTO: unknown = JSON.parse(String.raw`
    "comments": [],
    "cover": "steam",
    "format": "Carrusel",
-   "id": "<id:13>",
+   "id": "<id:11>",
    "network": "Instagram",
    "networks": [
     "Instagram"
@@ -1124,7 +1197,7 @@ const FOTO: unknown = JSON.parse(String.raw`
    "deliverablesCount": 1,
    "description": "",
    "dueDate": "2026-05-14",
-   "id": "<id:20>",
+   "id": "<id:21>",
    "progress": 50,
    "status": "Revisión",
    "title": "Proyecto"
@@ -1133,9 +1206,9 @@ const FOTO: unknown = JSON.parse(String.raw`
  "quotes": [
   {
    "createdAt": "2026-05-14T10:00:00.034Z",
-   "id": "<id:21>",
+   "id": "<id:22>",
    "items": [],
-   "leadId": "<id:16>",
+   "leadId": "<id:14>",
    "status": "Borrador",
    "title": "COT-2"
   }
@@ -1178,7 +1251,7 @@ const FOTO: unknown = JSON.parse(String.raw`
    10
   ],
   [
-   "<id:22>",
+   "<id:23>",
    "Nueva",
    "Editor",
    "Invitado",
@@ -1189,7 +1262,7 @@ const FOTO: unknown = JSON.parse(String.raw`
    50
   ],
   [
-   "<id:23>",
+   "<id:24>",
    "Otra",
    "Editor",
    "Invitado",
