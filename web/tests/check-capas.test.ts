@@ -7,6 +7,7 @@ import { after, test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 const script = join(dirname(fileURLToPath(import.meta.url)), "..", "scripts", "check-capas.mjs");
+const deuda = join(dirname(fileURLToPath(import.meta.url)), "..", "scripts", "check-deuda.mjs");
 const trees: string[] = [];
 
 after(() => {
@@ -32,6 +33,23 @@ function run(root: string, ...extra: string[]): SpawnSyncReturns<string> {
 function falla(result: SpawnSyncReturns<string>, ...needles: string[]) {
   assert.equal(result.status, 1, `salió con ${result.status}: ${result.stdout}`);
   for (const needle of needles) assert.ok(result.stderr.includes(needle), `stderr sin «${needle}»:\n${result.stderr}`);
+}
+
+function git(cwd: string, ...args: string[]) {
+  const result = spawnSync("git", args, { cwd, encoding: "utf8" });
+  assert.equal(result.status, 0, `git ${args.join(" ")}: ${result.stderr}`);
+}
+
+function repo(files: Record<string, string>): string {
+  const root = tree(files);
+  git(root, "init", "-q");
+  git(root, "add", ".");
+  git(root, "-c", "user.name=Pruebas", "-c", "user.email=pruebas@example.com", "-c", "commit.gpgsign=false", "commit", "-qm", "base");
+  return root;
+}
+
+function runDeuda(root: string): SpawnSyncReturns<string> {
+  return spawnSync(process.execPath, [deuda, "HEAD", "--root", join(root, "web")], { cwd: root, encoding: "utf8" });
 }
 
 test("un import de lib/ a components/ hace fallar el chequeo", () => {
@@ -101,4 +119,40 @@ test("un componente de cliente no importa lib/server/", () => {
   const result = run(root);
   falla(result, "components/app/chat/Cliente.tsx", "server-en-cliente");
   assert.ok(!result.stderr.includes("Servidor.tsx"), "un componente de servidor sí puede importarlo");
+});
+
+test("lo compartido tampoco importa de un dominio", () => {
+  const root = tree({
+    "components/app/social/Panel.tsx": "export const Panel = 1;\n",
+    "components/app/ui/Boton.tsx": 'import { Panel } from "@/components/app/social/Panel";\nexport const x = Panel;\n',
+  });
+  falla(run(root), "components/app/ui/Boton.tsx", "dominio-cruzado");
+});
+
+test("lib/domain/ no admite JSX", () => {
+  const root = tree({ "lib/domain/vista.tsx": "export const Vista = () => <div>hola</div>;\n" });
+  falla(run(root), "lib/domain/vista.tsx", "dominio-impuro", "1 hallazgos, permitidos 0");
+});
+
+const deudaBase = {
+  "web/package.json": JSON.stringify({ scripts: { lint: "eslint . --max-warnings 0" } }),
+  "web/scripts/check-size-baseline.json": "{}\n",
+  "web/scripts/check-ui-baseline.json": "{}\n",
+  "web/scripts/check-capas-baseline.json": "{}\n",
+};
+
+test("check-deuda frena una regla de capas que pasa de 0 a 1", () => {
+  const root = repo({ ...deudaBase, "web/scripts/check-capas-baseline.json": '{"lib/viejo.ts":{"lib-importa-arriba":1}}\n' });
+  writeFileSync(join(root, "web/scripts/check-capas-baseline.json"), '{"lib/viejo.ts":{"lib-importa-arriba":1},"lib/domain/probe.ts":{"dominio-impuro":1}}\n');
+  const result = runDeuda(root);
+  assert.equal(result.status, 1, result.stdout);
+  assert.ok(result.stderr.includes("scripts/check-capas-baseline.json: la regla dominio-impuro subió de 0 a 1"), result.stderr);
+});
+
+test("check-deuda no cuenta una regla nueva de check-ui como deuda", () => {
+  const root = repo(deudaBase);
+  writeFileSync(join(root, "web/scripts/check-ui-baseline.json"), '{"components/app/x.tsx":{"color-fijo":1}}\n');
+  const result = runDeuda(root);
+  assert.equal(result.status, 0, result.stderr);
+  assert.ok(result.stdout.includes("La deuda no subió."));
 });

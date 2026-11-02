@@ -2,18 +2,25 @@
 /*
  * Impide que un PR suba las bases de deuda para que un chequeo pase.
  * Compara contra la rama indicada: node scripts/check-deuda.mjs origin/main
+ * --root apunta a otro árbol; lo usan las pruebas.
  */
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const base = process.argv[2];
-if (!base) {
+const args = process.argv.slice(2);
+const base = args[0];
+if (!base || base.startsWith("--")) {
   console.error("Indica la rama base: node scripts/check-deuda.mjs origin/main");
   process.exit(2);
 }
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const rootArg = args.indexOf("--root");
+if (rootArg !== -1 && !args[rootArg + 1]) {
+  console.error("Falta la ruta después de --root.");
+  process.exit(2);
+}
+const root = rootArg === -1 ? join(dirname(fileURLToPath(import.meta.url)), "..") : args[rootArg + 1];
 const current = (path) => readFileSync(join(root, path), "utf8");
 const previous = (path) => {
   try {
@@ -40,16 +47,23 @@ const measures = [
   ["scripts/check-size-baseline.json", (text) => total(JSON.parse(text))],
   ["package.json", maxWarnings],
 ];
-const guarded = ["scripts/check-ui-baseline.json", "scripts/check-capas-baseline.json"];
+const guarded = [
+  { path: "scripts/check-ui-baseline.json", absentMeansZero: false },
+  // En capas cada regla existe desde el principio: si aparece con deuda, es nueva.
+  { path: "scripts/check-capas-baseline.json", absentMeansZero: true },
+];
 
 let failed = false;
-for (const path of guarded) {
+for (const { path, absentMeansZero } of guarded) {
   const before = previous(path);
   if (before === null) continue;
   const was = byRule(before);
-  for (const [id, now] of Object.entries(byRule(current(path)))) {
-    if (id in was && now > was[id]) {
-      console.error(`${path}: la regla ${id} subió de ${was[id]} a ${now}`);
+  const now = byRule(current(path));
+  const ids = absentMeansZero ? Object.keys(now) : Object.keys(was);
+  for (const id of ids) {
+    const [from, to] = [was[id] ?? 0, now[id] ?? 0];
+    if (to > from) {
+      console.error(`${path}: la regla ${id} subió de ${from} a ${to}`);
       failed = true;
     }
   }

@@ -110,6 +110,10 @@ function isName(node) {
 function impureUsage(source) {
   const found = [];
   const visit = (node) => {
+    if (ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node) || ts.isJsxFragment(node)) {
+      found.push({ line: source.getLineAndCharacterOfPosition(node.getStart(source)).line + 1, name: "JSX" });
+      return;
+    }
     if (ts.isIdentifier(node) && PURE_NAMES.has(node.text) && !isName(node)) {
       found.push({ line: source.getLineAndCharacterOfPosition(node.getStart(source)).line + 1, name: node.text });
     }
@@ -142,7 +146,7 @@ function scan() {
         }
         const fromDomain = domainOf(file);
         const toDomain = targetFile ? domainOf(targetFile) : null;
-        if (fromDomain && toDomain && fromDomain !== toDomain && !SHARED.has(fromDomain) && !SHARED.has(toDomain) && !isScreen(targetFile)) {
+        if (fromDomain && toDomain && fromDomain !== toDomain && !SHARED.has(toDomain) && !isScreen(targetFile)) {
           add(file, "dominio-cruzado", line, targetFile);
         }
         if (isSlice(file) && targetFile && isSlice(targetFile)) add(file, "slice-cruzado", line, targetFile);
