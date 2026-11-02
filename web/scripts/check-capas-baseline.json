@@ -1,0 +1,23 @@
+{
+  "components/app/compositor/ComposerContenido.tsx": {
+    "dominio-cruzado": 3
+  },
+  "components/app/compositor/ComposerMeta.tsx": {
+    "dominio-cruzado": 1
+  },
+  "components/app/compositor/PostComposerModal-shared.tsx": {
+    "dominio-cruzado": 1
+  },
+  "components/app/compositor/usePostComposerModal.tsx": {
+    "dominio-cruzado": 1
+  },
+  "components/app/dashboard/ExtraWidgets.tsx": {
+    "dominio-cruzado": 1
+  },
+  "components/app/shell/AppSurfaces.tsx": {
+    "dominio-cruzado": 1
+  },
+  "lib/types.ts": {
+    "lib-importa-arriba": 1
+  }
+}
