@@ -46,7 +46,11 @@ Va primero, un agente a la vez.
 
 **Un solo agente en toda la fase.** Solo mover: sin cambiar lógica ni estado. Requiere F0 completa. Cada tarea corre los flujos con cuentas y `store.contract.test.ts`, que no se edita. Se hace en este orden: de menos a más acoplado.
 
-Las 125 claves de la interfaz quedan asignadas abajo, salvo errores: antes de cada tarea, compara con `lib/store.ts`. Lo que no tenga dueño se pregunta, no se improvisa.
+El store tiene **148 claves** recién creado (`Object.keys(useHublyStore.getState())`) y **158** con un documento completo hidratado: **106 acciones**, **23 claves de datos guardados** y **19 claves de estado de interfaz**, más **10 opcionales** que solo aparecen al normalizar el documento (`schemaVersion`, `ideas`, `leads`, `quotes`, `automations`, `agents`, `taskLists`, `calendarActivities`, `chatScheduled`, `chatReminders`).
+
+**Solo se asignan abajo las 106 acciones y las 19 claves de estado de interfaz.** Las **23 claves de datos** entran por `...INITIAL_WORKSPACE_DATA` en `store.ts` y los slices **no las declaran**: es una de las trampas comprobadas de abajo. **No tienen dueño por tarea y no hay que asignárselas.** Las **10 opcionales** entran al hidratar un documento completo, tampoco las declara un slice, y F1 debe conservarlas.
+
+Antes de cada tarea, compara la tabla con `lib/store.ts`. Lo que no tenga dueño se pregunta, no se improvisa.
 
 **Trampas comprobadas:**
 - `...INITIAL_WORKSPACE_DATA` se queda como primer spread en `store.ts`. Un slice no declara datos guardados como `tasks: []`, porque pisaría los datos iniciales. Solo declara estado que no se guarda, y sus acciones.
@@ -58,7 +62,7 @@ Las 125 claves de la interfaz quedan asignadas abajo, salvo errores: antes de ca
 
 | Tarea | Crea | Mueve | Riesgo |
 |---|---|---|---|
-| **F1-1** Armazón, sesión y ventanas | `lib/store/sync.ts`, `lib/store/session.slice.ts`, `lib/store/ui.slice.ts` | `extractWorkspaceData`, `persistWorkspaceState`, ayudas compartidas, `syncFromServer`, `switchWorkspace`, `hydrated`, `role`, `isReferenceFixture`, `applyReferenceFixture`, `setTestClock`, `resetDemoData`, `updateProfile`, `updateAgency`, modales, `cmdkOpen`, `aiDrawer*`, `composer*`, `editWidgetsMode` | A |
+| **F1-1** Armazón, sesión y ventanas | `lib/store/sync.ts`, `lib/store/session.slice.ts`, `lib/store/ui.slice.ts` | `extractWorkspaceData`, `persistWorkspaceState`, ayudas compartidas, `syncFromServer`, `switchWorkspace`, `hydrated`, `role`, `isReferenceFixture`, `applyReferenceFixture`, `setTestClock`, `resetDemoData`, `updateProfile`, `updateAgency`, modales, `cmdkOpen`, `aiDrawer*`, `composer*`, `editingPostId`, `editWidgetsMode` | A |
 | **F1-2** Simples | `agents`, `automations`, `crm`, `projects`, `assets`, `notebooks` | `*Agent`, `*Automation`, `*Lead`, `*Quote`, `*Project`, `addAsset`, `*Notebook*` | M |
 | **F1-3** Tareas | `tasks.slice.ts` | `addTask`, `updateTask`, `toggleTaskStatus`, `deleteTask`, `moveTask`, `*TaskList` | M |
 | **F1-4** Equipo y tablero | `team.slice.ts`, `dashboard.slice.ts` | `*TeamMember`, `*TeamInvitation`, `recordActivityEvent`, `*Widget*`, `*Onboarding*`, `*Notification*` | M |
