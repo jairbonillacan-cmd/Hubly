@@ -34,7 +34,7 @@ Va primero, un agente a la vez.
 ### F0-5 Contrato del store · M
 - **Crea:** `web/lib/store.contract.test.ts`. Debe pasar **antes** de mover nada y seguir sin cambios durante toda F1.
 - **Fija tres cosas:**
-  1. La lista ordenada de las claves de `useHublyStore.getState()` (hoy 125 en la interfaz). Si dos slices definen la misma clave, la última gana en silencio; esta prueba es la que lo detecta.
+  1. La lista ordenada de las claves de `useHublyStore.getState()`: hoy **148** (125 las declara `HublyStoreState`, 106 acciones y 19 claves de interfaz, y 23 las aporta `...INITIAL_WORKSPACE_DATA`) y **158** con un documento completo hidratado. Si dos slices definen la misma clave, la última gana en silencio; esta prueba es la que lo detecta.
   2. Una secuencia de acciones de todos los dominios, con reloj y datos fijos, cuyo resultado se compara con una foto. Normaliza los ids generados.
   3. Qué se guarda: la forma del documento que recibe `saveWorkspaceToStorage`, y qué acciones provocan guardar. Un campo que deje de guardarse es pérdida de datos, y ninguna prueba visual lo vería.
 - **Acepta:** quitar un campo de `extractWorkspaceData`, o el `persistWorkspaceState` de una acción, hace fallar la prueba.
