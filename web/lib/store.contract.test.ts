@@ -94,9 +94,14 @@ global.fetch = async (_entrada, init) => {
 };
 
 let modulo: Modulo | undefined;
+/** Claves del estado recién importado, antes de que ninguna prueba lo toque. */
+let clavesPristinas: string[] | undefined;
 
 async function cargar(): Promise<Modulo> {
-  if (!modulo) modulo = await import("./store");
+  if (!modulo) {
+    modulo = await import("./store");
+    clavesPristinas = Object.keys(modulo.useHublyStore.getState()).sort();
+  }
   return modulo;
 }
 
@@ -200,6 +205,8 @@ function estadoFijo(): HublyWorkspaceData {
 
 /** Vuelve al estado fijo: sin esto, cada prueba arrastraría lo de la anterior. */
 function reiniciar(store: Store): void {
+  // El contrato se mide sobre el estado prístino: reiniciar antes lo falsearía.
+  if (!clavesPristinas) throw new Error("hay que cargar el store antes de reiniciarlo");
   ahora = MOMENTO;
   almacen.clear();
   guardados.length = 0;
@@ -537,8 +544,16 @@ function foto(estado: Estado): unknown {
 
 test("las claves del estado son las mismas", async () => {
   const { useHublyStore } = await cargar();
+  // Sobre el estado prístino, sin `reiniciar()`: si se reiniciara antes, `setState`
+  // repondría las claves que falten y el contrato no vería la pérdida.
+  assert.deepEqual(clavesPristinas, CLAVES);
+  // Al hidratar un documento completo entran las claves opcionales del documento,
+  // que el store no declara. F1 tampoco las puede perder.
   reiniciar(useHublyStore);
-  assert.deepEqual(Object.keys(useHublyStore.getState()).sort(), CLAVES);
+  assert.deepEqual(
+    Object.keys(useHublyStore.getState()).sort(),
+    [...CLAVES, ...OPCIONALES].sort()
+  );
 });
 
 test("la secuencia de todos los dominios deja el estado en la foto", async () => {
@@ -616,39 +631,49 @@ test("resetWidgetsLayout vuelve a la disposición por defecto y guarda una vez",
 });
 
 // Las cifras salen de correr esta misma prueba contra `main`: no se editan a mano.
+
+/** Lo que compone `useHublyStore` recién importado, sin hidratar. */
 const CLAVES: string[] = [
   "acceptTeamInvitation", "activeBrandId", "activeNotebookId", "activityEvents", "addAgent",
   "addAsset", "addAutomation", "addBrand", "addChatChannel", "addChatReminder",
   "addIdea", "addNotebook", "addNotification", "addPostComment", "addProject",
   "addTask", "addTaskList", "ads", "agency", "agencyName",
-  "agents", "aiDrawerOpen", "aiDrawerPrompt", "appliedRecommendationsMap", "applyRecommendation",
-  "applyRecommendationsBatch", "applyReferenceFixture", "approveAllBrandPosts", "assets", "autoSuggestionsModalOpen",
-  "automations", "brands", "calendarActivities", "cancelChatScheduled", "cancelTeamInvitation",
-  "channels", "chatReminders", "chatScheduled", "closeComposer", "cmdkOpen",
+  "aiDrawerOpen", "aiDrawerPrompt", "appliedRecommendationsMap", "applyRecommendation", "applyRecommendationsBatch",
+  "applyReferenceFixture", "approveAllBrandPosts", "assets", "autoSuggestionsModalOpen", "brands",
+  "cancelChatScheduled", "cancelTeamInvitation", "channels", "closeComposer", "cmdkOpen",
   "composerDefaultDate", "composerDirty", "composerOpen", "composerPending", "convertIdeaToPost",
   "dashboardWidgets", "deleteAgent", "deleteChatChannel", "deleteChatMessage", "deleteLead",
   "deleteNotebook", "deletePost", "deleteProject", "deleteQuote", "deleteTask",
   "deleteTaskList", "dismissRecommendation", "dismissedRecommendationIds", "duplicateAgent", "duplicatePost",
   "editChatMessage", "editWidgetsMode", "editingPostId", "flushChatQueue", "hydrated",
-  "ideas", "invitations", "inviteModalOpen", "inviteTeamMember", "isReferenceFixture",
-  "leads", "markAllNotificationsRead", "markChatRead", "markNotificationRead", "messages",
-  "moveLead", "movePost", "moveProject", "moveTask", "moveWidget",
-  "newBrandModalOpen", "notebooks", "notifications", "onboarding", "openComposer",
-  "patchPost", "posts", "profile", "projects", "quotes",
-  "recordActivityEvent", "recordPublication", "removeAutomation", "removeIdea", "renameTaskList",
-  "reorderWidgets", "resetDemoData", "resetWidgetsLayout", "resolveComposerPending", "role",
-  "saveLead", "savePost", "saveQuote", "scheduleChatMessage", "schemaVersion",
-  "sendChatMessage", "setActiveBrand", "setActiveNotebookId", "setAiDrawerOpen", "setAiDrawerPrompt",
-  "setAutoSuggestionsModalOpen", "setBrandCustomMetrics", "setCalendarActivities", "setChatPreference", "setCmdkOpen",
-  "setComposerDirty", "setEditWidgetsMode", "setInviteModalOpen", "setNewBrandModalOpen", "setOnboardingDismissed",
-  "setOnboardingMinimized", "setPostResults", "setTestClock", "setWidgetConfigModalOpen", "setWidgetMetric",
-  "setWidgetSpan", "setWidgetVisibility", "switchWorkspace", "syncFromServer", "taskLists",
+  "invitations", "inviteModalOpen", "inviteTeamMember", "isReferenceFixture", "markAllNotificationsRead",
+  "markChatRead", "markNotificationRead", "messages", "moveLead", "movePost",
+  "moveProject", "moveTask", "moveWidget", "newBrandModalOpen", "notebooks",
+  "notifications", "onboarding", "openComposer", "patchPost", "posts",
+  "profile", "projects", "recordActivityEvent", "recordPublication", "removeAutomation",
+  "removeIdea", "renameTaskList", "reorderWidgets", "resetDemoData", "resetWidgetsLayout",
+  "resolveComposerPending", "role", "saveLead", "savePost", "saveQuote",
+  "scheduleChatMessage", "sendChatMessage", "setActiveBrand", "setActiveNotebookId", "setAiDrawerOpen",
+  "setAiDrawerPrompt", "setAutoSuggestionsModalOpen", "setBrandCustomMetrics", "setCalendarActivities", "setChatPreference",
+  "setCmdkOpen", "setComposerDirty", "setEditWidgetsMode", "setInviteModalOpen", "setNewBrandModalOpen",
+  "setOnboardingDismissed", "setOnboardingMinimized", "setPostResults", "setTestClock", "setWidgetConfigModalOpen",
+  "setWidgetMetric", "setWidgetSpan", "setWidgetVisibility", "switchWorkspace", "syncFromServer",
   "tasks", "team", "teamMembers", "testClock", "toggleAutomation",
   "toggleChatPin", "toggleChatReaction", "toggleNotebookPinned", "toggleOnboardingStep", "togglePersonaAccepted",
   "toggleTaskStatus", "toggleWidgetVisibility", "updateAgency", "updateAgent", "updateBrand",
   "updateBrandCommitments", "updateBrandCore", "updateChatChannel", "updateNotebook", "updatePostFields",
   "updatePostStatus", "updateProfile", "updateProject", "updateTask", "updateTeamMember",
   "widgetConfigModalOpen", "widgets", "workspaceId",
+];
+
+/**
+ * Claves opcionales del documento que el store no declara: las aporta
+ * `normalizeWorkspacePayload` al hidratar. Con documento completo el estado
+ * pasa de 148 a 158 claves, y F1 tampoco puede perder estas.
+ */
+const OPCIONALES: string[] = [
+  "agents", "automations", "calendarActivities", "chatReminders", "chatScheduled",
+  "ideas", "leads", "quotes", "schemaVersion", "taskLists",
 ];
 
 const GUARDADOS: Record<string, number> = {
