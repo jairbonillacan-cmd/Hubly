@@ -34,7 +34,7 @@ Va primero, un agente a la vez.
 ### F0-5 Contrato del store · M
 - **Crea:** `web/lib/store.contract.test.ts`. Debe pasar **antes** de mover nada y seguir sin cambios durante toda F1.
 - **Fija tres cosas:**
-  1. La lista ordenada de las claves de `useHublyStore.getState()`: hoy **148** (125 las declara `HublyStoreState`, 106 acciones y 19 claves de interfaz, y 23 las aporta `...INITIAL_WORKSPACE_DATA`) y **158** con un documento completo hidratado. Si dos slices definen la misma clave, la última gana en silencio; esta prueba es la que lo detecta.
+  1. La lista ordenada de las claves de `useHublyStore.getState()`: **148** en el estado recién creado y **158** con un documento completo hidratado. La interfaz `HublyStoreState` declara 125 de ellas (106 acciones y 19 claves de interfaz) y las 23 restantes llegan por `...INITIAL_WORKSPACE_DATA`. Si dos slices definen la misma clave, la última gana en silencio; esta prueba es la que lo detecta.
   2. Una secuencia de acciones de todos los dominios, con reloj y datos fijos, cuyo resultado se compara con una foto. Normaliza los ids generados.
   3. Qué se guarda: la forma del documento que recibe `saveWorkspaceToStorage`, y qué acciones provocan guardar. Un campo que deje de guardarse es pérdida de datos, y ninguna prueba visual lo vería.
 - **Acepta:** quitar un campo de `extractWorkspaceData`, o el `persistWorkspaceState` de una acción, hace fallar la prueba.
@@ -46,9 +46,9 @@ Va primero, un agente a la vez.
 
 **Un solo agente en toda la fase.** Solo mover: sin cambiar lógica ni estado. Requiere F0 completa. Cada tarea corre los flujos con cuentas y `store.contract.test.ts`, que no se edita. Se hace en este orden: de menos a más acoplado.
 
-El store tiene **148 claves** recién creado (`Object.keys(useHublyStore.getState())`) y **158** con un documento completo hidratado: **106 acciones**, **23 claves de datos guardados** y **19 claves de estado de interfaz**, más **10 opcionales** que solo aparecen al normalizar el documento (`schemaVersion`, `ideas`, `leads`, `quotes`, `automations`, `agents`, `taskLists`, `calendarActivities`, `chatScheduled`, `chatReminders`).
+El store tiene **148 claves** recién creado (`Object.keys(useHublyStore.getState())`) y **158** con un documento completo hidratado: **106 acciones**, **23 claves de datos guardados** y **19 claves de estado de interfaz**, más **10 opcionales** que no están en el estado inicial (`schemaVersion`, `ideas`, `leads`, `quotes`, `automations`, `agents`, `taskLists`, `calendarActivities`, `chatScheduled`, `chatReminders`).
 
-**Solo se asignan abajo las 106 acciones y las 19 claves de estado de interfaz.** Las **23 claves de datos** entran por `...INITIAL_WORKSPACE_DATA` en `store.ts` y los slices **no las declaran**: es una de las trampas comprobadas de abajo. **No tienen dueño por tarea y no hay que asignárselas.** Las **10 opcionales** entran al hidratar un documento completo, tampoco las declara un slice, y F1 debe conservarlas.
+**Solo se asignan abajo las 106 acciones y las 19 claves de estado de interfaz.** Las **23 claves de datos** entran por `...INITIAL_WORKSPACE_DATA` en `store.ts` y ningún slice las declara: es una de las trampas comprobadas de abajo. No hay que asignarlas como claves, pero no están huérfanas: sus mutaciones viven en las acciones que reparte la tabla. Las **10 opcionales** son datos igual que esas y llegan por dos vías: al normalizar un documento completo y al ejecutar acciones que la tabla también reparte. Su dueño funcional es el slice de esas acciones, y ninguna se declara en el estado inicial. F1 debe conservarlas.
 
 Antes de cada tarea, compara la tabla con `lib/store.ts`. Lo que no tenga dueño se pregunta, no se improvisa.
 
@@ -70,6 +70,23 @@ Antes de cada tarea, compara la tabla con `lib/store.ts`. Lo que no tenga dueño
 | **F1-6** Posts y chat | `posts.slice.ts`, `chat.slice.ts` | `savePost`, `updatePost*`, `approveAllBrandPosts`, `deletePost`, `duplicatePost`, `movePost`, `patchPost`, `addPostComment`, `*Idea*`, `recordPublication`, `setPostResults`, `setCalendarActivities`, `*Chat*`, `flushChatQueue`, `scheduleChatMessage` | A |
 
 **`*Widget*` en F1-4:** son las acciones y el dato del tablero (`toggleWidgetVisibility`, `setWidgetVisibility`, `reorderWidgets`, `moveWidget`, `setWidgetSpan`, `setWidgetMetric`, `resetWidgetsLayout` y `dashboardWidgets`). Los flags de edición y los modales son estado de interfaz y quedan en F1-1: `editWidgetsMode`, `setEditWidgetsMode`, `widgetConfigModalOpen` y `setWidgetConfigModalOpen`. Así ninguna de las cuatro queda con dos dueños.
+
+**Las 10 opcionales y quién las escribe.** No se declaran en el estado inicial: las rellena `normalizeWorkspacePayload` al hidratar y las escriben estas acciones, que ya tienen tarea en la tabla de arriba.
+
+| Clave | Acciones que la escriben | Tarea |
+|---|---|---|
+| `schemaVersion` | ninguna: es la constante de versión y la pone `extractWorkspaceData` | F1-1 (`sync.ts`) |
+| `ideas` | `addIdea`, `removeIdea`, `convertIdeaToPost` | F1-6 (`posts.slice.ts`) |
+| `leads` | `saveLead`, `moveLead`, `deleteLead` | F1-2 (`crm`) |
+| `quotes` | `saveQuote`, `deleteQuote` y `deleteLead`, que borra las de su lead | F1-2 (`crm`) |
+| `automations` | `addAutomation`, `toggleAutomation`, `removeAutomation` | F1-2 (`automations`) |
+| `agents` | `addAgent`, `updateAgent`, `duplicateAgent`, `deleteAgent` | F1-2 (`agents`) |
+| `taskLists` | `addTaskList`, `renameTaskList`, `deleteTaskList` | F1-3 (`tasks.slice.ts`) |
+| `calendarActivities` | `setCalendarActivities` | F1-6 (`posts.slice.ts`) |
+| `chatScheduled` | `scheduleChatMessage`, `cancelChatScheduled`, `flushChatQueue` y `deleteChatChannel` | F1-6 (`chat.slice.ts`) |
+| `chatReminders` | `addChatReminder`, `flushChatQueue` y `deleteChatChannel` | F1-6 (`chat.slice.ts`) |
+
+Así las 10 tienen dueño funcional sin que ningún slice las declare: la trampa del primer spread no cambia.
 
 **F1-6 también:** elimina el único `useHublyStore()` sin selector, en `useInicioView.tsx`.
 
