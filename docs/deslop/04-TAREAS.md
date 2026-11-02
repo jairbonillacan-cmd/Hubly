@@ -48,7 +48,7 @@ Va primero, un agente a la vez.
 
 El store tiene **148 claves** recién creado (`Object.keys(useHublyStore.getState())`) y **158** con un documento completo hidratado: **106 acciones**, **23 claves de datos guardados** y **19 claves de estado de interfaz**, más **10 opcionales** que no están en el estado inicial (`schemaVersion`, `ideas`, `leads`, `quotes`, `automations`, `agents`, `taskLists`, `calendarActivities`, `chatScheduled`, `chatReminders`).
 
-**Solo se asignan abajo las 106 acciones y las 19 claves de estado de interfaz.** Las **23 claves de datos** entran por `...INITIAL_WORKSPACE_DATA` en `store.ts` y ningún slice las declara: es una de las trampas comprobadas de abajo. No hay que asignarlas como claves, pero no están huérfanas: sus mutaciones viven en las acciones que reparte la tabla. Las **10 opcionales** son datos igual que esas y llegan por dos vías: al normalizar un documento completo y al ejecutar acciones que la tabla también reparte. Su dueño funcional es el slice de esas acciones, y ninguna se declara en el estado inicial. F1 debe conservarlas.
+**Solo se asignan abajo las 106 acciones y las 19 claves de estado de interfaz.** Las **23 claves de datos** entran por `...INITIAL_WORKSPACE_DATA` en `store.ts` y ningún slice las declara: es una de las trampas comprobadas de abajo. No hay que asignarlas como claves. Todas menos `ads` se mutan desde acciones que reparte la tabla; `ads` no la escribe ninguna acción: solo se siembra, se normaliza y se lee al guardar (`extractWorkspaceData`, `:362`). Las **10 opcionales** son datos igual que esas: llegan al normalizar un documento completo y, salvo `schemaVersion`, también las escriben acciones. Ninguna se declara en el estado inicial y F1 debe conservarlas.
 
 Antes de cada tarea, compara la tabla con `lib/store.ts`. Lo que no tenga dueño se pregunta, no se improvisa.
 
@@ -69,24 +69,26 @@ Antes de cada tarea, compara la tabla con `lib/store.ts`. Lo que no tenga dueño
 | **F1-5** Marcas | `brands.slice.ts`, `brandStrategy.slice.ts` | Marcas: `addBrand` (165 líneas), `updateBrand` y datos básicos, `setActiveBrand`. Estrategia: `updateBrandCommitments`, `togglePersonaAccepted`, `setBrandCustomMetrics`, `*Recommendation*` | A |
 | **F1-6** Posts y chat | `posts.slice.ts`, `chat.slice.ts` | `savePost`, `updatePost*`, `approveAllBrandPosts`, `deletePost`, `duplicatePost`, `movePost`, `patchPost`, `addPostComment`, `*Idea*`, `recordPublication`, `setPostResults`, `setCalendarActivities`, `*Chat*`, `flushChatQueue`, `scheduleChatMessage` | A |
 
-**`*Widget*` en F1-4:** son las acciones y el dato del tablero (`toggleWidgetVisibility`, `setWidgetVisibility`, `reorderWidgets`, `moveWidget`, `setWidgetSpan`, `setWidgetMetric`, `resetWidgetsLayout` y `dashboardWidgets`). Los flags de edición y los modales son estado de interfaz y quedan en F1-1: `editWidgetsMode`, `setEditWidgetsMode`, `widgetConfigModalOpen` y `setWidgetConfigModalOpen`. Así ninguna de las cuatro queda con dos dueños.
+**`*Widget*` en F1-4:** son las siete acciones de los widgets del tablero (`toggleWidgetVisibility`, `setWidgetVisibility`, `reorderWidgets`, `moveWidget`, `setWidgetSpan`, `setWidgetMetric`, `resetWidgetsLayout`), que escriben `widgets` (el dato), y la copia de interfaz `dashboardWidgets`, que se calcula una vez en `store.ts` (`:475`) y no la escribe ninguna acción. Los flags de edición y los modales son estado de interfaz y quedan en F1-1: `editWidgetsMode`, `setEditWidgetsMode`, `widgetConfigModalOpen` y `setWidgetConfigModalOpen`. Así ninguna de las cuatro queda con dos dueños.
 
-**Las 10 opcionales y quién las escribe.** No se declaran en el estado inicial: las rellena `normalizeWorkspacePayload` al hidratar y las escriben estas acciones, que ya tienen tarea en la tabla de arriba.
+**Las 10 opcionales y qué acciones las escriben.** No se declaran en el estado inicial: `normalizeWorkspacePayload` las rellena al hidratar un documento completo y, salvo `schemaVersion`, las escriben acciones que la tabla de arriba ya reparte. Las líneas son de `web/lib/store.ts`.
 
-| Clave | Acciones que la escriben | Tarea |
-|---|---|---|
-| `schemaVersion` | ninguna: es la constante de versión y la pone `extractWorkspaceData` | F1-1 (`sync.ts`) |
-| `ideas` | `addIdea`, `removeIdea`, `convertIdeaToPost` | F1-6 (`posts.slice.ts`) |
-| `leads` | `saveLead`, `moveLead`, `deleteLead` | F1-2 (`crm`) |
-| `quotes` | `saveQuote`, `deleteQuote` y `deleteLead`, que borra las de su lead | F1-2 (`crm`) |
-| `automations` | `addAutomation`, `toggleAutomation`, `removeAutomation` | F1-2 (`automations`) |
-| `agents` | `addAgent`, `updateAgent`, `duplicateAgent`, `deleteAgent` | F1-2 (`agents`) |
-| `taskLists` | `addTaskList`, `renameTaskList`, `deleteTaskList` | F1-3 (`tasks.slice.ts`) |
-| `calendarActivities` | `setCalendarActivities` | F1-6 (`posts.slice.ts`) |
-| `chatScheduled` | `scheduleChatMessage`, `cancelChatScheduled`, `flushChatQueue` y `deleteChatChannel` | F1-6 (`chat.slice.ts`) |
-| `chatReminders` | `addChatReminder`, `flushChatQueue` y `deleteChatChannel` | F1-6 (`chat.slice.ts`) |
+| Clave | Acciones que la escriben |
+|---|---|
+| `schemaVersion` | ninguna: la pone `normalizeWorkspacePayload` (`workspace-repository.ts:435`) al hidratar, y `extractWorkspaceData` (`:342`) la escribe en el documento guardado |
+| `ideas` | `addIdea` (`:1447`), `removeIdea` (`:1456`), `convertIdeaToPost` (`:1489`) |
+| `leads` | `saveLead` (`:1250`), `moveLead` (`:1257`), `deleteLead` (`:1263`) |
+| `quotes` | `saveQuote` (`:1276`), `deleteQuote` (`:1283`) y `deleteLead` (`:1264`), que borra las del lead |
+| `automations` | `addAutomation` (`:1289`), `toggleAutomation` (`:1299`), `removeAutomation` (`:1305`) y `runAutomations` (`:437`), al que llaman `savePost` (`:1192`), `updatePostStatus` (`:1239`) y `approveAllBrandPosts` (`:1527`) |
+| `agents` | `addAgent` (`:1313`), `updateAgent` (`:1319`), `duplicateAgent` (`:1327`), `deleteAgent` (`:1333`) |
+| `taskLists` | `addTaskList` (`:1674`), `renameTaskList` (`:1685`), `deleteTaskList` (`:1696`) |
+| `calendarActivities` | `setCalendarActivities` (`:1364`) |
+| `chatScheduled` | `scheduleChatMessage` (`:2190`), `cancelChatScheduled` (`:2196`), `flushChatQueue` (`:2236`) y `deleteChatChannel` (`:2180`) |
+| `chatReminders` | `addChatReminder` (`:2204`), `flushChatQueue` (`:2221`, `:2240`) y `deleteChatChannel` (`:2181`) |
 
-Así las 10 tienen dueño funcional sin que ningún slice las declare: la trampa del primer spread no cambia.
+De las diez, solo `schemaVersion` no la escribe ninguna acción. Fuera de esta tabla, `ads` (dato) tampoco la escribe ninguna, y `dashboardWidgets` (interfaz) se calcula una vez en `store.ts` (`:475`); las siete acciones de widgets escriben `widgets`, que es el dato.
+
+**Claves con más de un escritor.** No todas tienen un solo dueño, y F1 debe decidirlo a consciencia: `automations` la escriben el CRUD de F1-2 y `runAutomations` (F1-1) cuando lo llaman `savePost`, `updatePostStatus` y `approveAllBrandPosts` (F1-6); `editingPostId` y `composerOpen`, F1-1 y `savePost` (F1-6) (`:1158-1159`, `:1186-1187`); `teamMembers` y `team`, `updateProfile` (F1-1, `:720-721`) e `inviteTeamMember` (F1-4, `:1840-1841`); y `activeNotebookId`, F1-1 (`syncFromServer`, `:569`; `switchWorkspace`, `:655`; `resetDemoData`, `:2257`) y las acciones de libretas de F1-2 (`setActiveNotebookId`, `:547`; `addNotebook`, `:1730`; `deleteNotebook`, `:1759`). La prueba de contrato de F0-5 detecta la doble declaración, y el reparto de arriba no cambia.
 
 **F1-6 también:** elimina el único `useHublyStore()` sin selector, en `useInicioView.tsx`.
 
