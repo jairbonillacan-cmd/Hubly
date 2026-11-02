@@ -38,7 +38,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | Tarea | Depende de | Archivos principales | Estado | Agente | PR |
 |---|---|---|---|---|---|
 | F0-1 Medición | — | `scripts/` | Hecha | | este plan |
-| F0-2 Capas | — | `scripts/`, CI | En curso | `impl-f0-2` | — |
+| F0-2 Capas | — | `scripts/`, CI | En revisión | `impl-f0-2` | #36 |
 | F0-3 Reglas `check:ui` | — | `scripts/`, docs | Pendiente | | |
 | F0-4 Flujos críticos | — | `e2e/`, CI | Pendiente | | |
 | F0-5 Contrato del store | — | `lib/store.contract.test.ts` | En curso | `impl-f0-5` | — |
