@@ -29,6 +29,7 @@ jobs:
       - run: npm run check:muerto
       - run: npm run check:ui
       - run: npm run check:size
+      - run: npm run check:capas
       - if: github.event_name == 'pull_request'
         run: node scripts/check-deuda.mjs origin/${{ github.base_ref }}
       - run: npm run build
@@ -55,7 +56,7 @@ jobs:
         run: |
           node tests/dev-live.mjs 3210 54410 &
           for i in $(seq 1 60); do curl -sf -o /dev/null http://localhost:3210/login && break; sleep 2; done
-      - run: npx playwright test e2e/fusion-live.spec.ts e2e/marcas-live.spec.ts e2e/chat-live.spec.ts
+      - run: npx playwright test e2e/fusion-live.spec.ts e2e/marcas-live.spec.ts e2e/chat-live.spec.ts e2e/critico-live.spec.ts
         env:
           E2E_LIVE: "1"
           E2E_PORT: "3210"
