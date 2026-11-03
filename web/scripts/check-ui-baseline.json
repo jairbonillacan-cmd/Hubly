@@ -1,98 +1,99 @@
 {
-  "app/(app)/ajustes/page.tsx": {
-    "color-fijo": 5,
-    "exclamacion": 1,
-    "rgb-fijo": 2,
-    "tamano-fuente": 4,
-    "transition-all": 1
-  },
   "app/(app)/anuncios/page.tsx": {
-    "color-fijo": 94,
+    "color-fijo": 88,
     "degradado": 1,
     "emoji": 3,
-    "rgb-fijo": 10,
-    "tamano-fuente": 1
+    "estado-crudo": 2,
+    "rgb-fijo": 8,
+    "tamano-fuente": 1,
+    "z-index-fijo": 1
   },
   "app/(app)/app-base.css": {
-    "color-fijo": 128,
-    "rgb-fijo": 10,
+    "color-fijo": 92,
+    "rgb-fijo": 8,
     "tamano-fuente": 1,
-    "transition-all": 1
+    "transition-all": 1,
+    "z-index-fijo": 3
   },
   "app/(app)/automatizaciones/page.tsx": {
     "color-fijo": 1,
     "tamano-fuente": 1
   },
   "app/(app)/calendario/page.tsx": {
-    "color-fijo": 4,
-    "rgb-fijo": 1
+    "color-fijo": 2
   },
   "app/(app)/chat/page.tsx": {
-    "color-fijo": 24,
-    "rgb-fijo": 2,
-    "tamano-fuente": 3
-  },
-  "app/(app)/crm/page.tsx": {
-    "color-fijo": 6,
-    "radio": 1,
-    "rgb-fijo": 1,
-    "tamano-fuente": 3
-  },
-  "app/(app)/dashboard-polish.css": {
-    "color-fijo": 349,
-    "degradado": 3,
-    "radio": 6,
-    "rgb-fijo": 89,
-    "tamano-fuente": 15
-  },
-  "app/(app)/hubly-saas.css": {
-    "color-fijo": 270,
-    "radio": 1,
-    "rgb-fijo": 34,
-    "tamano-fuente": 5
-  },
-  "app/(app)/ia/page.tsx": {
-    "color-fijo": 12,
+    "color-fijo": 17,
     "rgb-fijo": 2,
     "tamano-fuente": 2
   },
+  "app/(app)/crm/page.tsx": {
+    "color-fijo": 6,
+    "estado-crudo": 1,
+    "radio": 1,
+    "rgb-fijo": 1,
+    "tamano-fuente": 3,
+    "z-index-fijo": 1
+  },
+  "app/(app)/dashboard-polish.css": {
+    "color-fijo": 295,
+    "degradado": 3,
+    "radio": 6,
+    "rgb-fijo": 88,
+    "tamano-fuente": 14,
+    "z-index-fijo": 10
+  },
+  "app/(app)/hubly-saas.css": {
+    "color-fijo": 175,
+    "radio": 1,
+    "rgb-fijo": 28,
+    "tamano-fuente": 5,
+    "z-index-fijo": 1
+  },
   "app/(app)/layout.tsx": {
     "color-fijo": 18,
+    "estado-crudo": 2,
     "exclamacion": 1,
-    "rgb-fijo": 5,
-    "tamano-fuente": 4
+    "rgb-fijo": 4,
+    "tamano-fuente": 4,
+    "z-index-fijo": 7
   },
   "app/(app)/marca/page.tsx": {
-    "color-fijo": 22,
-    "emoji": 1,
-    "rgb-fijo": 4,
-    "tamano-fuente": 1
+    "color-fijo": 4,
+    "rgb-fijo": 2,
+    "z-index-fijo": 1
   },
   "app/(app)/marcas/page.tsx": {
     "color-fijo": 3,
+    "estado-crudo": 1,
     "tamano-fuente": 2
   },
   "app/(app)/notificaciones/page.tsx": {
     "tamano-fuente": 1
   },
   "app/(app)/parrillas/page.tsx": {
-    "color-fijo": 23,
+    "color-fijo": 18,
     "exclamacion": 2,
     "radio": 1,
-    "rgb-fijo": 7,
+    "rgb-fijo": 6,
     "tamano-fuente": 3,
-    "transition-all": 1
+    "transition-all": 1,
+    "z-index-fijo": 1
   },
   "app/(app)/reportes/page.tsx": {
-    "color-fijo": 11,
+    "color-fijo": 7,
     "degradado": 1,
-    "rgb-fijo": 6,
-    "tamano-fuente": 3
+    "rgb-fijo": 5,
+    "tamano-fuente": 2
   },
   "app/(app)/tareas/page.tsx": {
     "color-fijo": 2,
+    "estado-crudo": 1,
     "radio": 1,
     "rgb-fijo": 3
+  },
+  "components/AgencyCalculator.tsx": {
+    "prueba-escrita": 3
   },
   "components/app/AccessPanel.tsx": {
     "color-fijo": 3
@@ -100,27 +101,29 @@
   "components/app/AppDialogHost.tsx": {
     "color-fijo": 1,
     "rgb-fijo": 1,
-    "tamano-fuente": 1
+    "tamano-fuente": 1,
+    "z-index-fijo": 1
   },
   "components/app/ArchivosYProyectosView.tsx": {
-    "color-fijo": 10,
+    "color-fijo": 8,
+    "estado-crudo": 2,
     "rgb-fijo": 4,
-    "tamano-fuente": 1
+    "tamano-fuente": 1,
+    "z-index-fijo": 2
   },
   "components/app/AutoSuggestionsModal.tsx": {
     "color-fijo": 20,
     "rgb-fijo": 5,
-    "tamano-fuente": 1
+    "tamano-fuente": 1,
+    "z-index-fijo": 1
   },
   "components/app/CommandPaletteModal.tsx": {
-    "color-fijo": 4,
-    "rgb-fijo": 2,
-    "tamano-fuente": 1
+    "estado-crudo": 1
   },
   "components/app/DescubreHublyWidget.tsx": {
-    "color-fijo": 2,
     "rgb-fijo": 1,
-    "transition-all": 1
+    "transition-all": 1,
+    "z-index-fijo": 1
   },
   "components/app/FloatingAIDrawer.tsx": {
     "color-fijo": 3,
@@ -128,8 +131,10 @@
   },
   "components/app/InviteTeamModal.tsx": {
     "color-fijo": 20,
+    "estado-crudo": 3,
     "exclamacion": 1,
-    "rgb-fijo": 2
+    "rgb-fijo": 2,
+    "z-index-fijo": 1
   },
   "components/app/KraftNotebookCard.tsx": {
     "color-fijo": 15,
@@ -142,7 +147,8 @@
   },
   "components/app/NewBrandModal.tsx": {
     "color-fijo": 20,
-    "rgb-fijo": 3
+    "rgb-fijo": 3,
+    "z-index-fijo": 1
   },
   "components/app/NotebookEditor.tsx": {
     "lucide": 1
@@ -150,51 +156,56 @@
   "components/app/NotebookReaderModal.tsx": {
     "color-fijo": 65,
     "rgb-fijo": 3,
-    "tamano-fuente": 1
+    "tamano-fuente": 1,
+    "z-index-fijo": 1
   },
   "components/app/PostComposerModal.tsx": {
-    "color-fijo": 8,
-    "lucide": 1
+    "color-fijo": 4
   },
   "components/app/SaveStatus.tsx": {
-    "color-fijo": 2
+    "color-fijo": 2,
+    "z-index-fijo": 2
   },
   "components/app/WidgetConfigModal.tsx": {
     "color-fijo": 7,
     "rgb-fijo": 4,
-    "transition-all": 1
+    "transition-all": 1,
+    "z-index-fijo": 1
+  },
+  "components/app/ajustes/EquipoPanel.tsx": {
+    "estado-crudo": 1
   },
   "components/app/dashboard/EquipoView.tsx": {
-    "color-fijo": 79,
+    "color-fijo": 68,
     "degradado": 1,
     "emoji": 41,
+    "estado-crudo": 5,
     "exclamacion": 1,
     "radio": 3,
     "rgb-fijo": 8,
-    "tamano-fuente": 4
+    "tamano-fuente": 4,
+    "z-index-fijo": 3
   },
   "components/app/dashboard/InicioView.tsx": {
     "color-fijo": 36,
+    "estado-crudo": 1,
     "exclamacion": 1,
     "radio": 1,
-    "rgb-fijo": 5
+    "rgb-fijo": 5,
+    "z-index-fijo": 1
   },
   "components/app/dashboard/MemberDrawer.tsx": {
     "color-fijo": 4,
+    "estado-crudo": 1,
     "radio": 2,
-    "rgb-fijo": 1
+    "rgb-fijo": 1,
+    "z-index-fijo": 1
   },
   "components/app/dashboard/PendientesModal.tsx": {
     "color-fijo": 7,
     "radio": 1,
-    "rgb-fijo": 2
-  },
-  "components/app/dashboard/SaludCuentasView.tsx": {
-    "color-fijo": 198,
-    "emoji": 5,
-    "radio": 1,
-    "rgb-fijo": 7,
-    "transition-all": 2
+    "rgb-fijo": 2,
+    "z-index-fijo": 1
   },
   "components/app/media/MediaLibrary.tsx": {
     "color-fijo": 1,
@@ -239,8 +250,7 @@
     "radio": 1
   },
   "components/app/social/SocialCalendar.tsx": {
-    "color-fijo": 4,
-    "lucide": 1
+    "color-fijo": 1
   },
   "components/app/tasks/NotebooksSection.tsx": {
     "color-fijo": 5,
@@ -250,12 +260,15 @@
   },
   "components/app/tasks/TaskBoard.tsx": {
     "color-fijo": 14,
+    "estado-crudo": 1,
     "radio": 1,
     "rgb-fijo": 3,
-    "tamano-fuente": 2
+    "tamano-fuente": 2,
+    "z-index-fijo": 2
   },
   "components/app/tasks/TaskDetailModal.tsx": {
     "color-fijo": 3,
-    "rgb-fijo": 1
+    "rgb-fijo": 1,
+    "z-index-fijo": 1
   }
 }

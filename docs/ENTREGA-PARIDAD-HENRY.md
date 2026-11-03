@@ -293,3 +293,27 @@ Combinando la sección **«Pendiente tras la integración»** (líneas 36–47 d
 | `npm run audit:estados` | **0 hallazgos** (foco visible en todos los controles recorridos en claro y oscuro) |
 | `npx playwright test` | **88/88 pasan** |
 | `npm run audit:controles` | **688 controles** (268 en páginas, 420 en ventanas) · **573 responden** · **38 ya activos** · **49 enlaces** · **8 sin efecto visible** · **19 deshabilitados** · **0 con error** · **0 sin poder probar** · **1 omitido** |
+
+---
+
+## Plan anti-slop y arquitectura, Fase 0: guardarraíles (3 de noviembre)
+
+Plan completo: limpiar primero (guardarraíles, fundaciones, monolitos, deuda por pantalla) y construir después el Modo Revisión y los portales `/review` y `/connect`.
+
+- **`web/scripts/check-ui.mjs`:**
+  - Ya no cuenta como deuda las líneas que definen un token (`--ui-surface: #FFFFFF;`).
+  - Reglas nuevas:
+    - `z-index-fijo`: capa de 10 o más escrita como número.
+    - `prueba-escrita`: «7 días gratis» a mano. Escanea también `components/AgencyCalculator.tsx`, solo con esta regla.
+    - `estado-crudo`: `{x.status}`, `{x.role}` o `{x.kind}` mostrados tal cual.
+- **Capas:** escala única `--layer-*` en `dashboard-polish.css`, de `header` 20 a `dialog` 200. La tabla de §5 de la guía dice lo mismo.
+- **Base regenerada con `--update`:** la autoriza el plan, porque la deuda real ya había bajado y las reglas nuevas necesitan tope.
+
+  | | Hallazgos |
+  |---|---:|
+  | Base anterior | 1933 |
+  | Real antes del cambio | 1562 |
+  | Sin las definiciones de tokens, que no eran deuda | 1411 |
+  | Base nueva (1411 + 70 de las reglas nuevas) | **1481** |
+
+  Las reglas nuevas aportan: `z-index-fijo` 45, `estado-crudo` 22, `prueba-escrita` 3.

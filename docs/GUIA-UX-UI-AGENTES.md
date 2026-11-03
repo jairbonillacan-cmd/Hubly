@@ -246,7 +246,24 @@ No añadas sombras a nada más. Nada de `shadow-lg` en tarjetas, resplandores de
 
 ### Capas
 
-Usa estos valores, no números inventados: encabezado fijo 20, dropdown 40, botón flotante 45, cajón 50, toast 90, modal 110, confirmación 200.
+Usa los tokens, nunca el número: están en `web/app/(app)/dashboard-polish.css` y `check:ui` señala cualquier `z-index` de 10 o más escrito a mano.
+
+| Token | Valor | Para |
+|---|---:|---|
+| `--layer-header` | 20 | Encabezado fijo |
+| `--layer-dropdown` | 40 | Dropdown |
+| `--layer-fab` | 45 | Botón flotante de Hubi |
+| `--layer-drawer` | 50 | Cajón |
+| `--layer-toast` | 90 | Toast |
+| `--layer-scrim` | 105 | Velo del editor |
+| `--layer-modal` | 110 | Modal |
+| `--layer-composer` | 110 | Editor de posts |
+| `--layer-sidebar` | 112 | Sidebar con el editor abierto |
+| `--layer-command` | 120 | Buscador y modales sobre el editor |
+| `--layer-picker` | 130 | Selector de medios |
+| `--layer-dialog` | 200 | Confirmación |
+
+Del 0 al 9 solo ordena piezas dentro de un componente.
 
 ---
 

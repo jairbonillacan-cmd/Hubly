@@ -17,6 +17,8 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const baselinePath = join(root, "scripts", "check-ui-baseline.json");
 const scanDirs = ["app/(app)", "components/app"];
+// Fuera de la app autenticada, solo con las reglas que no dependen de su sistema visual.
+const scanFiles = { "components/AgencyCalculator.tsx": ["prueba-escrita"] };
 // Dibujos, marcas de terceros y simuladores de redes: su color es parte de la forma.
 const skipped = [/components\/app\/icons\//, /\.test\./];
 
@@ -24,10 +26,18 @@ const FONT_SIZES = new Set([10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 15, 16, 
 const RADII = new Set([0, 2, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 999, 9999]);
 
 const offScale = (scale, value) => !scale.has(Number(value));
+// `--ui-surface: #FFFFFF;` es la fuente del token, no un color suelto.
+const definesToken = (l) => /^\s*(:root\s*\{\s*)?--[\w-]+\s*:/.test(l);
+// Del 10 hacia arriba es una capa de pantalla; 0–9 solo ordena dentro de un componente.
+const layerNumber = (l) =>
+  [...l.matchAll(/(?:zIndex:\s*|z-index:\s*|\bz-\[)(\d+)|\bz-(\d{2,})\b/g)].some((m) => Number(m[1] ?? m[2]) >= 10);
 
 const RULES = [
-  { id: "color-fijo", why: "color fijo: usa un token --ui-* o --hb-* (§3)", test: (l) => /#[0-9a-fA-F]{3,8}\b(?![\w-])/.test(l) && !/&#/.test(l) },
-  { id: "rgb-fijo", why: "rgb()/rgba() fijo: usa un token o rgb(var(--hb-accent-rgb) / alfa) (§3)", test: (l) => /\brgba?\(\s*\d/.test(l) },
+  { id: "color-fijo", why: "color fijo: usa un token --ui-* o --hb-* (§3)", test: (l) => /#[0-9a-fA-F]{3,8}\b(?![\w-])/.test(l) && !/&#/.test(l) && !definesToken(l) },
+  { id: "rgb-fijo", why: "rgb()/rgba() fijo: usa un token o rgb(var(--hb-accent-rgb) / alfa) (§3)", test: (l) => /\brgba?\(\s*\d/.test(l) && !definesToken(l) },
+  { id: "z-index-fijo", why: "capa con número suelto: usa var(--layer-*) (§5)", test: layerNumber },
+  { id: "prueba-escrita", why: "duración de la prueba escrita a mano: usa PRICING_CONSTANTS.trialDays", test: (l) => /\d+\s+días\s+gratis|prueba de \d+\s+días/i.test(l) },
+  { id: "estado-crudo", why: "valor interno mostrado tal cual: usa una etiqueta de lib/labels.ts", test: (l) => /(?<![=\w])\{\s*[\w.?]+\.(status|role|kind)\s*\}/.test(l) },
   { id: "degradado", why: "degradado decorativo (§15)", test: (l) => /(linear|radial|conic)-gradient|bg-(gradient|linear)-/.test(l) },
   { id: "lucide", why: "iconos de lucide: usa DuotoneIcons (§6)", test: (l) => /from\s+["']lucide-react["']/.test(l) },
   { id: "emoji", why: "emoji en la interfaz: usa un icono duotono (§15)", test: (l) => /\p{Extended_Pictographic}/u.test(l.replace(/[©®™]/g, "")) },
@@ -56,22 +66,30 @@ function walk(dir, out = []) {
   return out;
 }
 
+function scanFile(full, rules, result) {
+  const file = relative(root, full).split(sep).join("/");
+  readFileSync(full, "utf8").split(/\r?\n/).forEach((line, index) => {
+    if (line.includes("ui-ok:")) return;
+    for (const rule of rules) {
+      if (!rule.test(line)) continue;
+      result[file] ??= {};
+      result[file][rule.id] ??= [];
+      result[file][rule.id].push(index + 1);
+    }
+  });
+}
+
 function scan() {
   const result = {};
   for (const dir of scanDirs) {
     for (const full of walk(join(root, dir))) {
       const file = relative(root, full).split(sep).join("/");
       if (skipped.some((re) => re.test(file))) continue;
-      readFileSync(full, "utf8").split(/\r?\n/).forEach((line, index) => {
-        if (line.includes("ui-ok:")) return;
-        for (const rule of RULES) {
-          if (!rule.test(line)) continue;
-          result[file] ??= {};
-          result[file][rule.id] ??= [];
-          result[file][rule.id].push(index + 1);
-        }
-      });
+      scanFile(full, RULES, result);
     }
+  }
+  for (const [file, ids] of Object.entries(scanFiles)) {
+    scanFile(join(root, file), RULES.filter((r) => ids.includes(r.id)), result);
   }
   return result;
 }
