@@ -691,3 +691,26 @@ Consola sin errores nuevos. Hay dos errores viejos:
 | Navegador (`1440` claro/oscuro, `375` móvil, teclado) | `/automatizaciones`, `/calendario`, `/marcas`, `/notificaciones` y `/parrillas` verificados |
 
 - **Sin comprobar:** El banner de conflicto `409` de `SaveStatus.tsx` en navegador en vivo (cubierto por la prueba unitaria `un 409 conserva el cambio hasta que la persona elige`).
+
+## Plan anti-slop y arquitectura, Fase 3 (Lote I): cola de base, parte 2 y cierre a 0 hallazgos (3 de noviembre)
+
+- **Qué hizo el lote:** `NotebookEditor.tsx` (1 → 0), `PostComposerModal.tsx` (4 → 0), `media/MediaLibrary.tsx` (3 → 0), `media/MediaPickerModal.tsx` (1 → 0), `reports/MonthlyReport.tsx` (3 → 0), `social/CalendarModals.tsx` (2 → 0), `social/ComposerExtras.tsx` (3 → 0), `social/FeedSimulator.tsx` (2 → 0), `social/IdeasBoard.tsx` (2 → 0), `social/MonthlyQuota.tsx` (1 → 0), `social/OrganicAnalytics.tsx` (3 → 0), `social/PostInbox.tsx` (2 → 0), `social/ProductionBoard.tsx` (1 → 0) y `social/SocialCalendar.tsx` (1 → 0) bajan de **29 a 0 hallazgos** en conjunto, con **0 `ui-ok`**.
+  - Se eliminaron todas las importaciones restantes de `lucide-react` en `NotebookEditor.tsx` (sustituido por texto `B`, `I`, `H2`, `1.` según §6 regla 7), `MediaLibrary.tsx`, `MediaPickerModal.tsx` y `CalendarModals.tsx` (sustituidos por `DuotoneIcons`).
+  - En `MediaLibrary.tsx`, `window.confirm(...)` se sustituyó por `askConfirm` (`AppDialogHost`) y se actualizó `web/e2e/archivos.spec.ts` para confirmar el `alertdialog` propio de Hubly.
+  - En `PostComposerModal.tsx` y `SocialCalendar.tsx`, `POST_COLORS` y `workflowColors` pasaron a tokens de acento, cielo y superficie de la guía §3.
+  - En `MonthlyReport.tsx`, `ComposerExtras.tsx`, `FeedSimulator.tsx`, `IdeasBoard.tsx`, `MonthlyQuota.tsx`, `OrganicAnalytics.tsx`, `PostInbox.tsx` y `ProductionBoard.tsx`, radios (`3px/5px → 4px/6px`) y tamaños (`9px → 10px`, `15px → 14px/16px`, `22px → 20px`) pasaron a la escala.
+- **Qué se ve distinto:**
+  - La barra del editor de libretas (`NotebookEditor`) muestra botones tipográficos `B`, `I`, `H2`, `1.` en lugar de iconos de línea de Lucide.
+  - Al eliminar archivos o carpetas en `/archivos`, se abre el diálogo de confirmación nativo de Hubly (`AppDialogHost`) en lugar del `window.confirm` del navegador.
+  - `web/scripts/check-ui-baseline.json` queda vacío (`{}`): **0 archivos con deuda** en todo el repositorio.
+
+### Verificación
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto, **0** hallazgos (de 1263 iniciales en 47 archivos a 0) |
+| `npx tsc --noEmit` | 0 errores |
+| `npm test` | 43/43 |
+| `npm run test:db` | 69/69 |
+| `npx playwright test e2e/archivos.spec.ts` | **3/3 pasan** (confirmación con `alertdialog`) |
+| `npx playwright test` | **88/88 pasan** |

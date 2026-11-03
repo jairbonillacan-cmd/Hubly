@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { X } from "lucide-react";
+import { HublyCloseIcon as X } from "@/components/app/icons/DuotoneIcons";
+import { STATUS_META } from "./status-meta";
 import { useHublyStore } from "@/lib/store";
 import { useLayer } from "@/lib/use-layer";
 import { inPeriod, periodLabel } from "@/lib/calendar-views";
@@ -257,7 +258,7 @@ export function ImportMonthModal({ brand, posts, onClose }: { brand: BrandWorksp
                   <td>{row.date ? `${row.date}${row.time ? ` ${row.time}` : ""}` : "Sin fecha"}</td>
                   <td>{row.networks.join(", ")}</td>
                   <td>{row.format}</td>
-                  <td>{row.errors.length ? <span style={{ color: "#B91C1C" }}>{row.errors.join(" ")}</span> : row.duplicate ? "Duplicado" : "Lista"}</td>
+                  <td>{row.errors.length ? <span style={{ color: STATUS_META.changes.color }}>{row.errors.join(" ")}</span> : row.duplicate ? "Duplicado" : "Lista"}</td>
                 </tr>
               ))}
             </tbody>

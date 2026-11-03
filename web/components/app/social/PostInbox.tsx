@@ -65,7 +65,7 @@ export function PostInbox({ posts }: { posts: SocialPost[] }) {
                 </button>
               </div>
               {selected.comments.map((c) => (
-                <div key={c.id} style={{ alignSelf: c.role === "agency" ? "flex-end" : "flex-start", maxWidth: "85%", background: c.role === "agency" ? "#E6F4FB" : "var(--ui-muted)", borderRadius: 12, padding: "8px 11px", fontSize: 12.5 }}>
+                <div key={c.id} style={{ alignSelf: c.role === "agency" ? "flex-end" : "flex-start", maxWidth: "85%", background: c.role === "agency" ? "var(--ui-sky-soft)" : "var(--ui-muted)", borderRadius: 12, padding: "8px 11px", fontSize: 12.5 }}>
                   <div style={{ fontWeight: 700, marginBottom: 2 }}>{c.author}</div>
                   {c.text}
                 </div>
@@ -85,7 +85,7 @@ export function PostInbox({ posts }: { posts: SocialPost[] }) {
                   aria-label="Responder comentario"
                   style={{ flex: 1, minWidth: 0, border: "1px solid var(--ui-border-strong)", borderRadius: 9, padding: "8px 11px", fontSize: 13 }}
                 />
-                <button type="submit" aria-label="Enviar respuesta" style={{ border: "none", borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "0 12px", cursor: "pointer", display: "grid", placeItems: "center" }}>
+                <button type="submit" aria-label="Enviar respuesta" style={{ border: "none", borderRadius: 9, background: "var(--hb-accent)", color: "var(--on-accent)", padding: "0 12px", cursor: "pointer", display: "grid", placeItems: "center" }}>
                   <Send size={14} />
                 </button>
               </form>

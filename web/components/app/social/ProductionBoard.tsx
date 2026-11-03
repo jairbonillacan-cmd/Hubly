@@ -37,7 +37,7 @@ export function ProductionBoard({ posts }: { posts: SocialPost[] }) {
       style={{
         background: "var(--ui-surface)",
         border: "1px solid var(--ui-border)",
-        borderRadius: 11,
+        borderRadius: 10,
         padding: "10px 12px",
         cursor: draggable ? (drag?.id === post.id ? "grabbing" : "grab") : "pointer",
         opacity: drag?.id === post.id ? 0.35 : 1,

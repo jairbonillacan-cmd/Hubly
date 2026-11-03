@@ -40,7 +40,7 @@ export function MonthlyQuota({ brand, posts, year, month }: { brand: BrandWorksp
         aria-valuemax={100}
         aria-label="Avance de la cuota"
         title={`${pct}% de la cuota`}
-        style={{ height: 8, background: "var(--ui-muted)", borderRadius: 4, marginTop: 8, overflow: "hidden" }}
+        style={{ height: 8, background: "var(--ui-muted)", borderRadius: 6, marginTop: 8, overflow: "hidden" }}
       >
         <div style={{ width: `${pct}%`, height: "100%", background: "var(--hb-accent)" }} />
       </div>

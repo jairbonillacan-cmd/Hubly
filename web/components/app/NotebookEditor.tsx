@@ -4,7 +4,10 @@ import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TaskItem } from "@tiptap/extension-task-item";
 import { TaskList } from "@tiptap/extension-task-list";
-import { Bold, Heading2, Italic, ListOrdered } from "lucide-react";
+const Bold = () => <b style={{ fontSize: 13, fontWeight: 700, lineHeight: 1 }} aria-hidden>B</b>;
+const Italic = () => <i style={{ fontSize: 13, fontWeight: 600, fontStyle: "italic", lineHeight: 1 }} aria-hidden>I</i>;
+const Heading2 = () => <b style={{ fontSize: 11.5, fontWeight: 700, lineHeight: 1 }} aria-hidden>H2</b>;
+const ListOrdered = () => <b style={{ fontSize: 11.5, fontWeight: 700, lineHeight: 1 }} aria-hidden>1.</b>;
 import { notebookToHtml } from "@/lib/notebook-content";
 import {
   HublyClipboardIcon as CheckSquare,

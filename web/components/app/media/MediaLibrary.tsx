@@ -1,7 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronRight, FileText, Folder, FolderPlus, Home, Play, RotateCcw, Search, Trash2, Upload, X } from "lucide-react";
+import {
+  HublyChevronRightIcon as ChevronRight,
+  HublyCloseIcon as X,
+  HublyDocumentIcon as FileText,
+  HublyFolderIcon as Folder,
+  HublyFolderIcon as FolderPlus,
+  HublyHomeIcon as Home,
+  HublyPlayIcon as Play,
+  HublyRefreshIcon as RotateCcw,
+  HublySearchIcon as Search,
+  HublyTrashIcon as Trash2,
+  HublyUploadIcon as Upload,
+} from "@/components/app/icons/DuotoneIcons";
+import { askConfirm } from "@/components/app/AppDialogHost";
 import { useHublyStore } from "@/lib/store";
 import { formatBytes, MAX_IMAGE_BYTES, MAX_VIDEO_BYTES, mediaFileUrl, type MediaKind, type MediaRecord } from "@/lib/media";
 import { hevcWarning, listMedia, removeMedia, updateMedia, uploadMedia, type UploadHandle } from "@/lib/media-client";
@@ -26,8 +39,7 @@ interface MediaLibraryProps {
   onCounts?: (counts: { files: number; folders: number }) => void;
 }
 
-const FOLDER_TONES = ["#16324F", "#2A76B0", "#0F766E", "#7C4A1E", "#5B3B8C"];
-const toneFor = (name: string) => FOLDER_TONES[[...name].reduce((sum, c) => sum + c.charCodeAt(0), 0) % FOLDER_TONES.length];
+const FOLDER_TONE = "var(--hb-accent)";
 
 export function MediaLibrary({ brandId, selectable = false, accept, maxSelection = 10, onSelectionChange, onCounts }: MediaLibraryProps) {
   const brand = useHublyStore((s) => s.brands.find((b) => b.id === brandId));
@@ -147,7 +159,7 @@ export function MediaLibrary({ brandId, selectable = false, accept, maxSelection
   };
 
   const remove = async (item: MediaRecord) => {
-    if (!window.confirm(`¿Eliminar «${item.name}»? Los posts que lo usan dejarán de mostrarlo.`)) return;
+    if (!(await askConfirm(`¿Eliminar «${item.name}»? Los posts que lo usan dejarán de mostrarlo.`))) return;
     try {
       await removeMedia(item.id);
       setItems((current) => current.filter((i) => i.id !== item.id));
@@ -288,7 +300,7 @@ export function MediaLibrary({ brandId, selectable = false, accept, maxSelection
                 <h3 className="hubly-media-heading">Carpetas</h3>
                 <div className="hubly-media-folders">
                   {visibleFolders.map((name) => (
-                    <button key={name} type="button" className="hubly-media-folder" style={{ background: toneFor(name) }} onClick={() => setFolder(name)}>
+                    <button key={name} type="button" className="hubly-media-folder" style={{ background: FOLDER_TONE }} onClick={() => setFolder(name)}>
                       <Folder size={18} aria-hidden />
                       <strong>{name}</strong>
                       <span>{items.filter((i) => i.folder === name).length} archivos</span>

@@ -62,7 +62,7 @@ export function FeedSimulator({ posts }: { posts: SocialPost[] }) {
               ) : (
                 <Cover kind={post.cover} />
               )}
-              <span style={{ position: "absolute", left: 4, bottom: 4, fontSize: 10.5, fontWeight: 600, color: "#FFFFFF", background: "rgba(15,23,42,0.7)", borderRadius: 5, padding: "1px 5px" }}>
+              <span style={{ position: "absolute", left: 4, bottom: 4, fontSize: 10.5, fontWeight: 600, color: "var(--on-accent)", background: "rgb(var(--hb-accent-rgb) / 0.82)", borderRadius: 5, padding: "1px 5px" }}>
                 {post.scheduledDate.slice(5)}
               </span>
             </div>

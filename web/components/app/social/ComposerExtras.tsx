@@ -5,6 +5,7 @@ import { localIsoDate } from "@/lib/date";
 import { useHublyStore } from "@/lib/store";
 import { publishing } from "@/lib/publishing/gateway";
 import type { BrandWorkspace, PostFormat, SocialNetwork, SocialPost } from "@/lib/types";
+import { STATUS_META } from "./status-meta";
 import {
   HublySparkIcon as Sparkles,
 } from "@/components/app/icons/DuotoneIcons";
@@ -91,8 +92,8 @@ export function ManualResults({ post }: { post: SocialPost }) {
           <button type="submit" disabled={!published} title={published ? undefined : "Primero marca el post como publicado"} className="hbtn hbtn-secondary hbtn-sm">Guardar resultados</button>
         </div>
       </form>
-      {error && <p role="alert" style={{ color: "#B91C1C", fontSize: 13, margin: 0 }}>{error}</p>}
-      {saved && <p role="status" style={{ color: "#15803D", fontSize: 13, margin: 0 }}>{saved}</p>}
+      {error && <p role="alert" style={{ color: STATUS_META.changes.color, fontSize: 13, margin: 0 }}>{error}</p>}
+      {saved && <p role="status" style={{ color: "var(--ui-positive-text)", fontSize: 13, margin: 0 }}>{saved}</p>}
     </div>
   );
 }
@@ -164,7 +165,7 @@ export function CaptionAssistant({
         <button type="button" disabled={busy || !brief.trim()} onClick={generate} className="hbtn hbtn-secondary hbtn-sm">{busy ? "Redactando…" : "Redactar"}</button>
         <button type="button" onClick={() => setOpen(false)} className="hbtn hbtn-ghost hbtn-sm">Cerrar</button>
       </div>
-      {error && <p role="alert" style={{ color: "#B91C1C", fontSize: 13, margin: 0 }}>{error}</p>}
+      {error && <p role="alert" style={{ color: STATUS_META.changes.color, fontSize: 13, margin: 0 }}>{error}</p>}
       {draft && (
         <>
           <p style={{ margin: 0, fontSize: 13, whiteSpace: "pre-line", color: "var(--ui-text-1)" }}>{draft}</p>

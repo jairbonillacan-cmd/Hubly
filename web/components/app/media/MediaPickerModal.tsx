@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Library, X } from "lucide-react";
+import { HublyCloseIcon as X, HublyLibraryIcon as Library } from "@/components/app/icons/DuotoneIcons";
 import type { MediaKind, MediaRecord } from "@/lib/media";
 import { useLayer } from "@/lib/use-layer";
 import { MediaLibrary } from "./MediaLibrary";

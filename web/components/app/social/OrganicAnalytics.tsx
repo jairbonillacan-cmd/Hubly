@@ -35,7 +35,7 @@ export function OrganicAnalytics({ posts }: { posts: SocialPost[] }) {
 
   return (
     <div style={{ display: "grid", gap: 16 }}>
-      <p role="note" style={{ margin: 0, fontSize: 12.5, fontWeight: 600, color: "var(--ui-accent-text)", background: "#E6F4FB", borderRadius: 10, padding: "8px 12px" }}>
+      <p role="note" style={{ margin: 0, fontSize: 12.5, fontWeight: 600, color: "var(--ui-accent-text)", background: "var(--ui-sky-soft)", borderRadius: 10, padding: "8px 12px" }}>
         {backendEnabled ? "Resultados capturados a mano en cada post." : "Datos de ejemplo: todavía no hay cuentas conectadas."}
       </p>
 
@@ -43,7 +43,7 @@ export function OrganicAnalytics({ posts }: { posts: SocialPost[] }) {
         {tiles.map((t) => (
           <div key={t.label} style={card}>
             <div style={{ fontSize: 12, color: "var(--ui-text-4)" }}>{t.label}</div>
-            <div style={{ fontSize: 26, fontWeight: 700, color: "var(--ui-text)", fontVariantNumeric: "tabular-nums" }}>{fmt(t.value)}</div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--ui-text)", fontVariantNumeric: "tabular-nums" }}>{fmt(t.value)}</div>
           </div>
         ))}
       </div>
@@ -54,8 +54,8 @@ export function OrganicAnalytics({ posts }: { posts: SocialPost[] }) {
           {bars.map(([name, reach]) => (
             <div key={name} title={`${name}: ${fmt(reach)} de alcance`} style={{ display: "grid", gridTemplateColumns: "84px minmax(0, 1fr) 64px", alignItems: "center", gap: 10, fontSize: 12.5, color: "var(--ui-text-2)" }}>
               <span>{name}</span>
-              <span style={{ height: 10, display: "block", background: "var(--ui-muted)", borderRadius: 4 }}>
-                <span style={{ display: "block", height: "100%", width: `${(reach / maxReach) * 100}%`, background: "var(--hb-accent)", borderRadius: "0 4px 4px 0" }} />
+              <span style={{ height: 10, display: "block", background: "var(--ui-muted)", borderRadius: 6 }}>
+                <span style={{ display: "block", height: "100%", width: `${(reach / maxReach) * 100}%`, background: "var(--hb-accent)", borderRadius: "0 6px 6px 0" }} />
               </span>
               <span style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{fmt(reach)}</span>
             </div>

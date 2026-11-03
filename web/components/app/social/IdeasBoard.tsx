@@ -74,7 +74,7 @@ export function IdeasBoard({ brandId, brandName }: { brandId: string; brandName:
           {brandIdeas.map((idea) => (
             <article key={idea.id} style={{ ...card, display: "flex", flexDirection: "column", gap: 8 }}>
               <span style={{ fontSize: 11.5, fontWeight: 700, color: "var(--ui-accent-text)" }}>{idea.pillar}</span>
-              <h3 style={{ fontSize: 14.5, fontWeight: 700, margin: 0 }}>{idea.title}</h3>
+              <h3 style={{ fontSize: 14, fontWeight: 700, margin: 0 }}>{idea.title}</h3>
               {idea.notes && <p style={{ fontSize: 12.5, color: "var(--ui-text-3)", margin: 0, whiteSpace: "pre-line" }}>{idea.notes}</p>}
               <div style={{ display: "flex", gap: 8, marginTop: "auto", paddingTop: 8 }}>
                 <button type="button" onClick={() => convertIdeaToPost(idea.id)} style={{ ...primary, flex: 1 }}>
@@ -108,7 +108,7 @@ const primary = {
   border: "none",
   borderRadius: 8,
   background: "var(--hb-accent)",
-  color: "#FFFFFF",
+  color: "var(--on-accent)",
   fontSize: 12.5,
   fontWeight: 600,
   padding: "8px 12px",

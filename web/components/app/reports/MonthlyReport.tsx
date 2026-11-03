@@ -24,7 +24,7 @@ export function MonthlyReportBody({ brand, report }: { brand?: BrandWorkspace; r
         {tiles.map((t) => (
           <div key={t.label} style={card}>
             <div style={{ fontSize: 12, color: "var(--ui-text-4)" }}>{t.label}</div>
-            <div style={{ fontSize: 24, fontWeight: 700, color: "var(--ui-text)", fontVariantNumeric: "tabular-nums" }}>{t.value}</div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--ui-text)", fontVariantNumeric: "tabular-nums" }}>{t.value}</div>
           </div>
         ))}
       </div>
@@ -40,8 +40,8 @@ export function MonthlyReportBody({ brand, report }: { brand?: BrandWorkspace; r
             {report.byNetwork.map((row) => (
               <div key={row.network} title={`${row.network}: ${fmt(row.reach)} de alcance en ${row.posts} posts`} style={{ display: "grid", gridTemplateColumns: "84px minmax(0, 1fr) 64px", alignItems: "center", gap: 10, fontSize: 12.5, color: "var(--ui-text-2)" }}>
                 <span>{row.network}</span>
-                <span style={{ height: 10, display: "block", background: "var(--ui-muted)", borderRadius: 4 }}>
-                  <span style={{ display: "block", height: "100%", width: `${(row.reach / maxReach) * 100}%`, background: "var(--hb-accent)", borderRadius: "0 4px 4px 0" }} />
+                <span style={{ height: 10, display: "block", background: "var(--ui-muted)", borderRadius: 6 }}>
+                  <span style={{ display: "block", height: "100%", width: `${(row.reach / maxReach) * 100}%`, background: "var(--hb-accent)", borderRadius: "0 6px 6px 0" }} />
                 </span>
                 <span style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{fmt(row.reach)}</span>
               </div>
@@ -94,7 +94,7 @@ export function MonthlyReport({ brand, posts }: { brand?: BrandWorkspace; posts:
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <input type="month" value={month} onChange={(e) => e.target.value && setMonth(e.target.value)} aria-label="Mes del reporte" style={{ border: "1px solid var(--ui-border-strong)", borderRadius: 8, padding: "5px 8px", fontSize: 13, background: "var(--ui-surface)" }} />
           {brand && (
-            <a href={`/reporte/${encodeURIComponent(brand.id)}?mes=${month}`} target="_blank" rel="noopener noreferrer" style={{ background: "var(--hb-accent)", color: "#FFFFFF", borderRadius: 8, padding: "7px 12px", fontSize: 12.5, fontWeight: 600, textDecoration: "none" }}>
+            <a href={`/reporte/${encodeURIComponent(brand.id)}?mes=${month}`} target="_blank" rel="noopener noreferrer" style={{ background: "var(--hb-accent)", color: "var(--on-accent)", borderRadius: 8, padding: "7px 12px", fontSize: 12.5, fontWeight: 600, textDecoration: "none" }}>
               Exportar PDF
             </a>
           )}

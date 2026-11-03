@@ -40,8 +40,9 @@ test("subir, encontrar y borrar un archivo real", async ({ page }) => {
   await page.getByLabel("Buscar archivos").fill(nombre);
   await expect(page.locator(".hubly-media-file", { hasText: nombre })).toBeVisible();
 
-  page.once("dialog", (d) => d.accept());
+
   await page.getByRole("button", { name: `Eliminar ${nombre}` }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Eliminar", exact: true }).click();
   await expect(page.locator(".hubly-media-file", { hasText: nombre })).toHaveCount(0);
 });
 
@@ -72,6 +73,7 @@ test("un fallo de subida ofrece reintentar", async ({ page }) => {
   await expect(page.locator(".hubly-media-queue")).toContainText("Se perdió la conexión");
   await page.getByRole("button", { name: "Reintentar" }).click();
   await expect(page.locator(".hubly-media-file", { hasText: nombre })).toBeVisible();
-  page.once("dialog", (d) => d.accept());
+
   await page.getByRole("button", { name: `Eliminar ${nombre}` }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Eliminar", exact: true }).click();
 });

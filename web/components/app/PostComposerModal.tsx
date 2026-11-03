@@ -104,7 +104,7 @@ const GLYPHS: Record<SocialNetwork, React.ReactNode> = {
 };
 
 const POST_FORMATS: PostFormat[] = ["Imagen", "Carrusel", "Reel / Video", "Story", "Texto"];
-const POST_COLORS = ["#16324F", "#2A76B0", "#0F766E", "#15803D", "#B45309", "#B91C1C", "#7C3AED", "#BE185D"];
+const POST_COLORS = ["var(--hb-accent)", "var(--hb-accent-hover)", "var(--ui-sky)", "var(--ui-sky-border)", "var(--ui-text)", "var(--ui-text-2)", "var(--ui-text-3)", "var(--ui-text-4)"];
 const FIELD_TYPES: { id: CustomFieldDefinition["type"]; label: string }[] = [
   { id: "text", label: "Texto" },
   { id: "number", label: "Número" },
@@ -974,9 +974,9 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                     type="button"
                     aria-pressed={n === previewNetwork}
                     onClick={() => setPreviewNet(n)}
-                    style={n === previewNetwork ? { background: networkSpec(n).color, color: "#FFFFFF" } : undefined}
+                    style={n === previewNetwork ? { background: networkSpec(n).color, color: "var(--on-accent)" } : undefined}
                   >
-                    <i style={{ background: n === previewNetwork ? "#FFFFFF" : networkSpec(n).color }} />
+                    <i style={{ background: n === previewNetwork ? "var(--on-accent)" : networkSpec(n).color }} />
                     {n}
                   </button>
                 ))}
@@ -989,7 +989,7 @@ export function PostComposerModal({ open: openProp, onClose: onCloseProp, initia
                   brandName: brand.name,
                   handle: (brand.handle || "tu_marca").replace("@", ""),
                   initials: brand.initials || brand.name.slice(0, 2).toUpperCase(),
-                  color: brand.color || "#16324F",
+                  color: brand.color || "var(--hb-accent)",
                   caption: captionFor(draft, previewNetwork),
                   media: previewMedia,
                   cover: draft.cover,

@@ -241,7 +241,8 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
   const addWorkflowStatus = async () => {
     const name = await askText("Nombre del nuevo estatus", "", "Crear");
     if (!name?.trim()) return;
-    updateBrand(brand.id, { workflowStatuses: [...workflow, { id: `wf-${Date.now()}`, name: name.trim(), color: ["#2A76B0", "#0F766E", "#7C3AED", "#BE185D"][workflow.length % 4] }] });
+    const workflowColors = ["var(--hb-accent)", "var(--hb-accent-hover)", "var(--ui-sky)", "var(--ui-text-3)"];
+    updateBrand(brand.id, { workflowStatuses: [...workflow, { id: `wf-${Date.now()}`, name: name.trim(), color: workflowColors[workflow.length % workflowColors.length] }] });
   };
 
   const renderUndated = () =>
