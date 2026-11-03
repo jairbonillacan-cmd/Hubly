@@ -16,7 +16,16 @@ Medido el 1 de noviembre de 2026. Las cifras vivas están en [SEGUIMIENTO.md](SE
 ## Diagnóstico
 
 ### 1. Un store que lo sabe todo
-`web/lib/store.ts` tiene 2,304 líneas y 125 miembros de 15 dominios, y lo usan 66 archivos. Mezcla datos, ventanas abiertas, sincronización y reglas de negocio.
+`web/lib/store.ts` tiene 2,304 líneas y 148 claves en el store recién creado (158 con un documento completo hidratado), de 15 dominios, y lo usan 66 archivos. Mezcla datos, ventanas abiertas, sincronización y reglas de negocio.
+
+**Medición** (`Object.keys(useHublyStore.getState())`, 1 de noviembre de 2026):
+
+- **106 acciones**, todas funciones.
+- **23 claves de datos guardados**, exactamente las de `INITIAL_WORKSPACE_DATA`: `activeBrandId`, `activityEvents`, `ads`, `agency`, `agencyName`, `appliedRecommendationsMap`, `assets`, `brands`, `channels`, `dismissedRecommendationIds`, `invitations`, `messages`, `notebooks`, `notifications`, `onboarding`, `posts`, `profile`, `projects`, `tasks`, `team`, `testClock`, `widgets`, `workspaceId`.
+- **19 claves de estado de interfaz**: `activeNotebookId`, `aiDrawerOpen`, `aiDrawerPrompt`, `autoSuggestionsModalOpen`, `cmdkOpen`, `composerDefaultDate`, `composerDirty`, `composerOpen`, `composerPending`, `dashboardWidgets`, `editWidgetsMode`, `editingPostId`, `hydrated`, `inviteModalOpen`, `isReferenceFixture`, `newBrandModalOpen`, `role`, `teamMembers`, `widgetConfigModalOpen`.
+- **10 claves opcionales**, que no están en `INITIAL_WORKSPACE_DATA` y son datos, no interfaz: `schemaVersion`, `ideas`, `leads`, `quotes`, `automations`, `agents`, `taskLists`, `calendarActivities`, `chatScheduled` y `chatReminders`. Las rellena `normalizeWorkspacePayload` al hidratar un documento completo, y también las escriben acciones del store (`addIdea`, `saveLead`, `addTaskList`, `flushChatQueue`, `runAutomations`…); `schemaVersion` es la excepción: la pone la normalización y no la escribe ninguna acción.
+
+La cifra anterior, 125, contaba solo los miembros declarados en `HublyStoreState` (106 acciones y 19 claves de interfaz) y dejaba fuera las 23 claves de datos que llegan al estado inicial por `...INITIAL_WORKSPACE_DATA` (la interfaz `HublyWorkspaceData` declara esas 23 requeridas más las 10 opcionales).
 
 **Consecuencia:** cualquier cambio exige entender todo el archivo, y las reglas de negocio no se pueden probar por separado.
 

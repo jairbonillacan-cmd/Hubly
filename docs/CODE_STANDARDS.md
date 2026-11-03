@@ -1,6 +1,6 @@
 # Estándares de código
 
-La interfaz se rige por [GUIA-UX-UI-AGENTES.md](GUIA-UX-UI-AGENTES.md). Aquí va lo demás. Lo que se puede comprobar lo hace CI.
+La interfaz se rige por [GUIA-UX-UI-AGENTES.md](GUIA-UX-UI-AGENTES.md). Aquí va lo demás. Lo que se puede comprobar lo hace CI, y las reglas de la estructura objetivo están en [docs/deslop/02-ARQUITECTURA-OBJETIVO.md](deslop/02-ARQUITECTURA-OBJETIVO.md).
 
 ## Antes de crear
 - Busca una función, componente o clase parecida. Si existe y sirve, se usa.
@@ -9,6 +9,20 @@ La interfaz se rige por [GUIA-UX-UI-AGENTES.md](GUIA-UX-UI-AGENTES.md). Aquí va
 
 ## Componentes
 Usa `web/components/app/ui/` antes de escribir marcado propio. Si un patrón se repite tres veces y no está, se añade ahí.
+
+- Una sección recibe props explícitas, no un objeto `view` con todo el estado de la pantalla. Más de 7 props suele significar que hace demasiado.
+- La pantalla lee del store y reparte datos; la sección no conoce el store, salvo para evitar pasar props por más de dos niveles.
+- `useHublyStore` siempre con selector. `useHublyStore()` suscribe a todo el store y está prohibido.
+
+## Estilos
+- Un color, un tamaño o un radio salen de un token y su escala ([§3 a §5](GUIA-UX-UI-AGENTES.md)).
+- `style={{ }}` solo para un valor calculado, como el color de una marca o el ancho de una barra. Para maquetar, una clase con tokens.
+- `!important` solo con un comentario que diga contra qué pelea, y una regla `html.dark` solo si el token no alcanza.
+- Cada `<dominio>.css` se importa en `(app)/layout.tsx`, en orden fijo: no desde la pantalla, para que la cascada no cambie al navegar.
+
+## Store y datos
+- Un slice compone; las reglas de negocio van a `lib/domain/`, con pruebas.
+- No cambies la forma de los datos guardados ni el nombre de sus campos en un refactor.
 
 ## Tamaño
 - Hasta 400 líneas por archivo. Los que ya pasan no pueden crecer (`npm run check:size`).
@@ -21,7 +35,11 @@ Usa `web/components/app/ui/` antes de escribir marcado propio. Si un patrón se 
 - Datos externos se validan en la frontera, con tope de tamaño (`readJson`, `readBodyText`).
 
 ## Deuda
-Las bases de `check:ui` y `check:size` y el tope de avisos de `lint` solo bajan. CI lo verifica en cada PR (`scripts/check-deuda.mjs`).
+Las bases de `check:ui`, `check:capas` y `check:size`, y el tope de avisos de `lint`, solo bajan. CI lo verifica en cada PR con `scripts/check-deuda.mjs`, que compara por regla y también frena cualquier exención nueva de `ui-ok:` o `eslint-disable`.
+
+- `check:ui` mide `app/(app)` y `components/app` con `scripts/check-ui-baseline.json`, y las rutas fuera de `(app)` con `scripts/check-ui-rutas-baseline.json`. Son dos bases: no mezcles una con otra.
+- Las reglas que llegaron en F0-3 (`style-inline`, `important`, `view-prop`, `use-store-sin-selector`) miden deuda ya existente; `node scripts/medir-deslop.mjs` imprime su total aparte del de las reglas de siempre.
+- Mover o partir un archivo con deuda sigue el protocolo de [03-REGLAS-PARA-AGENTES.md](deslop/03-REGLAS-PARA-AGENTES.md): commit de movimiento, `--update` y `check-deuda` en verde.
 
 ## Terminado
 Cumple lo pedido, reutiliza lo existente, valida en servidor, pasa las comprobaciones y su entrega dice qué se verificó y qué no. Que compile no significa que funcione.
