@@ -17,24 +17,57 @@ type Guardado = {
   notebooks: { title: string; content: string }[];
 };
 
-const signUp = async (email: string) =>
-  (await (await fetch(`${MOCK}/auth/v1/signup`, { method: "POST", headers: KEY, body: JSON.stringify({ email, password: "clave-de-prueba", data: { name: email.split("@")[0] } }) })).json()) as { access_token: string; user: { id: string } };
-
-const rpc = async (token: string, fn: string, body: object) => {
-  const res = await fetch(`${MOCK}/rest/v1/rpc/${fn}`, { method: "POST", headers: { ...KEY, Authorization: `Bearer ${token}` }, body: JSON.stringify(body) });
+/** El simulador contesta el error en el cuerpo: que la siembra falle aquí y no más tarde. */
+async function respuesta(res: Response, que: string): Promise<unknown> {
+  if (!res.ok) {
+    const detalle = (await res.text()).slice(0, 300).replace(/\s+/g, " ").trim();
+    throw new Error(`${que}: ${res.status} ${res.statusText}${detalle ? ` — ${detalle}` : ""}`);
+  }
   return res.json();
+}
+
+const signUp = async (email: string) =>
+  (await respuesta(
+    await fetch(`${MOCK}/auth/v1/signup`, {
+      method: "POST",
+      headers: KEY,
+      body: JSON.stringify({ email, password: "clave-de-prueba", data: { name: email.split("@")[0] } }),
+    }),
+    `no se pudo crear la cuenta ${email}`
+  )) as { access_token: string; user: { id: string } };
+
+const rpc = async (token: string, fn: string, body: object, que: string) => {
+  const res = await fetch(`${MOCK}/rest/v1/rpc/${fn}`, {
+    method: "POST",
+    headers: { ...KEY, Authorization: `Bearer ${token}` },
+    body: JSON.stringify(body),
+  });
+  return respuesta(res, que);
 };
 
 /** Cada flujo estrena agencia: un fallo no arrastra a los demás ni hereda datos de otro. */
 async function cuenta(nombre: string) {
   const email = `${nombre}${unique}@prueba.test`;
   const user = await signUp(email);
-  const agencyId = (await rpc(user.access_token, "create_agency", { agency_name: `Agencia ${nombre}` })) as string;
-  await rpc(user.access_token, "save_workspace", {
-    target_agency: agencyId,
-    new_data: { brands: [{ id: "m1", name: "Marca base", handle: "@marca-base", initials: "MB", color: "#16324F" }], posts: [], tasks: [] },
-    expected_version: 1,
-  });
+  const agencyId = await rpc(
+    user.access_token,
+    "create_agency",
+    { agency_name: `Agencia ${nombre}` },
+    `no se pudo crear la agencia de ${email}`
+  );
+  if (typeof agencyId !== "string" || !agencyId) {
+    throw new Error(`no se pudo crear la agencia de ${email}: respuesta inesperada`);
+  }
+  await rpc(
+    user.access_token,
+    "save_workspace",
+    {
+      target_agency: agencyId,
+      new_data: { brands: [{ id: "m1", name: "Marca base", handle: "@marca-base", initials: "MB", color: "#16324F" }], posts: [], tasks: [] },
+      expected_version: 1,
+    },
+    `no se pudo sembrar la agencia de ${email}`
+  );
   return email;
 }
 
@@ -175,7 +208,16 @@ test("crear una libreta: se guarda y sigue tras recargar", async ({ browser }) =
 
   await expect(page.locator("button", { hasText: titulo }).first()).toBeVisible();
   await expect.poll(async () => (await guardado(page)).notebooks.map((n) => n.title)).toContain(titulo);
+  await expect
+    .poll(async () => (await guardado(page)).notebooks.find((n) => n.title === titulo)?.content)
+    .toContain("Acuerdos de la semana");
 
   await page.reload();
-  await expect(page.locator("button", { hasText: titulo }).first()).toBeVisible();
+  const tarjeta = page.locator("button", { hasText: titulo }).first();
+  await expect(tarjeta).toBeVisible();
+  await expect(tarjeta).toContainText("Acuerdos de la semana");
+  await tarjeta.click();
+  await expect(page.getByRole("textbox", { name: "Contenido de la libreta" })).toContainText(
+    "Acuerdos de la semana"
+  );
 });

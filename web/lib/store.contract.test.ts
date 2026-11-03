@@ -19,7 +19,10 @@ import type {
   BrandWorkspace,
   DashboardWidgetConfig,
   HublyWorkspaceData,
+  NotebookItem,
   PeriodCommitmentSnapshot,
+  SocialPost,
+  TaskItem,
   TeamMember,
 } from "./types";
 
@@ -204,6 +207,98 @@ function estadoFijo(): HublyWorkspaceData {
     },
     dismissedRecommendationIds: [], appliedRecommendationsMap: {},
   };
+}
+
+/**
+ * Los anidados de una marca: núcleo (voz, estrategia, pilares), compromisos con
+ * su historial y las métricas propias, y bioLink con sus botones.
+ */
+function marcaCompleta(): BrandWorkspace {
+  const base = marca();
+  return {
+    ...base,
+    mediaFolders: ["General", "Campañas"],
+    workflowStatuses: [{ id: "wf-uno", name: "En diseño", color: "#f59e0b" }],
+    customFieldDefinitions: [{ id: "cf-uno", name: "Origen", type: "text" }],
+    monthlySpend: 500,
+    status: "Activa",
+    pinned: true,
+    archived: false,
+    commitments: {
+      ...base.commitments,
+      customMetrics: [{ id: "cm-uno", name: "Alcance", unit: "personas", value: 1000 }],
+      periodHistory: {
+        ...base.commitments.periodHistory,
+        mes_actual: {
+          ...base.commitments.periodHistory.mes_actual,
+          adSpend: 100, reachTotal: 5_000, clicksTotal: 120,
+          landingPageViewsPerWeek: 30, clicksPerWeek: 12,
+        },
+      },
+    },
+    bioLink: {
+      ...base.bioLink,
+      buttons: [{ id: "boton-uno", label: "Comprar", url: "https://marca-uno.ejemplo/tienda" }],
+    },
+  };
+}
+
+/** Un post con el copy por red, la multimedia y los avisos que viajan al documento. */
+function postCompleto(): SocialPost {
+  return {
+    id: "post-uno", brandId: "marca-uno", title: "Post completo", caption: "Copy general",
+    network: "Instagram", networks: ["Instagram", "Facebook"], format: "Carrusel", cover: "steam",
+    scheduledDate: HOY, scheduledTime: "10:00", status: "published", statusLabel: "Publicado",
+    assignee: "Ana Ruiz", authorId: "perfil-uno", approverName: "Beto Lara", pillar: "Producto",
+    metrics: { reach: 100, likes: 10, comments: 2, saves: 1, shares: 1 },
+    comments: [{ id: "pc-uno", author: "Ana Ruiz", role: "agency", text: "Listo", createdAt: RELOJ }],
+    mediaUrl: "https://medios.ejemplo/portada.png", publishedUrl: "https://redes.ejemplo/p/1",
+    metricsSource: "manual", notifyOnPublish: true, notifyMemberIds: ["tm-uno"],
+    notes: "Pendiente de arte",
+    todos: [{ id: "todo-uno", text: "Revisar arte", done: false, assigneeId: "tm-uno" }],
+    documents: [{ id: "doc-uno", name: "Guion", url: "https://medios.ejemplo/guion", folder: "General" }],
+    chat: [{ id: "pch-uno", author: "Ana Ruiz", text: "Va bien", at: RELOJ }],
+    activity: [{ id: "pa-uno", author: "Ana Ruiz", text: "Creó el post", at: RELOJ }],
+    media: [{ id: "media-uno", kind: "image", name: "Arte", assetId: "asset-uno", url: "https://medios.ejemplo/arte.png" }],
+    platformSettings: {
+      Instagram: { caption: "Copy para Instagram", collaborators: ["@marca"] },
+      Facebook: { caption: "Copy para Facebook", link: "https://ejemplo.com" },
+    },
+    workflowStatusId: "wf-uno",
+    assigneeIds: ["tm-uno"], color: "#16a34a",
+    customFields: { origen: "brief", prioridad: 2, aprobado: true, nota: null },
+  };
+}
+
+/** Una tarea con la persona, la lista y el tiempo que se guardan. */
+function tareaCompleta(): TaskItem {
+  return {
+    id: "task-uno", brandId: "marca-uno", title: "Tarea completa",
+    description: "Detalle de la tarea", dueLabel: "Hoy", dueDate: HOY, dueBucket: "today",
+    assignee: "Ana Ruiz", assigneeId: "tm-uno", assigneeName: "Ana Ruiz", assigneeInitial: "A",
+    listName: "Primeros pasos", listId: "list-uno", status: "done", priority: "alta",
+    completed: true, completedAt: RELOJ, estimatedMinutes: 30, spentMinutes: 10,
+    highlighted: true, tags: ["Marca Uno", "Urgente"],
+  };
+}
+
+/** Una libreta con contenido: lo que la prueba de F0-4 dejó de comprobar. */
+function libretaCompleta(): NotebookItem {
+  return {
+    id: "nb-uno", brandId: "marca-uno", title: "LIBRETA COMPLETA",
+    subtitle: "N° 01 · OCT 26", stamp: "N° 01 · OCT 26", variant: "space", category: "Ideas",
+    content: "<p>Acuerdos de la semana</p>",
+    bgGradient: "linear-gradient(180deg, #D9B78A 0%, #C79F6E 100%)",
+    accentColor: "#10B981", updatedAt: RELOJ, updatedBy: "Ana Ruiz", isPinned: true,
+  };
+}
+
+/** Widgets con título, descripción, medida y los campos opcionales. */
+function widgetsCompletos(): DashboardWidgetConfig[] {
+  return [
+    { ...widget("tareas", 1), description: "Pendientes del equipo", span: 2, metric: "ctr" },
+    { ...widget("posts", 2), title: "Publicaciones", description: "Posts del mes", visible: false, enabled: false },
+  ];
 }
 
 /** Vuelve al estado fijo: sin esto, cada prueba arrastraría lo de la anterior. */
@@ -638,6 +733,84 @@ test("el documento guardado lleva todos los campos de siempre", async () => {
   assert.equal(documento.schemaVersion, 2);
   assert.equal(documento.workspaceId, "prueba");
   assert.equal((documento.notifications as unknown[]).length, 3);
+});
+
+/**
+ * F0-5 fijaba los campos de primer nivel; un `extractWorkspaceData` que recortara
+ * un objeto anidado seguía pasando. Estas claves llegan al documento tal cual del
+ * estado, así que aquí se comparan enteras: voz y pilares de una marca, copy por
+ * red y multimedia de un post, persona y tiempo de una tarea, contenido de una
+ * libreta o descripción de un widget.
+ */
+const CLAVES_ANIDADAS = [
+  "profile", "agency", "testClock", "brands", "posts", "ideas", "leads",
+  "quotes", "automations", "agents", "tasks", "taskLists", "calendarActivities",
+  "notebooks", "assets", "projects", "ads", "channels", "messages",
+  "chatScheduled", "chatReminders", "team", "invitations", "activityEvents",
+  "notifications", "widgets", "onboarding", "dismissedRecommendationIds", "appliedRecommendationsMap",
+] as const;
+
+test("el documento guardado conserva los campos anidados", async () => {
+  const { useHublyStore } = await cargar();
+  reiniciar(useHublyStore);
+  // La secuencia llena las colecciones que el estado fijo deja vacías; después se
+  // reponen las que la secuencia vacía al final y se ejercitan libretas con contenido.
+  ejecutarSecuencia(useHublyStore);
+  useHublyStore.setState({
+    brands: [marcaCompleta()],
+    posts: [postCompleto()],
+    tasks: [tareaCompleta()],
+    notebooks: [{ ...libretaCompleta(), content: "<p>Borrador</p>" }],
+    widgets: widgetsCompletos(),
+    ads: [
+      {
+        id: "ad-uno", brandId: "marca-uno", name: "Anuncio Uno", platform: "Meta",
+        cover: "cup", status: "Activo", spend: 100, results: 10,
+        resultLabel: "Conversiones", cpa: 10, ctr: 2.5, clickScore: 80, hookScore: 85,
+      },
+    ],
+    agents: [
+      {
+        id: "ag-uno", name: "Asistente", templateId: "tpl-uno", purpose: "Redacción",
+        cadence: "Diaria", notes: ["Usar voz cercana"],
+        messages: [{ id: "am-uno", role: "user", text: "Hola" }], createdAt: RELOJ,
+      },
+    ],
+  });
+  const acciones = useHublyStore.getState();
+  acciones.addTaskList("marca-uno", "Primeros pasos");
+  acciones.addChatReminder({
+    channelId: "ch-equipo", messageId: "msg-uno", text: "Dar seguimiento", remindAt: MOMENTO + 60_000, authorId: "perfil-uno",
+  });
+  acciones.saveQuote({
+    leadId: "lead-uno", title: "Cotización con partidas", status: "Enviada",
+    items: [{ id: "qi-uno", description: "Mensualidad", quantity: 1, unitPrice: 1200 }],
+  });
+  const creada = acciones.addNotebook({
+    brandId: "marca-uno", title: "Libreta con cuerpo", content: "<p>Contenido inicial</p>",
+  });
+  assert.equal(creada.content, "<p>Contenido inicial</p>");
+  acciones.updateNotebook("nb-uno", { content: "<p>Acuerdos de la semana</p>" });
+  assert.equal(
+    useHublyStore.getState().notebooks.find((n) => n.id === "nb-uno")?.content,
+    "<p>Acuerdos de la semana</p>",
+  );
+  // Una acción normal vuelca el estado completo en el documento y en el almacenamiento local.
+  acciones.updateAgency({ name: "Agencia Prueba" });
+  const documento = guardados[guardados.length - 1];
+  assert.ok(documento, "la acción tenía que guardar");
+  const crudo = almacen.get("hubly:workspace:v3:prueba");
+  assert.ok(crudo, "saveWorkspaceToStorage tenía que escribir en localStorage");
+  const normalizado = JSON.parse(crudo) as Record<string, unknown>;
+  const estado = JSON.parse(JSON.stringify(useHublyStore.getState())) as Record<string, unknown>;
+  for (const clave of CLAVES_ANIDADAS) {
+    if (Array.isArray(estado[clave])) {
+      assert.ok((estado[clave] as unknown[]).length > 0, `${clave} quedó vacío en la prueba`);
+    }
+    assert.deepEqual(documento[clave], estado[clave], `el documento perdió ${clave}`);
+  }
+  assert.deepEqual(normalizado.posts, estado.posts, "saveWorkspaceToStorage perdió campos de posts");
+  assert.deepEqual(normalizado.notebooks, estado.notebooks, "saveWorkspaceToStorage perdió campos de notebooks");
 });
 
 test("addBrand crea la marca con su canal, su evento y un solo guardado", async () => {
