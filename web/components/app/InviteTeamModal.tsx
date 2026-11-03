@@ -4,7 +4,9 @@ import React, { useEffect, useId, useRef, useState } from "react";
 import { useHublyStore } from "@/lib/store";
 import { LiveInviteRedirect } from "@/components/app/LiveUnavailable";
 import { backendEnabled } from "@/lib/supabase/config";
+import { useLayer } from "@/lib/use-layer";
 import { useModalPresence } from "@/lib/use-modal-presence";
+import { STATUS_META } from "@/components/app/social/status-meta";
 import type { TeamInvitation } from "@/lib/types";
 import {
   HublyCheckIcon as Check,
@@ -97,7 +99,6 @@ function DemoInviteTeamModal({
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
-  const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
   const [suppressedAsFallback, setSuppressedAsFallback] = useState(false);
 
@@ -144,6 +145,8 @@ function DemoInviteTeamModal({
     }
   };
 
+  useLayer(isOpen, handleClose);
+
   useEffect(() => {
     if (!isOpen) return;
     setEmail("");
@@ -160,12 +163,10 @@ function DemoInviteTeamModal({
     setCreatedInvitation(null);
   }, [isOpen, defaultRole, activeBrandId, brands]);
 
-  // Focus trap, Escape key, Initial focus & Scroll lock
+  // Initial focus & Scroll lock
   useEffect(() => {
     if (!isOpen) return;
 
-    previousActiveElementRef.current =
-      document.activeElement as HTMLElement | null;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -178,58 +179,40 @@ function DemoInviteTeamModal({
       }
     });
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        e.stopPropagation();
-        handleClose();
-        return;
-      }
-
-      if (e.key === "Tab") {
-        const focusables = getFocusableElements(dialogRef.current);
-        if (focusables.length === 0) {
-          e.preventDefault();
-          return;
-        }
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        const active = document.activeElement as HTMLElement | null;
-
-        if (e.shiftKey) {
-          if (!active || active === first || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (!active || active === last || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown, true);
-
     return () => {
       window.cancelAnimationFrame(rafId);
-      document.removeEventListener("keydown", handleKeyDown, true);
       const remainingDialogs = document.querySelectorAll(
         '[role="dialog"][aria-modal="true"]'
       );
       if (remainingDialogs.length <= 1) {
         document.body.style.overflow = prevOverflow || "";
       }
-      const prevEl = previousActiveElementRef.current;
-      if (prevEl && document.body.contains(prevEl)) {
-        window.requestAnimationFrame(() => {
-          prevEl.focus();
-        });
-      }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "Tab") return;
+    const focusables = getFocusableElements(dialogRef.current);
+    if (focusables.length === 0) {
+      e.preventDefault();
+      return;
+    }
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    const active = document.activeElement as HTMLElement | null;
+
+    if (e.shiftKey) {
+      if (!active || active === first || !dialogRef.current?.contains(active)) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (!active || active === last || !dialogRef.current?.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  };
 
   const presence = useModalPresence(isOpen);
   if (!presence.mounted) return null;
@@ -332,38 +315,29 @@ function DemoInviteTeamModal({
 
   return (
     <div
-      className="hubly-overlay"
+      className="hubly-overlay hubly-cal-overlay"
       data-state={presence.state}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) handleClose();
       }}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 110,
-        background: "rgba(15, 23, 42, 0.45)",
-        backdropFilter: "blur(4px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 16,
-      }}
     >
       <div
         ref={dialogRef}
-        className="hubly-sheet"
+        className="hubly-sheet hubly-cal-modal"
         data-state={presence.state}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        onKeyDown={handleKeyDown}
         style={{
           width: "100%",
           maxWidth: 620,
           maxHeight: "92vh",
+          padding: 0,
+          gap: 0,
           background: "var(--ui-surface)",
-          borderRadius: 20,
+          borderRadius: 24,
           border: "1px solid var(--ui-border)",
-          boxShadow: "0 24px 60px rgba(15, 23, 42, 0.22)",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
@@ -455,19 +429,19 @@ function DemoInviteTeamModal({
             style={{
               padding: "10px 14px",
               borderRadius: 12,
-              background: "#F1F9FD",
-              border: "1px solid #BFE2F4",
+              background: "var(--ui-sky-soft)",
+              border: "1px solid var(--ui-sky-border)",
               display: "flex",
               alignItems: "flex-start",
               gap: 10,
               fontSize: 12,
               lineHeight: 1.45,
-              color: "var(--hb-accent-edge)",
+              color: "var(--ui-sky-text)",
             }}
           >
             <Info
               size={15}
-              style={{ color: "var(--ui-accent-text-2)", flexShrink: 0, marginTop: 1 }}
+              style={{ color: "var(--hb-accent-text)", flexShrink: 0, marginTop: 1 }}
             />
             <div>
               <strong style={{ fontWeight: 700 }}>
@@ -487,7 +461,7 @@ function DemoInviteTeamModal({
                 padding: 14,
                 borderRadius: 14,
                 background: "var(--ui-accent-soft)",
-                border: "1px solid #BFE2F4",
+                border: "1px solid var(--ui-sky-border)",
                 display: "flex",
                 flexDirection: "column",
                 gap: 10,
@@ -508,7 +482,7 @@ function DemoInviteTeamModal({
                       height: 24,
                       borderRadius: 9999,
                       background: "var(--hb-accent)",
-                      color: "#FFFFFF",
+                      color: "var(--on-accent)",
                       display: "grid",
                       placeItems: "center",
                     }}
@@ -537,8 +511,8 @@ function DemoInviteTeamModal({
                   style={{
                     padding: "2px 8px",
                     borderRadius: 9999,
-                    background: "#E6F4FB",
-                    color: "var(--ui-accent-text)",
+                    background: "var(--ui-sky-soft)",
+                    color: "var(--ui-sky-text)",
                     fontSize: 11,
                     fontWeight: 700,
                   }}
@@ -555,7 +529,7 @@ function DemoInviteTeamModal({
                   background: "var(--ui-surface)",
                   padding: "7px 10px",
                   borderRadius: 10,
-                  border: "1px solid #BFE2F4",
+                  border: "1px solid var(--ui-sky-border)",
                 }}
               >
                 <Link2 size={14} style={{ color: "var(--hb-accent-text)", flexShrink: 0 }} />
@@ -572,7 +546,6 @@ function DemoInviteTeamModal({
                     fontSize: 12,
                     color: "var(--ui-text-2)",
                     outline: "none",
-                    fontFamily: "monospace",
                   }}
                 />
                 <button
@@ -583,8 +556,10 @@ function DemoInviteTeamModal({
                     borderRadius: 8,
                     border: "none",
                     background:
-                      copiedId === createdInvitation.id ? "#16A34A" : "var(--hb-accent)",
-                    color: "#FFFFFF",
+                      copiedId === createdInvitation.id
+                        ? STATUS_META.approved.color
+                        : "var(--hb-accent)",
+                    color: "var(--on-accent)",
                     fontSize: 11.5,
                     fontWeight: 600,
                     cursor: "pointer",
@@ -597,7 +572,7 @@ function DemoInviteTeamModal({
                   {copiedId === createdInvitation.id ? (
                     <>
                       <Check size={12} />
-                      <span>¡Copiado!</span>
+                      <span>Copiado</span>
                     </>
                   ) : (
                     <>
@@ -622,9 +597,9 @@ function DemoInviteTeamModal({
                 style={{
                   padding: "10px 14px",
                   borderRadius: 10,
-                  background: "#FEF2F2",
-                  border: "1px solid #FECACA",
-                  color: "#B91C1C",
+                  background: STATUS_META.changes.bg,
+                  border: `1px solid ${STATUS_META.changes.color}`,
+                  color: STATUS_META.changes.color,
                   fontSize: 12.5,
                   fontWeight: 600,
                 }}
@@ -819,7 +794,7 @@ function DemoInviteTeamModal({
                         borderRadius: 10,
                         border: checked
                           ? "1px solid var(--hb-accent)"
-                          : "1px solid #E2E8F0",
+                          : "1px solid var(--ui-border)",
                         background: checked ? "var(--ui-accent-soft)" : "var(--ui-surface)",
                         cursor: "pointer",
                         textAlign: "left",
@@ -839,7 +814,7 @@ function DemoInviteTeamModal({
                             height: 22,
                             borderRadius: 6,
                             background: b.color,
-                            color: "#FFFFFF",
+                            color: "var(--on-accent)",
                             fontSize: 10,
                             fontWeight: 700,
                             display: "grid",
@@ -870,9 +845,9 @@ function DemoInviteTeamModal({
                           borderRadius: 5,
                           border: checked
                             ? "none"
-                            : "1.5px solid #CBD5E1",
+                            : "1.5px solid var(--ui-border-strong)",
                           background: checked ? "var(--hb-accent)" : "var(--ui-surface)",
-                          color: "#FFFFFF",
+                          color: "var(--on-accent)",
                           display: "grid",
                           placeItems: "center",
                           flexShrink: 0,
@@ -952,8 +927,8 @@ function DemoInviteTeamModal({
                           style={{
                             padding: "1px 7px",
                             borderRadius: 9999,
-                            background: "#E6F4FB",
-                            color: "var(--ui-accent-text)",
+                            background: "var(--ui-sky-soft)",
+                            color: "var(--ui-sky-text)",
                             fontSize: 10.5,
                             fontWeight: 700,
                           }}
@@ -1000,9 +975,9 @@ function DemoInviteTeamModal({
                           width: 26,
                           height: 26,
                           borderRadius: 7,
-                          border: "1px solid #FECACA",
-                          background: "#FEF2F2",
-                          color: "#DC2626",
+                          border: `1px solid ${STATUS_META.changes.color}`,
+                          background: STATUS_META.changes.bg,
+                          color: STATUS_META.changes.color,
                           display: "grid",
                           placeItems: "center",
                           cursor: "pointer",
@@ -1064,7 +1039,7 @@ function DemoInviteTeamModal({
                 borderRadius: 10,
                 border: "none",
                 background: "var(--hb-accent)",
-                color: "#FFFFFF",
+                color: "var(--on-accent)",
                 fontSize: 12.5,
                 fontWeight: 600,
                 cursor: "pointer",

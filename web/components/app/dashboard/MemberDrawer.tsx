@@ -1,14 +1,17 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useHublyStore } from "@/lib/store";
 import { addDays, dueLabelFor, localIsoDate } from "@/lib/date";
+import { useLayer } from "@/lib/use-layer";
+import { useModalPresence } from "@/lib/use-modal-presence";
+import { STATUS_META } from "@/components/app/social/status-meta";
 import {
   HublyCloseIcon as X,
 } from "@/components/app/icons/DuotoneIcons";
 
 const HEATMAP_DAYS = 49;
-const STEPS = ["#F1F5F9", "#BFE2F4", "#9099D3", "var(--hb-accent)", "var(--hb-accent-edge)"];
+const STEPS = ["var(--ui-muted)", "var(--ui-sky-soft)", "var(--ui-sky-border)", "var(--ui-sky)", "var(--hb-accent)"];
 const stepFor = (count: number) => (count === 0 ? 0 : count === 1 ? 1 : count <= 3 ? 2 : count <= 6 ? 3 : 4);
 
 export function MemberDrawer({ memberId, onClose }: { memberId: string; onClose: () => void }) {
@@ -17,13 +20,9 @@ export function MemberDrawer({ memberId, onClose }: { memberId: string; onClose:
   const events = useHublyStore((s) => s.activityEvents);
   const tasks = useHublyStore((s) => s.tasks);
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  const isOpen = Boolean(member);
+  const presence = useModalPresence(isOpen);
+  useLayer(isOpen, onClose);
 
   const today = localIsoDate();
   const days = useMemo(() => {
@@ -39,7 +38,7 @@ export function MemberDrawer({ memberId, onClose }: { memberId: string; onClose:
     });
   }, [events, memberId, today]);
 
-  if (!member) return null;
+  if (!presence.mounted || !member) return null;
   const total = days.reduce((s, d) => s + d.count, 0);
   const activeDays = days.filter((d) => d.count > 0).length;
   const memberBrands = brands.filter((b) => member.brandIds?.includes(b.id));
@@ -49,14 +48,23 @@ export function MemberDrawer({ memberId, onClose }: { memberId: string; onClose:
 
   return (
     <div
+      className="hubly-overlay hubly-cal-overlay"
+      data-state={presence.state}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(15,23,42,0.4)", display: "flex", justifyContent: "flex-end" }}
+      style={{ zIndex: "var(--layer-drawer)", justifyContent: "flex-end", alignItems: "stretch", padding: 0 }}
     >
-      <aside role="dialog" aria-modal="true" aria-label={`Perfil de ${member.name}`} style={{ width: "100%", maxWidth: 440, height: "100%", overflowY: "auto", background: "var(--ui-surface)", padding: 22, display: "grid", gap: 18, alignContent: "start" }}>
+      <aside
+        className="hubly-drawer"
+        data-state={presence.state}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Perfil de ${member.name}`}
+        style={{ width: "100%", maxWidth: 440, height: "100%", overflowY: "auto", background: "var(--ui-surface)", borderLeft: "1px solid var(--ui-border)", padding: 22, display: "grid", gap: 18, alignContent: "start", color: "var(--ui-text)" }}
+      >
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ width: 46, height: 46, borderRadius: 999, background: member.avatarColor || "var(--hb-accent)", color: "#FFFFFF", display: "grid", placeItems: "center", fontWeight: 700 }}>{member.initials}</span>
+          <span style={{ width: 46, height: 46, borderRadius: 999, background: member.avatarColor || "var(--hb-accent)", color: "var(--on-accent)", display: "grid", placeItems: "center", fontWeight: 700 }}>{member.initials}</span>
           <div style={{ flex: 1, minWidth: 0 }}>
             <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{member.name}</h2>
             <div style={{ fontSize: 12.5, color: "var(--ui-text-4)" }}>{member.role} · {member.email}</div>
@@ -86,13 +94,13 @@ export function MemberDrawer({ memberId, onClose }: { memberId: string; onClose:
               <span
                 key={d.date}
                 title={`${d.date}: ${d.count} actividades`}
-                style={{ aspectRatio: "1", borderRadius: 4, background: STEPS[stepFor(d.count)], outline: d.date === today ? "1.5px solid #0F172A" : undefined }}
+                style={{ aspectRatio: "1", borderRadius: 6, background: STEPS[stepFor(d.count)], outline: d.date === today ? "1.5px solid var(--ui-text)" : undefined }}
               />
             ))}
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11.5, color: "var(--ui-text-4)", marginTop: 8 }}>
             Menos
-            {STEPS.map((c) => <span key={c} style={{ width: 11, height: 11, borderRadius: 3, background: c }} />)}
+            {STEPS.map((c) => <span key={c} style={{ width: 11, height: 11, borderRadius: 2, background: c }} />)}
             Más · {total} actividades en {activeDays} días
           </div>
         </section>
@@ -113,7 +121,7 @@ export function MemberDrawer({ memberId, onClose }: { memberId: string; onClose:
               {open.slice(0, 8).map((t) => (
                 <li key={t.id} style={{ display: "flex", justifyContent: "space-between", gap: 10, fontSize: 13 }}>
                   <span style={{ minWidth: 0, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{t.title}</span>
-                  <span style={{ flexShrink: 0, fontSize: 12, color: t.dueDate < today ? "#B91C1C" : "var(--ui-text-4)" }}>{dueLabelFor(t.dueDate)}</span>
+                  <span style={{ flexShrink: 0, fontSize: 12, color: t.dueDate < today ? STATUS_META.changes.color : "var(--ui-text-4)" }}>{dueLabelFor(t.dueDate)}</span>
                 </li>
               ))}
             </ul>

@@ -572,3 +572,28 @@ Consola sin errores nuevos. Hay dos errores viejos:
 | Navegador (`1440` claro/oscuro, `375` móvil, teclado) | Sección de libretas en `/tareas`, widget Kraft en `/dashboard` y apertura/cierre con `Escape` de `NotebookReaderModal` verificados |
 
 - **Sin comprobar:** El flujo de eliminar libreta no se ejecutó sobre las libretas semilla para no alterar los datos de demo del servidor en vivo.
+
+## Plan anti-slop y arquitectura, Fase 3 (Lote D): modales y cajón de miembro (3 de noviembre)
+
+- **Qué hizo el lote:** `AutoSuggestionsModal.tsx` (27 → 0), `InviteTeamModal.tsx` (24 → 0), `NewBrandModal.tsx` (24 → 0), `WidgetConfigModal.tsx` (13 → 0), `dashboard/PendientesModal.tsx` (11 → 0) y `dashboard/MemberDrawer.tsx` (8 → 0) bajan de **107 a 0 hallazgos** en conjunto.
+  - Los 5 modales y `MemberDrawer` adoptan `useLayer` y `useModalPresence`, eliminando los `z-index` numéricos propios (`130`, `9999`, `10000`) y las escuchas manuales de `Escape`.
+  - Los modales usan `.hubly-overlay.hubly-cal-overlay` y `.hubly-sheet.hubly-cal-modal`; `MemberDrawer` usa `--layer-drawer`, `.hubly-shell-scrim` y `.hubly-drawer`.
+  - Se eliminaron los signos de exclamación en «Todas las sugerencias automáticas están al día» y «Copiado».
+  - Se quitó `fontFamily: "monospace"` del enlace de invitación en `InviteTeamModal` y `transition: all` en `WidgetConfigModal`.
+  - La insignia de impacto `+X (+Y%)` en `AutoSuggestionsModal` usa tinte de acento (`rgb(var(--hb-accent-rgb) / 0.14)` y `--hb-accent-text`), reservando el verde solo a estados aprobados/activos.
+  - Único `ui-ok` justificado: `COLOR_SWATCHES` en `NewBrandModal.tsx` (`// ui-ok: paleta de colores de marca cliente`).
+- **Qué se ve distinto:**
+  - Los 5 modales comparten el mismo velo, sombra y radio de hoja (`--r-xl`), sin competir en capas con el buscador global `Ctrl+K` ni los menús desplegables.
+  - El mapa de calor de actividad en `MemberDrawer` usa la escala de superficie y acento marino de Hubly en claro y oscuro.
+
+### Verificación
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto, **945** hallazgos (antes 1052; Lote D: 107 → 0) |
+| `npx tsc --noEmit` | 0 errores |
+| `npm test` | 43/43 |
+| `npx playwright test e2e/compositor.spec.ts` | **6/6 pasan** (pila LIFO de Escape y bloqueo de fondo intactos) |
+| Navegador (`1440` claro/oscuro, `375` móvil, teclado) | Apertura, recorrido con `Tab` y cierre con `Escape` verificados en los modales y el cajón |
+
+- **Sin comprobar:** El envío real de correo en `InviteTeamModal` (la función actual genera enlace local de invitación).

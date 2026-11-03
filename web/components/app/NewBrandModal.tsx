@@ -2,7 +2,9 @@
 
 import React, { useEffect, useId, useRef, useState } from "react";
 import { useHublyStore } from "@/lib/store";
+import { useLayer } from "@/lib/use-layer";
 import { useModalPresence } from "@/lib/use-modal-presence";
+import { STATUS_META } from "@/components/app/social/status-meta";
 import {
   HublyBuildingIcon as Building2,
   HublyCheckIcon as Check,
@@ -18,18 +20,7 @@ export interface NewBrandModalProps {
   onCreated?: (brandId: string) => void;
 }
 
-const COLOR_SWATCHES = [
-  "#16324F",
-  "#C87A51",
-  "#2E5E4E",
-  "#5B50D6",
-  "#B88D40",
-  "#E11D48",
-  "#0EA5E9",
-  "#10B981",
-  "#7C3AED",
-  "#0F172A",
-];
+const COLOR_SWATCHES = ["#16324F", "#C87A51", "#2E5E4E", "#5B50D6", "#B88D40", "#E11D48", "#0EA5E9", "#10B981", "#7C3AED", "#0F172A"]; // ui-ok: paleta de colores de marca cliente
 
 const INDUSTRY_PRESETS = [
   "Cafetería & Panadería",
@@ -66,7 +57,6 @@ export function NewBrandModal({
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const nameInputRef = useRef<HTMLInputElement | null>(null);
-  const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
   const newBrandModalOpen = useHublyStore((s) => s.newBrandModalOpen);
   const setNewBrandModalOpen = useHublyStore((s) => s.setNewBrandModalOpen);
@@ -109,6 +99,8 @@ export function NewBrandModal({
     }
   };
 
+  useLayer(isOpen, handleClose);
+
   // Reset form when modal opens
   useEffect(() => {
     if (!isOpen) return;
@@ -129,12 +121,10 @@ export function NewBrandModal({
     setErrorMsg(null);
   }, [isOpen, brands.length]);
 
-  // Focus trap, Escape key, Initial focus & Scroll lock
+  // Initial focus & Scroll lock
   useEffect(() => {
     if (!isOpen) return;
 
-    previousActiveElementRef.current =
-      document.activeElement as HTMLElement | null;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -147,58 +137,40 @@ export function NewBrandModal({
       }
     });
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        e.stopPropagation();
-        handleClose();
-        return;
-      }
-
-      if (e.key === "Tab") {
-        const focusables = getFocusableElements(dialogRef.current);
-        if (focusables.length === 0) {
-          e.preventDefault();
-          return;
-        }
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        const active = document.activeElement as HTMLElement | null;
-
-        if (e.shiftKey) {
-          if (!active || active === first || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (!active || active === last || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown, true);
-
     return () => {
       window.cancelAnimationFrame(rafId);
-      document.removeEventListener("keydown", handleKeyDown, true);
       const remainingDialogs = document.querySelectorAll(
         '[role="dialog"][aria-modal="true"]'
       );
       if (remainingDialogs.length <= 1) {
         document.body.style.overflow = prevOverflow || "";
       }
-      const prevEl = previousActiveElementRef.current;
-      if (prevEl && document.body.contains(prevEl)) {
-        window.requestAnimationFrame(() => {
-          prevEl.focus();
-        });
-      }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "Tab") return;
+    const focusables = getFocusableElements(dialogRef.current);
+    if (focusables.length === 0) {
+      e.preventDefault();
+      return;
+    }
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    const active = document.activeElement as HTMLElement | null;
+
+    if (e.shiftKey) {
+      if (!active || active === first || !dialogRef.current?.contains(active)) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (!active || active === last || !dialogRef.current?.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  };
 
   const presence = useModalPresence(isOpen);
   if (!presence.mounted) return null;
@@ -288,38 +260,29 @@ export function NewBrandModal({
 
   return (
     <div
-      className="hubly-overlay"
+      className="hubly-overlay hubly-cal-overlay"
       data-state={presence.state}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) handleClose();
       }}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 110,
-        background: "rgba(15, 23, 42, 0.45)",
-        backdropFilter: "blur(4px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 16,
-      }}
     >
       <div
         ref={dialogRef}
-        className="hubly-sheet"
+        className="hubly-sheet hubly-cal-modal"
         data-state={presence.state}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        onKeyDown={handleKeyDown}
         style={{
           width: "100%",
           maxWidth: 640,
           maxHeight: "92vh",
+          padding: 0,
+          gap: 0,
           background: "var(--ui-surface)",
-          borderRadius: 20,
+          borderRadius: 24,
           border: "1px solid var(--ui-border)",
-          boxShadow: "0 24px 60px rgba(15, 23, 42, 0.22)",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
@@ -344,7 +307,7 @@ export function NewBrandModal({
                 height: 36,
                 borderRadius: 10,
                 background: color,
-                color: "#FFFFFF",
+                color: "var(--on-accent)",
                 fontWeight: 700,
                 fontSize: 13,
                 display: "grid",
@@ -423,9 +386,9 @@ export function NewBrandModal({
                 style={{
                   padding: "10px 14px",
                   borderRadius: 10,
-                  background: "#FEF2F2",
-                  border: "1px solid #FECACA",
-                  color: "#B91C1C",
+                  background: STATUS_META.changes.bg,
+                  border: `1px solid ${STATUS_META.changes.color}`,
+                  color: STATUS_META.changes.color,
                   fontSize: 12.5,
                   fontWeight: 600,
                 }}
@@ -646,8 +609,8 @@ export function NewBrandModal({
                       padding: "4px 10px",
                       borderRadius: 9999,
                       border: active
-                        ? "1px solid #BFE2F4"
-                        : "1px solid #E2E8F0",
+                        ? "1px solid var(--ui-sky-border)"
+                        : "1px solid var(--ui-border)",
                       background: active ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
                       color: active ? "var(--hb-accent-text)" : "var(--ui-text-3)",
                       fontSize: 11.5,
@@ -692,16 +655,16 @@ export function NewBrandModal({
                         borderRadius: 8,
                         background: swatch,
                         border: active
-                          ? "2px solid #0F172A"
-                          : "2px solid #FFFFFF",
-                        boxShadow: "0 1px 4px rgba(15,23,42,0.16)",
+                          ? "2px solid var(--ui-text)"
+                          : "2px solid var(--ui-surface)",
+                        boxShadow: active ? "0 0 0 2px var(--hb-accent)" : "none",
                         cursor: "pointer",
                         display: "grid",
                         placeItems: "center",
                         padding: 0,
                       }}
                     >
-                      {active && <Check size={13} color="#FFFFFF" />}
+                      {active && <Check size={13} color="var(--on-accent)" />}
                     </button>
                   );
                 })}
@@ -983,7 +946,7 @@ export function NewBrandModal({
                   borderRadius: 10,
                   border: "none",
                   background: "var(--hb-accent)",
-                  color: "#FFFFFF",
+                  color: "var(--on-accent)",
                   fontSize: 12.5,
                   fontWeight: 600,
                   cursor: "pointer",

@@ -2,8 +2,10 @@
 
 import React, { useEffect, useId, useRef, useState } from "react";
 import { useHublyStore } from "@/lib/store";
+import { useLayer } from "@/lib/use-layer";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { selectAccountRecommendations } from "@/lib/domain-selectors";
+import { STATUS_META } from "@/components/app/social/status-meta";
 import type {
   AccountCommitment,
   AccountRecommendation,
@@ -144,16 +146,16 @@ function getFocusableElements(container: HTMLElement | null): HTMLElement[] {
 
 function MetricCardIcon({ type }: { type: SuggestedMetricItem["icon"] }) {
   if (type === "globe") {
-    return <Globe size={15} style={{ color: "#38BDF8" }} />;
+    return <Globe size={15} style={{ color: "var(--hb-accent-text)" }} />;
   }
   if (type === "mouse") {
-    return <MousePointerClick size={15} style={{ color: "var(--ui-text-5)" }} />;
+    return <MousePointerClick size={15} style={{ color: "var(--ui-text-3)" }} />;
   }
   if (type === "form") {
-    return <FileText size={15} style={{ color: "#CB997E" }} />;
+    return <FileText size={15} style={{ color: "var(--hb-accent-text)" }} />;
   }
   if (type === "chat") {
-    return <MessageCircle size={15} style={{ color: "#CBD5E1" }} />;
+    return <MessageCircle size={15} style={{ color: "var(--ui-text-3)" }} />;
   }
   if (type === "ig") {
     return (
@@ -164,20 +166,20 @@ function MetricCardIcon({ type }: { type: SuggestedMetricItem["icon"] }) {
           width="12"
           height="12"
           rx="3.5"
-          stroke="#EC4899"
+          stroke="var(--hb-accent-text)"
           strokeWidth="1.5"
         />
-        <circle cx="8" cy="8" r="2.6" stroke="#EC4899" strokeWidth="1.4" />
-        <circle cx="11.4" cy="4.6" r="0.8" fill="#EC4899" />
+        <circle cx="8" cy="8" r="2.6" stroke="var(--hb-accent-text)" strokeWidth="1.4" />
+        <circle cx="11.4" cy="4.6" r="0.8" fill="var(--hb-accent-text)" />
       </svg>
     );
   }
   return (
     <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <circle cx="8" cy="8" r="6" fill="#3B82F6" />
+      <circle cx="8" cy="8" r="6" fill="var(--hb-accent)" />
       <path
         d="M9.6 5.5H8.7C8.2 5.5 8 5.75 8 6.2V7.2H9.5L9.3 8.6H8V12.5H6.5V8.6H5.4V7.2H6.5V6C6.5 4.8 7.2 4.1 8.5 4.1C9.1 4.1 9.6 4.2 9.6 4.2V5.5Z"
-        fill="#FFFFFF"
+        fill="var(--on-accent)"
       />
     </svg>
   );
@@ -192,7 +194,6 @@ export function AutoSuggestionsModal({
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const firstActionRef = useRef<HTMLButtonElement | null>(null);
-  const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
   const [suppressedAsFallback, setSuppressedAsFallback] = useState(false);
 
@@ -315,12 +316,12 @@ export function AutoSuggestionsModal({
     onCloseProp?.();
   };
 
-  // Focus trap, Escape key, Initial focus & Scroll lock
+  useLayer(isOpen, handleClose);
+
+  // Initial focus & Scroll lock
   useEffect(() => {
     if (!isOpen) return;
 
-    previousActiveElementRef.current =
-      document.activeElement as HTMLElement | null;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -333,58 +334,40 @@ export function AutoSuggestionsModal({
       }
     });
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        e.stopPropagation();
-        handleClose();
-        return;
-      }
-
-      if (e.key === "Tab") {
-        const focusables = getFocusableElements(dialogRef.current);
-        if (focusables.length === 0) {
-          e.preventDefault();
-          return;
-        }
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        const active = document.activeElement as HTMLElement | null;
-
-        if (e.shiftKey) {
-          if (!active || active === first || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (!active || active === last || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown, true);
-
     return () => {
       window.cancelAnimationFrame(rafId);
-      document.removeEventListener("keydown", handleKeyDown, true);
       const remainingDialogs = document.querySelectorAll(
         '[role="dialog"][aria-modal="true"]'
       );
       if (remainingDialogs.length <= 1) {
         document.body.style.overflow = prevOverflow || "";
       }
-      const prevEl = previousActiveElementRef.current;
-      if (prevEl && document.body.contains(prevEl)) {
-        window.requestAnimationFrame(() => {
-          prevEl.focus();
-        });
-      }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "Tab") return;
+    const focusables = getFocusableElements(dialogRef.current);
+    if (focusables.length === 0) {
+      e.preventDefault();
+      return;
+    }
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    const active = document.activeElement as HTMLElement | null;
+
+    if (e.shiftKey) {
+      if (!active || active === first || !dialogRef.current?.contains(active)) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (!active || active === last || !dialogRef.current?.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  };
 
   const presence = useModalPresence(isOpen);
   if (!presence.mounted) return null;
@@ -484,38 +467,29 @@ export function AutoSuggestionsModal({
 
   return (
     <div
-      className="hubly-overlay"
+      className="hubly-overlay hubly-cal-overlay"
       data-state={presence.state}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) handleClose();
       }}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 110,
-        background: "rgba(15, 23, 42, 0.45)",
-        backdropFilter: "blur(4px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 16,
-      }}
     >
       <div
         ref={dialogRef}
-        className="hubly-sheet"
+        className="hubly-sheet hubly-cal-modal"
         data-state={presence.state}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        onKeyDown={handleKeyDown}
         style={{
           width: "100%",
           maxWidth: 680,
           maxHeight: "90vh",
+          padding: 0,
+          gap: 0,
           background: "var(--ui-surface)",
-          borderRadius: 20,
+          borderRadius: 24,
           border: "1px solid var(--ui-border)",
-          boxShadow: "0 24px 60px rgba(15, 23, 42, 0.22)",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
@@ -554,7 +528,7 @@ export function AutoSuggestionsModal({
                 id={titleId}
                 style={{
                   margin: 0,
-                  fontSize: 16.5,
+                  fontSize: 16,
                   fontWeight: 700,
                   color: "var(--ui-text)",
                   lineHeight: 1.25,
@@ -622,42 +596,36 @@ export function AutoSuggestionsModal({
             <button
               ref={firstActionRef}
               type="button"
-              aria-pressed={activeView === "reglas"} onClick={() => setActiveView("reglas")}
+              aria-pressed={activeView === "reglas"}
+              onClick={() => setActiveView("reglas")}
               style={{
                 padding: "5px 12px",
                 borderRadius: 8,
-                border: "none",
+                border: activeView === "reglas" ? "1px solid var(--ui-border)" : "1px solid transparent",
                 background:
                   activeView === "reglas" ? "var(--ui-surface)" : "transparent",
-                color: activeView === "reglas" ? "var(--hb-accent)" : "var(--ui-text-3)",
+                color: activeView === "reglas" ? "var(--hb-accent-text)" : "var(--ui-text-3)",
                 fontSize: 12,
                 fontWeight: 700,
                 cursor: "pointer",
-                boxShadow:
-                  activeView === "reglas"
-                    ? "0 1px 2px rgba(15,23,42,0.08)"
-                    : "none",
               }}
             >
               Recomendaciones por marca ({pendingRecommendations.length})
             </button>
             <button
               type="button"
-              aria-pressed={activeView === "metricas"} onClick={() => setActiveView("metricas")}
+              aria-pressed={activeView === "metricas"}
+              onClick={() => setActiveView("metricas")}
               style={{
                 padding: "5px 12px",
                 borderRadius: 8,
-                border: "none",
+                border: activeView === "metricas" ? "1px solid var(--ui-border)" : "1px solid transparent",
                 background:
                   activeView === "metricas" ? "var(--ui-surface)" : "transparent",
-                color: activeView === "metricas" ? "var(--hb-accent)" : "var(--ui-text-3)",
+                color: activeView === "metricas" ? "var(--hb-accent-text)" : "var(--ui-text-3)",
                 fontSize: 12,
                 fontWeight: 700,
                 cursor: "pointer",
-                boxShadow:
-                  activeView === "metricas"
-                    ? "0 1px 2px rgba(15,23,42,0.08)"
-                    : "none",
               }}
             >
               Métricas semanales de pauta
@@ -686,9 +654,9 @@ export function AutoSuggestionsModal({
               style={{
                 padding: "9px 14px",
                 borderRadius: 10,
-                background: "#DCFCE7",
-                border: "1px solid #86EFAC",
-                color: "#166534",
+                background: STATUS_META.approved.bg,
+                border: `1px solid ${STATUS_META.approved.color}`,
+                color: STATUS_META.approved.color,
                 fontSize: 12.5,
                 fontWeight: 600,
               }}
@@ -718,7 +686,6 @@ export function AutoSuggestionsModal({
                       display: "flex",
                       flexDirection: "column",
                       gap: 10,
-                      boxShadow: "0 2px 6px rgba(15,23,42,0.03)",
                     }}
                   >
                     {/* Top Row: Brand Avatar + Name + Metric + Delta Badge */}
@@ -744,7 +711,7 @@ export function AutoSuggestionsModal({
                             height: 34,
                             borderRadius: 10,
                             background: rec.brandColor,
-                            color: "#FFFFFF",
+                            color: "var(--on-accent)",
                             fontSize: 12,
                             fontWeight: 700,
                             display: "grid",
@@ -811,8 +778,8 @@ export function AutoSuggestionsModal({
                           gap: 4,
                           padding: "4px 10px",
                           borderRadius: 9999,
-                          background: diffAbs >= 0 ? "#DCFCE7" : "#E6F4FB",
-                          color: diffAbs >= 0 ? "#15803D" : "var(--ui-accent-text)",
+                          background: diffAbs >= 0 ? "rgb(var(--hb-accent-rgb) / 0.14)" : "var(--ui-sky-soft)",
+                          color: diffAbs >= 0 ? "var(--hb-accent-text)" : "var(--ui-sky-text)",
                           fontSize: 12,
                           fontWeight: 800,
                         }}
@@ -1011,7 +978,7 @@ export function AutoSuggestionsModal({
                     marginBottom: 4,
                   }}
                 >
-                  ¡Todas las sugerencias automáticas están al día!
+                  Todas las sugerencias automáticas están al día
                 </div>
                 <p
                   style={{
@@ -1029,7 +996,7 @@ export function AutoSuggestionsModal({
                   style={{
                     padding: "7px 14px",
                     borderRadius: 9,
-                    border: "1px solid #BFE2F4",
+                    border: "1px solid var(--ui-sky-border)",
                     background: "var(--ui-accent-soft)",
                     color: "var(--hb-accent-text)",
                     fontSize: 12,
@@ -1056,9 +1023,9 @@ export function AutoSuggestionsModal({
                     padding: "11px 14px",
                     borderRadius: 12,
                     border: m.checked
-                      ? "1px solid #BFE2F4"
-                      : "1px solid #E2E8F0",
-                    background: m.checked ? "#F5F7FF" : "var(--ui-surface)",
+                      ? "1px solid var(--ui-sky-border)"
+                      : "1px solid var(--ui-border)",
+                    background: m.checked ? "var(--ui-sky-soft)" : "var(--ui-surface)",
                     cursor: "pointer",
                   }}
                 >
@@ -1084,7 +1051,7 @@ export function AutoSuggestionsModal({
                         borderRadius: 5,
                         border: m.checked ? "none" : "1.5px solid var(--ui-border-strong)",
                         background: m.checked ? "var(--hb-accent)" : "var(--ui-surface)",
-                        color: "#FFFFFF",
+                        color: "var(--on-accent)",
                         display: "grid",
                         placeItems: "center",
                         padding: 0,
@@ -1203,7 +1170,7 @@ export function AutoSuggestionsModal({
                 borderRadius: 10,
                 border: "none",
                 background: "var(--hb-accent)",
-                color: "#FFFFFF",
+                color: "var(--on-accent)",
                 fontSize: 12.5,
                 fontWeight: 600,
                 cursor: "pointer",

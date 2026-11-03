@@ -2,6 +2,7 @@
 
 import React, { useEffect, useId, useRef, useState } from "react";
 import { useHublyStore } from "@/lib/store";
+import { useLayer } from "@/lib/use-layer";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import type { DashboardWidgetId } from "@/lib/types";
 import {
@@ -88,7 +89,6 @@ export function WidgetConfigModal({
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const firstActionRef = useRef<HTMLButtonElement | null>(null);
-  const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
   const [suppressedAsFallback, setSuppressedAsFallback] = useState(false);
 
@@ -128,12 +128,12 @@ export function WidgetConfigModal({
     }
   };
 
-  // Focus trap, Escape key, Initial focus & Scroll lock
+  useLayer(isOpen, handleClose);
+
+  // Initial focus & Scroll lock
   useEffect(() => {
     if (!isOpen) return;
 
-    previousActiveElementRef.current =
-      document.activeElement as HTMLElement | null;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -146,58 +146,40 @@ export function WidgetConfigModal({
       }
     });
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        e.stopPropagation();
-        handleClose();
-        return;
-      }
-
-      if (e.key === "Tab") {
-        const focusables = getFocusableElements(dialogRef.current);
-        if (focusables.length === 0) {
-          e.preventDefault();
-          return;
-        }
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        const active = document.activeElement as HTMLElement | null;
-
-        if (e.shiftKey) {
-          if (!active || active === first || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (!active || active === last || !dialogRef.current?.contains(active)) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown, true);
-
     return () => {
       window.cancelAnimationFrame(rafId);
-      document.removeEventListener("keydown", handleKeyDown, true);
       const remainingDialogs = document.querySelectorAll(
         '[role="dialog"][aria-modal="true"]'
       );
       if (remainingDialogs.length <= 1) {
         document.body.style.overflow = prevOverflow || "";
       }
-      const prevEl = previousActiveElementRef.current;
-      if (prevEl && document.body.contains(prevEl)) {
-        window.requestAnimationFrame(() => {
-          prevEl.focus();
-        });
-      }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "Tab") return;
+    const focusables = getFocusableElements(dialogRef.current);
+    if (focusables.length === 0) {
+      e.preventDefault();
+      return;
+    }
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    const active = document.activeElement as HTMLElement | null;
+
+    if (e.shiftKey) {
+      if (!active || active === first || !dialogRef.current?.contains(active)) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (!active || active === last || !dialogRef.current?.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  };
 
   const presence = useModalPresence(isOpen);
   if (!presence.mounted) return null;
@@ -222,38 +204,29 @@ export function WidgetConfigModal({
 
   return (
     <div
-      className="hubly-overlay"
+      className="hubly-overlay hubly-cal-overlay"
       data-state={presence.state}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) handleClose();
       }}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 110,
-        background: "rgba(15, 23, 42, 0.45)",
-        backdropFilter: "blur(4px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 16,
-      }}
     >
       <div
         ref={dialogRef}
-        className="hubly-sheet"
+        className="hubly-sheet hubly-cal-modal"
         data-state={presence.state}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        onKeyDown={handleKeyDown}
         style={{
           width: "100%",
           maxWidth: 660,
           maxHeight: "90vh",
+          padding: 0,
+          gap: 0,
           background: "var(--ui-surface)",
-          borderRadius: 20,
+          borderRadius: 24,
           border: "1px solid var(--ui-border)",
-          boxShadow: "0 24px 60px rgba(15, 23, 42, 0.22)",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
@@ -347,9 +320,9 @@ export function WidgetConfigModal({
               style={{
                 padding: "9px 14px",
                 borderRadius: 10,
-                background: "var(--ui-accent-soft)",
-                border: "1px solid #BFE2F4",
-                color: "var(--hb-accent-edge)",
+                background: "var(--ui-sky-soft)",
+                border: "1px solid var(--ui-sky-border)",
+                color: "var(--ui-sky-text)",
                 fontSize: 12.5,
                 fontWeight: 600,
               }}
@@ -374,15 +347,16 @@ export function WidgetConfigModal({
                   padding: "12px 14px",
                   borderRadius: 14,
                   border: w.visible
-                    ? "1px solid #CBD5E1"
-                    : "1px dashed #CBD5E1",
+                    ? "1px solid var(--ui-border-strong)"
+                    : "1px dashed var(--ui-border-strong)",
                   background: w.visible ? "var(--ui-surface)" : "var(--ui-surface-2)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
                   flexWrap: "wrap",
                   gap: 12,
-                  transition: "all 0.15s ease",
+                  transition:
+                    "background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
               >
                 {/* Left: Visibility Toggle + Title & Description */}
@@ -414,7 +388,7 @@ export function WidgetConfigModal({
                       alignItems: "center",
                       justifyContent: w.visible ? "flex-end" : "flex-start",
                       flexShrink: 0,
-                      transition: "background 0.15s ease",
+                      transition: "background-color 150ms cubic-bezier(0.4, 0, 0.2, 1)",
                     }}
                   >
                     <span
@@ -423,7 +397,6 @@ export function WidgetConfigModal({
                         height: 20,
                         borderRadius: 9999,
                         background: "var(--ui-surface)",
-                        boxShadow: "0 1px 3px rgba(15,23,42,0.2)",
                         display: "grid",
                         placeItems: "center",
                       }}
@@ -431,7 +404,7 @@ export function WidgetConfigModal({
                       {w.visible ? (
                         <Eye size={11} color="var(--hb-accent)" />
                       ) : (
-                        <EyeOff size={11} color="#94A3B8" />
+                        <EyeOff size={11} color="var(--ui-text-5)" />
                       )}
                     </span>
                   </button>
@@ -515,13 +488,12 @@ export function WidgetConfigModal({
                             minWidth: 26,
                             padding: "4px 7px",
                             borderRadius: 6,
-                            border: "none",
+                            border: isCurrent ? "1px solid var(--ui-border)" : "1px solid transparent",
                             background: isCurrent ? "var(--ui-surface)" : "transparent",
                             color: isCurrent ? "var(--hb-accent-text)" : "var(--ui-text-4)",
                             fontSize: 11,
                             fontWeight: 600,
                             cursor: "pointer",
-                            boxShadow: isCurrent ? "0 1px 2px rgba(15,23,42,0.08)" : "none",
                           }}
                         >
                           {span}×
@@ -544,7 +516,7 @@ export function WidgetConfigModal({
                         borderRadius: 8,
                         border: "1px solid var(--ui-border)",
                         background: isFirst ? "var(--ui-surface-2)" : "var(--ui-surface)",
-                        color: isFirst ? "#CBD5E1" : "var(--ui-text-3)",
+                        color: isFirst ? "var(--ui-text-5)" : "var(--ui-text-3)",
                         display: "grid",
                         placeItems: "center",
                         cursor: isFirst ? "not-allowed" : "pointer",
@@ -565,7 +537,7 @@ export function WidgetConfigModal({
                         borderRadius: 8,
                         border: "1px solid var(--ui-border)",
                         background: isLast ? "var(--ui-surface-2)" : "var(--ui-surface)",
-                        color: isLast ? "#CBD5E1" : "var(--ui-text-3)",
+                        color: isLast ? "var(--ui-text-5)" : "var(--ui-text-3)",
                         display: "grid",
                         placeItems: "center",
                         cursor: isLast ? "not-allowed" : "pointer",
@@ -639,7 +611,7 @@ export function WidgetConfigModal({
                 borderRadius: 10,
                 border: "none",
                 background: "var(--hb-accent)",
-                color: "#FFFFFF",
+                color: "var(--on-accent)",
                 fontSize: 12.5,
                 fontWeight: 600,
                 cursor: "pointer",

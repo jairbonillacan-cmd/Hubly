@@ -81,12 +81,6 @@
     "tamano-fuente": 1,
     "z-index-fijo": 2
   },
-  "components/app/AutoSuggestionsModal.tsx": {
-    "color-fijo": 20,
-    "rgb-fijo": 5,
-    "tamano-fuente": 1,
-    "z-index-fijo": 1
-  },
   "components/app/DescubreHublyWidget.tsx": {
     "rgb-fijo": 1,
     "transition-all": 1,
@@ -96,19 +90,8 @@
     "color-fijo": 3,
     "emoji": 7
   },
-  "components/app/InviteTeamModal.tsx": {
-    "color-fijo": 20,
-    "exclamacion": 1,
-    "rgb-fijo": 2,
-    "z-index-fijo": 1
-  },
   "components/app/MonthDragCalendar.tsx": {
     "color-fijo": 2
-  },
-  "components/app/NewBrandModal.tsx": {
-    "color-fijo": 20,
-    "rgb-fijo": 3,
-    "z-index-fijo": 1
   },
   "components/app/NotebookEditor.tsx": {
     "lucide": 1
@@ -120,28 +103,10 @@
     "color-fijo": 2,
     "z-index-fijo": 2
   },
-  "components/app/WidgetConfigModal.tsx": {
-    "color-fijo": 7,
-    "rgb-fijo": 4,
-    "transition-all": 1,
-    "z-index-fijo": 1
-  },
   "components/app/dashboard/EquipoView.tsx": {
     "color-fijo": 39,
     "rgb-fijo": 3,
     "tamano-fuente": 3
-  },
-  "components/app/dashboard/MemberDrawer.tsx": {
-    "color-fijo": 4,
-    "radio": 2,
-    "rgb-fijo": 1,
-    "z-index-fijo": 1
-  },
-  "components/app/dashboard/PendientesModal.tsx": {
-    "color-fijo": 7,
-    "radio": 1,
-    "rgb-fijo": 2,
-    "z-index-fijo": 1
   },
   "components/app/media/MediaLibrary.tsx": {
     "color-fijo": 1,
