@@ -41,7 +41,7 @@ export default function NotificacionesPage() {
         }}
       >
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, color: "var(--ui-text)", margin: 0 }}>
+          <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.02em", color: "var(--ui-text)", margin: 0 }}>
             Notificaciones
           </h1>
           <p style={{ fontSize: 13, color: "var(--ui-text-4)", margin: "4px 0 0" }}>

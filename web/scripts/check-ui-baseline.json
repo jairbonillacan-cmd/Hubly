@@ -1,47 +1,9 @@
 {
-  "app/(app)/automatizaciones/page.tsx": {
-    "color-fijo": 1,
-    "tamano-fuente": 1
-  },
-  "app/(app)/calendario/page.tsx": {
-    "color-fijo": 2
-  },
-  "app/(app)/marcas/page.tsx": {
-    "color-fijo": 3,
-    "tamano-fuente": 2
-  },
-  "app/(app)/notificaciones/page.tsx": {
-    "tamano-fuente": 1
-  },
-  "app/(app)/parrillas/page.tsx": {
-    "rgb-fijo": 1
-  },
-  "components/app/AccessPanel.tsx": {
-    "color-fijo": 3
-  },
-  "components/app/AppDialogHost.tsx": {
-    "color-fijo": 1,
-    "rgb-fijo": 1,
-    "tamano-fuente": 1,
-    "z-index-fijo": 1
-  },
-  "components/app/DescubreHublyWidget.tsx": {
-    "rgb-fijo": 1,
-    "transition-all": 1,
-    "z-index-fijo": 1
-  },
-  "components/app/MonthDragCalendar.tsx": {
-    "color-fijo": 2
-  },
   "components/app/NotebookEditor.tsx": {
     "lucide": 1
   },
   "components/app/PostComposerModal.tsx": {
     "color-fijo": 4
-  },
-  "components/app/SaveStatus.tsx": {
-    "color-fijo": 2,
-    "z-index-fijo": 2
   },
   "components/app/media/MediaLibrary.tsx": {
     "color-fijo": 1,
@@ -87,10 +49,5 @@
   },
   "components/app/social/SocialCalendar.tsx": {
     "color-fijo": 1
-  },
-  "components/app/tasks/TaskDetailModal.tsx": {
-    "color-fijo": 3,
-    "rgb-fijo": 1,
-    "z-index-fijo": 1
   }
 }

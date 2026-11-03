@@ -40,7 +40,7 @@ export default function AutomatizacionesPage() {
   return (
     <div style={{ maxWidth: 860, margin: "0 auto", padding: "12px 0 48px", display: "grid", gap: 18 }}>
       <div>
-        <h1 style={{ fontSize: 24, fontWeight: 700, color: "var(--ui-text)", margin: 0 }}>Automatizaciones</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.02em", color: "var(--ui-text)", margin: 0 }}>Automatizaciones</h1>
         <p style={{ fontSize: 13, color: "var(--ui-text-4)", margin: "2px 0 0" }}>
           Reglas que hacen el trabajo repetitivo. Por ahora se ejecutan cuando el cambio ocurre con la app abierta.
         </p>
@@ -127,4 +127,4 @@ const card = { background: "var(--ui-surface)", border: "1px solid var(--ui-bord
 const h2 = { fontSize: 15, fontWeight: 700, color: "var(--ui-text)", margin: 0 } as const;
 const field = { width: "100%", border: "1px solid var(--ui-border-strong)", borderRadius: 9, padding: "8px 10px", fontSize: 13, fontFamily: "inherit", background: "var(--ui-surface)", minWidth: 0 } as const;
 const lab = { display: "grid", gap: 4, fontSize: 12, fontWeight: 600, color: "var(--ui-text-3)" } as const;
-const primary = { border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "7px 13px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;
+const primary = { border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "var(--on-accent)", padding: "7px 13px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;

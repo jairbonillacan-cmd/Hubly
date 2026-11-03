@@ -669,3 +669,25 @@ Consola sin errores nuevos. Hay dos errores viejos:
 | Navegador (`1440` claro/oscuro, `375` móvil) | `/dashboard` y `/calendario` verificados entre tanda y tanda sin regresiones visuales ni errores de consola |
 
 - **Sin comprobar:** La corrida completa de las 88 pruebas de Playwright se ejecuta al cerrar el último lote.
+
+## Plan anti-slop y arquitectura, Fase 3 (Lote H): cola de base, parte 1 (3 de noviembre)
+
+- **Qué hizo el lote:** `automatizaciones/page.tsx` (2 → 0), `calendario/page.tsx` (2 → 0), `marcas/page.tsx` (5 → 0), `notificaciones/page.tsx` (1 → 0), `parrillas/page.tsx` (1 → 0), `AccessPanel.tsx` (3 → 0), `AppDialogHost.tsx` (4 → 0), `DescubreHublyWidget.tsx` (3 → 0), `MonthDragCalendar.tsx` (2 → 0), `SaveStatus.tsx` (4 → 0) y `tasks/TaskDetailModal.tsx` (5 → 0) bajan de **32 a 0 hallazgos** en conjunto, con **0 `ui-ok`**.
+  - Los títulos `h1` de `/automatizaciones`, `/marcas` y `/notificaciones` suben a `28px/800`.
+  - En `/calendario`, `ACTIVITY_COLORS` y el color por defecto del punto de actividad pasan a tokens (`--hb-accent`, `--hb-accent-hover`, `--ui-sky`, `--ui-sky-border`, `--ui-text-2`, `--ui-text-4`) con tinte `color-mix(in srgb, ${entry.color} 16%, transparent)`.
+  - En `/marcas`, `/parrillas`, `AccessPanel.tsx` y `MonthDragCalendar.tsx`, los colores hex/rgba y radios fuera de escala pasan a tokens.
+  - En `AppDialogHost.tsx`, `DescubreHublyWidget.tsx`, `SaveStatus.tsx` y `TaskDetailModal.tsx`, los `z-index` propios pasan a `--layer-modal`, `--layer-popover` y `--layer-toast`.
+- **Qué se ve distinto:**
+  - Los encabezados de `/automatizaciones`, `/marcas` y `/notificaciones` comparten la jerarquía `28px/800` del resto de la aplicación.
+  - Los puntos e iconos del cajón de actividad de `/calendario` usan los tonos marino, cielo y gris de la paleta de tokens.
+
+### Verificación
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto, **29** hallazgos (antes 61; Lote H: 32 → 0) |
+| `npx tsc --noEmit` | 0 errores |
+| `npm test` | 43/43 |
+| Navegador (`1440` claro/oscuro, `375` móvil, teclado) | `/automatizaciones`, `/calendario`, `/marcas`, `/notificaciones` y `/parrillas` verificados |
+
+- **Sin comprobar:** El banner de conflicto `409` de `SaveStatus.tsx` en navegador en vivo (cubierto por la prueba unitaria `un 409 conserva el cambio hasta que la persona elige`).

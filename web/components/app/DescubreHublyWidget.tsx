@@ -150,11 +150,11 @@ export function DescubreHublyWidget() {
             borderRadius: minimized ? 9999 : 16,
             border: "1px solid var(--ui-border)",
             padding: minimized ? (isMobile ? "0 2px 0 14px" : "7px 14px") : "14px 16px 14px",
-            zIndex: 68,
+            zIndex: "var(--layer-fab)",
             boxShadow:
-              "0 10px 28px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(15, 23, 42, 0.03)",
+              "0 10px 28px rgb(var(--hb-accent-rgb) / 0.08), 0 2px 6px rgb(var(--hb-accent-rgb) / 0.03)",
             color: "var(--ui-text)",
-            transition: "all 0.18s ease",
+            transition: "background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1)",
           }}
         >
           {minimized ? (

@@ -92,7 +92,14 @@ const REPEAT_OPTIONS: { id: RepeatMode; label: string }[] = [
   { id: "biweekly", label: "Quincenal" },
   { id: "monthly", label: "Mensual" },
 ];
-const ACTIVITY_COLORS = ["#E59A9A", "#F2B37A", "#9BD08F", "#94A3DD", "#C6A2DF", "#7CC4C4"];
+const ACTIVITY_COLORS = [
+  "var(--hb-accent)",
+  "var(--hb-accent-hover)",
+  "var(--ui-sky)",
+  "var(--ui-sky-border)",
+  "var(--ui-text-2)",
+  "var(--ui-text-4)",
+];
 
 const occurrences = (activity: CalendarActivity) => {
   const step = { daily: 1, weekly: 7, biweekly: 14 }[activity.repeat as "daily"];
@@ -361,7 +368,11 @@ export default function CalendarioPage() {
         type="button"
         className="hubly-cal-chip"
         title={`${entry.label} · ${entry.title}`}
-        style={entry.color ? { background: `${entry.color}2A`, color: entry.color } : { background: style.bg, color: style.color }}
+        style={
+          entry.color
+            ? { background: `color-mix(in srgb, ${entry.color} 16%, transparent)`, color: entry.color }
+            : { background: style.bg, color: style.color }
+        }
         onClick={(e) => {
           e.stopPropagation();
           openEntry(entry);
@@ -694,7 +705,7 @@ export default function CalendarioPage() {
           >
             <div className="hubly-cal-modal-head">
               <h2>
-                <i style={{ background: draftColor || "#94A3DD" }} />
+                <i style={{ background: draftColor || "var(--hb-accent)" }} />
                 Nueva actividad
               </h2>
               <button type="button" className="hubly-cal-modal-close" aria-label="Cerrar" onClick={() => setNewActivityDate(null)}>

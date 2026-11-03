@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useHublyStore } from "@/lib/store";
 import { askConfirm } from "@/components/app/AppDialogHost";
+import { STATUS_META } from "@/components/app/social/status-meta";
 import { dueLabelFor } from "@/lib/date";
 import type { AgencyTask } from "@/lib/types";
 import { normalizedStatus } from "./task-utils";
@@ -72,7 +73,7 @@ export function TaskDetailModal({
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(15,23,42,0.45)", display: "grid", placeItems: "center", padding: 16 }}
+      style={{ position: "fixed", inset: 0, zIndex: "var(--layer-modal)", background: "rgb(var(--hb-accent-rgb) / 0.45)", display: "grid", placeItems: "center", padding: 16 }}
     >
       <form
         role="dialog"
@@ -121,7 +122,7 @@ export function TaskDetailModal({
           <input type="checkbox" checked={highlighted} onChange={(e) => setHighlighted(e.target.checked)} />
           Resaltar como prioridad
         </label>
-        {error && <span role="alert" style={{ color: "#B91C1C", fontSize: 12.5 }}>{error}</span>}
+        {error && <span role="alert" style={{ color: STATUS_META.changes.color, fontSize: 12.5 }}>{error}</span>}
         <div style={{ display: "flex", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
           <button
             type="button"
@@ -131,11 +132,11 @@ export function TaskDetailModal({
                 onClose();
               }
             }}
-            style={{ border: "1px solid #FECACA", background: "#FEF2F2", color: "#B91C1C", borderRadius: 9, padding: "8px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}
+            style={{ border: `1px solid ${STATUS_META.changes.bg}`, background: STATUS_META.changes.bg, color: STATUS_META.changes.color, borderRadius: 9, padding: "8px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}
           >
             Eliminar
           </button>
-          <button type="submit" style={{ border: 0, background: "var(--hb-accent)", color: "#FFFFFF", borderRadius: 9, padding: "8px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+          <button type="submit" style={{ border: 0, background: "var(--hb-accent)", color: "var(--on-accent)", borderRadius: 9, padding: "8px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
             Guardar
           </button>
         </div>

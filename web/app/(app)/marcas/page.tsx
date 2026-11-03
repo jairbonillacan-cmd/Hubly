@@ -38,7 +38,7 @@ export default function MarcasPage() {
     router.push("/marca");
   };
   const badge = (b: BrandWorkspace) => (
-    <span style={{ width: 36, height: 36, flexShrink: 0, borderRadius: 10, background: b.color, color: "#FFFFFF", display: "grid", placeItems: "center", fontWeight: 700, fontSize: 13 }}>
+    <span style={{ width: 36, height: 36, flexShrink: 0, borderRadius: 10, background: b.color, color: "var(--on-accent)", display: "grid", placeItems: "center", fontWeight: 700, fontSize: 13 }}>
       {b.initials}
     </span>
   );
@@ -62,10 +62,10 @@ export default function MarcasPage() {
   return (
     <div style={{ maxWidth: 1040, margin: "0 auto", padding: "24px 16px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700, color: "var(--ui-text)", margin: 0 }}>Marcas</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.02em", color: "var(--ui-text)", margin: 0 }}>Marcas</h1>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           <label style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "0 12px", height: 36, border: "1px solid var(--ui-border)", borderRadius: 10, background: "var(--ui-surface)" }}>
-            <Search size={14} color="#64748B" />
+            <Search size={14} style={{ color: "var(--ui-text-4)" }} />
             <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar marca…" aria-label="Buscar marca" style={{ border: 0, outline: 0, background: "transparent", fontSize: 13, width: 150 }} />
           </label>
           <button type="button" className="saas-btn saas-btn-sm" onClick={() => setNewBrandModalOpen(true)} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
@@ -102,7 +102,7 @@ export default function MarcasPage() {
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
                 {badge(b)}
                 <span style={{ minWidth: 0, flex: 1 }}>
-                  <button type="button" onClick={(e) => { e.stopPropagation(); open(b); }} style={{ display: "block", padding: 0, border: 0, background: "transparent", fontSize: 14.5, fontWeight: 700, color: "var(--ui-text)", cursor: "pointer", textAlign: "left" }}>{b.name}</button>
+                  <button type="button" onClick={(e) => { e.stopPropagation(); open(b); }} style={{ display: "block", padding: 0, border: 0, background: "transparent", fontSize: 14, fontWeight: 700, color: "var(--ui-text)", cursor: "pointer", textAlign: "left" }}>{b.name}</button>
                   <span style={{ display: "block", fontSize: 12, color: "var(--ui-text-4)" }}>{b.handle}</span>
                 </span>
                 {archiveBtn(b)}
@@ -148,7 +148,7 @@ export default function MarcasPage() {
             return (
               <section key={m.id} style={{ background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 14, padding: 14 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-                  <span style={{ width: 30, height: 30, borderRadius: 999, background: m.avatarColor || "var(--hb-accent)", color: "#FFFFFF", display: "grid", placeItems: "center", fontSize: 11.5, fontWeight: 700 }}>{m.initials}</span>
+                  <span style={{ width: 30, height: 30, borderRadius: 999, background: m.avatarColor || "var(--hb-accent)", color: "var(--on-accent)", display: "grid", placeItems: "center", fontSize: 11.5, fontWeight: 700 }}>{m.initials}</span>
                   <strong style={{ fontSize: 14 }}>{m.name}</strong>
                   <span style={{ fontSize: 12, color: "var(--ui-text-4)" }}>{m.role} · {mine.length} marcas</span>
                 </div>

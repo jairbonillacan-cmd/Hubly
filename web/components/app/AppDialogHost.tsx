@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { STATUS_META } from "@/components/app/social/status-meta";
 
 type Request =
   | { kind: "confirm"; message: string; confirmLabel: string; danger: boolean; resolve: (ok: boolean) => void }
@@ -63,7 +64,7 @@ export function AppDialogHost() {
           close(false);
         }
       }}
-      style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(15,23,42,0.45)", display: "grid", placeItems: "center", padding: 16 }}
+      style={{ position: "fixed", inset: 0, zIndex: "var(--layer-dialog)", background: "rgb(var(--hb-accent-rgb) / 0.45)", display: "grid", placeItems: "center", padding: 16 }}
     >
       <form
         role="alertdialog"
@@ -75,7 +76,7 @@ export function AppDialogHost() {
         }}
         style={{ width: "100%", maxWidth: 400, background: "var(--ui-surface)", color: "var(--ui-text)", borderRadius: 16, padding: 20, display: "grid", gap: 14 }}
       >
-        <p style={{ margin: 0, fontSize: 14.5, fontWeight: 600, lineHeight: 1.45 }}>{request.message}</p>
+        <p style={{ margin: 0, fontSize: 14, fontWeight: 600, lineHeight: 1.45 }}>{request.message}</p>
         {request.kind === "text" && (
           <input
             autoFocus
@@ -92,7 +93,7 @@ export function AppDialogHost() {
           <button
             ref={confirmRef}
             type="submit"
-            style={{ border: 0, background: request.kind === "confirm" && request.danger ? "#B91C1C" : "var(--hb-accent)", color: "#FFFFFF", borderRadius: 9, padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+            style={{ border: 0, background: request.kind === "confirm" && request.danger ? STATUS_META.changes.color : "var(--hb-accent)", color: "var(--on-accent)", borderRadius: 9, padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
           >
             {request.confirmLabel}
           </button>

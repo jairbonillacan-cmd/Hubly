@@ -164,7 +164,7 @@ export default function ParrillasPage() {
                   fontWeight: isActive ? 600 : 500,
                   fontSize: 13,
                   cursor: "pointer",
-                  boxShadow: isActive ? "0 1px 2px rgba(15, 23, 42, 0.06)" : "none",
+                  boxShadow: isActive ? "0 1px 2px rgb(var(--hb-accent-rgb) / 0.08)" : "none",
                   whiteSpace: "nowrap",
                   transition: "background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
