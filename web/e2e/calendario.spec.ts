@@ -132,7 +132,7 @@ test("Traer mi mes: mapeo, errores por fila, duplicados y revisión antes de cre
   await page.getByRole("button", { name: "Continuar con lo pegado" }).click();
   await expect(page.locator(".hubly-import-map select").first()).toHaveValue("0");
   const antes = await page.evaluate(() => (window as unknown as { __hubly: Store }).__hubly.getState().posts.length);
-  await page.getByRole("button", { name: "Revisar" }).click();
+  await page.getByRole("button", { name: "Revisar", exact: true }).click();
   await expect(page.getByText("Fecha no válida")).toBeVisible();
   await expect(page.getByText("Red desconocida: MySpace")).toBeVisible();
   await expect(page.getByRole("cell", { name: "Duplicado", exact: true })).toBeVisible();
@@ -165,7 +165,7 @@ test("Traer mi mes lee un Excel real", async ({ page }) => {
   await page.getByRole("button", { name: "Más opciones" }).click();
   await page.getByRole("menuitem", { name: /Traer mi mes/ }).click();
   await page.getByLabel("Archivo a importar").setInputFiles("e2e/fixtures/parrilla.xlsx");
-  await page.getByRole("button", { name: "Revisar" }).click();
+  await page.getByRole("button", { name: "Revisar", exact: true }).click();
   await page.getByRole("button", { name: "Importar 2 como borradores" }).click();
   await expect(page.getByText("Se crearon 2 borradores")).toBeVisible();
   const creados = await page.evaluate(() => (window as unknown as { __hubly: Store }).__hubly.getState().posts.filter((p) => p.title.startsWith("E2E xlsx")).map((p) => p.scheduledDate).sort());

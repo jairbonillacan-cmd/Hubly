@@ -1,10 +1,10 @@
 # Matriz de controles de Hubly
 
-Generada con `npm run audit:controles` en modo demo el 2026-11-01 (previo a la integración). Cubre botones, enlaces y pestañas visibles al cargar cada ruta, la barra lateral y el botón de Hubi, y los controles dentro de cada menú, modal o panel que abre un control de la página (una ronda de profundidad).
+Generada con `npm run audit:controles` en modo demo el 2026-11-03 (previo a la integración). Cubre botones, enlaces y pestañas visibles al cargar cada ruta, la barra lateral y el botón de Hubi, y los controles dentro de cada menú, modal o panel que abre un control de la página (una ronda de profundidad).
 
 **Qué significa:** «responde» indica que pulsar cambió la página (el detalle dice qué cambió) sin error; no prueba que el resultado sea correcto ni que persista, porque la auditoría bloquea las escrituras. La persistencia y los permisos se prueban en `e2e/` y `tests/`. «Ya activo» es una pestaña o filtro que ya estaba seleccionado, así que no cambia nada: es lo esperado. «Sin efecto visible» pide revisión manual: puede ser un botón muerto o un cambio que la auditoría no detecta. Los editores (compositor) se abren pero no se recorren aquí: los cubre `compositor.spec.ts`.
 
-**Totales:** 679 controles (259 en páginas, 420 dentro de ventanas) · 564 responden · 29 ya activos · 49 enlaces · 17 sin efecto visible · 19 deshabilitados · 0 con error · 0 sin poder probar · 1 omitidos.
+**Totales:** 688 controles (268 en páginas, 420 dentro de ventanas) · 573 responden · 38 ya activos · 49 enlaces · 8 sin efecto visible · 19 deshabilitados · 0 con error · 0 sin poder probar · 1 omitidos.
 
 Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/dashboard/salud-cuentas`, `/estrategia` → `/marca`.
 
@@ -77,7 +77,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | Resultados de búsqueda | Dashboard · Inicio Resumen operativo, tareas, libretas y apr | responde | cierra una ventana; cambia un estado; cambia el texto |
 | `/dashboard` | Resultados de búsqueda | Dashboard · Salud de cuentas Cumplimiento de entregas, presu | responde | navega a /dashboard/salud-cuentas; cierra una ventana; cambia un estado |
 | `/dashboard` | Resultados de búsqueda | Dashboard · Equipo Carga operativa, actividad semanal e invi | responde | navega a /dashboard/equipo; cierra una ventana; cambia un estado |
-| `/dashboard` | Resultados de búsqueda | Mi espacio · Tareas y libretas Entregables y notas de estrat | responde | navega a /tareas; cierra una ventana; cambia un estado |
+| `/dashboard` | Resultados de búsqueda | Mi espacio · Tareas y libretas Entregables y notas de estrat | responde | cierra una ventana; cambia un estado; cambia el texto |
 | `/dashboard` | Resultados de búsqueda | Calendario Planeación mensual de posts | responde | navega a /calendario; cierra una ventana; cambia un estado |
 | `/dashboard` | Resultados de búsqueda | Social Media · Parrillas Parrilla de posts y flujo de aproba | responde | navega a /parrillas; cierra una ventana; cambia un estado |
 | `/dashboard` | Resultados de búsqueda | CB Café Bruma (@cafebruma) Cafetería de especialidad y tosta | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
@@ -89,7 +89,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard` | Resultados de búsqueda | NÚCLEO DE MARCA N° 04 · OCT 26 Estrategia IA | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard` | Resultados de búsqueda | Conecta las redes de tu cliente Min · Jair · Vence hoy Alta | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
 | `/dashboard` | Resultados de búsqueda | Manda tu primer reporte Min · Jair · Vence mañana Alta | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
-| `/dashboard` | Resultados de búsqueda | Ajustar horario a 8:00 am en post de panqué de cardamomo Caf | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
+| `/dashboard` | Resultados de búsqueda | Ajustar horario a 8:00 am en post de panqué de cardamomo Caf | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `/dashboard` | Resultados de búsqueda | Mandar liga de parrilla de noviembre a Elena por WhatsApp Ca | responde | navega a /tareas; cierra una ventana; cambia un estado; intenta guardar (bloqueado) |
 | `/dashboard` | Configurar widgets del Dashboard | Cerrar configuración de widgets | responde | cierra una ventana; cambia un estado; cambia el texto |
 | `/dashboard` | Configurar widgets del Dashboard | Mostrar widget Tareas | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
@@ -227,23 +227,23 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard/equipo` | — | Inicio | enlace | /dashboard |
 | `/dashboard/equipo` | — | Cuentas | enlace | /dashboard/salud-cuentas |
 | `/dashboard/equipo` | — | Equipo | enlace | /dashboard/equipo |
-| `/dashboard/equipo` | — | 7 días | sin efecto visible |  |
-| `/dashboard/equipo` | — | 30 días | sin efecto visible |  |
-| `/dashboard/equipo` | — | 90 días | sin efecto visible |  |
+| `/dashboard/equipo` | — | 7 días | responde | cambia un estado |
+| `/dashboard/equipo` | — | 30 días | ya activo | estaba seleccionado |
+| `/dashboard/equipo` | — | 90 días | responde | cambia un estado |
 | `/dashboard/equipo` | — | Invitar | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard/equipo` | — | Filtros | responde | abre una ventana; cambia un estado; cambia el texto |
 | `/dashboard/equipo` | — | Editar marcas | responde | abre una ventana; cambia un estado; cambia el texto |
-| `/dashboard/equipo` | — | Semana | sin efecto visible |  |
-| `/dashboard/equipo` | — | Mes | responde | cambia el texto |
+| `/dashboard/equipo` | — | Semana | ya activo | estaba seleccionado |
+| `/dashboard/equipo` | — | Mes | responde | cambia un estado; cambia el texto |
 | `/dashboard/equipo` | — | Ver todos los logros (39) | responde | cambia el texto |
-| `/dashboard/equipo` | — | Hoy | responde | cambia el texto |
-| `/dashboard/equipo` | — | Semana | sin efecto visible |  |
-| `/dashboard/equipo` | — | Mes | responde | cambia el texto |
-| `/dashboard/equipo` | — | Ver perfil 🥇 L Lucía Ramírez Diseño y Dirección de Arte · 1 | responde | cambia el texto |
+| `/dashboard/equipo` | — | Hoy | responde | cambia un estado; cambia el texto |
+| `/dashboard/equipo` | — | Semana | ya activo | estaba seleccionado |
+| `/dashboard/equipo` | — | Mes | responde | cambia un estado; cambia el texto |
+| `/dashboard/equipo` | — | Ver perfil 🥇 L Lucía Ramírez Diseño y Dirección de Arte · 1 | responde | cambia un estado; cambia el texto |
 | `/dashboard/equipo` | — | Ver perfil | responde | abre una ventana; cambia el texto |
-| `/dashboard/equipo` | — | Ver perfil 🥈 D Diego Morales Paid Media y Analítica · 8 tar | responde | cambia el texto |
+| `/dashboard/equipo` | — | Ver perfil 🥈 D Diego Morales Paid Media y Analítica · 8 tar | responde | cambia un estado; cambia el texto |
 | `/dashboard/equipo` | — | Ver perfil | responde | abre una ventana; cambia el texto |
-| `/dashboard/equipo` | — | Ver perfil 🥉 J Jair (tú) Dueño · 0 tareas · 0 posts 63 pts  | sin efecto visible |  |
+| `/dashboard/equipo` | — | Ver perfil 🥉 J Jair (tú) Dueño · 0 tareas · 0 posts 63 pts  | ya activo | estaba seleccionado |
 | `/dashboard/equipo` | — | Ver perfil | responde | abre una ventana; cambia el texto |
 | `/dashboard/equipo` | — | Cómo funcionan los puntos · Se miden por esfuerzo, no por cl | responde | abre una ventana; cambia un estado; cambia el texto |
 | `/dashboard/equipo` | Invitar miembro al equipo | Cerrar modal de invitación | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
@@ -255,16 +255,16 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard/equipo` | Invitar miembro al equipo | Generar invitación local | responde | cambia el texto |
 | `/dashboard/equipo` | hubly-dropdown | Mi vista (1) | ya activo | estaba seleccionado |
 | `/dashboard/equipo` | hubly-dropdown | Todo el equipo (3) | responde | cambia un estado; cambia el texto |
-| `/dashboard/equipo` | hubly-dropdown | Todas | sin efecto visible |  |
-| `/dashboard/equipo` | hubly-dropdown | Café Bruma | responde | cambia el texto |
-| `/dashboard/equipo` | hubly-dropdown | Min | responde | cambia el texto |
-| `/dashboard/equipo` | hubly-dropdown | Clínica Norte | responde | cambia el texto |
+| `/dashboard/equipo` | hubly-dropdown | Todas | ya activo | estaba seleccionado |
+| `/dashboard/equipo` | hubly-dropdown | Café Bruma | responde | cambia un estado; cambia el texto |
+| `/dashboard/equipo` | hubly-dropdown | Min | responde | cambia un estado; cambia el texto |
+| `/dashboard/equipo` | hubly-dropdown | Clínica Norte | responde | cambia un estado; cambia el texto |
 | `/dashboard/equipo` | hubly-dropdown | Completar tarea en curso +25 XP | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `/dashboard/equipo` | hubly-dropdown | Registrar entrega activa +30 XP | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `/dashboard/equipo` | ventana | Editar marcas | responde | cambia un estado; cambia el texto |
-| `/dashboard/equipo` | ventana | C Café Bruma | responde | cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard/equipo` | ventana | M Min | sin efecto visible |  |
-| `/dashboard/equipo` | ventana | C Clínica Norte | responde | cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard/equipo` | ventana | C Café Bruma | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard/equipo` | ventana | M Min | ya activo | estaba seleccionado |
+| `/dashboard/equipo` | ventana | C Clínica Norte | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `/dashboard/equipo` | Perfil de Lucía Ramírez | Cerrar perfil | responde | cierra una ventana; cambia el texto |
 | `/dashboard/equipo` | Perfil de Diego Morales | Cerrar perfil | responde | cierra una ventana; cambia el texto |
 | `/dashboard/equipo` | Perfil de Jair | Cerrar perfil | responde | cierra una ventana; cambia el texto |
@@ -273,7 +273,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard/salud-cuentas` | — | Cuentas | enlace | /dashboard/salud-cuentas |
 | `/dashboard/salud-cuentas` | — | Equipo | enlace | /dashboard/equipo |
 | `/dashboard/salud-cuentas` | — | Nueva marca | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
-| `/dashboard/salud-cuentas` | — | Declarar compromisos | responde | abre una ventana; cambia el texto |
+| `/dashboard/salud-cuentas` | — | Declarar compromisos | responde | abre una ventana; cambia un estado; cambia el texto |
 | `/dashboard/salud-cuentas` | — | 7 días | responde | cambia un estado; cambia el texto |
 | `/dashboard/salud-cuentas` | — | 30 días | responde | cambia un estado; cambia el texto |
 | `/dashboard/salud-cuentas` | — | Esta semana | responde | cambia un estado; cambia el texto |
@@ -286,7 +286,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard/salud-cuentas` | — | En riesgo 1 | responde | cambia un estado; cambia el texto |
 | `/dashboard/salud-cuentas` | — | Completas 1 | responde | cambia un estado; cambia el texto |
 | `/dashboard/salud-cuentas` | — | Aplicar todas (7) | responde | cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard/salud-cuentas` | — | Configurar por marca | responde | abre una ventana; cambia el texto |
+| `/dashboard/salud-cuentas` | — | Configurar por marca | responde | abre una ventana; cambia un estado; cambia el texto |
 | `/dashboard/salud-cuentas` | — | Ocultar | responde | cambia un estado; cambia el texto |
 | `/dashboard/salud-cuentas` | — | Descartar | responde | cambia el texto; intenta guardar (bloqueado) |
 | `/dashboard/salud-cuentas` | — | Aplicar | responde | cambia el texto; intenta guardar (bloqueado) |
@@ -330,22 +330,22 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Aumentar Campañas Ads | responde | cambia el texto |
 | `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Cancelar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard/salud-cuentas` | Nueva marca / Cuenta de cliente | Crear marca | responde | cambia el texto |
-| `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Cerrar sugerencias automáticas | responde | cierra una ventana; cambia el texto |
-| `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Recomendaciones por marca (7) | sin efecto visible |  |
+| `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Cerrar sugerencias automáticas | responde | cierra una ventana; cambia un estado; cambia el texto |
+| `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Recomendaciones por marca (7) | ya activo | estaba seleccionado |
 | `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Métricas semanales de pauta | responde | cambia un estado; cambia el texto; cambia un campo |
 | `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Disminuir meta sugerida para Café Bruma | responde | cambia el texto |
 | `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Aumentar meta sugerida para Café Bruma | responde | cambia el texto |
-| `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Descartar | responde | cambia el texto; intenta guardar (bloqueado) |
-| `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Aplicar | responde | cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Descartar | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Aplicar | responde | cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Disminuir meta sugerida para Min | responde | cambia el texto |
 | `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Aumentar meta sugerida para Min | responde | cambia el texto |
 | `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Disminuir meta sugerida para Clínica Norte | responde | cambia el texto |
 | `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Aumentar meta sugerida para Clínica Norte | responde | cambia el texto |
-| `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Cancelar | responde | cierra una ventana; cambia el texto |
-| `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Aplicar todas las sugerencias (7) | responde | cierra una ventana; cambia el texto; intenta guardar (bloqueado) |
+| `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Cancelar | responde | cierra una ventana; cambia un estado; cambia el texto |
+| `/dashboard/salud-cuentas` | Sugerencias automáticas de compromisos | Aplicar todas las sugerencias (7) | responde | cierra una ventana; cambia un estado; cambia el texto; intenta guardar (bloqueado) |
 | `/dashboard/salud-cuentas` | hubly-salud-actions | Activar | responde | cambia el texto; intenta guardar (bloqueado) |
 | `/dashboard/salud-cuentas` | hubly-salud-actions | Cerrar edición | responde | cambia un estado; cambia el texto; cambia un campo |
-| `/calendario` | — | Revisar | responde | navega a /parrillas; cambia un estado |
+| `/calendario` | — | Revisar | sin efecto visible |  |
 | `/calendario` | — | Actividad | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/calendario` | — | Anterior | responde | cambia el texto |
 | `/calendario` | — | Siguiente | responde | cambia el texto |
@@ -354,12 +354,21 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/calendario` | — | Mes | responde | cambia un estado; cambia el texto |
 | `/calendario` | — | Por marca | responde | cambia un estado; cambia el texto |
 | `/calendario` | — | Filtros | responde | abre una ventana; cambia un estado; cambia el texto |
-| `/calendario` | — | Exportar reporte mensual de octubre con resultados de Meta A | responde | navega a /tareas; cambia un estado |
+| `/calendario` | — | Exportar reporte mensual de octubre con resultados de Meta A | sin efecto visible |  |
 | `/calendario` | — | Grabar 2 cápsulas de fotoprotección con la Dra. Lozano Tarea | responde | navega a /tareas; cambia un estado |
 | `/calendario` | — | Conecta las redes de tu cliente Tarea · Min | responde | navega a /tareas; cambia un estado |
 | `/calendario` | — | Ajustar horario a 8:00 am en post de panqué de cardamomo Tar | responde | navega a /tareas; cambia un estado |
 | `/calendario` | — | Mandar liga de parrilla de noviembre a Elena por WhatsApp Ta | responde | navega a /tareas; cambia un estado |
 | `/calendario` | — | Tueste de la semana · Coatepec lavado Carrusel · Café Bruma  | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo (editor: lo cubre compositor.spec) |
+| `/calendario` | — | Manda tu primer reporte Tarea · Min | responde | navega a /tareas; cambia un estado |
+| `/calendario` | — | Anatomía de una bota cosida Goodyear welt Carrusel · Min 19: | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo (editor: lo cubre compositor.spec) |
+| `/calendario` | — | Receta V60 en 2 minutos para casa Reel / Video · Café Bruma  | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo (editor: lo cubre compositor.spec) |
+| `/calendario` | — | 3 señales para revisar un lunar con dermatoscopía Reel / Vid | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo (editor: lo cubre compositor.spec) |
+| `/calendario` | — | Panqué de cardamomo y espresso doble Imagen · Café Bruma 08: | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo (editor: lo cubre compositor.spec) |
+| `/calendario` | — | Cómo evoluciona el cuero avellana tras 18 meses Imagen · Min | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo (editor: lo cubre compositor.spec) |
+| `/calendario` | — | Luz de sábado en la terraza de Roma Norte Story · Café Bruma | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo (editor: lo cubre compositor.spec) |
+| `/calendario` | — | Suscripción para estudios y oficinas creativas Carrusel · Ca | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo (editor: lo cubre compositor.spec) |
+| `/calendario` | — | Guía rápida: prensa francesa vs aeropress Reel / Video · Caf | responde | abre una ventana; cambia un estado; cambia el texto; cambia un campo (editor: lo cubre compositor.spec) |
 | `/calendario` | Nueva actividad | Cerrar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo |
 | `/calendario` | Nueva actividad | Junta | ya activo | estaba seleccionado |
 | `/calendario` | Nueva actividad | Grabación | responde | cambia un estado |
@@ -453,7 +462,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/marcas` | — | Tabla | responde | cambia un estado; cambia el texto |
 | `/marcas` | — | Por usuario | responde | cambia un estado; cambia el texto |
 | `/marcas` | — | Ver archivadas (0) | responde | cambia el texto |
-| `/marcas` | — | Café Bruma | responde | cambia el texto; intenta guardar (bloqueado) |
+| `/marcas` | — | Café Bruma | responde | navega a /marca; cambia un estado; intenta guardar (bloqueado) |
 | `/marcas` | — | Archivar Café Bruma | responde | cambia el texto; intenta guardar (bloqueado) |
 | `/marcas` | — | Min | responde | navega a /marca; cambia un estado; intenta guardar (bloqueado) |
 | `/marcas` | — | Archivar Min | deshabilitado |  |
@@ -502,11 +511,11 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/marca` | ¿Eliminar a «Camila Vega»? | Cancelar | responde | cierra una ventana; cambia el texto |
 | `/marca` | ¿Eliminar a «Camila Vega»? | Eliminar | responde | cierra una ventana; cambia un estado; cambia el texto; cambia un campo; intenta guardar (bloqueado) |
 | `/archivos` | — | Ver proyectos | responde | cambia un estado; cambia el texto; cambia un campo |
-| `/archivos` | — | Inicio de la biblioteca | sin efecto visible |  |
+| `/archivos` | — | Inicio de la biblioteca | ya activo | estaba seleccionado |
 | `/archivos` | — | Carpeta | responde | cambia el texto; cambia un campo |
 | `/archivos` | — | Subir | responde | abre el selector de archivos |
-| `/archivos` | — | portada_operacion_cartago.jpg 287 KB | enlace | /api/media/2e346774-4a64-4ee3-a8db-8bde97ef052a/file |
-| `/archivos` | — | Eliminar portada_operacion_cartago.jpg | sin efecto visible |  |
+| `/archivos` | — | WhatsApp Image 2026-10-27 at 09.57.42.jpeg 314 KB | enlace | /api/media/d165a776-2899-4137-baee-fd957f514082/file |
+| `/archivos` | — | Eliminar WhatsApp Image 2026-10-27 at 09.57.42.jpeg | sin efecto visible |  |
 | `/proyectos` | — | Buscar proyecto | responde | cambia el contenido; cambia un campo |
 | `/proyectos` | — | Filas | ya activo | estaba seleccionado |
 | `/proyectos` | — | Kanban | responde | cambia un estado; cambia el texto |
@@ -558,9 +567,9 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `/anuncios` | — | Ideas | enlace | /parrillas?tab=ideas |
 | `/anuncios` | — | Reportes | enlace | /reportes |
 | `/anuncios` | — | Buscar anuncios | responde | cambia el contenido |
-| `/anuncios` | — | Cards | sin efecto visible |  |
-| `/anuncios` | — | Tabla | responde | cambia el texto |
-| `/anuncios` | — | Funnels | responde | cambia el texto |
+| `/anuncios` | — | Cards | ya activo | estaba seleccionado |
+| `/anuncios` | — | Tabla | responde | cambia un estado; cambia el texto |
+| `/anuncios` | — | Funnels | responde | cambia un estado; cambia el texto |
 | `/anuncios` | — | Ver ejemplo | responde | abre una ventana; cambia el texto |
 | `/anuncios` | — | Ver ejemplo | responde | abre una ventana; cambia el texto |
 | `/anuncios` | — | Ver ejemplo | responde | abre una ventana; cambia el texto |
@@ -670,7 +679,7 @@ Alias con la misma pantalla: `/equipo` → `/dashboard/equipo`, `/salud` → `/d
 | `(sidebar y Hubi)` | Resultados de búsqueda | Pregúntale a Hubi Consulta tareas vencidas, salud de cuentas | responde | abre una ventana; cierra una ventana; cambia un estado; cambia el texto |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Dashboard · Inicio Resumen operativo, tareas, libretas y apr | responde | cierra una ventana; cambia un estado; cambia el texto |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Dashboard · Salud de cuentas Cumplimiento de entregas, presu | responde | navega a /dashboard/salud-cuentas; cierra una ventana; cambia un estado |
-| `(sidebar y Hubi)` | Resultados de búsqueda | Dashboard · Equipo Carga operativa, actividad semanal e invi | responde | navega a /dashboard/equipo; cierra una ventana; cambia un estado |
+| `(sidebar y Hubi)` | Resultados de búsqueda | Dashboard · Equipo Carga operativa, actividad semanal e invi | responde | navega a /dashboard/equipo; cambia un estado |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Mi espacio · Tareas y libretas Entregables y notas de estrat | responde | navega a /tareas; cierra una ventana; cambia un estado |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Calendario Planeación mensual de posts | responde | navega a /calendario; cierra una ventana; cambia un estado |
 | `(sidebar y Hubi)` | Resultados de búsqueda | Social Media · Parrillas Parrilla de posts y flujo de aproba | responde | navega a /parrillas; cierra una ventana; cambia un estado |

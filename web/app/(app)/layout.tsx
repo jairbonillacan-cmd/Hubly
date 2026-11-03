@@ -1825,7 +1825,7 @@ export default function SaaSAppLayout({
           left: 0,
           right: 0,
           height: 60,
-          background: "rgba(255, 255, 255, 0.96)",
+          background: "var(--ui-surface)",
           backdropFilter: "blur(12px)",
           borderTop: "1px solid var(--ui-border)",
           display: "grid",

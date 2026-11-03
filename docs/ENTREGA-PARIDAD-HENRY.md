@@ -252,3 +252,44 @@ Combinando la sección **«Pendiente tras la integración»** (líneas 36–47 d
    - Definir token semántico para sustituir `#059669` en `/anuncios` y `/reportes` (actualmente < 4.5:1 en oscuro).
 7. **Controles sin efecto visible en `/dashboard/equipo` (`EquipoView.tsx`):**
    - Verificar si «7 días», «30 días», «90 días» y «Semana» deben filtrar datos o retirarse, y revisar la clase del botón «Reasignar tareas».
+
+
+---
+
+## Cierre del 3 de noviembre: correcciones finales y batería completa de verificación
+
+### 1. Correcciones aplicadas sobre los pendientes de `5f25230`
+
+1. **Honestidad en `/reportes` (`web/app/(app)/reportes/page.tsx`):**
+   - Se añadió el cintillo permanente `role="note"`: *«Datos de ejemplo. Aún no hay cuentas conectadas para calcular métricas reales: estas cifras son una muestra de formato.»*.
+   - Se etiquetaron con insignia `Ejemplo` los 4 KPIs (`Gasto Total`, `Visitas al perfil`, `Costo por visita al perfil`, `CTR Promedio`) y `· Ejemplo` en `Click Score Promedio`.
+2. **Encabezado `<h1>` único en `/reportes`, `/anuncios` y `/chat`:**
+   - `/reportes`: `<h1>Reportes</h1>` en la barra superior y ajuste del encabezado interno de la hoja imprimible a `<h2>`.
+   - `/anuncios`: `<h1>Anuncios</h1>` en la barra superior.
+   - `/chat`: `<h1>Chat</h1>` en el encabezado de la pantalla.
+3. **Estado en `/chat` tras enviar mensaje (`web/app/(app)/chat/page.tsx`):**
+   - Se calcula `generalCount` combinando mensajes de tienda y sesión para actualizar en vivo el aviso lateral, el subtítulo de `# General` y el subtítulo de la cabecera al enviar mensajes.
+4. **Foco visible (`:focus-visible`) y estados interactivos (`web/app/(app)/dashboard-polish.css`, `web/app/(app)/notificaciones/page.tsx`):**
+   - En `/notificaciones`, se sustituyó `all: "unset"` del botón `«Marcar como leída»` por estilos explícitos para preservar el anillo `:focus-visible`.
+   - Se añadieron reglas `:focus-visible` con `var(--hb-accent)` para `.hubly-hubi-composer`, `.hubly-composer-field input`, `.hubly-main`, `.hubly-sheet` y `.hubly-mobile-tabbar`, así como la definición de `.hbtn-outline`.
+5. **Barra inferior móvil `.hubly-mobile-tabbar` en modo oscuro (`web/app/(app)/layout.tsx`):**
+   - Se reemplazó el fondo fijo `rgba(255, 255, 255, 0.96)` en línea por `var(--ui-surface)`.
+6. **Contraste de verde en modo oscuro (`web/app/(app)/dashboard-polish.css`, `/anuncios`, `/reportes`):**
+   - Se definió el token `--ui-positive-text` (`#047857` en claro, `#34D399` en oscuro) y se aplicó en `/anuncios` y `/reportes`, reduciendo además la deuda de `color-fijo` en `check:ui` de `1571` a `1562`.
+7. **Semántica `aria-pressed` / `aria-current` para `audit:controles`:**
+   - Se añadieron `aria-pressed` en los filtros de periodo, rango, marcas y filas de ranking de `/dashboard/equipo` (`EquipoView.tsx`), en los conmutadores `Cards`/`Tabla`/`Funnels` de `/anuncios`, en las pestañas de `AutoSuggestionsModal.tsx`, y `aria-current="page"` en `«Inicio de la biblioteca»` (`MediaLibrary.tsx`).
+8. **Estabilidad de pruebas E2E (`buscador.spec.ts`, `calendario.spec.ts`):**
+   - `buscador.spec.ts`: el saludo matutino en `/dashboard` (`«Buenos días, Jair»`) ahora coincide con `/^Buen(os|as)/`.
+   - `calendario.spec.ts`: el botón `Revisar` del importador usa `{ name: "Revisar", exact: true }` para no colisionar en noviembre con el post del calendario de fondo `«3 señales para revisar un lunar con dermatoscopía»` (causa raíz del fallo intermitente en la prueba de Excel).
+
+### 2. Resultados finales de verificación (3 de noviembre de 2026)
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | **Correcto.** Deuda heredada reducida de 1571 a **1562 hallazgos** (sin `--update`) |
+| `npx tsc --noEmit` | **Sin errores** (0 errores) |
+| `npm test` | **43/43 pasan** |
+| `npm run test:db` | **69/69 pasan** (PGlite + RLS + migraciones) |
+| `npm run audit:estados` | **0 hallazgos** (foco visible en todos los controles recorridos en claro y oscuro) |
+| `npx playwright test` | **88/88 pasan** |
+| `npm run audit:controles` | **688 controles** (268 en páginas, 420 en ventanas) · **573 responden** · **38 ya activos** · **49 enlaces** · **8 sin efecto visible** · **19 deshabilitados** · **0 con error** · **0 sin poder probar** · **1 omitido** |

@@ -581,8 +581,9 @@ function DemoAnunciosPage() {
           </Link>
         </div>
 
-        {/* Right Date Picker Pill + Settings Icon with Red Notification Dot */}
+        <h1 style={{ fontSize: 18, fontWeight: 700, color: "var(--ui-text)", margin: 0, letterSpacing: "-0.02em" }}>Anuncios</h1>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+
           
 
           
@@ -591,6 +592,7 @@ function DemoAnunciosPage() {
 
       <div
         role="note"
+        aria-label="Aviso de datos de ejemplo"
         style={{
           display: "flex",
           alignItems: "center",
@@ -674,6 +676,7 @@ function DemoAnunciosPage() {
       >
         {/* Left: Search circle + Filtros pill */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+
           <button
             type="button"
             title="Buscar anuncios"
@@ -728,6 +731,7 @@ function DemoAnunciosPage() {
             <button
               type="button"
               aria-label="Cards"
+              aria-pressed={viewMode === "cards"}
               title="Vista visual con creatividades"
               onClick={() => setViewMode("cards")}
               style={{
@@ -748,6 +752,7 @@ function DemoAnunciosPage() {
             <button
               type="button"
               aria-label="Tabla"
+              aria-pressed={viewMode === "table"}
               title="Comparación numérica completa"
               onClick={() => setViewMode("table")}
               style={{
@@ -768,6 +773,7 @@ function DemoAnunciosPage() {
             <button
               type="button"
               aria-label="Funnels"
+              aria-pressed={viewMode === "funnels"}
               title="Funnel: dónde caen las conversiones"
               onClick={() => setViewMode("funnels")}
               style={{
@@ -945,7 +951,7 @@ function DemoAnunciosPage() {
                       }}
                     />
                   </div>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "#059669" }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: "var(--ui-positive-text)" }}>
                     {ad.clickScore}
                   </span>
                 </div>
@@ -1137,7 +1143,7 @@ function DemoAnunciosPage() {
                       padding: "12px 16px",
                       textAlign: "right",
                       fontWeight: 700,
-                      color: "#059669",
+                      color: "var(--ui-positive-text)",
                     }}
                   >
                     {ad.clickScore}
@@ -1252,7 +1258,7 @@ function DemoAnunciosPage() {
             >
               <div>
                 <div style={{ color: "var(--ui-text-4)" }}>Click Score</div>
-                <div style={{ fontWeight: 800, color: "#059669", fontSize: 15 }}>
+                <div style={{ fontWeight: 800, color: "var(--ui-positive-text)", fontSize: 15 }}>
                   {selectedAd.clickScore}/100
                 </div>
               </div>

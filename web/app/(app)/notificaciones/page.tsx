@@ -103,7 +103,7 @@ export default function NotificacionesPage() {
                     <button
                       type="button"
                       onClick={() => markRead(n.id)}
-                      style={{ all: "unset", cursor: "pointer", color: "var(--ui-accent-text-2)" }}
+                      style={{ border: "none", background: "transparent", padding: "0 2px", borderRadius: 6, font: "inherit", cursor: "pointer", color: "var(--ui-accent-text-2)" }}
                     >
                       Marcar como leída
                     </button>

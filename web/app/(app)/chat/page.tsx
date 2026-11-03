@@ -77,6 +77,7 @@ export default function ChatPage() {
   const [minExpanded, setMinExpanded] = useState(false);
   const [draft, setDraft] = useState("");
   const [localMessages, setLocalMessages] = useState<LocalThreadMessage[]>(backendEnabled ? [] : INITIAL_LOCAL_MESSAGES);
+  const generalCount = localMessages.filter((m) => m.targetId === "ch-general").length + storeMessages.filter((m) => m.channelId === "ch-general").length;
 
   const minSubChannels = [
     { id: "ch-min", name: "general", subtitle: `Canal principal · ${brandLabel}` },
@@ -90,7 +91,7 @@ export default function ChatPage() {
       return {
         id: "ch-general",
         title: "# General",
-        subtitle: "Canal general de la agencia · Sin mensajes aún",
+        subtitle: generalCount > 0 ? `Canal general de la agencia · ${generalCount} ${generalCount === 1 ? "mensaje" : "mensajes"}` : "Canal general de la agencia · Sin mensajes aún",
         badgeText: "#",
         badgeBg: "#F1F5F9",
         badgeColor: "#475569",
@@ -129,7 +130,7 @@ export default function ChatPage() {
       };
     }
     return null;
-  }, [selectedId, channels]);
+  }, [selectedId, channels, generalCount, myName, brandLabel]);
 
   const threadMessages = useMemo(() => {
     if (!selectedId) return [];
@@ -289,16 +290,16 @@ export default function ChatPage() {
             justifyContent: "space-between",
           }}
         >
-          <span
+          <h1
             style={{
-              fontSize: 17,
+              fontSize: 18, margin: 0,
               fontWeight: 700,
               color: "var(--ui-text)",
               letterSpacing: "-0.02em",
             }}
           >
             Chat
-          </span>
+          </h1>
           <button
             type="button"
             onClick={() => setSelectedId("ch-general")}
@@ -329,7 +330,7 @@ export default function ChatPage() {
             borderBottom: "1px solid var(--ui-muted)",
           }}
         >
-          Todavía no hay canales con conversación.
+          {generalCount > 0 ? "Conversaciones activas del espacio." : "Todavía no hay canales con conversación."}
         </div>
 
         {/* Scrollable Navigation Sections */}
@@ -505,7 +506,7 @@ export default function ChatPage() {
                     >
                       # General
                     </span>
-                    <span style={{ fontSize: 11, color: "var(--ui-text-5)" }}>Sin mensajes aún</span>
+                    <span style={{ fontSize: 11, color: "var(--ui-text-5)" }}>{generalCount > 0 ? `${generalCount} ${generalCount === 1 ? "mensaje" : "mensajes"}` : "Sin mensajes aún"}</span>
                   </span>
                 </span>
               </button>

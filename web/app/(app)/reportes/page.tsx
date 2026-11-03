@@ -12,7 +12,7 @@ import {
   HublyCalendarIcon,
   HublyChartIcon as BarChart2,
   HublyChatIcon as MessageCircle,
-  HublyHomeIcon as Home,
+  HublyHomeIcon as Home, HublyInfoIcon as Info,
   HublyLinkIcon as Link2,
   HublyPlusIcon as Plus,
   HublyPresentationIcon,
@@ -225,6 +225,7 @@ function DemoReportesPage() {
       >
         
 
+        <h1 style={{ fontSize: 20, fontWeight: 700, color: "var(--ui-text)", margin: 0, letterSpacing: "-0.02em" }}>Reportes</h1>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           
 
@@ -328,6 +329,7 @@ function DemoReportesPage() {
         </div>
       </div>
 
+      <div role="note" style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, padding: "10px 12px", border: "1px solid var(--ui-border)", borderRadius: 12, background: "var(--ui-surface-2)", color: "var(--ui-text-2)", fontSize: 12.5 }}><Info size={16} style={{ flexShrink: 0, color: "var(--hb-accent-text)" }} /><span>Datos de ejemplo. Aún no hay cuentas conectadas para calcular métricas reales: estas cifras son una muestra de formato.</span></div>
       {/* Hubi Empty-State Card (10b-social-media-reportes-1440.png) */}
       <div
         style={{
@@ -429,9 +431,9 @@ function DemoReportesPage() {
               >
                 Reporte Ejecutivo · {new Date().toLocaleDateString("es-MX", { month: "long", year: "numeric" })}
               </div>
-              <h1 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 4px", color: "#FFFFFF" }}>
+              <h2 style={{ fontSize: 20, fontWeight: 800, margin: "0 0 4px", color: "var(--on-accent)" }}>
                 {brandName} · Informe Mensual de Resultados
-              </h1>
+              </h2>
               <div style={{ fontSize: 13, color: "#DCEFF9" }}>
                 {activeBrand?.industry || "Sin giro definido"} · {activeBrand?.connectedNetworks?.length
                   ? `Redes: ${activeBrand.connectedNetworks.join(", ")}`
@@ -448,7 +450,7 @@ function DemoReportesPage() {
                 textAlign: "right",
               }}
             >
-              <div style={{ fontSize: 11, color: "#DCEFF9" }}>Click Score Promedio</div>
+              <div style={{ fontSize: 11, color: "var(--on-accent)" }}>Click Score Promedio · Ejemplo</div>
               <div style={{ fontSize: 26, fontWeight: 800, color: "#6EE7B7" }}>100 / 100</div>
             </div>
           </div>
@@ -477,7 +479,7 @@ function DemoReportesPage() {
                 }}
               >
                 <div style={{ fontSize: 12, color: "var(--ui-text-4)", fontWeight: 600, marginBottom: 6 }}>
-                  {kpi.label}
+                  <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}><span>{kpi.label}</span><span style={{ fontSize: 11, fontWeight: 600, padding: "2px 8px", borderRadius: 999, background: "var(--ui-muted)", color: "var(--ui-text-3)" }}>Ejemplo</span></span>
                 </div>
                 <div style={{ fontSize: 24, fontWeight: 800, color: "var(--ui-text)", marginBottom: 4 }}>
                   {kpi.value}
@@ -486,7 +488,7 @@ function DemoReportesPage() {
                   style={{
                     fontSize: 11.5,
                     fontWeight: 600,
-                    color: "#059669",
+                    color: "var(--ui-positive-text)",
                     display: "inline-flex",
                     alignItems: "center",
                     gap: 4,

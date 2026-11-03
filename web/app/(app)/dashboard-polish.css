@@ -1468,7 +1468,7 @@ button[data-planned] { opacity: 0.5; cursor: not-allowed !important; }
   --ui-text: #0F172A; --ui-text-1: #1E293B; --ui-text-2: #334155; --ui-text-3: #475569;
   --ui-text-4: #64748B; --ui-text-5: #94A3B8; --ui-accent-text: var(--hb-accent-text); --ui-accent-text-2: var(--hb-accent-text);
   --ui-sky: #7CC8EE; --ui-sky-text: #16324F; --ui-sky-soft: #DCEFF9; --ui-sky-border: #BFE2F4;
-  --ui-sky-icon: #7CC8EE; --ui-sky-card: #FFFFFF;
+  --ui-sky-icon: #7CC8EE; --ui-sky-card: #FFFFFF; --ui-positive-text: #047857; --ui-positive-soft: #DCFCE7;
 }
 html.dark {
   --ui-surface: #15202B; --ui-surface-2: #1C2A38; --ui-muted: #263747;
@@ -1476,7 +1476,7 @@ html.dark {
   --ui-text: #ECECF1; --ui-text-1: #E2E2E9; --ui-text-2: #D2D2DB; --ui-text-3: #BDBDC9;
   --ui-text-4: #A5A5B3; --ui-text-5: #8F8F9E; --ui-accent-text: #9AD4F1; --ui-accent-text-2: #9AD4F1;
   --ui-sky: #7CC8EE; --ui-sky-text: #BFE2F4; --ui-sky-soft: #22384A; --ui-sky-border: #2F4C63;
-  --ui-sky-icon: #2F6288; --ui-sky-card: #172330;
+  --ui-sky-icon: #2F6288; --ui-sky-card: #172330; --ui-positive-text: #34D399; --ui-positive-soft: #133A2E;
 }
 html.dark :is(.hubly-sidebar, .hubly-mobile-tabbar) { --hi-soft: #4A4C66; --hi-strong: #9CA3D8; }
 html.dark :is(input, select, textarea):not([type="checkbox"]):not([type="radio"]) { color: var(--ui-text); }
@@ -2343,4 +2343,20 @@ html:has([data-mision-pildora][data-desplegado]) .hubly-main.hb-main { padding-b
 .hubly-reporte-cifras { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 @media (max-width: 767.98px) {
   .hubly-reporte-cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+
+/* 25. Foco de teclado visible y variante outline de botones ---------------------- */
+.hbtn-outline { border: 1px solid var(--ui-border); border-radius: 10px; background: var(--ui-surface); color: var(--ui-text-2); font-weight: 600; cursor: pointer; }
+.hbtn-outline:hover { background: var(--ui-surface-2); color: var(--ui-text); }
+.hubly-hubi-composer:focus-within,
+.hubly-composer-field input:focus-visible {
+  border-color: var(--hb-accent) !important;
+  box-shadow: 0 0 0 2px rgb(var(--hb-accent-rgb) / 0.18) !important;
+}
+.hubly-main :is(input, textarea, select, button, a, [role="button"], [role="tab"]):focus-visible,
+.hubly-sheet :is(input, textarea, select, button, a, [role="button"], [role="tab"]):focus-visible,
+.hubly-mobile-tabbar :is(button, a):focus-visible {
+  outline: 2px solid var(--hb-accent) !important;
+  outline-offset: 2px !important;
 }

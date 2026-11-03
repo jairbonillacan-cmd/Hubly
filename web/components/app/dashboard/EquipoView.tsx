@@ -1236,6 +1236,7 @@ export function EquipoView() {
                   key={p.id}
                   type="button"
                   onClick={() => setTeamPeriod(p.id)}
+                  aria-pressed={active}
                   className="hubly-seg-pill"
                   style={{
                     border: "none",
@@ -1460,6 +1461,7 @@ export function EquipoView() {
                 <button
                   type="button"
                   onClick={() => setBrandFilterId("all")}
+                  aria-pressed={brandFilterId === "all"}
                   style={{
                     padding: "4px 9px",
                     borderRadius: 7,
@@ -1481,6 +1483,7 @@ export function EquipoView() {
                     key={b.id}
                     type="button"
                     onClick={() => setBrandFilterId(b.id)}
+                    aria-pressed={brandFilterId === b.id}
                     style={{
                       padding: "4px 9px",
                       borderRadius: 7,
@@ -1911,6 +1914,7 @@ export function EquipoView() {
                       key={b.id}
                       type="button"
                       onClick={() => handleToggleBrandForMember(b.id)}
+                      aria-pressed={isAssigned}
                       style={{
                         display: "flex",
                         alignItems: "center",
@@ -2339,6 +2343,7 @@ export function EquipoView() {
                     key={r}
                     type="button"
                     onClick={() => setActivityRange(r)}
+                    aria-pressed={active}
                     style={{
                       border: "none",
                       background: active ? "var(--hb-accent)" : "transparent",
@@ -2656,6 +2661,7 @@ export function EquipoView() {
                     key={r}
                     type="button"
                     onClick={() => setRankingRange(r)}
+                    aria-pressed={active}
                     className="hubly-seg-pill"
                     style={{
                       border: "none",
@@ -2698,6 +2704,7 @@ export function EquipoView() {
                 <div
                   key={member.id}
                   onClick={() => setSelectedMemberId(member.id)}
+                  aria-pressed={isSelected}
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
