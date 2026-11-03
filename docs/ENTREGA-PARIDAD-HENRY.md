@@ -358,3 +358,56 @@ Las 2 que fallan son `salud-cuentas.spec.ts:14` y `:51`, y no vienen de esta fas
 - **Por qué fallan:** la prueba lee el espacio de demo guardado en `web/.data/workspaces/workspace-default.json`, no la semilla. Ese archivo tiene 6 tareas vencidas (del 29 de octubre al 1 de noviembre) y da 3 cuentas en riesgo y 8 sugerencias.
 - **Comprobación:** con la semilla limpia, calculado con los mismos selectores para hoy, el 2 y el 1 de noviembre, salen 1 cuenta en riesgo y 7 sugerencias, lo que espera la prueba.
 - **Arreglo pendiente:** que la prueba sirva la semilla en su `GET` en lugar de depender de los datos guardados.
+
+## Plan anti-slop y arquitectura, Fase 2 (primer corte): armazón (3 de noviembre)
+
+`app/(app)/layout.tsx` baja de 1968 a 1119 líneas. Seis piezas pasan a `web/components/app/shell/`: `MobileTopbar`, `MobileTabbar`, `NotificationsPopover`, `BrandMenu`, `ProfilePopover` y `ShellModals`.
+
+- **Cómo se movió:** el JSX se copió tal cual. Cada componente lee del store lo suyo y recibe por props solo el estado propio del armazón: cajón abierto, `withQuery`, `isNavActive` y cerrar.
+- **Perfil:** el borrador y su guardado viven ahora en `ProfilePopover`.
+- **Sin cambio:** el sidebar sigue en el layout, porque su animación recorre sus hijos directos.
+
+### Capas a tokens
+
+| Pieza | Antes | Ahora |
+|---|---:|---|
+| Barra superior móvil | 45 | `--layer-fab` (45) |
+| Barra inferior móvil | 46 | `--layer-fab` (45) |
+| Cajón móvil | 59 | `--layer-drawer` (50) |
+| Velo del cajón | 58 | `--layer-drawer` (50), va antes en el DOM |
+| Menús del sidebar | 65 y 70 | `--layer-dropdown` (40), dentro de la capa del sidebar |
+
+Verificado en el navegador: el cajón queda sobre la barra inferior y el velo.
+
+### Colores a tokens
+
+Se ven distinto:
+
+- **Modo oscuro:** el ítem activo del menú de marcas y del de espacios de trabajo usa `--ui-sky-soft`. Antes era `#F1F9FD`, un recuadro casi blanco sobre el fondo oscuro.
+- **Marca Min:** su cuadro muestra su propio color (`#5B67CA`). Antes un caso especial con el id `brand-min` la pintaba de marino.
+- **Contadores e iniciales:** suben de 8.5–9.5 px a 10 px, el mínimo de la escala.
+- **Botón de guardar perfil:** dice «Perfil actualizado», sin exclamación.
+
+Se ven igual: sombras y velo con los valores de la guía (`.hubly-shell-pop`, `.hubly-shell-scrim`) y texto sobre marino con `--on-accent`. El círculo de Hubi en la barra inferior conserva `#F1F9FD` con `ui-ok`: Hubi va siempre sobre celeste pálido.
+
+### Verificación
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto, **1422** hallazgos (antes 1456); el layout y `shell/` sin hallazgos |
+| `npx tsc --noEmit` | 0 errores |
+| `npm test` | 43/43 |
+| `npx playwright test` | 86/88; fallan las 2 de Salud de cuentas ya documentadas |
+| Navegador | Notificaciones, menú de marcas y perfil en escritorio; barra superior, barra inferior y cajón a 375 px; menú de marcas en oscuro |
+
+Consola sin errores nuevos. Hay dos errores viejos:
+
+- `MobileTopbar is not defined`: salió durante la recarga en caliente, mientras el layout estaba a medio editar.
+- El aviso de `<script>`: viene del script de tema de `app/layout.tsx` y ya existía antes de esta fase.
+
+### Pendiente de la Fase 2
+
+- **`EquipoView`:** sacar el catálogo de logros, decidir qué hacer con `DemoInviteTeamModal` y cambiar los 41 emojis por iconos duotono.
+- **`InicioView`:** un archivo por widget.
+- **`/parrillas`:** separar la tabla y el diálogo de compartir.
+- **Sidebar:** pasar sus estilos en línea a clases.
