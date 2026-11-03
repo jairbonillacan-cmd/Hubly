@@ -264,7 +264,7 @@ function postCompleto(): SocialPost {
       Instagram: { caption: "Copy para Instagram", collaborators: ["@marca"] },
       Facebook: { caption: "Copy para Facebook", link: "https://ejemplo.com" },
     },
-    coverAssetId: "asset-uno", videoContext: "Detrás de cámaras", workflowStatusId: "wf-uno",
+    workflowStatusId: "wf-uno",
     assigneeIds: ["tm-uno"], color: "#16a34a",
     customFields: { origen: "brief", prioridad: 2, aprobado: true, nota: null },
   };
@@ -753,24 +753,64 @@ const CLAVES_ANIDADAS = [
 test("el documento guardado conserva los campos anidados", async () => {
   const { useHublyStore } = await cargar();
   reiniciar(useHublyStore);
-  // La secuencia llena las colecciones que el estado fijo deja vacías (ideas,
-  // leads, quotes, assets, proyectos, chat); después se añaden los casos ricos.
+  // La secuencia llena las colecciones que el estado fijo deja vacías; después se
+  // reponen las que la secuencia vacía al final y se ejercitan libretas con contenido.
   ejecutarSecuencia(useHublyStore);
   useHublyStore.setState({
     brands: [marcaCompleta()],
     posts: [postCompleto()],
     tasks: [tareaCompleta()],
-    notebooks: [libretaCompleta()],
+    notebooks: [{ ...libretaCompleta(), content: "<p>Borrador</p>" }],
     widgets: widgetsCompletos(),
+    ads: [
+      {
+        id: "ad-uno", brandId: "marca-uno", name: "Anuncio Uno", platform: "Meta",
+        cover: "cup", status: "Activo", spend: 100, results: 10,
+        resultLabel: "Conversiones", cpa: 10, ctr: 2.5, clickScore: 80, hookScore: 85,
+      },
+    ],
+    agents: [
+      {
+        id: "ag-uno", name: "Asistente", templateId: "tpl-uno", purpose: "Redacción",
+        cadence: "Diaria", notes: ["Usar voz cercana"],
+        messages: [{ id: "am-uno", role: "user", text: "Hola" }], createdAt: RELOJ,
+      },
+    ],
   });
-  // Una acción normal vuelca el estado completo en el documento.
-  useHublyStore.getState().updateAgency({ name: "Agencia Prueba" });
+  const acciones = useHublyStore.getState();
+  acciones.addTaskList("marca-uno", "Primeros pasos");
+  acciones.addChatReminder({
+    channelId: "ch-equipo", messageId: "msg-uno", text: "Dar seguimiento", remindAt: MOMENTO + 60_000, authorId: "perfil-uno",
+  });
+  acciones.saveQuote({
+    leadId: "lead-uno", title: "Cotización con partidas", status: "Enviada",
+    items: [{ id: "qi-uno", description: "Mensualidad", quantity: 1, unitPrice: 1200 }],
+  });
+  const creada = acciones.addNotebook({
+    brandId: "marca-uno", title: "Libreta con cuerpo", content: "<p>Contenido inicial</p>",
+  });
+  assert.equal(creada.content, "<p>Contenido inicial</p>");
+  acciones.updateNotebook("nb-uno", { content: "<p>Acuerdos de la semana</p>" });
+  assert.equal(
+    useHublyStore.getState().notebooks.find((n) => n.id === "nb-uno")?.content,
+    "<p>Acuerdos de la semana</p>",
+  );
+  // Una acción normal vuelca el estado completo en el documento y en el almacenamiento local.
+  acciones.updateAgency({ name: "Agencia Prueba" });
   const documento = guardados[guardados.length - 1];
   assert.ok(documento, "la acción tenía que guardar");
+  const crudo = almacen.get("hubly:workspace:v3:prueba");
+  assert.ok(crudo, "saveWorkspaceToStorage tenía que escribir en localStorage");
+  const normalizado = JSON.parse(crudo) as Record<string, unknown>;
   const estado = JSON.parse(JSON.stringify(useHublyStore.getState())) as Record<string, unknown>;
   for (const clave of CLAVES_ANIDADAS) {
+    if (Array.isArray(estado[clave])) {
+      assert.ok((estado[clave] as unknown[]).length > 0, `${clave} quedó vacío en la prueba`);
+    }
     assert.deepEqual(documento[clave], estado[clave], `el documento perdió ${clave}`);
   }
+  assert.deepEqual(normalizado.posts, estado.posts, "saveWorkspaceToStorage perdió campos de posts");
+  assert.deepEqual(normalizado.notebooks, estado.notebooks, "saveWorkspaceToStorage perdió campos de notebooks");
 });
 
 test("addBrand crea la marca con su canal, su evento y un solo guardado", async () => {
