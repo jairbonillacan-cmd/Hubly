@@ -7,6 +7,7 @@ import { addDays, dueLabelFor, localIsoDate } from "@/lib/date";
 import { useKanbanDrag } from "@/lib/use-kanban-drag";
 import { KanbanDropSlot } from "@/components/app/KanbanDropSlot";
 import { MonthDragCalendar } from "@/components/app/MonthDragCalendar";
+import { STATUS_META } from "@/components/app/social/status-meta";
 import type { AgencyTask, TaskListDef } from "@/lib/types";
 import { TaskDetailModal } from "./TaskDetailModal";
 import { normalizedStatus, type BoardStatus } from "./task-utils";
@@ -32,8 +33,8 @@ type Popover = "agrupar" | "campos" | "filtro" | null;
 
 const KANBAN_COLUMNS = [
   { key: "todo", title: "Por hacer", dot: "var(--hb-accent)" },
-  { key: "in_progress", title: "En progreso", dot: "#D97706" },
-  { key: "done", title: "Completadas", dot: "#10B981" },
+  { key: "in_progress", title: "En progreso", dot: "var(--ui-sky)" },
+  { key: "done", title: "Completadas", dot: "var(--ui-positive-text)" },
 ] as const;
 const COLUMN_KEYS = KANBAN_COLUMNS.map((c) => c.key);
 const NO_LISTS: TaskListDef[] = [];
@@ -186,7 +187,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
           borderRadius: 999,
           border: done ? "none" : "1.5px solid var(--ui-border-strong)",
           background: done ? "var(--hb-accent)" : "var(--ui-surface)",
-          color: "#FFFFFF",
+          color: "var(--on-accent)",
           display: "grid",
           placeItems: "center",
           flexShrink: 0,
@@ -207,9 +208,9 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
           fontWeight: 500,
           color: done ? "var(--ui-text-5)" : "var(--ui-text-1)",
           textDecoration: done ? "line-through" : "none",
-          background: task.highlighted && !done ? "#E6F4FB" : "transparent",
+          background: task.highlighted && !done ? "var(--ui-sky-soft)" : "transparent",
           padding: task.highlighted ? "1px 5px" : 0,
-          borderRadius: 4,
+          borderRadius: 6,
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
@@ -224,7 +225,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
   const avatar = (task: AgencyTask) => (
     <span
       title={`Responsable: ${task.assigneeName || task.assignee}`}
-      style={{ width: 26, height: 26, flexShrink: 0, borderRadius: 999, background: "#DCEFF9", color: "var(--ui-accent-text)", fontSize: 11, fontWeight: 700, display: "grid", placeItems: "center" }}
+      style={{ width: 26, height: 26, flexShrink: 0, borderRadius: 999, background: "var(--ui-sky-soft)", color: "var(--ui-sky-text)", fontSize: 11, fontWeight: 700, display: "grid", placeItems: "center" }}
     >
       {task.assigneeInitial || (task.assigneeName || "?").slice(0, 1)}
     </span>
@@ -232,7 +233,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
 
   const today = localIsoDate();
   const dueColor = (task: AgencyTask) =>
-    normalizedStatus(task) !== "done" && task.dueDate < today ? "#B91C1C" : task.dueDate === today ? "#334155" : "#64748B";
+    normalizedStatus(task) !== "done" && task.dueDate < today ? STATUS_META.changes.color : task.dueDate === today ? "var(--ui-text-2)" : "var(--ui-text-4)";
 
   const timelineDays = Array.from({ length: TIMELINE_DAYS }, (_, i) => addDays(today, i - 3));
   const timelineRows = listNames.map((name) => ({ name, items: visible.filter((t) => t.listName === name) }));
@@ -276,7 +277,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
 
         <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
           <label style={{ display: "inline-flex", alignItems: "center", gap: 6, border: "1px solid var(--ui-border)", borderRadius: 8, padding: "0 8px", height: 30 }}>
-            <Search size={13} color="#64748B" />
+            <Search size={13} style={{ color: "var(--ui-text-4)" }} />
             <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar tarea" aria-label="Buscar tarea" style={{ border: 0, outline: 0, fontSize: 12.5, width: 110, background: "transparent" }} />
           </label>
           <button type="button" title="Agrupar las tareas" aria-label="Agrupar las tareas" aria-expanded={popover === "agrupar"} onClick={() => setPopover(popover === "agrupar" ? null : "agrupar")} style={iconBtn(popover === "agrupar" || groupBy !== "lista")}>
@@ -301,7 +302,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
         </div>
 
         {popover && (
-          <div style={{ position: "absolute", top: "100%", right: 0, marginTop: 6, zIndex: 20, width: 220, background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 12, padding: 12, boxShadow: "0 12px 28px rgba(15,23,42,0.12)", display: "grid", gap: 8, fontSize: 13 }}>
+          <div className="hubly-pop" style={{ position: "absolute", top: "100%", right: 0, marginTop: 6, zIndex: "var(--layer-dropdown)", width: 220, background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 12, padding: 12, display: "grid", gap: 8, fontSize: 13 }}>
             {popover === "agrupar" && (
               <>
                 <strong style={{ fontSize: 12 }}>Agrupar las cards por</strong>
@@ -358,7 +359,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
           {groups.map((group) => {
             const pending = group.items.filter((t) => normalizedStatus(t) !== "done").length;
             return (
-              <section key={group.key} style={{ background: "var(--ui-sky-card)", borderRadius: 16, border: "1px solid var(--ui-sky-border)", padding: "20px 22px 18px", position: "relative", boxShadow: "0 1px 2px rgba(26, 26, 46, 0.04)" }}>
+              <section key={group.key} style={{ background: "var(--ui-sky-card)", borderRadius: 16, border: "1px solid var(--ui-sky-border)", padding: "20px 22px 18px", position: "relative" }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: 12, borderBottom: "2px solid var(--ui-sky)" }}>
                   <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: "var(--ui-text)" }}>{group.name}</h3>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -372,7 +373,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                 </div>
 
                 {listMenu === group.key && (
-                  <div style={{ position: "absolute", right: 22, top: 56, zIndex: 10, background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 10, boxShadow: "0 12px 28px rgba(15,23,42,0.12)", padding: 4, display: "grid" }}>
+                  <div className="hubly-pop" style={{ position: "absolute", right: 22, top: 56, zIndex: "var(--layer-dropdown)", background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 10, padding: 4, display: "grid" }}>
                     <button
                       type="button"
                       style={menuItem}
@@ -386,7 +387,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                     </button>
                     <button
                       type="button"
-                      style={{ ...menuItem, color: "#B91C1C" }}
+                      style={{ ...menuItem, color: STATUS_META.changes.color }}
                       onClick={async () => {
                         setListMenu(null);
                         const count = brandTasks.filter((t) => t.listName === group.name).length;
@@ -450,7 +451,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                       style={{ flex: 1, minWidth: 0, border: "none", background: "transparent", outline: "none", fontSize: 13 }}
                     />
                     {(drafts[group.key] || "").trim() && (
-                      <button type="submit" style={{ padding: "4px 10px", borderRadius: 6, border: "none", background: "var(--hb-accent)", color: "#FFFFFF", fontSize: 11.5, fontWeight: 600, cursor: "pointer" }}>
+                      <button type="submit" style={{ padding: "4px 10px", borderRadius: 6, border: "none", background: "var(--hb-accent)", color: "var(--on-accent)", fontSize: 11.5, fontWeight: 600, cursor: "pointer" }}>
                         Guardar
                       </button>
                     )}
@@ -476,7 +477,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                 <input id="new-list-name" autoFocus value={newListName} onChange={(e) => setNewListName(e.target.value)} placeholder="Ej. Entregables de noviembre" style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--ui-border-strong)", fontSize: 13.5, width: "100%", maxWidth: 280 }} />
                 <div style={{ display: "flex", gap: 8 }}>
                   <button type="button" onClick={() => setCreatingList(false)} style={{ padding: "7px 14px", borderRadius: 8, border: "1px solid var(--ui-border)", background: "var(--ui-surface)", color: "var(--ui-text-3)", fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}>Cancelar</button>
-                  <button type="submit" style={{ padding: "7px 16px", borderRadius: 8, border: "none", background: "var(--hb-accent)", color: "#FFFFFF", fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}>Crear lista</button>
+                  <button type="submit" style={{ padding: "7px 16px", borderRadius: 8, border: "none", background: "var(--hb-accent)", color: "var(--on-accent)", fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}>Crear lista</button>
                 </div>
               </form>
             ) : (
@@ -567,8 +568,8 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
               date: task.dueDate,
               label: task.title,
               title: `${task.title} · ${task.assigneeName || task.assignee}`,
-              bg: status === "done" ? "#F1F5F9" : status === "in_progress" ? "#FEF3C7" : "#E6F4FB",
-              color: status === "done" ? "var(--ui-text-3)" : status === "in_progress" ? "#92400E" : "var(--hb-accent-edge)",
+              bg: status === "done" ? "var(--ui-muted)" : status === "in_progress" ? "var(--ui-sky-soft)" : "rgb(var(--hb-accent-rgb) / 0.08)",
+              color: status === "done" ? "var(--ui-text-3)" : status === "in_progress" ? "var(--ui-sky-text)" : "var(--hb-accent-text)",
               strike: status === "done",
             };
           })}
@@ -590,9 +591,9 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
             {timelineDays.map((d) => {
               const day = new Date(`${d}T12:00:00`);
               return (
-                <div key={d} style={{ ...tlHead, textAlign: "center", color: d === today ? "#FFFFFF" : "var(--ui-text-4)", background: d === today ? "var(--hb-accent)" : "var(--ui-surface-2)", fontWeight: 700 }}>
+                <div key={d} style={{ ...tlHead, textAlign: "center", color: d === today ? "var(--on-accent)" : "var(--ui-text-4)", background: d === today ? "var(--hb-accent)" : "var(--ui-surface-2)", fontWeight: 700 }}>
                   {day.getDate()}
-                  <div style={{ fontSize: 9.5, fontWeight: 600 }}>{day.toLocaleDateString("es-MX", { weekday: "short" })}</div>
+                  <div style={{ fontSize: 10, fontWeight: 600 }}>{day.toLocaleDateString("es-MX", { weekday: "short" })}</div>
                 </div>
               );
             })}
@@ -614,7 +615,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                         onClick={() => setOpenTaskId(task.id)}
                         title={`${task.title} · ${dueLabelFor(task.dueDate)}`}
                         aria-label={task.title}
-                        style={{ height: 22, borderRadius: 6, background: normalizedStatus(task) === "done" ? "var(--ui-border-strong)" : "var(--hb-accent)", color: "#FFFFFF", fontSize: 10.5, fontWeight: 600, padding: "3px 5px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", cursor: "grab", opacity: timelineDrag.drag?.id === task.id ? 0.35 : 1 }}
+                        style={{ height: 22, borderRadius: 6, background: normalizedStatus(task) === "done" ? "var(--ui-border-strong)" : "var(--hb-accent)", color: "var(--on-accent)", fontSize: 10.5, fontWeight: 600, padding: "3px 5px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", cursor: "grab", opacity: timelineDrag.drag?.id === task.id ? 0.35 : 1 }}
                       >
                         {task.title}
                       </div>
@@ -643,7 +644,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                 <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "var(--ui-accent-soft)", color: "var(--ui-accent-text)" }}>{p.status}</span>
                 <span style={{ fontSize: 11.5, color: "var(--ui-text-4)" }}>Entrega: {p.dueDate}</span>
               </div>
-              <div style={{ fontSize: 14.5, fontWeight: 700, color: "var(--ui-text)", marginBottom: 6 }}>{p.title}</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)", marginBottom: 6 }}>{p.title}</div>
               <div style={{ fontSize: 12.5, color: "var(--ui-text-4)", marginBottom: 12 }}>{p.description}</div>
               <div style={{ height: 6, borderRadius: 999, background: "var(--ui-muted)", overflow: "hidden" }}>
                 <div style={{ width: `${p.progress}%`, height: "100%", background: "var(--hb-accent)" }} />

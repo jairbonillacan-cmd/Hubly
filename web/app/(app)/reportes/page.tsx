@@ -254,7 +254,7 @@ function DemoReportesPage() {
                 display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
-                boxShadow: !showPrintableSheet ? "0 1px 2px rgba(0,0,0,0.06)" : "none",
+                boxShadow: !showPrintableSheet ? "0 1px 2px rgb(var(--hb-accent-rgb) / 0.08)" : "none",
               }}
             >
               <LayoutGrid size={14} />
@@ -275,7 +275,7 @@ function DemoReportesPage() {
                 display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
-                boxShadow: showPrintableSheet ? "0 1px 2px rgba(0,0,0,0.06)" : "none",
+                boxShadow: showPrintableSheet ? "0 1px 2px rgb(var(--hb-accent-rgb) / 0.08)" : "none",
               }}
             >
               <List size={14} />
@@ -314,7 +314,7 @@ function DemoReportesPage() {
               alignItems: "center",
               gap: 6,
               background: "var(--hb-accent)",
-              color: "#FFFFFF",
+              color: "var(--on-accent)",
               border: "none",
               borderRadius: 10,
               padding: "8px 16px",
@@ -378,7 +378,7 @@ function DemoReportesPage() {
             alignItems: "center",
             gap: 8,
             background: "var(--hb-accent)",
-            color: "#FFFFFF",
+            color: "var(--on-accent)",
             border: "none",
             borderRadius: 12,
             padding: "10px 22px",
@@ -400,7 +400,6 @@ function DemoReportesPage() {
             border: "1px solid var(--ui-border)",
             borderRadius: 20,
             padding: "32px 36px",
-            boxShadow: "0 4px 20px rgba(15, 23, 42, 0.04)",
           }}
         >
           {/* Report Header Banner */}
@@ -408,8 +407,9 @@ function DemoReportesPage() {
             style={{
               padding: "24px 28px",
               borderRadius: 16,
-              background: "linear-gradient(135deg, #0F2539 0%, #16324F 100%)",
-              color: "#FFFFFF",
+              background: "var(--ui-surface-2)",
+              border: "1px solid var(--ui-border)",
+              color: "var(--ui-text)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -425,16 +425,16 @@ function DemoReportesPage() {
                   fontWeight: 700,
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
-                  color: "#BFE2F4",
+                  color: "var(--hb-accent-text)",
                   marginBottom: 6,
                 }}
               >
                 Reporte Ejecutivo · {new Date().toLocaleDateString("es-MX", { month: "long", year: "numeric" })}
               </div>
-              <h2 style={{ fontSize: 20, fontWeight: 800, margin: "0 0 4px", color: "var(--on-accent)" }}>
+              <h2 style={{ fontSize: 20, fontWeight: 700, margin: "0 0 4px", color: "var(--ui-text)" }}>
                 {brandName} · Informe Mensual de Resultados
               </h2>
-              <div style={{ fontSize: 13, color: "#DCEFF9" }}>
+              <div style={{ fontSize: 13, color: "var(--ui-text-3)" }}>
                 {activeBrand?.industry || "Sin giro definido"} · {activeBrand?.connectedNetworks?.length
                   ? `Redes: ${activeBrand.connectedNetworks.join(", ")}`
                   : "Sin redes indicadas"}
@@ -443,15 +443,15 @@ function DemoReportesPage() {
 
             <div
               style={{
-                background: "rgba(255, 255, 255, 0.12)",
-                border: "1px solid rgba(255, 255, 255, 0.2)",
+                background: "var(--ui-surface)",
+                border: "1px solid var(--ui-border)",
                 borderRadius: 12,
                 padding: "12px 18px",
                 textAlign: "right",
               }}
             >
-              <div style={{ fontSize: 11, color: "var(--on-accent)" }}>Click Score Promedio · Ejemplo</div>
-              <div style={{ fontSize: 26, fontWeight: 800, color: "#6EE7B7" }}>100 / 100</div>
+              <div style={{ fontSize: 11, color: "var(--ui-text-4)" }}>Click Score Promedio · Ejemplo</div>
+              <div style={{ fontSize: 20, fontWeight: 700, color: "var(--hb-accent-text)" }}>100 / 100</div>
             </div>
           </div>
 
@@ -481,7 +481,7 @@ function DemoReportesPage() {
                 <div style={{ fontSize: 12, color: "var(--ui-text-4)", fontWeight: 600, marginBottom: 6 }}>
                   <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}><span>{kpi.label}</span><span style={{ fontSize: 11, fontWeight: 600, padding: "2px 8px", borderRadius: 999, background: "var(--ui-muted)", color: "var(--ui-text-3)" }}>Ejemplo</span></span>
                 </div>
-                <div style={{ fontSize: 24, fontWeight: 800, color: "var(--ui-text)", marginBottom: 4 }}>
+                <div style={{ fontSize: 20, fontWeight: 700, color: "var(--ui-text)", marginBottom: 4 }}>
                   {kpi.value}
                 </div>
                 <div

@@ -17,11 +17,14 @@ import {
   HublyChartIcon as BarChart3,
   HublyCheckCircleIcon as CheckCircle2,
   HublyChevronRightIcon as ChevronRight,
+  HublyClipboardIcon,
   HublyCloseIcon as X,
   HublyExpandIcon as Maximize2,
   HublyPaperclipIcon as Paperclip,
+  HublyPencilIcon,
   HublyPeopleIcon as Users,
   HublyPlugIcon as Plug,
+  HublySparkIcon,
   HublyTrashIcon as Trash2,
 } from "@/components/app/icons/DuotoneIcons";
 import { POST_STATUS_LABEL } from "@/lib/labels";
@@ -37,6 +40,7 @@ interface LocalAssistantTurn {
   role: "user" | "assistant";
   text: string;
   timestamp: string;
+  icon?: React.ComponentType<{ size?: number | string }>;
   actionType?: "open_composer" | "open_suggestions" | "open_invite";
   actionLabel?: string;
 }
@@ -184,7 +188,7 @@ export function FloatingAIDrawer() {
         .join("\n");
 
       const lines = [
-        `📋 Estado de tareas en ${brandLabel} (datos locales del store):`,
+        `Estado de tareas en ${brandLabel} (datos locales del store):`,
         `• Vencidas: ${overdueCount} | Para hoy: ${todayCount} | Para mañana: ${tomorrowCount}`,
         `• Total pendientes en toda la agencia: ${allBreakdown.pendingCount} (${allBreakdown.completedCount} completadas).`,
       ];
@@ -198,6 +202,7 @@ export function FloatingAIDrawer() {
 
       return {
         text: lines.join("\n"),
+        icon: HublyClipboardIcon,
         actionType: "open_composer",
         actionLabel: "Programar entregable",
       };
@@ -223,7 +228,7 @@ export function FloatingAIDrawer() {
       const { summary, accounts } = healthResult;
 
       const topLines = [
-        `📊 Diagnóstico de Salud de Cuentas (${summary.totalAccounts} marcas en el store):`,
+        `Diagnóstico de Salud de Cuentas (${summary.totalAccounts} marcas en el store):`,
         `• Completas: ${summary.completeCount} | En progreso: ${summary.inProgressCount} | En riesgo: ${summary.atRiskCount}`,
       ];
 
@@ -234,11 +239,12 @@ export function FloatingAIDrawer() {
       });
 
       topLines.push(
-        `💡 Tienes ${recs.length} sugerencia(s) automática(s) lista(s) para aplicar según el cumplimiento del último mes.`
+        `Tienes ${recs.length} sugerencia(s) automática(s) lista(s) para aplicar según el cumplimiento del último mes.`
       );
 
       return {
         text: topLines.join("\n"),
+        icon: BarChart3,
         actionType: "open_suggestions",
         actionLabel: `Revisar sugerencias (${recs.length})`,
       };
@@ -257,7 +263,7 @@ export function FloatingAIDrawer() {
       );
 
       const lines = [
-        `🗓️ Resumen de Publicaciones y Aprobaciones:`,
+        `Resumen de Publicaciones y Aprobaciones:`,
         `• ${POST_STATUS_LABEL.pending}: ${approvalPosts.length} pieza(s)`,
         `• Programadas para hoy: ${todayPosts.length} pieza(s)`,
       ];
@@ -272,6 +278,7 @@ export function FloatingAIDrawer() {
 
       return {
         text: lines.join("\n"),
+        icon: CalendarDays,
         actionType: "open_composer",
         actionLabel: "Abrir compositor de posts",
       };
@@ -287,12 +294,13 @@ export function FloatingAIDrawer() {
 
       return {
         text: [
-          `✍️ 3 propuestas de copy para ${brandLabel} (${industry}):`,
+          `3 propuestas de copy para ${brandLabel} (${industry}):`,
           `Tono de marca: "${tone}"`,
-          `1️⃣ Carrusel educativo: "3 detalles detrás de cada proyecto en ${brandLabel} que transforman la experiencia de nuestros clientes. Desliza para conocer el proceso → ${handle}"`,
-          `2️⃣ Reel dinámico (9:16): "Un día real en ${brandLabel}: del concepto a la entrega final en 30 segundos. ¿Cuál es tu parte favorita?"`,
-          `3️⃣ Story interactiva: "Estamos preparando las novedades de la semana en ${brandLabel}. Vota en la encuesta qué te gustaría ver primero 👇"`,
+          `1. Carrusel educativo: "3 detalles detrás de cada proyecto en ${brandLabel} que transforman la experiencia de nuestros clientes. Desliza para conocer el proceso → ${handle}"`,
+          `2. Reel dinámico (9:16): "Un día real en ${brandLabel}: del concepto a la entrega final en 30 segundos. ¿Cuál es tu parte favorita?"`,
+          `3. Story interactiva: "Estamos preparando las novedades de la semana en ${brandLabel}. Vota en la encuesta qué te gustaría ver primero."`,
         ].join("\n"),
+        icon: HublyPencilIcon,
         actionType: "open_composer",
         actionLabel: "Usar en el compositor",
       };
@@ -307,12 +315,13 @@ export function FloatingAIDrawer() {
 
     return {
       text: [
-        `🐱 Soy Hubi. Resumen en vivo de tu workspace:`,
+        `Soy Hubi. Resumen en vivo de tu workspace:`,
         `• Marca activa: ${brandLabel} (${activeBrand?.industry || "Agencia"})`,
         `• Tareas de ${brandLabel}: ${breakdown.overdue.length} vencida(s), ${breakdown.today.length} para hoy, ${breakdown.completedCount} completada(s).`,
         `• Publicaciones esperando aprobación: ${approvalPosts.length}.`,
         `• Equipo: ${teamMembers.length} miembro(s) activo(s) y ${pendingInvites} invitación(es) local(es) pendiente(s).`,
       ].join("\n"),
+      icon: HublySparkIcon,
       actionType: "open_composer",
       actionLabel: "Crear publicación",
     };
@@ -340,6 +349,7 @@ export function FloatingAIDrawer() {
       role: "assistant",
       text: reply.text,
       timestamp: nowTime,
+      icon: reply.icon,
       actionType: reply.actionType,
       actionLabel: reply.actionLabel,
     };
@@ -484,14 +494,19 @@ export function FloatingAIDrawer() {
                           border:
                             turn.role === "user"
                               ? "none"
-                              : "1px solid #E2E8F0",
+                              : "1px solid var(--ui-border)",
                           color:
-                            turn.role === "user" ? "#FFFFFF" : "var(--ui-text-1)",
+                            turn.role === "user" ? "var(--on-accent)" : "var(--ui-text-1)",
                           fontSize: 12.5,
                           lineHeight: 1.55,
                           whiteSpace: "pre-line",
                         }}
                       >
+                        {turn.icon && (
+                          <span style={{ display: "inline-flex", verticalAlign: "text-bottom", marginRight: 6, color: "var(--hb-accent-text)" }}>
+                            <turn.icon size={15} />
+                          </span>
+                        )}
                         {turn.text}
                       </div>
 
@@ -511,7 +526,7 @@ export function FloatingAIDrawer() {
                             style={{
                               padding: "5px 11px",
                               borderRadius: 8,
-                              border: "1px solid #BFE2F4",
+                              border: "1px solid var(--ui-sky-border)",
                               background: "var(--ui-accent-soft)",
                               color: "var(--hb-accent-text)",
                               fontSize: 11.5,

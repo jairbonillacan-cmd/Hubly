@@ -5,6 +5,7 @@ import { useHublyStore } from "@/lib/store";
 import { askConfirm } from "@/components/app/AppDialogHost";
 import { useKanbanDrag } from "@/lib/use-kanban-drag";
 import { KanbanDropSlot } from "@/components/app/KanbanDropSlot";
+import { STATUS_META } from "@/components/app/social/status-meta";
 import type { Lead, LeadStage, Quote, QuoteItem, QuoteStatus } from "@/lib/types";
 import {
   HublyCloseIcon as X,
@@ -14,10 +15,10 @@ import {
 
 const STAGES: { key: LeadStage; label: string; dot: string }[] = [
   { key: "nuevo", label: "Nuevo", dot: "var(--hb-accent)" },
-  { key: "contactado", label: "Contactado", dot: "#0EA5E9" },
-  { key: "propuesta", label: "Propuesta", dot: "#D97706" },
-  { key: "ganado", label: "Ganado", dot: "#10B981" },
-  { key: "perdido", label: "Perdido", dot: "#94A3B8" },
+  { key: "contactado", label: "Contactado", dot: "var(--ui-sky)" },
+  { key: "propuesta", label: "Propuesta", dot: "var(--hb-accent-text)" },
+  { key: "ganado", label: "Ganado", dot: "var(--ui-positive-text)" },
+  { key: "perdido", label: "Perdido", dot: "var(--ui-text-5)" },
 ];
 const STAGE_KEYS = STAGES.map((s) => s.key);
 const QUOTE_STATUSES: QuoteStatus[] = ["Borrador", "Enviada", "Aceptada", "Rechazada"];
@@ -63,7 +64,7 @@ export default function CrmPage() {
     <div style={{ padding: "12px 0 48px" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 700, color: "var(--ui-text)", margin: 0 }}>CRM</h1>
+          <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.02em", color: "var(--ui-text)", margin: 0 }}>CRM</h1>
           <p style={{ fontSize: 13, color: "var(--ui-text-4)", margin: "2px 0 0" }}>Prospectos y cotizaciones de tu agencia.</p>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -80,7 +81,7 @@ export default function CrmPage() {
         {tiles.map((t) => (
           <div key={t.label} style={card}>
             <div style={{ fontSize: 12, color: "var(--ui-text-4)" }}>{t.label}</div>
-            <div style={{ fontSize: 24, fontWeight: 700, color: "var(--ui-text)", fontVariantNumeric: "tabular-nums" }}>{t.value}</div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--ui-text)", fontVariantNumeric: "tabular-nums" }}>{t.value}</div>
             <div style={{ fontSize: 12, color: "var(--ui-text-4)" }}>{t.sub}</div>
           </div>
         ))}
@@ -124,7 +125,7 @@ export default function CrmPage() {
                   {items.map((lead) => (
                     <React.Fragment key={lead.id}>
                       {over && drag?.beforeId === lead.id && <KanbanDropSlot height={drag.height} />}
-                      <div {...getCardProps(lead.id)} onClick={() => setLeadDraft(lead)} style={{ background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 11, padding: "10px 12px", cursor: drag?.id === lead.id ? "grabbing" : "grab", opacity: drag?.id === lead.id ? 0.35 : 1 }}>
+                      <div {...getCardProps(lead.id)} onClick={() => setLeadDraft(lead)} style={{ background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 12, padding: "10px 12px", cursor: drag?.id === lead.id ? "grabbing" : "grab", opacity: drag?.id === lead.id ? 0.35 : 1 }}>
                         <div style={{ fontSize: 13, fontWeight: 650, color: "var(--ui-text)" }}>{lead.company || lead.name}</div>
                         {lead.company && <div style={{ fontSize: 12, color: "var(--ui-text-3)" }}>{lead.name}</div>}
                         <div style={{ fontSize: 12, fontWeight: 600, color: "var(--ui-accent-text)", marginTop: 6, fontVariantNumeric: "tabular-nums" }}>{money(lead.value)}/mes</div>
@@ -239,11 +240,12 @@ function ModalShell({ label, onClose, onSubmit, children }: { label: string; onC
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(15,23,42,0.45)", display: "grid", placeItems: "center", padding: 16 }}
+      className="hubly-overlay hubly-cal-overlay"
+      style={{ position: "fixed", inset: 0, zIndex: "var(--layer-modal)", display: "grid", placeItems: "center", padding: 16 }}
     >
       <form role="dialog" aria-modal="true" aria-label={label} onSubmit={onSubmit} style={{ width: "100%", maxWidth: 560, maxHeight: "90vh", overflowY: "auto", background: "var(--ui-surface)", borderRadius: 16, padding: 20, display: "grid", gap: 12 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h2 style={{ fontSize: 17, fontWeight: 700, margin: 0 }}>{label}</h2>
+          <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0 }}>{label}</h2>
           <button type="button" aria-label="Cerrar" onClick={onClose} style={{ border: 0, background: "transparent", cursor: "pointer", color: "var(--ui-text-4)", display: "grid" }}>
             <X size={18} />
           </button>
@@ -382,6 +384,6 @@ const lab = { display: "grid", gap: 4, fontSize: 12, fontWeight: 600, color: "va
 const grid2 = { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 10 } as const;
 const cell = { padding: "10px 14px" } as const;
 const empty = { fontSize: 13.5, color: "var(--ui-text-4)", textAlign: "center", padding: 32, margin: 0 } as const;
-const primary = { display: "inline-flex", alignItems: "center", gap: 6, border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" } as const;
+const primary = { display: "inline-flex", alignItems: "center", gap: 6, border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "var(--on-accent)", padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" } as const;
 const secondary = { display: "inline-flex", alignItems: "center", gap: 6, border: "1px solid var(--ui-border-strong)", borderRadius: 9, background: "var(--ui-surface)", color: "var(--ui-text-2)", padding: "7px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;
-const danger = { border: "1px solid #FECACA", background: "#FEF2F2", color: "#B91C1C", borderRadius: 9, padding: "7px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;
+const danger = { border: `1px solid ${STATUS_META.changes.bg}`, background: STATUS_META.changes.bg, color: STATUS_META.changes.color, borderRadius: 9, padding: "7px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;

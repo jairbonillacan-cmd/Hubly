@@ -13,18 +13,6 @@
   "app/(app)/calendario/page.tsx": {
     "color-fijo": 2
   },
-  "app/(app)/chat/page.tsx": {
-    "color-fijo": 17,
-    "rgb-fijo": 2,
-    "tamano-fuente": 2
-  },
-  "app/(app)/crm/page.tsx": {
-    "color-fijo": 6,
-    "radio": 1,
-    "rgb-fijo": 1,
-    "tamano-fuente": 3,
-    "z-index-fijo": 1
-  },
   "app/(app)/dashboard-polish.css": {
     "color-fijo": 295,
     "degradado": 3,
@@ -40,11 +28,6 @@
     "tamano-fuente": 5,
     "z-index-fijo": 1
   },
-  "app/(app)/marca/page.tsx": {
-    "color-fijo": 4,
-    "rgb-fijo": 2,
-    "z-index-fijo": 1
-  },
   "app/(app)/marcas/page.tsx": {
     "color-fijo": 3,
     "tamano-fuente": 2
@@ -55,17 +38,6 @@
   "app/(app)/parrillas/page.tsx": {
     "rgb-fijo": 1
   },
-  "app/(app)/reportes/page.tsx": {
-    "color-fijo": 7,
-    "degradado": 1,
-    "rgb-fijo": 5,
-    "tamano-fuente": 2
-  },
-  "app/(app)/tareas/page.tsx": {
-    "color-fijo": 2,
-    "radio": 1,
-    "rgb-fijo": 3
-  },
   "components/app/AccessPanel.tsx": {
     "color-fijo": 3
   },
@@ -75,20 +47,10 @@
     "tamano-fuente": 1,
     "z-index-fijo": 1
   },
-  "components/app/ArchivosYProyectosView.tsx": {
-    "color-fijo": 8,
-    "rgb-fijo": 4,
-    "tamano-fuente": 1,
-    "z-index-fijo": 2
-  },
   "components/app/DescubreHublyWidget.tsx": {
     "rgb-fijo": 1,
     "transition-all": 1,
     "z-index-fijo": 1
-  },
-  "components/app/FloatingAIDrawer.tsx": {
-    "color-fijo": 3,
-    "emoji": 7
   },
   "components/app/MonthDragCalendar.tsx": {
     "color-fijo": 2
@@ -147,13 +109,6 @@
   },
   "components/app/social/SocialCalendar.tsx": {
     "color-fijo": 1
-  },
-  "components/app/tasks/TaskBoard.tsx": {
-    "color-fijo": 14,
-    "radio": 1,
-    "rgb-fijo": 3,
-    "tamano-fuente": 2,
-    "z-index-fijo": 2
   },
   "components/app/tasks/TaskDetailModal.tsx": {
     "color-fijo": 3,

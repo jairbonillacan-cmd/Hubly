@@ -619,3 +619,28 @@ Consola sin errores nuevos. Hay dos errores viejos:
 | Navegador (`1440` claro/oscuro, `375` móvil, teclado) | Pestaña Equipo en `/dashboard`, cajón de logros y cajón de miembro verificados |
 
 - **Sin comprobar:** La lista de invitaciones pendientes cuando hay invitaciones enviadas (en la semilla inicial está vacía, por lo que muestra el estado vacío).
+
+## Plan anti-slop y arquitectura, Fase 3 (Lote F): pantallas medianas y cajón de IA (3 de noviembre)
+
+- **Qué hizo el lote:** `chat/page.tsx` (21 → 0), `reportes/page.tsx` (15 → 0), `crm/page.tsx` (12 → 0), `marca/page.tsx` (7 → 0), `tareas/page.tsx` (6 → 0), `tasks/TaskBoard.tsx` (22 → 0), `ArchivosYProyectosView.tsx` (15 → 0) y `FloatingAIDrawer.tsx` (10 → 0) bajan de **108 a 0 hallazgos** en conjunto, con **0 `ui-ok`**.
+  - En `/chat`, colores de burbujas, estados de canales y capas de menús (`--layer-dropdown`) y modales (`--layer-modal`) pasan a tokens; tamaños `14.5px` y `9.5px` pasan a `14px` y `10px`.
+  - En `/reportes`, se eliminó el degradado decorativo del bloque ejecutivo imprimible (`linear-gradient(135deg, #1E1B4B, #312E81)`), sustituido por `--ui-surface-2` con borde `1px solid var(--ui-border)`, métricas a `20px` y `Click Score Promedio · Ejemplo` en `--hb-accent-text`.
+  - En `/crm`, el `h1` sube de `22px/700` a `28px/800`, el valor del embudo baja de `22px` a `20px`, las columnas usan `--ui-border` / `--ui-text-3` y el modal usa `--layer-modal`.
+  - En `/marca` y `/tareas`, colores, sombras, radios (`13px → 12px`, `4px → 6px`) y capas (`--layer-toast`, `--layer-modal`) pasan a tokens.
+  - En `TaskBoard.tsx` y `ArchivosYProyectosView.tsx`, prioridades, etiquetas, barra de selección múltiple y diálogos usan tokens `--ui-*` y `--layer-*`.
+  - En `FloatingAIDrawer.tsx`, los 7 emojis (`✨`, `✍️`, `💡`, `📅`, `🎯`, `📊`, `🔥`) se reemplazaron por iconos de `DuotoneIcons` y el texto `¡Listo!` pasó a `Listo`.
+- **Qué se ve distinto:**
+  - En `/reportes`, el resumen ejecutivo imprimible es una tarjeta plana `--ui-surface-2` con borde de 1px en lugar de un bloque degradado índigo oscuro.
+  - En `/crm`, el título principal «CRM y prospectos» tiene jerarquía de página (`28px/800`) y las cabeceras del tablero Kanban usan bordes y textos de superficie neutros.
+  - En el asistente lateral de IA (`FloatingAIDrawer`), las sugerencias rápidas y cabeceras muestran iconos duotono en lugar de emojis.
+
+### Verificación
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto, **792** hallazgos (antes 900; Lote F: 108 → 0) |
+| `npx tsc --noEmit` | 0 errores |
+| `npm test` | 43/43 |
+| Navegador (`1440` claro/oscuro, `375` móvil, teclado) | `/chat`, `/reportes`, `/crm`, `/marca`, `/tareas`, `/archivos` y `FloatingAIDrawer` verificados |
+
+- **Sin comprobar:** Impresión física o exportación a PDF desde el diálogo nativo `window.print()` en `/reportes`.

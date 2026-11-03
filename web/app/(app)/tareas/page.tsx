@@ -47,7 +47,7 @@ export default function TareasPage() {
           marginBottom: 18,
         }}
       >
-        {/* Left Pill Group (#F1F5F9): Listas | Libretas | Contenido */}
+        {/* Left Pill Group: Listas | Libretas | Contenido */}
         <div
           style={{
             display: "inline-flex",
@@ -74,18 +74,18 @@ export default function TareasPage() {
               fontWeight: 600,
               fontSize: 13.5,
               boxShadow:
-                topSection === "listas" ? "0 1px 3px rgba(15, 23, 42, 0.08)" : "none",
+                topSection === "listas" ? "0 1px 3px rgb(var(--hb-accent-rgb) / 0.08)" : "none",
               cursor: "pointer",
             }}
           >
-            {/* Yellow notepad icon matching screenshot */}
+            {/* Notepad icon matching screenshot */}
             <span
               style={{
                 width: 16,
                 height: 16,
-                borderRadius: 4,
-                background: "#9099D3",
-                color: "var(--hb-accent-edge)",
+                borderRadius: 6,
+                background: "var(--ui-sky-soft)",
+                color: "var(--hb-accent-text)",
                 fontSize: 10,
                 display: "grid",
                 placeItems: "center",
@@ -113,7 +113,7 @@ export default function TareasPage() {
               fontWeight: 600,
               fontSize: 13.5,
               boxShadow:
-                topSection === "libretas" ? "0 1px 3px rgba(15, 23, 42, 0.08)" : "none",
+                topSection === "libretas" ? "0 1px 3px rgb(var(--hb-accent-rgb) / 0.08)" : "none",
               cursor: "pointer",
             }}
           >
@@ -137,7 +137,7 @@ export default function TareasPage() {
               fontWeight: 600,
               fontSize: 13.5,
               boxShadow:
-                topSection === "contenido" ? "0 1px 3px rgba(15, 23, 42, 0.08)" : "none",
+                topSection === "contenido" ? "0 1px 3px rgb(var(--hb-accent-rgb) / 0.08)" : "none",
               cursor: "pointer",
             }}
           >

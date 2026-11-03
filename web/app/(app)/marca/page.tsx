@@ -60,18 +60,20 @@ export default function MarcaCorePage() {
     >
       {savedToast && (
         <div
+          role="status"
+          className="hubly-pop"
           style={{
             position: "fixed",
             top: 20,
             right: 24,
-            zIndex: 80,
-            background: "#0F172A",
-            color: "#FFFFFF",
+            zIndex: "var(--layer-toast)",
+            background: "var(--ui-surface)",
+            color: "var(--ui-text)",
+            border: "1px solid var(--ui-border)",
             padding: "10px 16px",
             borderRadius: 12,
             fontSize: 13,
             fontWeight: 600,
-            boxShadow: "0 10px 25px rgba(15, 23, 42, 0.18)",
             display: "flex",
             alignItems: "center",
             gap: 8,
@@ -90,7 +92,6 @@ export default function MarcaCorePage() {
           padding: 24,
           background: "var(--ui-surface)",
           marginBottom: 28,
-          boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
         }}
       >
         {/* Header */}
@@ -107,7 +108,8 @@ export default function MarcaCorePage() {
               width: 40,
               height: 40,
               borderRadius: "50%",
-              background: "#E6F4FB",
+              background: "var(--ui-sky-soft)",
+              color: "var(--hb-accent-text)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -236,7 +238,7 @@ export default function MarcaCorePage() {
             onClick={() => handleSaveBrand()}
             style={{
               background: "var(--hb-accent)",
-              color: "#FFFFFF",
+              color: "var(--on-accent)",
               fontSize: 13.5,
               fontWeight: 700,
               height: 40,

@@ -40,7 +40,7 @@ function GoldenCloudUploadIllustration() {
       {/* Cloud body with warm gold fill and brown-gold outline matching 08-content-manager-1440.png */}
       <path
         d="M21 49H48.5C54.8513 49 60 43.8513 60 37.5C60 31.6524 55.6317 26.8235 49.9806 26.0942C48.8768 19.2367 42.9317 14 35.75 14C27.781 14 21.3182 20.4318 21.2505 28.3849C15.4793 29.1525 11 34.088 11 40C11 44.9706 15.0294 49 20 49H21Z"
-        fill="#BFE2F4"
+        fill="var(--ui-sky-border)"
         stroke="var(--hb-accent-text)"
         strokeWidth="2.4"
         strokeLinecap="round"
@@ -164,18 +164,20 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
     <div style={{ maxWidth: 1140, margin: "0 auto", color: "var(--ui-text)" }}>
       {toast && (
         <div
+          role="status"
+          className="hubly-pop"
           style={{
             position: "fixed",
             top: 20,
             right: 24,
-            zIndex: 90,
-            background: "#0F172A",
-            color: "#FFFFFF",
+            zIndex: "var(--layer-toast)",
+            background: "var(--ui-surface)",
+            color: "var(--ui-text)",
+            border: "1px solid var(--ui-border)",
             padding: "10px 16px",
             borderRadius: 12,
             fontSize: 13,
             fontWeight: 600,
-            boxShadow: "0 10px 25px rgba(15, 23, 42, 0.18)",
             display: "flex",
             alignItems: "center",
             gap: 8,
@@ -314,7 +316,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       style={{
                         background: active ? "var(--ui-surface)" : "transparent",
                         color: active ? "var(--ui-text)" : "var(--ui-text-4)",
-                        boxShadow: active ? "0 1px 2px rgba(15, 23, 42, 0.08)" : "none",
+                        boxShadow: active ? "0 1px 2px rgb(var(--hb-accent-rgb) / 0.08)" : "none",
                         border: "none",
                         borderRadius: 999,
                         padding: "5px 14px",
@@ -336,7 +338,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 onClick={() => setNewProjectModal(true)}
                 style={{
                   background: "var(--hb-accent)",
-                  color: "#FFFFFF",
+                  color: "var(--on-accent)",
                   border: "none",
                   borderRadius: 999,
                   height: 36,
@@ -497,8 +499,8 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       <td style={{ padding: "14px 16px" }}>
                         <span
                           style={{
-                            background: "#DCFCE7",
-                            color: "#15803D",
+                            background: p.status === "Completado" ? "var(--ui-positive-soft)" : "var(--ui-muted)",
+                            color: p.status === "Completado" ? "var(--ui-positive-text)" : "var(--ui-text-2)",
                             fontSize: 12,
                             fontWeight: 600,
                             padding: "4px 10px",
@@ -557,7 +559,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
               onClick={() => setNewProjectModal(true)}
               style={{
                 background: "var(--hb-accent)",
-                color: "#FFFFFF",
+                color: "var(--on-accent)",
                 border: "none",
                 borderRadius: 10,
                 height: 38,
@@ -580,19 +582,26 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
 
           {newProjectModal && (
             <div
+              className="hubly-overlay hubly-cal-overlay"
               onClick={() => setNewProjectModal(false)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setNewProjectModal(false);
+              }}
               style={{
                 position: "fixed",
                 inset: 0,
-                background: "rgba(15, 23, 42, 0.45)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                zIndex: 100,
+                zIndex: "var(--layer-modal)",
                 padding: 16,
               }}
             >
               <form
+                role="dialog"
+                aria-modal="true"
+                aria-label={`Nuevo proyecto para ${activeBrand.name}`}
+                className="hubly-sheet hubly-cal-modal"
                 onClick={(e) => e.stopPropagation()}
                 onSubmit={handleCreateProject}
                 style={{
@@ -601,10 +610,9 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                   padding: 24,
                   width: "100%",
                   maxWidth: 440,
-                  boxShadow: "0 20px 40px rgba(15, 23, 42, 0.2)",
                 }}
               >
-                <h3 style={{ fontSize: 17, fontWeight: 800, margin: "0 0 14px" }}>
+                <h3 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 14px" }}>
                   Nuevo proyecto para {activeBrand.name}
                 </h3>
                 <div style={{ marginBottom: 12 }}>
@@ -684,7 +692,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                     type="submit"
                     style={{
                       background: "var(--hb-accent)",
-                      color: "#FFFFFF",
+                      color: "var(--on-accent)",
                       border: "none",
                       borderRadius: 10,
                       height: 38,

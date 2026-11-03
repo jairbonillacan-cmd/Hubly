@@ -37,7 +37,7 @@ const INITIAL_LOCAL_MESSAGES: LocalThreadMessage[] = [
     targetId: "ch-min",
     sender: "Diego Morales",
     senderInitials: "DM",
-    senderBg: "#EAF6FC",
+    senderBg: "var(--ui-sky-soft)",
     senderColor: "var(--hb-accent)",
     text: "Subimos los 3 cortes del taller en Guadalajara y la parrilla de noviembre para revisión.",
     time: "10:42",
@@ -47,8 +47,8 @@ const INITIAL_LOCAL_MESSAGES: LocalThreadMessage[] = [
     targetId: "ch-min",
     sender: "Jair",
     senderInitials: "JA",
-    senderBg: "#E6F4FB",
-    senderColor: "var(--hb-accent-edge)",
+    senderBg: "var(--ui-sky-soft)",
+    senderColor: "var(--hb-accent-text)",
     text: "Excelente, en cuanto Raúl apruebe el carrusel Goodyear welt programamos toda la semana.",
     time: "11:05",
   },
@@ -57,7 +57,7 @@ const INITIAL_LOCAL_MESSAGES: LocalThreadMessage[] = [
     targetId: "dm-jair",
     sender: "Jair (tú)",
     senderInitials: "J",
-    senderBg: "#E6F4FB",
+    senderBg: "var(--ui-sky-soft)",
     senderColor: "var(--hb-accent-text)",
     text: "Notas rápidas: conectar las redes y mandar el primer reporte mensual este viernes.",
     time: "09:15",
@@ -94,8 +94,8 @@ export default function ChatPage() {
         title: "# General",
         subtitle: generalCount > 0 ? `Canal general de la agencia · ${generalCount} ${generalCount === 1 ? "mensaje" : "mensajes"}` : "Canal general de la agencia · Sin mensajes aún",
         badgeText: "#",
-        badgeBg: "#F1F5F9",
-        badgeColor: "#475569",
+        badgeBg: "var(--ui-muted)",
+        badgeColor: "var(--ui-text-3)",
       };
     }
     if (selectedId === "dm-jair") {
@@ -104,7 +104,7 @@ export default function ChatPage() {
         title: `${myName} (tú)`,
         subtitle: "Espacio personal · Notas, borradores y recordatorios",
         badgeText: "J",
-        badgeBg: "#E6F4FB",
+        badgeBg: "var(--ui-sky-soft)",
         badgeColor: "var(--hb-accent-text)",
       };
     }
@@ -116,7 +116,7 @@ export default function ChatPage() {
         subtitle: sub.subtitle,
         badgeText: "M",
         badgeBg: "var(--hb-accent)",
-        badgeColor: "#FFFFFF",
+        badgeColor: "var(--on-accent)",
       };
     }
     const found = channels.find((c) => c.id === selectedId);
@@ -126,7 +126,7 @@ export default function ChatPage() {
         title: found.name,
         subtitle: found.type === "brand" ? "Canal de marca" : "Mensaje directo",
         badgeText: found.type === "brand" ? "#" : found.name.slice(0, 1).toUpperCase(),
-        badgeBg: "#EAF6FC",
+        badgeBg: "var(--ui-sky-soft)",
         badgeColor: "var(--hb-accent)",
       };
     }
@@ -142,7 +142,7 @@ export default function ChatPage() {
         targetId: m.channelId,
         sender: m.sender,
         senderInitials: m.senderInitials,
-        senderBg: "#EAF6FC",
+        senderBg: "var(--ui-sky-soft)",
         senderColor: "var(--hb-accent)",
         text: m.text,
         time: m.time,
@@ -168,7 +168,7 @@ export default function ChatPage() {
           targetId: selectedId,
           sender: myName,
           senderInitials: "JA",
-          senderBg: "#E6F4FB",
+          senderBg: "var(--ui-sky-soft)",
           senderColor: "var(--hb-accent-text)",
           text: draft.trim(),
           time,
@@ -224,7 +224,6 @@ export default function ChatPage() {
               border: "1px solid var(--ui-border)",
               borderRadius: 999,
               padding: "9px 14px",
-              boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
             }}
           >
             <Search size={14} style={{ color: "var(--ui-text-5)", flexShrink: 0 }} />
@@ -254,8 +253,8 @@ export default function ChatPage() {
               width: 38,
               height: 38,
               borderRadius: 999,
-              background: "#D1FAE5",
-              color: "#047857",
+              background: "var(--ui-sky-soft)",
+              color: "var(--hb-accent-text)",
               border: "none",
               fontWeight: 700,
               fontSize: 13,
@@ -275,7 +274,7 @@ export default function ChatPage() {
                 width: 10,
                 height: 10,
                 borderRadius: 999,
-                background: "#4ADE80",
+                background: "var(--ui-positive-text)",
                 border: "2px solid var(--ui-surface)",
               }}
             />
@@ -419,7 +418,7 @@ export default function ChatPage() {
                     width: 26,
                     height: 26,
                     borderRadius: 999,
-                    background: "#E6F4FB",
+                    background: "var(--ui-sky-soft)",
                     color: "var(--ui-accent-text)",
                     fontSize: 11.5,
                     fontWeight: 700,
@@ -438,7 +437,7 @@ export default function ChatPage() {
                       width: 8,
                       height: 8,
                       borderRadius: 999,
-                      background: "#4ADE80",
+                      background: "var(--ui-positive-text)",
                       border: "1.5px solid var(--ui-surface)",
                     }}
                   />
@@ -558,7 +557,7 @@ export default function ChatPage() {
                       height: 26,
                       borderRadius: 7,
                       background: "var(--hb-accent)",
-                      color: "#FFFFFF",
+                      color: "var(--on-accent)",
                       fontSize: 11.5,
                       fontWeight: 700,
                       display: "grid",
@@ -715,7 +714,7 @@ export default function ChatPage() {
                   {activeMeta.badgeText}
                 </span>
                 <div>
-                  <div style={{ fontSize: 14.5, fontWeight: 700, color: "var(--ui-text)" }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>
                     {activeMeta.title}
                   </div>
                   <div style={{ fontSize: 12, color: "var(--ui-text-5)" }}>{activeMeta.subtitle}</div>
@@ -775,7 +774,7 @@ export default function ChatPage() {
                   >
                     <MessageSquarePlus size={20} />
                   </div>
-                  <div style={{ fontSize: 14.5, fontWeight: 700, color: "var(--ui-text)", marginBottom: 4 }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)", marginBottom: 4 }}>
                     Comienza la conversación en {activeMeta.title}
                   </div>
                   <div style={{ fontSize: 12.5, color: "var(--ui-text-5)", lineHeight: 1.5 }}>
@@ -833,7 +832,6 @@ export default function ChatPage() {
                           fontSize: 13.5,
                           color: "var(--ui-text-1)",
                           lineHeight: 1.5,
-                          boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)",
                         }}
                       >
                         {m.text}
@@ -899,7 +897,7 @@ export default function ChatPage() {
                   borderRadius: 10,
                   border: "none",
                   background: "var(--hb-accent)",
-                  color: "#FFFFFF",
+                  color: "var(--on-accent)",
                   fontSize: 13,
                   fontWeight: 600,
                   display: "inline-flex",
