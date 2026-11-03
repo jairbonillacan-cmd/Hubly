@@ -60,7 +60,7 @@ export function ProfilePopover({ onClose }: { onClose: () => void }) {
   return (
     <div
       role="dialog"
-      className="hubly-shell-pop"
+      className="hubly-pop"
       aria-label="Editar perfil y espacio de trabajo"
       data-testid="sidebar-profile-popover"
       style={{

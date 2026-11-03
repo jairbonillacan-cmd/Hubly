@@ -411,3 +411,31 @@ Consola sin errores nuevos. Hay dos errores viejos:
 - **`InicioView`:** un archivo por widget.
 - **`/parrillas`:** separar la tabla y el diálogo de compartir.
 - **Sidebar:** pasar sus estilos en línea a clases.
+
+## Plan anti-slop y arquitectura, Fase 2 (segundo corte): `EquipoView` (3 de noviembre)
+
+`components/app/dashboard/EquipoView.tsx` baja de 3192 a 2495 líneas.
+
+- **Modal de invitar duplicado, borrado:** eran unas 575 líneas (`InviteTeamModal`, `DemoInviteTeamModal` y `ROLE_OPTIONS`). Era código muerto: se exportaba, pero nadie lo importaba. El botón «Invitar» de la pantalla abre el modal real (`components/app/InviteTeamModal.tsx`) a través del store. No había nada que fusionar.
+- **Datos a `lib/team-gamification.ts`:** el catálogo de 39 logros, los niveles de XP y las categorías de esfuerzo.
+  - El catálogo se va sin el campo `emoji`, que no se pintaba en ninguna parte.
+  - Los títulos pasan a mayúscula inicial: «Semana completa», «Club de los mil». Se conservan CRM, Hubly y Ads.
+- **Colores:**
+  - Los niveles dejan los puntos verde, rosa y menta. Ahora son un solo marino con intensidad creciente, de 0.25 a 1: así el color dice «más alto».
+  - Las categorías de esfuerzo pasan de fondos lavanda, rosa, azul y menta a `--ui-surface-2` con borde, y sus puntos van en `--hb-accent-text`.
+- **Ranking:** el número de puesto sustituye a las medallas 🥇🥈🥉. Los tres primeros van en acento.
+- **Menús de filtros y de editar marcas:** su capa pasa a `--layer-dropdown` y la sombra a la clase de la guía. `.hubly-shell-pop` se renombra a `.hubly-pop`, porque ya sirve a cualquier menú emergente.
+- **Otros arreglos:**
+  - El aviso dice «Enlace copiado», sin exclamación, y su check usa `--ui-positive-text`.
+  - La barra de actividad de hoy pasa de degradado a `--hb-accent` liso.
+- **Pendiente en `EquipoView`:** unos 50 colores fijos (entre ellos, la paleta de `AchievementBadgeSvg`), 6 rgb y 3 tamaños de texto.
+
+### Verificación
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto, **1338** hallazgos (antes 1422); `EquipoView` sin emojis, capas, degradados ni exclamaciones |
+| `npx tsc --noEmit` | 0 errores |
+| `npm test` | 43/43 |
+| `npx playwright test` | 86/88; fallan las 2 de Salud de cuentas ya documentadas |
+| Navegador, `/dashboard/equipo` | Sin emojis en la página. Logros con los títulos nuevos, ranking con números, categorías neutras y niveles en marino de 0.25 a 1 |

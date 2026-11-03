@@ -153,14 +153,9 @@
     "z-index-fijo": 1
   },
   "components/app/dashboard/EquipoView.tsx": {
-    "color-fijo": 68,
-    "degradado": 1,
-    "emoji": 41,
-    "exclamacion": 1,
-    "radio": 3,
-    "rgb-fijo": 8,
-    "tamano-fuente": 4,
-    "z-index-fijo": 3
+    "color-fijo": 39,
+    "rgb-fijo": 3,
+    "tamano-fuente": 3
   },
   "components/app/dashboard/InicioView.tsx": {
     "color-fijo": 36,

@@ -2365,6 +2365,6 @@ html:has([data-mision-pildora][data-desplegado]) .hubly-main.hb-main { padding-b
   outline-offset: 2px !important;
 }
 
-/* Armazón: velo del cajón móvil y sombra de los menús del sidebar (guía §5). */
+/* Velo del cajón móvil y sombra de los menús emergentes (guía §5). */
 .hubly-shell-scrim { position: fixed; inset: 0; z-index: var(--layer-drawer); background: rgba(26, 26, 46, 0.28); backdrop-filter: blur(4px); } /* ui-ok: velo de la guía, igual al de .hubly-cal-overlay */
-.hubly-shell-pop { box-shadow: 0 8px 24px rgba(26, 26, 46, 0.08); } /* ui-ok: sombra de dropdown de la guía, igual a .hubly-cal-filters */
+.hubly-pop { box-shadow: 0 8px 24px rgba(26, 26, 46, 0.08); } /* ui-ok: sombra de dropdown de la guía, igual a .hubly-cal-filters */

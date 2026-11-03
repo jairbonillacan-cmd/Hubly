@@ -18,7 +18,7 @@ export function BrandMenu({
   const setNewBrandModalOpen = useHublyStore((s) => s.setNewBrandModalOpen);
   return (
     <div
-      className="hubly-dropdown hubly-shell-pop"
+      className="hubly-dropdown hubly-pop"
       data-state={state}
       role="listbox"
       aria-label="Seleccionar marca activa"

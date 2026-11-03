@@ -11,7 +11,7 @@ export function NotificationsPopover() {
   return (
     <div
       role="dialog"
-      className="hubly-shell-pop"
+      className="hubly-pop"
       aria-label="Centro de notificaciones"
       style={{
         position: "absolute",
