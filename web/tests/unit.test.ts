@@ -317,7 +317,7 @@ test("calendario: semana desde el lunes, cruce de mes y año, zona de México", 
   // A las 02:00 UTC del 1 de noviembre todavía es 31 de octubre en Ciudad de México.
   assert.equal(todayInZone(new Date("2026-11-01T02:00:00Z")), "2026-10-31");
   assert.equal(publicationLabel({ status: "scheduled", scheduledDate: "2026-10-01" }, "2026-10-31").label, "Pendiente de registrar");
-  assert.equal(publicationLabel({ status: "scheduled", scheduledDate: "2026-11-01" }, "2026-10-31").label, "Planificado");
+  assert.equal(publicationLabel({ status: "scheduled", scheduledDate: "2026-11-01" }, "2026-10-31").label, "Programado");
   const posts = [{ title: "b", scheduledDate: "", scheduledTime: "" }, { title: "a", scheduledDate: "2026-10-02", scheduledTime: "" }, { title: "c", scheduledDate: "2026-10-01", scheduledTime: "" }] as never[];
   assert.deepEqual(sortPosts(posts, "fecha", "desc", () => "").map((p: { title: string }) => p.title), ["a", "c", "b"]);
 });

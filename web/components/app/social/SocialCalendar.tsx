@@ -53,8 +53,7 @@ const VIEWS: { id: CalendarView; label: string }[] = [
   { id: "tabla", label: "Tabla" },
   { id: "kanban", label: "Kanban" },
 ];
-// Sin publicación automática, un post con fecha está «Planificado», no programado en la red.
-const STATUS_NAMES: Record<PostStatus, string> = { ...POST_STATUS_LABEL, scheduled: "Planificado" };
+const STATUS_NAMES: Record<PostStatus, string> = POST_STATUS_LABEL;
 const WEEKDAYS = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
 const NO_VALUE = "__none__";
 

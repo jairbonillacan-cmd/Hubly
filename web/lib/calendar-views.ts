@@ -100,7 +100,7 @@ export function publicationLabel(post: Pick<SocialPost, "status" | "scheduledDat
     case "published":
       return { label: POST_STATUS_LABEL.published, tone: "ok" };
     case "scheduled":
-      return post.scheduledDate && post.scheduledDate < today ? { label: "Pendiente de registrar", tone: "warn" } : { label: "Planificado", tone: "info" };
+      return post.scheduledDate && post.scheduledDate < today ? { label: "Pendiente de registrar", tone: "warn" } : { label: POST_STATUS_LABEL.scheduled, tone: "info" };
     case "approved":
       return { label: POST_STATUS_LABEL.approved, tone: "ok" };
     case "pending":
