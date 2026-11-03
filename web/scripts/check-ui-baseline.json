@@ -1,12 +1,4 @@
 {
-  "app/(app)/anuncios/page.tsx": {
-    "color-fijo": 88,
-    "degradado": 1,
-    "emoji": 3,
-    "rgb-fijo": 8,
-    "tamano-fuente": 1,
-    "z-index-fijo": 1
-  },
   "app/(app)/app-base.css": {
     "color-fijo": 92,
     "rgb-fijo": 8,

@@ -3,30 +3,30 @@
 import { LiveUnavailable } from "@/components/app/LiveUnavailable";
 import { backendEnabled } from "@/lib/supabase/config";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 import { useLayer } from "@/lib/use-layer";
+import { useModalPresence } from "@/lib/use-modal-presence";
 import {
   HublyBentoIcon as LayoutGrid,
-  HublyCalendarIcon as Calendar,
-  HublyCheckCircleIcon as CheckCircle2,
-  HublyChevronDownIcon as ChevronDown,
+  HublyBoltIcon as Bolt,
+  HublyClockIcon as Clock,
   HublyCloseIcon as X,
   HublyInfoIcon as Info,
   HublyMegaphoneIcon as Megaphone,
   HublyPresentationIcon as Presentation,
   HublyPulseIcon as Gauge,
   HublySearchIcon as Search,
-  HublySettingsIcon as Settings,
-  HublySlidersIcon as SlidersHorizontal,
   HublySparkIcon as Sparkles,
   HublyTableIcon as Table2,
   HublyTimelineIcon as GitBranch,
+  type DuotoneIconProps,
 } from "@/components/app/icons/DuotoneIcons";
 
 interface SampleAdCard {
   id: string;
   title: string;
+  titleIcon?: React.ComponentType<DuotoneIconProps>;
   artworkKind: "thehive" | "taxco-quartz" | "veracruz-amethyst" | "mineralia-live" | "bee-here";
   status: "Activo";
   clickScore: number;
@@ -87,7 +87,8 @@ const SAMPLE_ADS: SampleAdCard[] = [
   },
   {
     id: "hb-ad-4",
-    title: "Instagram post: 💜VERACRUZ AMETHYST | TATATILA,...",
+    title: "Instagram post: VERACRUZ AMETHYST | TATATILA,...",
+    titleIcon: Sparkles,
     artworkKind: "veracruz-amethyst",
     status: "Activo",
     clickScore: 100,
@@ -102,7 +103,8 @@ const SAMPLE_ADS: SampleAdCard[] = [
   },
   {
     id: "hb-ad-5",
-    title: "Instagram post: 🎃 MineraliA LIVE SALE — Rare Specimens...",
+    title: "Instagram post: MineraliA LIVE SALE — Rare Specimens...",
+    titleIcon: Bolt,
     artworkKind: "mineralia-live",
     status: "Activo",
     clickScore: 100,
@@ -147,7 +149,8 @@ const SAMPLE_ADS: SampleAdCard[] = [
   },
   {
     id: "hb-ad-8",
-    title: "Publicación de Instagram: 🐝 LAST DAYS — BEE HERE BEFORE IT ENDS...",
+    title: "Publicación de Instagram: LAST DAYS — BEE HERE BEFORE IT ENDS...",
+    titleIcon: Clock,
     artworkKind: "bee-here",
     status: "Activo",
     clickScore: 100,
@@ -173,30 +176,30 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
         style={{ display: "block" }}
       >
         {/* Foliage & Sky Top */}
-        <rect width="280" height="340" fill="#1E291A" />
-        <path d="M0 0 L280 0 L280 140 L0 140 Z" fill="#1A2616" />
+        <rect width="280" height="340" fill="var(--hb-accent-hover)" />
+        <path d="M0 0 L280 0 L280 140 L0 140 Z" fill="var(--hb-accent)" />
         {/* Tree canopy texture */}
-        <circle cx="40" cy="30" r="55" fill="#2A3B1F" opacity="0.8" />
-        <circle cx="120" cy="20" r="65" fill="#324625" opacity="0.7" />
-        <circle cx="230" cy="35" r="60" fill="#24351A" opacity="0.85" />
+        <circle cx="40" cy="30" r="55" fill="var(--hb-accent-hover)" opacity="0.8" />
+        <circle cx="120" cy="20" r="65" fill="var(--hb-accent)" opacity="0.7" />
+        <circle cx="230" cy="35" r="60" fill="var(--hb-accent-hover)" opacity="0.85" />
         {/* Sunlight glow behind tent */}
-        <rect x="0" y="95" width="280" height="80" fill="#475535" opacity="0.65" />
+        <rect x="0" y="95" width="280" height="80" fill="var(--ui-sky)" opacity="0.22" />
 
         {/* Blue-roof Barn / Pavilion in Round Top */}
-        <polygon points="15,175 105,125 195,175" fill="#1E3A5F" />
-        <polygon points="165,175 230,132 280,175" fill="#172554" />
-        <rect x="25" y="175" width="160" height="45" fill="#292524" />
+        <polygon points="15,175 105,125 195,175" fill="var(--hb-accent)" />
+        <polygon points="165,175 230,132 280,175" fill="var(--hb-accent-hover)" />
+        <rect x="25" y="175" width="160" height="45" fill="var(--hb-accent-hover)" />
         {/* Warm interior lights */}
-        <rect x="50" y="185" width="25" height="22" fill="var(--hb-accent)" opacity="0.75" />
-        <rect x="95" y="185" width="30" height="22" fill="#9099D3" opacity="0.75" />
-        <rect x="140" y="185" width="25" height="22" fill="var(--hb-accent)" opacity="0.75" />
+        <rect x="50" y="185" width="25" height="22" fill="var(--ui-sky)" opacity="0.25" />
+        <rect x="95" y="185" width="30" height="22" fill="var(--ui-sky-border)" opacity="0.25" />
+        <rect x="140" y="185" width="25" height="22" fill="var(--ui-sky)" opacity="0.25" />
 
-        {/* Green lawn & gravel path */}
-        <rect x="0" y="218" width="280" height="122" fill="#3F5E2A" />
-        <polygon points="0,245 280,225 280,275 0,295" fill="#A8A29E" opacity="0.55" />
+        {/* Lawn & gravel path */}
+        <rect x="0" y="218" width="280" height="122" fill="var(--hb-accent)" />
+        <polygon points="0,245 280,225 280,275 0,295" fill="var(--ui-border-strong)" opacity="0.35" />
 
         {/* Honeycomb Hexagon Icon top-right */}
-        <g transform="translate(178, 12)" stroke="#FFFFFF" strokeWidth="1.8" fill="none">
+        <g transform="translate(178, 12)" stroke="var(--on-accent)" strokeWidth="1.8" fill="none">
           <polygon points="12,0 22,6 22,18 12,24 2,18 2,6" />
           <polygon points="24,8 34,14 34,26 24,32 14,26 14,14" />
           <polygon points="12,22 22,28 22,40 12,46 2,40 2,28" />
@@ -207,8 +210,7 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
           x="130"
           y="42"
           textAnchor="middle"
-          fill="#FFFFFF"
-          fontFamily="Georgia, serif"
+          fill="var(--on-accent)"
           fontSize="24"
           letterSpacing="2"
         >
@@ -218,8 +220,7 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
           x="140"
           y="82"
           textAnchor="middle"
-          fill="#FFFFFF"
-          fontFamily="Georgia, serif"
+          fill="var(--on-accent)"
           fontSize="44"
           letterSpacing="3"
         >
@@ -230,7 +231,7 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
           x="140"
           y="128"
           textAnchor="middle"
-          fill="#F8FAFC"
+          fill="var(--ui-sky-border)"
           fontSize="8.5"
           fontWeight="700"
           letterSpacing="2.5"
@@ -241,7 +242,7 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
           x="140"
           y="168"
           textAnchor="middle"
-          fill="#FFFFFF"
+          fill="var(--on-accent)"
           fontSize="20"
           fontWeight="600"
         >
@@ -251,7 +252,7 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
           x="140"
           y="190"
           textAnchor="middle"
-          fill="#F8FAFC"
+          fill="var(--on-accent)"
           fontSize="9.5"
           fontWeight="700"
           letterSpacing="1.2"
@@ -262,19 +263,19 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
           x="140"
           y="206"
           textAnchor="middle"
-          fill="#E2E8F0"
+          fill="var(--ui-sky-border)"
           fontSize="8.5"
         >
           Hwy 237 &amp; W Fuchs Rd · Carmine, Texas
         </text>
 
         {/* Social Handle & URL */}
-        <circle cx="90" cy="246" r="7" stroke="#FFFFFF" strokeWidth="1.5" fill="none" />
-        <circle cx="108" cy="246" r="7" fill="#FFFFFF" />
-        <text x="164" y="250" textAnchor="middle" fill="#FFFFFF" fontSize="10" fontWeight="600">
+        <circle cx="90" cy="246" r="7" stroke="var(--on-accent)" strokeWidth="1.5" fill="none" />
+        <circle cx="108" cy="246" r="7" fill="var(--on-accent)" />
+        <text x="164" y="250" textAnchor="middle" fill="var(--on-accent)" fontSize="10" fontWeight="600">
           @thehiveroundtop
         </text>
-        <text x="140" y="268" textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="600">
+        <text x="140" y="268" textAnchor="middle" fill="var(--on-accent)" fontSize="11" fontWeight="600">
           thehiveroundtop.com
         </text>
       </svg>
@@ -291,36 +292,36 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
         style={{ display: "block" }}
       >
         {/* Display box & dark velvet lining */}
-        <rect width="280" height="340" fill="#CBD5E1" />
-        <polygon points="35,20 275,35 260,295 20,275" fill="#F8FAFC" stroke="#94A3B8" strokeWidth="2" />
-        <polygon points="50,35 255,48 242,275 38,255" fill="#1E293B" />
+        <rect width="280" height="340" fill="var(--ui-border-strong)" />
+        <polygon points="35,20 275,35 260,295 20,275" fill="var(--ui-surface-2)" stroke="var(--ui-text-5)" strokeWidth="2" />
+        <polygon points="50,35 255,48 242,275 38,255" fill="var(--hb-accent-hover)" />
 
         {/* Hand holding the crystal specimen */}
         <path
           d="M0 70 C55 45 105 70 115 135 C120 190 95 265 40 320 L0 320 Z"
-          fill="#D99B78"
+          fill="var(--ui-sky-border)"
         />
 
         {/* Sparkling Silver/White Taxco Quartz Cluster */}
         <g transform="translate(22, 32)">
-          <polygon points="85,15 135,5 165,45 120,75 65,55" fill="#94A3B8" />
-          <polygon points="45,50 115,35 155,95 95,135 25,105" fill="#CBD5E1" />
-          <polygon points="95,45 185,30 220,95 165,155 85,125" fill="#64748B" />
-          <polygon points="35,95 110,75 145,145 85,195 15,155" fill="#94A3B8" />
-          <polygon points="85,110 175,85 215,155 155,220 75,185" fill="#E2E8F0" />
-          <polygon points="25,145 95,125 135,195 75,245 10,205" fill="#64748B" />
+          <polygon points="85,15 135,5 165,45 120,75 65,55" fill="var(--ui-text-5)" />
+          <polygon points="45,50 115,35 155,95 95,135 25,105" fill="var(--ui-border-strong)" />
+          <polygon points="95,45 185,30 220,95 165,155 85,125" fill="var(--ui-text-4)" />
+          <polygon points="35,95 110,75 145,145 85,195 15,155" fill="var(--ui-text-5)" />
+          <polygon points="85,110 175,85 215,155 155,220 75,185" fill="var(--ui-border)" />
+          <polygon points="25,145 95,125 135,195 75,245 10,205" fill="var(--ui-text-4)" />
           {/* White druzy quartz crystal points */}
-          <polygon points="75,55 95,38 112,62 90,78" fill="#F8FAFC" />
-          <polygon points="125,75 152,58 168,85 140,102" fill="#FFFFFF" />
-          <polygon points="55,110 82,92 98,118 72,135" fill="#F1F5F9" />
-          <polygon points="105,135 138,112 158,145 122,168" fill="#FFFFFF" />
-          <polygon points="145,150 175,132 192,162 162,182" fill="#F8FAFC" />
-          <polygon points="68,168 98,148 115,178 85,198" fill="#E2E8F0" />
-          <circle cx="95" cy="65" r="3" fill="#FFFFFF" />
-          <circle cx="145" cy="95" r="3.5" fill="#FFFFFF" />
-          <circle cx="128" cy="142" r="4" fill="#FFFFFF" />
-          <circle cx="82" cy="122" r="3" fill="#FFFFFF" />
-          <circle cx="165" cy="158" r="3" fill="#FFFFFF" />
+          <polygon points="75,55 95,38 112,62 90,78" fill="var(--ui-surface-2)" />
+          <polygon points="125,75 152,58 168,85 140,102" fill="var(--on-accent)" />
+          <polygon points="55,110 82,92 98,118 72,135" fill="var(--ui-muted)" />
+          <polygon points="105,135 138,112 158,145 122,168" fill="var(--on-accent)" />
+          <polygon points="145,150 175,132 192,162 162,182" fill="var(--ui-surface-2)" />
+          <polygon points="68,168 98,148 115,178 85,198" fill="var(--ui-border)" />
+          <circle cx="95" cy="65" r="3" fill="var(--on-accent)" />
+          <circle cx="145" cy="95" r="3.5" fill="var(--on-accent)" />
+          <circle cx="128" cy="142" r="4" fill="var(--on-accent)" />
+          <circle cx="82" cy="122" r="3" fill="var(--on-accent)" />
+          <circle cx="165" cy="158" r="3" fill="var(--on-accent)" />
         </g>
       </svg>
     );
@@ -335,32 +336,32 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
         preserveAspectRatio="xMidYMid slice"
         style={{ display: "block" }}
       >
-        {/* Warm skin/studio background */}
-        <rect width="280" height="340" fill="#B07D62" />
+        {/* Studio background */}
+        <rect width="280" height="340" fill="var(--ui-muted)" />
         {/* Fingers holding the amethyst specimen */}
-        <ellipse cx="45" cy="65" rx="65" ry="42" fill="#C68B6E" />
-        <ellipse cx="40" cy="155" rx="58" ry="44" fill="#B87A5C" />
-        <ellipse cx="45" cy="245" rx="62" ry="45" fill="#A3664A" />
-        <ellipse cx="235" cy="165" rx="60" ry="95" fill="#7C4D38" />
+        <ellipse cx="45" cy="65" rx="65" ry="42" fill="var(--ui-border)" />
+        <ellipse cx="40" cy="155" rx="58" ry="44" fill="var(--ui-border-strong)" />
+        <ellipse cx="45" cy="245" rx="62" ry="45" fill="var(--ui-border)" />
+        <ellipse cx="235" cy="165" rx="60" ry="95" fill="var(--ui-border-strong)" />
 
-        {/* Translucent Purple Veracruz Amethyst Crystal Points */}
+        {/* Translucent Crystal Points */}
         <g transform="translate(38, 18)">
-          <polygon points="75,10 105,45 92,115 58,95" fill="#9333EA" opacity="0.85" />
-          <polygon points="110,5 148,50 132,125 95,105" fill="#7E22CE" opacity="0.9" />
-          <polygon points="45,55 88,85 75,165 32,135" fill="#A855F7" opacity="0.85" />
-          <polygon points="85,65 135,95 118,185 68,155" fill="#6B21A8" opacity="0.92" />
-          <polygon points="128,60 185,95 165,180 115,150" fill="#9333EA" opacity="0.85" />
-          <polygon points="55,135 112,165 95,245 38,215" fill="#7E22CE" opacity="0.9" />
-          <polygon points="105,130 165,165 145,255 88,225" fill="#581C87" opacity="0.92" />
+          <polygon points="75,10 105,45 92,115 58,95" fill="var(--hb-accent)" opacity="0.85" />
+          <polygon points="110,5 148,50 132,125 95,105" fill="var(--hb-accent-hover)" opacity="0.9" />
+          <polygon points="45,55 88,85 75,165 32,135" fill="var(--ui-sky)" opacity="0.85" />
+          <polygon points="85,65 135,95 118,185 68,155" fill="var(--hb-accent)" opacity="0.92" />
+          <polygon points="128,60 185,95 165,180 115,150" fill="var(--hb-accent)" opacity="0.85" />
+          <polygon points="55,135 112,165 95,245 38,215" fill="var(--hb-accent-hover)" opacity="0.9" />
+          <polygon points="105,130 165,165 145,255 88,225" fill="var(--hb-accent-hover)" opacity="0.92" />
           {/* Crystalline highlights */}
-          <polygon points="82,25 98,52 88,95 72,75" fill="#E9D5FF" opacity="0.65" />
-          <polygon points="118,22 138,55 125,105 108,82" fill="#F3E8FF" opacity="0.55" />
-          <polygon points="95,85 122,108 110,162 82,138" fill="#D8B4FE" opacity="0.6" />
-          <polygon points="65,150 95,172 82,225 55,198" fill="#E9D5FF" opacity="0.55" />
-          <circle cx="95" cy="55" r="3.5" fill="#FFFFFF" />
-          <circle cx="125" cy="95" r="4" fill="#FFFFFF" />
-          <circle cx="85" cy="145" r="3.5" fill="#FFFFFF" />
-          <circle cx="135" cy="175" r="3" fill="#FFFFFF" />
+          <polygon points="82,25 98,52 88,95 72,75" fill="var(--ui-sky-soft)" opacity="0.65" />
+          <polygon points="118,22 138,55 125,105 108,82" fill="var(--ui-surface)" opacity="0.55" />
+          <polygon points="95,85 122,108 110,162 82,138" fill="var(--ui-sky-border)" opacity="0.6" />
+          <polygon points="65,150 95,172 82,225 55,198" fill="var(--ui-sky-soft)" opacity="0.55" />
+          <circle cx="95" cy="55" r="3.5" fill="var(--on-accent)" />
+          <circle cx="125" cy="95" r="4" fill="var(--on-accent)" />
+          <circle cx="85" cy="145" r="3.5" fill="var(--on-accent)" />
+          <circle cx="135" cy="175" r="3" fill="var(--on-accent)" />
         </g>
       </svg>
     );
@@ -375,20 +376,20 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
         preserveAspectRatio="xMidYMid slice"
         style={{ display: "block" }}
       >
-        <rect width="280" height="340" fill="#18121E" />
-        <circle cx="220" cy="60" r="70" fill="#3B1D5A" opacity="0.55" />
-        <circle cx="60" cy="180" r="85" fill="#2E1065" opacity="0.5" />
-        <text x="95" y="28" fill="#FFFFFF" fontSize="13" fontWeight="700" fontFamily="Georgia, serif">
+        <rect width="280" height="340" fill="var(--hb-accent-hover)" />
+        <circle cx="220" cy="60" r="70" fill="var(--hb-accent)" opacity="0.55" />
+        <circle cx="60" cy="180" r="85" fill="var(--hb-accent)" opacity="0.5" />
+        <text x="95" y="28" fill="var(--on-accent)" fontSize="13" fontWeight="700">
           MineraliA
         </text>
-        <text x="175" y="27" fill="#D8B4FE" fontSize="9.5" fontWeight="600">
+        <text x="175" y="27" fill="var(--ui-sky-border)" fontSize="9.5" fontWeight="600">
           @amethysts.us
         </text>
         <text
           x="140"
           y="78"
           textAnchor="middle"
-          fill="#FACC15"
+          fill="var(--ui-sky)"
           fontSize="34"
           fontWeight="900"
           letterSpacing="1.5"
@@ -396,10 +397,10 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
           LIVE SALE
         </text>
         {/* Crystal cluster silhouette */}
-        <polygon points="90,220 115,125 140,220" fill="#7E22CE" />
-        <polygon points="120,220 148,110 176,220" fill="#9333EA" />
-        <polygon points="155,220 178,135 202,220" fill="#A855F7" />
-        <polygon points="70,220 92,150 112,220" fill="#6B21A8" />
+        <polygon points="90,220 115,125 140,220" fill="var(--hb-accent)" />
+        <polygon points="120,220 148,110 176,220" fill="var(--ui-sky)" />
+        <polygon points="155,220 178,135 202,220" fill="var(--ui-sky-border)" />
+        <polygon points="70,220 92,150 112,220" fill="var(--hb-accent)" />
       </svg>
     );
   }
@@ -412,12 +413,12 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
       preserveAspectRatio="xMidYMid slice"
       style={{ display: "block" }}
     >
-      <rect width="280" height="340" fill="#141A12" />
+      <rect width="280" height="340" fill="var(--hb-accent-hover)" />
       <text
         x="140"
         y="28"
         textAnchor="middle"
-        fill="var(--hb-accent)"
+        fill="var(--ui-sky)"
         fontSize="9.5"
         fontWeight="800"
         letterSpacing="2.5"
@@ -428,7 +429,7 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
         x="140"
         y="56"
         textAnchor="middle"
-        fill="#FACC15"
+        fill="var(--ui-sky-border)"
         fontSize="24"
         fontWeight="900"
         letterSpacing="1"
@@ -439,15 +440,15 @@ function AdPosterArtwork({ kind }: { kind: SampleAdCard["artworkKind"] }) {
         x="140"
         y="80"
         textAnchor="middle"
-        fill="#FFFFFF"
+        fill="var(--on-accent)"
         fontSize="20"
         fontWeight="800"
         letterSpacing="0.5"
       >
         BEFORE IT ENDS
       </text>
-      <polygon points="30,220 140,145 250,220" fill="#1E3A5F" />
-      <rect x="45" y="220" width="190" height="65" fill="#292524" />
+      <polygon points="30,220 140,145 250,220" fill="var(--hb-accent)" />
+      <rect x="45" y="220" width="190" height="65" fill="var(--hb-accent-hover)" />
     </svg>
   );
 }
@@ -492,7 +493,10 @@ function DemoAnunciosPage() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAd, setSelectedAd] = useState<SampleAdCard | null>(null);
-  const [descubreOpen, setDescubreOpen] = useState(true);
+  const lastSelectedAd = useRef<SampleAdCard | null>(null);
+  if (selectedAd) lastSelectedAd.current = selectedAd;
+  const activeAd = selectedAd ?? lastSelectedAd.current;
+  const modalPresence = useModalPresence(selectedAd !== null);
   useLayer(selectedAd !== null, () => setSelectedAd(null));
 
   const visibleAds = SAMPLE_ADS.filter((ad) =>
@@ -550,7 +554,7 @@ function DemoAnunciosPage() {
               background: "var(--ui-surface)",
               color: "var(--hb-accent-text)",
               fontWeight: 600,
-              boxShadow: "0 1px 2px rgba(15, 23, 42, 0.06)",
+              boxShadow: "0 1px 2px rgb(var(--hb-accent-rgb) / 0.08)",
             }}
           >
             <Megaphone size={14} style={{ color: "var(--hb-accent-text)" }} />
@@ -582,12 +586,7 @@ function DemoAnunciosPage() {
         </div>
 
         <h1 style={{ fontSize: 18, fontWeight: 700, color: "var(--ui-text)", margin: 0, letterSpacing: "-0.02em" }}>Anuncios</h1>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-
-          
-
-          
-        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }} />
       </div>
 
       <div
@@ -650,11 +649,12 @@ function DemoAnunciosPage() {
             </div>
             <div
               style={{
-                fontSize: 26,
-                fontWeight: 800,
+                fontSize: 20,
+                fontWeight: 700,
                 color: "var(--ui-text)",
                 letterSpacing: "-0.02em",
                 lineHeight: 1.15,
+                fontVariantNumeric: "tabular-nums",
               }}
             >
               {kpi.value}
@@ -676,10 +676,10 @@ function DemoAnunciosPage() {
       >
         {/* Left: Search circle + Filtros pill */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-
           <button
             type="button"
             title="Buscar anuncios"
+            aria-label="Buscar anuncios"
             onClick={() => setSearchOpen(!searchOpen)}
             style={{
               width: 36,
@@ -707,16 +707,16 @@ function DemoAnunciosPage() {
                 padding: "0 12px",
                 borderRadius: 999,
                 border: "1px solid var(--ui-border-strong)",
+                background: "var(--ui-surface)",
+                color: "var(--ui-text)",
                 fontSize: 13,
                 outline: "none",
               }}
             />
           )}
-
-          
         </div>
 
-        {/* Right: View Switcher (Cards | Tabla | Funnels) + Métricas 5 */}
+        {/* Right: View Switcher (Cards | Tabla | Funnels) */}
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div
             style={{
@@ -740,11 +740,11 @@ function DemoAnunciosPage() {
                 borderRadius: 7,
                 border: "none",
                 background: viewMode === "cards" ? "var(--ui-surface)" : "transparent",
-                color: viewMode === "cards" ? "var(--hb-accent)" : "var(--ui-text-4)",
+                color: viewMode === "cards" ? "var(--hb-accent-text)" : "var(--ui-text-4)",
                 display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
-                boxShadow: viewMode === "cards" ? "0 1px 2px rgba(0,0,0,0.06)" : "none",
+                boxShadow: viewMode === "cards" ? "0 1px 2px rgb(var(--hb-accent-rgb) / 0.08)" : "none",
               }}
             >
               <LayoutGrid size={14} />
@@ -761,11 +761,11 @@ function DemoAnunciosPage() {
                 borderRadius: 7,
                 border: "none",
                 background: viewMode === "table" ? "var(--ui-surface)" : "transparent",
-                color: viewMode === "table" ? "var(--hb-accent)" : "var(--ui-text-4)",
+                color: viewMode === "table" ? "var(--hb-accent-text)" : "var(--ui-text-4)",
                 display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
-                boxShadow: viewMode === "table" ? "0 1px 2px rgba(0,0,0,0.06)" : "none",
+                boxShadow: viewMode === "table" ? "0 1px 2px rgb(var(--hb-accent-rgb) / 0.08)" : "none",
               }}
             >
               <Table2 size={14} />
@@ -782,18 +782,16 @@ function DemoAnunciosPage() {
                 borderRadius: 7,
                 border: "none",
                 background: viewMode === "funnels" ? "var(--ui-surface)" : "transparent",
-                color: viewMode === "funnels" ? "var(--hb-accent)" : "var(--ui-text-4)",
+                color: viewMode === "funnels" ? "var(--hb-accent-text)" : "var(--ui-text-4)",
                 display: "grid",
                 placeItems: "center",
                 cursor: "pointer",
-                boxShadow: viewMode === "funnels" ? "0 1px 2px rgba(0,0,0,0.06)" : "none",
+                boxShadow: viewMode === "funnels" ? "0 1px 2px rgb(var(--hb-accent-rgb) / 0.08)" : "none",
               }}
             >
               <GitBranch size={14} />
             </button>
           </div>
-
-          
         </div>
       </div>
 
@@ -806,273 +804,285 @@ function DemoAnunciosPage() {
             gap: 16,
           }}
         >
-          {visibleAds.map((ad) => (
-            <div
-              key={ad.id}
-              style={{
-                background: "var(--ui-surface)",
-                border: "1px solid var(--ui-border)",
-                borderRadius: 16,
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              {/* Creative Poster Cover (330px height) */}
-              <div style={{ position: "relative", height: 330, overflow: "hidden" }}>
-                <AdPosterArtwork kind={ad.artworkKind} />
+          {visibleAds.map((ad) => {
+            const TitleIcon = ad.titleIcon;
+            return (
+              <div
+                key={ad.id}
+                style={{
+                  background: "var(--ui-surface)",
+                  border: "1px solid var(--ui-border)",
+                  borderRadius: 16,
+                  overflow: "hidden",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                {/* Creative Poster Cover (330px height) */}
+                <div style={{ position: "relative", height: 330, overflow: "hidden" }}>
+                  <AdPosterArtwork kind={ad.artworkKind} />
 
-                {/* Top-Left Meta Infinity Badge */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 10,
-                    left: 10,
-                    width: 26,
-                    height: 26,
-                    borderRadius: 8,
-                    background: "var(--ui-surface)",
-                    display: "grid",
-                    placeItems: "center",
-                    boxShadow: "0 2px 6px rgba(0, 0, 0, 0.16)",
-                  }}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M17.5 6.5C15.8 6.5 14.3 7.6 12.8 9.8C11.7 8.1 10.3 6.5 8.1 6.5C5.2 6.5 3 9 3 12.3C3 15.5 5.1 17.5 7.4 17.5C9.3 17.5 10.9 16.2 12.5 13.7C13.6 15.6 15 17.5 17.2 17.5C19.9 17.5 22 15 22 11.8C22 8.7 20 6.5 17.5 6.5ZM7.5 15.3C6.1 15.3 5.1 14.1 5.1 12.2C5.1 10.1 6.3 8.7 8 8.7C9.4 8.7 10.4 9.8 11.4 11.5C10.1 13.8 8.9 15.3 7.5 15.3ZM17.1 15.3C15.8 15.3 14.7 13.9 13.7 12.1C14.8 10.1 16 8.7 17.4 8.7C18.9 8.7 19.9 10 19.9 11.9C19.9 13.9 18.7 15.3 17.1 15.3Z"
-                      fill="#0081FB"
-                    />
-                  </svg>
-                </div>
-
-                {/* Bottom Dark Gradient Overlay + Ad Title */}
-                <div
-                  style={{
-                    position: "absolute",
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    padding: "32px 14px 12px",
-                    background:
-                      "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.84) 100%)",
-                  }}
-                >
+                  {/* Top-Left Meta Infinity Badge */}
                   <div
                     style={{
-                      color: "#FFFFFF",
-                      fontSize: 12.5,
-                      fontWeight: 700,
-                      lineHeight: 1.35,
-                    }}
-                  >
-                    {ad.title}
-                  </div>
-                </div>
-              </div>
-
-              {/* Card Body */}
-              <div style={{ padding: "12px 14px 16px" }}>
-                {/* Activo pill + Analizar button */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginBottom: 12,
-                  }}
-                >
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                    <span
-                      style={{
-                        background: "#DCFCE7",
-                        color: "#15803D",
-                        fontSize: 11,
-                        fontWeight: 700,
-                        padding: "3px 10px",
-                        borderRadius: 999,
-                      }}
-                    >
-                      {ad.status}
-                    </span>
-                    <ExampleTag />
-                  </span>
-
-                  <button
-                    type="button"
-                    onClick={() => setSelectedAd(ad)}
-                    style={{
-                      background: "var(--hb-accent)",
-                      color: "var(--on-accent)",
-                      border: "none",
+                      position: "absolute",
+                      top: 10,
+                      left: 10,
+                      width: 26,
+                      height: 26,
                       borderRadius: 8,
-                      padding: "5px 12px",
-                      fontSize: 12,
-                      fontWeight: 600,
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 5,
-                      cursor: "pointer",
+                      background: "var(--ui-surface)",
+                      border: "1px solid var(--ui-border)",
+                      display: "grid",
+                      placeItems: "center",
                     }}
                   >
-                    <Sparkles size={12} />
-                    <span>Ver ejemplo</span>
-                  </button>
-                </div>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M17.5 6.5C15.8 6.5 14.3 7.6 12.8 9.8C11.7 8.1 10.3 6.5 8.1 6.5C5.2 6.5 3 9 3 12.3C3 15.5 5.1 17.5 7.4 17.5C9.3 17.5 10.9 16.2 12.5 13.7C13.6 15.6 15 17.5 17.2 17.5C19.9 17.5 22 15 22 11.8C22 8.7 20 6.5 17.5 6.5ZM7.5 15.3C6.1 15.3 5.1 14.1 5.1 12.2C5.1 10.1 6.3 8.7 8 8.7C9.4 8.7 10.4 9.8 11.4 11.5C10.1 13.8 8.9 15.3 7.5 15.3ZM17.1 15.3C15.8 15.3 14.7 13.9 13.7 12.1C14.8 10.1 16 8.7 17.4 8.7C18.9 8.7 19.9 10 19.9 11.9C19.9 13.9 18.7 15.3 17.1 15.3Z"
+                        fill="#0081FB" // ui-ok: color de marca de Meta
+                      />
+                    </svg>
+                  </div>
 
-                {/* Click 100 Progress Bar */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    paddingBottom: 12,
-                    marginBottom: 10,
-                    borderBottom: "1px solid var(--ui-muted)",
-                  }}
-                >
-                  <span style={{ fontSize: 11.5, color: "var(--ui-text-4)", fontWeight: 500 }}>
-                    Click
-                  </span>
+                  {/* Bottom Surface Bar + Ad Title */}
                   <div
                     style={{
-                      flex: 1,
-                      height: 6,
-                      borderRadius: 999,
-                      background: "var(--ui-border)",
-                      overflow: "hidden",
+                      position: "absolute",
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      padding: "10px 14px",
+                      background: "var(--ui-surface-2)",
+                      borderTop: "1px solid var(--ui-border)",
                     }}
                   >
                     <div
                       style={{
-                        width: `${ad.clickScore}%`,
-                        height: "100%",
-                        background: "#10B981",
-                        borderRadius: 999,
+                        color: "var(--ui-text)",
+                        fontSize: 12.5,
+                        fontWeight: 700,
+                        lineHeight: 1.35,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
                       }}
-                    />
+                    >
+                      {TitleIcon ? <TitleIcon size={15} /> : null}
+                      <span>{ad.title}</span>
+                    </div>
                   </div>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: "var(--ui-positive-text)" }}>
-                    {ad.clickScore}
-                  </span>
                 </div>
 
-                {/* 5 Metrics Rows */}
-                <div style={{ display: "flex", flexDirection: "column", gap: 7, fontSize: 12.5 }}>
-                  {/* Row 1: Resultados */}
+                {/* Card Body */}
+                <div style={{ padding: "12px 14px 16px" }}>
+                  {/* Activo pill + Analizar button */}
                   <div
                     style={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      marginBottom: 12,
                     }}
                   >
-                    <span
-                      style={{
-                        color: "var(--ui-text-4)",
-                        borderBottom: "1px dashed var(--ui-border-strong)",
-                      }}
-                    >
-                      Resultados
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                      <span
+                        style={{
+                          background: "var(--ui-positive-soft)",
+                          color: "var(--ui-positive-text)",
+                          fontSize: 11,
+                          fontWeight: 700,
+                          padding: "3px 10px",
+                          borderRadius: 999,
+                        }}
+                      >
+                        {ad.status}
+                      </span>
+                      <ExampleTag />
                     </span>
-                    <span
+
+                    <button
+                      type="button"
+                      onClick={() => setSelectedAd(ad)}
                       style={{
-                        background:
-                          ad.resultadosBadgeColor === "green" ? "#DCFCE7" : "#E6F4FB",
-                        color:
-                          ad.resultadosBadgeColor === "green" ? "#15803D" : "var(--ui-accent-text)",
-                        fontWeight: 700,
+                        background: "var(--hb-accent)",
+                        color: "var(--on-accent)",
+                        border: "none",
+                        borderRadius: 8,
+                        padding: "5px 12px",
                         fontSize: 12,
-                        padding: "1px 7px",
-                        borderRadius: 6,
+                        fontWeight: 600,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 5,
+                        cursor: "pointer",
                       }}
                     >
-                      {ad.resultados}
-                    </span>
+                      <Sparkles size={12} />
+                      <span>Ver ejemplo</span>
+                    </button>
                   </div>
 
-                  {/* Row 2: Gasto */}
+                  {/* Click 100 Progress Bar */}
                   <div
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "space-between",
+                      gap: 10,
+                      paddingBottom: 12,
+                      marginBottom: 10,
+                      borderBottom: "1px solid var(--ui-muted)",
                     }}
                   >
-                    <span
+                    <span style={{ fontSize: 11.5, color: "var(--ui-text-4)", fontWeight: 500 }}>
+                      Click
+                    </span>
+                    <div
                       style={{
-                        color: "var(--ui-text-4)",
-                        borderBottom: "1px dashed var(--ui-border-strong)",
+                        flex: 1,
+                        height: 6,
+                        borderRadius: 999,
+                        background: "var(--ui-border)",
+                        overflow: "hidden",
                       }}
                     >
-                      Gasto
-                    </span>
-                    <span style={{ fontWeight: 700, color: "var(--ui-text)" }}>{ad.gasto}</span>
-                  </div>
-
-                  {/* Row 3: Costo/Resultado */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <span
-                      style={{
-                        color: "var(--ui-text-4)",
-                        borderBottom: "1px dashed var(--ui-border-strong)",
-                      }}
-                    >
-                      Costo/Resultado
-                    </span>
-                    <span style={{ fontWeight: 700, color: "var(--ui-text)" }}>
-                      {ad.costoResultado}
+                      <div
+                        style={{
+                          width: `${ad.clickScore}%`,
+                          height: "100%",
+                          background: "var(--hb-accent)",
+                          borderRadius: 999,
+                        }}
+                      />
+                    </div>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: "var(--ui-text)", fontVariantNumeric: "tabular-nums" }}>
+                      {ad.clickScore}
                     </span>
                   </div>
 
-                  {/* Row 4: Clicks */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <span
+                  {/* 5 Metrics Rows */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 7, fontSize: 12.5 }}>
+                    {/* Row 1: Resultados */}
+                    <div
                       style={{
-                        color: "var(--ui-text-4)",
-                        borderBottom: "1px dashed var(--ui-border-strong)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
                       }}
                     >
-                      Clicks
-                    </span>
-                    <span style={{ fontWeight: 700, color: "var(--ui-text)" }}>{ad.clicks}</span>
-                  </div>
+                      <span
+                        style={{
+                          color: "var(--ui-text-4)",
+                          borderBottom: "1px dashed var(--ui-border-strong)",
+                        }}
+                      >
+                        Resultados
+                      </span>
+                      <span
+                        style={{
+                          background:
+                            ad.resultadosBadgeColor === "green"
+                              ? "rgb(var(--hb-accent-rgb) / 0.14)"
+                              : "var(--ui-muted)",
+                          color:
+                            ad.resultadosBadgeColor === "green"
+                              ? "var(--hb-accent-text)"
+                              : "var(--ui-text-2)",
+                          fontWeight: 700,
+                          fontSize: 12,
+                          padding: "1px 7px",
+                          borderRadius: 6,
+                          fontVariantNumeric: "tabular-nums",
+                        }}
+                      >
+                        {ad.resultados}
+                      </span>
+                    </div>
 
-                  {/* Row 5: % Campaña */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <span
+                    {/* Row 2: Gasto */}
+                    <div
                       style={{
-                        color: "var(--ui-text-4)",
-                        borderBottom: "1px dashed var(--ui-border-strong)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
                       }}
                     >
-                      % Campaña
-                    </span>
-                    <span style={{ fontWeight: 700, color: "var(--ui-text)" }}>
-                      {ad.pctCampana}
-                    </span>
+                      <span
+                        style={{
+                          color: "var(--ui-text-4)",
+                          borderBottom: "1px dashed var(--ui-border-strong)",
+                        }}
+                      >
+                        Gasto
+                      </span>
+                      <span style={{ fontWeight: 700, color: "var(--ui-text)", fontVariantNumeric: "tabular-nums" }}>{ad.gasto}</span>
+                    </div>
+
+                    {/* Row 3: Costo/Resultado */}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: "var(--ui-text-4)",
+                          borderBottom: "1px dashed var(--ui-border-strong)",
+                        }}
+                      >
+                        Costo/Resultado
+                      </span>
+                      <span style={{ fontWeight: 700, color: "var(--ui-text)", fontVariantNumeric: "tabular-nums" }}>
+                        {ad.costoResultado}
+                      </span>
+                    </div>
+
+                    {/* Row 4: Clicks */}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: "var(--ui-text-4)",
+                          borderBottom: "1px dashed var(--ui-border-strong)",
+                        }}
+                      >
+                        Clicks
+                      </span>
+                      <span style={{ fontWeight: 700, color: "var(--ui-text)", fontVariantNumeric: "tabular-nums" }}>{ad.clicks}</span>
+                    </div>
+
+                    {/* Row 5: % Campaña */}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: "var(--ui-text-4)",
+                          borderBottom: "1px dashed var(--ui-border-strong)",
+                        }}
+                      >
+                        % Campaña
+                      </span>
+                      <span style={{ fontWeight: 700, color: "var(--ui-text)", fontVariantNumeric: "tabular-nums" }}>
+                        {ad.pctCampana}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -1083,7 +1093,7 @@ function DemoAnunciosPage() {
             background: "var(--ui-surface)",
             border: "1px solid var(--ui-border)",
             borderRadius: 16,
-            overflow: "hidden",
+            overflowX: "auto",
           }}
         >
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
@@ -1116,102 +1126,89 @@ function DemoAnunciosPage() {
               </tr>
             </thead>
             <tbody>
-              {visibleAds.map((ad) => (
-                <tr key={ad.id} style={{ borderBottom: "1px solid var(--ui-muted)" }}>
-                  <td style={{ padding: "12px 16px", fontWeight: 600, color: "var(--ui-text)" }}>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                      {ad.title}
-                      <ExampleTag />
-                    </span>
-                  </td>
-                  <td style={{ padding: "12px 16px" }}>
-                    <span
+              {visibleAds.map((ad) => {
+                const TitleIcon = ad.titleIcon;
+                return (
+                  <tr key={ad.id} style={{ borderBottom: "1px solid var(--ui-muted)" }}>
+                    <td style={{ padding: "12px 16px", fontWeight: 600, color: "var(--ui-text)" }}>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                        {TitleIcon ? <TitleIcon size={15} /> : null}
+                        <span>{ad.title}</span>
+                        <ExampleTag />
+                      </span>
+                    </td>
+                    <td style={{ padding: "12px 16px" }}>
+                      <span
+                        style={{
+                          background: "var(--ui-positive-soft)",
+                          color: "var(--ui-positive-text)",
+                          fontSize: 11,
+                          fontWeight: 700,
+                          padding: "3px 9px",
+                          borderRadius: 999,
+                        }}
+                      >
+                        {ad.status}
+                      </span>
+                    </td>
+                    <td
                       style={{
-                        background: "#DCFCE7",
-                        color: "#15803D",
-                        fontSize: 11,
+                        padding: "12px 16px",
+                        textAlign: "right",
                         fontWeight: 700,
-                        padding: "3px 9px",
-                        borderRadius: 999,
+                        color: "var(--ui-text)",
+                        fontVariantNumeric: "tabular-nums",
                       }}
                     >
-                      {ad.status}
-                    </span>
-                  </td>
-                  <td
-                    style={{
-                      padding: "12px 16px",
-                      textAlign: "right",
-                      fontWeight: 700,
-                      color: "var(--ui-positive-text)",
-                    }}
-                  >
-                    {ad.clickScore}
-                  </td>
-                  <td style={{ padding: "12px 16px", textAlign: "right", fontWeight: 700 }}>
-                    {ad.resultados}
-                  </td>
-                  <td style={{ padding: "12px 16px", textAlign: "right", fontWeight: 700 }}>
-                    {ad.gasto}
-                  </td>
-                  <td style={{ padding: "12px 16px", textAlign: "right", fontWeight: 700 }}>
-                    {ad.costoResultado}
-                  </td>
-                  <td style={{ padding: "12px 16px", textAlign: "right", fontWeight: 700 }}>
-                    {ad.clicks}
-                  </td>
-                  <td style={{ padding: "12px 16px", textAlign: "right", fontWeight: 700 }}>
-                    {ad.pctCampana}
-                  </td>
-                </tr>
-              ))}
+                      {ad.clickScore}
+                    </td>
+                    <td style={{ padding: "12px 16px", textAlign: "right", fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>
+                      {ad.resultados}
+                    </td>
+                    <td style={{ padding: "12px 16px", textAlign: "right", fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>
+                      {ad.gasto}
+                    </td>
+                    <td style={{ padding: "12px 16px", textAlign: "right", fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>
+                      {ad.costoResultado}
+                    </td>
+                    <td style={{ padding: "12px 16px", textAlign: "right", fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>
+                      {ad.clicks}
+                    </td>
+                    <td style={{ padding: "12px 16px", textAlign: "right", fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>
+                      {ad.pctCampana}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       )}
 
       {/* Modal: Analizar Creativo con Hubi */}
-      {selectedAd && (
+      {modalPresence.mounted && activeAd && (
         <div
-          onClick={() => setSelectedAd(null)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(15, 23, 42, 0.45)",
-            display: "grid",
-            placeItems: "center",
-            zIndex: 100,
-            padding: 16,
+          className="hubly-overlay hubly-cal-overlay"
+          data-state={modalPresence.state}
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) setSelectedAd(null);
           }}
+          style={{ zIndex: "var(--layer-modal)" }}
         >
           <div
+            className="hubly-sheet hubly-cal-modal"
+            data-state={modalPresence.state}
             role="dialog"
             aria-modal="true"
             aria-label="Ejemplo de diagnóstico"
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              width: "100%",
-              maxWidth: 480,
-              background: "var(--ui-surface)",
-              borderRadius: 18,
-              padding: 24,
-              boxShadow: "0 24px 48px rgba(15, 23, 42, 0.22)",
-            }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: 12,
-              }}
-            >
+            <div className="hubly-cal-modal-head">
               <span
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 6,
-                  background: "var(--ui-accent-soft)",
+                  background: "rgb(var(--hb-accent-rgb) / 0.08)",
                   color: "var(--hb-accent-text)",
                   fontSize: 12,
                   fontWeight: 700,
@@ -1223,12 +1220,12 @@ function DemoAnunciosPage() {
               </span>
               <button
                 type="button"
+                className="hubly-cal-modal-close"
                 aria-label="Cerrar"
                 title="Cerrar"
                 onClick={() => setSelectedAd(null)}
-                style={{ background: "none", border: "none", cursor: "pointer", color: "var(--ui-text-4)" }}
               >
-                <X size={18} />
+                <X size={14} />
               </button>
             </div>
 
@@ -1236,12 +1233,23 @@ function DemoAnunciosPage() {
               Hubi todavía no analiza anuncios.
             </p>
 
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--ui-text)", margin: "0 0 10px" }}>
-              {selectedAd.title}
+            <h3
+              style={{
+                fontSize: 16,
+                fontWeight: 700,
+                color: "var(--ui-text)",
+                margin: "0 0 10px",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              {activeAd.titleIcon ? <activeAd.titleIcon size={16} /> : null}
+              <span>{activeAd.title}</span>
             </h3>
 
             <p style={{ fontSize: 13.5, color: "var(--ui-text-2)", lineHeight: 1.55, marginBottom: 16 }}>
-              {selectedAd.aiInsight}
+              {activeAd.aiInsight}
             </p>
 
             <div
@@ -1258,20 +1266,20 @@ function DemoAnunciosPage() {
             >
               <div>
                 <div style={{ color: "var(--ui-text-4)" }}>Click Score</div>
-                <div style={{ fontWeight: 800, color: "var(--ui-positive-text)", fontSize: 15 }}>
-                  {selectedAd.clickScore}/100
+                <div style={{ fontWeight: 700, color: "var(--ui-text)", fontSize: 15, fontVariantNumeric: "tabular-nums" }}>
+                  {activeAd.clickScore}/100
                 </div>
               </div>
               <div>
                 <div style={{ color: "var(--ui-text-4)" }}>Resultados</div>
-                <div style={{ fontWeight: 800, color: "var(--ui-text)", fontSize: 15 }}>
-                  {selectedAd.resultados}
+                <div style={{ fontWeight: 700, color: "var(--ui-text)", fontSize: 15, fontVariantNumeric: "tabular-nums" }}>
+                  {activeAd.resultados}
                 </div>
               </div>
               <div>
                 <div style={{ color: "var(--ui-text-4)" }}>Costo/Res.</div>
-                <div style={{ fontWeight: 800, color: "var(--ui-text)", fontSize: 15 }}>
-                  {selectedAd.costoResultado}
+                <div style={{ fontWeight: 700, color: "var(--ui-text)", fontSize: 15, fontVariantNumeric: "tabular-nums" }}>
+                  {activeAd.costoResultado}
                 </div>
               </div>
             </div>

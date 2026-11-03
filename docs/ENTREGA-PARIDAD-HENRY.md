@@ -523,3 +523,30 @@ Consola sin errores nuevos. Hay dos errores viejos:
 | `npx playwright test e2e/salud-cuentas.spec.ts` | **3/3 pasan** (1 cuenta en riesgo y 7 sugerencias) |
 
 - **Sin comprobar:** La corrida completa de Playwright (`npx playwright test` con las 88 pruebas) se ejecutará tras integrar los lotes A y D.
+
+## Plan anti-slop y arquitectura, Fase 3 (Lote B): `/anuncios` (3 de noviembre)
+
+- **Qué hizo el lote:** `web/app/(app)/anuncios/page.tsx` baja de **102 a 0 hallazgos** en `check:ui`.
+  - Los colores hex y `rgba` de las tarjetas, barras de progreso, pastillas, filtros, cabecera y modal de diagnóstico pasaron a tokens de la guía §3 (`--ui-surface*`, `--ui-border*`, `--ui-text*`, `--hb-accent*`, `--ui-sky*`, `--on-accent`, `--ui-positive*`).
+  - Único `ui-ok` justificado: `#0081FB` en el icono infinito oficial de Meta (`// ui-ok: color de marca de Meta`).
+  - Las ilustraciones de `AdPosterArtwork` (`launch`, `halloween`, `urgency`) usan la paleta de tokens de Hubly y tipografía sans-serif del sistema, sin `Georgia`/`serif`.
+  - Se eliminó el degradado decorativo del pie de las tarjetas (`linear-gradient(135deg, #F5F3FF, #EDE9FE)`), sustituido por `--ui-surface-2` con borde `1px solid var(--ui-border)`.
+  - Los 3 emojis (`💜`, `🎃`, `🐝`) se reemplazaron por iconos duotono (`HublySparkIcon`, `HublyBoltIcon`, `HublyClockIcon`).
+  - El modal de diagnóstico de campaña sigue la receta §9.9 (`useModalPresence`, `useLayer`, `.hubly-overlay.hubly-cal-overlay`, `.hubly-sheet.hubly-cal-modal`, `--layer-modal`).
+  - Se mantuvo el distintivo «Datos de ejemplo».
+- **Qué se ve distinto:**
+  - Las ilustraciones de las tarjetas de anuncio se integran en la paleta marina/cielo/crema de Hubly en claro y oscuro.
+  - El pie de cada tarjeta es plano (`--ui-surface-2`) en lugar de un degradado violeta.
+  - El verde (`--ui-positive-text` / `--ui-positive-soft`) queda reservado exclusivamente a la pastilla de estado «Activo»; `Click Score` y `Resultados` usan acento y texto neutro.
+  - Los números de resumen superior bajan de `26px/800` a `20px/700` con `tabular-nums`.
+
+### Verificación
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto, **1161** hallazgos (antes 1263; `anuncios/page.tsx`: 102 → 0) |
+| `npx tsc --noEmit` | 0 errores |
+| `npm test` | 43/43 |
+| Navegador (`1440` claro/oscuro, `375` móvil, teclado) | Tarjetas, filtros y modal de diagnóstico verificados; Escape cierra el modal y devuelve el foco |
+
+- **Sin comprobar:** El botón «Crear Campaña» es visual (sin `onClick` asignado en el diseño actual).
