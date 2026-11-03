@@ -15,7 +15,9 @@ Se obtienen con `node scripts/medir-deslop.mjs`, desde `web/`.
 | `page.tsx` sobre 80 líneas | 17 | 17 | 0 |
 | Archivos con prop `view` | 33 | 33 | 0 |
 | `style={{` sin simuladores | 1,475 | 1,475 | < 150 |
-| Deuda en la base de `check:ui` | 812 | 812 | < 100 |
+| Deuda de `check:ui`: reglas de siempre | 864 | 864 | < 100 |
+| Deuda de `check:ui`: reglas nuevas | 1,628 | 1,628 | 0 |
+| Deuda de `check:ui`: total | 2,492 | 2,492 | < 100 |
 | `!important` en CSS | 157 | 157 | < 10 |
 | Líneas con `eslint-disable` | 79 | 79 | < 25 |
 | Exenciones `ui-ok:` | 21 | 21 | No sube |
@@ -39,7 +41,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 |---|---|---|---|---|---|
 | F0-1 Medición | — | `scripts/` | Hecha | | este plan |
 | F0-2 Capas | — | `scripts/`, CI | Hecha | `impl-f0-2` | #36 |
-| F0-3 Reglas `check:ui` | — | `scripts/`, docs | En curso | `impl-f0-3` | — |
+| F0-3 Reglas `check:ui` | — | `scripts/`, docs | Hecha | `impl-f0-3` | #41 |
 | F0-4 Flujos críticos | — | `e2e/`, CI | Hecha | `impl-f0-4` | #38 |
 | F0-5 Contrato del store | — | `lib/store.contract.test.ts` | Hecha | `impl-f0-5` | #37 |
 | F0-6 Compuerta de F1 | F0-4, D4 | Ajuste en GitHub | Bloqueada | | |
@@ -98,3 +100,6 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 | 2026-11-01 | F0-2 | Revisión del delta: **aprobada, sin bloqueantes.** El agujero de `check-deuda` con reglas en 0 queda cerrado (reproducido por coordinación y por el revisor: `dominio-impuro` 0→1 → exit 1). Observaciones menores que pasan a F0-3: la prueba negativa de `check-ui` no discrimina, y `--root` produce un falso verde local porque `previous()` lee git del cwd y no del árbol apuntado. Pendiente de fusión por el dueño. |
 | 2026-11-01 | F0-5 | Tercera revisión (delta `88968f2` + merge `4d00a9b`): **aprobada, sin bloqueantes.** Los tres huecos quedaron cerrados y comprobados: los cuatro sabotajes de persistencia fallan solo por la llamada de guardado; la hidratación pasa por `syncFromServer` → `loadWorkspaceFromStorage` → `normalizeWorkspacePayload` (verificado con `ideas`); el mensaje editado/reaccionado/fijado es el que sobrevive. El revisor instrumentó `persistWorkspaceState` y observó **86 de 86** llamadas. Pendiente de fusión. Observaciones de alcance para F1: la prueba de hidratación se acopla al literal `hubly:workspace:v3:` y las filas de acciones con nombre duplicado colapsan a la última ocurrencia (el total sí cubre la suma). |
 | 2026-11-01 | F0-4 | Revisión: **aprobada, sin bloqueantes.** Los cinco flujos están, cada uno recarga y re-comprueba contra `/api/workspace`; el revisor hizo su propio sabotaje (editar un post sin persistir) y falló solo ese flujo. **Hueco conocido, para F1:** el contenido de la libreta se escribe pero no se comprueba —`critico-live.spec.ts` guarda `content` y solo verifica el título tras recargar—, así que perder `notebooks[].content` no lo detectaría ni esta prueba ni el contrato de F0-5 (que fija campos de primer nivel). Tampoco comprueban `res.ok` los ayudantes que siembran la agencia. Ninguno produce falso verde. |
+| 2026-11-03 | Plan (#39) | Revisión independiente (`d1af02a`) y fusión (`516ab92`): documentadas en `01-ESTADO-ACTUAL.md` y `04-TAREAS.md` las 148/158 claves del store, la distinción entre el único slice que declara cada clave inicial y los escritores en tiempo de ejecución (`set(...)`), y las líneas exactas de `store.ts`. |
+| 2026-11-03 | F0-3 (#41) | Revisión independiente (`25f5bde` / `2153cfc`) y fusión (`919b7bd`): añadidas `style-inline`, `important`, `view-prop` y `use-store-sin-selector` a `check:ui`; creada `check-ui-rutas-baseline.json` para las 10 rutas fuera de `(app)`; corregido `--root` en `check-deuda.mjs`, vigilancia de exenciones (`ui-ok:` 21, `eslint-disable` 79) y vigilancia de reglas en `0` en ambas bases de `check:ui`; alineados `ARCHITECTURE.md` y `CODE_STANDARDS.md`. La deuda de `check:ui` queda separada en reglas de siempre (`864`: `812` en `(app)` + `52` en rutas) y reglas nuevas (`1,628`: `1,523` en `(app)` + `105` en rutas), total `2,492`. |
+| 2026-11-03 | F0-4 / F0-5 (#40) | Revisión independiente (`09c21b3` / `950e73a`) y fusión (`f75400c`): cerrado el hueco de libretas y campos anidados antes de abrir F1. `critico-live.spec.ts` comprueba `notebooks[].content` tras recargar y valida `res.ok` en la siembra; `store.contract.test.ts` verifica las 29 `CLAVES_ANIDADAS` con todas sus colecciones pobladas, ejercita `addNotebook` y `updateNotebook` con `content`, y comprueba también la salida normalizada de `saveWorkspaceToStorage` para `posts` y `notebooks`. |
