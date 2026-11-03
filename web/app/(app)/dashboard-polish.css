@@ -1666,8 +1666,8 @@ html.dark .hubly-media-warning { color: #FBBF24; }
   .hubly-picker { width: 100%; height: 100dvh; border-radius: 0; }
 }
 
-/* Capas del editor: el velo queda debajo del sidebar, que sigue operativo. */
-:root { --layer-scrim: 105; --layer-composer: 110; --layer-sidebar: 112; --layer-command: 120; --layer-picker: 130; --layer-dialog: 200; }
+/* Escala única de capas (guía §5). Con el editor abierto, el velo queda debajo del sidebar, que sigue operativo. */
+:root { --layer-header: 20; --layer-dropdown: 40; --layer-fab: 45; --layer-drawer: 50; --layer-toast: 90; --layer-scrim: 105; --layer-modal: 110; --layer-composer: 110; --layer-sidebar: 112; --layer-command: 120; --layer-picker: 130; --layer-dialog: 200; }
 html:has(.hubly-composer) .hubly-app-root.hb-app-root .hubly-sidebar.hb-sidebar { z-index: var(--layer-sidebar) !important; }
 html:has(.hubly-composer) .hubly-overlay:not(.hubly-composer-overlay) { z-index: var(--layer-command) !important; }
 html:has(.hubly-composer) { --composer-left: 280px; }

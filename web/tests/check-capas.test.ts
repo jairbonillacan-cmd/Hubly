@@ -188,6 +188,38 @@ test("check-deuda no cuenta las reglas nuevas de check-ui como deuda, pero vigil
   assert.ok(deCeroAUno.stderr.includes("scripts/check-ui-baseline.json: la regla lucide subió de 0 a 1"), deCeroAUno.stderr);
 });
 
+test("check-deuda admite la deuda inicial de una tanda nueva, en las dos bases de check-ui", () => {
+  const root = repo({
+    ...deudaBase,
+    "web/scripts/check-ui-baseline.json": '{"components/app/x.tsx":{"color-fijo":1,"style-inline":2}}\n',
+    "web/scripts/check-ui-rutas-baseline.json": '{"app/page.tsx":{"style-inline":3}}\n',
+  });
+  // La tanda «capas» llega con deuda que ya existía en el código: no es un empeoramiento.
+  writeFileSync(join(root, "web/scripts/check-ui-baseline.json"), '{"components/app/x.tsx":{"color-fijo":1,"style-inline":2,"z-index-fijo":3}}\n');
+  writeFileSync(join(root, "web/scripts/check-ui-rutas-baseline.json"), '{"app/page.tsx":{"style-inline":3,"z-index-fijo":1}}\n');
+  const pasa = runDeuda(root);
+  assert.equal(pasa.status, 0, pasa.stderr);
+
+  // Una tanda que ya estaba en la base (F0-3) sigue vigilada aunque llegue otra.
+  writeFileSync(join(root, "web/scripts/check-ui-baseline.json"), '{"components/app/x.tsx":{"color-fijo":1,"style-inline":3,"z-index-fijo":3}}\n');
+  const sube = runDeuda(root);
+  assert.equal(sube.status, 1, sube.stdout);
+  assert.ok(sube.stderr.includes("scripts/check-ui-baseline.json: la regla style-inline subió de 2 a 3"), sube.stderr);
+});
+
+test("check-deuda no deja volver una regla ya declarada que se limpió hasta 0", () => {
+  // En la base la regla existe en check-ui.mjs, pero su deuda ya se limpió y no aparece.
+  const root = repo({
+    ...deudaBase,
+    "web/scripts/check-ui.mjs": 'const RULES = [{ id: "z-index-fijo" }];\n',
+    "web/scripts/check-ui-baseline.json": '{"components/app/x.tsx":{"color-fijo":1}}\n',
+  });
+  writeFileSync(join(root, "web/scripts/check-ui-baseline.json"), '{"components/app/x.tsx":{"color-fijo":1,"z-index-fijo":1}}\n');
+  const result = runDeuda(root);
+  assert.equal(result.status, 1, result.stdout);
+  assert.ok(result.stderr.includes("scripts/check-ui-baseline.json: la regla z-index-fijo subió de 0 a 1"), result.stderr);
+});
+
 test("check-deuda vigila la base de las rutas fuera de (app)", () => {
   const root = repo({ ...deudaBase, "web/scripts/check-ui-rutas-baseline.json": '{"app/share/[token]/page.tsx":{"style-inline":45}}\n' });
   writeFileSync(join(root, "web/scripts/check-ui-rutas-baseline.json"), '{"app/share/[token]/page.tsx":{"style-inline":46}}\n');

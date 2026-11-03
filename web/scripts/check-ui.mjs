@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /*
  * Chequeo anti-slop de la interfaz. Reglas en docs/GUIA-UX-UI-AGENTES.md; las
- * cuatro nuevas salen del plan de deslop (docs/deslop/04-TAREAS.md, F0-3).
+ * que llegaron después, por tanda, están en scripts/check-ui-reglas.mjs.
  * Compara contra scripts/check-ui-baseline.json, y las rutas fuera de (app)
  * contra scripts/check-ui-rutas-baseline.json: la deuda ya existente no falla,
  * pero ningún archivo puede empeorar y un archivo nuevo debe salir limpio.
@@ -59,6 +59,11 @@ const FONT_SIZES = new Set([10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 15, 16, 
 const RADII = new Set([0, 2, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 999, 9999]);
 
 const offScale = (scale, value) => !scale.has(Number(value));
+// Del 10 hacia arriba es una capa de pantalla; del 0 al 9 solo ordena piezas dentro de un componente.
+const layerNumber = (l) =>
+  [...l.matchAll(/(?:zIndex:\s*|z-index:\s*|\bz-\[)(\d+)|\bz-(\d{2,})\b/g)].some((m) => Number(m[1] ?? m[2]) >= 10);
+// Una definición de token no es usar un valor fijo, también en la forma de una línea `:root { --x: … }`.
+const definesToken = (l) => /^\s*(?::root\s*\{\s*)?--[\w-]+\s*:/.test(l);
 
 const RULES = [
   { id: "color-fijo", why: "color fijo: usa un token --ui-* o --hb-* (§3)", test: (l) => /#[0-9a-fA-F]{3,8}\b(?![\w-])/.test(l) && !/&#/.test(l) },
@@ -85,6 +90,7 @@ const RULES = [
   { id: "important", why: "!important: corrige la causa o justifícalo con un comentario (§15)", test: (l) => /!important/.test(l) },
   { id: "view-prop", why: "la sección recibe view entera: pide props explícitas (docs/deslop/02-ARQUITECTURA-OBJETIVO.md)", test: (l) => /\(\{\s*view\b|\bview:\s*\w+(Model|View)\b/.test(l) },
   { id: "use-store-sin-selector", why: "useHublyStore() sin selector: suscribe a todo el store, pasa un selector (F1-6)", test: (l) => /useHublyStore\(\s*\)/.test(l) },
+  { id: "z-index-fijo", why: "capa con número suelto: usa var(--layer-*) (§5)", test: layerNumber },
 ];
 const why = Object.fromEntries(RULES.map((rule) => [rule.id, rule.why]));
 
@@ -114,7 +120,7 @@ function scan(paths) {
     const file = relative(root, full).split(sep).join("/");
     if (skipped.some((re) => re.test(file))) continue;
     readFileSync(full, "utf8").split(/\r?\n/).forEach((line, index) => {
-      if (line.includes("ui-ok:")) return; if (/^\s*--[\w-]+:/.test(line)) return; // Una definición de token no es usar un color fijo.
+      if (line.includes("ui-ok:") || definesToken(line)) return;
       for (const rule of RULES) {
         if (rule.skipFile?.test(file) || !rule.test(line)) continue;
         result[file] ??= {};
