@@ -1,4 +1,6 @@
 import type { DashboardWidgetConfig } from "./types";
+import type { PostStatus } from "./types";
+import { POST_STATUS_LABEL } from "./labels";
 import {
   createSeedWorkspaceData,
   DEFAULT_AGENCY,
@@ -262,18 +264,8 @@ function normalizePost(post: Partial<SocialPost>): SocialPost {
       ? [post.network]
       : ["Instagram"];
   const status = post.status || "pending";
-  // «Programado» en un aprobado es la etiqueta antigua: aprobar no programa nada.
-  const statusLabel =
-    (status === "approved" ? "Aprobado" : post.statusLabel) ||
-    (status === "draft"
-      ? "Borrador"
-      : status === "pending"
-      ? "En aprobación"
-      : status === "changes"
-      ? "Requiere cambios"
-      : status === "published"
-      ? "Publicado"
-      : "Programado");
+  // La etiqueta se deriva siempre del estado: así se corrigen las antiguas («Programado» en un aprobado, «En aprobación»).
+  const statusLabel = POST_STATUS_LABEL[status as PostStatus] ?? post.statusLabel ?? POST_STATUS_LABEL.draft;
   return {
     id: post.id || `post-${Date.now()}`,
     brandId: post.brandId || "brand-min",

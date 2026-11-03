@@ -24,6 +24,7 @@ import {
   HublyPlugIcon as Plug,
   HublyTrashIcon as Trash2,
 } from "@/components/app/icons/DuotoneIcons";
+import { POST_STATUS_LABEL } from "@/lib/labels";
 
 export function HublyAvatarIllustration({ size = 34 }: { size?: number }) {
   return <HublyCatAvatar size={size} />;
@@ -257,7 +258,7 @@ export function FloatingAIDrawer() {
 
       const lines = [
         `🗓️ Resumen de Publicaciones y Aprobaciones:`,
-        `• Esperando visto bueno (En aprobación): ${approvalPosts.length} pieza(s)`,
+        `• ${POST_STATUS_LABEL.pending}: ${approvalPosts.length} pieza(s)`,
         `• Programadas para hoy: ${todayPosts.length} pieza(s)`,
       ];
 

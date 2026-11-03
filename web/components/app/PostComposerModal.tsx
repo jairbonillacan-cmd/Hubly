@@ -32,6 +32,7 @@ import {
 import { DEFAULT_WORKFLOW } from "@/lib/calendar-views";
 import { moveInList } from "@/lib/use-kanban-drag";
 import type { CustomFieldDefinition, PlatformSettings, PostFormat, PostMedia, PostStatus, SocialNetwork, WorkflowStatus } from "@/lib/types";
+import { POST_STATUS_LABEL } from "@/lib/labels";
 import {
   HublyArrowLeftIcon as ArrowLeft,
   HublyArrowRightIcon as ArrowRight,
@@ -112,14 +113,7 @@ const FIELD_TYPES: { id: CustomFieldDefinition["type"]; label: string }[] = [
   { id: "checkbox", label: "Casilla" },
   { id: "select", label: "Opciones" },
 ];
-const STATUS_TEXT: Record<PostStatus, string> = {
-  draft: "Borrador",
-  pending: "En aprobación",
-  changes: "Requiere cambios",
-  approved: "Aprobado",
-  scheduled: "Programado",
-  published: "Publicado",
-};
+const STATUS_TEXT: Record<PostStatus, string> = POST_STATUS_LABEL;
 
 interface UploadSlot {
   id: string;

@@ -7,6 +7,7 @@ import { useLayer } from "@/lib/use-layer";
 import { inPeriod, periodLabel } from "@/lib/calendar-views";
 import { guessMapping, IMPORT_FIELDS, parseDelimited, reviewRows, type ColumnMapping, type ImportFieldId } from "@/lib/post-import";
 import type { BrandWorkspace, SocialPost } from "@/lib/types";
+import { postStatusLabel } from "@/lib/labels";
 import { FeedSimulator } from "./FeedSimulator";
 
 function ModalShell({ title, subtitle, onClose, children, footer, wide }: { title: string; subtitle?: string; onClose: () => void; children: React.ReactNode; footer?: React.ReactNode; wide?: boolean }) {
@@ -96,7 +97,7 @@ export function CreateGridModal({ brand, anchor, posts, onCopyLink, onClose }: {
                 <td><strong>{p.title}</strong><small style={{ display: "block", color: "var(--ui-text-3)" }}>{p.caption.slice(0, 90)}</small></td>
                 <td>{p.networks.join(", ")}</td>
                 <td>{p.format}</td>
-                <td>{p.status === "draft" ? "Borrador (oculto)" : p.statusLabel}</td>
+                <td>{p.status === "draft" ? "Borrador (oculto)" : postStatusLabel(p.status)}</td>
               </tr>
             ))}
           </tbody>

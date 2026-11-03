@@ -406,6 +406,7 @@ export interface TodayPostsAndApprovalsResult {
 export function isPostInApproval(post: PostItem): boolean {
   return (
     post.status === "pending" ||
+    post.statusLabel === "Esperando cliente" ||
     post.statusLabel === "En aprobación" ||
     (post.status as string) === "En aprobación"
   );

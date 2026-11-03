@@ -44,6 +44,7 @@ import {
   type SortKey,
 } from "@/lib/calendar-views";
 import type { BrandWorkspace, PostFormat, PostStatus, SocialPost, WorkflowStatus } from "@/lib/types";
+import { POST_STATUS_LABEL } from "@/lib/labels";
 import { CreateGridModal, FeedModal, ImportMonthModal } from "./CalendarModals";
 
 const VIEWS: { id: CalendarView; label: string }[] = [
@@ -52,14 +53,8 @@ const VIEWS: { id: CalendarView; label: string }[] = [
   { id: "tabla", label: "Tabla" },
   { id: "kanban", label: "Kanban" },
 ];
-const STATUS_NAMES: Record<PostStatus, string> = {
-  draft: "Borrador",
-  pending: "En aprobación",
-  changes: "Requiere cambios",
-  approved: "Aprobado",
-  scheduled: "Planificado",
-  published: "Publicado",
-};
+// Sin publicación automática, un post con fecha está «Planificado», no programado en la red.
+const STATUS_NAMES: Record<PostStatus, string> = { ...POST_STATUS_LABEL, scheduled: "Planificado" };
 const WEEKDAYS = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
 const NO_VALUE = "__none__";
 

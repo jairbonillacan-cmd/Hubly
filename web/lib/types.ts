@@ -22,6 +22,8 @@ export type PostStatus =
 
 export type PostStatusLabel =
   | "Borrador"
+  | "Esperando cliente"
+  /** Heredado: posts guardados antes del 3 de noviembre de 2026. */
   | "En aprobación"
   | "Aprobado"
   | "Programado"

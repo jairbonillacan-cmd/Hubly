@@ -7,7 +7,7 @@ import type { MediaAsset, PostStatus, PostStatusLabel } from "@/lib/types";
 /** Nombre corto del estado: el que se guarda en `statusLabel` y se ve en tablas y filas. */
 export const POST_STATUS_LABEL: Record<PostStatus, PostStatusLabel> = {
   draft: "Borrador",
-  pending: "En aprobación",
+  pending: "Esperando cliente",
   changes: "Requiere cambios",
   approved: "Aprobado",
   scheduled: "Programado",
