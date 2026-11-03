@@ -180,6 +180,12 @@ test("check-deuda no cuenta las reglas nuevas de check-ui como deuda, pero vigil
   const sube = runDeuda(root);
   assert.equal(sube.status, 1, sube.stdout);
   assert.ok(sube.stderr.includes("scripts/check-ui-baseline.json: la regla color-fijo subió de 1 a 2"), sube.stderr);
+
+  // Una regla de siempre que estaba en 0 (ausente en was) tampoco puede subir a 1.
+  writeFileSync(join(root, "web/scripts/check-ui-baseline.json"), '{"components/app/x.tsx":{"color-fijo":1,"lucide":1}}\n');
+  const deCeroAUno = runDeuda(root);
+  assert.equal(deCeroAUno.status, 1, deCeroAUno.stdout);
+  assert.ok(deCeroAUno.stderr.includes("scripts/check-ui-baseline.json: la regla lucide subió de 0 a 1"), deCeroAUno.stderr);
 });
 
 test("check-deuda vigila la base de las rutas fuera de (app)", () => {
@@ -190,6 +196,15 @@ test("check-deuda vigila la base de las rutas fuera de (app)", () => {
   assert.ok(
     result.stderr.includes("scripts/check-ui-rutas-baseline.json: la regla style-inline subió de 45 a 46"),
     result.stderr,
+  );
+
+  // También si una regla que partía de 0 en esa base sube a 1.
+  writeFileSync(join(root, "web/scripts/check-ui-rutas-baseline.json"), '{"app/share/[token]/page.tsx":{"style-inline":45,"view-prop":1}}\n');
+  const desdeCero = runDeuda(root);
+  assert.equal(desdeCero.status, 1, desdeCero.stdout);
+  assert.ok(
+    desdeCero.stderr.includes("scripts/check-ui-rutas-baseline.json: la regla view-prop subió de 0 a 1"),
+    desdeCero.stderr,
   );
 });
 

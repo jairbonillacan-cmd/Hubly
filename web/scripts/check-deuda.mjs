@@ -8,6 +8,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { NUEVAS, esNueva } from "./check-ui-reglas.mjs";
 
 const args = process.argv.slice(2);
 const base = args[0];
@@ -71,14 +72,14 @@ const measures = [
   ["package.json", maxWarnings],
 ];
 const guarded = [
-  { path: "scripts/check-ui-baseline.json", absentMeansZero: false },
-  { path: "scripts/check-ui-rutas-baseline.json", absentMeansZero: false },
-  // En capas cada regla existe desde el principio: si aparece con deuda, es nueva.
-  { path: "scripts/check-capas-baseline.json", absentMeansZero: true },
+  // Toda regla ausente en la base vale 0; solo al cruzar F0-3 se ignoran las 4 nuevas que aún no existían en was.
+  { path: "scripts/check-ui-baseline.json", skipInitialNewRules: true },
+  { path: "scripts/check-ui-rutas-baseline.json", skipInitialNewRules: false },
+  { path: "scripts/check-capas-baseline.json", skipInitialNewRules: false },
 ];
 
 let failed = false;
-for (const { path, absentMeansZero } of guarded) {
+for (const { path, skipInitialNewRules } of guarded) {
   const before = previous(path);
   if (before === null) continue;
   if (!existsSync(join(root, path))) {
@@ -88,7 +89,8 @@ for (const { path, absentMeansZero } of guarded) {
   }
   const was = byRule(before);
   const now = byRule(current(path));
-  const ids = absentMeansZero ? Object.keys(now) : Object.keys(was);
+  const introducingNewRules = skipInitialNewRules && ![...NUEVAS].some((id) => id in was);
+  const ids = Object.keys(now).filter((id) => !(introducingNewRules && esNueva(id)));
   for (const id of ids) {
     const [from, to] = [was[id] ?? 0, now[id] ?? 0];
     if (to > from) {
