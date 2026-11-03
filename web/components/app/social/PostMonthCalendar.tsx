@@ -1,13 +1,14 @@
 "use client";
 
 import { useHublyStore } from "@/lib/store";
+import { publishing } from "@/lib/publishing/gateway";
 import { MonthDragCalendar } from "@/components/app/MonthDragCalendar";
 import type { BrandWorkspace, SocialPost } from "@/lib/types";
 import { MonthlyQuota } from "./MonthlyQuota";
 import { STATUS_META } from "./status-meta";
 
 export function PostMonthCalendar({ posts, brand }: { posts: SocialPost[]; brand?: BrandWorkspace }) {
-  const movePost = useHublyStore((s) => s.movePost);
+  const movePost = publishing.reschedule;
   const openComposer = useHublyStore((s) => s.openComposer);
 
   return (

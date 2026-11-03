@@ -8,6 +8,7 @@ import {
   selectAccountsHealth,
   selectTasksBreakdown,
   selectTodayPostsAndApprovals,
+  selectActiveBrand,
 } from "@/lib/domain-selectors";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import {
@@ -101,7 +102,7 @@ export function FloatingAIDrawer() {
     autoSuggestionsModalOpen;
 
   const activeBrand =
-    brands.find((b) => b.id === activeBrandId) || brands[0] || null;
+    selectActiveBrand(brands, activeBrandId) || null;
 
   const [prompt, setPrompt] = useState("");
   const [turns, setTurns] = useState<LocalAssistantTurn[]>([]);

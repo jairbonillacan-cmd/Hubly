@@ -24,6 +24,7 @@ import {
   HublyTrashIcon as Trash2,
   HublyUploadIcon as Upload,
 } from "@/components/app/icons/DuotoneIcons";
+import { selectActiveBrand } from "@/lib/domain-selectors";
 
 const PROJECT_COLUMNS = ["En curso", "Revisión", "Completado"] as const;
 
@@ -83,7 +84,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
     onMove: (id, toCol, beforeId) => moveProject(id, toCol as BrandProject["status"], beforeId),
   });
 
-  const activeBrand = brands.find((b) => b.id === activeBrandId) || brands[0];
+  const activeBrand = selectActiveBrand(brands, activeBrandId);
 
   const [mode, setMode] = useState<"content" | "proyectos">(
     tabParam === "proyectos" ? "proyectos" : "content"

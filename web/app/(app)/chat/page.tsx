@@ -18,6 +18,7 @@ import {
   HublySparkIcon as Sparkles,
   HublyArrowLeftIcon,
 } from "@/components/app/icons/DuotoneIcons";
+import { useActiveBrand } from "@/lib/use-active-brand";
 
 interface LocalThreadMessage {
   id: string;
@@ -72,7 +73,7 @@ export default function ChatPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const myName = useHublyStore((st) => st.profile?.name) || "Equipo";
-  const brandLabel = useHublyStore((st) => st.brands.find((b) => b.id === st.activeBrandId)?.name) || "Marca";
+  const brandLabel = useActiveBrand()?.name || "Marca";
   const [dmOpen, setDmOpen] = useState(true);
   const [minExpanded, setMinExpanded] = useState(false);
   const [draft, setDraft] = useState("");

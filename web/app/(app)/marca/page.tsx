@@ -13,6 +13,7 @@ import {
   HublySparkIcon,
   HublyTargetIcon as Target,
 } from "@/components/app/icons/DuotoneIcons";
+import { selectActiveBrand } from "@/lib/domain-selectors";
 
 
 export default function MarcaCorePage() {
@@ -20,7 +21,7 @@ export default function MarcaCorePage() {
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
   const updateBrandCore = useHublyStore((s) => s.updateBrandCore);
 
-  const activeBrand = brands.find((b) => b.id === activeBrandId) || brands[0];
+  const activeBrand = selectActiveBrand(brands, activeBrandId);
 
   const [whatTheySell, setWhatTheySell] = useState(activeBrand?.core?.whatTheySell ?? "");
   const [category, setCategory] = useState(activeBrand?.core?.category ?? "");

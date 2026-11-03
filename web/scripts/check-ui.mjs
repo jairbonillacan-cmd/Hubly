@@ -37,7 +37,8 @@ const RULES = [
   { id: "rgb-fijo", why: "rgb()/rgba() fijo: usa un token o rgb(var(--hb-accent-rgb) / alfa) (§3)", test: (l) => /\brgba?\(\s*\d/.test(l) && !definesToken(l) },
   { id: "z-index-fijo", why: "capa con número suelto: usa var(--layer-*) (§5)", test: layerNumber },
   { id: "prueba-escrita", why: "duración de la prueba escrita a mano: usa PRICING_CONSTANTS.trialDays", test: (l) => /\d+\s+días\s+gratis|prueba de \d+\s+días/i.test(l) },
-  { id: "estado-crudo", why: "valor interno mostrado tal cual: usa una etiqueta de lib/labels.ts", test: (l) => /(?<![=\w])\{\s*[\w.?]+\.(status|role|kind)\s*\}/.test(l) },
+  // Solo los campos que guardan códigos internos; otros `status` ya se guardan en español («Activo», «Pendiente»).
+  { id: "estado-crudo", why: "valor interno mostrado tal cual: usa una etiqueta de lib/labels.ts", test: (l) => /(?<![=\w])\{\s*([\w.?]+\.kind|(post|\w+Post)\??\.status)\s*\}/.test(l) },
   { id: "degradado", why: "degradado decorativo (§15)", test: (l) => /(linear|radial|conic)-gradient|bg-(gradient|linear)-/.test(l) },
   { id: "lucide", why: "iconos de lucide: usa DuotoneIcons (§6)", test: (l) => /from\s+["']lucide-react["']/.test(l) },
   { id: "emoji", why: "emoji en la interfaz: usa un icono duotono (§15)", test: (l) => /\p{Extended_Pictographic}/u.test(l.replace(/[©®™]/g, "")) },

@@ -317,3 +317,44 @@ Plan completo: limpiar primero (guardarraíles, fundaciones, monolitos, deuda po
   | Base nueva (1411 + 70 de las reglas nuevas) | **1481** |
 
   Las reglas nuevas aportan: `z-index-fijo` 45, `estado-crudo` 22, `prueba-escrita` 3.
+
+## Plan anti-slop y arquitectura, Fase 1: fundaciones (3 de noviembre)
+
+Sin cambio visual salvo uno: en `/tareas` el tipo de archivo dice «IMAGEN» y «DOCUMENTO» en lugar de «IMAGE» y «DOC».
+
+- **Diccionario de etiquetas (`web/lib/labels.ts`):**
+  - Estado de post en dos vocabularios, ambos en este archivo:
+    - `POST_STATUS_LABEL`, corto: el que se guarda en `statusLabel`.
+    - `POST_STATUS_CLIENT_LABEL`, el del cliente.
+  - `store.ts`, `calendar-views.ts` y `STATUS_META` leen de aquí.
+  - Roles: el `ROLE_LABEL` duplicado en `api/workspace/route.ts` e `invitacion/[token]` pasa a `roleLabel()`.
+  - Tipo de archivo: `MEDIA_KIND_LABEL`.
+  - **Decisión pendiente, sin aplicar:** un mismo estado se nombra distinto según la pantalla. «En aprobación» y «Esperando cliente» dicen lo mismo, y «Planificado» en la tabla equivale a «Programado».
+- **Regla `estado-crudo` acotada:** ahora solo marca `{x.kind}` y `{post.status}`. Los demás `status` y `role` ya se guardan en español o los escribe la agencia.
+- **Planes:** `PRICING_CONSTANTS.trialDays` (7). `AgencyCalculator` ya no escribe la duración a mano.
+- **Marca activa:** `selectActiveBrand` en `domain-selectors.ts` y `useActiveBrand()` sustituyen 11 derivaciones. Todas siguen ahora la regla del sidebar: elegida, luego la primera sin archivar, luego la primera. `/parrillas` y `/reportes` ya no buscan el id de ejemplo `brand-min`.
+- **Puerta de publicación (`web/lib/publishing/gateway.ts`):**
+  - `SocialPublishingGateway` con `mode`, `reschedule` y `markPublished`, más su implementación `manualGateway`.
+  - El calendario, el feed, el mes y el registro de publicación pasan por `publishing`.
+  - `schedule` y `cancel` llegan con el conector real: hoy no tendrían a quién servir.
+- **`next/dynamic`:** los 7 modales del layout cargan aparte. Se quitaron los envoltorios `as unknown as`.
+- **Store en slices (`web/lib/store-slices/`):** `ui`, `sync`, `brands`, `posts`, `crm`, `tasks`, `team` y `workspace`, más `helpers`.
+  - El código de las acciones se movió sin reescribirlo.
+  - `useHublyStore`, el estado inicial y la protección de lector siguen en `store.ts` (de 2080 a 317 líneas).
+
+### Verificación
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto, **1456** hallazgos (antes 1481) |
+| `npx tsc --noEmit` | 0 errores |
+| `npm test` | 43/43 |
+| `npm run test:db` | 69/69 |
+| `npx playwright test` | **86/88** |
+| Navegador | `/dashboard` y el buscador (⌘K) abren, sin errores de la app en consola |
+
+Las 2 que fallan son `salud-cuentas.spec.ts:14` y `:51`, y no vienen de esta fase:
+
+- **Por qué fallan:** la prueba lee el espacio de demo guardado en `web/.data/workspaces/workspace-default.json`, no la semilla. Ese archivo tiene 6 tareas vencidas (del 29 de octubre al 1 de noviembre) y da 3 cuentas en riesgo y 8 sugerencias.
+- **Comprobación:** con la semilla limpia, calculado con los mismos selectores para hoy, el 2 y el 1 de noviembre, salen 1 cuenta en riesgo y 7 sugerencias, lo que espera la prueba.
+- **Arreglo pendiente:** que la prueba sirva la semilla en su `GET` en lugar de depender de los datos guardados.

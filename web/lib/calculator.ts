@@ -67,6 +67,8 @@ export const CURRENCY_CONFIG: Record<
 };
 
 export const PRICING_CONSTANTS = {
+  /** Días de prueba gratis. Todo texto que mencione la prueba lee de aquí. */
+  trialDays: 7,
   v3: {
     solo: {
       prices: { mxn: 390, usd: 24, eur: 24 },

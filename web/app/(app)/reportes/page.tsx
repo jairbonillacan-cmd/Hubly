@@ -22,6 +22,8 @@ import {
   HublyRowsIcon as List,
   HublySparkIcon as Sparkles,
 } from "@/components/app/icons/DuotoneIcons";
+import { selectActiveBrand } from "@/lib/domain-selectors";
+import { useActiveBrand } from "@/lib/use-active-brand";
 
 export default function ReportesPage() {
   if (backendEnabled) return <LiveReportes />;
@@ -34,9 +36,7 @@ function DemoReportesPage() {
   const posts = useHublyStore((s) => s.posts);
 
   const activeBrand =
-    brands.find((b) => b.id === activeBrandId) ||
-    brands.find((b) => b.id === "brand-min") ||
-    brands[0];
+    selectActiveBrand(brands, activeBrandId);
 
   const brandName =
     activeBrand?.name || "";
@@ -588,7 +588,7 @@ function DemoReportesPage() {
 }
 
 function LiveReportes() {
-  const brand = useHublyStore((s) => s.brands.find((b) => b.id === s.activeBrandId));
+  const brand = useActiveBrand();
   const posts = useHublyStore((s) => s.posts);
   return <MonthlyReport brand={brand} posts={posts.filter((p) => p.brandId === brand?.id)} />;
 }

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useHublyStore } from "@/lib/store";
+import { label, MEDIA_KIND_LABEL } from "@/lib/labels";
 import { TaskBoard } from "@/components/app/tasks/TaskBoard";
 import { NotebooksSection, useCreateNotebook } from "@/components/app/tasks/NotebooksSection";
 import {
@@ -220,7 +221,7 @@ export default function TareasPage() {
                     textTransform: "uppercase",
                   }}
                 >
-                  {asset.kind}
+                  {label(MEDIA_KIND_LABEL, asset.kind)}
                 </span>
                 <span style={{ fontSize: 11.5, color: "var(--ui-text-5)" }}>{asset.sizeLabel}</span>
               </div>

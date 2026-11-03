@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { localIsoDate } from "@/lib/date";
 import { useHublyStore } from "@/lib/store";
+import { publishing } from "@/lib/publishing/gateway";
 import type { BrandWorkspace, PostFormat, SocialNetwork, SocialPost } from "@/lib/types";
 import {
   HublySparkIcon as Sparkles,
@@ -27,7 +28,7 @@ const AI_ERRORS: Record<string, string> = {
 
 /** Mientras no haya conexión con redes, la publicación y sus resultados se registran a mano. */
 export function ManualResults({ post }: { post: SocialPost }) {
-  const recordPublication = useHublyStore((s) => s.recordPublication);
+  const recordPublication = publishing.markPublished;
   const setPostResults = useHublyStore((s) => s.setPostResults);
   const [url, setUrl] = useState(post.publishedUrl || "");
   const [date, setDate] = useState(post.status === "published" ? post.scheduledDate : localIsoDate());

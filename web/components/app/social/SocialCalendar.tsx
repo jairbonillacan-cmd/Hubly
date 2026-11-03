@@ -18,6 +18,7 @@ import {
   HublyUploadIcon as Upload,
 } from "@/components/app/icons/DuotoneIcons";
 import { useHublyStore } from "@/lib/store";
+import { publishing } from "@/lib/publishing/gateway";
 import { askText } from "@/components/app/AppDialogHost";
 import { Cover } from "@/components/Cover";
 import { networkSpec, NETWORKS } from "@/lib/network-catalog";
@@ -93,7 +94,7 @@ function PublicationBadge({ post, today }: { post: SocialPost; today: string }) 
 
 export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorkspace; posts: SocialPost[]; onCopyLink: () => void }) {
   const openComposer = useHublyStore((s) => s.openComposer);
-  const movePost = useHublyStore((s) => s.movePost);
+  const movePost = publishing.reschedule;
   const updateBrand = useHublyStore((s) => s.updateBrand);
   const updatePostFields = useHublyStore((s) => s.updatePostFields);
   const updatePostStatus = useHublyStore((s) => s.updatePostStatus);

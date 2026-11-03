@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState, useLayoutEffect } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import "./hubly-saas.css";
 import "./app-base.css";
@@ -10,13 +11,6 @@ import { useModalPresence } from "@/lib/use-modal-presence";
 import { useHublyTheme } from "@/lib/theme";
 import { useHublyStore } from "@/lib/store";
 import { useLayer } from "@/lib/use-layer";
-import { PostComposerModal } from "@/components/app/PostComposerModal";
-import { NewBrandModal } from "@/components/app/NewBrandModal";
-import { CommandPaletteModal } from "@/components/app/CommandPaletteModal";
-import { InviteTeamModal } from "@/components/app/InviteTeamModal";
-import { NotebookReaderModal } from "@/components/app/NotebookReaderModal";
-import { WidgetConfigModal } from "@/components/app/WidgetConfigModal";
-import { AutoSuggestionsModal } from "@/components/app/AutoSuggestionsModal";
 import { FloatingAIDrawer } from "@/components/app/FloatingAIDrawer";
 import { AppDialogHost } from "@/components/app/AppDialogHost";
 import { SaveStatus } from "@/components/app/SaveStatus";
@@ -47,20 +41,16 @@ import {
   HublyTagIcon,
   HublyBuildingIcon,
 } from "@/components/app/icons/DuotoneIcons";
+import { selectActiveBrand } from "@/lib/domain-selectors";
 
-// Flexible wrappers so shared modals work seamlessly whether they read state from
-// useHublyStore internally or accept explicit open/onClose props.
-const InviteTeamModalSurface =
-  InviteTeamModal as unknown as React.ComponentType<Record<string, unknown>>;
-const NotebookReaderModalSurface =
-  NotebookReaderModal as unknown as React.ComponentType<Record<string, unknown>>;
-const WidgetConfigModalSurface =
-  WidgetConfigModal as unknown as React.ComponentType<Record<string, unknown>>;
-const AutoSuggestionsModalSurface =
-  AutoSuggestionsModal as unknown as React.ComponentType<Record<string, unknown>>;
-
-const DescubreHublyWidgetSurface =
-  DescubreHublyWidget as unknown as React.ComponentType<Record<string, unknown>>;
+// Las ventanas viven montadas pero cerradas: se cargan aparte para no engordar el armazón.
+const PostComposerModal = dynamic(() => import("@/components/app/PostComposerModal").then((m) => m.PostComposerModal), { ssr: false });
+const NewBrandModal = dynamic(() => import("@/components/app/NewBrandModal").then((m) => m.NewBrandModal), { ssr: false });
+const CommandPaletteModal = dynamic(() => import("@/components/app/CommandPaletteModal").then((m) => m.CommandPaletteModal), { ssr: false });
+const InviteTeamModal = dynamic(() => import("@/components/app/InviteTeamModal").then((m) => m.InviteTeamModal), { ssr: false });
+const NotebookReaderModal = dynamic(() => import("@/components/app/NotebookReaderModal").then((m) => m.NotebookReaderModal), { ssr: false });
+const WidgetConfigModal = dynamic(() => import("@/components/app/WidgetConfigModal").then((m) => m.WidgetConfigModal), { ssr: false });
+const AutoSuggestionsModal = dynamic(() => import("@/components/app/AutoSuggestionsModal").then((m) => m.AutoSuggestionsModal), { ssr: false });
 
 const TIMEZONE_OPTIONS = [
   { value: "America/Mexico_City", label: "Ciudad de México (GMT-6)" },
@@ -105,7 +95,6 @@ export default function SaaSAppLayout({
     (s) => s.markAllNotificationsRead
   );
 
-  const notebooks = useHublyStore((s) => s.notebooks);
   const activeNotebookId = useHublyStore((s) => s.activeNotebookId);
   const setActiveNotebookId = useHublyStore((s) => s.setActiveNotebookId);
 
@@ -245,9 +234,7 @@ export default function SaaSAppLayout({
   // Active brand derived strictly from store state (persisted in localStorage)
   const activeBrand = useMemo(
     () =>
-      brands.find((b) => b.id === activeBrandId) ||
-      brands.find((b) => b.status !== "archived") ||
-      brands[0],
+      selectActiveBrand(brands, activeBrandId),
     [brands, activeBrandId]
   );
 
@@ -267,10 +254,6 @@ export default function SaaSAppLayout({
     [notifications]
   );
 
-  const activeNotebook = useMemo(
-    () => notebooks.find((n) => n.id === activeNotebookId) || null,
-    [notebooks, activeNotebookId]
-  );
 
   // Preserve ?workspace= and ?fixture= query params on internal navigation links
   const preservedQuerySuffix = useMemo(() => {
@@ -1956,28 +1939,27 @@ export default function SaaSAppLayout({
       {/* =====================================================================
           SHARED SURFACES, DRAWERS & MODALS
          ===================================================================== */}
-      <DescubreHublyWidgetSurface />
+      <DescubreHublyWidget />
       <AppDialogHost />
       <SaveStatus />
       <FloatingAIDrawer />
       <PostComposerModal />
       <NewBrandModal />
       <CommandPaletteModal />
-      <InviteTeamModalSurface
+      <InviteTeamModal
         open={inviteModalOpen}
         onClose={() => setInviteModalOpen(false)}
       />
-      <NotebookReaderModalSurface
+      <NotebookReaderModal
         open={Boolean(activeNotebookId)}
         notebookId={activeNotebookId}
-        notebook={activeNotebook}
         onClose={() => setActiveNotebookId(null)}
       />
-      <WidgetConfigModalSurface
+      <WidgetConfigModal
         open={widgetConfigModalOpen}
         onClose={() => setWidgetConfigModalOpen(false)}
       />
-      <AutoSuggestionsModalSurface
+      <AutoSuggestionsModal
         open={autoSuggestionsModalOpen}
         onClose={() => setAutoSuggestionsModalOpen(false)}
       />

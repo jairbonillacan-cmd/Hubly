@@ -3,7 +3,6 @@
     "color-fijo": 88,
     "degradado": 1,
     "emoji": 3,
-    "estado-crudo": 2,
     "rgb-fijo": 8,
     "tamano-fuente": 1,
     "z-index-fijo": 1
@@ -29,7 +28,6 @@
   },
   "app/(app)/crm/page.tsx": {
     "color-fijo": 6,
-    "estado-crudo": 1,
     "radio": 1,
     "rgb-fijo": 1,
     "tamano-fuente": 3,
@@ -52,7 +50,6 @@
   },
   "app/(app)/layout.tsx": {
     "color-fijo": 18,
-    "estado-crudo": 2,
     "exclamacion": 1,
     "rgb-fijo": 4,
     "tamano-fuente": 4,
@@ -65,7 +62,6 @@
   },
   "app/(app)/marcas/page.tsx": {
     "color-fijo": 3,
-    "estado-crudo": 1,
     "tamano-fuente": 2
   },
   "app/(app)/notificaciones/page.tsx": {
@@ -88,12 +84,8 @@
   },
   "app/(app)/tareas/page.tsx": {
     "color-fijo": 2,
-    "estado-crudo": 1,
     "radio": 1,
     "rgb-fijo": 3
-  },
-  "components/AgencyCalculator.tsx": {
-    "prueba-escrita": 3
   },
   "components/app/AccessPanel.tsx": {
     "color-fijo": 3
@@ -106,7 +98,6 @@
   },
   "components/app/ArchivosYProyectosView.tsx": {
     "color-fijo": 8,
-    "estado-crudo": 2,
     "rgb-fijo": 4,
     "tamano-fuente": 1,
     "z-index-fijo": 2
@@ -116,9 +107,6 @@
     "rgb-fijo": 5,
     "tamano-fuente": 1,
     "z-index-fijo": 1
-  },
-  "components/app/CommandPaletteModal.tsx": {
-    "estado-crudo": 1
   },
   "components/app/DescubreHublyWidget.tsx": {
     "rgb-fijo": 1,
@@ -131,7 +119,6 @@
   },
   "components/app/InviteTeamModal.tsx": {
     "color-fijo": 20,
-    "estado-crudo": 3,
     "exclamacion": 1,
     "rgb-fijo": 2,
     "z-index-fijo": 1
@@ -172,14 +159,10 @@
     "transition-all": 1,
     "z-index-fijo": 1
   },
-  "components/app/ajustes/EquipoPanel.tsx": {
-    "estado-crudo": 1
-  },
   "components/app/dashboard/EquipoView.tsx": {
     "color-fijo": 68,
     "degradado": 1,
     "emoji": 41,
-    "estado-crudo": 5,
     "exclamacion": 1,
     "radio": 3,
     "rgb-fijo": 8,
@@ -188,7 +171,6 @@
   },
   "components/app/dashboard/InicioView.tsx": {
     "color-fijo": 36,
-    "estado-crudo": 1,
     "exclamacion": 1,
     "radio": 1,
     "rgb-fijo": 5,
@@ -196,7 +178,6 @@
   },
   "components/app/dashboard/MemberDrawer.tsx": {
     "color-fijo": 4,
-    "estado-crudo": 1,
     "radio": 2,
     "rgb-fijo": 1,
     "z-index-fijo": 1
@@ -260,7 +241,6 @@
   },
   "components/app/tasks/TaskBoard.tsx": {
     "color-fijo": 14,
-    "estado-crudo": 1,
     "radio": 1,
     "rgb-fijo": 3,
     "tamano-fuente": 2,

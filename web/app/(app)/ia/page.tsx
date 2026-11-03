@@ -16,6 +16,7 @@ import {
   HublyPlugIcon as Plug,
   HublyPulseIcon as TrendingUp,
 } from "@/components/app/icons/DuotoneIcons";
+import { selectActiveBrand } from "@/lib/domain-selectors";
 
 const SUGGESTION_PILLS = [
   "Dame ideas de contenido para esta semana",
@@ -33,7 +34,7 @@ function DemoHublyAIPage() {
   const brands = useHublyStore((s) => s.brands);
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
 
-  const activeBrand = brands.find((b) => b.id === activeBrandId) || brands[0];
+  const activeBrand = selectActiveBrand(brands, activeBrandId);
 
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<{ id: string; replyBody: string }[]>([]);

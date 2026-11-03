@@ -492,7 +492,7 @@ export function AgencyCalculator({
               </button>
 
               <span className="text-[13px] font-medium" style={{ color: "var(--ink-soft, #456256)" }}>
-                Hubly desde {formatCurrency(PRICING_CONSTANTS.v3.solo.prices[currency], currency)}/mes · 7 días gratis
+                Hubly desde {formatCurrency(PRICING_CONSTANTS.v3.solo.prices[currency], currency)}/mes · {PRICING_CONSTANTS.trialDays} días gratis
               </span>
             </div>
           </div>
@@ -746,7 +746,7 @@ export function AgencyCalculator({
                 backgroundColor: "var(--green, #0a7a55)",
               }}
             >
-              <span>{ctaLabel || `Empezar prueba de 7 días con ${pricingBrands} marcas`}</span>
+              <span>{ctaLabel || `Empezar prueba de ${PRICING_CONSTANTS.trialDays} días con ${pricingBrands} marcas`}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -910,7 +910,7 @@ export function AgencyCalculator({
                 backgroundColor: "var(--green, #0a7a55)",
               }}
             >
-              <span>{ctaLabel || "Empieza a generar este ROI — 7 días gratis"}</span>
+              <span>{ctaLabel || `Empieza a generar este ROI — ${PRICING_CONSTANTS.trialDays} días gratis`}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

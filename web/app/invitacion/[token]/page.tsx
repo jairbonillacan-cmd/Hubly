@@ -4,8 +4,8 @@ import { Suspense, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { selectLiveAgency } from "@/lib/live-workspace";
+import { roleLabel } from "@/lib/labels";
 
-const ROLE_LABEL: Record<string, string> = { admin: "Administración", editor: "Edición", viewer: "Solo lectura" };
 
 function InvitacionView() {
   const token = useParams<{ token: string }>()?.token || "";
@@ -57,7 +57,7 @@ function InvitacionView() {
         {state === "ready" && invite && (
           <>
             <h1 style={title}>Te invitaron a {invite.agency}</h1>
-            <p style={text}>Para {invite.email}, con acceso de {ROLE_LABEL[invite.role] || invite.role}.</p>
+            <p style={text}>Para {invite.email}, con acceso de {roleLabel(invite.role)}.</p>
             <button type="button" onClick={accept} style={{ border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "10px 16px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
               Aceptar invitación
             </button>

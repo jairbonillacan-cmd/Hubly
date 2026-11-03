@@ -4,12 +4,13 @@ import { postThumbnail } from "@/lib/post-draft";
 import { useMemo } from "react";
 import { Cover } from "@/components/Cover";
 import { useHublyStore } from "@/lib/store";
+import { publishing } from "@/lib/publishing/gateway";
 import { useKanbanDrag } from "@/lib/use-kanban-drag";
 import type { SocialPost } from "@/lib/types";
 
 /** Vista previa del perfil de Instagram. Arrastrar intercambia las fechas de los dos posts. */
 export function FeedSimulator({ posts }: { posts: SocialPost[] }) {
-  const movePost = useHublyStore((s) => s.movePost);
+  const movePost = publishing.reschedule;
   const openComposer = useHublyStore((s) => s.openComposer);
 
   const feed = useMemo(

@@ -6,6 +6,7 @@ import { notebookPlainText } from "@/lib/notebook-content";
 import {
   HublyPlusIcon as Plus,
 } from "@/components/app/icons/DuotoneIcons";
+import { selectActiveBrand } from "@/lib/domain-selectors";
 
 export function useCreateNotebook() {
   const addNotebook = useHublyStore((s) => s.addNotebook);
@@ -29,7 +30,7 @@ export function NotebooksSection() {
   const createNotebook = useCreateNotebook();
 
   const visible = notebooks.filter((n) => n.brandId === activeBrandId);
-  const brandName = brands.find((b) => b.id === activeBrandId)?.name || "";
+  const brandName = selectActiveBrand(brands, activeBrandId)?.name || "";
 
   return (
     <div>

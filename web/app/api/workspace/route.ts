@@ -9,6 +9,7 @@ import {
 import { backendEnabled } from "@/lib/supabase/config";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import type { HublyWorkspaceData } from "@/lib/types";
+import { roleLabel } from "@/lib/labels";
 
 const DATA_DIR = path.join(process.cwd(), ".data");
 const WORKSPACES_DIR = path.join(DATA_DIR, "workspaces");
@@ -114,7 +115,6 @@ async function liveGet(requestedAgency: string | null) {
     avatarSourceUrl: (auth.user.user_metadata?.avatar_source_url as string) || undefined,
   };
   const { data: members } = await supabase.rpc("list_members", { target_agency: membership.agency_id });
-  const ROLE_LABEL: Record<string, string> = { owner: "Dueño", admin: "Administración", editor: "Edición", viewer: "Solo lectura" };
   data.team = ((members ?? []) as { user_id: string; role: string; email: string; name: string }[]).map((m) => {
     const saved = data.team.find((t) => t.email === m.email);
     const memberName = m.user_id === auth.user!.id ? data.profile.name : m.name || saved?.name || m.email;
@@ -133,7 +133,7 @@ async function liveGet(requestedAgency: string | null) {
       id: m.user_id,
       name: memberName,
       email: m.email,
-      role: ROLE_LABEL[m.role] || m.role,
+      role: roleLabel(m.role),
       status: "Activo" as const,
       initials,
       avatarInitial: initials.charAt(0),

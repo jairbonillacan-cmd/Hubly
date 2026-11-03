@@ -9,6 +9,7 @@ import {
   selectGreetingAndDate,
   selectTasksBreakdown,
   selectTodayPostsAndApprovals,
+  selectActiveBrand,
 } from "@/lib/domain-selectors";
 import type {
   DashboardWidgetId,
@@ -138,7 +139,7 @@ export function InicioView() {
   const notebookPresence = useModalPresence(isCreatingNotebook);
 
   const activeBrand = useMemo(
-    () => brands.find((b) => b.id === activeBrandId) || brands[0],
+    () => selectActiveBrand(brands, activeBrandId),
     [brands, activeBrandId]
   );
 

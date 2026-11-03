@@ -41,6 +41,7 @@ import {
   HublyRowsIcon as List,
   HublySparkIcon,
 } from "@/components/app/icons/DuotoneIcons";
+import { selectActiveBrand } from "@/lib/domain-selectors";
 
 type SocialSubTab =
   | "calendario"
@@ -97,9 +98,7 @@ export default function ParrillasPage() {
   }, []);
 
   const activeBrand =
-    brands.find((b) => b.id === activeBrandId) ||
-    brands.find((b) => b.id === "brand-min") ||
-    brands[0];
+    selectActiveBrand(brands, activeBrandId);
 
   const brandName =
     activeBrand?.name || "";
@@ -851,7 +850,7 @@ export default function ParrillasPage() {
       )}
 
       {/* INTERACTIVE PARRILLA & CALENDAR VIEW (Toggled by 'Ver con datos de ejemplo ->') */}
-      {activeTab === "calendario" && showDemoData && (
+      {activeTab === "calendario" && showDemoData && activeBrand && (
         <div>
           <SocialCalendar brand={activeBrand} posts={brandPosts} onCopyLink={() => void handleCopyClientLink()} />
         </div>
