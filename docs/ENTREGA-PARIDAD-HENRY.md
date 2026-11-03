@@ -474,3 +474,36 @@ Consola sin errores nuevos. Hay dos errores viejos:
 
 - No se pulsó «+ Nota» en el navegador, para no crear una libreta en los datos de demo del usuario. Usa el mismo `useCreateNotebook` que `/tareas`.
 - Los estilos en línea de los widgets siguen ahí: la guía §2 los lista como deuda, pero pasarlos a clases es otro corte.
+
+## Plan anti-slop y arquitectura, Fase 2 (cuarto corte): `/parrillas` (3 de noviembre)
+
+`app/(app)/parrillas/page.tsx` baja de 1551 a unas 230 líneas. Con este corte se cierran los monolitos de la Fase 2.
+
+- **Enlaces del portal en `web/lib/share-links.ts`:** `createLiveShareUrl` (la llamada a `/api/share`), `clientShareUrl` y `shareUrlForToken`. La página ya no hace `fetch`.
+  - Sin marca ya no se inventa el token de ejemplo `min-nov`: no se copia ningún enlace.
+- **Cuatro bloques a `components/app/social/parrillas/`:** `ParrillaOnboarding` (calendario sin datos), `ParrillaReportesPreview`, `ParrillaLinks` y `AccountsModal`.
+  - El JSX se movió tal cual.
+  - El estado que solo usaba un bloque se fue con él: el desplegable de más redes, y el de bio y WhatsApp de Links.
+  - `SocialSubTab` vive en `parrillas/types.ts`.
+- **`AccountsModal` sigue la receta §9.9:** `useModalPresence`, `useLayer`, velo y hoja de la guía, sin z-index propio.
+  - Escape lo cierra y el foco vuelve a «Cuentas». Antes no se podía cerrar con Escape.
+  - Los cuatro «Conectar» pasan de botones marinos a `hbtn-secondary`: había un primario por fila.
+- **Código muerto quitado:** `descubreOpen`, `updatePostStatus`, `approveAllBrandPosts`, `openComposer`, `profileName` y 20 imports.
+- **Colores y textos:**
+  - Blanco sobre acento pasa a `--on-accent`.
+  - El fondo del icono de reportes pasa a `--ui-sky-soft`.
+  - Se quitaron las sombras de las filas y de la maqueta del teléfono.
+  - Llevan `ui-ok` justificado: los logos de Instagram, Facebook, LinkedIn y WhatsApp (color de su marca) y el marco y la tipografía de la maqueta de la página pública.
+  - Los textos dicen «Copiado» y «Liga copiada. Abriendo portal…», sin exclamaciones.
+  - Las pestañas nombran sus propiedades de transición.
+- **Revisado y sin cambio:** «Conectar» sigue simulando la conexión, pero la pantalla ya dice «La conexión directa todavía no está lista…». El conector real llega con Zernio por la puerta de publicación.
+
+### Verificación
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto, **1263** hallazgos (antes 1294); los componentes nuevos sin hallazgos |
+| `npx tsc --noEmit` | 0 errores |
+| `npm test` | 43/43 |
+| `npx playwright test` | 86/88; fallan las 2 de Salud de cuentas ya documentadas |
+| Navegador | Onboarding igual; modal de cuentas centrado (medido en el DOM), se cierra con Escape y devuelve el foco; Links y Reportes con su contenido; consola sin errores |

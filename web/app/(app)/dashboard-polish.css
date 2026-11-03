@@ -2368,3 +2368,9 @@ html:has([data-mision-pildora][data-desplegado]) .hubly-main.hb-main { padding-b
 /* Velo del cajón móvil y sombra de los menús emergentes (guía §5). */
 .hubly-shell-scrim { position: fixed; inset: 0; z-index: var(--layer-drawer); background: rgba(26, 26, 46, 0.28); backdrop-filter: blur(4px); } /* ui-ok: velo de la guía, igual al de .hubly-cal-overlay */
 .hubly-pop { box-shadow: 0 8px 24px rgba(26, 26, 46, 0.08); } /* ui-ok: sombra de dropdown de la guía, igual a .hubly-cal-filters */
+
+/* Cuentas conectadas de la marca (/parrillas): filas dentro del modal de la guía. */
+.hubly-accounts-hint { margin: 0; font-size: 13px; color: var(--ui-text-4); }
+.hubly-accounts-list { border: 1px solid var(--ui-border); border-radius: 14px; overflow: hidden; }
+.hubly-accounts-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; font-size: 13.5px; font-weight: 600; color: var(--ui-text); }
+.hubly-accounts-row + .hubly-accounts-row { border-top: 1px solid var(--ui-border); }
