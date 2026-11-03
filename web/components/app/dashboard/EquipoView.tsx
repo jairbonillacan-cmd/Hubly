@@ -44,12 +44,12 @@ export function AchievementBadgeSvg({
   unlocked?: boolean;
 }) {
   const palettes = [
-    { bg: "#EAF6FC", ring: "#16324F", fill: "#BFE2F4" },
-    { bg: "#E6F4FB", ring: "var(--hb-accent)", fill: "#BFE2F4" },
-    { bg: "#E6F4FB", ring: "#16324F", fill: "#BFE2F4" },
-    { bg: "#EAF6FC", ring: "#7CC8EE", fill: "#DCEFF9" },
-    { bg: "#E0F2FE", ring: "#2A76B0", fill: "#BAE6FD" },
-    { bg: "#EAF6FC", ring: "#24496E", fill: "#BFE2F4" },
+    { bg: "rgb(var(--hb-accent-rgb) / 0.08)", ring: "var(--hb-accent)", fill: "var(--ui-sky-border)" },
+    { bg: "var(--ui-sky-soft)", ring: "var(--hb-accent)", fill: "var(--ui-sky-border)" },
+    { bg: "rgb(var(--hb-accent-rgb) / 0.12)", ring: "var(--hb-accent-text)", fill: "var(--ui-sky-border)" },
+    { bg: "rgb(var(--hb-accent-rgb) / 0.08)", ring: "var(--ui-sky)", fill: "var(--ui-sky-soft)" },
+    { bg: "var(--ui-sky-soft)", ring: "var(--hb-accent-hover)", fill: "rgb(var(--hb-accent-rgb) / 0.14)" },
+    { bg: "rgb(var(--hb-accent-rgb) / 0.14)", ring: "var(--hb-accent)", fill: "var(--ui-sky-border)" },
   ];
   const p = palettes[variant % palettes.length];
   return (
@@ -60,7 +60,7 @@ export function AchievementBadgeSvg({
       fill="none"
       style={{
         opacity: unlocked ? 1 : 0.72,
-        filter: unlocked ? "drop-shadow(0 4px 10px rgba(79,70,229,0.16))" : "none",
+        filter: unlocked ? "drop-shadow(0 4px 10px rgb(var(--hb-accent-rgb) / 0.16))" : "none",
         transition: "opacity 180ms ease, transform 180ms ease",
       }}
       aria-hidden="true"
@@ -79,29 +79,29 @@ export function AchievementBadgeSvg({
         cy="26"
         r="11"
         fill={p.fill}
-        stroke="#1E293B"
+        stroke="var(--ui-text)"
         strokeWidth="1.5"
       />
-      <circle cx="24.5" cy="24.5" r="1.5" fill="#1E293B" />
-      <circle cx="31.5" cy="24.5" r="1.5" fill="#1E293B" />
+      <circle cx="24.5" cy="24.5" r="1.5" fill="var(--ui-text)" />
+      <circle cx="31.5" cy="24.5" r="1.5" fill="var(--ui-text)" />
       <path
         d="M25 28.5C26.2 30 29.8 30 31 28.5"
-        stroke="#1E293B"
+        stroke="var(--ui-text)"
         strokeWidth="1.4"
         strokeLinecap="round"
       />
       <path
         d="M19 42C20.5 37.5 23.8 35.5 28 35.5C32.2 35.5 35.5 37.5 37 42"
-        stroke="#1E293B"
+        stroke="var(--ui-text)"
         strokeWidth="1.5"
         strokeLinecap="round"
       />
       {unlocked && (
         <g>
-          <circle cx="43" cy="13" r="7" fill="#16324F" stroke="#FFFFFF" strokeWidth="1.5" />
+          <circle cx="43" cy="13" r="7" fill="var(--hb-accent)" stroke="var(--ui-surface)" strokeWidth="1.5" />
           <path
             d="M39.8 13L42 15.2L46.4 10.8"
-            stroke="#FFFFFF"
+            stroke="var(--on-accent)"
             strokeWidth="1.6"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -557,7 +557,7 @@ export function EquipoView() {
                     borderRadius: 7,
                     cursor: "pointer",
                     boxShadow: active
-                      ? "0 1px 2px rgba(15, 23, 42, 0.06)"
+                      ? "0 1px 2px rgb(var(--hb-accent-rgb) / 0.08)"
                       : "none",
                     fontFamily: "inherit",
                   }}
@@ -647,7 +647,7 @@ export function EquipoView() {
                   marginLeft: 2,
                   padding: "1px 6px",
                   borderRadius: 9999,
-                  background: "rgba(255, 255, 255, 0.22)",
+                  background: "var(--hb-accent-hover)",
                   fontSize: 10.5,
                   fontWeight: 700,
                 }}
@@ -669,7 +669,7 @@ export function EquipoView() {
               padding: "0 12px",
               borderRadius: 10,
               color: filtersOpen ? "var(--hb-accent-text)" : "var(--ui-text-3)",
-              borderColor: filtersOpen ? "#BFE2F4" : "var(--ui-border)",
+              borderColor: filtersOpen ? "var(--ui-sky-border)" : "var(--ui-border)",
               background: filtersOpen ? "var(--ui-accent-soft)" : "var(--ui-surface)",
             }}
           >
@@ -776,9 +776,9 @@ export function EquipoView() {
                     border:
                       brandFilterId === "all"
                         ? "1px solid var(--hb-accent)"
-                        : "1px solid #E2E8F0",
+                        : "1px solid var(--ui-border)",
                     background: brandFilterId === "all" ? "var(--ui-accent-soft)" : "var(--ui-surface)",
-                    color: brandFilterId === "all" ? "var(--hb-accent)" : "var(--ui-text-3)",
+                    color: brandFilterId === "all" ? "var(--hb-accent-text)" : "var(--ui-text-3)",
                     fontSize: 11.5,
                     fontWeight: 600,
                     cursor: "pointer",
@@ -798,7 +798,7 @@ export function EquipoView() {
                       border:
                         brandFilterId === b.id
                           ? "1px solid var(--hb-accent)"
-                          : "1px solid #E2E8F0",
+                          : "1px solid var(--ui-border)",
                       background: brandFilterId === b.id ? "var(--ui-accent-soft)" : "var(--ui-surface)",
                       color: brandFilterId === b.id ? "var(--hb-accent-text)" : "var(--ui-text-3)",
                       fontSize: 11.5,
@@ -842,7 +842,7 @@ export function EquipoView() {
                   }}
                 >
                   <span>Completar tarea en curso</span>
-                  <span style={{ color: "#10B981", fontWeight: 700 }}>+25 XP</span>
+                  <span style={{ color: "var(--hb-accent-text)", fontWeight: 700 }}>+25 XP</span>
                 </button>
                 <button
                   type="button"
@@ -907,7 +907,7 @@ export function EquipoView() {
                   borderRadius: 9999,
                   border: isSelected
                     ? "1px solid var(--hb-accent)"
-                    : "1px solid #E2E8F0",
+                    : "1px solid var(--ui-border)",
                   background: isSelected ? "var(--ui-accent-soft)" : "var(--ui-surface)",
                   color: isSelected ? "var(--hb-accent-text)" : "var(--ui-text-2)",
                   fontSize: 12,
@@ -932,7 +932,7 @@ export function EquipoView() {
             marginBottom: 22,
             padding: "14px 18px",
             borderRadius: 14,
-            border: "1px solid #BFE2F4",
+            border: "1px solid var(--ui-sky-border)",
             background: "var(--ui-accent-soft)",
             display: "flex",
             flexDirection: "column",
@@ -949,7 +949,7 @@ export function EquipoView() {
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <Mail size={15} color="var(--hb-accent)" />
+              <Mail size={15} color="var(--hb-accent-text)" />
               <span style={{ fontSize: 13, fontWeight: 700, color: "var(--ui-text)" }}>
                 Invitaciones del equipo ({invitations.length})
               </span>
@@ -981,7 +981,7 @@ export function EquipoView() {
                     background: "var(--ui-surface)",
                     borderRadius: 10,
                     padding: "10px 14px",
-                    border: "1px solid #DCEFF9",
+                    border: "1px solid var(--ui-sky-border)",
                     display: "flex",
                     flexWrap: "wrap",
                     alignItems: "center",
@@ -1015,8 +1015,8 @@ export function EquipoView() {
                           fontWeight: 700,
                           padding: "2px 8px",
                           borderRadius: 9999,
-                          background: isPending ? "#E6F4FB" : "#DCFCE7",
-                          color: isPending ? "var(--ui-accent-text)" : "#15803D",
+                          background: isPending ? "var(--ui-sky-soft)" : "rgb(var(--hb-accent-rgb) / 0.14)",
+                          color: isPending ? "var(--hb-accent-text)" : "var(--ui-positive-text)",
                         }}
                       >
                         {inv.status}
@@ -1058,7 +1058,7 @@ export function EquipoView() {
                             borderRadius: 7,
                             border: "none",
                             background: "var(--hb-accent)",
-                            color: "#FFFFFF",
+                            color: "var(--on-accent)",
                             fontSize: 11.5,
                             fontWeight: 600,
                             display: "inline-flex",
@@ -1077,9 +1077,9 @@ export function EquipoView() {
                             height: 28,
                             padding: "0 8px",
                             borderRadius: 7,
-                            border: "1px solid #FECACA",
-                            background: "#FEF2F2",
-                            color: "#DC2626",
+                            border: "1px solid var(--ui-border)",
+                            background: "var(--ui-surface-2)",
+                            color: "var(--ui-text-3)",
                             fontSize: 11,
                             fontWeight: 600,
                             cursor: "pointer",
@@ -1243,9 +1243,9 @@ export function EquipoView() {
                             width: 18,
                             height: 18,
                             borderRadius: 5,
-                            background: b.id === "brand-min" ? "#16324F" : b.color,
-                            color: "#FFFFFF",
-                            fontSize: 9.5,
+                            background: b.id === "brand-min" ? "var(--hb-accent)" : b.color,
+                            color: "var(--on-accent)",
+                            fontSize: 10,
                             fontWeight: 700,
                             display: "inline-flex",
                             alignItems: "center",
@@ -1408,7 +1408,7 @@ export function EquipoView() {
             TIEMPO
           </span>
           <span style={{ fontSize: 13.5, color: "var(--ui-text-4)" }}>
-            <strong style={{ color: "var(--ui-text)", fontWeight: 700, fontSize: 14.5 }}>
+            <strong style={{ color: "var(--ui-text)", fontWeight: 700, fontSize: 14 }}>
               {activeMemberMetrics.activeTimeFormatted}
             </strong>{" "}
             activo
@@ -1554,7 +1554,7 @@ export function EquipoView() {
         <div style={{ textAlign: "right", minWidth: 165 }}>
           <div
             style={{
-              fontSize: 22,
+              fontSize: 20,
               fontWeight: 800,
               color: "var(--hb-accent-text)",
               lineHeight: 1.1,
@@ -1655,7 +1655,7 @@ export function EquipoView() {
                     style={{
                       border: "none",
                       background: active ? "var(--hb-accent)" : "transparent",
-                      color: active ? "#FFFFFF" : "var(--ui-text-3)",
+                      color: active ? "var(--on-accent)" : "var(--ui-text-3)",
                       fontSize: 11.5,
                       fontWeight: 600,
                       padding: "3px 10px",
@@ -1706,7 +1706,7 @@ export function EquipoView() {
                     height: 24,
                     borderRadius: 7,
                     background: isToday ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
-                    border: isToday ? "1px solid #DCEFF9" : "none",
+                    border: isToday ? "1px solid var(--ui-sky-border)" : "none",
                     overflow: "hidden",
                     position: "relative",
                   }}
@@ -1861,7 +1861,7 @@ export function EquipoView() {
                           style={{
                             width: `${progressPct}%`,
                             height: "100%",
-                            background: ach.unlocked ? "var(--hb-accent)" : "#94A3B8",
+                            background: ach.unlocked ? "var(--hb-accent)" : "var(--ui-text-5)",
                             borderRadius: 9999,
                             transition: "width 220ms ease",
                           }}
@@ -1946,7 +1946,7 @@ export function EquipoView() {
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <Users size={15} style={{ color: "#16324F" }} />
+              <Users size={15} style={{ color: "var(--hb-accent-text)" }} />
               <span style={{ fontSize: 14, fontWeight: 700, color: "var(--ui-text)" }}>
                 Ranking del Equipo
               </span>
@@ -1972,7 +1972,7 @@ export function EquipoView() {
                     style={{
                       border: "none",
                       background: active ? "var(--hb-accent)" : "transparent",
-                      color: active ? "#FFFFFF" : "var(--ui-text-3)",
+                      color: active ? "var(--on-accent)" : "var(--ui-text-3)",
                       fontSize: 11.5,
                       fontWeight: 600,
                       padding: "3px 10px",
@@ -2016,8 +2016,8 @@ export function EquipoView() {
                     background: isCurrentUser || isSelected ? "var(--ui-accent-soft)" : "var(--ui-surface-2)",
                     border:
                       isCurrentUser || isSelected
-                        ? "1px solid #DCEFF9"
-                        : "1px solid #F1F5F9",
+                        ? "1px solid var(--ui-sky-border)"
+                        : "1px solid var(--ui-muted)",
                     borderRadius: 12,
                     padding: "12px 14px",
                     display: "flex",
@@ -2129,7 +2129,7 @@ export function EquipoView() {
                       width: "100%",
                       height: 4,
                       borderRadius: 9999,
-                      background: isCurrentUser ? "#DCEFF9" : "var(--ui-border)",
+                      background: isCurrentUser ? "var(--ui-sky-soft)" : "var(--ui-border)",
                       overflow: "hidden",
                     }}
                   >
@@ -2138,7 +2138,7 @@ export function EquipoView() {
                         width: `${barWidthPct}%`,
                         height: "100%",
                         borderRadius: 9999,
-                        background: isCurrentUser ? "var(--hb-accent)" : "#64748B",
+                        background: isCurrentUser ? "var(--hb-accent)" : "var(--ui-text-4)",
                         opacity:
                           0.2 + 0.8 * (member.displayPoints / leaderPoints),
                         transition: "width 240ms ease",
@@ -2281,8 +2281,8 @@ export function EquipoView() {
                         fontWeight: 700,
                         padding: "2px 7px",
                         borderRadius: 9999,
-                        background: item.unlocked ? "#DCFCE7" : "var(--ui-border)",
-                        color: item.unlocked ? "#15803D" : "var(--ui-text-3)",
+                        background: item.unlocked ? "rgb(var(--hb-accent-rgb) / 0.14)" : "var(--ui-border)",
+                        color: item.unlocked ? "var(--hb-accent-text)" : "var(--ui-text-3)",
                       }}
                     >
                       +{item.xpReward} XP

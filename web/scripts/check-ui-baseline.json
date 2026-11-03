@@ -103,11 +103,6 @@
     "color-fijo": 2,
     "z-index-fijo": 2
   },
-  "components/app/dashboard/EquipoView.tsx": {
-    "color-fijo": 39,
-    "rgb-fijo": 3,
-    "tamano-fuente": 3
-  },
   "components/app/media/MediaLibrary.tsx": {
     "color-fijo": 1,
     "dialogo-nativo": 1,

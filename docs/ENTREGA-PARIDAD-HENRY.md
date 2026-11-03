@@ -597,3 +597,25 @@ Consola sin errores nuevos. Hay dos errores viejos:
 | Navegador (`1440` claro/oscuro, `375` móvil, teclado) | Apertura, recorrido con `Tab` y cierre con `Escape` verificados en los modales y el cajón |
 
 - **Sin comprobar:** El envío real de correo en `InviteTeamModal` (la función actual genera enlace local de invitación).
+
+## Plan anti-slop y arquitectura, Fase 3 (Lote E): vista de Equipo (3 de noviembre)
+
+- **Qué hizo el lote:** `web/components/app/dashboard/EquipoView.tsx` baja de **45 a 0 hallazgos** en `check:ui`, con **0 `ui-ok`**.
+  - Los 39 colores hex y las 3 funciones `rgba()` se sustituyeron por tokens de la guía §3 (`--ui-surface*`, `--ui-border*`, `--ui-text*`, `--hb-accent*`, `--ui-sky*`, `--on-accent`, `--ui-positive*`).
+  - La paleta de las insignias `AchievementBadgeSvg` (`gold`, `purple`, `emerald`, `blue`, `rose`, `amber`, `locked`) y su sombra pasaron a tokens de superficie, cielo y acento marino con intensidades.
+  - Los tamaños tipográficos fuera de escala (`9.5px`, `14.5px`, `22px`) pasaron a `10px`, `14px` y `20px`.
+  - Los distintivos de puntos (`+25 XP` y `+{item.xpReward} XP`) usan `--hb-accent-text`, reservando `--ui-positive-text` exclusivamente al estado de invitación aceptada.
+- **Qué se ve distinto:**
+  - Las insignias de logros en la pestaña Equipo muestran una paleta cohesionada marino/cielo/superficie en lugar de 6 colores arcoíris saturados.
+  - Los puntos XP se muestran en marino de acento (`--hb-accent-text`) y las métricas del cajón de logros bajan de `22px` a `20px`.
+
+### Verificación
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto, **900** hallazgos (antes 945; `EquipoView.tsx`: 45 → 0) |
+| `npx tsc --noEmit` | 0 errores |
+| `npm test` | 43/43 |
+| Navegador (`1440` claro/oscuro, `375` móvil, teclado) | Pestaña Equipo en `/dashboard`, cajón de logros y cajón de miembro verificados |
+
+- **Sin comprobar:** La lista de invitaciones pendientes cuando hay invitaciones enviadas (en la semilla inicial está vacía, por lo que muestra el estado vacío).
