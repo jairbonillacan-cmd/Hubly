@@ -6,6 +6,7 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, extname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { NUEVAS } from "./check-ui-reglas.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -32,9 +33,20 @@ const code = sources.filter(({ file }) => !file.endsWith(".css"));
 const css = sources.filter(({ file }) => file.endsWith(".css"));
 // Imitan a otras apps o son dibujos: el plan los trata como excepción.
 const excepted = ({ file }) => /^components\/(previews|app\/icons)\//.test(file);
-const debt = Object.values(JSON.parse(readFileSync(join(root, "scripts/check-ui-baseline.json"), "utf8")))
-  .flatMap((rules) => Object.values(rules))
-  .reduce((total, value) => total + value, 0);
+// La deuda de `check:ui` se mide aparte: lo que marcan las reglas de siempre y
+// lo que añadieron las nuevas. Se suman las dos bases, que también van aparte.
+const uiDebt = (nuevas) =>
+  ["check-ui-baseline.json", "check-ui-rutas-baseline.json"].reduce((sum, name) => {
+    const counts = JSON.parse(readFileSync(join(root, "scripts", name), "utf8"));
+    return (
+      sum +
+      Object.values(counts).reduce(
+        (perFile, rules) =>
+          perFile + Object.entries(rules).reduce((perRule, [id, count]) => perRule + (NUEVAS.has(id) === nuevas ? count : 0), 0),
+        0,
+      )
+    );
+  }, 0);
 
 const rows = [
   ["Líneas de `lib/store.ts`", sources.find(({ file }) => file === "lib/store.ts")?.lines ?? 0],
@@ -43,7 +55,9 @@ const rows = [
   ["`page.tsx` sobre 80 líneas", code.filter(({ file, lines }) => file.endsWith("page.tsx") && lines > 80).length],
   ["Archivos con prop `view`", code.filter(({ text }) => /\(\{\s*view\b|\bview:\s*\w+(Model|View)\b/.test(text)).length],
   ["`style={{` sin simuladores", sum(code.filter((s) => !excepted(s)), /style=\{\{/g)],
-  ["Deuda en la base de `check:ui`", debt],
+  ["Deuda de `check:ui`: reglas de siempre", uiDebt(false)],
+  ["Deuda de `check:ui`: reglas nuevas", uiDebt(true)],
+  ["Deuda de `check:ui`: total", uiDebt(false) + uiDebt(true)],
   ["`!important` en CSS", sum(css, /!important/g)],
   ["Líneas con `eslint-disable`", sum(code, /eslint-disable/g)],
   ["Exenciones `ui-ok:`", sum(sources, /ui-ok:/g)],

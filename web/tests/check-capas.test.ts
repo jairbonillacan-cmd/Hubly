@@ -48,8 +48,8 @@ function repo(files: Record<string, string>): string {
   return root;
 }
 
-function runDeuda(root: string): SpawnSyncReturns<string> {
-  return spawnSync(process.execPath, [deuda, "HEAD", "--root", join(root, "web")], { cwd: root, encoding: "utf8" });
+function runDeuda(root: string, cwd = root): SpawnSyncReturns<string> {
+  return spawnSync(process.execPath, [deuda, "HEAD", "--root", join(root, "web")], { cwd, encoding: "utf8" });
 }
 
 test("un import de lib/ a components/ hace fallar el chequeo", () => {
@@ -164,10 +164,87 @@ test("check-deuda frena una regla de capas que pasa de 0 a 1", () => {
   assert.ok(result.stderr.includes("scripts/check-capas-baseline.json: la regla dominio-impuro subió de 0 a 1"), result.stderr);
 });
 
-test("check-deuda no cuenta una regla nueva de check-ui como deuda", () => {
-  const root = repo(deudaBase);
-  writeFileSync(join(root, "web/scripts/check-ui-baseline.json"), '{"components/app/x.tsx":{"color-fijo":1}}\n');
+test("check-deuda no cuenta las reglas nuevas de check-ui como deuda, pero vigila las de siempre", () => {
+  const root = repo({ ...deudaBase, "web/scripts/check-ui-baseline.json": '{"components/app/x.tsx":{"color-fijo":1}}\n' });
+
+  // F0-3 añade reglas: su deuda ya existía y no es un empeoramiento.
+  writeFileSync(join(root, "web/scripts/check-ui-baseline.json"), '{"components/app/x.tsx":{"color-fijo":1,"style-inline":5}}\n');
+  // Una base nueva tampoco: no había nada con qué compararla.
+  writeFileSync(join(root, "web/scripts/check-ui-rutas-baseline.json"), '{"app/page.tsx":{"style-inline":3}}\n');
+  const pasa = runDeuda(root);
+  assert.equal(pasa.status, 0, pasa.stderr);
+  assert.ok(pasa.stdout.includes("La deuda no subió."));
+
+  // Si esta vigilancia se rompe, esta subida pasaría sin aviso.
+  writeFileSync(join(root, "web/scripts/check-ui-baseline.json"), '{"components/app/x.tsx":{"color-fijo":2}}\n');
+  const sube = runDeuda(root);
+  assert.equal(sube.status, 1, sube.stdout);
+  assert.ok(sube.stderr.includes("scripts/check-ui-baseline.json: la regla color-fijo subió de 1 a 2"), sube.stderr);
+
+  // Una regla de siempre que estaba en 0 (ausente en was) tampoco puede subir a 1.
+  writeFileSync(join(root, "web/scripts/check-ui-baseline.json"), '{"components/app/x.tsx":{"color-fijo":1,"lucide":1}}\n');
+  const deCeroAUno = runDeuda(root);
+  assert.equal(deCeroAUno.status, 1, deCeroAUno.stdout);
+  assert.ok(deCeroAUno.stderr.includes("scripts/check-ui-baseline.json: la regla lucide subió de 0 a 1"), deCeroAUno.stderr);
+});
+
+test("check-deuda vigila la base de las rutas fuera de (app)", () => {
+  const root = repo({ ...deudaBase, "web/scripts/check-ui-rutas-baseline.json": '{"app/share/[token]/page.tsx":{"style-inline":45}}\n' });
+  writeFileSync(join(root, "web/scripts/check-ui-rutas-baseline.json"), '{"app/share/[token]/page.tsx":{"style-inline":46}}\n');
   const result = runDeuda(root);
-  assert.equal(result.status, 0, result.stderr);
-  assert.ok(result.stdout.includes("La deuda no subió."));
+  assert.equal(result.status, 1, result.stdout);
+  assert.ok(
+    result.stderr.includes("scripts/check-ui-rutas-baseline.json: la regla style-inline subió de 45 a 46"),
+    result.stderr,
+  );
+
+  // También si una regla que partía de 0 en esa base sube a 1.
+  writeFileSync(join(root, "web/scripts/check-ui-rutas-baseline.json"), '{"app/share/[token]/page.tsx":{"style-inline":45,"view-prop":1}}\n');
+  const desdeCero = runDeuda(root);
+  assert.equal(desdeCero.status, 1, desdeCero.stdout);
+  assert.ok(
+    desdeCero.stderr.includes("scripts/check-ui-rutas-baseline.json: la regla view-prop subió de 0 a 1"),
+    desdeCero.stderr,
+  );
+});
+
+test("--root compara contra el repositorio del árbol apuntado, no contra el del cwd", () => {
+  // El repo del cwd no tiene la base: antes, `git show` fallaba y se saltaba la comprobación.
+  const ajeno = repo({ "web/package.json": JSON.stringify({ scripts: { lint: "eslint . --max-warnings 0" } }) });
+  const root = repo({ ...deudaBase, "web/scripts/check-ui-rutas-baseline.json": '{"app/page.tsx":{"style-inline":3}}\n' });
+  writeFileSync(join(root, "web/scripts/check-ui-rutas-baseline.json"), '{"app/page.tsx":{"style-inline":4}}\n');
+
+  const result = runDeuda(root, ajeno);
+  assert.equal(result.status, 1, result.stdout);
+  assert.ok(result.stderr.includes("scripts/check-ui-rutas-baseline.json: la regla style-inline subió de 3 a 4"), result.stderr);
+});
+
+test("--root fuera de un repositorio avisa en vez de dar verde", () => {
+  const result = runDeuda(tree(deudaBase));
+  assert.equal(result.status, 2, result.stdout);
+  assert.ok(result.stderr.includes("--root no apunta a un repositorio git"), result.stderr);
+});
+
+test("check-deuda frena una exención nueva y admite moverla de archivo", () => {
+  const exento = "// ui-ok: motivo\n// eslint-disable-next-line regla\nconst a = 1;\n";
+  const root = repo({ ...deudaBase, "web/app/pantalla.tsx": exento });
+
+  // Mover el archivo sin tocar las líneas conserva el total.
+  writeFileSync(join(root, "web/app/otra.tsx"), exento);
+  rmSync(join(root, "web/app/pantalla.tsx"));
+  const movido = runDeuda(root);
+  assert.equal(movido.status, 0, movido.stderr);
+
+  writeFileSync(join(root, "web/app/otra.tsx"), "// ui-ok: motivo\n// ui-ok: otro motivo\n// eslint-disable-next-line regla\nconst a = 1;\n");
+  const uiOk = runDeuda(root);
+  assert.equal(uiOk.status, 1, uiOk.stdout);
+  assert.ok(uiOk.stderr.includes("Exenciones ui-ok: subieron de 1 a 2"), uiOk.stderr);
+
+  writeFileSync(
+    join(root, "web/app/otra.tsx"),
+    "// ui-ok: motivo\n// eslint-disable-next-line regla\n// eslint-disable-next-line otra\nconst a = 1;\n",
+  );
+  const eslint = runDeuda(root);
+  assert.equal(eslint.status, 1, eslint.stdout);
+  assert.ok(eslint.stderr.includes("Exenciones eslint-disable: subieron de 1 a 2"), eslint.stderr);
 });
