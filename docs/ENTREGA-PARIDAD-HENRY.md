@@ -644,3 +644,28 @@ Consola sin errores nuevos. Hay dos errores viejos:
 | Navegador (`1440` claro/oscuro, `375` móvil, teclado) | `/chat`, `/reportes`, `/crm`, `/marca`, `/tareas`, `/archivos` y `FloatingAIDrawer` verificados |
 
 - **Sin comprobar:** Impresión física o exportación a PDF desde el diálogo nativo `window.print()` en `/reportes`.
+
+## Plan anti-slop y arquitectura, Fase 3 (Lote A): CSS globales (3 de noviembre)
+
+- **Qué hizo el lote:** `dashboard-polish.css` (416 → 0), `hubly-saas.css` (210 → 0) y `app-base.css` (105 → 0) bajan de **731 a 0 hallazgos** en conjunto, con **0 `ui-ok`**.
+  - Todos los colores hex y funciones `rgb()`/`rgba()` fuera de las definiciones `:root`/`html.dark` se sustituyeron por tokens de la guía §3 (`--ui-*`, `--hb-*`, `--on-accent`, `--ui-positive*`, `rgb(var(--hb-accent-rgb) / alpha)`).
+  - Las 14 declaraciones `z-index` numéricas (`3`, `10`, `20`, `30`, `50`, `60`, `120`, `140`, `9999`) pasaron a `var(--layer-sticky)`, `var(--layer-dropdown)`, `var(--layer-popover)`, `var(--layer-drawer)`, `var(--layer-modal)`, `var(--layer-toast)` y `var(--layer-skip)`.
+  - Se eliminaron los 3 degradados decorativos de `dashboard-polish.css` (`.hubly-kraft`, `.hubly-weather`, `.hubly-sidebar-empty`), sustituidos por superficies planas de tokens (`--ui-surface-2`, `--ui-surface`, `--ui-bg-2`).
+  - Se ajustaron a escala los 20 tamaños de fuente (`9px/9.5px → 10px`, `10.5px/11.5px → 11px/12px`, `12.5px → 13px`, `13.5px → 14px`) y los 7 radios (`5px → 6px`, `7px → 8px`, `18px/20px → 16px`).
+  - Se sustituyó `transition: all 0.15s ease` en `.skip-link` (`app-base.css`) por `transition: top 0.15s ease`.
+  - Se eliminaron de `:root` y `html.dark` los tokens prohibidos de la guía §3 que ningún archivo usaba (`--bg-app`, `--bg-card`, `--bg-muted`, `--bg-subtle`, `--text-primary`, `--text-secondary`, `--text-muted`, `--border-color`, `--border-subtle`, `--brand-primary`, `--brand-primary-hover`, `--brand-light`, `--brand-glow`, `--status-*`, `--accent-*`, `--hubly-blue*`, `--hubly-green*`, `--hubly-amber*`, `--hubly-violet*`, `--hubly-pink*`, `--hubly-bg`, `--hubly-surface*`, `--hubly-border*`, `--hubly-text*`, `--hubly-shadow*`), conservando `--bg-surface` (usado en `HublyIcons.tsx`) y `--hubly-danger*`.
+  - Se eliminaron las reglas obsoletas `html.dark .hubly-app-root [style*="..."]` en `dashboard-polish.css`.
+- **Qué se ve distinto:**
+  - `/dashboard` y `/calendario` mantienen su forma en claro y oscuro; en `/dashboard`, las superficies `.hubly-kraft` y `.hubly-weather` usan fondos planos de tokens en lugar de degradados lineales.
+
+### Verificación
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto, **61** hallazgos (antes 792; Lote A: 731 → 0) |
+| `npx tsc --noEmit` | 0 errores |
+| `npm test` | 43/43 |
+| `npx playwright test e2e/rutas.spec.ts` | **42/42 pasan** (las 21 rutas en claro y oscuro) |
+| Navegador (`1440` claro/oscuro, `375` móvil) | `/dashboard` y `/calendario` verificados entre tanda y tanda sin regresiones visuales ni errores de consola |
+
+- **Sin comprobar:** La corrida completa de las 88 pruebas de Playwright se ejecuta al cerrar el último lote.

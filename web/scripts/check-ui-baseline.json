@@ -1,32 +1,10 @@
 {
-  "app/(app)/app-base.css": {
-    "color-fijo": 92,
-    "rgb-fijo": 8,
-    "tamano-fuente": 1,
-    "transition-all": 1,
-    "z-index-fijo": 3
-  },
   "app/(app)/automatizaciones/page.tsx": {
     "color-fijo": 1,
     "tamano-fuente": 1
   },
   "app/(app)/calendario/page.tsx": {
     "color-fijo": 2
-  },
-  "app/(app)/dashboard-polish.css": {
-    "color-fijo": 295,
-    "degradado": 3,
-    "radio": 6,
-    "rgb-fijo": 88,
-    "tamano-fuente": 14,
-    "z-index-fijo": 10
-  },
-  "app/(app)/hubly-saas.css": {
-    "color-fijo": 175,
-    "radio": 1,
-    "rgb-fijo": 28,
-    "tamano-fuente": 5,
-    "z-index-fijo": 1
   },
   "app/(app)/marcas/page.tsx": {
     "color-fijo": 3,
