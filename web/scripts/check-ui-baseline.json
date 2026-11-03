@@ -102,12 +102,6 @@
     "rgb-fijo": 2,
     "z-index-fijo": 1
   },
-  "components/app/KraftNotebookCard.tsx": {
-    "color-fijo": 15,
-    "degradado": 3,
-    "rgb-fijo": 9,
-    "tamano-fuente": 2
-  },
   "components/app/MonthDragCalendar.tsx": {
     "color-fijo": 2
   },
@@ -118,12 +112,6 @@
   },
   "components/app/NotebookEditor.tsx": {
     "lucide": 1
-  },
-  "components/app/NotebookReaderModal.tsx": {
-    "color-fijo": 65,
-    "rgb-fijo": 3,
-    "tamano-fuente": 1,
-    "z-index-fijo": 1
   },
   "components/app/PostComposerModal.tsx": {
     "color-fijo": 4
@@ -199,12 +187,6 @@
   },
   "components/app/social/SocialCalendar.tsx": {
     "color-fijo": 1
-  },
-  "components/app/tasks/NotebooksSection.tsx": {
-    "color-fijo": 5,
-    "degradado": 1,
-    "rgb-fijo": 3,
-    "tamano-fuente": 1
   },
   "components/app/tasks/TaskBoard.tsx": {
     "color-fijo": 14,

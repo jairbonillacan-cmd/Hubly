@@ -550,3 +550,25 @@ Consola sin errores nuevos. Hay dos errores viejos:
 | Navegador (`1440` claro/oscuro, `375` móvil, teclado) | Tarjetas, filtros y modal de diagnóstico verificados; Escape cierra el modal y devuelve el foco |
 
 - **Sin comprobar:** El botón «Crear Campaña» es visual (sin `onClick` asignado en el diseño actual).
+
+## Plan anti-slop y arquitectura, Fase 3 (Lote C): libretas y lector (3 de noviembre)
+
+- **Qué hizo el lote:** `NotebookReaderModal.tsx` (70 → 0), `KraftNotebookCard.tsx` (29 → 0) y `tasks/NotebooksSection.tsx` (10 → 0) bajan de **109 a 0 hallazgos** en conjunto.
+  - `NotebookReaderModal.tsx` adopta la receta §9.9 (`useModalPresence`, `useLayer`, `.hubly-overlay.hubly-cal-overlay`, `.hubly-sheet.hubly-cal-modal`, `--layer-modal`, botones `.hbtn`), sin `z-index` propio ni escuchas manuales de `Escape`.
+  - `NotebooksSection.tsx` sustituye el degradado y la sombra de las tarjetas de libreta por superficie plana `--ui-surface`, borde `1px solid var(--ui-border)`, lomo `--ui-muted`, cabecera en `16px/700` y botón `.hbtn .hbtn-secondary`.
+  - `KraftNotebookCard.tsx` sube el texto de `8px` a `10px` con `tabular-nums` y lleva las variantes no-kraft del sello a `--hb-accent` / `--on-accent`.
+  - `ui-ok` justificados (`// ui-ok: ilustración de libreta kraft`): 14 en `KraftNotebookCard.tsx` para el papel kraft, costura y medallón de la ilustración física, y 4 en `NotebookReaderModal.tsx` para la paleta física de cubiertas (`NOTEBOOK_COLORS`).
+- **Qué se ve distinto:**
+  - En `/tareas`, las tarjetas de «Libretas del proyecto» son planas con borde de 1px y lomo neutro `--ui-muted`, sin degradado ni sombra flotante.
+  - El modal lector de libretas usa el velo y la hoja estándar de Hubly (`.hubly-cal-overlay` + `.hubly-cal-modal`), con superficies y textos de tokens en modo claro y oscuro, manteniendo la ilustración física de la portada Kraft.
+
+### Verificación
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto, **1052** hallazgos (antes 1161; Lote C: 109 → 0) |
+| `npx tsc --noEmit` | 0 errores |
+| `npm test` | 43/43 |
+| Navegador (`1440` claro/oscuro, `375` móvil, teclado) | Sección de libretas en `/tareas`, widget Kraft en `/dashboard` y apertura/cierre con `Escape` de `NotebookReaderModal` verificados |
+
+- **Sin comprobar:** El flujo de eliminar libreta no se ejecutó sobre las libretas semilla para no alterar los datos de demo del servidor en vivo.

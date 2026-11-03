@@ -24,15 +24,7 @@ function HublyCatMedallion({
   variant?: KraftNotebookVariant;
   accentColor?: string;
 }) {
-  const badgeColor =
-    accentColor ||
-    (variant === "report"
-      ? "var(--hb-accent)"
-      : variant === "space"
-        ? "#0A7A55"
-        : variant === "brand"
-          ? "#EC4899"
-          : "#8B572A");
+  const badgeColor = accentColor || "var(--hb-accent)";
 
   return (
     <span
@@ -44,7 +36,7 @@ function HublyCatMedallion({
         display: "inline-flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#FDF8EE",
+        background: "#FDF8EE", // ui-ok: ilustración de libreta kraft
       }}
     >
       <HublyCatAvatar
@@ -53,7 +45,7 @@ function HublyCatMedallion({
         rounded="full"
         alt="Hubi"
         style={{
-          background: "#FDF8EE",
+          background: "#FDF8EE", // ui-ok: ilustración de libreta kraft
         }}
       />
       {variant === "report" && (
@@ -67,10 +59,10 @@ function HublyCatMedallion({
             height: 14,
             borderRadius: "50%",
             background: badgeColor,
-            border: "1.5px solid #FDF8EE",
-            color: "#FFFFFF",
-            fontSize: 8,
-            fontWeight: 800,
+            border: "1.5px solid #FDF8EE", // ui-ok: ilustración de libreta kraft
+            color: "var(--on-accent)",
+            fontSize: 10,
+            fontWeight: 700,
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
@@ -105,11 +97,11 @@ export function KraftNotebookCard({
         width: "100%",
         height: 204,
         borderRadius: "4px 14px 14px 4px",
-        border: "1px solid #8C653A",
+        border: "1px solid #8C653A", // ui-ok: ilustración de libreta kraft
         background:
-          "radial-gradient(circle at 30% 22%, rgba(255,245,225,0.16) 0%, transparent 55%), linear-gradient(160deg, #B99260 0%, #A88050 52%, #976F40 100%)",
+          "radial-gradient(circle at 30% 22%, rgba(255,245,225,0.16) 0%, transparent 55%), linear-gradient(160deg, #B99260 0%, #A88050 52%, #976F40 100%)", // ui-ok: ilustración de libreta kraft
         boxShadow:
-          "0 4px 0 #EFECE6, 0 5px 0 #C5B49E, 0 8px 16px rgba(45, 28, 12, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.32), inset -1px -2px 5px rgba(58, 35, 14, 0.25)",
+          "0 4px 0 #EFECE6, 0 5px 0 #C5B49E, 0 8px 16px rgba(45, 28, 12, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.32), inset -1px -2px 5px rgba(58, 35, 14, 0.25)", // ui-ok: ilustración de libreta kraft
         padding: "20px 12px 15px 20px",
         display: "flex",
         flexDirection: "column",
@@ -127,7 +119,7 @@ export function KraftNotebookCard({
           position: "absolute",
           inset: 0,
           backgroundImage:
-            "radial-gradient(rgba(60, 35, 12, 0.08) 1px, transparent 0), radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 0)",
+            "radial-gradient(rgba(60, 35, 12, 0.08) 1px, transparent 0), radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 0)", // ui-ok: ilustración de libreta kraft
           backgroundSize: "12px 12px, 18px 18px",
           backgroundPosition: "0 0, 6px 6px",
           pointerEvents: "none",
@@ -143,7 +135,7 @@ export function KraftNotebookCard({
           bottom: 0,
           left: 11,
           width: 2,
-          background: "linear-gradient(90deg, rgba(48,28,10,0.28) 0%, rgba(255,255,255,0.16) 100%)",
+          background: "linear-gradient(90deg, rgba(48,28,10,0.28) 0%, rgba(255,255,255,0.16) 100%)", // ui-ok: ilustración de libreta kraft
           pointerEvents: "none",
         }}
       />
@@ -156,7 +148,7 @@ export function KraftNotebookCard({
           top: 6,
           bottom: 6,
           left: 5.5,
-          borderLeft: "1.5px dashed rgba(255, 248, 235, 0.55)",
+          borderLeft: "1.5px dashed rgba(255, 248, 235, 0.55)", // ui-ok: ilustración de libreta kraft
           pointerEvents: "none",
         }}
       />
@@ -173,7 +165,7 @@ export function KraftNotebookCard({
             height: 16,
             background: accentColor || "var(--hb-accent-hover)",
             borderRadius: "0 0 3px 3px",
-            boxShadow: "0 1px 2px rgba(44, 26, 11, 0.25)",
+            boxShadow: "0 1px 2px rgba(44, 26, 11, 0.25)", // ui-ok: ilustración de libreta kraft
             pointerEvents: "none",
           }}
         />
@@ -185,12 +177,12 @@ export function KraftNotebookCard({
           position: "relative",
           zIndex: 1,
           fontSize: 10.5,
-          fontWeight: 800,
+          fontWeight: 700,
           lineHeight: 1.22,
           letterSpacing: "0.02em",
           textTransform: "uppercase",
-          color: "#2C1A0B",
-          textShadow: "0 1px 0 rgba(255,255,255,0.18)",
+          color: "#2C1A0B", // ui-ok: ilustración de libreta kraft
+          textShadow: "0 1px 0 rgba(255,255,255,0.18)", // ui-ok: ilustración de libreta kraft
           maxWidth: 112,
           minHeight: 26,
           display: "flex",
@@ -201,7 +193,7 @@ export function KraftNotebookCard({
         {title}
       </span>
 
-      {/* Center Circular Medallion (56x56px, cream fill #FDF8EE, brown double border, Hubly Cat) */}
+      {/* Center Circular Medallion */}
       <span
         style={{
           position: "relative",
@@ -209,10 +201,10 @@ export function KraftNotebookCard({
           width: 56,
           height: 56,
           borderRadius: "50%",
-          background: "#FDF8EE",
-          border: "2.5px solid #8B572A",
+          background: "#FDF8EE", // ui-ok: ilustración de libreta kraft
+          border: "2.5px solid #8B572A", // ui-ok: ilustración de libreta kraft
           boxShadow:
-            "0 2px 6px rgba(44, 26, 11, 0.26), inset 0 0 0 2px #DFC39D",
+            "0 2px 6px rgba(44, 26, 11, 0.26), inset 0 0 0 2px #DFC39D", // ui-ok: ilustración de libreta kraft
           display: "grid",
           placeItems: "center",
           overflow: "hidden",
@@ -222,17 +214,17 @@ export function KraftNotebookCard({
         <HublyCatMedallion variant={variant} accentColor={accentColor} />
       </span>
 
-      {/* Bottom Monospace Stamp */}
+      {/* Bottom Stamp */}
       <span
         style={{
           position: "relative",
           zIndex: 1,
-          fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
-          fontSize: 8,
-          fontWeight: 700,
-          letterSpacing: "0.08em",
+          fontVariantNumeric: "tabular-nums",
+          fontSize: 10,
+          fontWeight: 600,
+          letterSpacing: "0.06em",
           textTransform: "uppercase",
-          color: "rgba(44, 26, 11, 0.68)",
+          color: "rgba(44, 26, 11, 0.68)", // ui-ok: ilustración de libreta kraft
         }}
       >
         {stamp}

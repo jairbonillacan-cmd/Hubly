@@ -3,9 +3,11 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { useHublyStore } from "@/lib/store";
+import { useLayer } from "@/lib/use-layer";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import { NotebookEditor } from "@/components/app/NotebookEditor";
+import { STATUS_META } from "@/components/app/social/status-meta";
 import { notebookPlainText, notebookTasks } from "@/lib/notebook-content";
 import { dueLabelFor, localIsoDate } from "@/lib/date";
 import {
@@ -26,10 +28,10 @@ export interface NotebookReaderModalProps {
 }
 
 const NOTEBOOK_COLORS = [
-  { id: "kraft", label: "Kraft clásico", bg: "#C59B6D", spine: "#3A2210" },
-  { id: "terracotta", label: "Terracota", bg: "#C87A51", spine: "#4A2511" },
-  { id: "sage", label: "Salvia", bg: "#4A7862", spine: "#1E382B" },
-  { id: "slate", label: "Pizarra", bg: "#475569", spine: "#1E293B" },
+  { id: "kraft", label: "Kraft clásico", bg: "#C59B6D", spine: "#3A2210" }, // ui-ok: ilustración de libreta kraft
+  { id: "terracotta", label: "Terracota", bg: "#C87A51", spine: "#4A2511" }, // ui-ok: ilustración de libreta kraft
+  { id: "sage", label: "Salvia", bg: "#4A7862", spine: "#1E382B" }, // ui-ok: ilustración de libreta kraft
+  { id: "slate", label: "Pizarra", bg: "#475569", spine: "#1E293B" }, // ui-ok: ilustración de libreta kraft
 ];
 
 let primaryNotebookModalMounts = 0;
@@ -73,7 +75,6 @@ export function NotebookReaderModal({
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const titleInputRef = useRef<HTMLInputElement | null>(null);
   const autosaveRef = useRef<number | undefined>(undefined);
-  const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
   const [suppressedAsFallback, setSuppressedAsFallback] = useState(false);
   const [explicitStoreOpen, setExplicitStoreOpen] = useState(false);
@@ -126,7 +127,7 @@ export function NotebookReaderModal({
   const [subtitle, setSubtitle] = useState("");
   const [category, setCategory] = useState("GUÍA DE AGENCIA");
   const [brandId, setBrandId] = useState(activeBrandId || "brand-min");
-  const [accentColor, setAccentColor] = useState("#C59B6D");
+  const [accentColor, setAccentColor] = useState(NOTEBOOK_COLORS[0].bg);
   const [content, setContent] = useState("");
   const [savedNotice, setSavedNotice] = useState(false);
   const [taskNotice, setTaskNotice] = useState<string | null>(null);
@@ -147,6 +148,8 @@ export function NotebookReaderModal({
     }
   };
 
+  useLayer(isOpen, handleClose);
+
   // Sync form fields with active notebook
   useEffect(() => {
     if (!isOpen) return;
@@ -158,7 +161,7 @@ export function NotebookReaderModal({
       setSubtitle("Notas operativas y acuerdos de cuenta");
       setCategory("ESTRATEGIA");
       setBrandId(activeBrandId || brands[0]?.id || "brand-min");
-      setAccentColor("#C59B6D");
+      setAccentColor(NOTEBOOK_COLORS[0].bg);
       setContent("");
     } else {
       setTitle(currentNotebook.title);
@@ -167,19 +170,17 @@ export function NotebookReaderModal({
         currentNotebook.category || currentNotebook.stamp || "LIBRETA KRAFT"
       );
       setBrandId(currentNotebook.brandId || activeBrandId || "brand-min");
-      setAccentColor(currentNotebook.accentColor || "#C59B6D");
+      setAccentColor(currentNotebook.accentColor || NOTEBOOK_COLORS[0].bg);
       setContent(currentNotebook.content);
     }
     // Solo al abrir o cambiar de libreta: el autoguardado actualiza currentNotebook.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, isCreatingNew, currentNotebook?.id]);
 
-  // Focus trap, Escape key, Initial focus & Scroll lock
+  // Focus trap, Initial focus & Scroll lock (Escape y retorno de foco en useLayer)
   useEffect(() => {
     if (!isOpen) return;
 
-    previousActiveElementRef.current =
-      document.activeElement as HTMLElement | null;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -193,13 +194,6 @@ export function NotebookReaderModal({
     });
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        e.stopPropagation();
-        handleClose();
-        return;
-      }
-
       if (e.key === "Tab") {
         const focusables = getFocusableElements(dialogRef.current);
         if (focusables.length === 0) {
@@ -235,14 +229,7 @@ export function NotebookReaderModal({
       if (remainingDialogs.length <= 1) {
         document.body.style.overflow = prevOverflow || "";
       }
-      const prevEl = previousActiveElementRef.current;
-      if (prevEl && document.body.contains(prevEl)) {
-        window.requestAnimationFrame(() => {
-          prevEl.focus();
-        });
-      }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const presence = useModalPresence(isOpen);
@@ -329,26 +316,18 @@ export function NotebookReaderModal({
 
   return (
     <div
-      className="hubly-overlay"
+      className="hubly-overlay hubly-cal-overlay"
       data-state={presence.state}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) handleClose();
       }}
       style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 110,
-        background: "rgba(15, 23, 42, 0.45)",
-        backdropFilter: "blur(4px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 16,
+        zIndex: "var(--layer-modal)",
       }}
     >
       <div
         ref={dialogRef}
-        className="hubly-sheet"
+        className="hubly-sheet hubly-cal-modal"
         data-state={presence.state}
         role="dialog"
         aria-modal="true"
@@ -357,14 +336,15 @@ export function NotebookReaderModal({
           width: "100%",
           maxWidth: 780,
           maxHeight: "90vh",
-          background: "#FAF5EC",
-          borderRadius: 20,
-          border: "1px solid #D6C2A5",
-          boxShadow: "0 24px 60px rgba(44, 26, 11, 0.28)",
+          padding: 0,
+          gap: 0,
+          background: "var(--ui-surface)",
+          borderRadius: 24,
+          border: "1px solid var(--ui-border)",
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
-          color: "#2C1A0B",
+          color: "var(--ui-text)",
           position: "relative",
         }}
       >
@@ -376,7 +356,7 @@ export function NotebookReaderModal({
             top: 0,
             bottom: 0,
             left: 0,
-            width: 14,
+            width: 12,
             background: activeColorSpec.spine,
             zIndex: 2,
           }}
@@ -385,9 +365,9 @@ export function NotebookReaderModal({
         {/* Header */}
         <div
           style={{
-            padding: "16px 22px 14px 32px",
-            background: "#F4E9D8",
-            borderBottom: "1px solid #DFCBB0",
+            padding: "16px 24px 14px 32px",
+            background: "var(--ui-surface-2)",
+            borderBottom: "1px solid var(--ui-border)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -397,14 +377,13 @@ export function NotebookReaderModal({
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div
               style={{
-                width: 34,
-                height: 34,
+                width: 36,
+                height: 36,
                 borderRadius: 10,
                 background: activeColorSpec.bg,
-                color: "#FFFFFF",
+                color: "var(--on-accent)",
                 display: "grid",
                 placeItems: "center",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.28)",
               }}
             >
               <BookOpen size={17} />
@@ -413,14 +392,14 @@ export function NotebookReaderModal({
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <span
                   style={{
-                    fontSize: 10,
-                    fontWeight: 800,
+                    fontSize: 10.5,
+                    fontWeight: 600,
                     letterSpacing: "0.06em",
                     textTransform: "uppercase",
                     padding: "2px 8px",
-                    borderRadius: 9999,
-                    background: "#E8D5B7",
-                    color: "#3A2210",
+                    borderRadius: 999,
+                    background: "var(--ui-muted)",
+                    color: "var(--ui-text-3)",
                   }}
                 >
                   {category || "LIBRETA KRAFT"}
@@ -433,11 +412,11 @@ export function NotebookReaderModal({
                       alignItems: "center",
                       gap: 4,
                       fontSize: 11,
-                      fontWeight: 700,
-                      color: "#15803D",
-                      background: "#DCFCE7",
+                      fontWeight: 600,
+                      color: STATUS_META.approved.color,
+                      background: STATUS_META.approved.bg,
                       padding: "2px 8px",
-                      borderRadius: 9999,
+                      borderRadius: 999,
                     }}
                   >
                     <Check size={11} /> Guardado en Mi espacio
@@ -447,15 +426,15 @@ export function NotebookReaderModal({
               <h2
                 id={titleId}
                 style={{
-                  margin: "3px 0 0",
-                  fontSize: 16,
-                  fontWeight: 800,
-                  color: "#2C1A0B",
+                  margin: "2px 0 0",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  color: "var(--ui-text)",
                 }}
               >
                 {isCreatingNew
                   ? "Nueva libreta Kraft"
-                  : currentNotebook?.title || "Lector de Libretas Kraft"}
+                  : currentNotebook?.title || "Lector de libretas"}
               </h2>
             </div>
           </div>
@@ -464,40 +443,34 @@ export function NotebookReaderModal({
             <HublyCatAvatar size={26} />
             <button
               type="button"
+              className="hubly-cal-modal-close"
               onClick={handleClose}
               aria-label="Cerrar lector de libreta"
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: 9999,
-                border: "1px solid #D6C2A5",
-                background: "#FAF5EC",
-                color: "#5C3D22",
-                display: "grid",
-                placeItems: "center",
-                cursor: "pointer",
-              }}
+              title="Cerrar"
             >
-              <X size={15} />
+              <X size={14} />
             </button>
           </div>
         </div>
 
-        {/* Content Grid: Sidebar List + Kraft Reader/Editor */}
+        {/* Content Area: Sidebar List + Reader/Editor */}
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "210px minmax(0, 1fr)",
+            display: "flex",
+            flexWrap: "wrap",
             flex: 1,
             minHeight: 0,
-            paddingLeft: 14,
+            overflowY: "auto",
+            paddingLeft: 12,
           }}
         >
           {/* Left Notebook Switcher */}
           <div
             style={{
-              background: "#F4E9D8",
-              borderRight: "1px solid #DFCBB0",
+              flex: "1 1 190px",
+              background: "var(--ui-surface-2)",
+              borderRight: "1px solid var(--ui-border)",
+              borderBottom: "1px solid var(--ui-border)",
               padding: 12,
               display: "flex",
               flexDirection: "column",
@@ -516,32 +489,20 @@ export function NotebookReaderModal({
               <span
                 style={{
                   fontSize: 10.5,
-                  fontWeight: 800,
+                  fontWeight: 600,
                   textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color: "#6B4C30",
+                  letterSpacing: "0.06em",
+                  color: "var(--ui-text-4)",
                 }}
               >
                 Mis libretas ({notebooks.length})
               </span>
               <button
                 type="button"
+                className={isCreatingNew ? "hbtn hbtn-xs hbtn-primary" : "hbtn hbtn-xs hbtn-secondary"}
                 onClick={() => setIsCreatingNew(true)}
-                style={{
-                  padding: "3px 8px",
-                  borderRadius: 7,
-                  border: "1px solid #C59B6D",
-                  background: isCreatingNew ? "#3A2210" : "#FAF5EC",
-                  color: isCreatingNew ? "#FFFFFF" : "#3A2210",
-                  fontSize: 11,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 3,
-                }}
               >
-                <Plus size={11} /> Nueva
+                <Plus size={12} /> Nueva
               </button>
             </div>
 
@@ -560,24 +521,25 @@ export function NotebookReaderModal({
                   style={{
                     width: "100%",
                     textAlign: "left",
-                    padding: "9px 10px",
+                    padding: "8px 10px",
                     borderRadius: 10,
                     border: selected
-                      ? "1px solid #8C6239"
+                      ? "1px solid var(--ui-sky-border)"
                       : "1px solid transparent",
-                    background: selected ? "#FAF5EC" : "transparent",
-                    color: "#2C1A0B",
+                    background: selected ? "var(--ui-sky-soft)" : "transparent",
+                    color: selected ? "var(--ui-sky-text)" : "var(--ui-text)",
                     cursor: "pointer",
                     display: "flex",
                     flexDirection: "column",
-                    gap: 3,
+                    gap: 4,
                   }}
                 >
                   <span
                     style={{
-                      fontSize: 9.5,
-                      fontWeight: 800,
-                      color: "#8C6239",
+                      fontSize: 10.5,
+                      fontWeight: 600,
+                      letterSpacing: "0.06em",
+                      color: "var(--ui-text-4)",
                       textTransform: "uppercase",
                     }}
                   >
@@ -585,14 +547,14 @@ export function NotebookReaderModal({
                   </span>
                   <span
                     style={{
-                      fontSize: 12.5,
-                      fontWeight: selected ? 800 : 600,
+                      fontSize: 13,
+                      fontWeight: selected ? 700 : 500,
                       lineHeight: 1.25,
                     }}
                   >
                     {nb.title}
                   </span>
-                  <span style={{ fontSize: 10.5, color: "#785A3C" }}>
+                  <span style={{ fontSize: 11, color: "var(--ui-text-4)" }}>
                     Actualizado:{" "}
                     {new Date(nb.updatedAt).toLocaleDateString("es-MX", { day: "numeric", month: "short" })}
                   </span>
@@ -606,7 +568,9 @@ export function NotebookReaderModal({
             id="notebook-reader-form"
             onSubmit={handleSave}
             style={{
-              padding: "18px 22px",
+              flex: "999 1 360px",
+              minWidth: 0,
+              padding: "16px 24px",
               overflowY: "auto",
               display: "flex",
               flexDirection: "column",
@@ -617,11 +581,11 @@ export function NotebookReaderModal({
               <div
                 role="alert"
                 style={{
-                  padding: "9px 12px",
+                  padding: "8px 12px",
                   borderRadius: 10,
-                  background: "#FEF2F2",
-                  border: "1px solid #FECACA",
-                  color: "#B91C1C",
+                  background: STATUS_META.changes.bg,
+                  border: "1px solid var(--ui-border)",
+                  color: STATUS_META.changes.color,
                   fontSize: 12,
                   fontWeight: 600,
                 }}
@@ -633,7 +597,7 @@ export function NotebookReaderModal({
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "1.4fr 1fr",
+                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
                 gap: 10,
               }}
             >
@@ -642,12 +606,12 @@ export function NotebookReaderModal({
                   htmlFor="nb-title-input"
                   style={{
                     display: "block",
-                    fontSize: 10.5,
-                    fontWeight: 800,
+                    fontSize: 11,
+                    fontWeight: 600,
                     textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: "#5C3D22",
-                    marginBottom: 4,
+                    letterSpacing: "0.06em",
+                    color: "var(--ui-text-4)",
+                    marginBottom: 6,
                   }}
                 >
                   Título de la libreta *
@@ -656,6 +620,8 @@ export function NotebookReaderModal({
                   ref={titleInputRef}
                   id="nb-title-input"
                   type="text"
+                  autoFocus
+                  aria-invalid={Boolean(errorMsg && !title.trim())}
                   value={title}
                   onChange={(e) => {
                     setTitle(e.target.value);
@@ -665,13 +631,13 @@ export function NotebookReaderModal({
                   style={{
                     width: "100%",
                     height: 36,
-                    padding: "0 11px",
-                    borderRadius: 9,
-                    border: "1px solid #D6C2A5",
+                    padding: "0 12px",
+                    borderRadius: 10,
+                    border: "1px solid var(--ui-border-strong)",
                     background: "var(--ui-surface)",
                     fontSize: 13.5,
-                    fontWeight: 700,
-                    color: "#2C1A0B",
+                    fontWeight: 600,
+                    color: "var(--ui-text)",
                   }}
                 />
               </div>
@@ -681,12 +647,12 @@ export function NotebookReaderModal({
                   htmlFor="nb-brand-select"
                   style={{
                     display: "block",
-                    fontSize: 10.5,
-                    fontWeight: 800,
+                    fontSize: 11,
+                    fontWeight: 600,
                     textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: "#5C3D22",
-                    marginBottom: 4,
+                    letterSpacing: "0.06em",
+                    color: "var(--ui-text-4)",
+                    marginBottom: 6,
                   }}
                 >
                   Marca vinculada
@@ -699,12 +665,12 @@ export function NotebookReaderModal({
                     width: "100%",
                     height: 36,
                     padding: "0 10px",
-                    borderRadius: 9,
-                    border: "1px solid #D6C2A5",
+                    borderRadius: 10,
+                    border: "1px solid var(--ui-border-strong)",
                     background: "var(--ui-surface)",
-                    fontSize: 12.5,
-                    fontWeight: 600,
-                    color: "#2C1A0B",
+                    fontSize: 13,
+                    fontWeight: 500,
+                    color: "var(--ui-text)",
                   }}
                 >
                   {brands.map((b) => (
@@ -719,7 +685,7 @@ export function NotebookReaderModal({
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "1fr 140px",
+                gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
                 gap: 10,
               }}
             >
@@ -728,12 +694,12 @@ export function NotebookReaderModal({
                   htmlFor="nb-subtitle-input"
                   style={{
                     display: "block",
-                    fontSize: 10.5,
-                    fontWeight: 800,
+                    fontSize: 11,
+                    fontWeight: 600,
                     textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: "#5C3D22",
-                    marginBottom: 4,
+                    letterSpacing: "0.06em",
+                    color: "var(--ui-text-4)",
+                    marginBottom: 6,
                   }}
                 >
                   Subtítulo / Resumen
@@ -746,13 +712,13 @@ export function NotebookReaderModal({
                   placeholder="Resumen corto para la portada Kraft"
                   style={{
                     width: "100%",
-                    height: 34,
+                    height: 36,
                     padding: "0 10px",
-                    borderRadius: 9,
-                    border: "1px solid #D6C2A5",
+                    borderRadius: 10,
+                    border: "1px solid var(--ui-border-strong)",
                     background: "var(--ui-surface)",
-                    fontSize: 12.5,
-                    color: "#2C1A0B",
+                    fontSize: 13,
+                    color: "var(--ui-text)",
                   }}
                 />
               </div>
@@ -762,12 +728,12 @@ export function NotebookReaderModal({
                   htmlFor="nb-badge-input"
                   style={{
                     display: "block",
-                    fontSize: 10.5,
-                    fontWeight: 800,
+                    fontSize: 11,
+                    fontWeight: 600,
                     textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                    color: "#5C3D22",
-                    marginBottom: 4,
+                    letterSpacing: "0.06em",
+                    color: "var(--ui-text-4)",
+                    marginBottom: 6,
                   }}
                 >
                   Etiqueta
@@ -779,14 +745,14 @@ export function NotebookReaderModal({
                   onChange={(e) => setCategory(e.target.value)}
                   style={{
                     width: "100%",
-                    height: 34,
+                    height: 36,
                     padding: "0 10px",
-                    borderRadius: 9,
-                    border: "1px solid #D6C2A5",
+                    borderRadius: 10,
+                    border: "1px solid var(--ui-border-strong)",
                     background: "var(--ui-surface)",
-                    fontSize: 11.5,
-                    fontWeight: 700,
-                    color: "#2C1A0B",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "var(--ui-text)",
                   }}
                 />
               </div>
@@ -798,19 +764,20 @@ export function NotebookReaderModal({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
+                flexWrap: "wrap",
                 gap: 8,
               }}
             >
               <span
                 style={{
                   fontSize: 11,
-                  fontWeight: 700,
-                  color: "#5C3D22",
+                  fontWeight: 600,
+                  color: "var(--ui-text-4)",
                 }}
               >
                 Cubierta del cuaderno:
               </span>
-              <div style={{ display: "flex", gap: 6 }}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                 {NOTEBOOK_COLORS.map((c) => {
                   const active = accentColor === c.bg;
                   return (
@@ -822,14 +789,14 @@ export function NotebookReaderModal({
                       aria-label={c.label}
                       style={{
                         padding: "4px 10px",
-                        borderRadius: 9999,
+                        borderRadius: 999,
                         border: active
-                          ? "1.5px solid #2C1A0B"
-                          : "1px solid #D6C2A5",
+                          ? "1.5px solid var(--hb-accent)"
+                          : "1px solid var(--ui-border-strong)",
                         background: active ? c.bg : "var(--ui-surface)",
-                        color: active ? "#FFFFFF" : "#3A2210",
+                        color: active ? "var(--on-accent)" : "var(--ui-text-2)",
                         fontSize: 11,
-                        fontWeight: 700,
+                        fontWeight: 600,
                         cursor: "pointer",
                       }}
                     >
@@ -840,17 +807,17 @@ export function NotebookReaderModal({
               </div>
             </div>
 
-            {/* Lined Kraft Content Area */}
+            {/* Content Area */}
             <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
               <span
                 style={{
                   display: "block",
-                  fontSize: 10.5,
-                  fontWeight: 800,
+                  fontSize: 11,
+                  fontWeight: 600,
                   textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color: "#5C3D22",
-                  marginBottom: 4,
+                  letterSpacing: "0.06em",
+                  color: "var(--ui-text-4)",
+                  marginBottom: 6,
                 }}
               >
                 Contenido y notas operativas *
@@ -875,9 +842,9 @@ export function NotebookReaderModal({
         {/* Footer */}
         <div
           style={{
-            padding: "12px 22px 12px 32px",
-            background: "#F4E9D8",
-            borderTop: "1px solid #DFCBB0",
+            padding: "12px 24px 12px 32px",
+            background: "var(--ui-surface-2)",
+            borderTop: "1px solid var(--ui-border)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -885,53 +852,47 @@ export function NotebookReaderModal({
             gap: 10,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
             <Link
               href="/tareas?seccion=libretas"
               onClick={handleClose}
+              className="hb-widget-link"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 5,
-                fontSize: 12,
-                fontWeight: 700,
-                color: "#5C3D22",
+                gap: 6,
+                fontSize: 12.5,
+                fontWeight: 600,
+                color: "var(--hb-accent-text)",
                 textDecoration: "none",
               }}
             >
               <span>Abrir en Mi espacio</span>
-              <ExternalLink size={12} />
+              <ExternalLink size={14} />
             </Link>
 
             <button
               type="button"
+              className="hbtn hbtn-sm hbtn-secondary"
               onClick={sendPendingToTasks}
-              style={{ padding: "5px 10px", borderRadius: 8, border: "1px solid #C59B6D", background: "#FAF5EC", color: "#3A2210", fontSize: 11.5, fontWeight: 600, cursor: "pointer" }}
             >
               Enviar pendientes a Tareas
             </button>
-            {taskNotice && <span role="status" style={{ fontSize: 11.5, fontWeight: 600, color: "#3A2210" }}>{taskNotice}</span>}
+            {taskNotice && (
+              <span role="status" style={{ fontSize: 11.5, fontWeight: 600, color: "var(--ui-text-3)" }}>
+                {taskNotice}
+              </span>
+            )}
 
             {!isCreatingNew && currentNotebook && notebooks.length > 1 && (
               <button
                 type="button"
+                className="hbtn hbtn-sm hbtn-danger"
+                aria-label="Eliminar libreta"
                 onClick={handleDeleteCurrent}
-                style={{
-                  padding: "5px 10px",
-                  borderRadius: 8,
-                  border: "1px solid #FECACA",
-                  background: "#FEF2F2",
-                  color: "#B91C1C",
-                  fontSize: 11.5,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 4,
-                }}
               >
-                <Trash2 size={12} />
-                <span>Eliminar</span>
+                <Trash2 size={14} />
+                <span>Eliminar libreta</span>
               </button>
             )}
           </div>
@@ -939,18 +900,8 @@ export function NotebookReaderModal({
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <button
               type="button"
+              className="hbtn hbtn-ghost"
               onClick={handleClose}
-              style={{
-                height: 35,
-                padding: "0 14px",
-                borderRadius: 9,
-                border: "1px solid #C59B6D",
-                background: "#FAF5EC",
-                color: "#3A2210",
-                fontSize: 12.5,
-                fontWeight: 700,
-                cursor: "pointer",
-              }}
             >
               Cerrar
             </button>
@@ -958,22 +909,9 @@ export function NotebookReaderModal({
             <button
               type="submit"
               form="notebook-reader-form"
-              style={{
-                height: 35,
-                padding: "0 16px",
-                borderRadius: 9,
-                border: "none",
-                background: "#3A2210",
-                color: "#FFFFFF",
-                fontSize: 12.5,
-                fontWeight: 700,
-                cursor: "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-              }}
+              className="hbtn hbtn-primary"
             >
-              <Save size={13} />
+              <Save size={15} />
               <span>
                 {isCreatingNew ? "Crear libreta Kraft" : "Guardar cambios"}
               </span>
