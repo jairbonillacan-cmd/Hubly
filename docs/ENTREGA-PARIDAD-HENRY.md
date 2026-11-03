@@ -507,3 +507,19 @@ Consola sin errores nuevos. Hay dos errores viejos:
 | `npm test` | 43/43 |
 | `npx playwright test` | 86/88; fallan las 2 de Salud de cuentas ya documentadas |
 | Navegador | Onboarding igual; modal de cuentas centrado (medido en el DOM), se cierra con Escape y devuelve el foco; Links y Reportes con su contenido; consola sin errores |
+
+## Plan anti-slop y arquitectura, Fase 3 (Lote G): prueba de Salud de cuentas (3 de noviembre)
+
+- **Qué hizo el lote:** En `web/e2e/salud-cuentas.spec.ts`, el `beforeEach` intercepta ahora el `GET` de `/api/workspace` y sirve `createSeedWorkspaceData()` en lugar de leer el archivo local `web/.data/workspaces/workspace-default.json` (que tenía tareas vencidas acumuladas en demo). No se tocó ningún archivo de la aplicación.
+- **Qué se ve distinto:** Nada en la aplicación (cambio exclusivo de aislamiento de datos en la prueba E2E).
+
+### Verificación
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto, **1263** hallazgos |
+| `npx tsc --noEmit` | 0 errores |
+| `npm test` | 43/43 |
+| `npx playwright test e2e/salud-cuentas.spec.ts` | **3/3 pasan** (1 cuenta en riesgo y 7 sugerencias) |
+
+- **Sin comprobar:** La corrida completa de Playwright (`npx playwright test` con las 88 pruebas) se ejecutará tras integrar los lotes A y D.

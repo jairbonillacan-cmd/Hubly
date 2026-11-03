@@ -1,10 +1,15 @@
 import { expect, test } from "@playwright/test";
+import { createSeedWorkspaceData } from "@/lib/seed-data";
 
 // Estas pruebas cambian cifras y descartan sugerencias: nada de eso debe llegar al espacio de demo guardado.
 test.beforeEach(async ({ page }) => {
   await page.route("**/api/workspace**", (route) =>
     route.request().method() === "GET"
-      ? route.continue()
+      ? route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(createSeedWorkspaceData()),
+        })
       : route.fulfill({ status: 200, contentType: "application/json", body: "{\"ok\":true}" })
   );
   await page.goto("/dashboard/salud-cuentas");
