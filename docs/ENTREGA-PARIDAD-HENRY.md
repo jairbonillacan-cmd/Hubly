@@ -439,3 +439,38 @@ Consola sin errores nuevos. Hay dos errores viejos:
 | `npm test` | 43/43 |
 | `npx playwright test` | 86/88; fallan las 2 de Salud de cuentas ya documentadas |
 | Navegador, `/dashboard/equipo` | Sin emojis en la página. Logros con los títulos nuevos, ranking con números, categorías neutras y niveles en marino de 0.25 a 1 |
+
+## Plan anti-slop y arquitectura, Fase 2 (tercer corte): `InicioView` (3 de noviembre)
+
+`components/app/dashboard/InicioView.tsx` baja de 1785 a unas 430 líneas. Es pantalla de referencia, así que su forma no cambió. Se comparó con `docs/guia-ui/dashboard-1440.png` y `dashboard-oscuro-1440.png`, y se revisó a 375 px sin desborde.
+
+- **Un archivo por widget en `components/app/dashboard/widgets/`:** `TareasWidget`, `LibretasWidget`, `HoyWidget`, `NotificacionesWidget`, `AprobacionesWidget`, `GraficaAdsWidget`, `AdsActivosWidget` y `ProyectosCriticosWidget`.
+  - El JSX se movió tal cual.
+  - Cada widget lee del store con selectores.
+  - Solo bajan como props el filtro «solo esta marca» y los cálculos que dependen de él (`tasksBreakdown` y `todayAndApprovals`), porque los comparten Tareas, Hoy y Aprobaciones.
+- **Suscripción al store:** el padre deja `useHublyStore()` completo y pasa a un selector por campo. Ya no se vuelve a renderizar con cualquier cambio del store.
+- **Libretas:** «+ Nota» crea la libreta y abre el lector global con `useCreateNotebook`, igual que `/tareas`. Decidido con el usuario. Se borró el modal propio de crear libreta (unas 180 líneas, con color fijo y título forzado a mayúsculas).
+- **Escape:** se quitó el manejador global que cerraba a la vez el editor, el buscador y el resto de ventanas. Cada ventana ya lo maneja con su propia capa, y este se saltaba la pila de capas del editor.
+- **Código muerto:** se borró el estado y el envío del formulario de invitación, que no se pintaba.
+- **Colores (los 8 widgets quedan sin hallazgos):**
+  - El formato del post («Story») y el click score dejan el verde y pasan a pastilla neutra. El verde solo marca estado; era un defecto listado en la guía §2.
+  - «Aprobar» y «Guardar tarea» pasan a acento (`--hb-accent` / `--on-accent`).
+  - La tarea completada conserva el verde (`--ui-positive-text`), porque ahí sí es estado.
+  - «Atrasada» usa `STATUS_META.changes.color`, la referencia de error de la guía.
+  - Los celestes fijos pasan a `--ui-sky-soft` y `--ui-sky-border`. La tarjeta de notificación queda algo más celeste en claro, y en oscuro deja de ser un recuadro casi blanco.
+  - La CTR media va en `--ui-text`.
+  - El botón dice «Copiado», sin exclamación.
+
+### Verificación
+
+| Comando | Resultado |
+|---|---|
+| `npm run check:ui` | Correcto, **1294** hallazgos (antes 1338) |
+| `npx tsc --noEmit` | 0 errores |
+| `npm test` | 43/43 |
+| `npx playwright test` | 86/88; fallan las 2 de Salud de cuentas ya documentadas |
+
+**Sin comprobar:**
+
+- No se pulsó «+ Nota» en el navegador, para no crear una libreta en los datos de demo del usuario. Usa el mismo `useCreateNotebook` que `/tareas`.
+- Los estilos en línea de los widgets siguen ahí: la guía §2 los lista como deuda, pero pasarlos a clases es otro corte.

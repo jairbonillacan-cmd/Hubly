@@ -157,13 +157,6 @@
     "rgb-fijo": 3,
     "tamano-fuente": 3
   },
-  "components/app/dashboard/InicioView.tsx": {
-    "color-fijo": 36,
-    "exclamacion": 1,
-    "radio": 1,
-    "rgb-fijo": 5,
-    "z-index-fijo": 1
-  },
   "components/app/dashboard/MemberDrawer.tsx": {
     "color-fijo": 4,
     "radio": 2,
