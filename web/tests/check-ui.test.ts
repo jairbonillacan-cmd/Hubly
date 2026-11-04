@@ -108,6 +108,14 @@ test("una capa con número suelto falla; el token y el orden interno no", () => 
   falla(result, "components/app/Capas.tsx [z-index-fijo]", "2 hallazgos, permitidos 0", "app/(app)/capas.css [z-index-fijo]", "1 hallazgos, permitidos 0");
 });
 
+test("un estado o un tipo crudo falla; la etiqueta, el estado en español y la plantilla no", () => {
+  const root = tree({
+    "components/app/Estados.tsx":
+      'export const Estados = ({ post, asset, proyecto, menu }) => (\n  <>\n    <span>{post.status}</span>\n    <span>{asset.kind}</span>\n    <span>{POST_STATUS_LABEL[post.status]}</span>\n    <span>{proyecto.status}</span>\n    <span key={`${menu.kind}-${menu.id}`}>{menu.label}</span>\n  </>\n);\n',
+  });
+  falla(run(root), "components/app/Estados.tsx [estado-crudo]", "2 hallazgos, permitidos 0");
+});
+
 test("una definición de token no cuenta, tampoco en una línea con :root", () => {
   const root = tree({
     "app/(app)/tokens.css": ":root { --ui-surface: #FFFFFF; --layer-modal: 110; }\n:root {\n  --ui-text: #0F172A;\n}\n",

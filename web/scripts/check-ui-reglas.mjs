@@ -9,6 +9,7 @@
 export const TANDAS = [
   { nombre: "F0-3", reglas: ["style-inline", "important", "view-prop", "use-store-sin-selector"] },
   { nombre: "capas", reglas: ["z-index-fijo"] },
+  { nombre: "etiquetas", reglas: ["estado-crudo"] },
 ];
 export const NUEVAS = new Set(TANDAS.flatMap((tanda) => tanda.reglas));
 export const esNueva = (id) => NUEVAS.has(id);

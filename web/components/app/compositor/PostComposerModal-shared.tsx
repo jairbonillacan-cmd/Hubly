@@ -1,7 +1,7 @@
 import { TikTokSettings, } from "@/components/app/social/ComposerPanels";
 import { GLYPHS } from "@/components/previews/NetworkMarks";
 import { type UploadHandle } from "@/lib/media-client";
-import type { CustomFieldDefinition, PlatformSettings, PostFormat, PostStatus, SocialNetwork, } from "@/lib/types";
+import type { CustomFieldDefinition, PlatformSettings, PostFormat, SocialNetwork, } from "@/lib/types";
 import {
   HublyChartIcon,
   HublyChatIcon,
@@ -68,15 +68,6 @@ export const FIELD_TYPES: { id: CustomFieldDefinition["type"]; label: string }[]
   { id: "checkbox", label: "Casilla" },
   { id: "select", label: "Opciones" },
 ];
-
-export const STATUS_TEXT: Record<PostStatus, string> = {
-  draft: "Borrador",
-  pending: "En aprobación",
-  changes: "Requiere cambios",
-  approved: "Aprobado",
-  scheduled: "Programado",
-  published: "Publicado",
-};
 
 export interface UploadSlot {
   id: string;

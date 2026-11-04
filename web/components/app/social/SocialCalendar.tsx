@@ -43,6 +43,7 @@ import {
   type SortKey,
 } from "@/lib/calendar-views";
 import type { BrandWorkspace, PostFormat, PostStatus, SocialPost, WorkflowStatus } from "@/lib/types";
+import { POST_STATUS_LABEL } from "@/lib/labels";
 import { CreateGridModal, FeedModal, ImportMonthModal } from "./CalendarModals";
 
 const VIEWS: { id: CalendarView; label: string }[] = [
@@ -51,14 +52,6 @@ const VIEWS: { id: CalendarView; label: string }[] = [
   { id: "tabla", label: "Tabla" },
   { id: "kanban", label: "Kanban" },
 ];
-const STATUS_NAMES: Record<PostStatus, string> = {
-  draft: "Borrador",
-  pending: "En aprobación",
-  changes: "Requiere cambios",
-  approved: "Aprobado",
-  scheduled: "Planificado",
-  published: "Publicado",
-};
 const WEEKDAYS = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
 const NO_VALUE = "__none__";
 
@@ -407,7 +400,7 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
     if (activeGroup === "pilar") return pillars.map((p) => ({ id: p, label: p }));
     if (activeGroup === "formato") return FORMAT_COLUMNS.map((f) => ({ id: f, label: f }));
     if (activeGroup === "responsable") return [{ id: NO_VALUE, label: "Sin asignar" }, ...team.map((m) => ({ id: m.id, label: m.name }))];
-    if (activeGroup === "publicacion") return PUBLICATION_COLUMNS.map((s) => ({ id: s, label: STATUS_NAMES[s], lockedDrop: s === "published" }));
+    if (activeGroup === "publicacion") return PUBLICATION_COLUMNS.map((s) => ({ id: s, label: POST_STATUS_LABEL[s], lockedDrop: s === "published" }));
     const field = customSelects.find((f) => `campo:${f.id}` === activeGroup);
     return [{ id: NO_VALUE, label: "Sin valor" }, ...(field?.options ?? []).map((o) => ({ id: o.id, label: o.label, color: o.color }))];
   };
@@ -553,7 +546,7 @@ export function SocialCalendar({ brand, posts, onCopyLink }: { brand: BrandWorks
           {filterOpen && (
             <div className="hubly-social-pop" role="group" aria-label="Filtros">
               <h4>Publicación</h4>
-              <div>{PUBLICATION_COLUMNS.map((s) => <label key={s}><input type="checkbox" checked={filters.statuses.includes(s)} onChange={() => toggleFilter("statuses", s)} /> {STATUS_NAMES[s]}</label>)}</div>
+              <div>{PUBLICATION_COLUMNS.map((s) => <label key={s}><input type="checkbox" checked={filters.statuses.includes(s)} onChange={() => toggleFilter("statuses", s)} /> {POST_STATUS_LABEL[s]}</label>)}</div>
               <h4>Redes</h4>
               <div>{NETWORKS.map((n) => <label key={n.id}><input type="checkbox" checked={filters.networks.includes(n.id)} onChange={() => toggleFilter("networks", n.id)} /> {n.id}</label>)}</div>
               <h4>Formato</h4>

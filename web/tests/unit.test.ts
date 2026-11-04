@@ -430,7 +430,8 @@ test("calendario: semana desde el lunes, cruce de mes y año, zona de México", 
   // A las 02:00 UTC del 1 de noviembre todavía es 31 de octubre en Ciudad de México.
   assert.equal(todayInZone(new Date("2026-11-01T02:00:00Z")), "2026-10-31");
   assert.equal(publicationLabel({ status: "scheduled", scheduledDate: "2026-10-01" }, "2026-10-31").label, "Pendiente de registrar");
-  assert.equal(publicationLabel({ status: "scheduled", scheduledDate: "2026-11-01" }, "2026-10-31").label, "Planificado");
+  // El dueño decidió que `scheduled` se llama «Programado» en toda la app.
+  assert.equal(publicationLabel({ status: "scheduled", scheduledDate: "2026-11-01" }, "2026-10-31").label, "Programado");
   const posts = [{ title: "b", scheduledDate: "", scheduledTime: "" }, { title: "a", scheduledDate: "2026-10-02", scheduledTime: "" }, { title: "c", scheduledDate: "2026-10-01", scheduledTime: "" }] as never[];
   assert.deepEqual(sortPosts(posts, "fecha", "desc", () => "").map((p: { title: string }) => p.title), ["a", "c", "b"]);
 });
@@ -459,6 +460,24 @@ test("importar: separadores, comillas, fechas, mapeo y duplicados", async () => 
   assert.ok(rows[2].errors.length > 0);
   assert.equal(rows[3].errors.length, 2);
   assert.equal(rows[0].row, 2);
+});
+
+test("etiquetas: cubren todos los estados y no cambian lo guardado", async () => {
+  const { POST_STATUS_LABEL, POST_STATUS_CLIENT_LABEL, MEDIA_KIND_LABEL, ROLE_LABEL } = await import("../lib/labels");
+  // Lo guardado en `statusLabel` es contrato: cambiarlo rompe store.contract.test.ts y los datos existentes.
+  assert.deepEqual(POST_STATUS_LABEL, {
+    draft: "Borrador",
+    pending: "En aprobación",
+    changes: "Requiere cambios",
+    approved: "Aprobado",
+    scheduled: "Programado",
+    published: "Publicado",
+  });
+  // El cliente ve otro nombre para lo que aprueba; `scheduled` es «Programado» por decisión del dueño.
+  assert.equal(POST_STATUS_CLIENT_LABEL.pending, "Esperando cliente");
+  assert.equal(POST_STATUS_CLIENT_LABEL.scheduled, "Programado");
+  assert.equal(MEDIA_KIND_LABEL.image, "Imagen");
+  assert.equal(ROLE_LABEL.owner, "Dueño");
 });
 
 test("PRODUCT.md y CONTRIBUTING.md reflejan el estado real del código y los comandos de verificación", async () => {
