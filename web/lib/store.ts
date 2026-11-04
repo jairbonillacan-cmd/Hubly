@@ -1,40 +1,24 @@
 "use client";
 
 import { create } from "zustand";
-import {
-  createSeedWorkspaceData,
-  rebaseStaleFixture,
-  DEFAULT_WIDGETS_CONFIG,
-  INITIAL_WORKSPACE_DATA,
-  REFERENCE_FIXTURE_CLOCK,
-} from "./seed-data";
+import { DEFAULT_WIDGETS_CONFIG, INITIAL_WORKSPACE_DATA } from "./seed-data";
 import { selectAccountRecommendations } from "./domain-selectors";
+import { POST_STATUS_LABEL } from "./labels";
+import { createActivityItem } from "./domain/activity";
+import { withPostLog } from "./domain/posts";
+import { createSessionSlice, type SessionSlice } from "./store/session.slice";
+import { createUiSlice, type UiSlice } from "./store/ui.slice";
+import { persistWorkspaceState } from "./store/sync";
 import { localIsoDate } from "./date";
 import { nextOccurrence, toggleReaction } from "./chat";
-import { CHAT_NOTIFICATION_PREFIX, chatRemote, newChatId, startChatLive, useChatPresence } from "./chat-live";
+import { CHAT_NOTIFICATION_PREFIX, chatRemote, newChatId, useChatPresence } from "./chat-live";
 import { moveInList } from "./use-kanban-drag";
 import { backendEnabled } from "./supabase/config";
 import { createAgent, duplicateAgent, isBlankAgent } from "./agents";
-import { currentAgencyId, loadLiveWorkspace, queueLiveSave } from "./live-workspace";
-import {
-  buildReferenceFixtureWorkspace,
-  clearWorkspaceStorage,
-  fetchWorkspaceFromApi,
-  hasStoredWorkspaceInV3,
-  isReferenceFixtureUrl,
-  loadWorkspaceFromStorage,
-  normalizeWorkspacePayload,
-  pushWorkspaceToApi,
-  rememberWorkspaceId,
-  resolveActiveWorkspaceId,
-  resolveTestClockFromUrl,
-  saveWorkspaceToStorage,
-} from "./workspace-repository";
+import { currentAgencyId } from "./live-workspace";
 import type {
   AccountCommitment,
   ActivityEvent,
-  ActivityEventType,
-  AgencyInfo,
   AgencyTask,
   BrandCore,
   ChatAttachment,
@@ -62,13 +46,11 @@ import type {
   PeriodCommitmentSnapshot,
   PostExtrasPatch,
   PostStatus,
-  PostStatusLabel,
   SocialNetwork,
   SocialPost,
   TeamInvitation,
   TeamMember,
   WorkspaceNotification,
-  WorkspaceProfile,
 } from "./types";
 
 type CommitmentPeriodKey = "mes_actual" | "mes_anterior" | "trimestre";
@@ -119,55 +101,17 @@ type AddTaskInput = Omit<
   dueBucket?: AgencyTask["dueBucket"];
 };
 
-interface HublyStoreState extends HublyWorkspaceData {
-  hydrated: boolean;
-  /** Rol en la agencia con backend real; null en el modo demo. */
-  role: string | null;
-  isReferenceFixture: boolean;
+/** Lo que aún vive en este archivo. Las demás claves llegan por los slices. */
+interface StoreCoreState extends HublyWorkspaceData {
   teamMembers: TeamMember[];
   dashboardWidgets: DashboardWidgetConfig[];
-  composerOpen: boolean;
-  editingPostId: string | null;
-  cmdkOpen: boolean;
-  aiDrawerOpen: boolean;
-  aiDrawerPrompt: string | null;
-  newBrandModalOpen: boolean;
-  inviteModalOpen: boolean;
-  widgetConfigModalOpen: boolean;
-  autoSuggestionsModalOpen: boolean;
-  editWidgetsMode: boolean;
   activeNotebookId: string | null;
 
   // UI & Modal Actions
   setActiveBrand: (brandId: string) => void;
-  composerDefaultDate: string | null;
-  /** El editor tiene cambios sin guardar: abrir otro post pide decidir antes. */
-  composerDirty: boolean;
-  composerPending: { postId: string | null; defaultDate: string | null } | null;
-  setComposerDirty: (dirty: boolean) => void;
-  resolveComposerPending: (decision: "open" | "keep") => void;
-  openComposer: (postId?: string | null, defaultDate?: string | null) => void;
-  closeComposer: () => void;
-  setCmdkOpen: (open: boolean) => void;
-  setAiDrawerOpen: (open: boolean) => void;
-  setAiDrawerPrompt: (prompt: string | null) => void;
-  setNewBrandModalOpen: (open: boolean) => void;
-  setInviteModalOpen: (open: boolean) => void;
-  setWidgetConfigModalOpen: (open: boolean) => void;
-  setAutoSuggestionsModalOpen: (open: boolean) => void;
-  setEditWidgetsMode: (enabled: boolean) => void;
   setActiveNotebookId: (notebookId: string | null) => void;
 
-  // Workspace, Hydration & Fixture Actions
-  syncFromServer: (workspaceIdOverride?: string) => Promise<void>;
-  switchWorkspace: (workspaceId: string) => Promise<void>;
-  applyReferenceFixture: () => void;
-  setTestClock: (fixedIsoNow: string | null) => void;
-  resetDemoData: (options?: { referenceFixture?: boolean }) => void;
-
   // Profile & Agency Actions
-  updateProfile: (patch: Partial<WorkspaceProfile>) => void;
-  updateAgency: (patch: Partial<AgencyInfo>) => void;
 
   // Brand & Commitment Actions
   addBrand: (brand: AddBrandInput) => void;
@@ -328,72 +272,9 @@ interface HublyStoreState extends HublyWorkspaceData {
   flushChatQueue: (now: number) => void;
 }
 
-const STATUS_TO_LABEL: Record<PostStatus, PostStatusLabel> = {
-  draft: "Borrador",
-  pending: "En aprobación",
-  changes: "Requiere cambios",
-  approved: "Aprobado",
-  scheduled: "Programado",
-  published: "Publicado",
-};
+export type HublyStoreState = StoreCoreState & SessionSlice & UiSlice;
 
-function extractWorkspaceData(state: HublyStoreState): HublyWorkspaceData {
-  return {
-    schemaVersion: 2,
-    workspaceId: state.workspaceId || "default",
-    agencyName: state.agencyName,
-    profile: state.profile,
-    agency: state.agency,
-    testClock: state.testClock,
-    activeBrandId: state.activeBrandId,
-    brands: state.brands,
-    posts: state.posts,
-    ideas: state.ideas,
-    leads: state.leads,
-    quotes: state.quotes,
-    automations: state.automations,
-    agents: state.agents,
-    tasks: state.tasks,
-    taskLists: state.taskLists,
-    calendarActivities: state.calendarActivities,
-    notebooks: state.notebooks,
-    assets: state.assets,
-    projects: state.projects,
-    ads: state.ads,
-    channels: chatRemote() ? [] : state.channels,
-    // Con las tablas de chat activas, nada del chat se escribe en el documento.
-    messages: chatRemote() ? [] : state.messages,
-    chatScheduled: chatRemote() ? [] : state.chatScheduled,
-    chatReminders: chatRemote() ? [] : state.chatReminders,
-    team: state.team,
-    invitations: state.invitations,
-    activityEvents: state.activityEvents,
-    notifications: state.notifications.filter((n) => !n.id.startsWith(CHAT_NOTIFICATION_PREFIX)),
-    widgets: state.widgets,
-    onboarding: state.onboarding,
-    dismissedRecommendationIds: state.dismissedRecommendationIds,
-    appliedRecommendationsMap: state.appliedRecommendationsMap,
-  };
-}
 
-function persistWorkspaceState(state: HublyStoreState): void {
-  if (typeof window === "undefined") return;
-  if (isReferenceFixtureUrl()) return;
-  if (backendEnabled) {
-    queueLiveSave(extractWorkspaceData(state));
-    return;
-  }
-  const wsId = state.workspaceId || "default";
-  const payload = extractWorkspaceData(state);
-  saveWorkspaceToStorage(wsId, payload);
-  pushWorkspaceToApi(wsId, payload).catch(() => {});
-}
-
-function withPostLog(post: SocialPost, text: string, author: string): SocialPost {
-  const at = new Date().toISOString();
-  const entry = { id: `pa-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, author, text, at };
-  return { ...post, activity: [entry, ...(post.activity || [])] };
-}
 
 const STATUS_TO_TRIGGER: Partial<Record<PostStatus, AutomationTrigger>> = {
   pending: "post_pending",
@@ -441,54 +322,17 @@ function runAutomations(
   });
 }
 
-function createActivityItem(
-  state: HublyStoreState,
-  partial: {
-    type: ActivityEventType;
-    memberId?: string;
-    brandId?: string;
-    durationMinutes?: number;
-    metadata?: Record<string, string | number | boolean>;
-    timestamp?: string;
-  }
-): ActivityEvent {
-  const defaultMemberId = state.team[0]?.id || "tm-1";
-  const clockIso = state.testClock?.fixedIsoNow || new Date().toISOString();
-
+export const useHublyStore = create<HublyStoreState>()((...a) => {
+  const [set, get] = a;
   return {
-    id: `evt-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-    memberId: partial.memberId || defaultMemberId,
-    brandId: partial.brandId || state.activeBrandId,
-    type: partial.type,
-    timestamp: partial.timestamp || clockIso,
-    durationMinutes: partial.durationMinutes ?? 15,
-    metadata: partial.metadata,
-  };
-}
-
-export const useHublyStore = create<HublyStoreState>()((set, get) => ({
-  ...INITIAL_WORKSPACE_DATA,
-  hydrated: false,
-  role: null,
-  isReferenceFixture: false,
+  ...INITIAL_WORKSPACE_DATA, // Siempre primero: aporta los datos guardados
+  ...createSessionSlice(...a),
+  ...createUiSlice(...a),
   teamMembers: INITIAL_WORKSPACE_DATA.team,
   dashboardWidgets: INITIAL_WORKSPACE_DATA.widgets.map((w) => ({
     ...w,
     enabled: w.visible,
   })),
-  composerOpen: false,
-  editingPostId: null,
-  composerDefaultDate: null,
-  composerDirty: false,
-  composerPending: null,
-  cmdkOpen: false,
-  aiDrawerOpen: false,
-  aiDrawerPrompt: null,
-  newBrandModalOpen: false,
-  inviteModalOpen: false,
-  widgetConfigModalOpen: false,
-  autoSuggestionsModalOpen: false,
-  editWidgetsMode: false,
   activeNotebookId: null,
 
   setActiveBrand: (brandId) => {
@@ -507,233 +351,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     if (get().role !== "viewer") persistWorkspaceState(get());
   },
 
-  openComposer: (postId = null, defaultDate = null) => {
-    const state = get();
-    if (state.composerOpen && state.composerDirty && postId !== state.editingPostId) {
-      set({ composerPending: { postId, defaultDate }, cmdkOpen: false });
-      return;
-    }
-    set({
-      composerOpen: true,
-      editingPostId: postId,
-      composerDefaultDate: defaultDate,
-      inviteModalOpen: false,
-      newBrandModalOpen: false,
-      cmdkOpen: false,
-      widgetConfigModalOpen: false,
-      autoSuggestionsModalOpen: false,
-    });
-  },
-  closeComposer: () => set({ composerOpen: false, editingPostId: null, composerDirty: false, composerPending: null }),
-  setComposerDirty: (dirty) => {
-    if (get().composerDirty !== dirty) set({ composerDirty: dirty });
-  },
-  resolveComposerPending: (decision) => {
-    const pending = get().composerPending;
-    if (decision === "keep" || !pending) {
-      set({ composerPending: null });
-      return;
-    }
-    set({ composerOpen: true, editingPostId: pending.postId, composerDefaultDate: pending.defaultDate, composerDirty: false, composerPending: null });
-  },
-  setCmdkOpen: (open) => set({ cmdkOpen: open }),
-  setAiDrawerOpen: (open) => set({ aiDrawerOpen: open }),
-  setAiDrawerPrompt: (prompt) => set({ aiDrawerPrompt: prompt }),
-  setNewBrandModalOpen: (open) => set({ newBrandModalOpen: open }),
-  setInviteModalOpen: (open) => set({ inviteModalOpen: open }),
-  setWidgetConfigModalOpen: (open) => set({ widgetConfigModalOpen: open }),
-  setAutoSuggestionsModalOpen: (open) => set({ autoSuggestionsModalOpen: open }),
-  setEditWidgetsMode: (enabled) => set({ editWidgetsMode: enabled }),
   setActiveNotebookId: (notebookId) => set({ activeNotebookId: notebookId }),
-
-  syncFromServer: async (workspaceIdOverride) => {
-    if (typeof window === "undefined") {
-      set({ hydrated: true });
-      return;
-    }
-
-    if (backendEnabled) {
-      const loaded = await loadLiveWorkspace();
-      if (loaded.kind === "ok") {
-        // Onboarding interrumpido: sin marcas no hay pantalla que mostrar.
-        if (loaded.data.brands.length === 0 && window.location.pathname !== "/onboarding") {
-          window.location.assign("/onboarding");
-          return;
-        }
-        // La marca activa es de cada persona, no de la agencia.
-        let activeBrandId = loaded.data.activeBrandId;
-        try {
-          const saved = localStorage.getItem(`hubly:marca-activa:${loaded.agencyId}`);
-          if (saved && loaded.data.brands.some((b) => b.id === saved)) activeBrandId = saved;
-        } catch { /* Almacenamiento lleno o bloqueado: se sigue sin él. */ }
-        set({ ...loaded.data, activeBrandId, activeNotebookId: null, hydrated: true, role: loaded.role });
-        void startChatLive({ agencyId: loaded.agencyId, get: () => get(), set: (patch) => set((s) => patch(s) as Partial<HublyStoreState>) });
-      } else if (loaded.kind === "unauthenticated") {
-        window.location.assign("/login");
-      } else if (loaded.kind === "no_agency") {
-        if (window.location.pathname !== "/onboarding") window.location.assign("/onboarding");
-        else set({ hydrated: true });
-      } else {
-        window.dispatchEvent(new CustomEvent("hubly:save-state", { detail: "error" }));
-        set({ hydrated: true });
-      }
-      return;
-    }
-
-    const resolvedWorkspaceId = workspaceIdOverride || resolveActiveWorkspaceId();
-    const forceReferenceFixture = isReferenceFixtureUrl();
-    const urlClock = resolveTestClockFromUrl();
-
-    if (forceReferenceFixture) {
-      const fixtureData = buildReferenceFixtureWorkspace(resolvedWorkspaceId);
-      if (urlClock) {
-        fixtureData.testClock = { fixedIsoNow: urlClock };
-      }
-      // Los datos de prueba viven solo en esta visita: no pisan el espacio demo guardado.
-      set({
-        ...fixtureData,
-        activeNotebookId: null,
-        hydrated: true,
-      });
-      return;
-    }
-
-    const hadLocalV3 = hasStoredWorkspaceInV3(resolvedWorkspaceId);
-    const storedData = loadWorkspaceFromStorage(resolvedWorkspaceId);
-    const localData = storedData
-      ? rebaseStaleFixture(storedData)
-      : createSeedWorkspaceData(resolvedWorkspaceId);
-    if (storedData && localData !== storedData) {
-      saveWorkspaceToStorage(resolvedWorkspaceId, localData);
-      pushWorkspaceToApi(resolvedWorkspaceId, localData).catch(() => {});
-    }
-
-    if (urlClock) {
-      localData.testClock = { fixedIsoNow: urlClock };
-    }
-
-    set({
-      ...localData,
-      activeNotebookId: null,
-      hydrated: true,
-    });
-
-    if (!hadLocalV3) {
-      const serverData = await fetchWorkspaceFromApi(resolvedWorkspaceId);
-      if (serverData && Array.isArray(serverData.brands) && serverData.brands.length > 0) {
-        const normalizedServer = rebaseStaleFixture(
-          normalizeWorkspacePayload(serverData, resolvedWorkspaceId)
-        );
-        if (urlClock) {
-          normalizedServer.testClock = { fixedIsoNow: urlClock };
-        }
-        saveWorkspaceToStorage(resolvedWorkspaceId, normalizedServer);
-        set({
-          ...normalizedServer,
-          activeNotebookId: null,
-          hydrated: true,
-        });
-        return;
-      }
-      saveWorkspaceToStorage(resolvedWorkspaceId, localData);
-      pushWorkspaceToApi(resolvedWorkspaceId, localData).catch(() => {});
-    }
-  },
-
-  switchWorkspace: async (workspaceId) => {
-    // Con cuentas reales, cargar un espacio de ejemplo acabaría guardado sobre la agencia.
-    if (backendEnabled) return;
-    const cleanId = workspaceId.trim() || "default";
-    rememberWorkspaceId(cleanId);
-    const storedWorkspace = loadWorkspaceFromStorage(cleanId);
-    const loaded = storedWorkspace
-      ? rebaseStaleFixture(storedWorkspace)
-      : createSeedWorkspaceData(cleanId);
-    set({
-      ...loaded,
-      workspaceId: cleanId,
-      activeNotebookId: null,
-      hydrated: true,
-    });
-    saveWorkspaceToStorage(cleanId, loaded);
-  },
-
-  applyReferenceFixture: () => {
-    const wsId = get().workspaceId || "default";
-    const fixture = buildReferenceFixtureWorkspace(wsId);
-    set({
-      ...fixture,
-      activeNotebookId: null,
-      hydrated: true,
-    });
-    saveWorkspaceToStorage(wsId, fixture);
-    pushWorkspaceToApi(wsId, fixture).catch(() => {});
-  },
-
-  setTestClock: (fixedIsoNow) => {
-    set({
-      testClock: {
-        fixedIsoNow: fixedIsoNow || REFERENCE_FIXTURE_CLOCK,
-      },
-    });
-    persistWorkspaceState(get());
-  },
-
-  updateProfile: (patch) => {
-    if (backendEnabled && patch.name) {
-      const name = patch.name;
-      void import("./supabase/browser").then(({ createSupabaseBrowser }) =>
-        createSupabaseBrowser().auth.updateUser({ data: { name } })
-      );
-    }
-    set((s) => {
-      const nextName = patch.name ?? s.profile.name;
-      const nextRole = patch.role ?? s.profile.role;
-      const nextAvatarInitial =
-        patch.avatarInitial ??
-        nextName
-          .split(" ")
-          .filter(Boolean)
-          .slice(0, 2)
-          .map((p) => p[0]?.toUpperCase() ?? "")
-          .join("");
-      const resolvedInitial = nextAvatarInitial || s.profile.avatarInitial;
-      const nextTeam = s.team.map((m, idx) =>
-        m.id === "tm-1" || idx === 0
-          ? {
-              ...m,
-              name: nextName,
-              role: nextRole,
-              initials: resolvedInitial,
-              avatarInitial: resolvedInitial.slice(0, 1) || "J",
-            }
-          : m
-      );
-      return {
-        profile: {
-          ...s.profile,
-          ...patch,
-          name: nextName,
-          role: nextRole,
-          avatarInitial: resolvedInitial,
-        },
-        team: nextTeam,
-        teamMembers: nextTeam,
-      };
-    });
-    persistWorkspaceState(get());
-  },
-
-  updateAgency: (patch) => {
-    set((s) => {
-      const nextAgency = { ...s.agency, ...patch };
-      return {
-        agency: nextAgency,
-        agencyName: nextAgency.name,
-      };
-    });
-    persistWorkspaceState(get());
-  },
 
   addBrand: (input) => {
     const slug = input.name
@@ -1137,7 +755,7 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     const previousStatus = get().posts.find((p) => p.id === postInput.id)?.status;
     set((s) => {
       const statusLabel =
-        postInput.statusLabel || STATUS_TO_LABEL[postInput.status] || "Borrador";
+        postInput.statusLabel || POST_STATUS_LABEL[postInput.status] || "Borrador";
       if (postInput.id) {
         return {
           posts: s.posts.map((p) =>
@@ -1216,10 +834,10 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
           {
             ...p,
             status,
-            statusLabel: STATUS_TO_LABEL[status] || p.statusLabel,
+            statusLabel: POST_STATUS_LABEL[status] || p.statusLabel,
             comments: nextComments,
           },
-          `Cambió el estado a «${STATUS_TO_LABEL[status] || status}»`,
+          `Cambió el estado a «${POST_STATUS_LABEL[status] || status}»`,
           authorName
         );
       });
@@ -2245,22 +1863,8 @@ export const useHublyStore = create<HublyStoreState>()((set, get) => ({
     else persistWorkspaceState(get());
   },
 
-  resetDemoData: (options) => {
-    const currentWorkspaceId = get().workspaceId || "default";
-    const useRef = options?.referenceFixture ?? isReferenceFixtureUrl();
-    clearWorkspaceStorage(currentWorkspaceId);
-    const freshData = createSeedWorkspaceData(currentWorkspaceId, {
-      referenceFixture: useRef,
-    });
-    set({
-      ...freshData,
-      activeNotebookId: freshData.notebooks[0]?.id ?? null,
-      hydrated: true,
-    });
-    saveWorkspaceToStorage(currentWorkspaceId, freshData);
-    pushWorkspaceToApi(currentWorkspaceId, freshData).catch(() => {});
-  },
-}));
+  };
+});
 
 // Un lector puede navegar, pero ninguna acción cambia datos: el servidor rechazaría el
 // guardado y la pantalla mostraría cambios que no existen.
