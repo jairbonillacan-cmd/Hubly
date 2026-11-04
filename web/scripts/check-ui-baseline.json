@@ -163,28 +163,14 @@
     "style-inline": 3
   },
   "components/app/anuncios/AnunciosCabecera.tsx": {
-    "rgb-fijo": 4,
-    "style-inline": 24,
-    "tamano-fuente": 1,
-    "view-prop": 1
-  },
-  "components/app/anuncios/AnunciosDiagnostico.tsx": {
-    "style-inline": 13,
-    "view-prop": 1
+    "style-inline": 1,
+    "tamano-fuente": 1
   },
   "components/app/anuncios/AnunciosTarjetas.tsx": {
-    "color-fijo": 2,
+    "color-fijo": 1,
     "degradado": 1,
-    "rgb-fijo": 2,
-    "style-inline": 54,
-    "view-prop": 1
-  },
-  "components/app/anuncios/DemoAnunciosPage.tsx": {
-    "style-inline": 1
-  },
-  "components/app/anuncios/demoAnunciosPage-shared.tsx": {
-    "emoji": 3,
-    "style-inline": 1
+    "rgb-fijo": 1,
+    "style-inline": 2
   },
   "components/app/compositor/ComposerCabecera.tsx": {
     "style-inline": 3,

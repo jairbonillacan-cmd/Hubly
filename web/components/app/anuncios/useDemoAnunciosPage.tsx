@@ -1,21 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { SampleAdCard, SAMPLE_ADS, } from "./demoAnunciosPage-shared";
+import {
+  filterSampleAds,
+  SAMPLE_ADS,
+  type AnunciosViewMode,
+  type SampleAdCard,
+} from "@/lib/domain/ads";
 
 /** Estado y datos de DemoAnunciosPage. */
 export function useDemoAnunciosPage() {
-  const [viewMode, setViewMode] = useState<"cards" | "table" | "funnels">("cards");
+  const [viewMode, setViewMode] = useState<AnunciosViewMode>("cards");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAd, setSelectedAd] = useState<SampleAdCard | null>(null);
-  const visibleAds = SAMPLE_ADS.filter((ad) =>
-    searchQuery.trim()
-      ? ad.title.toLowerCase().includes(searchQuery.trim().toLowerCase())
-      : true
-  );
+  const visibleAds = filterSampleAds(SAMPLE_ADS, searchQuery);
 
-  return { viewMode, setViewMode, searchOpen, setSearchOpen, searchQuery, setSearchQuery, selectedAd, setSelectedAd, visibleAds };
+  return {
+    viewMode,
+    setViewMode,
+    searchOpen,
+    setSearchOpen,
+    searchQuery,
+    setSearchQuery,
+    selectedAd,
+    setSelectedAd,
+    visibleAds,
+  };
 }
-
-export type DemoAnunciosPageModel = ReturnType<typeof useDemoAnunciosPage>;
