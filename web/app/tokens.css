@@ -1,0 +1,195 @@
+/* ==========================================================================
+   TOKENS GLOBALES Y DE ALCANCE (tokens.css)
+   Único lugar con definiciones de variables CSS.
+   ========================================================================== */
+
+:root {
+  /* Landing y páginas públicas */
+  --forest: #111c27;
+  --ink: #111c27;
+  --ink-soft: #4a5a6a;
+  --ground: #ffffff;
+  --surface: #ffffff;
+  --surface-warm: #f1f5f9;
+  --sidebar-bg: #0f1c2a;
+  --line: #e3e9ef;
+  --line-strong: #cbd6e0;
+  --green: #16324f;
+  --green-deep: #0f2539;
+  --green-pale: #dceff9;
+  --yellow: #7cc8ee;
+  --yellow-pale: #eaf6fc;
+  --coral: #d9483b;
+  --coral-deep: #b3261e;
+  --coral-pale: #fde8e6;
+  --lilac: #dceff9;
+  --shadow-window: 0 24px 60px -24px rgb(17 28 39 / 0.35), 0 2px 6px rgb(17 28 39 / 0.08);
+  --shadow-sheet: 0 14px 30px -14px rgb(17 28 39 / 0.4);
+  --shadow-card: 0 4px 16px -4px rgb(17 28 39 / 0.07), 0 1px 2px rgb(17 28 39 / 0.04);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --font-display: var(--font-bricolage);
+  --display: var(--font-bricolage), "Trebuchet MS", sans-serif;
+  --serif: var(--font-serif), Georgia, serif;
+  --mono: var(--font-mono), monospace;
+  --gutter: clamp(16px, 4vw, 40px);
+
+  /* Acento de marca */
+  --hb-accent: #16324f;
+  --hb-accent-hover: #0f2539;
+  --hb-accent-edge: #0b1c2e;
+  --hb-accent-text: #16324f;
+  --hb-accent-rgb: 22 50 79;
+  --on-accent: #ffffff;
+
+  /* Superficie y texto de la interfaz (guía §3) */
+  --ui-surface: #FFFFFF;
+  --ui-surface-2: #F8FAFC;
+  --ui-muted: #F1F5F9;
+  --ui-border: #E2E8F0;
+  --ui-border-strong: #CBD5E1;
+  --ui-accent-soft: #EAF6FC;
+  --ui-text: #0F172A;
+  --ui-text-1: #1E293B;
+  --ui-text-2: #334155;
+  --ui-text-3: #475569;
+  --ui-text-4: #64748B;
+  --ui-text-5: #94A3B8;
+  --ui-accent-text: var(--hb-accent-text);
+  --ui-accent-text-2: var(--hb-accent-text);
+  --ui-sky: #7CC8EE;
+  --ui-sky-text: #16324F;
+  --ui-sky-soft: #DCEFF9;
+  --ui-sky-border: #BFE2F4;
+  --ui-sky-icon: #7CC8EE;
+  --ui-sky-card: #FFFFFF;
+
+  /* Escala única de capas (guía §5) */
+  --layer-header: 20;
+  --layer-dropdown: 40;
+  --layer-fab: 45;
+  --layer-drawer: 50;
+  --layer-toast: 90;
+  --layer-scrim: 105;
+  --layer-modal: 110;
+  --layer-composer: 110;
+  --layer-sidebar: 112;
+  --layer-command: 120;
+  --layer-picker: 130;
+  --layer-dialog: 200;
+}
+
+/* Modo oscuro: superficie y texto */
+html.dark {
+  --ui-surface: #15202B;
+  --ui-surface-2: #1C2A38;
+  --ui-muted: #263747;
+  --ui-border: #2B3E50;
+  --ui-border-strong: #3A5064;
+  --ui-accent-soft: #22384A;
+  --ui-text: #ECECF1;
+  --ui-text-1: #E2E2E9;
+  --ui-text-2: #D2D2DB;
+  --ui-text-3: #BDBDC9;
+  --ui-text-4: #A5A5B3;
+  --ui-text-5: #8F8F9E;
+  --ui-accent-text: #9AD4F1;
+  --ui-accent-text-2: #9AD4F1;
+  --ui-sky: #7CC8EE;
+  --ui-sky-text: #BFE2F4;
+  --ui-sky-soft: #22384A;
+  --ui-sky-border: #2F4C63;
+  --ui-sky-icon: #2F6288;
+  --ui-sky-card: #172330;
+}
+
+/* En oscuro, el marino no se distingue del fondo: acción intermedia y texto celeste */
+html.dark:has(.hubly-app-root) {
+  --hb-accent: #2a76b0;
+  --hb-accent-hover: #3487c4;
+  --hb-accent-edge: #1d5a88;
+  --hb-accent-text: #9ad4f1;
+  --hb-accent-rgb: 42 118 176;
+}
+
+/* Alcance de la app autenticada: valores que pisan :root dentro de .hubly-app-root / .hb-app-root */
+:is(.hubly-app-root, .hb-app-root) {
+  --bg-surface: #FFFFFF;
+  --tinta-exito: #059669;
+  --hubly-success: #10B981;
+  --hubly-success-bg: #ECFDF5;
+  --hubly-success-text: #059669;
+  --hubly-danger: #EF4444;
+  --hubly-danger-bg: #FEF2F2;
+  --hubly-danger-text: #DC2626;
+  --shadow-lg: 0 8px 32px rgba(15, 23, 42, 0.10), 0 2px 8px rgba(15, 23, 42, 0.06);
+  --hubly-font-serif: "Instrument Serif", "Playfair Display", Georgia, var(--font-serif), "Young Serif", "Fraunces", Cambria, "Times New Roman", serif;
+  --hubly-font-mono: "Geist Mono", "JetBrains Mono", var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --hubly-z-canvas: 1;
+  --hubly-z-subnav: 20;
+  --hubly-z-popover: 40;
+  --hubly-z-floating: 45;
+  --hubly-z-drawer: 50;
+  --hubly-z-modal: 60;
+  --ink: #0F172A;
+  --ink-2: #334155;
+  --ink-soft: #475569;
+  --ink-muted: #64748B;
+  --ground: #FAFAFA;
+  --surface-warm: #F8FAFC;
+  --cream: #F8FAFC;
+  --line: #E2E8F0;
+  --line-strong: #CBD5E1;
+  --forest: var(--hb-accent);
+  --green: var(--hb-accent);
+  --green-deep: var(--hb-accent-hover);
+  --green-pale: #EAF6FC;
+  --yellow: var(--hb-accent);
+  --yellow-pale: #E6F4FB;
+  --coral: #EF4444;
+  --coral-deep: #DC2626;
+  --coral-pale: #FEE2E2;
+  --display: var(--font-bricolage), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: var(--font-bricolage), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body: var(--font-bricolage), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --hubly-font-sans: var(--font-display), system-ui, sans-serif;
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.03), 0 1px 2px rgba(15, 23, 42, 0.02);
+  --shadow-window: 0 24px 60px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+html.dark :is(.hubly-app-root, .hb-app-root) {
+  --tinta-exito: #34D399;
+  --hubly-success-text: #34D399;
+  --hubly-success-bg: rgb(52 211 153 / 0.16);
+}
+
+/* Cantos táctiles de botones (.hbtn) y medidas de barra lateral */
+:is(.hubly-app-root, .hb-app-root) .hbtn {
+  --hbtn-edge: #CBD5E1;
+}
+:is(.hubly-app-root, .hb-app-root) :is(.hbtn.is-selected, .hbtn[aria-pressed="true"], .hbtn-indigo, .hbtn-primary, .hbtn-amber, .hbtn-hb, .hbtn-amber-solid) {
+  --hbtn-edge: var(--hb-accent-edge);
+}
+:is(.hubly-app-root, .hb-app-root) .hbtn-secondary {
+  --hbtn-edge: #D6DFE7;
+}
+:is(.hubly-app-root, .hb-app-root) .hbtn-blue {
+  --hbtn-edge: #1E40AF;
+}
+:is(.hubly-app-root, .hb-app-root) .hbtn-pink {
+  --hbtn-edge: #9D174D;
+}
+:is(.hubly-app-root, .hb-app-root) .hbtn-purple {
+  --hbtn-edge: #4C1D95;
+}
+:is(.hubly-app-root, .hb-app-root) .hbtn-danger {
+  --hbtn-edge: #B91C1C;
+}
+:is(.hubly-app-root, .hb-app-root) :is(.hbtn-ghost, .hbtn-ghost-primary, .hbtn-ghost-danger) {
+  --hbtn-edge: transparent;
+}
+
+@media (min-width: 768px) {
+  .hubly-app-root.hb-app-root .hubly-sidebar.hb-sidebar.is-collapsed {
+    --rail-row: clamp(22px, calc((100dvh - 118px) / 14), 36px);
+  }
+}

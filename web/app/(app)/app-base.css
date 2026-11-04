@@ -3,59 +3,6 @@
    ========================================================================== */
 
 .hb-app-root {
-  /* Paleta base y variables */
-  --hb-bg: #FAFAFA;
-  --hb-surface: #FFFFFF;
-  --hb-border: #E2E8F0;
-  --hb-border-subtle: #F1F5F9;
-  --hb-border-card: #EDF2F7;
-  --hb-text: #0F172A;
-  --hb-text-secondary: #334155;
-  --hb-text-muted: #64748B;
-  --hb-text-subtle: #94A3B8;
-  --hb-indigo: var(--hb-accent);
-  --hb-indigo-hover: var(--hb-accent-hover);
-  --hb-indigo-soft: #EAF6FC;
-  --hb-amber-bg: #F1F9FD;
-  --hb-amber-pill: #E6F4FB;
-  --hb-amber-border: #BFE2F4;
-  --hb-amber-text: var(--hb-accent-text);
-  --hb-amber-accent: var(--hb-accent);
-  --hb-gold-avatar: #CAA052;
-
-  /* Override landing page CSS variables inside .hb-app-root */
-  --ink: #0F172A;
-  --ink-2: #334155;
-  --ink-soft: #475569;
-  --ink-muted: #64748B;
-  --ground: #FAFAFA;
-  --surface: #FFFFFF;
-  --surface-warm: #F8FAFC;
-  --cream: #F8FAFC;
-  --cream-2: #F1F5F9;
-  --cream-3: #E2E8F0;
-  --line: #E2E8F0;
-  --line-strong: #CBD5E1;
-  --forest: var(--hb-accent);
-  --forest-soft: #EAF6FC;
-  --green: var(--hb-accent);
-  --green-deep: var(--hb-accent-hover);
-  --green-pale: #EAF6FC;
-  --amber: var(--hb-accent);
-  --yellow: var(--hb-accent);
-  --yellow-pale: #E6F4FB;
-  --coral: #EF4444;
-  --coral-deep: #DC2626;
-  --coral-pale: #FEE2E2;
-  --coral-soft: #FEE2E2;
-  --lilac: #DCEFF9;
-  --lilac-pale: #EAF6FC;
-  --display: var(--font-bricolage), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-display: var(--font-bricolage), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-body: var(--font-bricolage), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.03), 0 1px 2px rgba(15, 23, 42, 0.02);
-  --shadow-window: 0 24px 60px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.06);
-
   font-family: var(--font-bricolage), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 14px;
   line-height: 1.5;
@@ -160,7 +107,6 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .hb-app-root .hbtn-secondary {
-  --hbtn-edge: #D6DFE7;
   background: var(--ui-surface);
   color: var(--ui-text);
   border: 1px solid var(--ui-border-strong);
@@ -171,7 +117,6 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .hb-app-root .hbtn-hb {
-  --hbtn-edge: var(--hb-accent-edge);
   background: var(--ui-surface);
   color: var(--ui-text);
   border: 1.5px solid var(--hb-accent);
