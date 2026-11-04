@@ -10,7 +10,7 @@ Se obtienen con `node scripts/medir-deslop.mjs`, desde `web/`.
 
 | Medida | Partida (`aa4a1d3`) | Actual | Meta |
 |---|---:|---:|---:|
-| Líneas de `lib/store.ts` | 2,304 | 1,155 | < 150 |
+| Líneas de `lib/store.ts` | 2,304 | 700 | < 150 |
 | Archivos sobre 400 líneas, sin simuladores ni iconos | 35 | 35 | 0 |
 | `page.tsx` sobre 80 líneas | 17 | 17 | 0 |
 | Archivos con prop `view` | 33 | 33 | 0 |
@@ -49,7 +49,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F1-2 Dominios simples | F1-1 | `lib/store*` | Hecha | `impl-f1-2` | #50 |
 | F1-3 Tareas | F1-2 | `lib/store*` | Hecha | `impl-f1-3` | #51 |
 | F1-4 Equipo y tablero | F1-3 | `lib/store*` | Hecha | `impl-f1-4` | #52 |
-| F1-5 Marcas | F1-4 | `lib/store*` | Pendiente | | |
+| F1-5 Marcas | F1-4 | `lib/store*` | Hecha | `impl-f1-5` | #53 |
 | F1-6 Posts y chat | F1-5 | `lib/store*`, `useInicioView` | Pendiente | | |
 | F1-7 Reglas fuera del store | F1-6 | `lib/store/`, `lib/domain/` | Pendiente | | |
 | F2-1 Selectores | F1 | `lib/domain*` | Pendiente | | |
@@ -113,3 +113,4 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 | 2026-11-03 | F1-2 (#50) | Fusión (`65b1097`): `store.ts` de **1.908 a 1.665** líneas. Seis slices nuevos en `lib/store/`: `crm` (leads y cotizaciones), `automations`, `agents`, `notebooks` (con `activeNotebookId`), `assets` y `projects`. Ningún slice declara datos guardados y ninguno importa a otro. Contrato **8/8 sin tocarlo**; 193 pruebas; `flujos-con-cuentas` en verde. Siguiente: F1-3 (tareas). |
 | 2026-11-03 | F1-3 (#51) | Fusión: `store.ts` de **1.665 a 1.469** líneas. `lib/store/tasks.slice.ts` con `addTask`, `updateTask`, `toggleTaskStatus`, `deleteTask`, `moveTask` y las tres de listas; `AddTaskInput` viaja con ellas porque solo lo usaba `addTask`. Contrato **8/8 sin tocarlo**; 193 pruebas; `flujos-con-cuentas` en verde. Siguiente: F1-4 (equipo y tablero). |
 | 2026-11-03 | F1-4 (#52) | Fusión: `store.ts` de **1.469 a 1.155** líneas. `team.slice.ts` (equipo, invitaciones, actividad; declara `teamMembers` desde `INITIAL_WORKSPACE_DATA.team`), `dashboard.slice.ts` (widgets, onboarding y `dashboardWidgets` derivado de `widgets`, con `OnboardingStepKey`) y `notifications.slice.ts` (avisos; el plan los daba a F1-4 sin archivo, se les dio el suyo). Contrato **8/8 sin tocarlo**; 193 pruebas; `flujos-con-cuentas` en verde. Siguiente: F1-5 (marcas, dos slices). |
+| 2026-11-03 | F1-5 (#53) | Fusión: `store.ts` de **1.155 a 700** líneas. `brands.slice.ts` (`setActiveBrand`, `addBrand` de 165 líneas, `updateBrand`, `updateBrandCore`, `AddBrandInput`) y `brandStrategy.slice.ts` (personas, compromisos, métricas y las tres de recomendaciones, con `CommitmentPeriodKey`). Contrato **8/8 sin tocarlo**; 193 pruebas; `flujos-con-cuentas` en verde. Siguiente: F1-6 (posts y chat), donde entra `runAutomations`. |
