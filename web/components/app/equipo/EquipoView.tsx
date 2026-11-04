@@ -1,11 +1,11 @@
 "use client";
 
-import { useEquipoView } from "./team/useEquipoView";
-import { EquipoCabecera } from "./team/EquipoCabecera";
-import { EquipoMiembros } from "./team/EquipoMiembros";
-import { EquipoResumen } from "./team/EquipoResumen";
-import { EquipoProgreso } from "./team/EquipoProgreso";
-import { EquipoLogrosRanking } from "./team/EquipoLogrosRanking";
+import { useEquipoView } from "./useEquipoView";
+import { EquipoCabecera } from "./EquipoCabecera";
+import { EquipoMiembros } from "./EquipoMiembros";
+import { EquipoResumen } from "./EquipoResumen";
+import { EquipoProgreso } from "./EquipoProgreso";
+import { EquipoLogrosRanking } from "./EquipoLogrosRanking";
 
 export function EquipoView() {
   const view = useEquipoView();

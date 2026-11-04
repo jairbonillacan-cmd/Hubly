@@ -1,6 +1,6 @@
 "use client";
 
-import { MemberDrawer } from "@/components/app/dashboard/MemberDrawer";
+import { MemberDrawer } from "@/components/app/equipo/MemberDrawer";
 import {
   HublyPeopleIcon as Users,
 } from "@/components/app/icons/DuotoneIcons";
