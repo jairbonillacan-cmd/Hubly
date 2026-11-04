@@ -127,42 +127,25 @@ export async function saveDemoWorkspace(workspaceId: string, data: HublyWorkspac
   }
 }
 
-export async function loadLiveWorkspace(
+async function hydrateLiveTables(
   supabase: SupabaseServer,
-  user: AuthUser,
-  requestedAgency: string | null
-) {
-  const { data: memberships } = await supabase
-    .from("agency_members")
-    .select("agency_id, role, agencies(name)")
-    .eq("user_id", user.id)
-    .order("created_at");
-  const membership = memberships?.find((m) => m.agency_id === requestedAgency) ?? memberships?.[0];
-  if (!membership) return NextResponse.json({ error: "no_agency" }, { status: 404 });
-
-  const { data: row, error } = await supabase
-    .from("agency_workspaces")
-    .select("data, version")
-    .eq("agency_id", membership.agency_id)
-    .single();
-  if (error || !row) return NextResponse.json({ error: "load_failed" }, { status: 500 });
-
-  // El cliente de Supabase tipa esta relación como lista, aunque aquí devuelve una sola fila.
-  const agency = membership.agencies as unknown as { name: string } | null;
+  agencyId: string,
+  baseDoc: Partial<HublyWorkspaceData>
+): Promise<Partial<HublyWorkspaceData>> {
   // Con la tabla de marcas poblada, ella manda y aplica los permisos por marca. Sin filas, o sin
   // la migración, se sigue con el documento. Va antes de normalizar: las filas reciben lo mismo que él.
-  const doc = { ...(row.data as Partial<HublyWorkspaceData>) };
+  const doc = { ...baseDoc };
   const { data: brandRows, error: brandsError } = await supabase
     .from("brands")
     .select("id, name, slug, data")
-    .eq("agency_id", membership.agency_id)
+    .eq("agency_id", agencyId)
     .order("position");
   if (!brandsError && brandRows?.length) {
     doc.brands = (brandRows as BrandRow[]).map(brandFromRow);
     // 0014 copia posts y tareas: una lista vacía es real, y volver al documento mostraría lo que no puede ver.
     const [posts, tasks] = await Promise.all(
       ["posts", "tasks"].map((table) =>
-        supabase.from(table).select("data").eq("agency_id", membership.agency_id).order("position")
+        supabase.from(table).select("data").eq("agency_id", agencyId).order("position")
       )
     );
     if (!posts.error) doc.posts = (posts.data ?? []).map((item) => item.data);
@@ -171,29 +154,21 @@ export async function loadLiveWorkspace(
     const { data: items, error: itemsError } = await supabase
       .from("workspace_items")
       .select("collection, data")
-      .eq("agency_id", membership.agency_id)
+      .eq("agency_id", agencyId)
       .order("position");
     if (!itemsError) Object.assign(doc, groupWorkspaceItems(items as WorkspaceItemRow[]));
   }
+  return doc;
+}
 
-  const data = normalizeWorkspacePayload(doc, membership.agency_id, { live: true });
-  // El perfil es de cada persona: nunca se toma del documento compartido.
-  const name = (user.user_metadata?.name as string) || user.email || "";
-  data.agencyName = agency?.name || data.agencyName;
-  data.agency = { ...data.agency, id: membership.agency_id, name: data.agencyName };
-  data.profile = {
-    ...data.profile,
-    id: user.id,
-    email: user.email || "",
-    name,
-    avatarInitial: name.slice(0, 1).toUpperCase(),
-    avatarUrl: (user.user_metadata?.avatar_url as string) || undefined,
-    avatarSourceUrl: (user.user_metadata?.avatar_source_url as string) || undefined,
-  };
-  const { data: members } = await supabase.rpc("list_members", { target_agency: membership.agency_id });
-  data.team = ((members ?? []) as { user_id: string; role: string; email: string; name: string }[]).map((m) => {
+function mergeLiveTeam(
+  data: HublyWorkspaceData,
+  userId: string,
+  members: { user_id: string; role: string; email: string; name: string }[]
+): HublyWorkspaceData["team"] {
+  return members.map((m) => {
     const saved = data.team.find((t) => t.email === m.email);
-    const memberName = m.user_id === user.id ? data.profile.name : m.name || saved?.name || m.email;
+    const memberName = m.user_id === userId ? data.profile.name : m.name || saved?.name || m.email;
     const initials = memberName.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
     return {
       ...(saved ?? {
@@ -216,7 +191,54 @@ export async function loadLiveWorkspace(
       baseActiveMinutes: saved?.baseActiveMinutes ?? 0,
     };
   });
-  if (!(row.data as Partial<HublyWorkspaceData>)?.agency) {
+}
+
+export async function loadLiveWorkspace(
+  supabase: SupabaseServer,
+  user: AuthUser,
+  requestedAgency: string | null
+) {
+  const { data: memberships } = await supabase
+    .from("agency_members")
+    .select("agency_id, role, agencies(name)")
+    .eq("user_id", user.id)
+    .order("created_at");
+  const membership = memberships?.find((m) => m.agency_id === requestedAgency) ?? memberships?.[0];
+  if (!membership) return NextResponse.json({ error: "no_agency" }, { status: 404 });
+
+  const { data: row, error } = await supabase
+    .from("agency_workspaces")
+    .select("data, version")
+    .eq("agency_id", membership.agency_id)
+    .single();
+  if (error || !row) return NextResponse.json({ error: "load_failed" }, { status: 500 });
+
+  // El cliente de Supabase tipa esta relación como lista, aunque aquí devuelve una sola fila.
+  const agency = membership.agencies as unknown as { name: string } | null;
+  const rawDoc = (row.data as Partial<HublyWorkspaceData>) ?? {};
+  const doc = await hydrateLiveTables(supabase, membership.agency_id, rawDoc);
+  const data = normalizeWorkspacePayload(doc, membership.agency_id, { live: true });
+
+  // El perfil es de cada persona: nunca se toma del documento compartido.
+  const name = (user.user_metadata?.name as string) || user.email || "";
+  data.agencyName = agency?.name || data.agencyName;
+  data.agency = { ...data.agency, id: membership.agency_id, name: data.agencyName };
+  data.profile = {
+    ...data.profile,
+    id: user.id,
+    email: user.email || "",
+    name,
+    avatarInitial: name.slice(0, 1).toUpperCase(),
+    avatarUrl: (user.user_metadata?.avatar_url as string) || undefined,
+    avatarSourceUrl: (user.user_metadata?.avatar_source_url as string) || undefined,
+  };
+  const { data: members } = await supabase.rpc("list_members", { target_agency: membership.agency_id });
+  data.team = mergeLiveTeam(
+    data,
+    user.id,
+    (members ?? []) as { user_id: string; role: string; email: string; name: string }[]
+  );
+  if (!rawDoc.agency) {
     Object.assign(data.agency, { plan: "", activeDays: 0, activeStreak: 0, bestStreak: 0, xp: 0, level: 1 });
   }
   return NextResponse.json(
