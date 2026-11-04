@@ -463,14 +463,6 @@ export const HublyClockIcon = createDuotoneIcon("HublyClockIcon", () => (
   </>
 ));
 
-export const HublyAwardIcon = createDuotoneIcon("HublyAwardIcon", () => (
-  <>
-    <path fill={STRONG} d="m7.4 13.4-1.6 6.800c-.1.6.5 1 1 .8l5.2-2.6 5.2 2.600c.5.2 1.1-.2 1-.8l-1.6-6.800H7.400Z" />
-    <circle cx="12" cy="9.4" r="6.8" fill={SOFT} />
-    <circle cx="12" cy="9.4" r="2.8" fill={STRONG} />
-  </>
-));
-
 export const HublyHeadsetIcon = createDuotoneIcon("HublyHeadsetIcon", () => (
   <>
     <path stroke={SOFT} strokeWidth="2.4" strokeLinecap="round" d="M4.2 14v-2a7.8 7.8 0 0 1 15.6 0v2" />

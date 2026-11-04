@@ -2,13 +2,12 @@
 
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import {
-  HublyBoltIcon,
   HublyPulseIcon as TrendingUp,
 } from "@/components/app/icons/DuotoneIcons";
 import type { EquipoViewModel } from "./useEquipoView";
 
 export function EquipoProgreso({ view }: { view: EquipoViewModel }) {
-  const { activityRange, setActivityRange, greetingData, activeMemberMetrics, isPrimaryOwner, activityRows, maxActivityRowPoints } = view;
+  const { activityRange, setActivityRange, activeMemberMetrics, activityRows, maxActivityRowMinutes } = view;
 
   return (
     <>
@@ -31,128 +30,7 @@ export function EquipoProgreso({ view }: { view: EquipoViewModel }) {
       </p>
 
       {/* ====================================================================
-          6. GAMIFICATION XP, LEVEL & STREAK BANNER
-          ==================================================================== */}
-      <div
-        style={{
-          background: "var(--ui-surface)",
-          border: "1px solid var(--ui-border)",
-          borderRadius: 16,
-          padding: "18px 22px",
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 16,
-          marginBottom: 16,
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <div
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: 9999,
-              background: "var(--ui-accent-soft)",
-              color: "var(--hb-accent-text)",
-              fontSize: 16,
-              fontWeight: 700,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-            }}
-          >
-            {activeMemberMetrics.avatarInitial.slice(0, 1)}
-          </div>
-          <div>
-            <div
-              style={{
-                fontSize: 18,
-                fontWeight: 700,
-                color: "var(--ui-text)",
-                lineHeight: 1.2,
-              }}
-            >
-              {isPrimaryOwner
-                ? greetingData.greeting
-                : `Actividad de ${activeMemberMetrics.name}`}
-            </div>
-            <div
-              style={{
-                fontSize: 12.5,
-                color: "var(--ui-text-4)",
-                marginTop: 3,
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-              }}
-            >
-              <HublyBoltIcon size={15} />
-              <span>
-                {activeMemberMetrics.streakDays}{" "}
-                {activeMemberMetrics.streakDays === 1 ? "día" : "días"} racha ·
-                Mejor: {activeMemberMetrics.bestStreakDays}d
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Right: XP & Level Progress */}
-        <div style={{ textAlign: "right", minWidth: 165 }}>
-          <div
-            style={{
-              fontSize: 22,
-              fontWeight: 800,
-              color: "var(--hb-accent-text)",
-              lineHeight: 1.1,
-            }}
-          >
-            {activeMemberMetrics.xp}{" "}
-            <span style={{ fontSize: 13, fontWeight: 600 }}>XP</span>
-          </div>
-          <div
-            style={{
-              width: 150,
-              height: 6,
-              borderRadius: 9999,
-              background: "var(--ui-accent-soft)",
-              marginTop: 6,
-              marginLeft: "auto",
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                width: `${Math.max(4, activeMemberMetrics.levelProgressPercent)}%`,
-                height: "100%",
-                background: "var(--hb-accent)",
-                borderRadius: 9999,
-                transition: "width 240ms ease",
-              }}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              fontSize: 10.5,
-              color: "var(--ui-text-4)",
-              marginTop: 4,
-            }}
-          >
-            <span>Nivel {activeMemberMetrics.level}</span>
-            <span>
-              {activeMemberMetrics.xpToNextLevel} para Nv.
-              {activeMemberMetrics.level + 1}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* ====================================================================
-          7. TU ACTIVIDAD CARD (Weekly / Monthly Breakdown with Stickers)
+          6. TU ACTIVIDAD CARD (Weekly / Monthly Breakdown with Real Active Time)
           ==================================================================== */}
       <div
         style={{
@@ -182,7 +60,7 @@ export function EquipoProgreso({ view }: { view: EquipoViewModel }) {
 
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ fontSize: 12, color: "var(--ui-text-4)", fontWeight: 600 }}>
-              {activeMemberMetrics.xp} pts
+              {activeMemberMetrics.activeTimeFormatted} activo
             </span>
             <div
               style={{
@@ -226,7 +104,7 @@ export function EquipoProgreso({ view }: { view: EquipoViewModel }) {
             const isToday = row.label === "Hoy" || row.label === "Semana actual";
             const pct = Math.min(
               100,
-              Math.round((row.points / maxActivityRowPoints) * 100)
+              Math.round((row.minutes / maxActivityRowMinutes) * 100)
             );
             return (
               <div
@@ -259,7 +137,7 @@ export function EquipoProgreso({ view }: { view: EquipoViewModel }) {
                     position: "relative",
                   }}
                 >
-                  {row.points > 0 && (
+                  {row.minutes > 0 && (
                     <div
                       style={{
                         width: `${Math.max(8, pct)}%`,
@@ -277,8 +155,8 @@ export function EquipoProgreso({ view }: { view: EquipoViewModel }) {
                 <span
                   style={{
                     fontSize: 11.5,
-                    color: row.points > 0 ? "var(--ui-text-3)" : "var(--ui-text-4)",
-                    fontWeight: row.points > 0 ? 600 : 400,
+                    color: row.minutes > 0 ? "var(--ui-text-3)" : "var(--ui-text-4)",
+                    fontWeight: row.minutes > 0 ? 600 : 400,
                     textAlign: "right",
                   }}
                 >
@@ -289,10 +167,6 @@ export function EquipoProgreso({ view }: { view: EquipoViewModel }) {
           })}
         </div>
       </div>
-
-      {/* ====================================================================
-          8. TWO-COLUMN BOTTOM GRID: Logros (Left) + Ranking del Equipo (Right)
-          ==================================================================== */}
     </>
   );
 }

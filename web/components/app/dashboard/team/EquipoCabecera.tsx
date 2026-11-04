@@ -409,7 +409,6 @@ export function EquipoCabecera({ view }: { view: EquipoViewModel }) {
                   }}
                 >
                   <span>Completar tarea en curso</span>
-                  <span style={{ color: "#10B981", fontWeight: 700 }}>+25 XP</span>
                 </button>
                 <button
                   type="button"
@@ -433,7 +432,6 @@ export function EquipoCabecera({ view }: { view: EquipoViewModel }) {
                   }}
                 >
                   <span>Registrar entrega activa</span>
-                  <span style={{ color: "var(--hb-accent-text)", fontWeight: 700 }}>+30 XP</span>
                 </button>
               </div>
             </div>
