@@ -103,12 +103,8 @@
     "view-prop": 1
   },
   "app/(app)/parrillas/_vista/ParrillasIdeas.tsx": {
-    "color-fijo": 1,
-    "rgb-fijo": 2,
-    "style-inline": 10,
-    "tamano-fuente": 1,
-    "view-prop": 1,
-    "z-index-fijo": 1
+    "style-inline": 4,
+    "view-prop": 1
   },
   "app/(app)/parrillas/_vista/ParrillasLinks.tsx": {
     "color-fijo": 5,
@@ -270,11 +266,7 @@
     "style-inline": 3
   },
   "components/app/dashboard/inicio/InicioContenido.tsx": {
-    "color-fijo": 18,
     "exclamacion": 1,
-    "radio": 1,
-    "rgb-fijo": 1,
-    "style-inline": 16,
     "view-prop": 1
   },
   "components/app/dashboard/inicio/InicioWidget.tsx": {
@@ -318,7 +310,6 @@
     "view-prop": 1
   },
   "components/app/dashboard/inicio/useInicioView.tsx": {
-    "color-fijo": 1,
     "use-store-sin-selector": 1
   },
   "components/app/dashboard/team/EquipoCabecera.tsx": {

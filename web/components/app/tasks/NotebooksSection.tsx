@@ -2,25 +2,11 @@
 
 import { useHublyStore } from "@/lib/store";
 import { openNotebookModal } from "@/components/app/NotebookReaderModal";
+import { useCreateNotebook } from "@/components/app/use-create-notebook";
 import { notebookPlainText } from "@/lib/notebook-content";
 import {
   HublyPlusIcon as Plus,
 } from "@/components/app/icons/DuotoneIcons";
-
-export function useCreateNotebook() {
-  const addNotebook = useHublyStore((s) => s.addNotebook);
-  const activeBrandId = useHublyStore((s) => s.activeBrandId);
-  return () => {
-    const created = addNotebook({
-      title: "Nueva libreta",
-      subtitle: "Notas de la marca",
-      category: "Libreta",
-      brandId: activeBrandId,
-      content: "",
-    });
-    openNotebookModal(created.id);
-  };
-}
 
 export function NotebooksSection() {
   const notebooks = useHublyStore((s) => s.notebooks);

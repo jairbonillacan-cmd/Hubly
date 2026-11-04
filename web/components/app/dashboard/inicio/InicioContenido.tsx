@@ -2,12 +2,10 @@
 
 import { InicioWidget } from "./InicioWidget";
 import { Button } from "@/components/app/ui/Button";
-import { Modal } from "@/components/app/ui/Modal";
 import React from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { NotebookEditor } from "@/components/app/NotebookEditor";
 import { PendientesModal } from "@/components/app/dashboard/PendientesModal";
-import { HublyCatAvatar, HublySunWeatherIcon, } from "@/components/app/icons/HublyIcons";
+import { HublySunWeatherIcon, } from "@/components/app/icons/HublyIcons";
 import {
   HublyArrowLeftIcon as ArrowLeft,
   HublyArrowRightIcon as ArrowRight,
@@ -22,7 +20,7 @@ import {
 import type { InicioViewModel } from "./useInicioView";
 
 export function InicioContenido({ view }: { view: InicioViewModel }) {
-  const { agency, agencyName, editWidgetsMode, setWidgetConfigModalOpen, setEditWidgetsMode, toggleTaskStatus, toggleWidgetVisibility, moveWidget, isCreatingNotebook, setIsCreatingNotebook, nbTitle, setNbTitle, nbCategory, setNbCategory, setNbContent, pendientesOpen, setPendientesOpen, dragId, setDragId, setDragOrder, resizing, hiddenWidget, setHiddenWidget, layoutCopied, gridRef, greetingInfo, tasksBreakdown, activeNotebook, sortedWidgets, orderedVisibleWidgets, handleDragEnterWidget, handleDragEndWidget, handleHideWidget, handleResetLayout, handleCopyLayout, handleCycleSpan, handleResizeStart, handleOpenNewPost, handleOpenNewBrand, handleOpenInviteTeam, handleOpenSearch, handleSaveNotebook } = view;
+  const { agency, agencyName, editWidgetsMode, setWidgetConfigModalOpen, setEditWidgetsMode, toggleTaskStatus, toggleWidgetVisibility, moveWidget, pendientesOpen, setPendientesOpen, dragId, setDragId, setDragOrder, resizing, hiddenWidget, setHiddenWidget, layoutCopied, gridRef, greetingInfo, tasksBreakdown, sortedWidgets, orderedVisibleWidgets, handleDragEnterWidget, handleDragEndWidget, handleHideWidget, handleResetLayout, handleCopyLayout, handleCycleSpan, handleResizeStart, handleOpenNewPost, handleOpenNewBrand, handleOpenInviteTeam, handleOpenSearch } = view;
 
   return (
     <>
@@ -181,217 +179,6 @@ export function InicioContenido({ view }: { view: InicioViewModel }) {
         onToggle={toggleTaskStatus}
       />
 
-      {/* ====================================================================
-          MODAL LOCAL: CREAR NUEVA LIBRETA KRAFT (con gato de Hubly)
-          (Los modales de Invitar equipo, Configurar widgets y Lector de libreta
-          están montados globalmente en app/(app)/layout.tsx)
-          ==================================================================== */}
-      <Modal
-        open={isCreatingNotebook}
-        onClose={() => setIsCreatingNotebook(false)}
-        label="Nueva libreta Kraft"
-        className="hubly-sheet"
-        style={{
-          width: "100%",
-          maxWidth: 540,
-          borderRadius: 22,
-          background: "#FDF8EE",
-          border: "2px solid #8B572A",
-          boxShadow: "0 24px 48px rgba(44, 26, 11, 0.28)",
-          padding: "22px 24px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 12,
-            paddingBottom: 14,
-            borderBottom: "1px dashed #D6BC94",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <HublyCatAvatar size={42} />
-            <div>
-              <span
-                style={{
-                  fontSize: 10.5,
-                  fontWeight: 800,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "#8B572A",
-                }}
-              >
-                NUEVA LIBRETA KRAFT
-              </span>
-              <h3 style={{ fontSize: 16, fontWeight: 800, color: "#2C1A0B", margin: 0 }}>
-                Crear nota en Mi espacio
-              </h3>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              setIsCreatingNotebook(false);
-            }}
-            aria-label="Cerrar libreta"
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: 8,
-              border: "1px solid #D6BC94",
-              background: "var(--ui-surface)",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              color: "#5C3A1B",
-            }}
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        <form
-          onSubmit={handleSaveNotebook}
-          style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 12 }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 140px",
-              gap: 10,
-            }}
-          >
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: 11.5,
-                  fontWeight: 700,
-                  color: "#5C3A1B",
-                  marginBottom: 4,
-                }}
-              >
-                Título de la libreta
-              </label>
-              <input
-                type="text"
-                required
-                value={nbTitle}
-                onChange={(e) => setNbTitle(e.target.value)}
-                placeholder="Ej. IDEAS DE CONTENIDO Q4"
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  borderRadius: 10,
-                  border: "1px solid #C8A97E",
-                  background: "var(--ui-surface)",
-                  color: "#2C1A0B",
-                }}
-              />
-            </div>
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: 11.5,
-                  fontWeight: 700,
-                  color: "#5C3A1B",
-                  marginBottom: 4,
-                }}
-              >
-                Categoría
-              </label>
-              <select
-                value={nbCategory}
-                onChange={(e) => setNbCategory(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "8px 10px",
-                  fontSize: 13,
-                  borderRadius: 10,
-                  border: "1px solid #C8A97E",
-                  background: "var(--ui-surface)",
-                  color: "#2C1A0B",
-                }}
-              >
-                <option value="Guía">Guía</option>
-                <option value="Idea">Idea</option>
-                <option value="Brief">Brief</option>
-                <option value="Minuta">Minuta</option>
-                <option value="Checklist">Checklist</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label
-              style={{
-                display: "block",
-                fontSize: 11.5,
-                fontWeight: 700,
-                color: "#5C3A1B",
-                marginBottom: 4,
-              }}
-            >
-              Contenido y notas
-            </label>
-            <NotebookEditor
-              key={activeNotebook?.id || "nueva"}
-              initialContent={activeNotebook?.content || ""}
-              onChange={setNbContent}
-            />
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              gap: 8,
-              marginTop: 4,
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => {
-                setIsCreatingNotebook(false);
-              }}
-              style={{
-                padding: "8px 14px",
-                fontSize: 12.5,
-                fontWeight: 600,
-                borderRadius: 10,
-                border: "1px solid #C8A97E",
-                background: "var(--ui-surface)",
-                color: "#5C3A1B",
-                cursor: "pointer",
-              }}
-            >
-              Cerrar
-            </button>
-            <button
-              type="submit"
-              style={{
-                padding: "8px 16px",
-                fontSize: 12.5,
-                fontWeight: 700,
-                borderRadius: 10,
-                border: "none",
-                background: "#8B572A",
-                color: "#FFFFFF",
-                cursor: "pointer",
-              }}
-            >
-              Crear libreta
-            </button>
-          </div>
-        </form>
-      </Modal>
     </>
   );
 }

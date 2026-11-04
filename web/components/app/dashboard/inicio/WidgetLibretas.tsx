@@ -6,11 +6,13 @@ import { HublyNotebookIcon, } from "@/components/app/icons/HublyIcons";
 import {
   HublyPlusIcon as Plus,
 } from "@/components/app/icons/DuotoneIcons";
+import { useCreateNotebook } from "@/components/app/use-create-notebook";
 import { notebookStamp } from "./inicioView-shared";
 import type { InicioViewModel } from "./useInicioView";
 
 export function WidgetLibretas({ view }: { view: InicioViewModel }) {
-  const { notebooks, setActiveNotebookId, setIsCreatingNotebook, setNbTitle, setNbSubtitle, setNbCategory, setNbContent } = view;
+  const { notebooks, setActiveNotebookId } = view;
+  const createNotebook = useCreateNotebook();
   return (
     <section
       key="libretas"
@@ -28,14 +30,7 @@ export function WidgetLibretas({ view }: { view: InicioViewModel }) {
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <button
             type="button"
-            onClick={() => {
-              setActiveNotebookId(null);
-              setIsCreatingNotebook(true);
-              setNbTitle("");
-              setNbSubtitle("");
-              setNbCategory("Idea");
-              setNbContent("");
-            }}
+            onClick={createNotebook}
             style={{
               fontSize: 11.5,
               fontWeight: 600,
@@ -68,10 +63,7 @@ export function WidgetLibretas({ view }: { view: InicioViewModel }) {
               category={nb.category}
               isPinned={nb.isPinned}
               accentColor={nb.accentColor}
-              onClick={() => {
-                setIsCreatingNotebook(false);
-                setActiveNotebookId(nb.id);
-              }}
+              onClick={() => setActiveNotebookId(nb.id)}
             />
           ))}
         </div>

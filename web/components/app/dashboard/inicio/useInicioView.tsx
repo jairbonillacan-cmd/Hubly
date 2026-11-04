@@ -60,7 +60,8 @@ export function useInicioView() {
     markAllNotificationsRead,
     updatePostStatus,
     updateNotebook,
-    addNotebook,  } = store;
+    addNotebook,
+  } = store;
   // Filtro de tareas: por defecto true (marca activa = "Mi marca" -> 2 pendientes en seed)
   const [filterByBrand, setFilterByBrand] = useState<boolean>(true);
   const [showCompletedTasks, setShowCompletedTasks] = useState<boolean>(false);
@@ -70,12 +71,6 @@ export function useInicioView() {
   const [newTaskPriority, setNewTaskPriority] = useState<TaskPriority>("Media");
   // Estado local del modal Invitar equipo
 
-  // Estado local del modal Lector/Editor de Libretas Kraft
-  const [isCreatingNotebook, setIsCreatingNotebook] = useState<boolean>(false);
-  const [nbTitle, setNbTitle] = useState<string>("");
-  const [nbSubtitle, setNbSubtitle] = useState<string>("");
-  const [nbCategory, setNbCategory] = useState<string>("Guía");
-  const [nbContent, setNbContent] = useState<string>("");
   const [pendientesOpen, setPendientesOpen] = useState<boolean>(false);
   const [dragId, setDragId] = useState<DashboardWidgetId | null>(null);
   const [dragOrder, setDragOrder] = useState<DashboardWidgetId[] | null>(null);
@@ -126,49 +121,6 @@ export function useInicioView() {
     () => notifications.filter((n) => !n.read),
     [notifications]
   );
-  const activeNotebook = useMemo(
-    () => notebooks.find((nb) => nb.id === activeNotebookId) || null,
-    [notebooks, activeNotebookId]
-  );
-  useEffect(() => {
-    if (activeNotebook) {
-      setIsCreatingNotebook(false); // eslint-disable-line react-hooks/set-state-in-effect -- reinicia el formulario al cambiar de libreta
-      setNbTitle(activeNotebook.title);
-      setNbSubtitle(activeNotebook.subtitle || "");
-      setNbCategory(activeNotebook.category || "Guía");
-      setNbContent(activeNotebook.content);
-    }
-  }, [activeNotebook]);
-  // Listener global de Escape para cerrar cualquier modal abierto
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        if (composerOpen) closeComposer();
-        if (newBrandModalOpen) setNewBrandModalOpen(false);
-        if (inviteModalOpen) setInviteModalOpen(false);
-        if (cmdkOpen) setCmdkOpen(false);
-        if (widgetConfigModalOpen) setWidgetConfigModalOpen(false);
-        if (activeNotebookId) setActiveNotebookId(null);
-        if (isCreatingNotebook) setIsCreatingNotebook(false);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [
-    composerOpen,
-    newBrandModalOpen,
-    inviteModalOpen,
-    cmdkOpen,
-    widgetConfigModalOpen,
-    activeNotebookId,
-    isCreatingNotebook,
-    closeComposer,
-    setNewBrandModalOpen,
-    setInviteModalOpen,
-    setCmdkOpen,
-    setWidgetConfigModalOpen,
-    setActiveNotebookId,
-  ]);
   // Orden y columnas de widgets persistidos en store
   const sortedWidgets = useMemo(
     () => [...widgets].sort((a, b) => a.order - b.order),
@@ -308,36 +260,12 @@ export function useInicioView() {
     setNewTaskTitle("");
     setShowQuickTaskForm(false);
   };
-  const handleSaveNotebook = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isCreatingNotebook) {
-      if (!nbTitle.trim()) return;
-      addNotebook({
-        brandId: activeBrandId,
-        title: nbTitle.trim().toUpperCase(),
-        subtitle: nbSubtitle.trim() || "Nota operativa del equipo",
-        category: nbCategory,
-        content: nbContent.trim() || "Escribe aquí los acuerdos y aprendizajes de la cuenta.",
-        accentColor: "#0A7A55",
-        isPinned: false,
-      });
-      setIsCreatingNotebook(false);
-      return;
-    }
-    if (!activeNotebook) return;
-    updateNotebook(activeNotebook.id, {
-      title: nbTitle.trim() || activeNotebook.title,
-      subtitle: nbSubtitle.trim(),
-      category: nbCategory,
-      content: nbContent,
-    });
-  };
   /* ========================================================================
      RENDERIZADOR DE CADA WIDGET DEL BENTO GRID
      ======================================================================== */
 
 
-  return { store, profile, agency, agencyName, testClock, activeBrandId, brands, tasks, posts, notebooks, notifications, ads, widgets, editWidgetsMode, composerOpen, newBrandModalOpen, inviteModalOpen, cmdkOpen, widgetConfigModalOpen, activeNotebookId, openComposer, closeComposer, setNewBrandModalOpen, setInviteModalOpen, setCmdkOpen, setWidgetConfigModalOpen, setEditWidgetsMode, setActiveNotebookId, toggleTaskStatus, addTask, deleteTask, toggleWidgetVisibility, moveWidget, resetWidgetsLayout, reorderWidgets, setWidgetSpan, projects, markNotificationRead, markAllNotificationsRead, updatePostStatus, updateNotebook, addNotebook, filterByBrand, setFilterByBrand, showCompletedTasks, setShowCompletedTasks, showQuickTaskForm, setShowQuickTaskForm, newTaskTitle, setNewTaskTitle, newTaskBucket, setNewTaskBucket, newTaskPriority, setNewTaskPriority, isCreatingNotebook, setIsCreatingNotebook, nbTitle, setNbTitle, nbSubtitle, setNbSubtitle, nbCategory, setNbCategory, nbContent, setNbContent, pendientesOpen, setPendientesOpen, dragId, setDragId, dragOrder, setDragOrder, resizing, setResizing, hiddenWidget, setHiddenWidget, layoutCopied, setLayoutCopied, gridRef, activeBrand, greetingInfo, tasksBreakdown, allBrandsTasksBreakdown, todayAndApprovals, unreadNotifications, activeNotebook, sortedWidgets, orderedVisibleWidgets, criticalProjects, handleDragEnterWidget, handleDragEndWidget, handleHideWidget, handleResetLayout, handleCopyLayout, handleCycleSpan, handleResizeStart, handleOpenNewPost, handleOpenNewBrand, handleOpenInviteTeam, handleOpenSearch, handleCreateQuickTask, handleSaveNotebook };
+  return { store, profile, agency, agencyName, testClock, activeBrandId, brands, tasks, posts, notebooks, notifications, ads, widgets, editWidgetsMode, composerOpen, newBrandModalOpen, inviteModalOpen, cmdkOpen, widgetConfigModalOpen, activeNotebookId, openComposer, closeComposer, setNewBrandModalOpen, setInviteModalOpen, setCmdkOpen, setWidgetConfigModalOpen, setEditWidgetsMode, setActiveNotebookId, toggleTaskStatus, addTask, deleteTask, toggleWidgetVisibility, moveWidget, resetWidgetsLayout, reorderWidgets, setWidgetSpan, projects, markNotificationRead, markAllNotificationsRead, updatePostStatus, updateNotebook, addNotebook, filterByBrand, setFilterByBrand, showCompletedTasks, setShowCompletedTasks, showQuickTaskForm, setShowQuickTaskForm, newTaskTitle, setNewTaskTitle, newTaskBucket, setNewTaskBucket, newTaskPriority, setNewTaskPriority, pendientesOpen, setPendientesOpen, dragId, setDragId, dragOrder, setDragOrder, resizing, setResizing, hiddenWidget, setHiddenWidget, layoutCopied, setLayoutCopied, gridRef, activeBrand, greetingInfo, tasksBreakdown, allBrandsTasksBreakdown, todayAndApprovals, unreadNotifications, sortedWidgets, orderedVisibleWidgets, criticalProjects, handleDragEnterWidget, handleDragEndWidget, handleHideWidget, handleResetLayout, handleCopyLayout, handleCycleSpan, handleResizeStart, handleOpenNewPost, handleOpenNewBrand, handleOpenInviteTeam, handleOpenSearch, handleCreateQuickTask };
 }
 
 export type InicioViewModel = ReturnType<typeof useInicioView>;

@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useHublyStore } from "@/lib/store";
 import { MEDIA_KIND_LABEL } from "@/lib/labels";
 import { TaskBoard } from "@/components/app/tasks/TaskBoard";
-import { NotebooksSection, useCreateNotebook } from "@/components/app/tasks/NotebooksSection";
+import { NotebooksSection } from "@/components/app/tasks/NotebooksSection";
+import { useCreateNotebook } from "@/components/app/use-create-notebook";
 import {
   HublyFolderIcon,
   HublyNotebookIcon,
