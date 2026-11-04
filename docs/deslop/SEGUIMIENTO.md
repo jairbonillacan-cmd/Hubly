@@ -11,7 +11,7 @@ Se obtienen con `node scripts/medir-deslop.mjs`, desde `web/`.
 | Medida | Partida (`aa4a1d3`) | Actual | Meta |
 |---|---:|---:|---:|
 | Líneas de `lib/store.ts` | 2,304 | 101 | < 150 |
-| Archivos sobre 400 líneas, sin simuladores ni iconos | 35 | 26 | 0 |
+| Archivos sobre 400 líneas, sin simuladores ni iconos | 35 | 25 | 0 |
 | `page.tsx` sobre 80 líneas | 17 | 17 | 0 |
 | Archivos con prop `view` | 33 | 33 | 0 |
 | `style={{` sin simuladores | 1,475 | 1,453 | < 150 |

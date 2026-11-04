@@ -1,0 +1,29 @@
+/* Estilos del calendario del dominio social (.hubly-social-cal-*) */
+
+.hubly-social-cal-nav-group { display: flex; align-items: center; gap: 2px; }
+.hubly-social-cal-spacer { flex: 1; }
+.hubly-social-cal-filters-wrap { position: relative; }
+.hubly-social-cal-flex-main { flex: 1; min-width: 0; }
+
+.hubly-cal-row-icon[data-kind="post"],
+.hubly-cal-chip[data-kind="post"] {
+  background: rgb(var(--hb-accent-rgb) / 0.11);
+  color: var(--hb-accent-text);
+}
+
+.hubly-cal-row-icon[data-kind="tarea"],
+.hubly-cal-row-icon[data-kind="actividad"],
+.hubly-cal-chip[data-kind="tarea"],
+.hubly-cal-chip[data-kind="actividad"] {
+  background: var(--ui-muted);
+  color: var(--ui-text-3);
+}
+
+.hubly-social-cal-kind-label {
+  color: var(--ui-text-3);
+  font-weight: 500;
+}
+
+.hubly-social-cal-kind-label[data-kind="post"] {
+  color: var(--hb-accent-text);
+}
