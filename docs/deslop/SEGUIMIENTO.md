@@ -53,7 +53,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F1-6 Posts y chat | F1-5 | `lib/store*`, `useInicioView` | Hecha | `impl-f1-6` | #54 |
 | F1-7 Reglas fuera del store | F1-6 | `lib/store/`, `lib/domain/` | Hecha | `impl-f1-7` | #55 |
 | F2-1 Selectores | F1 | `lib/domain*` | Hecha | `impl-f2-1` | #56, #57 |
-| F2-2 Tipos | F1 | `lib/types*` | Pendiente | | |
+| F2-2 Tipos | F1 | `lib/types*` | Hecha | `impl-f2-2` | #58 |
 | F2-3 Datos de ejemplo | F1 | `lib/seed*` | Pendiente | | |
 | F2-4 Servidor | F1 | `app/api/`, `lib/server/` | Pendiente | | |
 | F3-1 Equipo | F1, F2-2 | `dashboard/team/` | Pendiente | | |
@@ -118,3 +118,4 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 | 2026-11-03 | F1-7 (#55) | **F1 cerrada.** `lib/domain/tasks.ts` (`buildTask`, `mergeTaskPatch`, `toggleTaskState`), `lib/domain/posts.ts` (`duplicatePostAsDraft`) y `lib/domain/brands.ts` (`applyCommitmentPatch`, `applyRecommendationToBrand`). Los slices quedan como cableado y `lib/domain/` sigue puro. **12 pruebas nuevas** (205 en total). Contrato **8/8 sin tocarlo**. Quedan en los slices solo mutaciones sin decisión (actualizar un miembro, crear un aviso). |
 | 2026-11-04 | F2-1 (1/2) (#56) | Fusión: `domain-selectors.ts` de **1.596 a 1.039** líneas. `lib/domain/time.ts` (zona horaria y fechas), `greeting.ts`, `tasks.ts` (+`selectTasksBreakdown`), `posts.ts` (+`selectTodayPostsAndApprovals`) y `onboarding.ts`; el archivo sigue reexportando, así que no cambia ningún import. `isTaskCompleted`, `computeTaskDueBucket` e `isPostInApproval` se exportan para salud y equipo. **Falta (2/2):** `account-health`, `recommendations` y `team`, dividiendo `selectAccountsHealth` y `selectTeamProductivity`, que superan 80 líneas; y mover las pruebas por módulo. |
 | 2026-11-04 | F2-1 (2/2) (#57) | Fusión: `domain-selectors.ts` queda en **30 líneas** (solo reexporta). `account-health.ts` + `account-health-evaluate.ts` (con `evaluateBrandAccount`), `recommendations.ts` y `team.ts` (con `evaluateTeamMember`, que recibe `hasBackend` para no importar el store desde domain). Pruebas repartidas por módulo con `test-fixtures.ts`; se borra `domain-selectors.test.ts`. Archivos sobre 400: 34 → 33. |
+| 2026-11-04 | F2-2 (#58) | Fusión: `lib/types.ts` (768 líneas) pasa a `lib/types/` con un archivo por dominio y `index.ts`; `@/lib/types` sigue igual. `CoverKind` se muda a `lib/types/cover.ts` (con reexport en `components/Cover`), lo que cierra la última violación `lib-importa-arriba`: capas de 9 a 8 y base actualizada. Se elimina el alias `TaskItem` en todo el código (9 archivos) y se queda `AgencyTask`; el `TaskItem` de Tiptap no se toca. |
