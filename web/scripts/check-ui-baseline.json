@@ -231,9 +231,6 @@
     "hbtn-directo": 1,
     "style-inline": 13
   },
-  "components/app/dashboard/SaludCuentasView.tsx": {
-    "style-inline": 3
-  },
   "components/app/dashboard/team/EquipoCabecera.tsx": {
     "color-fijo": 3,
     "rgb-fijo": 3,
@@ -285,6 +282,9 @@
     "radio": 1,
     "style-inline": 27,
     "tamano-fuente": 1
+  },
+  "components/app/salud/SaludCuentasView.tsx": {
+    "style-inline": 3
   },
   "components/app/shell/BrandSwitcher.tsx": {
     "color-fijo": 2,
