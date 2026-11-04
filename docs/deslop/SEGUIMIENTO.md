@@ -11,18 +11,18 @@ Se obtienen con `node scripts/medir-deslop.mjs`, desde `web/`.
 | Medida | Partida (`aa4a1d3`) | Actual | Meta |
 |---|---:|---:|---:|
 | Líneas de `lib/store.ts` | 2,304 | 101 | < 150 |
-| Archivos sobre 400 líneas, sin simuladores ni iconos | 35 | 33 | 0 |
+| Archivos sobre 400 líneas, sin simuladores ni iconos | 35 | 32 | 0 |
 | `page.tsx` sobre 80 líneas | 17 | 17 | 0 |
 | Archivos con prop `view` | 33 | 33 | 0 |
-| `style={{` sin simuladores | 1,475 | 1,475 | < 150 |
+| `style={{` sin simuladores | 1,475 | 1,453 | < 150 |
 | Deuda de `check:ui`: reglas de siempre | 864 | 836 | < 100 |
 | Deuda de `check:ui`: reglas nuevas | 1,628 | 1,646 | 0 |
 | Deuda de `check:ui`: total | 2,492 | 2,482 | < 100 |
 | `!important` en CSS | 157 | 157 | < 10 |
 | Líneas con `eslint-disable` | 79 | 78 | < 25 |
 | Exenciones `ui-ok:` | 21 | 21 | No sube |
-| `as unknown as` | 7 | 7 | ≤ 2 |
-| Archivos que leen `backendEnabled` | 39 | 39 | ≤ 3, tras D3 |
+| `as unknown as` | 7 | 9 | ≤ 2 |
+| Archivos que leen `backendEnabled` | 39 | 42 | ≤ 3, tras D3 |
 
 Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 
@@ -54,8 +54,8 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F1-7 Reglas fuera del store | F1-6 | `lib/store/`, `lib/domain/` | Hecha | `impl-f1-7` | #55 |
 | F2-1 Selectores | F1 | `lib/domain*` | Hecha | `impl-f2-1` | #56, #57 |
 | F2-2 Tipos | F1 | `lib/types*` | Hecha | `impl-f2-2` | #58 |
-| F2-3 Datos de ejemplo | F1 | `lib/seed*` | Pendiente | | |
-| F2-4 Servidor | F1 | `app/api/`, `lib/server/` | Pendiente | | |
+| F2-3 Datos de ejemplo | F1 | `lib/seed*` | En curso | `impl-f2-3` | |
+| F2-4 Servidor | F1 | `app/api/`, `lib/server/` | En curso | `impl-f2-4` | |
 | F3-1 Equipo | F1, F2-2 | `dashboard/team/` | Pendiente | | |
 | F3-2 Inicio | F1, F2-2 | `dashboard/inicio/` | Pendiente | | |
 | F3-3 Parrillas | F1, F2-2 | `parrillas/_vista/` | Pendiente | | |
@@ -71,7 +71,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F3-13 Rutas restantes | F1, F2-2 | `ia`, `automatizaciones`, `notificaciones`, `onboarding`, `register`, `cotizacion`, `invitacion` | Pendiente | | |
 | F3-14 Vistas públicas | F1, F2-2 | `share`, `reporte` | Pendiente | | |
 | F3-15 Landing y chat en vivo | F1, F2-2 | `app/page`, `lib/chat-live` | Pendiente | | |
-| F4-1 Tokens | F0 | CSS | Pendiente | | |
+| F4-1 Tokens | F0 | CSS | En curso | `impl-f4-1` | |
 | F4-2 Tokens de estado | F4-1 | CSS, guía | Pendiente | | |
 | F4-3 `dashboard-polish.css` | F4-1 | CSS, `(app)/layout` | Pendiente | | |
 | F4-4 `hubly-saas.css` | F4-3 | CSS | Pendiente | | |
@@ -120,3 +120,5 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 | 2026-11-04 | F2-1 (2/2) (#57) | Fusión: `domain-selectors.ts` queda en **30 líneas** (solo reexporta). `account-health.ts` + `account-health-evaluate.ts` (con `evaluateBrandAccount`), `recommendations.ts` y `team.ts` (con `evaluateTeamMember`, que recibe `hasBackend` para no importar el store desde domain). Pruebas repartidas por módulo con `test-fixtures.ts`; se borra `domain-selectors.test.ts`. Archivos sobre 400: 34 → 33. |
 | 2026-11-04 | F0-6 y D1–D3 | **Decisiones tomadas** por encargo del dueño, con su motivo en el [ADR 0006](../adr/0006-demo-anuncios-y-logros.md). `flujos-con-cuentas` pasa a ser obligatorio en `main`: corre en todo PR, sin filtro de rutas, con la misma app que `web` y `secretos`. Quedan sin bloqueo F3-4, F4-7 y F5-1 a F5-3. **Orden:** F5-2 antes de F4-7 (borra la mayoría de sus emojis) y F5-3 antes de F5-1 (las cifras de ejemplo salen del repositorio de la demo). F5-3 sigue esperando a F2-3 y F2-4. |
 | 2026-11-04 | F2-2 (#58) | Fusión: `lib/types.ts` (768 líneas) pasa a `lib/types/` con un archivo por dominio y `index.ts`; `@/lib/types` sigue igual. `CoverKind` se muda a `lib/types/cover.ts` (con reexport en `components/Cover`), lo que cierra la última violación `lib-importa-arriba`: capas de 9 a 8 y base actualizada. Se elimina el alias `TaskItem` en todo el código (9 archivos) y se queda `AgencyTask`; el `TaskItem` de Tiptap no se toca. |
+| 2026-11-04 | Punto de control F1 | El dueño probó la app en `localhost:3000` con dos cuentas el 4 de noviembre sin hallar regresiones. Compuerta de F1 superada. |
+| 2026-11-04 | Ola 1 (F2-3, F2-4, F4-1) | En curso en worktrees `Hubly-wt/f2-3`, `Hubly-wt/f2-4` y `Hubly-wt/f4-1`, ramas `deslop/f2-3`, `deslop/f2-4` y `deslop/f4-1`, desde `20184ca`. Archivos disjuntos: `lib/seed*`, `app/api/` + `lib/server/` y CSS globales (`tokens.css`, `globals.css`, `hubly-saas.css`, `app-base.css`, `dashboard-polish.css`). Medidas sincronizadas con `medir-deslop` tras #58 (archivos sobre 400: 33 → 32). |
