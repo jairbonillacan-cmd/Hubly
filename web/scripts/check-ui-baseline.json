@@ -283,7 +283,7 @@
     "style-inline": 27,
     "tamano-fuente": 1
   },
-  "components/app/salud/SaludCuentasView.tsx": {
+  "components/app/salud/SaludTarjetaMarca.tsx": {
     "style-inline": 3
   },
   "components/app/shell/BrandSwitcher.tsx": {
