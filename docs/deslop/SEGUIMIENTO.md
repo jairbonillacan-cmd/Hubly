@@ -16,8 +16,8 @@ Se obtienen con `node scripts/medir-deslop.mjs`, desde `web/`.
 | Archivos con prop `view` | 33 | 33 | 0 |
 | `style={{` sin simuladores | 1,475 | 1,475 | < 150 |
 | Deuda de `check:ui`: reglas de siempre | 864 | 864 | < 100 |
-| Deuda de `check:ui`: reglas nuevas | 1,628 | 1,628 | 0 |
-| Deuda de `check:ui`: total | 2,492 | 2,492 | < 100 |
+| Deuda de `check:ui`: reglas nuevas | 1,628 | 1,669 | 0 |
+| Deuda de `check:ui`: total | 2,492 | 2,533 | < 100 |
 | `!important` en CSS | 157 | 157 | < 10 |
 | Líneas con `eslint-disable` | 79 | 79 | < 25 |
 | Exenciones `ui-ok:` | 21 | 21 | No sube |
@@ -33,7 +33,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | D1 | Cifras de ejemplo de `/anuncios` | Pendiente |
 | D2 | Logros y XP | Pendiente |
 | D3 | Modo demo público | Pendiente |
-| D4 | Hacer obligatorio `flujos-con-cuentas` en `main` | **Sí.** Lo activa el dueño cuando `critico-live.spec.ts` corra en `main`. Ningún agente cambia ajustes de GitHub. |
+| D4 | Hacer obligatorio `flujos-con-cuentas` en `main` | **Sí.** Ya corre y pasa en `main` (run `41666261834`); solo falta marcarlo obligatorio. Lo activa el dueño: ningún agente cambia ajustes de GitHub. |
 
 ## Tareas
 
@@ -44,7 +44,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F0-3 Reglas `check:ui` | — | `scripts/`, docs | Hecha | `impl-f0-3` | #41 |
 | F0-4 Flujos críticos | — | `e2e/`, CI | Hecha | `impl-f0-4` | #38 |
 | F0-5 Contrato del store | — | `lib/store.contract.test.ts` | Hecha | `impl-f0-5` | #37 |
-| F0-6 Compuerta de F1 | F0-4, D4 | Ajuste en GitHub | Bloqueada | | |
+| F0-6 Compuerta de F1 | F0-4, D4 | Ajuste en GitHub | Bloqueada: solo falta marcar `flujos-con-cuentas` | | |
 | F1-1 Armazón, sesión y ventanas | F0 | `lib/store*`, `lib/domain/` | Pendiente | | |
 | F1-2 Dominios simples | F1-1 | `lib/store*` | Pendiente | | |
 | F1-3 Tareas | F1-2 | `lib/store*` | Pendiente | | |
@@ -103,3 +103,6 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 | 2026-11-03 | Plan (#39) | Revisión independiente (`d1af02a`) y fusión (`516ab92`): documentadas en `01-ESTADO-ACTUAL.md` y `04-TAREAS.md` las 148/158 claves del store, la distinción entre el único slice que declara cada clave inicial y los escritores en tiempo de ejecución (`set(...)`), y las líneas exactas de `store.ts`. |
 | 2026-11-03 | F0-3 (#41) | Revisión independiente (`25f5bde` / `2153cfc`) y fusión (`919b7bd`): añadidas `style-inline`, `important`, `view-prop` y `use-store-sin-selector` a `check:ui`; creada `check-ui-rutas-baseline.json` para las 10 rutas fuera de `(app)`; corregido `--root` en `check-deuda.mjs`, vigilancia de exenciones (`ui-ok:` 21, `eslint-disable` 79) y vigilancia de reglas en `0` en ambas bases de `check:ui`; alineados `ARCHITECTURE.md` y `CODE_STANDARDS.md`. La deuda de `check:ui` queda separada en reglas de siempre (`864`: `812` en `(app)` + `52` en rutas) y reglas nuevas (`1,628`: `1,523` en `(app)` + `105` en rutas), total `2,492`. |
 | 2026-11-03 | F0-4 / F0-5 (#40) | Revisión independiente (`09c21b3` / `950e73a`) y fusión (`f75400c`): cerrado el hueco de libretas y campos anidados antes de abrir F1. `critico-live.spec.ts` comprueba `notebooks[].content` tras recargar y valida `res.ok` en la siembra; `store.contract.test.ts` verifica las 29 `CLAVES_ANIDADAS` con todas sus colecciones pobladas, ejercita `addNotebook` y `updateNotebook` con `content`, y comprueba también la salida normalizada de `saveWorkspaceToStorage` para `posts` y `notebooks`. |
+| 2026-11-03 | Capas (#43) | Revisión de coordinación y fusión (`7e9e20e`): regla `z-index-fijo` (cualquier `z-index` de 10 o más escrito a mano), escala de 12 `--layer-*` en `dashboard-polish.css` con tabla en la guía §5, definiciones de token en una línea, `check-ui-reglas.mjs` con tandas y `check-deuda` que admite la deuda inicial de la tanda que llega en las dos bases y no deja volver una regla limpiada a 0. Solo entra `z-index-fijo`, con 41 hallazgos que ya existían: `1,628 → 1,669` nuevas, total `2,492 → 2,533`. Cifras reproducidas en local y `check-deuda origin/main` en verde. |
+| 2026-11-03 | Traspaso (#44) | Fusión (`c99a3e0`) de `docs/deslop/TRASPASO-DESLOP-ARQ.md`: qué hizo `paridad-henry` y qué no se porta, los PR 2 y 3 con sus referencias en `main`, y las decisiones del dueño que siguen abiertas. `main` y `deslop-arq` quedan al mismo contenido. |
+| 2026-11-03 | Controles (#45) | Hallazgo al revisar #43: en macOS, `npm test` fallaba en **5 pruebas de `check-deuda` sobre `main` limpio**. `tmpdir()` vive en `/var`, enlace a `/private/var`: `relative(repo, root)` salía del repositorio, `previous()` devolvía `null` y el chequeo decía «La deuda no subió» sin comparar ninguna base. PR #45 resuelve `--root` con `realpathSync`, falla si el árbol se sale del repositorio y añade la prueba que falla sin el arreglo. En Linux no se veía. |
