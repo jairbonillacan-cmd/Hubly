@@ -211,7 +211,7 @@ Un PR por lote de hasta 10 archivos. Si el archivo pertenece a una tarea de F3 e
 **`components/previews/`** imita a otras apps: sus colores son legítimos, con `// ui-ok: simulador`. No se le aplica la meta de `style`, y se documenta en el ADR 0005.
 
 ### F4-7 Emojis y restos · B
-- **Hace:** sustituye los 51 emojis por iconos duotono (la mayoría en el catálogo de logros: espera D2), y corrige `tamano-fuente`, `radio`, `degradado`, `exclamacion` y `transition-all`.
+- **Hace:** sustituye los 51 emojis por iconos duotono (los del catálogo de logros desaparecen antes, con F5-2; ADR 0006), y corrige `tamano-fuente`, `radio`, `degradado`, `exclamacion` y `transition-all`.
 
 ## F5: Fachadas y modo demo
 
@@ -219,9 +219,9 @@ Requiere decisiones del dueño. No empezar sin ellas.
 
 | Tarea | Decisión | Hace | Riesgo |
 |---|---|---|---|
-| **F5-1** Anuncios | D1 | Aplica lo decidido sobre `SAMPLE_ADS` | B |
-| **F5-2** Logros | D2 | Implementar con backend, ocultar con bandera o eliminar `FULL_39_ACHIEVEMENTS_CATALOG` y XP | M |
-| **F5-3** Modo demo | D3 | Reduce `backendEnabled` a un solo punto: las pantallas no saben en qué modo están. Si no hay demo público, retira los caminos de disco y `/api/workspace` de disco. Parte `workspace-repository.ts` | A |
+| **F5-1** Anuncios | D1, F5-3 | Las cifras de ejemplo salen del repositorio de la demo; con cuentas reales, estado vacío «Función prevista» (ADR 0006) | B |
+| **F5-2** Logros | D2 | Elimina `FULL_39_ACHIEVEMENTS_CATALOG`, medallas, XP, niveles y rachas; conserva las métricas reales del equipo (ADR 0006) | M |
+| **F5-3** Modo demo | D3 | Reduce `backendEnabled` a un solo punto: las pantallas no saben en qué modo están. La demo guarda en el navegador de cada visitante; retira los caminos de disco y `/api/workspace` de disco. Parte `workspace-repository.ts` (ADR 0006) | A |
 
 ## F6: Cierre
 

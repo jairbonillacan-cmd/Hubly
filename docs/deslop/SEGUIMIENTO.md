@@ -30,10 +30,10 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 
 | ID | Decisión | Respuesta |
 |---|---|---|
-| D1 | Cifras de ejemplo de `/anuncios` | Pendiente |
-| D2 | Logros y XP | Pendiente |
-| D3 | Modo demo público | Pendiente |
-| D4 | Hacer obligatorio `flujos-con-cuentas` en `main` | **Sí.** Ya corre y pasa en `main` (run `41666261834`); solo falta marcarlo obligatorio. Lo activa el dueño: ningún agente cambia ajustes de GitHub. |
+| D1 | Cifras de ejemplo de `/anuncios` | **En la demo se quedan, etiquetadas «Ejemplo»; con cuentas reales, estado vacío «Función prevista» y ninguna cifra.** [ADR 0006](../adr/0006-demo-anuncios-y-logros.md) |
+| D2 | Logros y XP | **Se eliminan** logros, XP, niveles y rachas: mezclan cifras inventadas. Se quedan las métricas reales del equipo. [ADR 0006](../adr/0006-demo-anuncios-y-logros.md) |
+| D3 | Modo demo público | **Sí, en el navegador de cada visitante:** semilla propia y sin guardar en el disco del servidor. Un solo punto elige el modo; las vistas no leen `backendEnabled`. [ADR 0006](../adr/0006-demo-anuncios-y-logros.md) |
+| D4 | Hacer obligatorio `flujos-con-cuentas` en `main` | **Sí. Hecho el 4 de noviembre:** `flujos-con-cuentas` es obligatorio en la protección de `main`, junto a `web` y `secretos`. Lo aplicó el coordinador por encargo expreso del dueño. |
 
 ## Tareas
 
@@ -44,7 +44,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F0-3 Reglas `check:ui` | — | `scripts/`, docs | Hecha | `impl-f0-3` | #41 |
 | F0-4 Flujos críticos | — | `e2e/`, CI | Hecha | `impl-f0-4` | #38 |
 | F0-5 Contrato del store | — | `lib/store.contract.test.ts` | Hecha | `impl-f0-5` | #37 |
-| F0-6 Compuerta de F1 | F0-4, D4 | Ajuste en GitHub | Bloqueada: solo falta marcar `flujos-con-cuentas` | | |
+| F0-6 Compuerta de F1 | F0-4, D4 | Ajuste en GitHub | Hecha | coordinación | — |
 | F1-1 Armazón, sesión y ventanas | F0 | `lib/store*`, `lib/domain/` | Hecha | `impl-f1-1` | #49 |
 | F1-2 Dominios simples | F1-1 | `lib/store*` | Hecha | `impl-f1-2` | #50 |
 | F1-3 Tareas | F1-2 | `lib/store*` | Hecha | `impl-f1-3` | #51 |
@@ -59,7 +59,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F3-1 Equipo | F1, F2-2 | `dashboard/team/` | Pendiente | | |
 | F3-2 Inicio | F1, F2-2 | `dashboard/inicio/` | Pendiente | | |
 | F3-3 Parrillas | F1, F2-2 | `parrillas/_vista/` | Pendiente | | |
-| F3-4 Anuncios | F1, F2-2, D1 | `anuncios/_vista/` | Bloqueada | | |
+| F3-4 Anuncios | F1, F2-2, D1 | `anuncios/_vista/` | Pendiente | | |
 | F3-5 Editor de post | F1, F2-2 | `compositor/` | Pendiente | | |
 | F3-6 Libreta y sugerencias | F1, F2-2 | `NotebookReaderModal`, `sugerencias/` | Pendiente | | |
 | F3-7 Salud | F1, F2-2 | `SaludCuentasView` | Pendiente | | |
@@ -77,10 +77,10 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F4-4 `hubly-saas.css` | F4-3 | CSS | Pendiente | | |
 | F4-5 `!important` y oscuro | F4-4 | CSS | Pendiente | | |
 | F4-6 `style={{}}` | F4-1 | Ver lotes | Pendiente | | |
-| F4-7 Emojis y restos | F4-1, D2 | Varios | Bloqueada | | |
-| F5-1 Anuncios | D1 | `anuncios` | Bloqueada | | |
-| F5-2 Logros | D2 | `equipo` | Bloqueada | | |
-| F5-3 Modo demo | D3, F2 | `backendEnabled` | Bloqueada | | |
+| F4-7 Emojis y restos | F4-1, F5-2 | Varios | Pendiente | | |
+| F5-1 Anuncios | D1, F5-3 | `anuncios` | Pendiente | | |
+| F5-2 Logros | D2 | `equipo` | Pendiente | | |
+| F5-3 Modo demo | D3, F2 | `backendEnabled` | Pendiente | | |
 | F6-1 Excepciones | F1 a F5 | Varios | Pendiente | | |
 | F6-2 Topes | F6-1 | `scripts/` | Pendiente | | |
 | F6-3 Documentación | F6-2 | `docs/` | Pendiente | | |
@@ -118,4 +118,5 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 | 2026-11-03 | F1-7 (#55) | **F1 cerrada.** `lib/domain/tasks.ts` (`buildTask`, `mergeTaskPatch`, `toggleTaskState`), `lib/domain/posts.ts` (`duplicatePostAsDraft`) y `lib/domain/brands.ts` (`applyCommitmentPatch`, `applyRecommendationToBrand`). Los slices quedan como cableado y `lib/domain/` sigue puro. **12 pruebas nuevas** (205 en total). Contrato **8/8 sin tocarlo**. Quedan en los slices solo mutaciones sin decisión (actualizar un miembro, crear un aviso). |
 | 2026-11-04 | F2-1 (1/2) (#56) | Fusión: `domain-selectors.ts` de **1.596 a 1.039** líneas. `lib/domain/time.ts` (zona horaria y fechas), `greeting.ts`, `tasks.ts` (+`selectTasksBreakdown`), `posts.ts` (+`selectTodayPostsAndApprovals`) y `onboarding.ts`; el archivo sigue reexportando, así que no cambia ningún import. `isTaskCompleted`, `computeTaskDueBucket` e `isPostInApproval` se exportan para salud y equipo. **Falta (2/2):** `account-health`, `recommendations` y `team`, dividiendo `selectAccountsHealth` y `selectTeamProductivity`, que superan 80 líneas; y mover las pruebas por módulo. |
 | 2026-11-04 | F2-1 (2/2) (#57) | Fusión: `domain-selectors.ts` queda en **30 líneas** (solo reexporta). `account-health.ts` + `account-health-evaluate.ts` (con `evaluateBrandAccount`), `recommendations.ts` y `team.ts` (con `evaluateTeamMember`, que recibe `hasBackend` para no importar el store desde domain). Pruebas repartidas por módulo con `test-fixtures.ts`; se borra `domain-selectors.test.ts`. Archivos sobre 400: 34 → 33. |
+| 2026-11-04 | F0-6 y D1–D3 | **Decisiones tomadas** por encargo del dueño, con su motivo en el [ADR 0006](../adr/0006-demo-anuncios-y-logros.md). `flujos-con-cuentas` pasa a ser obligatorio en `main`: corre en todo PR, sin filtro de rutas, con la misma app que `web` y `secretos`. Quedan sin bloqueo F3-4, F4-7 y F5-1 a F5-3. **Orden:** F5-2 antes de F4-7 (borra la mayoría de sus emojis) y F5-3 antes de F5-1 (las cifras de ejemplo salen del repositorio de la demo). F5-3 sigue esperando a F2-3 y F2-4. |
 | 2026-11-04 | F2-2 (#58) | Fusión: `lib/types.ts` (768 líneas) pasa a `lib/types/` con un archivo por dominio y `index.ts`; `@/lib/types` sigue igual. `CoverKind` se muda a `lib/types/cover.ts` (con reexport en `components/Cover`), lo que cierra la última violación `lib-importa-arriba`: capas de 9 a 8 y base actualizada. Se elimina el alias `TaskItem` en todo el código (9 archivos) y se queda `AgencyTask`; el `TaskItem` de Tiptap no se toca. |
