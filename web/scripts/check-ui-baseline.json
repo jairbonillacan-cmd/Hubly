@@ -119,10 +119,6 @@
     "tamano-fuente": 1,
     "z-index-fijo": 2
   },
-  "components/app/AutoSuggestionsModal.tsx": {
-    "rgb-fijo": 1,
-    "style-inline": 1
-  },
   "components/app/CommandPaletteModal.tsx": {
     "style-inline": 1
   },
@@ -159,11 +155,6 @@
   },
   "components/app/NewBrandModal.tsx": {
     "color-fijo": 1,
-    "style-inline": 2
-  },
-  "components/app/NotebookReaderModal.tsx": {
-    "color-fijo": 3,
-    "rgb-fijo": 1,
     "style-inline": 2
   },
   "components/app/PostComposerModal.tsx": {
@@ -235,24 +226,6 @@
   "components/app/media/MediaLibrary.tsx": {
     "color-fijo": 1,
     "style-inline": 2
-  },
-  "components/app/notebooks/LibretaCabecera.tsx": {
-    "color-fijo": 8,
-    "rgb-fijo": 1,
-    "style-inline": 10
-  },
-  "components/app/notebooks/LibretaFormulario.tsx": {
-    "color-fijo": 17,
-    "style-inline": 18
-  },
-  "components/app/notebooks/LibretaLista.tsx": {
-    "color-fijo": 11,
-    "style-inline": 8,
-    "tamano-fuente": 1
-  },
-  "components/app/notebooks/LibretaPie.tsx": {
-    "color-fijo": 9,
-    "style-inline": 9
   },
   "components/app/parrillas/ParrillasCalendario.tsx": {
     "style-inline": 1
@@ -347,31 +320,6 @@
   "components/app/social/SocialCalendar.tsx": {
     "color-fijo": 1,
     "style-inline": 2
-  },
-  "components/app/sugerencias/AutoSuggestionsModal-shared.tsx": {
-    "color-fijo": 8,
-    "style-inline": 4
-  },
-  "components/app/sugerencias/SugerenciasCabecera.tsx": {
-    "rgb-fijo": 2,
-    "style-inline": 11,
-    "tamano-fuente": 1,
-    "view-prop": 1
-  },
-  "components/app/sugerencias/SugerenciasCuerpo.tsx": {
-    "color-fijo": 1,
-    "rgb-fijo": 1,
-    "style-inline": 30,
-    "view-prop": 1
-  },
-  "components/app/sugerencias/SugerenciasMetricas.tsx": {
-    "color-fijo": 3,
-    "style-inline": 10
-  },
-  "components/app/sugerencias/SugerenciasPie.tsx": {
-    "color-fijo": 1,
-    "style-inline": 6,
-    "view-prop": 1
   },
   "components/app/tasks/NotebooksSection.tsx": {
     "color-fijo": 5,

@@ -1,42 +1,82 @@
 "use client";
 
+import "./sugerencias/sugerencias.css";
 import { Modal } from "@/components/app/ui/Modal";
-import { useAutoSuggestionsModal, buildAutoSuggestionsModal } from "./sugerencias/useAutoSuggestionsModal";
+import {
+  useAutoSuggestionsModal,
+  type AutoSuggestionsModalProps,
+} from "./sugerencias/useAutoSuggestionsModal";
 import { SugerenciasCabecera } from "./sugerencias/SugerenciasCabecera";
 import { SugerenciasCuerpo } from "./sugerencias/SugerenciasCuerpo";
+import { SugerenciasMetricas } from "./sugerencias/SugerenciasMetricas";
 import { SugerenciasPie } from "./sugerencias/SugerenciasPie";
 
-export function AutoSuggestionsModal(props: Parameters<typeof useAutoSuggestionsModal>[0]) {
-  const base = useAutoSuggestionsModal(props);
-  const { presence } = base;
-  if (!presence.mounted) return null;
-  const view = buildAutoSuggestionsModal(base);
-  const { titleId, dialogRef, isOpen, handleClose } = view;
+export function AutoSuggestionsModal(props: AutoSuggestionsModalProps = {}) {
+  const {
+    titleId,
+    brandsCount,
+    isOpen,
+    activeView,
+    setActiveView,
+    customValues,
+    metrics,
+    feedbackBanner,
+    pendingRecommendations,
+    handleClose,
+    handleAdjustValue,
+    handleApplySingle,
+    handleDismissSingle,
+    handleApplyAll,
+    toggleMetricChecked,
+    updateMetricTarget,
+  } = useAutoSuggestionsModal(props);
 
   return (
     <Modal
       open={isOpen}
       onClose={handleClose}
       labelledBy={titleId}
-      className="hubly-sheet"
-      surfaceRef={dialogRef}
-      style={{
-        width: "100%",
-        maxWidth: 680,
-        maxHeight: "90vh",
-        background: "var(--ui-surface)",
-        borderRadius: 20,
-        border: "1px solid var(--ui-border)",
-        boxShadow: "0 24px 60px rgba(15, 23, 42, 0.22)",
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-        color: "var(--ui-text)",
-      }}
+      className="hubly-sheet hubly-sugerencias-modal"
     >
-      <SugerenciasCabecera view={view} />
-      <SugerenciasCuerpo view={view} />
-      <SugerenciasPie view={view} />
+      <SugerenciasCabecera
+        titleId={titleId}
+        brandsCount={brandsCount}
+        activeView={activeView}
+        pendingCount={pendingRecommendations.length}
+        onSelectView={setActiveView}
+        onClose={handleClose}
+      />
+
+      <div className="hubly-sugerencias-body">
+        {feedbackBanner && (
+          <div role="status" className="hubly-sugerencias-feedback">
+            {feedbackBanner}
+          </div>
+        )}
+
+        {activeView === "reglas" ? (
+          <SugerenciasCuerpo
+            recommendations={pendingRecommendations}
+            customValues={customValues}
+            onAdjustValue={handleAdjustValue}
+            onApplySingle={handleApplySingle}
+            onDismissSingle={handleDismissSingle}
+            onSwitchToMetrics={() => setActiveView("metricas")}
+          />
+        ) : (
+          <SugerenciasMetricas
+            metrics={metrics}
+            onToggleChecked={toggleMetricChecked}
+            onUpdateTarget={updateMetricTarget}
+          />
+        )}
+      </div>
+
+      <SugerenciasPie
+        pendingCount={pendingRecommendations.length}
+        onClose={handleClose}
+        onApplyAll={handleApplyAll}
+      />
     </Modal>
   );
 }

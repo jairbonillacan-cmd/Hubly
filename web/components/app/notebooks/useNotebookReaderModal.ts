@@ -3,8 +3,13 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import { useHublyStore } from "@/lib/store";
 import { useActiveBrand } from "@/lib/use-active-brand";
-import { useModalPresence } from "@/lib/use-modal-presence";
-import { notebookPlainText, notebookTasks } from "@/lib/notebook-content";
+import {
+  NOTEBOOK_COLORS,
+  buildNotebookFormDraft,
+  extractFreshNotebookTasks,
+  resolveNextNotebookIdAfterDelete,
+  validateAndBuildNotebookInput,
+} from "@/lib/domain/notebooks";
 import { dueLabelFor, localIsoDate } from "@/lib/date";
 
 export interface NotebookReaderModalProps {
@@ -12,13 +17,6 @@ export interface NotebookReaderModalProps {
   notebookId?: string | null;
   onClose?: () => void;
 }
-
-export const NOTEBOOK_COLORS = [
-  { id: "kraft", label: "Kraft clásico", bg: "#C59B6D", spine: "#3A2210" },
-  { id: "terracotta", label: "Terracota", bg: "#C87A51", spine: "#4A2511" },
-  { id: "sage", label: "Salvia", bg: "#4A7862", spine: "#1E382B" },
-  { id: "slate", label: "Pizarra", bg: "#475569", spine: "#1E293B" },
-];
 
 const explicitNotebookOpenListeners = new Set<(id: string | null) => void>();
 let storePatchedForNotebook = false;
@@ -40,26 +38,14 @@ export function openNotebookModal(notebookId: string) {
   useHublyStore.getState().setActiveNotebookId(notebookId);
 }
 
-function getFocusableElements(container: HTMLElement | null): HTMLElement[] {
-  if (!container) return [];
-  const nodes = container.querySelectorAll<HTMLElement>(
-    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-  );
-  return Array.from(nodes).filter(
-    (el) => !el.hasAttribute("disabled") && el.offsetParent !== null
-  );
-}
-
 export function useNotebookReaderModal({
   open: openProp,
   notebookId: notebookIdProp,
   onClose: onCloseProp,
 }: NotebookReaderModalProps = {}) {
   const titleId = useId();
-  const dialogRef = useRef<HTMLDivElement | null>(null);
   const titleInputRef = useRef<HTMLInputElement | null>(null);
   const autosaveRef = useRef<number | undefined>(undefined);
-  const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
   const [explicitStoreOpen, setExplicitStoreOpen] = useState(false);
 
@@ -99,7 +85,7 @@ export function useNotebookReaderModal({
   const [subtitle, setSubtitle] = useState("");
   const [category, setCategory] = useState("GUÍA DE AGENCIA");
   const [brandId, setBrandId] = useState(activeBrand?.id ?? "");
-  const [accentColor, setAccentColor] = useState("#C59B6D");
+  const [accentColor, setAccentColor] = useState<string>(NOTEBOOK_COLORS[0].bg);
   const [content, setContent] = useState("");
   const [savedNotice, setSavedNotice] = useState(false);
   const [taskNotice, setTaskNotice] = useState<string | null>(null);
@@ -125,103 +111,48 @@ export function useNotebookReaderModal({
     setErrorMsg(null); // eslint-disable-line react-hooks/set-state-in-effect -- reinicia el formulario al abrir
     setSavedNotice(false);
 
-    if (isCreatingNew || !currentNotebook) {
-      setTitle("");
-      setSubtitle("Notas operativas y acuerdos de cuenta");
-      setCategory("ESTRATEGIA");
-      setBrandId(activeBrand?.id ?? "");
-      setAccentColor("#C59B6D");
-      setContent("");
-    } else {
-      setTitle(currentNotebook.title);
-      setSubtitle(currentNotebook.subtitle || "Guía operativa de agencia");
-      setCategory(
-        currentNotebook.category || currentNotebook.stamp || "LIBRETA KRAFT"
-      );
-      setBrandId(currentNotebook.brandId || activeBrand?.id || "");
-      setAccentColor(currentNotebook.accentColor || "#C59B6D");
-      setContent(currentNotebook.content);
-    }
+    const draft = buildNotebookFormDraft(
+      currentNotebook,
+      isCreatingNew,
+      activeBrand?.id ?? ""
+    );
+    setTitle(draft.title);
+    setSubtitle(draft.subtitle);
+    setCategory(draft.category);
+    setBrandId(draft.brandId);
+    setAccentColor(draft.accentColor);
+    setContent(draft.content);
     // Solo al abrir o cambiar de libreta: el autoguardado actualiza currentNotebook.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, isCreatingNew, currentNotebook?.id]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    previousActiveElementRef.current =
-      document.activeElement as HTMLElement | null;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    const rafId = window.requestAnimationFrame(() => {
-      if (titleInputRef.current) {
-        titleInputRef.current.focus();
-      } else {
-        const focusables = getFocusableElements(dialogRef.current);
-        focusables[0]?.focus();
-      }
-    });
-
-    return () => {
-      window.cancelAnimationFrame(rafId);
-      const remainingDialogs = document.querySelectorAll(
-        '[role="dialog"][aria-modal="true"]'
-      );
-      if (remainingDialogs.length <= 1) {
-        document.body.style.overflow = prevOverflow || "";
-      }
-      const prevEl = previousActiveElementRef.current;
-      if (prevEl && document.body.contains(prevEl)) {
-        window.requestAnimationFrame(() => {
-          prevEl.focus();
-        });
-      }
-    };
-  }, [isOpen]);
-
-  const presence = useModalPresence(isOpen);
-
-  const activeColorSpec =
-    NOTEBOOK_COLORS.find((c) => c.bg === accentColor) || NOTEBOOK_COLORS[0];
-
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanTitle = title.trim();
     window.clearTimeout(autosaveRef.current);
-    const cleanContent = notebookPlainText(content) ? content.trim() : "";
 
-    if (!cleanTitle) {
-      setErrorMsg("Escribe un título para esta libreta Kraft.");
-      titleInputRef.current?.focus();
-      return;
-    }
+    const validation = validateAndBuildNotebookInput({
+      title,
+      subtitle,
+      category,
+      brandId,
+      accentColor,
+      content,
+    });
 
-    if (!cleanContent) {
-      setErrorMsg("Agrega contenido o notas a la libreta antes de guardar.");
+    if (!validation.ok) {
+      setErrorMsg(validation.error);
+      if (validation.field === "title") {
+        titleInputRef.current?.focus();
+      }
       return;
     }
 
     if (isCreatingNew || !currentNotebook) {
-      const created = addNotebook({
-        brandId,
-        title: cleanTitle,
-        subtitle: subtitle.trim() || "Notas operativas",
-        category: category.trim().toUpperCase() || "LIBRETA KRAFT",
-        accentColor,
-        content: cleanContent,
-      });
+      const created = addNotebook(validation.payload);
       setIsCreatingNew(false);
       setActiveNotebookId(created.id);
     } else {
-      updateNotebook(currentNotebook.id, {
-        brandId,
-        title: cleanTitle,
-        subtitle: subtitle.trim() || "Notas operativas",
-        category: category.trim().toUpperCase() || "LIBRETA KRAFT",
-        accentColor,
-        content: cleanContent,
-      });
+      updateNotebook(currentNotebook.id, validation.payload);
     }
 
     setSavedNotice(true);
@@ -231,8 +162,7 @@ export function useNotebookReaderModal({
 
   const sendPendingToTasks = () => {
     const state = useHublyStore.getState();
-    const existing = new Set(state.tasks.filter((t) => t.brandId === brandId).map((t) => t.title));
-    const fresh = notebookTasks(content).filter((t) => !existing.has(t));
+    const fresh = extractFreshNotebookTasks(content, state.tasks, brandId);
     const today = localIsoDate();
     for (const taskTitle of fresh) {
       state.addTask({
@@ -246,18 +176,22 @@ export function useNotebookReaderModal({
         priority: "media",
       });
     }
-    setTaskNotice(fresh.length === 0 ? "No hay pendientes nuevos." : `${fresh.length} enviados a Tareas.`);
+    setTaskNotice(
+      fresh.length === 0
+        ? "No hay pendientes nuevos."
+        : `${fresh.length} enviados a Tareas.`
+    );
     window.setTimeout(() => setTaskNotice(null), 2400);
   };
 
   const handleDeleteCurrent = () => {
     if (!currentNotebook || isCreatingNew) return;
     deleteNotebook(currentNotebook.id);
-    const remaining = notebooks.filter((n) => n.id !== currentNotebook.id);
-    if (remaining.length === 0) {
+    const nextId = resolveNextNotebookIdAfterDelete(notebooks, currentNotebook.id);
+    if (!nextId) {
       handleClose();
     } else {
-      setActiveNotebookId(remaining[0].id);
+      setActiveNotebookId(nextId);
     }
   };
 
@@ -267,18 +201,19 @@ export function useNotebookReaderModal({
     if (!isCreatingNew && currentNotebook) {
       const id = currentNotebook.id;
       window.clearTimeout(autosaveRef.current);
-      autosaveRef.current = window.setTimeout(() => updateNotebook(id, { content: html }), 500);
+      autosaveRef.current = window.setTimeout(
+        () => updateNotebook(id, { content: html }),
+        500
+      );
     }
   };
 
   return {
     titleId,
-    dialogRef,
     titleInputRef,
     notebooks,
     brands,
     isOpen,
-    presence,
     currentNotebook,
     isCreatingNew,
     setIsCreatingNew,
@@ -297,7 +232,6 @@ export function useNotebookReaderModal({
     taskNotice,
     errorMsg,
     setErrorMsg,
-    activeColorSpec,
     handleClose,
     handleSave,
     sendPendingToTasks,

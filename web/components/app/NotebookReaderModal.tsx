@@ -1,5 +1,6 @@
 "use client";
 
+import "./notebooks/notebooks.css";
 import { Modal } from "@/components/app/ui/Modal";
 import { LibretaCabecera } from "./notebooks/LibretaCabecera";
 import { LibretaLista } from "./notebooks/LibretaLista";
@@ -16,12 +17,10 @@ export { openNotebookModal };
 export function NotebookReaderModal(props: NotebookReaderModalProps = {}) {
   const {
     titleId,
-    dialogRef,
     titleInputRef,
     notebooks,
     brands,
     isOpen,
-    presence,
     currentNotebook,
     isCreatingNew,
     setIsCreatingNew,
@@ -40,7 +39,6 @@ export function NotebookReaderModal(props: NotebookReaderModalProps = {}) {
     taskNotice,
     errorMsg,
     setErrorMsg,
-    activeColorSpec,
     handleClose,
     handleSave,
     sendPendingToTasks,
@@ -48,29 +46,12 @@ export function NotebookReaderModal(props: NotebookReaderModalProps = {}) {
     handleContentChange,
   } = useNotebookReaderModal(props);
 
-  if (!presence.mounted) return null;
-
   return (
     <Modal
       open={isOpen}
       onClose={handleClose}
       labelledBy={titleId}
-      className="hubly-sheet"
-      surfaceRef={dialogRef}
-      style={{
-        width: "100%",
-        maxWidth: 780,
-        maxHeight: "90vh",
-        background: "#FAF5EC",
-        borderRadius: 20,
-        border: "1px solid #D6C2A5",
-        boxShadow: "0 24px 60px rgba(44, 26, 11, 0.28)",
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-        color: "#2C1A0B",
-        position: "relative",
-      }}
+      className="hubly-sheet hubly-notebooks-modal"
     >
       <LibretaCabecera
         titleId={titleId}
@@ -78,19 +59,10 @@ export function NotebookReaderModal(props: NotebookReaderModalProps = {}) {
         category={category}
         isCreatingNew={isCreatingNew}
         savedNotice={savedNotice}
-        colorSpec={activeColorSpec}
         onClose={handleClose}
       />
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "210px minmax(0, 1fr)",
-          flex: 1,
-          minHeight: 0,
-          paddingLeft: 14,
-        }}
-      >
+      <div className="hubly-notebooks-grid">
         <LibretaLista
           notebooks={notebooks}
           currentNotebookId={currentNotebook?.id ?? null}

@@ -25,31 +25,12 @@ export function LibretaPie({
   onClose,
 }: LibretaPieProps) {
   return (
-    <div
-      style={{
-        padding: "12px 22px 12px 32px",
-        background: "#F4E9D8",
-        borderTop: "1px solid #DFCBB0",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexWrap: "wrap",
-        gap: 10,
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+    <div className="hubly-notebooks-footer">
+      <div className="hubly-notebooks-footer-left">
         <Link
           href="/tareas?seccion=libretas"
           onClick={onClose}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 5,
-            fontSize: 12,
-            fontWeight: 700,
-            color: "#5C3D22",
-            textDecoration: "none",
-          }}
+          className="hubly-notebooks-space-link"
         >
           <span>Abrir en Mi espacio</span>
           <ExternalLink size={12} />
@@ -58,29 +39,21 @@ export function LibretaPie({
         <button
           type="button"
           onClick={onSendPendingToTasks}
-          style={{ padding: "5px 10px", borderRadius: 8, border: "1px solid #C59B6D", background: "#FAF5EC", color: "#3A2210", fontSize: 11.5, fontWeight: 600, cursor: "pointer" }}
+          className="hubly-notebooks-tasks-btn"
         >
           Enviar pendientes a Tareas
         </button>
-        {taskNotice && <span role="status" style={{ fontSize: 11.5, fontWeight: 600, color: "#3A2210" }}>{taskNotice}</span>}
+        {taskNotice && (
+          <span role="status" className="hubly-notebooks-task-notice">
+            {taskNotice}
+          </span>
+        )}
 
         {canDelete && (
           <button
             type="button"
             onClick={onDelete}
-            style={{
-              padding: "5px 10px",
-              borderRadius: 8,
-              border: "1px solid var(--ui-danger-border)",
-              background: "var(--ui-danger-soft)",
-              color: "var(--ui-danger-text)",
-              fontSize: 11.5,
-              fontWeight: 600,
-              cursor: "pointer",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-            }}
+            className="hubly-notebooks-delete-btn"
           >
             <Trash2 size={12} />
             <span>Eliminar</span>
@@ -88,21 +61,11 @@ export function LibretaPie({
         )}
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <div className="hubly-notebooks-footer-right">
         <button
           type="button"
           onClick={onClose}
-          style={{
-            height: 35,
-            padding: "0 14px",
-            borderRadius: 9,
-            border: "1px solid #C59B6D",
-            background: "#FAF5EC",
-            color: "#3A2210",
-            fontSize: 12.5,
-            fontWeight: 700,
-            cursor: "pointer",
-          }}
+          className="hubly-notebooks-cancel-btn"
         >
           Cerrar
         </button>
@@ -110,20 +73,7 @@ export function LibretaPie({
         <button
           type="submit"
           form="notebook-reader-form"
-          style={{
-            height: 35,
-            padding: "0 16px",
-            borderRadius: 9,
-            border: "none",
-            background: "#3A2210",
-            color: "var(--on-accent)",
-            fontSize: 12.5,
-            fontWeight: 700,
-            cursor: "pointer",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-          }}
+          className="hubly-notebooks-save-btn"
         >
           <Save size={13} />
           <span>
