@@ -1,7 +1,15 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { selectTeamProductivity } from "./team";
-import { post, task } from "./test-fixtures";
+import {
+  buildTeamActivityRows,
+  buildTeamRankingRows,
+  computeToggledMemberBrandIds,
+  findNextPendingMemberTask,
+  resolveMemberAssignedBrands,
+  selectTeamProductivity,
+  syncTeamWithProfile,
+} from "./team";
+import { brand, post, task } from "./test-fixtures";
 import type { ActivityEvent, TeamMember } from "../types";
 
 const member = (overrides: Partial<TeamMember>): TeamMember => ({
@@ -159,4 +167,110 @@ test("selectTeamProductivity filtra miembros por búsqueda sin perder el ranking
     ["tm-2"]
   );
   assert.equal(result.members[0].rankPosition, 1);
+});
+
+test("syncTeamWithProfile sincroniza nombre, inicial y rol del miembro principal", () => {
+  const members = [
+    member({ id: "tm-1", name: "Jair", avatarInitial: "J", role: "Dueño" }),
+    member({ id: "tm-2", name: "Lucía", avatarInitial: "L", role: "Diseño" }),
+  ];
+  const synced = syncTeamWithProfile(members, {
+    name: "Jair Morales",
+    avatarInitial: "M",
+    role: "Director",
+  });
+  assert.equal(synced[0].name, "Jair Morales");
+  assert.equal(synced[0].avatarInitial, "M");
+  assert.equal(synced[0].role, "Director");
+  assert.equal(synced[1].name, "Lucía");
+});
+
+test("buildTeamRankingRows agrega deliverablesCount a cada fila del ranking", () => {
+  const { ranking } = selectTeamProductivity(
+    [member({ id: "tm-1", tasksCompleted: 3, postsPublished: 2 })],
+    [],
+    [],
+    [],
+    "30d",
+    "",
+    true
+  );
+  const rows = buildTeamRankingRows(ranking);
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].deliverablesCount, 5);
+});
+
+test("resolveMemberAssignedBrands y computeToggledMemberBrandIds respetan la marca activa y evitan lista vacía", () => {
+  const b1 = brand({ id: "b-1", name: "Café Bruma" });
+  const b2 = brand({ id: "b-2", name: "Clínica Norte" });
+  const brands = [b1, b2];
+
+  const initialOwnerBrands = resolveMemberAssignedBrands({
+    isPrimaryOwner: true,
+    hasCustomizedOwnerBrands: false,
+    memberBrandIds: ["b-1", "b-2"],
+    brands,
+    activeBrand: b2,
+  });
+  assert.deepEqual(initialOwnerBrands.map((b) => b.id), ["b-2"]);
+
+  // No permite quitar la única marca activa
+  const emptyAttempt = computeToggledMemberBrandIds({
+    isPrimaryOwner: true,
+    hasCustomizedOwnerBrands: false,
+    memberBrandIds: ["b-2"],
+    activeBrandId: "b-2",
+    brandId: "b-2",
+  });
+  assert.equal(emptyAttempt, null);
+
+  // Permite añadir otra marca y luego reflejar la selección personalizada
+  const added = computeToggledMemberBrandIds({
+    isPrimaryOwner: true,
+    hasCustomizedOwnerBrands: false,
+    memberBrandIds: ["b-2"],
+    activeBrandId: "b-2",
+    brandId: "b-1",
+  });
+  assert.deepEqual(added, ["b-2", "b-1"]);
+
+  const customizedOwnerBrands = resolveMemberAssignedBrands({
+    isPrimaryOwner: true,
+    hasCustomizedOwnerBrands: true,
+    memberBrandIds: added ?? undefined,
+    brands,
+    activeBrand: b2,
+  });
+  assert.deepEqual(customizedOwnerBrands.map((b) => b.id), ["b-1", "b-2"]);
+});
+
+test("buildTeamActivityRows construye filas semanales con Hoy al final y desglose mensual en 4 semanas", () => {
+  const { activeMember } = selectTeamProductivity(
+    [member({ id: "tm-2", name: "Lucía", baseActiveMinutes: 100 })],
+    [],
+    [],
+    [],
+    "30d",
+    "",
+    true
+  );
+
+  const weekly = buildTeamActivityRows("Semana", activeMember.weeklyActivity, activeMember.activeMinutes);
+  assert.equal(weekly.length, 4);
+  assert.equal(weekly[weekly.length - 1].label, "Hoy");
+  assert.equal(weekly[0].statusLabel, "85m");
+
+  const monthly = buildTeamActivityRows("Mes", activeMember.weeklyActivity, 100);
+  assert.equal(monthly.length, 4);
+  assert.deepEqual(monthly.map((r) => r.minutes), [20, 25, 25, 30]);
+  assert.equal(monthly[3].label, "Semana actual");
+});
+
+test("findNextPendingMemberTask prioriza tareas del miembro activo y cae en la primera pendiente", () => {
+  const tDone = task({ id: "t-done", assigneeId: "tm-2", assignee: "Lucía", status: "done" as never, completed: true });
+  const tOther = task({ id: "t-other", assigneeId: "tm-1", assignee: "Jair", status: "in_progress" as never, completed: false });
+  const tMine = task({ id: "t-mine", assigneeId: "tm-2", assignee: "Lucía", status: "in_progress" as never, completed: false });
+
+  assert.equal(findNextPendingMemberTask([tDone, tOther, tMine], "tm-2", "Lucía")?.id, "t-mine");
+  assert.equal(findNextPendingMemberTask([tDone, tOther], "tm-2", "Lucía")?.id, "t-other");
 });

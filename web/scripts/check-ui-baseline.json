@@ -210,56 +210,28 @@
   "components/app/compositor/PostComposerModal-shared.tsx": {
     "color-fijo": 2
   },
-  "components/app/dashboard/EquipoView.tsx": {
-    "style-inline": 1
-  },
   "components/app/dashboard/ExtraWidgets.tsx": {
     "style-inline": 1
   },
   "components/app/dashboard/InicioContenido.tsx": {
     "exclamacion": 1
   },
-  "components/app/dashboard/MemberDrawer.tsx": {
-    "color-fijo": 4,
-    "radio": 2,
-    "style-inline": 20
-  },
   "components/app/dashboard/PendientesModal.tsx": {
     "color-fijo": 1,
     "hbtn-directo": 1,
     "style-inline": 13
   },
-  "components/app/dashboard/team/EquipoCabecera.tsx": {
-    "color-fijo": 3,
-    "rgb-fijo": 3,
-    "style-inline": 27,
-    "view-prop": 1,
-    "z-index-fijo": 1
+  "components/app/equipo/EquipoLogrosRanking.tsx": {
+    "style-inline": 1
   },
-  "components/app/dashboard/team/EquipoLogrosRanking.tsx": {
-    "color-fijo": 5,
-    "style-inline": 23,
-    "view-prop": 1
+  "components/app/equipo/EquipoProgreso.tsx": {
+    "style-inline": 1
   },
-  "components/app/dashboard/team/EquipoMiembros.tsx": {
-    "color-fijo": 9,
-    "exclamacion": 1,
-    "style-inline": 20,
-    "view-prop": 1
+  "components/app/equipo/EquipoResumen.tsx": {
+    "style-inline": 1
   },
-  "components/app/dashboard/team/EquipoProgreso.tsx": {
-    "color-fijo": 4,
-    "degradado": 1,
-    "style-inline": 18,
-    "view-prop": 1
-  },
-  "components/app/dashboard/team/EquipoResumen.tsx": {
-    "color-fijo": 1,
-    "rgb-fijo": 1,
-    "style-inline": 39,
-    "tamano-fuente": 2,
-    "view-prop": 1,
-    "z-index-fijo": 1
+  "components/app/equipo/MemberDrawer.tsx": {
+    "style-inline": 1
   },
   "components/app/media/MediaLibrary.tsx": {
     "color-fijo": 1,
