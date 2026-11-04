@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync, type SpawnSyncReturns } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { after, test } from "node:test";
@@ -249,6 +249,22 @@ test("--root compara contra el repositorio del árbol apuntado, no contra el del
   const result = runDeuda(root, ajeno);
   assert.equal(result.status, 1, result.stdout);
   assert.ok(result.stderr.includes("scripts/check-ui-rutas-baseline.json: la regla style-inline subió de 3 a 4"), result.stderr);
+});
+
+test("--root a través de un enlace sigue comparando contra la base", () => {
+  // En macOS el temporal vive en /var, un enlace a /private/var: comparar cadenas en
+  // vez de rutas reales sacaba al árbol del repositorio y `git show` no encontraba
+  // nada, así que el chequeo pasaba en verde sin mirar la base.
+  const root = repo({ ...deudaBase, "web/scripts/check-ui-baseline.json": '{"components/app/x.tsx":{"color-fijo":1}}\n' });
+  writeFileSync(join(root, "web/scripts/check-ui-baseline.json"), '{"components/app/x.tsx":{"color-fijo":2}}\n');
+  const enlace = mkdtempSync(join(tmpdir(), "hubly-enlace-"));
+  trees.push(enlace);
+  const alias = join(enlace, "alias");
+  symlinkSync(root, alias);
+
+  const result = runDeuda(alias);
+  assert.equal(result.status, 1, result.stdout);
+  assert.ok(result.stderr.includes("scripts/check-ui-baseline.json: la regla color-fijo subió de 1 a 2"), result.stderr);
 });
 
 test("--root fuera de un repositorio avisa en vez de dar verde", () => {
