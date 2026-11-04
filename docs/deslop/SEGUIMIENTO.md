@@ -15,11 +15,11 @@ Se obtienen con `node scripts/medir-deslop.mjs`, desde `web/`.
 | `page.tsx` sobre 80 líneas | 17 | 17 | 0 |
 | Archivos con prop `view` | 33 | 33 | 0 |
 | `style={{` sin simuladores | 1,475 | 1,475 | < 150 |
-| Deuda de `check:ui`: reglas de siempre | 864 | 861 | < 100 |
-| Deuda de `check:ui`: reglas nuevas | 1,628 | 1,669 | 0 |
-| Deuda de `check:ui`: total | 2,492 | 2,530 | < 100 |
+| Deuda de `check:ui`: reglas de siempre | 864 | 836 | < 100 |
+| Deuda de `check:ui`: reglas nuevas | 1,628 | 1,646 | 0 |
+| Deuda de `check:ui`: total | 2,492 | 2,482 | < 100 |
 | `!important` en CSS | 157 | 157 | < 10 |
-| Líneas con `eslint-disable` | 79 | 79 | < 25 |
+| Líneas con `eslint-disable` | 79 | 78 | < 25 |
 | Exenciones `ui-ok:` | 21 | 21 | No sube |
 | `as unknown as` | 7 | 7 | ≤ 2 |
 | Archivos que leen `backendEnabled` | 39 | 39 | ≤ 3, tras D3 |
@@ -108,3 +108,4 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 | 2026-11-03 | Controles (#45) | Hallazgo al revisar #43: en macOS, `npm test` fallaba en **5 pruebas de `check-deuda` sobre `main` limpio**. `tmpdir()` vive en `/var`, enlace a `/private/var`: `relative(repo, root)` salía del repositorio, `previous()` devolvía `null` y el chequeo decía «La deuda no subió» sin comparar ninguna base. PR #45 resuelve `--root` con `realpathSync`, falla si el árbol se sale del repositorio y añade la prueba que falla sin el arreglo. En Linux no se veía. |
 | 2026-11-03 | Etiquetas (#46) | Fusión (`72a993e`): `web/lib/labels.ts` como fuente única de estados, roles y tipos de archivo; `status-meta`, `calendar-views`, `SocialCalendar`, el compositor, la API del espacio de trabajo y `/invitacion` leen de ahí. Regla nueva `estado-crudo` (tanda `etiquetas`) acotada a `kind` y `post.status`; entra con **0 hallazgos** porque el único real, `{asset.kind}` en `/tareas`, se corrige en el PR. `statusLabel` guardado sin cambios: el contrato del store no se toca. **Visible:** `scheduled` pasa a «Programado» en el kanban y en el filtro de publicación (antes «Planificado»), y el tipo de archivo deja de pintarse en inglés. Siguiente: marca activa (`selectActiveBrand`/`useActiveBrand`, los atajos de `brand-min` y `lib/share-links.ts`). |
 | 2026-11-03 | Marca activa (#47) | Fusión (`173313c`): `lib/active-brand.ts` con `selectActiveBrand` y `lib/use-active-brand.ts` como hook. Seis cálculos propios pasan a uno (armazón, parrillas, reportes, inicio, equipo, libretas) y desaparecen los respaldos a `brand-min`/`min-nov` de la interfaz. `lib/share-links.ts` centraliza el enlace del portal y ya no inventa token. `BrandSwitcher` y `EquipoResumen` usan el color guardado de la marca: la deuda de `check:ui` baja de `864` a `861` (`--update` solo restó). Quedan los cuatro respaldos de `lib/workspace-repository.ts`, que reparan documentos incompletos y no eligen marca: son de F1/F2. |
+| 2026-11-03 | Modales y libretas (#48) | Fusión (`b0b22ad`): «+ Nota» crea la libreta y abre el lector como `/tareas`; el modal Kraft duplicado desaparece y `InicioContenido` baja de 397 a 184 líneas. `useCreateNotebook` se muda a `components/app/` para no cruzar dominios (`check:capas` lo detectó). Se quita el Escape global del tablero —cerraba toda la pila— y el modal de cuentas usa `<Modal>` y `<Button>`. Deuda de `check:ui`: `2,530 → 2,482` (`836 + 1,646`, `--update` solo restó); `eslint-disable`: `79 → 78`. Con esto quedan hechos los PR 2 y 3 del traspaso. Siguiente sin bloqueo: F4-1 (tokens) y F4-2; F1 espera a que el dueño marque `flujos-con-cuentas` obligatorio (F0-6).
