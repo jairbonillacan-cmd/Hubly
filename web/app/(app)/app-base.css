@@ -500,13 +500,13 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .saas-btn-ink {
-  background: var(--ui-text);
+  background: #0F172A;
   color: var(--on-accent);
-  border-color: var(--ui-text);
+  border-color: #0F172A;
 }
 
 .saas-btn-ink:hover:not(:disabled) {
-  background: var(--ui-text-1);
+  background: #1E293B;
   color: var(--on-accent);
 }
 

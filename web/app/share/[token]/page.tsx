@@ -114,7 +114,7 @@ function ClientSharePortalInner() {
       <header
         style={{
           background: "#0F241C",
-          color: "var(--on-accent)",
+          color: "#fff",
           padding: "18px clamp(20px, 5vw, 56px)",
           display: "flex",
           alignItems: "center",
@@ -130,7 +130,7 @@ function ClientSharePortalInner() {
               height: 38,
               borderRadius: 10,
               background: brand.color,
-              color: "var(--on-accent)",
+              color: "#fff",
               fontWeight: 700,
               display: "grid",
               placeItems: "center",
@@ -149,7 +149,7 @@ function ClientSharePortalInner() {
                   padding: "2px 8px",
                   borderRadius: 999,
                   background: "rgba(16,185,129,0.22)",
-                  color: "var(--ui-success-border)",
+                  color: "#6ee7b7",
                   fontWeight: 600,
                 }}
               >
@@ -172,7 +172,7 @@ function ClientSharePortalInner() {
               borderRadius: 9,
               border: "1px solid rgba(255,255,255,0.2)",
               background: "rgba(255,255,255,0.08)",
-              color: "var(--on-accent)",
+              color: "#fff",
               fontSize: 12.5,
             }}
           />
@@ -191,7 +191,7 @@ function ClientSharePortalInner() {
             className="saas-btn saas-btn-sm"
             style={{
               background: "rgba(255,255,255,0.1)",
-              color: "var(--on-accent)",
+              color: "#fff",
               borderColor: "rgba(255,255,255,0.2)",
             }}
           >
@@ -213,7 +213,7 @@ function ClientSharePortalInner() {
             justifyContent: "space-between",
             flexWrap: "wrap",
             gap: 16,
-            background: "var(--ui-surface)",
+            background: "#fff",
           }}
         >
           <div>
@@ -251,7 +251,7 @@ function ClientSharePortalInner() {
               <div style={{ fontSize: 11.5, color: "var(--ink-muted)" }}>Listos</div>
             </div>
             <div style={{ textAlign: "center", padding: "8px 16px", borderRadius: 12, background: "var(--cream)" }}>
-              <div style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700, color: "var(--ui-warning-text)" }}>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700, color: "#9a6406" }}>
                 {pendingCount}
               </div>
               <div style={{ fontSize: 11.5, color: "var(--ink-muted)" }}>Pendientes</div>
@@ -322,7 +322,7 @@ function ClientSharePortalInner() {
                         padding: "3px 9px",
                         borderRadius: 999,
                         background: "rgba(15,36,28,0.8)",
-                        color: "var(--on-accent)",
+                        color: "#fff",
                         fontSize: 11,
                         fontWeight: 600,
                       }}

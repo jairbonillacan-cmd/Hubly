@@ -129,7 +129,7 @@ Todos cambian solos en modo oscuro. **Usa solo esta tabla.**
 | `--ui-sky-soft` | `#DCEFF9` | `#22384A` | Fondo del ítem activo en navegación |
 | `--ui-sky-text` | `#16324F` | `#BFE2F4` | Texto sobre `--ui-sky-soft` |
 | `--ui-sky-border` | `#BFE2F4` | `#2F4C63` | Borde del ítem activo |
-| `--ui-danger` | `#DC2626` | `#EF4444` | Relleno, borde o indicador de error o acción destructiva |
+| `--ui-danger` | `#DC2626` | `#DC2626` | Relleno, borde o indicador de error o acción destructiva |
 | `--ui-danger-soft` | `#FEE2E2` | `rgb(248 113 113 / 0.16)` | Fondo suave de error o `STATUS_META.changes` |
 | `--ui-danger-text` | `#B91C1C` | `#FCA5A5` | Texto o icono de error sobre `--ui-danger-soft` o `--ui-surface` |
 | `--ui-danger-border` | `#FECACA` | `rgb(248 113 113 / 0.35)` | Borde suave de aviso de error o botón destructivo |

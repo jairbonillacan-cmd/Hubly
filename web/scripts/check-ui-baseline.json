@@ -24,6 +24,7 @@
     "style-inline": 1
   },
   "app/(app)/app-base.css": {
+    "color-fijo": 3,
     "important": 7,
     "rgb-fijo": 8,
     "tamano-fuente": 1,
@@ -46,7 +47,7 @@
     "tamano-fuente": 3
   },
   "app/(app)/dashboard-polish.css": {
-    "color-fijo": 112,
+    "color-fijo": 113,
     "degradado": 3,
     "important": 95,
     "radio": 5,
@@ -58,7 +59,7 @@
     "style-inline": 1
   },
   "app/(app)/hubly-saas.css": {
-    "color-fijo": 15,
+    "color-fijo": 18,
     "important": 19,
     "radio": 1,
     "rgb-fijo": 28,
@@ -112,6 +113,7 @@
     "z-index-fijo": 1
   },
   "components/app/ArchivosYProyectosView.tsx": {
+    "color-fijo": 2,
     "rgb-fijo": 4,
     "style-inline": 48,
     "tamano-fuente": 1,

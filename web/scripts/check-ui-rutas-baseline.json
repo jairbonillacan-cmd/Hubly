@@ -1,13 +1,16 @@
 {
   "app/cotizacion/[id]/page.tsx": {
+    "color-fijo": 9,
     "important": 1,
     "style-inline": 19,
     "tamano-fuente": 1
   },
   "app/invitacion/[token]/page.tsx": {
+    "color-fijo": 4,
     "style-inline": 4
   },
   "app/onboarding/page.tsx": {
+    "color-fijo": 10,
     "style-inline": 12
   },
   "app/page.tsx": {
@@ -18,12 +21,13 @@
     "tamano-fuente": 1
   },
   "app/reporte/[brandId]/page.tsx": {
+    "color-fijo": 5,
     "important": 1,
     "style-inline": 6,
     "tamano-fuente": 1
   },
   "app/share/[token]/page.tsx": {
-    "color-fijo": 1,
+    "color-fijo": 9,
     "rgb-fijo": 7,
     "style-inline": 45,
     "tamano-fuente": 4
