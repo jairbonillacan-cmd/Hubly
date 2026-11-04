@@ -16,7 +16,6 @@
   "components/app/compositor/ComposerContenido.tsx": 527,
   "components/app/compositor/usePostComposerModal.tsx": 465,
   "components/app/dashboard/ExtraWidgets.tsx": 522,
-  "components/app/dashboard/SaludCuentasView.tsx": 852,
   "components/app/dashboard/team/EquipoCabecera.tsx": 448,
   "components/app/dashboard/team/EquipoLogrosRanking.tsx": 440,
   "components/app/DescubreHublyWidget.tsx": 445,
