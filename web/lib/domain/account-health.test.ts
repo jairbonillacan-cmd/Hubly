@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { selectAccountsHealth } from "./account-health";
+import {
+  buildCommitmentSavePayload,
+  createCommitmentDraft,
+  resolveCommitmentPeriodKey,
+  selectAccountsHealth,
+  sortEvaluatedAccounts,
+} from "./account-health";
 import { brand, post, RELOJ, task } from "./test-fixtures";
 import type { BrandWorkspace } from "../types";
 
@@ -57,4 +63,72 @@ test("sin marcas el resumen de salud queda en ceros", () => {
   assert.equal(r.accounts.length, 0);
   assert.equal(r.summary.totalAccounts, 0);
   assert.equal(r.summary.averageHealthScore, 0);
+});
+
+test("resolveCommitmentPeriodKey mapea ventanas cortas a mes_actual", () => {
+  assert.equal(resolveCommitmentPeriodKey("7d"), "mes_actual");
+  assert.equal(resolveCommitmentPeriodKey("30d"), "mes_actual");
+  assert.equal(resolveCommitmentPeriodKey("semana"), "mes_actual");
+  assert.equal(resolveCommitmentPeriodKey("mes_actual"), "mes_actual");
+  assert.equal(resolveCommitmentPeriodKey("mes_anterior"), "mes_anterior");
+  assert.equal(resolveCommitmentPeriodKey("trimestre"), "trimestre");
+});
+
+test("sortEvaluatedAccounts coloca primero las marcas fijadas y ordena por nombre en español", () => {
+  const r = selectAccountsHealth(
+    [
+      brand({ id: "z", name: "Zeta", pinned: false }),
+      brand({ id: "a", name: "Alfa", pinned: false }),
+      brand({ id: "p", name: "Omega", pinned: true }),
+    ],
+    [],
+    [],
+    { referenceNow: RELOJ }
+  );
+  const ordenadas = sortEvaluatedAccounts(r.accounts, "name_asc");
+  assert.deepEqual(
+    ordenadas.map((item) => item.brand.id),
+    ["p", "a", "z"]
+  );
+});
+
+test("createCommitmentDraft y buildCommitmentSavePayload escalan 7d x4 y limpian pauta inactiva", () => {
+  const r = selectAccountsHealth(
+    [
+      brand({
+        id: "m1",
+        hasPaidAds: true,
+        monthlySpend: 12000,
+      }),
+    ],
+    [],
+    [],
+    { period: "7d", referenceNow: RELOJ }
+  );
+  const draft = createCommitmentDraft(r.accounts[0]);
+  draft.postsCommitted = 3;
+  draft.postsCompleted = 2;
+  draft.StoriesCommitted = 5;
+  draft.StoriesCompleted = 4;
+  draft.reelsCommitted = 2;
+  draft.reelsCompleted = 1;
+  draft.adCampaignsCommitted = 2;
+  draft.adCampaignsCompleted = 1;
+
+  const saved7d = buildCommitmentSavePayload(draft, "7d");
+  assert.equal(saved7d.targetPeriodKey, "mes_actual");
+  assert.equal(saved7d.commitmentsPatch.postsCommitted, 12);
+  assert.equal(saved7d.commitmentsPatch.postsCompleted, 8);
+  assert.equal(saved7d.commitmentsPatch.StoriesCommitted, 20);
+  assert.equal(saved7d.commitmentsPatch.storiesCompleted, 16);
+  assert.equal(saved7d.commitmentsPatch.reelsCommitted, 8);
+  // Las campañas de pauta no se multiplican x4 en 7d
+  assert.equal(saved7d.commitmentsPatch.adCampaignsCommitted, 2);
+  assert.equal(saved7d.commitmentsPatch.adSpend, 12000);
+
+  const sinPauta = buildCommitmentSavePayload({ ...draft, hasPaidAds: false }, "mes_anterior");
+  assert.equal(sinPauta.targetPeriodKey, "mes_anterior");
+  assert.equal(sinPauta.brandPatch.hasPaidAds, false);
+  assert.equal(sinPauta.commitmentsPatch.adSpend, 0);
+  assert.equal(sinPauta.commitmentsPatch.postsCommitted, 3);
 });

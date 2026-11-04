@@ -1,12 +1,5 @@
 /* Estilos del dominio Equipo (.hubly-equipo-*) */
 
-:root {
-  --equipo-rank-border: #F1F5F9;
-  --equipo-today-fill: linear-gradient(90deg, #16324F 0%, var(--hb-accent) 100%);
-  --equipo-font-time: 14.5px;
-  --equipo-font-dot: 9.5px;
-}
-
 .hubly-equipo-view { max-width: 1120px; width: 100%; padding-bottom: 48px; }
 
 /* Cabecera y controles */
@@ -54,15 +47,15 @@
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view :is(.hubly-equipo-invites-title, .hubly-equipo-invite-name) { font-size: 13px; font-weight: 700; color: var(--ui-text); }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-invites-new-btn { border: none; background: transparent; color: var(--hb-accent-text); font-size: 12px; font-weight: 600; cursor: pointer; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-invites-list { display: flex; flex-direction: column; gap: 8px; }
-:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-invite-card { background: var(--ui-surface); border-radius: 10px; padding: 10px 14px; border: 1px solid var(--lilac); gap: 10px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-invite-card { background: var(--ui-surface); border-radius: 10px; padding: 10px 14px; border: 1px solid var(--ui-sky-soft); gap: 10px; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-invite-email { font-size: 12px; color: var(--ui-text-4); }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-invite-role { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 9999px; background: var(--ui-muted); color: var(--ui-text-3); }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-invite-status { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 9999px; background: var(--hubly-success-bg); color: var(--hubly-success-text); }
-:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-invite-status[data-pending="true"] { background: var(--yellow-pale); color: var(--ui-accent-text); }
+:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-invite-status[data-pending="true"] { background: var(--ui-accent-soft); color: var(--ui-accent-text); }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view :is(.hubly-equipo-invite-btn-copy, .hubly-equipo-invite-btn-accept, .hubly-equipo-invite-btn-cancel) { height: 28px; padding: 0 10px; border-radius: 7px; font-size: 11.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-invite-btn-copy { border: 1px solid var(--ui-border-strong); background: var(--ui-surface); color: var(--ui-text-2); }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-invite-btn-accept { border: none; background: var(--hb-accent); color: var(--on-accent); }
-:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-invite-btn-cancel { padding: 0 8px; border: 1px solid var(--coral-pale); background: var(--hubly-danger-bg); color: var(--hubly-danger-text); font-size: 11px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-invite-btn-cancel { padding: 0 8px; border: 1px solid var(--hubly-danger-bg); background: var(--hubly-danger-bg); color: var(--hubly-danger-text); font-size: 11px; }
 
 /* Resumen de perfil y tarjetas */
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-profile-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; position: relative; }
@@ -80,7 +73,7 @@
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-brand-option { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border-radius: 8px; border: none; background: transparent; color: var(--ui-text-2); font-size: 12.5px; font-weight: 500; cursor: pointer; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-brand-option[aria-pressed="true"] { background: var(--ui-accent-soft); color: var(--hb-accent-text); font-weight: 600; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-brand-option-left { display: inline-flex; align-items: center; gap: 8px; }
-:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-brand-dot { width: 18px; height: 18px; border-radius: 5px; background: var(--hb-accent); color: var(--on-accent); font-size: var(--equipo-font-dot); font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-brand-dot { width: 18px; height: 18px; border-radius: 5px; background: var(--hb-accent); color: var(--on-accent); font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-metrics-strip { background: var(--ui-surface-2); border-radius: 14px; padding: 18px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 28px; margin-bottom: 18px; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-metrics-period { font-size: 11.5px; font-weight: 600; color: var(--ui-text-4); }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-metrics-group { display: flex; flex-wrap: wrap; align-items: baseline; gap: 14px; }
@@ -90,7 +83,7 @@
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-metrics-val-lg { color: var(--ui-text); font-weight: 700; font-size: 18px; margin-right: 4px; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-metrics-val-md { color: var(--ui-text); font-weight: 700; font-size: 15px; margin-right: 4px; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-metrics-val-muted { color: var(--ui-text-4); font-weight: 700; font-size: 15px; margin-right: 4px; }
-:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-metrics-val-time { color: var(--ui-text); font-weight: 700; font-size: var(--equipo-font-time); }
+:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-metrics-val-time { color: var(--ui-text); font-weight: 700; font-size: 14px; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-metrics-divider { width: 1px; height: 22px; background: var(--ui-border); flex-shrink: 0; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-brands-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-bottom: 20px; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-brand-badge-item { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; }
@@ -115,16 +108,16 @@
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-activity-label { font-size: 12.5px; font-weight: 500; color: var(--ui-text-3); }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-activity-label[data-today="true"] { font-weight: 700; color: var(--hb-accent-text); }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-activity-track { height: 24px; border-radius: 7px; background: var(--ui-surface-2); border: none; overflow: hidden; position: relative; }
-:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-activity-track[data-today="true"] { background: var(--ui-accent-soft); border: 1px solid var(--lilac); }
+:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-activity-track[data-today="true"] { background: var(--ui-accent-soft); border: 1px solid var(--ui-sky-soft); }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-activity-fill { height: 100%; background: var(--line-strong); opacity: 0.65; border-radius: 6px; transition: width 240ms ease; }
-:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-activity-fill[data-today="true"] { background: var(--equipo-today-fill); opacity: 0.88; }
+:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-activity-fill[data-today="true"] { background: var(--hb-accent); opacity: 0.88; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-activity-status { font-size: 11.5px; color: var(--ui-text-4); font-weight: 400; text-align: right; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-activity-status[data-active="true"] { color: var(--ui-text-3); font-weight: 600; }
 
 /* Ranking y perfil lateral */
-:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-row { background: var(--ui-surface-2); border: 1px solid var(--equipo-rank-border); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; transition: background 150ms ease, border-color 150ms ease; }
+:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-row { background: var(--ui-surface-2); border: 1px solid var(--ui-muted); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; transition: background 150ms ease, border-color 150ms ease; }
 html.dark :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-row:not([data-highlight="true"]) { border-color: var(--ui-border-strong); }
-:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-row[data-highlight="true"] { background: var(--ui-accent-soft); border-color: var(--lilac); }
+:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-row[data-highlight="true"] { background: var(--ui-accent-soft); border-color: var(--ui-sky-soft); }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-profile-btn { order: 1; align-self: flex-end; border: 0; background: transparent; color: var(--ui-accent-text-2); font-size: 12px; font-weight: 600; cursor: pointer; padding: 0; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-main { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
@@ -143,7 +136,7 @@ html.dark :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-ra
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-cycle { font-size: 10.5px; color: var(--ui-text-4); }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-cycle[data-current="true"] { color: var(--ui-text-3); }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-bar-track { width: 100%; height: 4px; border-radius: 9999px; background: var(--ui-border); overflow: hidden; }
-:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-bar-track[data-current="true"] { background: var(--lilac); }
+:is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-bar-track[data-current="true"] { background: var(--ui-sky-soft); }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-bar-fill { height: 100%; border-radius: 9999px; background: var(--ink-muted); transition: width 240ms ease; }
 :is(.hubly-app-root, .hb-app-root) .hubly-equipo-view .hubly-equipo-rank-bar-fill[data-current="true"] { background: var(--hb-accent); }
 

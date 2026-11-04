@@ -223,9 +223,6 @@
     "hbtn-directo": 1,
     "style-inline": 13
   },
-  "components/app/dashboard/SaludCuentasView.tsx": {
-    "style-inline": 3
-  },
   "components/app/equipo/EquipoLogrosRanking.tsx": {
     "style-inline": 1
   },
@@ -257,6 +254,9 @@
     "radio": 1,
     "style-inline": 27,
     "tamano-fuente": 1
+  },
+  "components/app/salud/SaludTarjetaMarca.tsx": {
+    "style-inline": 3
   },
   "components/app/shell/BrandSwitcher.tsx": {
     "color-fijo": 2,

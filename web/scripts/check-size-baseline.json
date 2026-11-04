@@ -16,7 +16,6 @@
   "components/app/compositor/ComposerContenido.tsx": 527,
   "components/app/compositor/usePostComposerModal.tsx": 465,
   "components/app/dashboard/ExtraWidgets.tsx": 522,
-  "components/app/dashboard/SaludCuentasView.tsx": 852,
   "components/app/DescubreHublyWidget.tsx": 445,
   "components/app/FloatingAIDrawer.tsx": 610,
   "components/app/icons/DuotoneIcons.tsx": 800,
