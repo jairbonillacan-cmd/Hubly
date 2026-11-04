@@ -36,10 +36,6 @@
     "style-inline": 22,
     "tamano-fuente": 1
   },
-  "app/(app)/calendario/page.tsx": {
-    "color-fijo": 2,
-    "style-inline": 11
-  },
   "app/(app)/crm/page.tsx": {
     "color-fijo": 1,
     "radio": 1,
@@ -297,6 +293,10 @@
   },
   "components/app/social/CalendarModals.tsx": {
     "style-inline": 3
+  },
+  "components/app/social/CalendarioView.tsx": {
+    "color-fijo": 2,
+    "style-inline": 11
   },
   "components/app/social/ComposerExtras.tsx": {
     "style-inline": 10

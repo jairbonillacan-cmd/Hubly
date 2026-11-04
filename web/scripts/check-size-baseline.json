@@ -1,6 +1,5 @@
 {
   "app/(app)/app-base.css": 703,
-  "app/(app)/calendario/page.tsx": 805,
   "app/(app)/chat/page.tsx": 776,
   "app/(app)/dashboard-polish.css": 3090,
   "app/(app)/hubly-saas.css": 1498,
@@ -22,6 +21,7 @@
   "components/app/icons/HublyIcons.tsx": 429,
   "components/app/NewBrandModal.tsx": 420,
   "components/app/NotebookReaderModal.tsx": 916,
+  "components/app/social/CalendarioView.tsx": 805,
   "components/app/social/SocialCalendar.tsx": 616,
   "components/app/sugerencias/SugerenciasCuerpo.tsx": 506,
   "components/app/tasks/TaskBoard.tsx": 664,
