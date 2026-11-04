@@ -1,20 +1,27 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
-import { HublyCalendarIcon, } from "@/components/app/icons/HublyIcons";
-import {
-  HublyCalendarIcon as DuoCalendarIcon,
-} from "@/components/app/icons/DuotoneIcons";
-import type { InicioViewModel } from "./useInicioView";
+import { useHublyStore } from "@/lib/store";
+import { selectTodayPostsAndApprovals } from "@/lib/domain-selectors";
+import { HublyCalendarIcon } from "@/components/app/icons/HublyIcons";
+import { HublyCalendarIcon as DuoCalendarIcon } from "@/components/app/icons/DuotoneIcons";
 
-export function WidgetHoy({ view }: { view: InicioViewModel }) {
-  const { brands, openComposer, todayAndApprovals } = view;
+export function WidgetHoy({ filterByBrand }: { filterByBrand: boolean }) {
+  const timezone = useHublyStore((s) => s.profile?.timezone);
+  const fixedIsoNow = useHublyStore((s) => s.testClock?.fixedIsoNow);
+  const activeBrandId = useHublyStore((s) => s.activeBrandId);
+  const brands = useHublyStore((s) => s.brands);
+  const posts = useHublyStore((s) => s.posts);
+  const openComposer = useHublyStore((s) => s.openComposer);
+
+  const todayAndApprovals = useMemo(
+    () => selectTodayPostsAndApprovals(posts, activeBrandId, fixedIsoNow, filterByBrand, timezone),
+    [posts, activeBrandId, fixedIsoNow, filterByBrand, timezone]
+  );
+
   return (
-    <section
-      key="hoy"
-      data-widget-id="hoy"
-      className="hb-widget"
-    >
+    <section key="hoy" data-widget-id="hoy" className="hb-widget">
       <div className="hb-widget-head">
         <div className="hb-widget-title">
           <span className="hb-widget-icon-box">
@@ -39,57 +46,24 @@ export function WidgetHoy({ view }: { view: InicioViewModel }) {
           <p className="hb-empty-desc">Hoy no sale nada programado.</p>
         </div>
       ) : (
-        <div className="hb-widget-body" style={{ padding: "14px 20px 18px" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div className="hb-widget-body hubly-dashboard-body-compact">
+          <div className="hubly-dashboard-stack-10">
             {todayAndApprovals.todayPosts.map((post) => {
               const postBrand = brands.find((b) => b.id === post.brandId);
               return (
                 <div
                   key={post.id}
                   onClick={() => openComposer(post.id)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 12,
-                    padding: "10px 12px",
-                    borderRadius: 12,
-                    border: "1px solid var(--ui-muted)",
-                    background: "var(--ui-surface-2)",
-                    cursor: "pointer",
-                  }}
+                  className="hubly-dashboard-post-row is-clickable"
                 >
-                  <div style={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 600,
-                        color: "var(--ui-text)",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {post.title}
-                    </div>
-                    <div style={{ fontSize: 11.5, color: "var(--ui-text-4)", marginTop: 2 }}>
+                  <div className="hubly-dashboard-item-main">
+                    <div className="hubly-dashboard-item-title">{post.title}</div>
+                    <div className="hubly-dashboard-item-meta">
                       {post.scheduledTime} · {post.networks.join(", ")}
                       {postBrand ? ` · ${postBrand.name}` : ""}
                     </div>
                   </div>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 600,
-                      padding: "3px 8px",
-                      borderRadius: 999,
-                      background: "var(--hubly-success-bg)",
-                      color: "var(--tinta-exito)",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {post.format}
-                  </span>
+                  <span className="hubly-dashboard-format-pill">{post.format}</span>
                 </div>
               );
             })}

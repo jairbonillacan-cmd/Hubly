@@ -1,6 +1,7 @@
+"use client";
+
 import { ExtraWidget } from "@/components/app/dashboard/ExtraWidgets";
 import type { DashboardWidgetId } from "@/lib/types";
-import type { InicioViewModel } from "./useInicioView";
 import { WidgetTareas } from "./WidgetTareas";
 import { WidgetLibretas } from "./WidgetLibretas";
 import { WidgetHoy } from "./WidgetHoy";
@@ -11,24 +12,37 @@ import { WidgetAdsActivos } from "./WidgetAdsActivos";
 import { WidgetProyectosCriticos } from "./WidgetProyectosCriticos";
 
 /** Elige el widget del tablero. */
-export function InicioWidget({ widgetId, view }: { widgetId: DashboardWidgetId; view: InicioViewModel }) {
+export function InicioWidget({
+  widgetId,
+  filterByBrand,
+  onToggleFilterByBrand,
+}: {
+  widgetId: DashboardWidgetId;
+  filterByBrand: boolean;
+  onToggleFilterByBrand: () => void;
+}) {
   switch (widgetId) {
     case "tareas":
-      return <WidgetTareas view={view} />;
+      return (
+        <WidgetTareas
+          filterByBrand={filterByBrand}
+          onToggleFilterByBrand={onToggleFilterByBrand}
+        />
+      );
     case "libretas":
-      return <WidgetLibretas view={view} />;
+      return <WidgetLibretas />;
     case "hoy":
-      return <WidgetHoy view={view} />;
+      return <WidgetHoy filterByBrand={filterByBrand} />;
     case "notificaciones":
-      return <WidgetNotificaciones view={view} />;
+      return <WidgetNotificaciones />;
     case "aprobaciones":
-      return <WidgetAprobaciones view={view} />;
+      return <WidgetAprobaciones filterByBrand={filterByBrand} />;
     case "grafica_ads":
-      return <WidgetGraficaAds view={view} />;
+      return <WidgetGraficaAds />;
     case "ads_activos":
-      return <WidgetAdsActivos view={view} />;
+      return <WidgetAdsActivos />;
     case "proyectos_criticos":
-      return <WidgetProyectosCriticos view={view} />;
+      return <WidgetProyectosCriticos />;
     default:
       return <ExtraWidget id={widgetId} />;
   }

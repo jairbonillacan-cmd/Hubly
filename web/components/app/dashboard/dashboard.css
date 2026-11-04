@@ -1,0 +1,63 @@
+/* Maquetación de los widgets del tablero de Inicio */
+.hubly-dashboard-head-wrap { flex-wrap: wrap; gap: 8px; }
+.hubly-dashboard-head-actions { display: flex; align-items: center; gap: 10px; }
+.hubly-dashboard-task-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.hubly-dashboard-filter-pill { padding: 3px 9px; border: 1px solid var(--ui-border); border-radius: 999px; background: var(--ui-surface-2); color: var(--ui-text-4); font-size: 11px; font-weight: 600; cursor: pointer; }
+.hubly-dashboard-filter-pill.is-all { background: var(--ui-accent-soft); color: var(--hb-accent-text); }
+.hubly-dashboard-chip-btn { display: inline-flex; align-items: center; gap: 3px; padding: 3px 9px; border: 1px solid var(--ui-border); border-radius: 999px; background: var(--ui-surface); color: var(--ui-text-3); font-size: 11.5px; font-weight: 600; cursor: pointer; }
+.hubly-dashboard-chip-btn.is-compact { padding: 3px 8px; }
+.hubly-dashboard-text-btn { padding: 0; border: none; background: transparent; color: var(--ui-text-4); font-size: 11.5px; font-weight: 600; cursor: pointer; }
+.hubly-dashboard-body-pad { padding: 16px 20px; }
+.hubly-dashboard-body-compact { padding: 14px 20px 18px; }
+.hubly-dashboard-body-notebooks { padding: 18px 20px; }
+.hubly-dashboard-body-projects { padding: 12px 14px; }
+.hubly-dashboard-empty-grow { flex: 1; }
+.hubly-dashboard-stack-8 { display: flex; flex-direction: column; gap: 8px; }
+.hubly-dashboard-stack-10 { display: flex; flex-direction: column; gap: 10px; }
+.hubly-dashboard-item-main { min-width: 0; }
+.hubly-dashboard-item-title { overflow: hidden; color: var(--ui-text); font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.hubly-dashboard-item-title-sm { overflow: hidden; color: var(--ui-text); font-size: 12.5px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.hubly-dashboard-item-meta { margin-top: 2px; color: var(--ui-text-4); font-size: 11.5px; }
+.hubly-dashboard-item-meta-xs { color: var(--ui-text-4); font-size: 11px; }
+.hubly-dashboard-item-actions { display: flex; flex-shrink: 0; align-items: center; gap: 6px; }
+.hubly-dashboard-ad-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 12px; border: 1px solid var(--ui-border); border-radius: 10px; background: var(--ui-surface-2); }
+.hubly-dashboard-post-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid var(--ui-muted); border-radius: 12px; background: var(--ui-surface-2); }
+.hubly-dashboard-post-row.is-clickable { gap: 12px; cursor: pointer; }
+.hubly-dashboard-pill-success { flex-shrink: 0; padding: 2px 8px; border-radius: 999px; background: var(--hubly-success-bg); color: var(--tinta-exito); font-size: 11px; font-weight: 600; }
+.hubly-dashboard-pill-success.is-bold { font-weight: 700; }
+.hubly-dashboard-format-pill { flex-shrink: 0; padding: 3px 8px; border-radius: 999px; background: var(--hubly-success-bg); color: var(--tinta-exito); font-size: 11px; font-weight: 600; }
+.hubly-dashboard-approve-btn { padding: 4px 9px; border: none; border-radius: 999px; background: var(--hubly-success); color: var(--on-accent); font-size: 11px; font-weight: 600; cursor: pointer; }
+.hubly-dashboard-ads-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.hubly-dashboard-ads-stat { padding: 12px 14px; border: 1px solid var(--ui-border); border-radius: 12px; background: var(--ui-surface-2); }
+.hubly-dashboard-ads-stat-label { color: var(--ui-text-4); font-size: 11px; font-weight: 600; }
+.hubly-dashboard-ads-stat-value { margin-top: 4px; color: var(--ui-text); font-size: 18px; font-weight: 700; }
+.hubly-dashboard-ads-stat-value.is-success { color: var(--tinta-exito); }
+.hubly-dashboard-notif-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid var(--ui-sky-border); border-radius: 12px; background: var(--ui-sky-soft); }
+.hubly-dashboard-notif-title { color: var(--ui-text); font-size: 12.5px; font-weight: 600; }
+.hubly-dashboard-notif-done { flex-shrink: 0; padding: 2px 8px; border: 1px solid var(--ui-sky-border); border-radius: 999px; background: var(--ui-surface); color: var(--hb-accent-text); font-size: 11px; font-weight: 600; cursor: pointer; }
+.hubly-dashboard-project-link { text-decoration: none; }
+.hubly-dashboard-project-title { display: block; font-weight: 600; }
+.hubly-dashboard-project-meta { color: var(--ui-text-4); font-size: 11.5px; }
+.hubly-dashboard-quick-form { display: flex; flex-direction: column; gap: 8px; padding: 12px 20px; border-bottom: 1px solid var(--ui-muted); background: var(--ui-surface-2); }
+.hubly-dashboard-quick-input { width: 100%; padding: 7px 11px; border: 1px solid var(--ui-border-strong); border-radius: 8px; outline: none; background: var(--ui-surface); color: var(--ui-text); font-size: 12.5px; }
+.hubly-dashboard-quick-input:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 1px; }
+.hubly-dashboard-quick-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.hubly-dashboard-quick-selects { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.hubly-dashboard-quick-select { padding: 4px 8px; border: 1px solid var(--ui-border-strong); border-radius: 6px; background: var(--ui-surface); color: var(--ui-text-2); font-size: 11.5px; }
+.hubly-dashboard-quick-actions { display: flex; align-items: center; gap: 6px; }
+.hubly-dashboard-quick-cancel { padding: 4px 10px; border: 1px solid var(--ui-border); border-radius: 6px; background: var(--ui-surface); color: var(--ui-text-4); font-size: 11.5px; cursor: pointer; }
+.hubly-dashboard-quick-submit { padding: 4px 12px; border: none; border-radius: 6px; background: var(--hb-accent); color: var(--on-accent); font-size: 11.5px; font-weight: 600; cursor: pointer; }
+.hubly-dashboard-task-section + .hubly-dashboard-task-section { margin-top: 14px; }
+.hubly-dashboard-task-group-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; color: var(--ui-text-4); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.hubly-dashboard-task-group-head.is-overdue { color: var(--hubly-danger); }
+.hubly-dashboard-task-list { display: flex; flex-direction: column; gap: 4px; }
+.hubly-dashboard-task-main { display: flex; flex: 1; align-items: center; gap: 10px; min-width: 0; }
+.hubly-dashboard-task-brand { flex-shrink: 0; padding: 2px 7px; border-radius: 999px; background: var(--ui-muted); color: var(--ui-text-3); font-size: 10.5px; font-weight: 600; }
+.hubly-dashboard-completed-wrap { margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--ui-border); }
+.hubly-dashboard-completed-toggle { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: none; background: transparent; color: var(--ui-text-4); font-size: 11.5px; font-weight: 600; cursor: pointer; }
+.hubly-dashboard-completed-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.hubly-dashboard-completed-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 6px; border-radius: 6px; }
+.hubly-dashboard-completed-btn { display: inline-flex; align-items: center; gap: 8px; min-width: 0; padding: 0; border: none; background: transparent; text-align: left; cursor: pointer; }
+.hubly-dashboard-completed-check { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 999px; background: var(--hubly-success); }
+.hubly-dashboard-completed-title { overflow: hidden; color: var(--ui-text-4); font-size: 12.5px; text-decoration: line-through; text-overflow: ellipsis; white-space: nowrap; }
+.hubly-dashboard-completed-delete { padding: 2px; border: none; background: transparent; color: var(--ui-border-strong); cursor: pointer; }

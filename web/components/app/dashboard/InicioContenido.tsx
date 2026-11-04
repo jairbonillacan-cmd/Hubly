@@ -1,11 +1,12 @@
 "use client";
 
-import { InicioWidget } from "./InicioWidget";
-import { Button } from "@/components/app/ui/Button";
-import React from "react";
+import React, { useMemo } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { useHublyStore } from "@/lib/store";
+import { selectGreetingAndDate, selectTasksBreakdown } from "@/lib/domain-selectors";
+import { Button } from "@/components/app/ui/Button";
 import { PendientesModal } from "@/components/app/dashboard/PendientesModal";
-import { HublySunWeatherIcon, } from "@/components/app/icons/HublyIcons";
+import { HublySunWeatherIcon } from "@/components/app/icons/HublyIcons";
 import {
   HublyArrowLeftIcon as ArrowLeft,
   HublyArrowRightIcon as ArrowRight,
@@ -17,64 +18,134 @@ import {
   HublySearchIcon,
   HublyTagIcon,
 } from "@/components/app/icons/DuotoneIcons";
-import type { InicioViewModel } from "./useInicioView";
+import { InicioWidget } from "./InicioWidget";
+import { useInicioView } from "./useInicioView";
 
-export function InicioContenido({ view }: { view: InicioViewModel }) {
-  const { agency, agencyName, editWidgetsMode, setWidgetConfigModalOpen, setEditWidgetsMode, toggleTaskStatus, toggleWidgetVisibility, moveWidget, pendientesOpen, setPendientesOpen, dragId, setDragId, setDragOrder, resizing, hiddenWidget, setHiddenWidget, layoutCopied, gridRef, greetingInfo, tasksBreakdown, sortedWidgets, orderedVisibleWidgets, handleDragEnterWidget, handleDragEndWidget, handleHideWidget, handleResetLayout, handleCopyLayout, handleCycleSpan, handleResizeStart, handleOpenNewPost, handleOpenNewBrand, handleOpenInviteTeam, handleOpenSearch } = view;
+type GreetingInfo = ReturnType<typeof selectGreetingAndDate>;
+
+function InicioHero({
+  greetingInfo,
+  pendingCount,
+  onOpenPendientes,
+}: {
+  greetingInfo: GreetingInfo;
+  pendingCount: number;
+  onOpenPendientes: () => void;
+}) {
+  const agency = useHublyStore((s) => s.agency);
+  const agencyName = useHublyStore((s) => s.agencyName);
+  const openComposer = useHublyStore((s) => s.openComposer);
+  const setNewBrandModalOpen = useHublyStore((s) => s.setNewBrandModalOpen);
+  const setInviteModalOpen = useHublyStore((s) => s.setInviteModalOpen);
+  const setCmdkOpen = useHublyStore((s) => s.setCmdkOpen);
+  const setWidgetConfigModalOpen = useHublyStore((s) => s.setWidgetConfigModalOpen);
+  const setActiveNotebookId = useHublyStore((s) => s.setActiveNotebookId);
+
+  const closeOverlays = () => {
+    setInviteModalOpen(false);
+    setWidgetConfigModalOpen(false);
+    setActiveNotebookId(null);
+  };
+
+  return (
+    <header className="hubly-hero">
+      <p className="hubly-hero-eyebrow">{agency?.name || agencyName || "Tu agencia"}</p>
+      <h1 data-testid="dashboard-greeting-title" className="hubly-hero-title">
+        <span>
+          {greetingInfo.greetingPrefix}, {greetingInfo.userName}
+        </span>
+        <span className="hubly-weather" key={greetingInfo.period}>
+          {greetingInfo.period === "night" ? <HublyMoonIcon size={32} /> : <HublySunWeatherIcon size={32} />}
+        </span>
+      </h1>
+      <p data-testid="dashboard-greeting-subtitle" className="hubly-hero-date">
+        {greetingInfo.dateTitleCase}
+      </p>
+      <p className="hubly-hero-pending">
+        {pendingCount === 0 ? (
+          "Todo al día por hoy."
+        ) : (
+          <>
+            Tienes{" "}
+            <button
+              type="button"
+              className="hubly-pending-pill"
+              aria-haspopup="dialog"
+              onClick={onOpenPendientes}
+            >
+              {pendingCount} {pendingCount === 1 ? "pendiente" : "pendientes"}
+            </button>
+            .
+          </>
+        )}
+      </p>
+      <div className="hubly-hero-actions">
+        <Button onClick={() => { closeOverlays(); openComposer(null); }} variant="secondary">
+          <HublyHashIcon size={18} />
+          <span>Nuevo post</span>
+        </Button>
+        <Button onClick={() => { closeOverlays(); setNewBrandModalOpen(true); }} variant="secondary">
+          <HublyTagIcon size={18} />
+          <span>Nueva marca</span>
+        </Button>
+        <Button onClick={() => setInviteModalOpen(true)} variant="secondary">
+          <HublyPeopleIcon size={18} />
+          <span>Invitar equipo</span>
+        </Button>
+        <Button onClick={() => { closeOverlays(); setCmdkOpen(true); }} variant="gold" title="Buscar (Ctrl+K)">
+          <HublySearchIcon size={18} />
+          <span>Buscar</span>
+        </Button>
+      </div>
+    </header>
+  );
+}
+
+export function InicioContenido({ greetingInfo }: { greetingInfo: GreetingInfo }) {
+  const tasks = useHublyStore((s) => s.tasks);
+  const activeBrandId = useHublyStore((s) => s.activeBrandId);
+  const fixedIsoNow = useHublyStore((s) => s.testClock?.fixedIsoNow);
+  const timezone = useHublyStore((s) => s.profile?.timezone);
+  const editWidgetsMode = useHublyStore((s) => s.editWidgetsMode);
+  const setEditWidgetsMode = useHublyStore((s) => s.setEditWidgetsMode);
+  const setWidgetConfigModalOpen = useHublyStore((s) => s.setWidgetConfigModalOpen);
+  const toggleTaskStatus = useHublyStore((s) => s.toggleTaskStatus);
+  const moveWidget = useHublyStore((s) => s.moveWidget);
+
+  const {
+    filterByBrand,
+    setFilterByBrand,
+    pendientesOpen,
+    setPendientesOpen,
+    dragId,
+    resizing,
+    hiddenWidget,
+    layoutCopied,
+    gridRef,
+    orderedVisibleWidgets,
+    handleDragStartWidget,
+    handleDragEnterWidget,
+    handleDragEndWidget,
+    handleHideWidget,
+    handleUndoHideWidget,
+    handleResetLayout,
+    handleCopyLayout,
+    handleCycleSpan,
+    handleResizeStart,
+  } = useInicioView();
+
+  const tasksBreakdown = useMemo(
+    () => selectTasksBreakdown(tasks, activeBrandId, filterByBrand, fixedIsoNow, timezone),
+    [tasks, activeBrandId, filterByBrand, fixedIsoNow, timezone]
+  );
 
   return (
     <>
-      <header className="hubly-hero">
-        <p className="hubly-hero-eyebrow">{agency?.name || agencyName || "Tu agencia"}</p>
-        <h1 data-testid="dashboard-greeting-title" className="hubly-hero-title">
-          <span>
-            {greetingInfo.greetingPrefix}, {greetingInfo.userName}
-          </span>
-          <span className="hubly-weather" key={greetingInfo.period}>
-            {greetingInfo.period === "night" ? <HublyMoonIcon size={32} /> : <HublySunWeatherIcon size={32} />}
-          </span>
-        </h1>
-        <p data-testid="dashboard-greeting-subtitle" className="hubly-hero-date">
-          {greetingInfo.dateTitleCase}
-        </p>
-        <p className="hubly-hero-pending">
-          {tasksBreakdown.pendingCount === 0 ? (
-            "Todo al día por hoy."
-          ) : (
-            <>
-              Tienes{" "}
-              <button
-                type="button"
-                className="hubly-pending-pill"
-                aria-haspopup="dialog"
-                onClick={() => setPendientesOpen(true)}
-              >
-                {tasksBreakdown.pendingCount}{" "}
-                {tasksBreakdown.pendingCount === 1 ? "pendiente" : "pendientes"}
-              </button>
-              .
-            </>
-          )}
-        </p>
-        <div className="hubly-hero-actions">
-          <Button onClick={handleOpenNewPost} variant="secondary">
-            <HublyHashIcon size={18} />
-            <span>Nuevo post</span>
-          </Button>
-          <Button onClick={handleOpenNewBrand} variant="secondary">
-            <HublyTagIcon size={18} />
-            <span>Nueva marca</span>
-          </Button>
-          <Button onClick={handleOpenInviteTeam} variant="secondary">
-            <HublyPeopleIcon size={18} />
-            <span>Invitar equipo</span>
-          </Button>
-          <Button onClick={handleOpenSearch} variant="gold" title="Buscar (Ctrl+K)">
-            <HublySearchIcon size={18} />
-            <span>Buscar</span>
-          </Button>
-        </div>
-      </header>
+      <InicioHero
+        greetingInfo={greetingInfo}
+        pendingCount={tasksBreakdown.pendingCount}
+        onOpenPendientes={() => setPendientesOpen(true)}
+      />
 
       <div className="hubly-tablero-tools">
         {editWidgetsMode && (
@@ -115,15 +186,18 @@ export function InicioContenido({ view }: { view: InicioViewModel }) {
                 draggable={editWidgetsMode && resizing === null}
                 onDragStartCapture={(e: React.DragEvent) => {
                   e.dataTransfer.effectAllowed = "move";
-                  setDragId(w.id);
-                  setDragOrder(sortedWidgets.map((x) => x.id));
+                  handleDragStartWidget(w.id);
                 }}
                 onDragOver={(e: React.DragEvent) => e.preventDefault()}
                 onDragEnter={() => handleDragEnterWidget(w.id)}
                 onDragEnd={handleDragEndWidget}
               >
                 <div className="hubly-tablero-slot-inner">
-                  <InicioWidget widgetId={w.id} view={view} />
+                  <InicioWidget
+                    widgetId={w.id}
+                    filterByBrand={filterByBrand}
+                    onToggleFilterByBrand={() => setFilterByBrand((prev) => !prev)}
+                  />
                   {editWidgetsMode && (
                     <>
                       <div className="hubly-edit-controls">
@@ -160,13 +234,7 @@ export function InicioContenido({ view }: { view: InicioViewModel }) {
       {hiddenWidget && (
         <div className="hubly-undo-toast" role="status">
           <span>{hiddenWidget.title} se quitó del tablero</span>
-          <button
-            type="button"
-            onClick={() => {
-              toggleWidgetVisibility(hiddenWidget.id);
-              setHiddenWidget(null);
-            }}
-          >
+          <button type="button" onClick={handleUndoHideWidget}>
             Deshacer
           </button>
         </div>
@@ -178,7 +246,6 @@ export function InicioContenido({ view }: { view: InicioViewModel }) {
         groups={tasksBreakdown.groups}
         onToggle={toggleTaskStatus}
       />
-
     </>
   );
 }

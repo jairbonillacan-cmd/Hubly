@@ -1,24 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import { useHublyStore } from "@/lib/store";
+import { notebookStamp } from "@/lib/domain/dashboard";
 import { KraftNotebookCard } from "@/components/app/KraftNotebookCard";
-import { HublyNotebookIcon, } from "@/components/app/icons/HublyIcons";
-import {
-  HublyPlusIcon as Plus,
-} from "@/components/app/icons/DuotoneIcons";
+import { HublyNotebookIcon } from "@/components/app/icons/HublyIcons";
+import { HublyPlusIcon as Plus } from "@/components/app/icons/DuotoneIcons";
 import { useCreateNotebook } from "@/components/app/use-create-notebook";
-import { notebookStamp } from "./inicioView-shared";
-import type { InicioViewModel } from "./useInicioView";
 
-export function WidgetLibretas({ view }: { view: InicioViewModel }) {
-  const { notebooks, setActiveNotebookId } = view;
+export function WidgetLibretas() {
+  const notebooks = useHublyStore((s) => s.notebooks);
+  const setActiveNotebookId = useHublyStore((s) => s.setActiveNotebookId);
   const createNotebook = useCreateNotebook();
+
   return (
-    <section
-      key="libretas"
-      data-widget-id="libretas"
-      className="hb-widget"
-    >
+    <section key="libretas" data-widget-id="libretas" className="hb-widget">
       <div className="hb-widget-head">
         <div className="hb-widget-title">
           <span className="hb-widget-icon-box">
@@ -27,23 +23,11 @@ export function WidgetLibretas({ view }: { view: InicioViewModel }) {
           <span>Libretas</span>
           <span className="hb-widget-badge">{notebooks.length}</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div className="hubly-dashboard-head-actions">
           <button
             type="button"
             onClick={createNotebook}
-            style={{
-              fontSize: 11.5,
-              fontWeight: 600,
-              padding: "3px 9px",
-              borderRadius: 999,
-              border: "1px solid rgba(226, 232, 240, 0.95)",
-              background: "var(--ui-surface)",
-              color: "var(--ui-text-3)",
-              cursor: "pointer",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 3,
-            }}
+            className="hubly-dashboard-chip-btn"
           >
             <Plus className="w-3 h-3" />
             <span>Nota</span>
@@ -51,13 +35,13 @@ export function WidgetLibretas({ view }: { view: InicioViewModel }) {
         </div>
       </div>
 
-      <div className="hb-widget-body hb-widget-body--tall" style={{ padding: "18px 20px" }}>
+      <div className="hb-widget-body hb-widget-body--tall hubly-dashboard-body-notebooks">
         <div className="hubly-shelf">
-          {notebooks.map((nb) => (
+          {notebooks.map((nb, idx) => (
             <KraftNotebookCard
               key={nb.id}
               title={nb.title}
-              stamp={nb.stamp || notebookStamp(notebooks.indexOf(nb), nb.updatedAt)}
+              stamp={nb.stamp || notebookStamp(idx, nb.updatedAt)}
               variant={nb.variant}
               subtitle={nb.subtitle}
               category={nb.category}

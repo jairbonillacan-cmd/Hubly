@@ -1,18 +1,27 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
-import {
-  HublyCheckCircleIcon,
-} from "@/components/app/icons/DuotoneIcons";
-import type { InicioViewModel } from "./useInicioView";
+import { useHublyStore } from "@/lib/store";
+import { selectTodayPostsAndApprovals } from "@/lib/domain-selectors";
+import { HublyCheckCircleIcon } from "@/components/app/icons/DuotoneIcons";
 
-export function WidgetAprobaciones({ view }: { view: InicioViewModel }) {
-  const { profile, brands, updatePostStatus, todayAndApprovals } = view;
+export function WidgetAprobaciones({ filterByBrand }: { filterByBrand: boolean }) {
+  const profileName = useHublyStore((s) => s.profile?.name);
+  const timezone = useHublyStore((s) => s.profile?.timezone);
+  const fixedIsoNow = useHublyStore((s) => s.testClock?.fixedIsoNow);
+  const activeBrandId = useHublyStore((s) => s.activeBrandId);
+  const brands = useHublyStore((s) => s.brands);
+  const posts = useHublyStore((s) => s.posts);
+  const updatePostStatus = useHublyStore((s) => s.updatePostStatus);
+
+  const todayAndApprovals = useMemo(
+    () => selectTodayPostsAndApprovals(posts, activeBrandId, fixedIsoNow, filterByBrand, timezone),
+    [posts, activeBrandId, fixedIsoNow, filterByBrand, timezone]
+  );
+
   return (
-    <section
-      key="aprobaciones"
-      className="hb-widget"
-    >
+    <section key="aprobaciones" className="hb-widget">
       <div className="hb-widget-head">
         <div className="hb-widget-title">
           <span className="hb-widget-icon-box">
@@ -37,63 +46,31 @@ export function WidgetAprobaciones({ view }: { view: InicioViewModel }) {
           <p className="hb-empty-desc">Nada esperando aprobación ✓</p>
         </div>
       ) : (
-        <div className="hb-widget-body" style={{ padding: "14px 20px 18px" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div className="hb-widget-body hubly-dashboard-body-compact">
+          <div className="hubly-dashboard-stack-10">
             {todayAndApprovals.approvalPosts.map((post) => {
               const postBrand = brands.find((b) => b.id === post.brandId);
               return (
-                <div
-                  key={post.id}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 10,
-                    padding: "10px 12px",
-                    borderRadius: 12,
-                    border: "1px solid var(--ui-muted)",
-                    background: "var(--ui-surface-2)",
-                  }}
-                >
-                  <div style={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 600,
-                        color: "var(--ui-text)",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {post.title}
-                    </div>
-                    <div style={{ fontSize: 11.5, color: "var(--ui-text-4)", marginTop: 2 }}>
+                <div key={post.id} className="hubly-dashboard-post-row">
+                  <div className="hubly-dashboard-item-main">
+                    <div className="hubly-dashboard-item-title">{post.title}</div>
+                    <div className="hubly-dashboard-item-meta">
                       {postBrand?.name || "Marca"} · {post.scheduledDate} ({post.scheduledTime})
                     </div>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                  <div className="hubly-dashboard-item-actions">
                     <button
                       type="button"
+                      className="hubly-dashboard-approve-btn"
                       onClick={() =>
                         updatePostStatus(
                           post.id,
                           "approved",
                           "Aprobado desde Inicio.",
-                          profile?.name || "Jair",
+                          profileName || "Jair",
                           "agency"
                         )
                       }
-                      style={{
-                        fontSize: 11,
-                        fontWeight: 600,
-                        padding: "4px 9px",
-                        borderRadius: 999,
-                        border: "none",
-                        background: "#10B981",
-                        color: "#FFFFFF",
-                        cursor: "pointer",
-                      }}
                     >
                       Aprobar
                     </button>

@@ -1,22 +1,202 @@
 "use client";
 
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
+import { useHublyStore } from "@/lib/store";
+import { useActiveBrand } from "@/lib/use-active-brand";
+import { selectTasksBreakdown } from "@/lib/domain-selectors";
+import { buildQuickTaskInput } from "@/lib/domain/dashboard";
 import type {
+  AgencyTask,
+  BrandWorkspace,
   TaskDueBucket,
   TaskPriority,
 } from "@/lib/types";
-import { HublyClipboardIcon, } from "@/components/app/icons/HublyIcons";
+import { HublyClipboardIcon } from "@/components/app/icons/HublyIcons";
 import {
   HublyCheckCircleIcon,
   HublyCheckIcon as Check,
   HublyPlusIcon as Plus,
   HublyTrashIcon as Trash2,
 } from "@/components/app/icons/DuotoneIcons";
-import type { InicioViewModel } from "./useInicioView";
 
-export function WidgetTareas({ view }: { view: InicioViewModel }) {
-  const { brands, toggleTaskStatus, deleteTask, filterByBrand, setFilterByBrand, showCompletedTasks, setShowCompletedTasks, showQuickTaskForm, setShowQuickTaskForm, newTaskTitle, setNewTaskTitle, newTaskBucket, setNewTaskBucket, newTaskPriority, setNewTaskPriority, activeBrand, tasksBreakdown, allBrandsTasksBreakdown, handleCreateQuickTask } = view;
+type TaskGroup = ReturnType<typeof selectTasksBreakdown>["groups"][number];
+
+function TaskGroupList({
+  groups,
+  brands,
+  filterByBrand,
+  onToggleTask,
+}: {
+  groups: TaskGroup[];
+  brands: BrandWorkspace[];
+  filterByBrand: boolean;
+  onToggleTask: (id: string) => void;
+}) {
+  return (
+    <>
+      {groups.map((group) => (
+        <div key={group.bucket} className="hubly-dashboard-task-section">
+          <div
+            className={`hubly-dashboard-task-group-head ${
+              group.bucket === "overdue" ? "is-overdue" : ""
+            }`}
+          >
+            <span>{group.label}</span>
+            {group.tasks.length > 1 && <span>{group.tasks.length}</span>}
+          </div>
+
+          <div className="hubly-task-group hubly-dashboard-task-list">
+            {group.tasks.map((task) => {
+              const taskBrand = brands.find((b) => b.id === task.brandId);
+              const isDone =
+                Boolean(task.completed) ||
+                task.status === "completada" ||
+                task.status === "done";
+              return (
+                <div
+                  key={task.id}
+                  className="hubly-task-row"
+                  onClick={() => onToggleTask(task.id)}
+                  role="checkbox"
+                  aria-checked={isDone}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onToggleTask(task.id);
+                    }
+                  }}
+                >
+                  <div className="hubly-dashboard-task-main">
+                    <span className="hubly-check" data-done={isDone}>
+                      {isDone && <Check className="w-2.5 h-2.5 text-white" />}
+                    </span>
+                    <span className="hubly-task-title">{task.title}</span>
+                  </div>
+
+                  {!filterByBrand && taskBrand && (
+                    <span className="hubly-dashboard-task-brand">{taskBrand.name}</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </>
+  );
+}
+
+function CompletedTasksSection({
+  tasks,
+  count,
+  open,
+  onToggleOpen,
+  onToggleTask,
+  onDeleteTask,
+}: {
+  tasks: AgencyTask[];
+  count: number;
+  open: boolean;
+  onToggleOpen: () => void;
+  onToggleTask: (id: string) => void;
+  onDeleteTask: (id: string) => void;
+}) {
+  return (
+    <div className="hubly-dashboard-completed-wrap">
+      <button
+        type="button"
+        onClick={onToggleOpen}
+        className="hubly-dashboard-completed-toggle"
+      >
+        <span>
+          {open ? "Ocultar" : "Ver"} completadas ({count})
+        </span>
+      </button>
+
+      {open && (
+        <div className="hubly-dashboard-completed-list">
+          {tasks.map((task) => (
+            <div key={task.id} className="hubly-dashboard-completed-row">
+              <button
+                type="button"
+                onClick={() => onToggleTask(task.id)}
+                className="hubly-dashboard-completed-btn"
+              >
+                <span className="hubly-dashboard-completed-check">
+                  <Check className="w-2.5 h-2.5 text-white" />
+                </span>
+                <span className="hubly-dashboard-completed-title">{task.title}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => onDeleteTask(task.id)}
+                title="Eliminar tarea"
+                className="hubly-dashboard-completed-delete"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function WidgetTareas({
+  filterByBrand,
+  onToggleFilterByBrand,
+}: {
+  filterByBrand: boolean;
+  onToggleFilterByBrand: () => void;
+}) {
+  const brands = useHublyStore((s) => s.brands);
+  const tasks = useHublyStore((s) => s.tasks);
+  const activeBrandId = useHublyStore((s) => s.activeBrandId);
+  const fixedIsoNow = useHublyStore((s) => s.testClock?.fixedIsoNow);
+  const timezone = useHublyStore((s) => s.profile?.timezone);
+  const profileName = useHublyStore((s) => s.profile?.name);
+  const toggleTaskStatus = useHublyStore((s) => s.toggleTaskStatus);
+  const addTask = useHublyStore((s) => s.addTask);
+  const deleteTask = useHublyStore((s) => s.deleteTask);
+  const activeBrand = useActiveBrand();
+
+  const [showCompletedTasks, setShowCompletedTasks] = useState<boolean>(false);
+  const [showQuickTaskForm, setShowQuickTaskForm] = useState<boolean>(false);
+  const [newTaskTitle, setNewTaskTitle] = useState<string>("");
+  const [newTaskBucket, setNewTaskBucket] = useState<TaskDueBucket>("today");
+  const [newTaskPriority, setNewTaskPriority] = useState<TaskPriority>("Media");
+
+  const tasksBreakdown = useMemo(
+    () => selectTasksBreakdown(tasks, activeBrandId, filterByBrand, fixedIsoNow, timezone),
+    [tasks, activeBrandId, filterByBrand, fixedIsoNow, timezone]
+  );
+  const allBrandsTasksBreakdown = useMemo(
+    () => selectTasksBreakdown(tasks, activeBrandId, false, fixedIsoNow, timezone),
+    [tasks, activeBrandId, fixedIsoNow, timezone]
+  );
+
+  const handleCreateQuickTask = (e: React.FormEvent) => {
+    e.preventDefault();
+    const input = buildQuickTaskInput({
+      title: newTaskTitle,
+      dueBucket: newTaskBucket,
+      priority: newTaskPriority,
+      brandId: activeBrand?.id ?? "",
+      assignee: profileName,
+      todayIso: tasksBreakdown.todayIso,
+      tomorrowIso: tasksBreakdown.tomorrowIso,
+    });
+    if (!input) return;
+    addTask(input);
+    setNewTaskTitle("");
+    setShowQuickTaskForm(false);
+  };
+
   const visibleGroups = tasksBreakdown.groups.filter((g) => g.tasks.length > 0);
+
   return (
     <section
       key="tareas"
@@ -24,7 +204,7 @@ export function WidgetTareas({ view }: { view: InicioViewModel }) {
       data-widget-id="tareas"
       className="hb-widget"
     >
-      <div className="hb-widget-head" style={{ flexWrap: "wrap", gap: 8 }}>
+      <div className="hb-widget-head hubly-dashboard-head-wrap">
         <div className="hb-widget-title">
           <span className="hb-widget-icon-box">
             <HublyClipboardIcon size={18} />
@@ -33,21 +213,12 @@ export function WidgetTareas({ view }: { view: InicioViewModel }) {
           <span className="hb-widget-badge">{tasksBreakdown.pendingCount}</span>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+        <div className="hubly-dashboard-task-controls">
           <button
             type="button"
-            onClick={() => setFilterByBrand((prev) => !prev)}
+            onClick={onToggleFilterByBrand}
             title="Alternar entre tareas de la marca activa y todas las marcas"
-            style={{
-              fontSize: 11,
-              fontWeight: 600,
-              padding: "3px 9px",
-              borderRadius: 999,
-              border: "1px solid rgba(226, 232, 240, 0.95)",
-              background: filterByBrand ? "var(--ui-surface-2)" : "#F1F9FD",
-              color: filterByBrand ? "var(--ui-text-4)" : "var(--ui-accent-text)",
-              cursor: "pointer",
-            }}
+            className={`hubly-dashboard-filter-pill ${filterByBrand ? "" : "is-all"}`}
           >
             {filterByBrand
               ? `${activeBrand?.name || "Mi marca"} (${tasksBreakdown.pendingCount})`
@@ -57,19 +228,7 @@ export function WidgetTareas({ view }: { view: InicioViewModel }) {
             type="button"
             onClick={() => setShowQuickTaskForm((prev) => !prev)}
             title="Añadir tarea rápida"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 3,
-              fontSize: 11.5,
-              fontWeight: 600,
-              padding: "3px 8px",
-              borderRadius: 999,
-              border: "1px solid rgba(226, 232, 240, 0.95)",
-              background: "var(--ui-surface)",
-              color: "var(--ui-text-3)",
-              cursor: "pointer",
-            }}
+            className="hubly-dashboard-chip-btn is-compact"
           >
             <Plus className="w-3 h-3" />
             <span>Nueva</span>
@@ -78,56 +237,22 @@ export function WidgetTareas({ view }: { view: InicioViewModel }) {
       </div>
 
       {showQuickTaskForm && (
-        <form
-          onSubmit={handleCreateQuickTask}
-          style={{
-            padding: "12px 20px",
-            background: "var(--ui-surface-2)",
-            borderBottom: "1px solid var(--ui-muted)",
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-          }}
-        >
+        <form onSubmit={handleCreateQuickTask} className="hubly-dashboard-quick-form">
           <input
             type="text"
             value={newTaskTitle}
             onChange={(e) => setNewTaskTitle(e.target.value)}
             placeholder="Escribe una tarea pendiente para el equipo..."
             aria-label="Título de nueva tarea"
-            style={{
-              width: "100%",
-              padding: "7px 11px",
-              fontSize: 12.5,
-              borderRadius: 8,
-              border: "1px solid var(--ui-border-strong)",
-              background: "var(--ui-surface)",
-              color: "var(--ui-text)",
-              outline: "none",
-            }}
+            className="hubly-dashboard-quick-input"
           />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 8,
-              flexWrap: "wrap",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+          <div className="hubly-dashboard-quick-bar">
+            <div className="hubly-dashboard-quick-selects">
               <select
                 value={newTaskBucket}
                 onChange={(e) => setNewTaskBucket(e.target.value as TaskDueBucket)}
                 aria-label="Cuándo vence"
-                style={{
-                  fontSize: 11.5,
-                  padding: "4px 8px",
-                  borderRadius: 6,
-                  border: "1px solid var(--ui-border-strong)",
-                  background: "var(--ui-surface)",
-                  color: "var(--ui-text-2)",
-                }}
+                className="hubly-dashboard-quick-select"
               >
                 <option value="today">Para hoy</option>
                 <option value="tomorrow">Para mañana</option>
@@ -138,49 +263,22 @@ export function WidgetTareas({ view }: { view: InicioViewModel }) {
                 value={newTaskPriority}
                 onChange={(e) => setNewTaskPriority(e.target.value as TaskPriority)}
                 aria-label="Prioridad"
-                style={{
-                  fontSize: 11.5,
-                  padding: "4px 8px",
-                  borderRadius: 6,
-                  border: "1px solid var(--ui-border-strong)",
-                  background: "var(--ui-surface)",
-                  color: "var(--ui-text-2)",
-                }}
+                className="hubly-dashboard-quick-select"
               >
                 <option value="Alta">Prioridad Alta</option>
                 <option value="Media">Prioridad Media</option>
                 <option value="Baja">Prioridad Baja</option>
               </select>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div className="hubly-dashboard-quick-actions">
               <button
                 type="button"
                 onClick={() => setShowQuickTaskForm(false)}
-                style={{
-                  fontSize: 11.5,
-                  padding: "4px 10px",
-                  borderRadius: 6,
-                  border: "1px solid var(--ui-border)",
-                  background: "var(--ui-surface)",
-                  color: "var(--ui-text-4)",
-                  cursor: "pointer",
-                }}
+                className="hubly-dashboard-quick-cancel"
               >
                 Cancelar
               </button>
-              <button
-                type="submit"
-                style={{
-                  fontSize: 11.5,
-                  fontWeight: 600,
-                  padding: "4px 12px",
-                  borderRadius: 6,
-                  border: "none",
-                  background: "#0F172A",
-                  color: "#FFFFFF",
-                  cursor: "pointer",
-                }}
-              >
+              <button type="submit" className="hubly-dashboard-quick-submit">
                 Guardar tarea
               </button>
             </div>
@@ -188,9 +286,9 @@ export function WidgetTareas({ view }: { view: InicioViewModel }) {
         </form>
       )}
 
-      <div className="hb-widget-body hb-widget-body--tall" style={{ padding: "16px 20px" }}>
+      <div className="hb-widget-body hb-widget-body--tall hubly-dashboard-body-pad">
         {visibleGroups.length === 0 ? (
-          <div className="hb-widget-empty" style={{ flex: 1 }}>
+          <div className="hb-widget-empty hubly-dashboard-empty-grow">
             <div className="hb-empty-illus">
               <HublyCheckCircleIcon size={26} />
             </div>
@@ -200,192 +298,23 @@ export function WidgetTareas({ view }: { view: InicioViewModel }) {
             <p className="hb-empty-desc">No tienes tareas pendientes en este filtro.</p>
           </div>
         ) : (
-          visibleGroups.map((group, groupIdx) => (
-            <div
-              key={group.bucket}
-              style={{ marginBottom: groupIdx < visibleGroups.length - 1 ? 14 : 0 }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  fontSize: 10,
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: group.bucket === "overdue" ? "#EF4444" : "var(--ui-text-4)",
-                  marginBottom: 8,
-                }}
-              >
-                <span>{group.label}</span>
-                {group.tasks.length > 1 && <span>{group.tasks.length}</span>}
-              </div>
-
-              <div className="hubly-task-group" style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                {group.tasks.map((task) => {
-                  const taskBrand = brands.find((b) => b.id === task.brandId);
-                  const isDone =
-                    Boolean(task.completed) ||
-                    task.status === "completada" ||
-                    task.status === "done";
-                  return (
-                    <div
-                      key={task.id}
-                      className="hubly-task-row"
-                      onClick={() => toggleTaskStatus(task.id)}
-                      role="checkbox"
-                      aria-checked={isDone}
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          toggleTaskStatus(task.id);
-                        }
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0, flex: 1 }}>
-                        <span className="hubly-check" data-done={isDone}>
-                          {isDone && <Check className="w-2.5 h-2.5 text-white" />}
-                        </span>
-                        <span className="hubly-task-title">{task.title}</span>
-                      </div>
-
-                      {!filterByBrand && taskBrand && (
-                        <span
-                          style={{
-                            fontSize: 10.5,
-                            fontWeight: 600,
-                            padding: "2px 7px",
-                            borderRadius: 999,
-                            background: "var(--ui-muted)",
-                            color: "var(--ui-text-3)",
-                            flexShrink: 0,
-                          }}
-                        >
-                          {taskBrand.name}
-                        </span>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))
+          <TaskGroupList
+            groups={visibleGroups}
+            brands={brands}
+            filterByBrand={filterByBrand}
+            onToggleTask={toggleTaskStatus}
+          />
         )}
 
         {tasksBreakdown.completedCount > 0 && (
-          <div
-            style={{
-              marginTop: 14,
-              paddingTop: 10,
-              borderTop: "1px dashed var(--ui-border)",
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setShowCompletedTasks((prev) => !prev)}
-              style={{
-                fontSize: 11.5,
-                fontWeight: 600,
-                color: "var(--ui-text-4)",
-                background: "transparent",
-                border: "none",
-                padding: 0,
-                cursor: "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-              }}
-            >
-              <span>
-                {showCompletedTasks ? "Ocultar" : "Ver"} completadas (
-                {tasksBreakdown.completedCount})
-              </span>
-            </button>
-
-            {showCompletedTasks && (
-              <div
-                style={{
-                  marginTop: 8,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 6,
-                }}
-              >
-                {tasksBreakdown.completedTasks.map((task) => (
-                  <div
-                    key={task.id}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      gap: 8,
-                      padding: "4px 6px",
-                      borderRadius: 6,
-                    }}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => toggleTaskStatus(task.id)}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 8,
-                        background: "transparent",
-                        border: "none",
-                        padding: 0,
-                        cursor: "pointer",
-                        textAlign: "left",
-                        minWidth: 0,
-                      }}
-                    >
-                      <span
-                        style={{
-                          width: 16,
-                          height: 16,
-                          borderRadius: "50%",
-                          background: "#10B981",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexShrink: 0,
-                        }}
-                      >
-                        <Check className="w-2.5 h-2.5 text-white" />
-                      </span>
-                      <span
-                        style={{
-                          fontSize: 12.5,
-                          color: "var(--ui-text-4)",
-                          textDecoration: "line-through",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {task.title}
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => deleteTask(task.id)}
-                      title="Eliminar tarea"
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        color: "#CBD5E1",
-                        cursor: "pointer",
-                        padding: 2,
-                      }}
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <CompletedTasksSection
+            tasks={tasksBreakdown.completedTasks}
+            count={tasksBreakdown.completedCount}
+            open={showCompletedTasks}
+            onToggleOpen={() => setShowCompletedTasks((prev) => !prev)}
+            onToggleTask={toggleTaskStatus}
+            onDeleteTask={deleteTask}
+          />
         )}
         <div className="hb-widget-footer">
           <Link href="/tareas" className="hb-widget-link">
