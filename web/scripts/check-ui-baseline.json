@@ -226,45 +226,17 @@
   "components/app/dashboard/SaludCuentasView.tsx": {
     "style-inline": 3
   },
-  "components/app/equipo/EquipoCabecera.tsx": {
-    "color-fijo": 3,
-    "rgb-fijo": 3,
-    "style-inline": 27,
-    "view-prop": 1,
-    "z-index-fijo": 1
-  },
   "components/app/equipo/EquipoLogrosRanking.tsx": {
-    "color-fijo": 5,
-    "style-inline": 23,
-    "view-prop": 1
-  },
-  "components/app/equipo/EquipoMiembros.tsx": {
-    "color-fijo": 9,
-    "exclamacion": 1,
-    "style-inline": 20,
-    "view-prop": 1
+    "style-inline": 1
   },
   "components/app/equipo/EquipoProgreso.tsx": {
-    "color-fijo": 4,
-    "degradado": 1,
-    "style-inline": 18,
-    "view-prop": 1
+    "style-inline": 1
   },
   "components/app/equipo/EquipoResumen.tsx": {
-    "color-fijo": 1,
-    "rgb-fijo": 1,
-    "style-inline": 39,
-    "tamano-fuente": 2,
-    "view-prop": 1,
-    "z-index-fijo": 1
-  },
-  "components/app/equipo/EquipoView.tsx": {
     "style-inline": 1
   },
   "components/app/equipo/MemberDrawer.tsx": {
-    "color-fijo": 4,
-    "radio": 2,
-    "style-inline": 20
+    "style-inline": 1
   },
   "components/app/media/MediaLibrary.tsx": {
     "color-fijo": 1,
