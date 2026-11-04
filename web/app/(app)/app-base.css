@@ -433,7 +433,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 
 .saas-btn:hover:not(:disabled) {
   background: var(--ui-surface-2);
-  border-color: #94A3B8;
+  border-color: var(--ui-text-5);
   color: var(--ui-text);
 }
 
@@ -511,9 +511,9 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 }
 
 .saas-btn-coral {
-  background: #EF4444;
+  background: var(--ui-danger);
   color: var(--on-accent);
-  border-color: #EF4444;
+  border-color: var(--ui-danger);
 }
 
 /* ==========================================================================
@@ -549,8 +549,8 @@ body:has(.hb-app-root)::-webkit-scrollbar {
 
 .saas-badge-coral,
 .saas-status-changes {
-  background: #FEE2E2;
-  color: #DC2626;
+  background: var(--ui-danger-soft);
+  color: var(--ui-danger-text);
 }
 
 .saas-badge-neutral,
@@ -598,7 +598,7 @@ body:has(.hb-app-root)::-webkit-scrollbar {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 1px;
-  background: #E2E8F0;
+  background: var(--ui-border);
   border: 1px solid var(--ui-border);
   border-radius: 14px;
   overflow: hidden;

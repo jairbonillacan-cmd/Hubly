@@ -267,7 +267,7 @@ export function ImportMonthModal({ brand, posts, onClose }: { brand: BrandWorksp
                   <td>{row.date ? `${row.date}${row.time ? ` ${row.time}` : ""}` : "Sin fecha"}</td>
                   <td>{row.networks.join(", ")}</td>
                   <td>{row.format}</td>
-                  <td>{row.errors.length ? <span style={{ color: "#B91C1C" }}>{row.errors.join(" ")}</span> : row.duplicate ? "Duplicado" : "Lista"}</td>
+                  <td>{row.errors.length ? <span style={{ color: "var(--ui-danger-text)" }}>{row.errors.join(" ")}</span> : row.duplicate ? "Duplicado" : "Lista"}</td>
                 </tr>
               ))}
             </tbody>

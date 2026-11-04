@@ -13,7 +13,7 @@
     "view-prop": 1
   },
   "app/(app)/anuncios/_vista/partes/AnunciosTarjetas.tsx": {
-    "color-fijo": 9,
+    "color-fijo": 2,
     "degradado": 1,
     "rgb-fijo": 2,
     "style-inline": 54,
@@ -24,7 +24,7 @@
     "style-inline": 1
   },
   "app/(app)/app-base.css": {
-    "color-fijo": 9,
+    "color-fijo": 3,
     "important": 7,
     "rgb-fijo": 8,
     "tamano-fuente": 1,
@@ -41,13 +41,13 @@
     "style-inline": 11
   },
   "app/(app)/crm/page.tsx": {
-    "color-fijo": 6,
+    "color-fijo": 1,
     "radio": 1,
     "style-inline": 55,
     "tamano-fuente": 3
   },
   "app/(app)/dashboard-polish.css": {
-    "color-fijo": 145,
+    "color-fijo": 113,
     "degradado": 3,
     "important": 95,
     "radio": 5,
@@ -59,7 +59,7 @@
     "style-inline": 1
   },
   "app/(app)/hubly-saas.css": {
-    "color-fijo": 34,
+    "color-fijo": 18,
     "important": 19,
     "radio": 1,
     "rgb-fijo": 28,
@@ -91,7 +91,7 @@
     "tamano-fuente": 1
   },
   "app/(app)/reportes/page.tsx": {
-    "color-fijo": 9,
+    "color-fijo": 5,
     "degradado": 1,
     "rgb-fijo": 5,
     "style-inline": 51,
@@ -104,7 +104,6 @@
     "style-inline": 21
   },
   "components/app/AccessPanel.tsx": {
-    "color-fijo": 2,
     "style-inline": 11
   },
   "components/app/AppDialogHost.tsx": {
@@ -114,7 +113,7 @@
     "z-index-fijo": 1
   },
   "components/app/ArchivosYProyectosView.tsx": {
-    "color-fijo": 7,
+    "color-fijo": 2,
     "rgb-fijo": 4,
     "style-inline": 48,
     "tamano-fuente": 1,
@@ -163,7 +162,7 @@
     "style-inline": 2
   },
   "components/app/NotebookReaderModal.tsx": {
-    "color-fijo": 65,
+    "color-fijo": 55,
     "rgb-fijo": 2,
     "style-inline": 47,
     "tamano-fuente": 1
@@ -172,7 +171,6 @@
     "style-inline": 1
   },
   "components/app/SaveStatus.tsx": {
-    "color-fijo": 2,
     "style-inline": 1,
     "z-index-fijo": 1
   },
@@ -298,11 +296,9 @@
     "tamano-fuente": 1
   },
   "components/app/social/CalendarModals.tsx": {
-    "color-fijo": 1,
     "style-inline": 3
   },
   "components/app/social/ComposerExtras.tsx": {
-    "color-fijo": 2,
     "style-inline": 10
   },
   "components/app/social/ComposerPanels.tsx": {
@@ -346,7 +342,7 @@
     "view-prop": 1
   },
   "components/app/sugerencias/SugerenciasCuerpo.tsx": {
-    "color-fijo": 10,
+    "color-fijo": 4,
     "rgb-fijo": 1,
     "style-inline": 40,
     "view-prop": 1
@@ -364,7 +360,7 @@
     "tamano-fuente": 1
   },
   "components/app/tasks/TaskBoard.tsx": {
-    "color-fijo": 13,
+    "color-fijo": 3,
     "radio": 1,
     "rgb-fijo": 3,
     "style-inline": 89,
@@ -372,7 +368,6 @@
     "z-index-fijo": 2
   },
   "components/app/tasks/TaskDetailModal.tsx": {
-    "color-fijo": 3,
     "style-inline": 10
   },
   "components/app/ui/ui-kit.css": {

@@ -16,9 +16,9 @@ import {
 const STAGES: { key: LeadStage; label: string; dot: string }[] = [
   { key: "nuevo", label: "Nuevo", dot: "var(--hb-accent)" },
   { key: "contactado", label: "Contactado", dot: "#0EA5E9" },
-  { key: "propuesta", label: "Propuesta", dot: "#D97706" },
-  { key: "ganado", label: "Ganado", dot: "#10B981" },
-  { key: "perdido", label: "Perdido", dot: "#94A3B8" },
+  { key: "propuesta", label: "Propuesta", dot: "var(--ui-warning)" },
+  { key: "ganado", label: "Ganado", dot: "var(--ui-success)" },
+  { key: "perdido", label: "Perdido", dot: "var(--ui-text-5)" },
 ];
 const STAGE_KEYS = STAGES.map((s) => s.key);
 const QUOTE_STATUSES: QuoteStatus[] = ["Borrador", "Enviada", "Aceptada", "Rechazada"];
@@ -369,6 +369,6 @@ const lab = { display: "grid", gap: 4, fontSize: 12, fontWeight: 600, color: "va
 const grid2 = { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 10 } as const;
 const cell = { padding: "10px 14px" } as const;
 const empty = { fontSize: 13.5, color: "var(--ui-text-4)", textAlign: "center", padding: 32, margin: 0 } as const;
-const primary = { display: "inline-flex", alignItems: "center", gap: 6, border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" } as const;
+const primary = { display: "inline-flex", alignItems: "center", gap: 6, border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "var(--on-accent)", padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" } as const;
 const secondary = { display: "inline-flex", alignItems: "center", gap: 6, border: "1px solid var(--ui-border-strong)", borderRadius: 9, background: "var(--ui-surface)", color: "var(--ui-text-2)", padding: "7px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;
-const danger = { border: "1px solid #FECACA", background: "#FEF2F2", color: "#B91C1C", borderRadius: 9, padding: "7px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;
+const danger = { border: "1px solid var(--ui-danger-border)", background: "var(--ui-danger-soft)", color: "var(--ui-danger-text)", borderRadius: 9, padding: "7px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" } as const;

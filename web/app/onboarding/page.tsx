@@ -121,7 +121,7 @@ export default function OnboardingPage() {
               <p style={{ fontSize: 12.5, color: "#64748B", margin: 0 }}>{backendEnabled ? "Las invitaciones estarán disponibles pronto; este paso se puede omitir." : "Por ahora se crea un enlace de invitación para compartir; todavía no se envía correo."}</p>
             </>
           )}
-          {error && <p role="alert" style={{ color: "#B91C1C", fontSize: 12.5, margin: 0 }}>{error}</p>}
+          {error && <p role="alert" style={{ color: "var(--ui-danger)", fontSize: 12.5, margin: 0 }}>{error}</p>}
           <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 4 }}>
             {step > 0 ? <button type="button" onClick={() => setStep(step - 1)} style={secondary}>Atrás</button> : <span />}
             <div style={{ display: "flex", gap: 8 }}>

@@ -32,8 +32,8 @@ type Popover = "agrupar" | "campos" | "filtro" | null;
 
 const KANBAN_COLUMNS = [
   { key: "todo", title: "Por hacer", dot: "var(--hb-accent)" },
-  { key: "in_progress", title: "En progreso", dot: "#D97706" },
-  { key: "done", title: "Completadas", dot: "#10B981" },
+  { key: "in_progress", title: "En progreso", dot: "var(--ui-warning)" },
+  { key: "done", title: "Completadas", dot: "var(--ui-success)" },
 ] as const;
 const COLUMN_KEYS = KANBAN_COLUMNS.map((c) => c.key);
 const NO_LISTS: TaskListDef[] = [];
@@ -186,7 +186,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
           borderRadius: 999,
           border: done ? "none" : "1.5px solid var(--ui-border-strong)",
           background: done ? "var(--hb-accent)" : "var(--ui-surface)",
-          color: "#FFFFFF",
+          color: "var(--on-accent)",
           display: "grid",
           placeItems: "center",
           flexShrink: 0,
@@ -232,7 +232,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
 
   const today = localIsoDate();
   const dueColor = (task: AgencyTask) =>
-    normalizedStatus(task) !== "done" && task.dueDate < today ? "#B91C1C" : task.dueDate === today ? "#334155" : "#64748B";
+    normalizedStatus(task) !== "done" && task.dueDate < today ? "var(--ui-danger-text)" : task.dueDate === today ? "#334155" : "#64748B";
 
   const timelineDays = Array.from({ length: TIMELINE_DAYS }, (_, i) => addDays(today, i - 3));
   const timelineRows = listNames.map((name) => ({ name, items: visible.filter((t) => t.listName === name) }));
@@ -386,7 +386,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                     </button>
                     <button
                       type="button"
-                      style={{ ...menuItem, color: "#B91C1C" }}
+                      style={{ ...menuItem, color: "var(--ui-danger-text)" }}
                       onClick={async () => {
                         setListMenu(null);
                         const count = brandTasks.filter((t) => t.listName === group.name).length;
@@ -450,7 +450,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                       style={{ flex: 1, minWidth: 0, border: "none", background: "transparent", outline: "none", fontSize: 13 }}
                     />
                     {(drafts[group.key] || "").trim() && (
-                      <button type="submit" style={{ padding: "4px 10px", borderRadius: 6, border: "none", background: "var(--hb-accent)", color: "#FFFFFF", fontSize: 11.5, fontWeight: 600, cursor: "pointer" }}>
+                      <button type="submit" style={{ padding: "4px 10px", borderRadius: 6, border: "none", background: "var(--hb-accent)", color: "var(--on-accent)", fontSize: 11.5, fontWeight: 600, cursor: "pointer" }}>
                         Guardar
                       </button>
                     )}
@@ -476,7 +476,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                 <input id="new-list-name" autoFocus value={newListName} onChange={(e) => setNewListName(e.target.value)} placeholder="Ej. Entregables de noviembre" style={{ padding: "9px 14px", borderRadius: 10, border: "1px solid var(--ui-border-strong)", fontSize: 13.5, width: "100%", maxWidth: 280 }} />
                 <div style={{ display: "flex", gap: 8 }}>
                   <button type="button" onClick={() => setCreatingList(false)} style={{ padding: "7px 14px", borderRadius: 8, border: "1px solid var(--ui-border)", background: "var(--ui-surface)", color: "var(--ui-text-3)", fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}>Cancelar</button>
-                  <button type="submit" style={{ padding: "7px 16px", borderRadius: 8, border: "none", background: "var(--hb-accent)", color: "#FFFFFF", fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}>Crear lista</button>
+                  <button type="submit" style={{ padding: "7px 16px", borderRadius: 8, border: "none", background: "var(--hb-accent)", color: "var(--on-accent)", fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}>Crear lista</button>
                 </div>
               </form>
             ) : (
@@ -567,8 +567,8 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
               date: task.dueDate,
               label: task.title,
               title: `${task.title} · ${task.assigneeName || task.assignee}`,
-              bg: status === "done" ? "#F1F5F9" : status === "in_progress" ? "#FEF3C7" : "#E6F4FB",
-              color: status === "done" ? "var(--ui-text-3)" : status === "in_progress" ? "#92400E" : "var(--hb-accent-text)",
+              bg: status === "done" ? "var(--ui-muted)" : status === "in_progress" ? "var(--ui-warning-soft)" : "var(--ui-accent-soft)",
+              color: status === "done" ? "var(--ui-text-3)" : status === "in_progress" ? "var(--ui-warning-text)" : "var(--hb-accent-text)",
               strike: status === "done",
             };
           })}
@@ -590,7 +590,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
             {timelineDays.map((d) => {
               const day = new Date(`${d}T12:00:00`);
               return (
-                <div key={d} style={{ ...tlHead, textAlign: "center", color: d === today ? "#FFFFFF" : "var(--ui-text-4)", background: d === today ? "var(--hb-accent)" : "var(--ui-surface-2)", fontWeight: 700 }}>
+                <div key={d} style={{ ...tlHead, textAlign: "center", color: d === today ? "var(--on-accent)" : "var(--ui-text-4)", background: d === today ? "var(--hb-accent)" : "var(--ui-surface-2)", fontWeight: 700 }}>
                   {day.getDate()}
                   <div style={{ fontSize: 9.5, fontWeight: 600 }}>{day.toLocaleDateString("es-MX", { weekday: "short" })}</div>
                 </div>
@@ -614,7 +614,7 @@ export function TaskBoard({ newListSignal }: { newListSignal: number }) {
                         onClick={() => setOpenTaskId(task.id)}
                         title={`${task.title} · ${dueLabelFor(task.dueDate)}`}
                         aria-label={task.title}
-                        style={{ height: 22, borderRadius: 6, background: normalizedStatus(task) === "done" ? "var(--ui-border-strong)" : "var(--hb-accent)", color: "#FFFFFF", fontSize: 10.5, fontWeight: 600, padding: "3px 5px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", cursor: "grab", opacity: timelineDrag.drag?.id === task.id ? 0.35 : 1 }}
+                        style={{ height: 22, borderRadius: 6, background: normalizedStatus(task) === "done" ? "var(--ui-border-strong)" : "var(--hb-accent)", color: "var(--on-accent)", fontSize: 10.5, fontWeight: 600, padding: "3px 5px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", cursor: "grab", opacity: timelineDrag.drag?.id === task.id ? 0.35 : 1 }}
                       >
                         {task.title}
                       </div>

@@ -332,8 +332,8 @@ html:has(.hubly-sheet, [role="dialog"], .hubly-dropdown, .hubly-cal-filters) :is
     border-color 130ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .hubly-check[data-done="true"] {
-  border-color: #10B981;
-  background: #10B981;
+  border-color: var(--ui-success);
+  background: var(--ui-success);
   animation: hubly-pop 130ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .hubly-task-title {
@@ -410,7 +410,7 @@ html:has(.hubly-sheet, [role="dialog"], .hubly-dropdown, .hubly-cal-filters) :is
     color 150ms cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 .hubly-edit-btn:hover { color: var(--ui-text); }
-.hubly-edit-btn.is-remove:hover { color: #DC2626; }
+.hubly-edit-btn.is-remove:hover { color: var(--ui-danger-text); }
 .hubly-edit-btn:active { transform: translateY(2px); box-shadow: none; }
 .hubly-edit-btn:focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
 .hubly-resize-handle {
@@ -1198,7 +1198,7 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 .hubly-cal-colors .hubly-cal-pill i { width: 12px; height: 12px; border-radius: 50%; background: #94A3DD; }
 .hubly-cal-color { width: 28px; height: 28px; padding: 0; border: 2px solid transparent; border-radius: 50%; cursor: pointer; transition: transform 150ms ease, box-shadow 150ms ease; }
 .hubly-cal-color:hover { transform: scale(1.08); }
-.hubly-cal-color[aria-pressed="true"] { box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--hb-accent); }
+.hubly-cal-color[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--ui-surface), 0 0 0 4px var(--hb-accent); }
 
 /* Formulario de post */
 .hubly-composer-overlay { position: fixed; inset: 0; z-index: var(--layer-composer); display: flex; align-items: center; justify-content: center; padding: 24px 24px 24px var(--composer-left, 92px); pointer-events: none; transition: padding-left 220ms var(--ease-out); }
@@ -1235,7 +1235,7 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 .hubly-composer-preview { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 16px 24px; overflow-y: auto; border-left: 1px solid var(--ui-border); background: var(--ui-surface-2); }
 .hubly-composer-preview > small { color: var(--ui-text-4); font-size: 11px; font-weight: 600; }
 .hubly-composer-foot { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 14px 24px; border-top: 1px solid var(--ui-border); }
-.hubly-composer-foot span { flex: 1; color: #DC2626; font-size: 12px; }
+.hubly-composer-foot span { flex: 1; color: var(--ui-danger-text); font-size: 12px; }
 @media (max-width: 860px) {
   .hubly-composer-body { grid-template-columns: minmax(0, 1fr); }
   .hubly-composer-body[data-pane="editar"] .hubly-composer-preview { display: none; }
@@ -1246,12 +1246,12 @@ html:has([data-hubi-panel]) [data-mision-pildora] { display: none !important; }
 }
 
 /* Modo oscuro: valores de superficie y texto */
-html.dark:has(.hubly-app-root), html.dark body:has(.hubly-app-root) { background: #172330 !important; color-scheme: dark; }
-html.dark .hubly-app-root { background: #172330; color: var(--on-accent); }
-html.dark .hubly-app-root .hubly-main.hb-main { background: #172330; }
+html.dark:has(.hubly-app-root), html.dark body:has(.hubly-app-root) { background: var(--ui-sky-card) !important; color-scheme: dark; }
+html.dark .hubly-app-root { background: var(--ui-sky-card); color: var(--on-accent); }
+html.dark .hubly-app-root .hubly-main.hb-main { background: var(--ui-sky-card); }
 html.dark .hubly-wordmark { color: var(--on-accent); }
-html.dark .hubly-app-root .hubly-sidebar.hb-sidebar { border-color: var(--ui-border); background: #172330; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25); }
-html.dark .hubly-app-root .hubly-sidebar-collapse-btn.hb-sidebar-collapse-btn { border-color: var(--ui-border); background: #172330; }
+html.dark .hubly-app-root .hubly-sidebar.hb-sidebar { border-color: var(--ui-border); background: var(--ui-sky-card); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25); }
+html.dark .hubly-app-root .hubly-sidebar-collapse-btn.hb-sidebar-collapse-btn { border-color: var(--ui-border); background: var(--ui-sky-card); }
 html.dark .hubly-app-root .hubly-sidebar :is(.hubly-nav-item, .hb-nav-item) { color: #DADAE2; }
 html.dark .hubly-app-root .hubly-sidebar :is(.hubly-nav-item, .hb-nav-item):hover, html.dark .hubly-sidebar-tab:hover { background: #20303F; color: var(--on-accent); }
 html.dark .hubly-app-root .hubly-sidebar :is(.hubly-nav-item, .hb-nav-item):is(.active, .is-selected, [aria-current="page"]) { color: var(--ui-sky-text); }
@@ -1259,24 +1259,24 @@ html.dark .hubly-sidebar :is(svg, img) { --dark-icon: 1; }
 html.dark .hubly-app-root :is(h1, h2, h3, h4, strong, b) { color: inherit; }
 html.dark .hubly-app-root .hbtn:not(.hbtn-danger) { background: #20303F; color: #DADAE2; }
 html.dark .hubly-app-root .hbtn:not(.hbtn-primary):not(.hbtn-ghost):not(.hbtn-danger) { --hbtn-edge: #1E1E26; border-color: var(--ui-border-strong); }
-html.dark .hubly-app-root .hbtn:not(.hbtn-primary):not(.hbtn-danger):hover { background: #2B3E50; color: var(--on-accent); }
+html.dark .hubly-app-root .hbtn:not(.hbtn-primary):not(.hbtn-danger):hover { background: var(--ui-border); color: var(--on-accent); }
 html.dark .hubly-app-root .hbtn.hbtn-primary { background: var(--hb-accent); color: var(--on-accent); }
 html.dark .hubly-app-root .hbtn.hbtn-ghost { background: transparent; }
 html.dark .hubly-app-root .hbtn.hbtn-gold { border-color: var(--ui-sky); color: var(--on-accent); }
-html.dark :is(.hb-widget-body, .hubly-cal-header, .hubly-cal-rows, .hubly-cal-month, .hubly-cal-date, .hubly-cal-today, .hubly-cal-reveal, .hubly-cal-pill, .hubly-cal-filters, .hubly-cal-modal, .hubly-cal-line, .hubly-cal-types button, .hubly-cal-durations button, .hubly-cal-cell-add, .hubly-composer, .hubly-hubi-panel, .hubly-hubi-fab, .hubly-composer-phone) { border-color: #2B3E50; background: #172330; color: #FFFFFF; }
+html.dark :is(.hb-widget-body, .hubly-cal-header, .hubly-cal-rows, .hubly-cal-month, .hubly-cal-date, .hubly-cal-today, .hubly-cal-reveal, .hubly-cal-pill, .hubly-cal-filters, .hubly-cal-modal, .hubly-cal-line, .hubly-cal-types button, .hubly-cal-durations button, .hubly-cal-cell-add, .hubly-composer, .hubly-hubi-panel, .hubly-hubi-fab, .hubly-composer-phone) { border-color: var(--ui-border); background: var(--ui-sky-card); color: var(--on-accent); }
 html.dark :is(.hb-widget-title, .hb-empty-title, .hubly-task-title, .hubly-hero-title, .hubly-hero-pending, .hubly-pending-pill, .hubly-cal, .hubly-cal-title, .hubly-cal-period, .hubly-cal-date strong, .hubly-cal-empty strong, .hubly-cal-brand-option, .hubly-composer-title, .hubly-composer-banner strong, .hubly-composer-meta select, .hubly-sidebar-panel-head.is-chats span, .hubly-hubi-head h2) { color: var(--on-accent); }
 html.dark :is(.hubly-hubi-action, .hubly-hubi-grid button) { color: var(--on-accent); }
 html.dark :is(.hubly-sidebar-brand, .hubly-sidebar-empty strong, .hubly-cal-today, .hubly-cal-pill, .hubly-cal-cell-num:not(.is-today), .hubly-composer-banner span, .hubly-cal-durations label, .hubly-cal-durations button) { color: #DADAE2; }
 html.dark :is(.hubly-cal-tabs, .hubly-cal-input, .hubly-hubi-composer, .hubly-composer-caption, .hubly-composer-meta, .hubly-composer-preview, .hubly-sidebar-empty i, .hubly-composer-networks button, .hubly-composer-sources button > span, .hubly-composer-phone-media) { background: #20303F; color: #DADAE2; }
 html.dark :is(.hubly-hubi-composer input, .hubly-cal-input, .hubly-composer-caption) { color: var(--on-accent); }
-html.dark .hubly-cal-tab[aria-selected="true"] { background: #2B3E50; box-shadow: none; color: #9AD4F1; }
+html.dark .hubly-cal-tab[aria-selected="true"] { background: var(--ui-border); box-shadow: none; color: var(--ui-accent-text); }
 html.dark .hubly-cal-tab:not([aria-selected="true"]) { color: #A8B6C3; }
 html.dark :is(.hubly-cal-weekdays, .hubly-cal-brand-head, .hubly-cal-cell.is-outside) { background: #20303F; }
-html.dark :is(.hubly-dashboard-subnav-wrap, .hubly-cal-weekdays, .hubly-cal-cell, .hubly-cal-brand-head, .hubly-cal-brand-row, .hubly-cal-brand-cell, .hubly-hubi-head, .hubly-composer-head, .hubly-composer-meta, .hubly-composer-meta > *, .hubly-composer-tabs, .hubly-composer-preview, .hubly-composer-foot, .hubly-composer-caption, .hubly-composer-sources button, .hubly-sidebar-panel-head.is-chats, .hubly-sidebar-empty, .hubly-cal-row + .hubly-cal-row) { border-color: #2B3E50; }
+html.dark :is(.hubly-dashboard-subnav-wrap, .hubly-cal-weekdays, .hubly-cal-cell, .hubly-cal-brand-head, .hubly-cal-brand-row, .hubly-cal-brand-cell, .hubly-hubi-head, .hubly-composer-head, .hubly-composer-meta, .hubly-composer-meta > *, .hubly-composer-tabs, .hubly-composer-preview, .hubly-composer-foot, .hubly-composer-caption, .hubly-composer-sources button, .hubly-sidebar-panel-head.is-chats, .hubly-sidebar-empty, .hubly-cal-row + .hubly-cal-row) { border-color: var(--ui-border); }
 html.dark .hubly-dashboard-subnav-wrap .hubly-subnav.hubly-tablero-tabs { background: #20303F; }
 html.dark .hubly-dashboard-subnav-wrap .hubly-subnav-tab { color: #9E9EAC; }
-html.dark .hubly-dashboard-subnav-wrap .hubly-subnav-tab:hover { background: #2B3E50; color: var(--on-accent); }
-html.dark .hubly-dashboard-subnav-wrap .hubly-subnav-tab.is-active { background: #2B3E50; color: #9AD4F1; }
+html.dark .hubly-dashboard-subnav-wrap .hubly-subnav-tab:hover { background: var(--ui-border); color: var(--on-accent); }
+html.dark .hubly-dashboard-subnav-wrap .hubly-subnav-tab.is-active { background: var(--ui-border); color: var(--ui-accent-text); }
 html.dark .hubly-task-row:hover, html.dark .hubly-cal-row:hover, html.dark .hubly-cal-icon:hover, html.dark .hubly-cal-reveal:hover, html.dark .hubly-cal-today:hover, html.dark .hubly-cal-pill:hover, html.dark .hubly-hubi-head button:hover, html.dark .hubly-cal-modal-close:hover { background: var(--ui-surface-2); color: var(--ui-text); }
 html.dark .hubly-cal-reveal span { color: var(--ui-text-2); }
 html.dark .hubly-cal-tab:not([aria-selected="true"]):hover { color: var(--ui-text); }
@@ -1286,7 +1286,7 @@ html.dark .hubly-edit-btn:hover { color: var(--ui-text); }
 :is(.hubly-subnav-tab, .hubly-cal-reveal, .hubly-cal-icon, .hubly-cal-today, .hubly-cal-tab, .hubly-cal-brand-option, .hubly-cal-pill, .hubly-cal-chip, .hubly-cal-modal-close, .hubly-cal-types button, .hubly-cal-durations button, .hubly-cal-color):focus-visible { outline: 2px solid var(--hb-accent); outline-offset: 2px; }
 html.dark .hubly-check { border-color: #566B7E; background: transparent; }
 html.dark .hb-empty-illus { background: #20303F; }
-html.dark .hubly-app-root [data-mision-pildora] { border-color: var(--ui-border) !important; background: #172330 !important; }
+html.dark .hubly-app-root [data-mision-pildora] { border-color: var(--ui-border) !important; background: var(--ui-sky-card) !important; }
 
 /* Remapeo de estilos en línea para el modo oscuro (generado) */
 html.dark .hubly-app-root [style*="background:#FFFFFF" i],html.dark .hubly-app-root [style*="background-color:#FFFFFF" i],html.dark .hubly-app-root [style*="background: rgb(255, 255, 255)"],html.dark .hubly-app-root [style*="background-color: rgb(255, 255, 255)"]{background-color:#172330!important}
@@ -1446,8 +1446,8 @@ html.dark select option { background: var(--ui-surface); color: var(--ui-text); 
 /* Sin esto, los campos sin fondo propio toman el gris del navegador */
 :where(html.dark) :where(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"]), select, textarea) { background-color: var(--ui-surface); }
 html.dark .hb-widget-link:hover { color: var(--ui-sky-text); }
-html.dark .hubly-app-root .hbtn.hbtn-danger { --hbtn-edge: #991B1B; border-color: #B91C1C; background: #DC2626; }
-html.dark .hubly-app-root .hbtn.hbtn-danger:hover:not(:disabled):not([aria-disabled="true"]) { background: #B91C1C; }
+html.dark .hubly-app-root .hbtn.hbtn-danger { --hbtn-edge: var(--ui-danger-border); border-color: var(--ui-danger-border); background: var(--ui-danger); }
+html.dark .hubly-app-root .hbtn.hbtn-danger:hover:not(:disabled):not([aria-disabled="true"]) { border-color: var(--ui-danger-border); background: var(--ui-danger); }
 /* Pastillas con color en línea: el tinte pálido y su tinta se invierten en oscuro */
 html.dark .hubly-app-root :is([style*="background:#DCFCE7" i], [style*="background: rgb(220, 252, 231)"], [style*="background:#D1FAE5" i], [style*="background: rgb(209, 250, 229)"]) { background-color: var(--hubly-success-bg) !important; color: var(--tinta-exito) !important; } /* ui-ok: reasigna colores en línea heredados */
 html.dark .hubly-app-root :is([style*="background:#DBEAFE" i], [style*="background: rgb(219, 234, 254)"]) { background-color: var(--ui-sky-soft) !important; color: var(--ui-sky-text) !important; } /* ui-ok: reasigna colores en línea heredados */
@@ -1603,18 +1603,17 @@ html.dark .hubly-composer-sources button strong { color: #D2DBE3; }
 .hubly-media-file-actions { display: flex; align-items: center; gap: 6px; padding: 0 8px 8px; }
 .hubly-media-file-actions select { flex: 1; min-width: 0; height: 28px; border: 1px solid var(--ui-border); border-radius: 7px; background: var(--ui-surface); color: var(--ui-text-2); font-size: 11.5px; }
 .hubly-media-file-actions button { display: grid; place-items: center; width: 28px; height: 28px; border: 0; border-radius: 7px; background: transparent; color: var(--ui-text-3); cursor: pointer; }
-.hubly-media-file-actions button:hover { background: var(--ui-muted); color: #B91C1C; }
+.hubly-media-file-actions button:hover { background: var(--ui-muted); color: var(--ui-danger-text); }
 .hubly-media-queue { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .hubly-media-queue li { padding: 10px 12px; border: 1px solid var(--ui-border); border-radius: 10px; }
-.hubly-media-queue li[data-state="failed"] { border-color: #B91C1C; }
+.hubly-media-queue li[data-state="failed"] { border-color: var(--ui-danger); }
 .hubly-media-queue-row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; flex-wrap: wrap; }
 .hubly-media-queue-row strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1 1 120px; }
 .hubly-media-queue-row span { color: var(--ui-text-3); }
 .hubly-media-queue-row button { display: inline-flex; align-items: center; gap: 4px; border: 0; background: transparent; color: var(--hb-accent-text); font-size: 12px; font-weight: 700; cursor: pointer; }
 .hubly-media-bar { height: 5px; margin-top: 8px; border-radius: 999px; background: var(--ui-muted); overflow: hidden; }
 .hubly-media-bar span { display: block; height: 100%; background: var(--hb-accent); transition: width 120ms linear; }
-.hubly-media-warning { margin: 6px 0 0; font-size: 12px; color: #92400E; }
-html.dark .hubly-media-warning { color: #FBBF24; }
+.hubly-media-warning { margin: 6px 0 0; font-size: 12px; color: var(--ui-warning-text); }
 .hubly-media-notice { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0; padding: 8px 12px; border-radius: 9px; background: var(--ui-muted); font-size: 12.5px; }
 .hubly-media-notice button { display: grid; place-items: center; border: 0; background: transparent; color: inherit; cursor: pointer; }
 .hubly-media-newfolder { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -1654,7 +1653,7 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-composer-scrim { position: fixed; inset: 0; z-index: var(--layer-scrim); background: rgba(17, 28, 39, 0.38); animation: hubly-fade-in 200ms ease-out both; }
 .hubly-composer-scrim[data-state="closing"] { animation: hubly-fade-out 150ms ease-in both; }
 .hubly-composer-mobile-preview { display: none !important; }
-.hubly-cal-icon.is-danger:hover { color: #B91C1C; }
+.hubly-cal-icon.is-danger:hover { color: var(--ui-danger-text); }
 .hubly-composer-dots { display: inline-flex !important; align-items: center; gap: 3px; background: transparent !important; }
 .hubly-composer-dots i { width: 7px; height: 7px; border-radius: 50%; }
 .hubly-composer-recovered { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 8px 24px; background: rgb(var(--hb-accent-rgb) / 0.08); color: var(--ui-text-1); font-size: 12.5px; }
@@ -1697,15 +1696,15 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-composer-copytabs button { height: 32px; padding: 0 12px; border: 0; border-radius: 9px; background: transparent; color: var(--ui-text-3); font-size: 13px; font-weight: 600; cursor: pointer; }
 .hubly-composer-copytabs button[aria-selected="true"] { background: rgb(var(--hb-accent-rgb) / 0.12); color: var(--hb-accent-text); }
 .hubly-composer-count { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: -10px; color: var(--ui-text-3); font-size: 12px; }
-.hubly-composer-count[data-level="near"] > span:first-child { color: #B45309; font-weight: 700; }
-.hubly-composer-count[data-level="over"] > span:first-child { color: #B91C1C; font-weight: 700; }
+.hubly-composer-count[data-level="near"] > span:first-child { color: var(--ui-warning-text); font-weight: 700; }
+.hubly-composer-count[data-level="over"] > span:first-child { color: var(--ui-danger-text); font-weight: 700; }
 .hubly-composer-count button { border: 0; background: transparent; color: var(--hb-accent-text); font-size: 12px; font-weight: 700; cursor: pointer; }
 .hubly-composer-netsettings { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; padding: 12px; border: 1px solid var(--ui-border); border-radius: 12px; }
 .hubly-composer-netsettings label { display: grid; gap: 4px; color: var(--ui-text-3); font-size: 11.5px; font-weight: 600; }
 .hubly-composer-nethead { grid-column: 1 / -1; color: var(--ui-text-2); font-size: 12px; font-weight: 700; }
 .hubly-composer-netsettings > small { grid-column: 1 / -1; }
 .hubly-composer-inline { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600; }
-.hubly-composer-issues { margin: 0; padding: 10px 12px 10px 28px; border-radius: 10px; background: color-mix(in srgb, #F59E0B 12%, var(--ui-surface)); color: var(--ui-text-1); font-size: 12.5px; }
+.hubly-composer-issues { margin: 0; padding: 10px 12px 10px 28px; border-radius: 10px; background: color-mix(in srgb, var(--ui-warning) 12%, var(--ui-surface)); color: var(--ui-text-1); font-size: 12.5px; }
 .hubly-composer-hint { color: var(--ui-text-3); font-size: 12px; }
 .hubly-composer-todo { display: flex; align-items: center; gap: 8px; }
 .hubly-composer-todo .hubly-cal-input { flex: 1; min-width: 0; }
@@ -1782,7 +1781,7 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .np-caption.np-flush { margin: 2px 0 8px; }
 .np-caption.is-light { margin: 6px 0; color: var(--on-accent); max-height: 110px; overflow: hidden; }
 .np-muted { color: #65676B; font-size: 13px; }
-.np-cut { position: relative; margin: 8px 0; border-top: 1.5px dashed #D97706; }
+.np-cut { position: relative; margin: 8px 0; border-top: 1.5px dashed var(--ui-warning); }
 .np-cut span { position: absolute; top: -10px; left: 50%; padding: 1px 9px; border-radius: 999px; background: #FEF3C7; color: #92400E; font-size: 11px; font-weight: 700; white-space: nowrap; transform: translateX(-50%); }
 .np-after-cut { opacity: 0.45; }
 .np-post-head { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
@@ -1796,7 +1795,7 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .np-rail { position: absolute; right: 10px; bottom: 96px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
 .np-reel-info { position: absolute; left: 12px; right: 60px; bottom: 60px; display: flex; flex-direction: column; gap: 4px; font-size: 13px; text-shadow: 0 1px 2px rgb(0 0 0 / 0.6); }
 .np-immersive > .np-tabbar { position: absolute; left: 0; right: 0; bottom: 0; padding-bottom: 22px; border-top: 0; }
-.np-immersive .np-cut span { background: #FBBF24; color: var(--ui-text); text-shadow: none; }
+.np-immersive .np-cut span { background: var(--ui-warning); color: var(--ink); text-shadow: none; }
 .np-story-bars { position: absolute; top: 54px; left: 10px; right: 10px; z-index: 2; display: flex; gap: 4px; }
 .np-story-bars i { flex: 1; height: 2px; background: rgb(255 255 255 / 0.7); border-radius: 2px; }
 .np-story-head { position: absolute; top: 64px; left: 12px; z-index: 2; display: flex; align-items: center; gap: 8px; font-size: 13px; }
@@ -1918,10 +1917,10 @@ html:has(.hubly-sidebar.is-collapsed):has(.hubly-composer) { --composer-left: 92
 .hubly-social-dots { display: inline-flex; flex-shrink: 0; align-items: center; gap: 3px; }
 .hubly-social-dots i { width: 7px; height: 7px; border-radius: 50%; }
 .hubly-social-badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; white-space: nowrap; background: var(--ui-muted); color: var(--ui-text-2); }
-.hubly-social-badge[data-tone="warn"] { background: color-mix(in srgb, #F59E0B 18%, var(--ui-surface)); color: var(--ui-text-1); }
+.hubly-social-badge[data-tone="warn"] { background: color-mix(in srgb, var(--ui-warning) 18%, var(--ui-surface)); color: var(--ui-text-1); }
 .hubly-social-badge[data-tone="info"] { background: rgb(var(--hb-accent-rgb) / 0.14); color: var(--hb-accent-text); }
-.hubly-social-badge[data-tone="ok"] { background: color-mix(in srgb, #10B981 18%, var(--ui-surface)); color: var(--ui-text-1); }
-.hubly-social-badge[data-tone="danger"] { background: color-mix(in srgb, #EF4444 16%, var(--ui-surface)); color: var(--ui-text-1); }
+.hubly-social-badge[data-tone="ok"] { background: color-mix(in srgb, var(--ui-success) 18%, var(--ui-surface)); color: var(--ui-text-1); }
+.hubly-social-badge[data-tone="danger"] { background: color-mix(in srgb, var(--ui-danger) 16%, var(--ui-surface)); color: var(--ui-text-1); }
 .hubly-social-week { display: grid; grid-template-columns: repeat(7, minmax(140px, 1fr)); gap: 10px; min-width: 1000px; }
 .hubly-social-week-col { display: flex; flex-direction: column; gap: 8px; min-height: 420px; padding: 10px; border: 1px solid var(--ui-border); border-radius: 14px; background: var(--ui-surface); }
 .hubly-social-week-col[data-today] { border-color: var(--hb-accent); }
@@ -2634,8 +2633,7 @@ html:has([data-mision-pildora][data-desplegado]) .hubly-main.hb-main { padding-b
 .hubly-invite-form { display: flex; flex-direction: column; gap: 12px; }
 .hubly-invite-form > .hbtn { width: 100%; }
 .hubly-invite-note { margin: 0; color: var(--ui-text-3); font-size: 12.5px; }
-.hubly-invite-error { margin: 0; color: #B91C1C; font-size: 12px; font-weight: 600; } /* ui-ok: rojo de STATUS_META.changes */
-html.dark .hubly-invite-error { color: #FCA5A5; } /* ui-ok: el rojo de estado no alcanza contraste en oscuro */
+.hubly-invite-error { margin: 0; color: var(--ui-danger-text); font-size: 12px; font-weight: 600; }
 .hubly-invite-search { position: relative; display: flex; align-items: center; }
 .hubly-invite-search svg { position: absolute; left: 12px; color: var(--ui-text-4); pointer-events: none; }
 .hubly-invite-search .hubly-cal-line { padding-left: 37px; }

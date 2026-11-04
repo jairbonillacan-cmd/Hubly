@@ -110,7 +110,7 @@ export function TaskDetailModal({
         <input type="checkbox" checked={highlighted} onChange={(e) => setHighlighted(e.target.checked)} />
         Resaltar como prioridad
       </label>
-      {error && <span role="alert" style={{ color: "#B91C1C", fontSize: 12.5 }}>{error}</span>}
+      {error && <span role="alert" style={{ color: "var(--ui-danger-text)", fontSize: 12.5 }}>{error}</span>}
       <div style={{ display: "flex", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
         <button
           type="button"
@@ -120,11 +120,11 @@ export function TaskDetailModal({
               onClose();
             }
           }}
-          style={{ border: "1px solid #FECACA", background: "#FEF2F2", color: "#B91C1C", borderRadius: 9, padding: "8px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}
+          style={{ border: "1px solid var(--ui-danger-border)", background: "var(--ui-danger-soft)", color: "var(--ui-danger-text)", borderRadius: 9, padding: "8px 12px", fontSize: 12.5, fontWeight: 600, cursor: "pointer" }}
         >
           Eliminar
         </button>
-        <button type="submit" style={{ border: 0, background: "var(--hb-accent)", color: "#FFFFFF", borderRadius: 9, padding: "8px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+        <button type="submit" style={{ border: 0, background: "var(--hb-accent)", color: "var(--on-accent)", borderRadius: 9, padding: "8px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
           Guardar
         </button>
       </div>

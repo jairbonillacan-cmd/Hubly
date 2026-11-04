@@ -10,7 +10,7 @@
     "style-inline": 4
   },
   "app/onboarding/page.tsx": {
-    "color-fijo": 11,
+    "color-fijo": 10,
     "style-inline": 12
   },
   "app/page.tsx": {

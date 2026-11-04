@@ -73,7 +73,7 @@ export function AnunciosTarjetas({ view }: { view: DemoAnunciosPageModel }) {
                 >
                   <div
                     style={{
-                      color: "#FFFFFF",
+                      color: "var(--on-accent)",
                       fontSize: 12.5,
                       fontWeight: 700,
                       lineHeight: 1.35,
@@ -98,8 +98,8 @@ export function AnunciosTarjetas({ view }: { view: DemoAnunciosPageModel }) {
                   <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                     <span
                       style={{
-                        background: "#DCFCE7",
-                        color: "#15803D",
+                        background: "var(--ui-success-soft)",
+                        color: "var(--ui-success-text)",
                         fontSize: 11,
                         fontWeight: 700,
                         padding: "3px 10px",
@@ -160,7 +160,7 @@ export function AnunciosTarjetas({ view }: { view: DemoAnunciosPageModel }) {
                       style={{
                         width: `${ad.clickScore}%`,
                         height: "100%",
-                        background: "#10B981",
+                        background: "var(--ui-success)",
                         borderRadius: 999,
                       }}
                     />
@@ -191,9 +191,9 @@ export function AnunciosTarjetas({ view }: { view: DemoAnunciosPageModel }) {
                     <span
                       style={{
                         background:
-                          ad.resultadosBadgeColor === "green" ? "#DCFCE7" : "#E6F4FB",
+                          ad.resultadosBadgeColor === "green" ? "var(--ui-success-soft)" : "#E6F4FB",
                         color:
-                          ad.resultadosBadgeColor === "green" ? "#15803D" : "var(--ui-accent-text)",
+                          ad.resultadosBadgeColor === "green" ? "var(--ui-success-text)" : "var(--ui-accent-text)",
                         fontWeight: 700,
                         fontSize: 12,
                         padding: "1px 7px",
@@ -341,8 +341,8 @@ export function AnunciosTarjetas({ view }: { view: DemoAnunciosPageModel }) {
                   <td style={{ padding: "12px 16px" }}>
                     <span
                       style={{
-                        background: "#DCFCE7",
-                        color: "#15803D",
+                        background: "var(--ui-success-soft)",
+                        color: "var(--ui-success-text)",
                         fontSize: 11,
                         fontWeight: 700,
                         padding: "3px 9px",

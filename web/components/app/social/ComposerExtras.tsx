@@ -92,8 +92,8 @@ export function ManualResults({ post }: { post: SocialPost }) {
           <Button type="submit" disabled={!published} title={published ? undefined : "Primero marca el post como publicado"} variant="secondary" size="sm">Guardar resultados</Button>
         </div>
       </form>
-      {error && <p role="alert" style={{ color: "#B91C1C", fontSize: 13, margin: 0 }}>{error}</p>}
-      {saved && <p role="status" style={{ color: "#15803D", fontSize: 13, margin: 0 }}>{saved}</p>}
+      {error && <p role="alert" style={{ color: "var(--ui-danger-text)", fontSize: 13, margin: 0 }}>{error}</p>}
+      {saved && <p role="status" style={{ color: "var(--ui-success-text)", fontSize: 13, margin: 0 }}>{saved}</p>}
     </div>
   );
 }
