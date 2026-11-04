@@ -1,27 +1,11 @@
 import type { StateCreator } from "zustand";
 import { createActivityItem } from "../domain/activity";
+import { buildTask, mergeTaskPatch, toggleTaskState, type AddTaskInput } from "../domain/tasks";
 import { moveInList } from "../use-kanban-drag";
 import { persistWorkspaceState } from "./sync";
 import type { HublyStoreState } from "../store";
 import type { AgencyTask } from "../types";
 
-export type AddTaskInput = Omit<
-  AgencyTask,
-  | "id"
-  | "completed"
-  | "assigneeId"
-  | "assigneeName"
-  | "assigneeInitial"
-  | "tags"
-  | "dueBucket"
-> & {
-  completed?: boolean;
-  assigneeId?: string;
-  assigneeName?: string;
-  assigneeInitial?: string;
-  tags?: string[];
-  dueBucket?: AgencyTask["dueBucket"];
-};
 
 export interface TasksSlice {
   addTask: (task: AddTaskInput) => void;
@@ -37,42 +21,19 @@ export interface TasksSlice {
 export const createTasksSlice: StateCreator<HublyStoreState, [], [], TasksSlice> = (set, get) => ({
   addTask: (taskInput) => {
     set((s) => {
-      const id = `task-${Date.now()}`;
-      const brand = s.brands.find((b) => b.id === taskInput.brandId);
-      const assigneeName =
-        taskInput.assigneeName || taskInput.assignee || s.profile.name || "Jair";
-      const assigneeInitial =
-        taskInput.assigneeInitial || assigneeName.slice(0, 1).toUpperCase() || "J";
-      const matchedMember = s.team.find(
-        (m) => m.name.toLowerCase() === assigneeName.toLowerCase()
-      );
-      const assigneeId = taskInput.assigneeId || matchedMember?.id || "tm-1";
-      const completed =
-        taskInput.completed ??
-        (taskInput.status === "done" || taskInput.status === "completada");
-      const tags =
-        taskInput.tags && taskInput.tags.length > 0
-          ? taskInput.tags
-          : [brand?.name || "Agencia", taskInput.listName || "Primeros pasos"];
-
-      const createdTask: AgencyTask = {
-        ...taskInput,
-        id,
-        completed,
-        assigneeId,
-        assignee: assigneeName,
-        assigneeName,
-        assigneeInitial,
-        tags,
-        dueBucket: taskInput.dueBucket || "today",
-      };
+      const createdTask = buildTask(taskInput, {
+        id: `task-${Date.now()}`,
+        brands: s.brands,
+        team: s.team,
+        profileName: s.profile.name,
+      });
 
       const event = createActivityItem(s, {
         type: "task_started",
-        memberId: assigneeId,
+        memberId: createdTask.assigneeId,
         brandId: taskInput.brandId,
         durationMinutes: 15,
-        metadata: { taskId: id, title: taskInput.title },
+        metadata: { taskId: createdTask.id, title: createdTask.title },
       });
 
       return {
@@ -89,54 +50,18 @@ export const createTasksSlice: StateCreator<HublyStoreState, [], [], TasksSlice>
 
   updateTask: (taskId, patch) => {
     set((s) => ({
-      tasks: s.tasks.map((t) => {
-        if (t.id !== taskId) return t;
-        const nextStatus =
-          patch.status ??
-          (patch.completed !== undefined ? (patch.completed ? "done" : "todo") : t.status);
-        const nextCompleted =
-          patch.completed !== undefined
-            ? patch.completed
-            : nextStatus === "done" || nextStatus === "completada";
-        return {
-          ...t,
-          ...patch,
-          status: nextStatus,
-          completed: nextCompleted,
-        };
-      }),
+      tasks: s.tasks.map((t) => (t.id === taskId ? mergeTaskPatch(t, patch) : t)),
     }));
     persistWorkspaceState(get());
   },
 
   toggleTaskStatus: (taskId) => {
     set((s) => {
-      let toggledTask: AgencyTask | undefined;
-      let becameDone = false;
       const nowIso = s.testClock?.fixedIsoNow || new Date().toISOString();
+      const current = s.tasks.find((t) => t.id === taskId);
+      if (!current) return s;
 
-      const nextTasks = s.tasks.map((t) => {
-        if (t.id !== taskId) return t;
-        toggledTask = t;
-        const isCurrentlyDone =
-          t.status === "done" || t.status === "completada" || t.completed;
-        becameDone = !isCurrentlyDone;
-        const nextStatus: AgencyTask["status"] = becameDone ? "done" : "todo";
-        return {
-          ...t,
-          status: nextStatus,
-          completed: becameDone,
-          completedAt: becameDone ? nowIso : undefined,
-          dueLabel: becameDone
-            ? "Completada"
-            : t.dueLabel === "Completada"
-            ? "Hoy"
-            : t.dueLabel,
-        };
-      });
-
-      if (!toggledTask) return s;
-
+      const { task: toggledTask, becameDone } = toggleTaskState(current, nowIso);
       const event = createActivityItem(s, {
         type: becameDone ? "task_completed" : "task_started",
         memberId: toggledTask.assigneeId || "tm-1",
@@ -146,7 +71,7 @@ export const createTasksSlice: StateCreator<HublyStoreState, [], [], TasksSlice>
       });
 
       return {
-        tasks: nextTasks,
+        tasks: s.tasks.map((t) => (t.id === taskId ? toggledTask : t)),
         onboarding: {
           ...s.onboarding,
           taskCreatedOrCompleted: becameDone ? true : s.onboarding.taskCreatedOrCompleted,
