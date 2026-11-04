@@ -1,0 +1,67 @@
+// Archivos multimedia de ejemplo exclusivos del modo demo y del fixture de referencia visual.
+import type { MediaAsset } from "../types";
+
+export function createSeedAssets(): MediaAsset[] {
+  return [
+    {
+      id: "asset-1",
+      brandId: "brand-bruma",
+      name: "reel-vertido-v60-vertical.mp4",
+      kind: "video",
+      cover: "steam",
+      sizeLabel: "24.8 MB · 0:38",
+      aiTags: ["café filtrado", "vapor", "barra de madera", "luz de mañana", "vertical 9:16"],
+      folder: "Reels Noviembre",
+      uploadedAt: "Hace 2 días",
+      usedInPosts: 1,
+    },
+    {
+      id: "asset-2",
+      brandId: "brand-bruma",
+      name: "costales-coatepec-tostador.jpg",
+      kind: "image",
+      cover: "beans",
+      sizeLabel: "4.2 MB · 2400×3000",
+      aiTags: ["granos tostados", "tostadora", "origen veracruz", "textura cálida"],
+      folder: "Lotes del Mes",
+      uploadedAt: "Hace 3 días",
+      usedInPosts: 2,
+    },
+    {
+      id: "asset-3",
+      brandId: "brand-bruma",
+      name: "manual-identidad-y-voz-bruma.pdf",
+      kind: "pdf",
+      cover: "cup",
+      sizeLabel: "6.1 MB · 18 págs.",
+      aiTags: ["lineamientos", "tipografía", "paleta crema y coral", "tono de marca"],
+      folder: "Brand Book",
+      uploadedAt: "Hace 2 semanas",
+      usedInPosts: 0,
+    },
+    {
+      id: "asset-4",
+      brandId: "brand-min",
+      name: "proceso-costura-goodyear-taller.mp4",
+      kind: "video",
+      cover: "beans",
+      sizeLabel: "31.4 MB · 0:45",
+      aiTags: ["piel vacuna", "costura a mano", "taller artesanal", "sin usar"],
+      folder: "Taller Guadalajara",
+      uploadedAt: "Ayer",
+      usedInPosts: 0,
+    },
+    {
+      id: "asset-5",
+      brandId: "brand-norte",
+      name: "infografia-regla-abcde-lunares.png",
+      kind: "image",
+      cover: "leaf",
+      sizeLabel: "2.9 MB · 1080×1350",
+      aiTags: ["dermatología", "educación paciente", "infografía clínica"],
+      folder: "Campaña Prevención",
+      uploadedAt: "Hace 5 días",
+      usedInPosts: 1,
+    },
+  ];
+}
