@@ -10,7 +10,7 @@ Se obtienen con `node scripts/medir-deslop.mjs`, desde `web/`.
 
 | Medida | Partida (`aa4a1d3`) | Actual | Meta |
 |---|---:|---:|---:|
-| Líneas de `lib/store.ts` | 2,304 | 1,908 | < 150 |
+| Líneas de `lib/store.ts` | 2,304 | 1,665 | < 150 |
 | Archivos sobre 400 líneas, sin simuladores ni iconos | 35 | 35 | 0 |
 | `page.tsx` sobre 80 líneas | 17 | 17 | 0 |
 | Archivos con prop `view` | 33 | 33 | 0 |
@@ -46,7 +46,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F0-5 Contrato del store | — | `lib/store.contract.test.ts` | Hecha | `impl-f0-5` | #37 |
 | F0-6 Compuerta de F1 | F0-4, D4 | Ajuste en GitHub | Bloqueada: solo falta marcar `flujos-con-cuentas` | | |
 | F1-1 Armazón, sesión y ventanas | F0 | `lib/store*`, `lib/domain/` | Hecha | `impl-f1-1` | #49 |
-| F1-2 Dominios simples | F1-1 | `lib/store*` | Pendiente | | |
+| F1-2 Dominios simples | F1-1 | `lib/store*` | Hecha | `impl-f1-2` | #50 |
 | F1-3 Tareas | F1-2 | `lib/store*` | Pendiente | | |
 | F1-4 Equipo y tablero | F1-3 | `lib/store*` | Pendiente | | |
 | F1-5 Marcas | F1-4 | `lib/store*` | Pendiente | | |
@@ -110,3 +110,4 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 | 2026-11-03 | Marca activa (#47) | Fusión (`173313c`): `lib/active-brand.ts` con `selectActiveBrand` y `lib/use-active-brand.ts` como hook. Seis cálculos propios pasan a uno (armazón, parrillas, reportes, inicio, equipo, libretas) y desaparecen los respaldos a `brand-min`/`min-nov` de la interfaz. `lib/share-links.ts` centraliza el enlace del portal y ya no inventa token. `BrandSwitcher` y `EquipoResumen` usan el color guardado de la marca: la deuda de `check:ui` baja de `864` a `861` (`--update` solo restó). Quedan los cuatro respaldos de `lib/workspace-repository.ts`, que reparan documentos incompletos y no eligen marca: son de F1/F2. |
 | 2026-11-03 | Modales y libretas (#48) | Fusión (`b0b22ad`): «+ Nota» crea la libreta y abre el lector como `/tareas`; el modal Kraft duplicado desaparece y `InicioContenido` baja de 397 a 184 líneas. `useCreateNotebook` se muda a `components/app/` para no cruzar dominios (`check:capas` lo detectó). Se quita el Escape global del tablero —cerraba toda la pila— y el modal de cuentas usa `<Modal>` y `<Button>`. Deuda de `check:ui`: `2,530 → 2,482` (`836 + 1,646`, `--update` solo restó); `eslint-disable`: `79 → 78`. Con esto quedan hechos los PR 2 y 3 del traspaso. Siguiente sin bloqueo: F4-1 (tokens) y F4-2; F1 espera a que el dueño marque `flujos-con-cuentas` obligatorio (F0-6).
 | 2026-11-03 | F1-1 (#49) | Fusión (`aa72d44`) con el visto bueno del dueño: `store.ts` baja de **2.304 a 1.908** líneas. `lib/store/sync.ts` (qué se guarda), `session.slice.ts` (hidratación, espacios, perfil), `ui.slice.ts` (modales y compositor), `lib/domain/posts.ts` (`withPostLog`) y `lib/domain/activity.ts` (`createActivityItem`). `STATUS_TO_LABEL` se elimina por duplicar `POST_STATUS_LABEL`. `HublyStoreState = StoreCoreState & SessionSlice & UiSlice`. Contrato del store **8/8 sin tocarlo**; 193 pruebas; `flujos-con-cuentas` en verde. **Queda pendiente en F1:** `runAutomations` sigue en `store.ts` hasta el slice de automatizaciones, porque sus entradas (`addTask`, notificación) se mueven con F1-3 y F1-6. Siguiente: F1-2. |
+| 2026-11-03 | F1-2 (#50) | Fusión (`65b1097`): `store.ts` de **1.908 a 1.665** líneas. Seis slices nuevos en `lib/store/`: `crm` (leads y cotizaciones), `automations`, `agents`, `notebooks` (con `activeNotebookId`), `assets` y `projects`. Ningún slice declara datos guardados y ninguno importa a otro. Contrato **8/8 sin tocarlo**; 193 pruebas; `flujos-con-cuentas` en verde. Siguiente: F1-3 (tareas). |
