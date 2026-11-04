@@ -1,3 +1,4 @@
+export type AnunciosViewMode = "cards" | "table" | "funnels";
 
 export interface SampleAdCard {
   id: string;
@@ -13,7 +14,19 @@ export interface SampleAdCard {
   aiInsight: string;
 }
 
-export const SAMPLE_ADS: SampleAdCard[] = [
+interface AnunciosKpiItem {
+  label: string;
+  value: string;
+}
+
+export const SAMPLE_ADS_KPIS: readonly AnunciosKpiItem[] = [
+  { label: "Gasto Total", value: "$2,231.21" },
+  { label: "Visitas al perfil", value: "268" },
+  { label: "Costo por visita al perfil", value: "$8.33" },
+  { label: "CTR Promedio", value: "5.40%" },
+];
+
+export const SAMPLE_ADS: readonly SampleAdCard[] = [
   {
     id: "hb-ad-1",
     title: "Publicación de Instagram: Fall in Round Top looks...",
@@ -128,32 +141,9 @@ export const SAMPLE_ADS: SampleAdCard[] = [
   },
 ];
 
-export function ExampleTag() {
-  return (
-    <span
-      style={{
-        flexShrink: 0,
-        background: "var(--ui-muted)",
-        color: "var(--ui-text-3)",
-        fontSize: 11,
-        fontWeight: 600,
-        padding: "2px 8px",
-        borderRadius: 999,
-      }}
-    >
-      Ejemplo
-    </span>
-  );
+/** Filtra las tarjetas de anuncios por coincidencia parcial en el título, ignorando mayúsculas y espacios. */
+export function filterSampleAds(ads: readonly SampleAdCard[], searchQuery: string): SampleAdCard[] {
+  const query = searchQuery.trim().toLowerCase();
+  if (!query) return [...ads];
+  return ads.filter((ad) => ad.title.toLowerCase().includes(query));
 }
-
-export const SUBNAV_LINK: React.CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 7,
-  padding: "6px 14px",
-  borderRadius: 999,
-  color: "var(--ui-text-3)",
-  fontWeight: 500,
-  fontSize: 13,
-  textDecoration: "none",
-};

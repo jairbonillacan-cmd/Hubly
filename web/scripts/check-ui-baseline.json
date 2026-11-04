@@ -1,28 +1,4 @@
 {
-  "app/(app)/anuncios/_vista/DemoAnunciosPage.tsx": {
-    "style-inline": 1
-  },
-  "app/(app)/anuncios/_vista/partes/AnunciosCabecera.tsx": {
-    "rgb-fijo": 4,
-    "style-inline": 24,
-    "tamano-fuente": 1,
-    "view-prop": 1
-  },
-  "app/(app)/anuncios/_vista/partes/AnunciosDiagnostico.tsx": {
-    "style-inline": 13,
-    "view-prop": 1
-  },
-  "app/(app)/anuncios/_vista/partes/AnunciosTarjetas.tsx": {
-    "color-fijo": 2,
-    "degradado": 1,
-    "rgb-fijo": 2,
-    "style-inline": 54,
-    "view-prop": 1
-  },
-  "app/(app)/anuncios/_vista/partes/demoAnunciosPage-shared.tsx": {
-    "emoji": 3,
-    "style-inline": 1
-  },
   "app/(app)/app-base.css": {
     "color-fijo": 3,
     "important": 7,
@@ -181,6 +157,16 @@
   },
   "components/app/ajustes/MarcasPanel.tsx": {
     "style-inline": 3
+  },
+  "components/app/anuncios/AnunciosCabecera.tsx": {
+    "style-inline": 1,
+    "tamano-fuente": 1
+  },
+  "components/app/anuncios/AnunciosTarjetas.tsx": {
+    "color-fijo": 1,
+    "degradado": 1,
+    "rgb-fijo": 1,
+    "style-inline": 2
   },
   "components/app/compositor/ComposerCabecera.tsx": {
     "style-inline": 3,
