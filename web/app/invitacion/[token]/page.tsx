@@ -4,8 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { selectLiveAgency } from "@/lib/live-workspace";
-
-const ROLE_LABEL: Record<string, string> = { admin: "Administración", editor: "Edición", viewer: "Solo lectura" };
+import { ROLE_LABEL } from "@/lib/labels";
 
 function InvitacionView() {
   const token = useParams<{ token: string }>()?.token || "";

@@ -1,3 +1,4 @@
+import { POST_STATUS_LABEL } from "./labels";
 import type { PostFormat, PostStatus, SocialNetwork, SocialPost } from "./types";
 
 const CALENDAR_TIME_ZONE = "America/Mexico_City";
@@ -96,17 +97,20 @@ export function sortPosts(posts: SocialPost[], key: SortKey, direction: "asc" | 
 export function publicationLabel(post: Pick<SocialPost, "status" | "scheduledDate">, today: string): { label: string; tone: "muted" | "warn" | "info" | "ok" | "danger" } {
   switch (post.status) {
     case "published":
-      return { label: "Publicado", tone: "ok" };
+      return { label: POST_STATUS_LABEL.published, tone: "ok" };
     case "scheduled":
-      return post.scheduledDate && post.scheduledDate < today ? { label: "Pendiente de registrar", tone: "warn" } : { label: "Planificado", tone: "info" };
+      // Una fecha vencida sin registrar no es «Programado»: pide que alguien diga qué pasó.
+      return post.scheduledDate && post.scheduledDate < today
+        ? { label: "Pendiente de registrar", tone: "warn" }
+        : { label: POST_STATUS_LABEL.scheduled, tone: "info" };
     case "approved":
-      return { label: "Aprobado", tone: "ok" };
+      return { label: POST_STATUS_LABEL.approved, tone: "ok" };
     case "pending":
-      return { label: "En aprobación", tone: "warn" };
+      return { label: POST_STATUS_LABEL.pending, tone: "warn" };
     case "changes":
-      return { label: "Requiere cambios", tone: "danger" };
+      return { label: POST_STATUS_LABEL.changes, tone: "danger" };
     default:
-      return { label: "Borrador", tone: "muted" };
+      return { label: POST_STATUS_LABEL.draft, tone: "muted" };
   }
 }
 

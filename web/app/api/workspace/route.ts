@@ -9,6 +9,7 @@ import {
 import { readBodyText } from "@/lib/api-guard";
 import { brandFromRow, groupWorkspaceItems, type BrandRow, type WorkspaceItemRow } from "@/lib/brand-rows";
 import { backendEnabled } from "@/lib/supabase/config";
+import { ROLE_LABEL } from "@/lib/labels";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import type { HublyWorkspaceData } from "@/lib/types";
 
@@ -161,7 +162,6 @@ async function liveGet(requestedAgency: string | null) {
     avatarSourceUrl: (auth.user.user_metadata?.avatar_source_url as string) || undefined,
   };
   const { data: members } = await supabase.rpc("list_members", { target_agency: membership.agency_id });
-  const ROLE_LABEL: Record<string, string> = { owner: "Dueño", admin: "Administración", editor: "Edición", viewer: "Solo lectura" };
   data.team = ((members ?? []) as { user_id: string; role: string; email: string; name: string }[]).map((m) => {
     const saved = data.team.find((t) => t.email === m.email);
     const memberName = m.user_id === auth.user!.id ? data.profile.name : m.name || saved?.name || m.email;

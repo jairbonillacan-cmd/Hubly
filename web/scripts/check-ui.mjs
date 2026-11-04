@@ -64,6 +64,9 @@ const layerNumber = (l) =>
   [...l.matchAll(/(?:zIndex:\s*|z-index:\s*|\bz-\[)(\d+)|\bz-(\d{2,})\b/g)].some((m) => Number(m[1] ?? m[2]) >= 10);
 // Una definición de token no es usar un valor fijo, también en la forma de una línea `:root { --x: … }`.
 const definesToken = (l) => /^\s*(?::root\s*\{\s*)?--[\w-]+\s*:/.test(l);
+// Se pinta el código interno. Solo los campos que lo guardan: `kind` y el estado de
+// un post; los demás `status` ya se guardan en español. El `$` excluye `${…}`.
+const rawState = (l) => /(?<![=$\w])\{\s*([\w.?]+\.kind|(post|\w+Post)\??\.status)\s*\}/.test(l);
 
 const RULES = [
   { id: "color-fijo", why: "color fijo: usa un token --ui-* o --hb-* (§3)", test: (l) => /#[0-9a-fA-F]{3,8}\b(?![\w-])/.test(l) && !/&#/.test(l) },
@@ -91,6 +94,7 @@ const RULES = [
   { id: "view-prop", why: "la sección recibe view entera: pide props explícitas (docs/deslop/02-ARQUITECTURA-OBJETIVO.md)", test: (l) => /\(\{\s*view\b|\bview:\s*\w+(Model|View)\b/.test(l) },
   { id: "use-store-sin-selector", why: "useHublyStore() sin selector: suscribe a todo el store, pasa un selector (F1-6)", test: (l) => /useHublyStore\(\s*\)/.test(l) },
   { id: "z-index-fijo", why: "capa con número suelto: usa var(--layer-*) (§5)", test: layerNumber },
+  { id: "estado-crudo", why: "valor interno mostrado tal cual: usa una etiqueta de lib/labels.ts (§14)", test: rawState },
 ];
 const why = Object.fromEntries(RULES.map((rule) => [rule.id, rule.why]));
 

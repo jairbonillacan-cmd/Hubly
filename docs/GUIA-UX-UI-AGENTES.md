@@ -679,6 +679,7 @@ Español de México, tuteando. Directo y cercano.
 - No nombres competidores en textos públicos. Solo Henry puede servir de referencia, según el [ADR 0001](adr/0001-paridad-con-henry.md).
 - Datos de ejemplo realistas y del sector: «Café Bruma», «Clínica Norte», nunca «Lorem ipsum», «Usuario 1» o «Acme».
 - Lo escrito por el usuario se muestra tal cual, incluso «asd».
+- Un valor interno (`pending`, `image`, `owner`) nunca se pinta tal cual: sale de `web/lib/labels.ts`. `check:ui` lo vigila con la regla `estado-crudo`.
 
 ---
 

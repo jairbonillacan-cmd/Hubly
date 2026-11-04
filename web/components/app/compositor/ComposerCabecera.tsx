@@ -1,6 +1,7 @@
 "use client";
 
 import { networkSpec } from "@/lib/network-catalog";
+import { POST_STATUS_LABEL } from "@/lib/labels";
 import {
   postColorText,
 } from "@/lib/post-draft";
@@ -9,7 +10,7 @@ import {
   HublyCopyIcon as Copy,
   HublyTrashIcon as Trash2,
 } from "@/components/app/icons/DuotoneIcons";
-import { networkInk, STATUS_TEXT, } from "./PostComposerModal-shared";
+import { networkInk } from "./PostComposerModal-shared";
 import type { PostComposerModalModel } from "./usePostComposerModal";
 
 export function ComposerCabecera({ view }: { view: PostComposerModalModel }) {
@@ -29,7 +30,7 @@ export function ComposerCabecera({ view }: { view: PostComposerModalModel }) {
         />
         <div className="hubly-composer-badges">
           <span title="Marca del post">{brand.name}</span>
-          <span>{STATUS_TEXT[draft.status]}</span>
+          <span>{POST_STATUS_LABEL[draft.status]}</span>
           {workflowStatus && <em style={{ color: workflowStatus.color }}>{workflowStatus.name}</em>}
           <span className="hubly-composer-dots" aria-label={`Redes: ${draft.networks.join(", ")}`}>
             {draft.networks.map((n) => <i key={n} style={{ background: networkInk(networkSpec(n).color) }} />)}
