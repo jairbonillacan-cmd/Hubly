@@ -1,0 +1,86 @@
+/* Estilos del dominio de anuncios (components/app/anuncios/anuncios.css) */
+
+.hubly-anuncios-page { color: var(--ui-text); min-height: calc(100vh - 64px); position: relative; padding-bottom: 60px; }
+
+/* Etiqueta compartida de ejemplo */
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-example-tag { flex-shrink: 0; background: var(--ui-muted); color: var(--ui-text-3); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+
+/* Sub-navegación superior */
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-subnav { display: flex; align-items: center; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid var(--ui-border); margin-bottom: 22px; flex-wrap: wrap; gap: 12px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-subnav-track { display: inline-flex; max-width: 100%; overflow-x: auto; align-items: center; gap: 2px; background: var(--ui-muted); padding: 4px; border-radius: 999px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-subnav-link { display: inline-flex; align-items: center; gap: 7px; padding: 6px 14px; border-radius: 999px; color: var(--ui-text-3); font-weight: 500; font-size: 13px; text-decoration: none; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-subnav-link.is-active { background: var(--ui-surface); color: var(--hb-accent-text); font-weight: 600; box-shadow: 0 1px 2px rgb(var(--hb-accent-rgb) / 0.06); }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-subnav-icon { color: var(--hb-accent-text); }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-subnav-actions { display: flex; align-items: center; gap: 8px; }
+
+/* Encabezado, aviso de datos de ejemplo y tarjetas de indicadores */
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-title-row { padding-top: 0; padding-bottom: 14px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-title-col { min-width: 0; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-note { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding: 10px 12px; border: 1px solid var(--ui-border); border-radius: 12px; background: var(--ui-surface-2); color: var(--ui-text-2); font-size: 12.5px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-note-icon { flex-shrink: 0; color: var(--hb-accent-text); }
+
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-kpi-card { background: var(--ui-surface); border: 1px solid var(--ui-border); border-radius: 16px; padding: 20px 22px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-kpi-head { margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-kpi-label { font-size: 12px; font-weight: 600; color: var(--ui-text-4); border-bottom: 1px dashed var(--ui-border-strong); padding-bottom: 1px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-kpi-value { font-weight: 800; color: var(--ui-text); letter-spacing: -0.02em; line-height: 1.15; }
+
+/* Barra de búsqueda y selector de vista */
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-search-row { display: flex; align-items: center; gap: 8px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-search-btn { width: 36px; height: 36px; border-radius: 999px; border: 1px solid var(--ui-border); background: var(--ui-surface); color: var(--ui-text-3); display: grid; place-items: center; cursor: pointer; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-search-input { height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--ui-border-strong); font-size: 13px; outline: none; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-toolbar-right { display: flex; align-items: center; gap: 10px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-view-track { display: inline-flex; align-items: center; background: var(--ui-muted); padding: 3px; border-radius: 10px; gap: 2px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-view-btn { width: 30px; height: 28px; border-radius: 7px; border: none; background: transparent; color: var(--ui-text-4); display: grid; place-items: center; cursor: pointer; box-shadow: none; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-view-btn[aria-pressed="true"] { background: var(--ui-surface); color: var(--hb-accent); box-shadow: 0 1px 2px rgb(var(--hb-accent-rgb) / 0.06); }
+
+/* Rejilla de tarjetas de creativos */
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-card { background: var(--ui-surface); border: 1px solid var(--ui-border); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-cover { position: relative; height: 330px; overflow: hidden; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-meta-badge { position: absolute; top: 10px; left: 10px; width: 26px; height: 26px; border-radius: 8px; background: var(--ui-surface); display: grid; place-items: center; box-shadow: 0 2px 6px rgb(var(--hb-accent-rgb) / 0.16); }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-cover-overlay { position: absolute; left: 0; right: 0; bottom: 0; padding: 32px 14px 12px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-cover-title { color: var(--on-accent); font-size: 12.5px; font-weight: 700; line-height: 1.35; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-card-body { padding: 12px 14px 16px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-status-group { display: inline-flex; align-items: center; gap: 6px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-status-pill { background: var(--ui-success-soft); color: var(--ui-success-text); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-status-pill.is-table { padding: 3px 9px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-example-btn { background: var(--hb-accent); color: var(--on-accent); border: none; border-radius: 8px; padding: 5px 12px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-score-row { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; margin-bottom: 10px; border-bottom: 1px solid var(--ui-muted); }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-score-label { font-size: 11.5px; color: var(--ui-text-4); font-weight: 500; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-score-track { flex: 1; height: 6px; border-radius: 999px; background: var(--ui-border); overflow: hidden; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-score-fill { height: 100%; background: var(--ui-success); border-radius: 999px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-score-val { font-size: 12px; font-weight: 700; color: var(--ui-success-text); }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-metrics { display: flex; flex-direction: column; gap: 7px; font-size: 12.5px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-metric-row { display: flex; align-items: center; justify-content: space-between; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-metric-label { color: var(--ui-text-4); border-bottom: 1px dashed var(--ui-border-strong); }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-metric-val { font-weight: 700; color: var(--ui-text); }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-result-badge { background: var(--ui-sky-soft); color: var(--hb-accent-text); font-weight: 700; font-size: 12px; padding: 1px 7px; border-radius: 6px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-result-badge[data-color="green"] { background: var(--ui-success-soft); color: var(--ui-success-text); }
+
+/* Tabla comparativa */
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-table-wrap { background: var(--ui-surface); border: 1px solid var(--ui-border); border-radius: 16px; overflow: hidden; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-table-head-row { background: var(--ui-surface-2); border-bottom: 1px solid var(--ui-border); }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-th { text-align: left; padding: 12px 16px; color: var(--ui-text-4); }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-th.is-right { text-align: right; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-tr { border-bottom: 1px solid var(--ui-muted); }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-td { padding: 12px 16px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-td-title { padding: 12px 16px; font-weight: 600; color: var(--ui-text); }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-td-title-inner { display: inline-flex; align-items: center; gap: 8px; }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-td-score { padding: 12px 16px; text-align: right; font-weight: 700; color: var(--ui-success-text); }
+:is(.hubly-app-root, .hb-app-root) .hubly-anuncios-page .hubly-anuncios-td-num { padding: 12px 16px; text-align: right; font-weight: 700; }
+
+/* Modal de ejemplo de diagnóstico */
+:is(.hubly-app-root, .hb-app-root, body) .hubly-anuncios-diag-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+:is(.hubly-app-root, .hb-app-root, body) .hubly-anuncios-diag-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--ui-sky-soft); color: var(--hb-accent-text); font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+:is(.hubly-app-root, .hb-app-root, body) .hubly-anuncios-diag-close { background: none; border: none; cursor: pointer; color: var(--ui-text-4); }
+:is(.hubly-app-root, .hb-app-root, body) p.hubly-anuncios-diag-note { font-size: 12.5px; color: var(--ui-text-4); margin: 0 0 10px; }
+:is(.hubly-app-root, .hb-app-root, body) h3.hubly-anuncios-diag-title { font-size: 16px; font-weight: 700; color: var(--ui-text); margin: 0 0 10px; }
+:is(.hubly-app-root, .hb-app-root, body) p.hubly-anuncios-diag-insight { font-size: 13.5px; color: var(--ui-text-2); line-height: 1.55; margin: 0 0 16px; }
+:is(.hubly-app-root, .hb-app-root, body) .hubly-anuncios-diag-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: var(--ui-surface-2); padding: 12px; border-radius: 12px; border: 1px solid var(--ui-border); font-size: 12px; }
+:is(.hubly-app-root, .hb-app-root, body) .hubly-anuncios-diag-stat-label { color: var(--ui-text-4); }
+:is(.hubly-app-root, .hb-app-root, body) .hubly-anuncios-diag-stat-val { font-weight: 800; color: var(--ui-text); font-size: 15px; }
+:is(.hubly-app-root, .hb-app-root, body) .hubly-anuncios-diag-stat-val.is-score { color: var(--ui-success-text); }
