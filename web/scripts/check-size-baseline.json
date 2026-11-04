@@ -1,7 +1,6 @@
 {
   "app/(app)/app-base.css": 703,
   "app/(app)/calendario/page.tsx": 805,
-  "app/(app)/chat/page.tsx": 776,
   "app/(app)/dashboard-polish.css": 3090,
   "app/(app)/hubly-saas.css": 1498,
   "app/(app)/layout.tsx": 672,
@@ -12,6 +11,7 @@
   "components/app/ArchivosYProyectosView.tsx": 658,
   "components/app/chat/ChatComposer.tsx": 590,
   "components/app/chat/ChatMessageRow.tsx": 488,
+  "components/app/chat/ChatView.tsx": 776,
   "components/app/CommandPaletteModal.tsx": 661,
   "components/app/compositor/ComposerContenido.tsx": 527,
   "components/app/compositor/usePostComposerModal.tsx": 465,
