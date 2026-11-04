@@ -1,6 +1,14 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { duplicatePostAsDraft, selectTodayPostsAndApprovals, withPostLog } from "./posts";
+import {
+  duplicatePostAsDraft,
+  filterPostsByBrand,
+  formatBrandBioUrl,
+  parseParrillasTab,
+  resolveBrandBioHandle,
+  selectTodayPostsAndApprovals,
+  withPostLog,
+} from "./posts";
 import { post as selectorPost, RELOJ } from "./test-fixtures";
 import type { SocialPost } from "../types";
 
@@ -75,4 +83,38 @@ test("con listas vacías los contadores de posts quedan en cero", () => {
   assert.equal(r.isEmptyToday, true);
   assert.equal(r.isEmptyApprovals, true);
   assert.deepEqual(r.changesRequestedPosts, []);
+});
+
+test("parseParrillasTab reconoce las pestañas válidas, el alias liga y descarta valores desconocidos", () => {
+  assert.equal(parseParrillasTab("calendario"), "calendario");
+  assert.equal(parseParrillasTab("ideas"), "ideas");
+  assert.equal(parseParrillasTab("mensajes"), "mensajes");
+  assert.equal(parseParrillasTab("analytics"), "analytics");
+  assert.equal(parseParrillasTab("tableros"), "tableros");
+  assert.equal(parseParrillasTab("reportes"), "reportes");
+  assert.equal(parseParrillasTab("links"), "links");
+  assert.equal(parseParrillasTab("liga"), "links");
+  assert.equal(parseParrillasTab("invalida"), null);
+  assert.equal(parseParrillasTab(null), null);
+  assert.equal(parseParrillasTab(undefined), null);
+});
+
+test("resolveBrandBioHandle prioriza bioLink.handle sobre slug y devuelve cadena vacía sin marca", () => {
+  assert.equal(resolveBrandBioHandle({ slug: "cafe-bruma", bioLink: { handle: "cafebruma" } }), "cafebruma");
+  assert.equal(resolveBrandBioHandle({ slug: "cafe-bruma", bioLink: { handle: "" } }), "cafe-bruma");
+  assert.equal(resolveBrandBioHandle({ slug: "cafe-bruma" }), "cafe-bruma");
+  assert.equal(resolveBrandBioHandle(null), "");
+});
+
+test("formatBrandBioUrl construye la dirección pública sin duplicar la arroba", () => {
+  assert.equal(formatBrandBioUrl("cafebruma"), "https://hubly.app/@cafebruma");
+  assert.equal(formatBrandBioUrl("@cafebruma"), "https://hubly.app/@cafebruma");
+  assert.equal(formatBrandBioUrl(""), "https://hubly.app/@");
+});
+
+test("filterPostsByBrand devuelve solo los posts de la marca activa", () => {
+  const lista = [post({ id: "p-a", brandId: "brand-a" }), post({ id: "p-b", brandId: "brand-b" })];
+  assert.deepEqual(filterPostsByBrand(lista, "brand-a").map((p) => p.id), ["p-a"]);
+  assert.deepEqual(filterPostsByBrand(lista, "brand-c"), []);
+  assert.deepEqual(filterPostsByBrand(lista, null), []);
 });
