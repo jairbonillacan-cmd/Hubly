@@ -3,6 +3,7 @@
 import { copyText } from "@/lib/clipboard";
 import { useMemo, useState } from "react";
 import { useHublyStore } from "@/lib/store";
+import { backendEnabled } from "@/lib/supabase/config";
 import { useActiveBrand } from "@/lib/use-active-brand";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import {
@@ -81,7 +82,8 @@ export function useEquipoView() {
         filteredPosts,
         activityEvents,
         teamPeriod,
-        searchQuery
+        searchQuery,
+        backendEnabled
       ),
     [syncedTeam, filteredTasks, filteredPosts, activityEvents, teamPeriod, searchQuery]
   );
@@ -96,7 +98,8 @@ export function useEquipoView() {
         filteredPosts,
         activityEvents,
         rankingPeriodKey,
-        searchQuery
+        searchQuery,
+        backendEnabled
       ),
     [syncedTeam, filteredTasks, filteredPosts, activityEvents, rankingPeriodKey, searchQuery]
   );
