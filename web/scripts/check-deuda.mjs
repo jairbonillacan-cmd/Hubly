@@ -8,7 +8,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { NUEVAS, esNueva } from "./check-ui-reglas.mjs";
+import { TANDAS } from "./check-ui-reglas.mjs";
 
 const args = process.argv.slice(2);
 const base = args[0];
@@ -72,11 +72,19 @@ const measures = [
   ["package.json", maxWarnings],
 ];
 const guarded = [
-  // Toda regla ausente en la base vale 0; solo al cruzar F0-3 se ignoran las 4 nuevas que aún no existían en was.
+  // Toda regla ausente en la base vale 0; solo la tanda que llega en este PR trae su deuda inicial sin contar.
   { path: "scripts/check-ui-baseline.json", skipInitialNewRules: true },
-  { path: "scripts/check-ui-rutas-baseline.json", skipInitialNewRules: false },
+  { path: "scripts/check-ui-rutas-baseline.json", skipInitialNewRules: true },
   { path: "scripts/check-capas-baseline.json", skipInitialNewRules: false },
 ];
+
+// Una tanda llega en este PR si ninguna de sus reglas tenía deuda en la base ni estaba
+// declarada en el check-ui.mjs de la base. Lo segundo impide que una regla limpiada a 0,
+// y por eso ausente de la base, vuelva a admitir deuda como si fuera nueva.
+// Sin check-ui.mjs en la base (árboles de prueba) cuenta solo la deuda.
+const reglasDeLaBase = previous("scripts/check-ui.mjs");
+const declarada = (id) => reglasDeLaBase?.includes(`id: "${id}"`) ?? false;
+const llegaEnEstePR = (tanda, was) => tanda.reglas.every((id) => !(id in was) && !declarada(id));
 
 let failed = false;
 for (const { path, skipInitialNewRules } of guarded) {
@@ -89,8 +97,10 @@ for (const { path, skipInitialNewRules } of guarded) {
   }
   const was = byRule(before);
   const now = byRule(current(path));
-  const introducingNewRules = skipInitialNewRules && ![...NUEVAS].some((id) => id in was);
-  const ids = Object.keys(now).filter((id) => !(introducingNewRules && esNueva(id)));
+  const recienLlegadas = new Set(
+    skipInitialNewRules ? TANDAS.filter((tanda) => llegaEnEstePR(tanda, was)).flatMap((tanda) => tanda.reglas) : [],
+  );
+  const ids = Object.keys(now).filter((id) => !recienLlegadas.has(id));
   for (const id of ids) {
     const [from, to] = [was[id] ?? 0, now[id] ?? 0];
     if (to > from) {

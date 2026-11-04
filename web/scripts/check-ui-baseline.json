@@ -28,7 +28,8 @@
     "important": 7,
     "rgb-fijo": 8,
     "tamano-fuente": 1,
-    "transition-all": 1
+    "transition-all": 1,
+    "z-index-fijo": 3
   },
   "app/(app)/automatizaciones/page.tsx": {
     "color-fijo": 1,
@@ -51,7 +52,8 @@
     "important": 95,
     "radio": 5,
     "rgb-fijo": 89,
-    "tamano-fuente": 11
+    "tamano-fuente": 11,
+    "z-index-fijo": 18
   },
   "app/(app)/dashboard/layout.tsx": {
     "style-inline": 1
@@ -61,7 +63,8 @@
     "important": 19,
     "radio": 1,
     "rgb-fijo": 28,
-    "tamano-fuente": 5
+    "tamano-fuente": 5,
+    "z-index-fijo": 1
   },
   "app/(app)/ia/page.tsx": {
     "hbtn-directo": 1,
@@ -69,12 +72,14 @@
   },
   "app/(app)/layout.tsx": {
     "rgb-fijo": 1,
-    "style-inline": 9
+    "style-inline": 9,
+    "z-index-fijo": 2
   },
   "app/(app)/marca/page.tsx": {
     "color-fijo": 3,
     "rgb-fijo": 2,
-    "style-inline": 17
+    "style-inline": 17,
+    "z-index-fijo": 1
   },
   "app/(app)/marcas/page.tsx": {
     "color-fijo": 3,
@@ -102,7 +107,8 @@
     "rgb-fijo": 2,
     "style-inline": 10,
     "tamano-fuente": 1,
-    "view-prop": 1
+    "view-prop": 1,
+    "z-index-fijo": 1
   },
   "app/(app)/parrillas/_vista/ParrillasLinks.tsx": {
     "color-fijo": 5,
@@ -142,13 +148,15 @@
   "components/app/AppDialogHost.tsx": {
     "rgb-fijo": 1,
     "style-inline": 5,
-    "tamano-fuente": 1
+    "tamano-fuente": 1,
+    "z-index-fijo": 1
   },
   "components/app/ArchivosYProyectosView.tsx": {
     "color-fijo": 7,
     "rgb-fijo": 4,
     "style-inline": 48,
-    "tamano-fuente": 1
+    "tamano-fuente": 1,
+    "z-index-fijo": 2
   },
   "components/app/AutoSuggestionsModal.tsx": {
     "rgb-fijo": 1,
@@ -163,7 +171,8 @@
   "components/app/DescubreHublyWidget.tsx": {
     "rgb-fijo": 1,
     "style-inline": 23,
-    "transition-all": 1
+    "transition-all": 1,
+    "z-index-fijo": 1
   },
   "components/app/FloatingAIDrawer.tsx": {
     "color-fijo": 2,
@@ -202,7 +211,8 @@
   },
   "components/app/SaveStatus.tsx": {
     "color-fijo": 2,
-    "style-inline": 1
+    "style-inline": 1,
+    "z-index-fijo": 1
   },
   "components/app/ajustes/CuentaPanel.tsx": {
     "style-inline": 1
@@ -315,7 +325,8 @@
     "color-fijo": 4,
     "rgb-fijo": 3,
     "style-inline": 29,
-    "view-prop": 1
+    "view-prop": 1,
+    "z-index-fijo": 1
   },
   "components/app/dashboard/team/EquipoCatalogo.tsx": {
     "color-fijo": 2,
@@ -347,7 +358,8 @@
     "rgb-fijo": 1,
     "style-inline": 39,
     "tamano-fuente": 2,
-    "view-prop": 1
+    "view-prop": 1,
+    "z-index-fijo": 1
   },
   "components/app/dashboard/team/equipoView-shared.tsx": {
     "color-fijo": 24,
@@ -369,26 +381,31 @@
     "color-fijo": 4,
     "rgb-fijo": 1,
     "style-inline": 16,
-    "tamano-fuente": 1
+    "tamano-fuente": 1,
+    "z-index-fijo": 1
   },
   "components/app/shell/MobileTabbar.tsx": {
-    "style-inline": 7
+    "style-inline": 7,
+    "z-index-fijo": 1
   },
   "components/app/shell/MobileTopbar.tsx": {
     "color-fijo": 2,
     "style-inline": 10,
-    "tamano-fuente": 1
+    "tamano-fuente": 1,
+    "z-index-fijo": 1
   },
   "components/app/shell/NotificationsPopover.tsx": {
     "color-fijo": 1,
     "rgb-fijo": 1,
-    "style-inline": 11
+    "style-inline": 11,
+    "z-index-fijo": 1
   },
   "components/app/shell/ProfilePopover.tsx": {
     "color-fijo": 2,
     "exclamacion": 1,
     "rgb-fijo": 1,
-    "style-inline": 21
+    "style-inline": 21,
+    "z-index-fijo": 1
   },
   "components/app/shell/SidebarFooter.tsx": {
     "color-fijo": 1,
@@ -470,10 +487,14 @@
     "radio": 1,
     "rgb-fijo": 3,
     "style-inline": 89,
-    "tamano-fuente": 2
+    "tamano-fuente": 2,
+    "z-index-fijo": 2
   },
   "components/app/tasks/TaskDetailModal.tsx": {
     "color-fijo": 3,
     "style-inline": 10
+  },
+  "components/app/ui/ui-kit.css": {
+    "z-index-fijo": 1
   }
 }

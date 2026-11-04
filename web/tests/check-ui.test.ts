@@ -98,6 +98,25 @@ test("el resumen separa la deuda de siempre de la de las reglas nuevas", () => {
   assert.ok(result.stdout.includes("De las reglas de siempre: 0. De las nuevas: 2."), result.stdout);
 });
 
+test("una capa con número suelto falla; el token y el orden interno no", () => {
+  const root = tree({
+    "components/app/Capas.tsx":
+      'export const Capas = () => (\n  <>\n    <div style={{ zIndex: 100 }} />\n    <div className="z-50" />\n    <div style={{ zIndex: "var(--layer-modal)" }} />\n    <div style={{ zIndex: 2 }} />\n  </>\n);\n',
+    "app/(app)/capas.css": ".menu { z-index: 65; }\n.menu-token { z-index: var(--layer-dropdown); }\n.pieza { z-index: 1; }\n",
+  });
+  const result = run(root);
+  falla(result, "components/app/Capas.tsx [z-index-fijo]", "2 hallazgos, permitidos 0", "app/(app)/capas.css [z-index-fijo]", "1 hallazgos, permitidos 0");
+});
+
+test("una definición de token no cuenta, tampoco en una línea con :root", () => {
+  const root = tree({
+    "app/(app)/tokens.css": ":root { --ui-surface: #FFFFFF; --layer-modal: 110; }\n:root {\n  --ui-text: #0F172A;\n}\n",
+  });
+  const result = run(root);
+  assert.equal(result.status, 0, result.stderr);
+  assert.ok(result.stdout.includes("Deuda heredada sin empeorar: 0 hallazgos."), result.stdout);
+});
+
 test("una línea con ui-ok: no cuenta", () => {
   const root = tree({
     "components/app/Exento.tsx": "const estilo = <div style={{ width: ancho }} />; // ui-ok: valor calculado\n",
