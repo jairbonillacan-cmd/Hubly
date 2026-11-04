@@ -6,7 +6,6 @@ import { EquipoMiembros } from "./team/EquipoMiembros";
 import { EquipoResumen } from "./team/EquipoResumen";
 import { EquipoProgreso } from "./team/EquipoProgreso";
 import { EquipoLogrosRanking } from "./team/EquipoLogrosRanking";
-import { EquipoCatalogo } from "./team/EquipoCatalogo";
 
 export function EquipoView() {
   const view = useEquipoView();
@@ -18,7 +17,6 @@ export function EquipoView() {
       <EquipoResumen view={view} />
       <EquipoProgreso view={view} />
       <EquipoLogrosRanking view={view} />
-      <EquipoCatalogo view={view} />
     </div>
   );
 }
