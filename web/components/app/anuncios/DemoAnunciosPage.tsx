@@ -1,9 +1,9 @@
 "use client";
 
-import { useDemoAnunciosPage } from "./partes/useDemoAnunciosPage";
-import { AnunciosCabecera } from "./partes/AnunciosCabecera";
-import { AnunciosTarjetas } from "./partes/AnunciosTarjetas";
-import { AnunciosDiagnostico } from "./partes/AnunciosDiagnostico";
+import { useDemoAnunciosPage } from "./useDemoAnunciosPage";
+import { AnunciosCabecera } from "./AnunciosCabecera";
+import { AnunciosTarjetas } from "./AnunciosTarjetas";
+import { AnunciosDiagnostico } from "./AnunciosDiagnostico";
 
 export function DemoAnunciosPage() {
   const view = useDemoAnunciosPage();
