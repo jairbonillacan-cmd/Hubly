@@ -252,6 +252,13 @@
   "components/app/dashboard/ExtraWidgets.tsx": {
     "style-inline": 1
   },
+  "components/app/dashboard/InicioContenido.tsx": {
+    "exclamacion": 1,
+    "view-prop": 1
+  },
+  "components/app/dashboard/InicioWidget.tsx": {
+    "view-prop": 1
+  },
   "components/app/dashboard/MemberDrawer.tsx": {
     "color-fijo": 4,
     "radio": 2,
@@ -265,52 +272,42 @@
   "components/app/dashboard/SaludCuentasView.tsx": {
     "style-inline": 3
   },
-  "components/app/dashboard/inicio/InicioContenido.tsx": {
-    "exclamacion": 1,
-    "view-prop": 1
-  },
-  "components/app/dashboard/inicio/InicioWidget.tsx": {
-    "view-prop": 1
-  },
-  "components/app/dashboard/inicio/WidgetAdsActivos.tsx": {
+  "components/app/dashboard/WidgetAdsActivos.tsx": {
     "style-inline": 7,
     "view-prop": 1
   },
-  "components/app/dashboard/inicio/WidgetAprobaciones.tsx": {
+  "components/app/dashboard/WidgetAprobaciones.tsx": {
     "color-fijo": 2,
     "style-inline": 8,
     "view-prop": 1
   },
-  "components/app/dashboard/inicio/WidgetGraficaAds.tsx": {
+  "components/app/dashboard/WidgetGraficaAds.tsx": {
     "style-inline": 8,
     "view-prop": 1
   },
-  "components/app/dashboard/inicio/WidgetHoy.tsx": {
+  "components/app/dashboard/WidgetHoy.tsx": {
     "style-inline": 7,
     "view-prop": 1
   },
-  "components/app/dashboard/inicio/WidgetLibretas.tsx": {
+  "components/app/dashboard/WidgetLibretas.tsx": {
     "rgb-fijo": 1,
     "style-inline": 3,
     "view-prop": 1
   },
-  "components/app/dashboard/inicio/WidgetNotificaciones.tsx": {
+  "components/app/dashboard/WidgetNotificaciones.tsx": {
     "color-fijo": 1,
     "style-inline": 8,
     "view-prop": 1
   },
-  "components/app/dashboard/inicio/WidgetProyectosCriticos.tsx": {
+  "components/app/dashboard/WidgetProyectosCriticos.tsx": {
     "style-inline": 5,
     "view-prop": 1
   },
-  "components/app/dashboard/inicio/WidgetTareas.tsx": {
+  "components/app/dashboard/WidgetTareas.tsx": {
     "color-fijo": 6,
     "rgb-fijo": 2,
     "style-inline": 28,
     "view-prop": 1
-  },
-  "components/app/dashboard/inicio/useInicioView.tsx": {
-    "use-store-sin-selector": 1
   },
   "components/app/dashboard/team/EquipoCabecera.tsx": {
     "color-fijo": 4,
@@ -357,6 +354,9 @@
     "emoji": 38,
     "rgb-fijo": 1,
     "style-inline": 1
+  },
+  "components/app/dashboard/useInicioView.tsx": {
+    "use-store-sin-selector": 1
   },
   "components/app/media/MediaLibrary.tsx": {
     "color-fijo": 1,

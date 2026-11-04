@@ -2,8 +2,8 @@
 
 import { MotionConfig } from "motion/react";
 
-import { useInicioView } from "./inicio/useInicioView";
-import { InicioContenido } from "./inicio/InicioContenido";
+import { useInicioView } from "./useInicioView";
+import { InicioContenido } from "./InicioContenido";
 
 export function InicioView() {
   const view = useInicioView();
