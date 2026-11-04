@@ -1,11 +1,11 @@
 "use client";
 
-import { useParrillasPage } from "./_vista/useParrillasPage";
-import { ParrillasNav } from "./_vista/ParrillasNav";
-import { ParrillasCalendario } from "./_vista/ParrillasCalendario";
-import { ParrillasDemo } from "./_vista/ParrillasDemo";
-import { ParrillasLinks } from "./_vista/ParrillasLinks";
-import { ParrillasIdeas } from "./_vista/ParrillasIdeas";
+import { useParrillasPage } from "@/components/app/parrillas/useParrillasPage";
+import { ParrillasNav } from "@/components/app/parrillas/ParrillasNav";
+import { ParrillasCalendario } from "@/components/app/parrillas/ParrillasCalendario";
+import { ParrillasDemo } from "@/components/app/parrillas/ParrillasDemo";
+import { ParrillasLinks } from "@/components/app/parrillas/ParrillasLinks";
+import { ParrillasIdeas } from "@/components/app/parrillas/ParrillasIdeas";
 
 export default function ParrillasPage() {
   const view = useParrillasPage();

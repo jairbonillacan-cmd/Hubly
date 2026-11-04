@@ -90,37 +90,6 @@
     "style-inline": 15,
     "tamano-fuente": 1
   },
-  "app/(app)/parrillas/_vista/ParrillasCalendario.tsx": {
-    "color-fijo": 9,
-    "exclamacion": 1,
-    "style-inline": 55,
-    "tamano-fuente": 1,
-    "view-prop": 1
-  },
-  "app/(app)/parrillas/_vista/ParrillasDemo.tsx": {
-    "color-fijo": 3,
-    "style-inline": 9,
-    "view-prop": 1
-  },
-  "app/(app)/parrillas/_vista/ParrillasIdeas.tsx": {
-    "style-inline": 4,
-    "view-prop": 1
-  },
-  "app/(app)/parrillas/_vista/ParrillasLinks.tsx": {
-    "color-fijo": 5,
-    "exclamacion": 1,
-    "radio": 1,
-    "rgb-fijo": 3,
-    "style-inline": 41,
-    "tamano-fuente": 1,
-    "view-prop": 1
-  },
-  "app/(app)/parrillas/_vista/ParrillasNav.tsx": {
-    "rgb-fijo": 1,
-    "style-inline": 4,
-    "transition-all": 1,
-    "view-prop": 1
-  },
   "app/(app)/parrillas/page.tsx": {
     "style-inline": 1
   },
@@ -361,6 +330,37 @@
   "components/app/media/MediaLibrary.tsx": {
     "color-fijo": 1,
     "style-inline": 2
+  },
+  "components/app/parrillas/ParrillasCalendario.tsx": {
+    "color-fijo": 9,
+    "exclamacion": 1,
+    "style-inline": 55,
+    "tamano-fuente": 1,
+    "view-prop": 1
+  },
+  "components/app/parrillas/ParrillasDemo.tsx": {
+    "color-fijo": 3,
+    "style-inline": 9,
+    "view-prop": 1
+  },
+  "components/app/parrillas/ParrillasIdeas.tsx": {
+    "style-inline": 4,
+    "view-prop": 1
+  },
+  "components/app/parrillas/ParrillasLinks.tsx": {
+    "color-fijo": 5,
+    "exclamacion": 1,
+    "radio": 1,
+    "rgb-fijo": 3,
+    "style-inline": 41,
+    "tamano-fuente": 1,
+    "view-prop": 1
+  },
+  "components/app/parrillas/ParrillasNav.tsx": {
+    "rgb-fijo": 1,
+    "style-inline": 4,
+    "transition-all": 1,
+    "view-prop": 1
   },
   "components/app/reports/MonthlyReport.tsx": {
     "color-fijo": 1,
