@@ -8,7 +8,7 @@ import type {
   CustomCommitmentMetric,
   PeriodCommitmentSnapshot,
   PostItem,
-  TaskItem,
+  AgencyTask,
 } from "../types";
 import type { DeliverableCommitmentSummary, EvaluatedBrandAccount } from "./account-health";
 
@@ -16,7 +16,7 @@ import type { DeliverableCommitmentSummary, EvaluatedBrandAccount } from "./acco
 export function evaluateBrandAccount(
   brand: BrandWorkspace,
   ctx: {
-    tasks: TaskItem[];
+    tasks: AgencyTask[];
     posts: PostItem[];
     period: CommitmentPeriod;
     todayIso: string;

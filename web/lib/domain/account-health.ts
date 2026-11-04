@@ -7,7 +7,7 @@ import type {
   CustomCommitmentMetric,
   PeriodCommitmentSnapshot,
   PostItem,
-  TaskItem,
+  AgencyTask,
 } from "../types";
 
 export type AccountHealthFilter =
@@ -105,7 +105,7 @@ function normalizeHealthFilter(
 
 export function selectAccountsHealth(
   brands: BrandWorkspace[],
-  tasks: TaskItem[],
+  tasks: AgencyTask[],
   posts: PostItem[],
   options: AccountsHealthOptions = {}
 ): AccountsHealthResult {

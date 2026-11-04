@@ -22,7 +22,7 @@ import type {
   NotebookItem,
   PeriodCommitmentSnapshot,
   SocialPost,
-  TaskItem,
+  AgencyTask,
   TeamMember,
 } from "./types";
 
@@ -271,7 +271,7 @@ function postCompleto(): SocialPost {
 }
 
 /** Una tarea con la persona, la lista y el tiempo que se guardan. */
-function tareaCompleta(): TaskItem {
+function tareaCompleta(): AgencyTask {
   return {
     id: "task-uno", brandId: "marca-uno", title: "Tarea completa",
     description: "Detalle de la tarea", dueLabel: "Hoy", dueDate: HOY, dueBucket: "today",
