@@ -1,4 +1,7 @@
-export type CoverKind = "cup" | "beans" | "sun" | "steam" | "leaf";
+import type { CoverKind } from "@/lib/types/cover";
+
+// Se mantiene el export para quien ya importaba el tipo desde aquí.
+export type { CoverKind };
 
 // Portadas de ejemplo dibujadas a mano: la demo no usa fotos reales.
 export function Cover({ kind }: { kind: CoverKind }) {

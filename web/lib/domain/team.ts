@@ -2,7 +2,7 @@ import { isTaskCompleted } from "./tasks";
 import type {
   ActivityEvent,
   PostItem,
-  TaskItem,
+  AgencyTask,
   TeamMember,
 } from "../types";
 
@@ -80,7 +80,7 @@ function evaluateTeamMember(
   member: TeamMember,
   idx: number,
   ctx: {
-    tasks: TaskItem[];
+    tasks: AgencyTask[];
     posts: PostItem[];
     activityEvents: ActivityEvent[];
     multiplier: number;
@@ -320,7 +320,7 @@ function evaluateTeamMember(
 
 export function selectTeamProductivity(
   members: TeamMember[],
-  tasks: TaskItem[],
+  tasks: AgencyTask[],
   posts: PostItem[],
   activityEvents: ActivityEvent[],
   period: TeamProductivityPeriod = "30d",

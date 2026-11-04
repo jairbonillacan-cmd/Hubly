@@ -1,5 +1,5 @@
 import { addDaysToIsoDate, resolveDateInTimezone } from "./time";
-import type { AgencyTask, BrandWorkspace, TaskDueBucket, TaskItem, TeamMember } from "../types";
+import type { AgencyTask, BrandWorkspace, TaskDueBucket, TeamMember } from "../types";
 
 export type AddTaskInput = Omit<
   AgencyTask,
@@ -93,28 +93,28 @@ interface TaskGroupSection {
   key: "ATRASADAS" | "HOY" | "MAÑANA" | "PRÓXIMAS";
   bucket: TaskDueBucket;
   label: string;
-  tasks: TaskItem[];
-  allTasks: TaskItem[];
+  tasks: AgencyTask[];
+  allTasks: AgencyTask[];
 }
 
 interface TasksBreakdownResult {
-  ATRASADAS: TaskItem[];
-  HOY: TaskItem[];
-  MAÑANA: TaskItem[];
-  PRÓXIMAS: TaskItem[];
-  overdue: TaskItem[];
-  today: TaskItem[];
-  tomorrow: TaskItem[];
-  upcoming: TaskItem[];
+  ATRASADAS: AgencyTask[];
+  HOY: AgencyTask[];
+  MAÑANA: AgencyTask[];
+  PRÓXIMAS: AgencyTask[];
+  overdue: AgencyTask[];
+  today: AgencyTask[];
+  tomorrow: AgencyTask[];
+  upcoming: AgencyTask[];
   allByBucket: {
-    ATRASADAS: TaskItem[];
-    HOY: TaskItem[];
-    MAÑANA: TaskItem[];
-    PRÓXIMAS: TaskItem[];
+    ATRASADAS: AgencyTask[];
+    HOY: AgencyTask[];
+    MAÑANA: AgencyTask[];
+    PRÓXIMAS: AgencyTask[];
   };
   groups: TaskGroupSection[];
-  pendingTasks: TaskItem[];
-  completedTasks: TaskItem[];
+  pendingTasks: AgencyTask[];
+  completedTasks: AgencyTask[];
   pendingCount: number;
   completedCount: number;
   totalCount: number;
@@ -125,7 +125,7 @@ interface TasksBreakdownResult {
 }
 
 
-export function isTaskCompleted(task: TaskItem): boolean {
+export function isTaskCompleted(task: AgencyTask): boolean {
   return (
     Boolean(task.completed) ||
     task.status === "done" ||
@@ -141,7 +141,7 @@ function getPriorityWeight(priority?: string): number {
 }
 
 export function computeTaskDueBucket(
-  task: Pick<TaskItem, "dueDate" | "dueLabel" | "dueBucket">,
+  task: Pick<AgencyTask, "dueDate" | "dueLabel" | "dueBucket">,
   todayIso: string,
   tomorrowIso: string
 ): TaskDueBucket {
@@ -183,7 +183,7 @@ export function computeTaskDueBucket(
   return "today";
 }
 
-function sortTasksByPriorityAndDate(items: TaskItem[]): TaskItem[] {
+function sortTasksByPriorityAndDate(items: AgencyTask[]): AgencyTask[] {
   return [...items].sort((a, b) => {
     const pDiff = getPriorityWeight(b.priority) - getPriorityWeight(a.priority);
     if (pDiff !== 0) return pDiff;
@@ -195,7 +195,7 @@ function sortTasksByPriorityAndDate(items: TaskItem[]): TaskItem[] {
 }
 
 export function selectTasksBreakdown(
-  tasks: TaskItem[],
+  tasks: AgencyTask[],
   activeBrandId?: string | null,
   filterByBrand = true,
   referenceNow?: string | Date | null,
@@ -209,7 +209,7 @@ export function selectTasksBreakdown(
       ? tasks.filter((t) => t.brandId === activeBrandId)
       : tasks;
 
-  const enriched: TaskItem[] = scopedTasks.map((t) => {
+  const enriched: AgencyTask[] = scopedTasks.map((t) => {
     const completed = isTaskCompleted(t);
     const dueBucket = computeTaskDueBucket(t, todayIso, tomorrowIso);
     return {

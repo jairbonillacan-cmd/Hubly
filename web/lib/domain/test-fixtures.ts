@@ -1,6 +1,6 @@
-import type { BrandWorkspace, PostItem, TaskItem } from "../types";
+import type { BrandWorkspace, PostItem, AgencyTask } from "../types";
 
-export const task = (overrides: Partial<TaskItem>): TaskItem =>
+export const task = (overrides: Partial<AgencyTask>): AgencyTask =>
   ({
     id: "t",
     title: "Tarea",
@@ -17,7 +17,7 @@ export const task = (overrides: Partial<TaskItem>): TaskItem =>
     completed: false,
     tags: [],
     ...overrides,
-  }) as TaskItem;
+  }) as AgencyTask;
 
 export const post = (overrides: Partial<PostItem>): PostItem =>
   ({

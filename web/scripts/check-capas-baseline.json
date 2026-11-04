@@ -16,8 +16,5 @@
   },
   "components/app/shell/AppSurfaces.tsx": {
     "dominio-cruzado": 1
-  },
-  "lib/types.ts": {
-    "lib-importa-arriba": 1
   }
 }

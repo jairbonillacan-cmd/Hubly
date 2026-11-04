@@ -4,12 +4,12 @@ import type {
   AccountRecommendation,
   BrandWorkspace,
   PostItem,
-  TaskItem,
+  AgencyTask,
 } from "../types";
 
 export function selectAccountRecommendations(
   brands: BrandWorkspace[],
-  tasks: TaskItem[],
+  tasks: AgencyTask[],
   posts: PostItem[],
   dismissedIds: string[] = [],
   appliedMap: Record<string, boolean> = {}

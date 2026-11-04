@@ -14,7 +14,7 @@ import type {
   SocialNetwork,
   PostMedia,
   SocialPost,
-  TaskItem,
+  AgencyTask,
   TeamMember,
 } from "./types";
 
@@ -240,7 +240,7 @@ function normalizeBrand(
   };
 }
 
-function normalizeTask(task: Partial<TaskItem>): TaskItem {
+function normalizeTask(task: Partial<AgencyTask>): AgencyTask {
   const completed =
     typeof task.completed === "boolean"
       ? task.completed
