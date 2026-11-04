@@ -31,21 +31,21 @@ function ReporteView() {
     <main style={page}>
       <style>{`@media print { .no-print { display: none !important; } }`}</style>
       <div className="no-print" style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
-        <button type="button" onClick={() => window.print()} style={{ border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "9px 16px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
+        <button type="button" onClick={() => window.print()} style={{ border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "var(--on-accent)", padding: "9px 16px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
           Imprimir o guardar PDF
         </button>
       </div>
-      <header style={{ borderBottom: "2px solid #0F172A", paddingBottom: 14, marginBottom: 18 }}>
-        <div style={{ fontSize: 13, color: "#475569" }}>{agency}</div>
+      <header style={{ borderBottom: "2px solid var(--ui-text)", paddingBottom: 14, marginBottom: 18 }}>
+        <div style={{ fontSize: 13, color: "var(--ui-text-3)" }}>{agency}</div>
         <h1 style={{ fontSize: 26, fontWeight: 700, margin: "4px 0 0" }}>Reporte de {brand.name}</h1>
-        <div style={{ fontSize: 14, color: "#475569" }}>{label}</div>
+        <div style={{ fontSize: 14, color: "var(--ui-text-3)" }}>{label}</div>
       </header>
       <MonthlyReportBody brand={brand} report={report} />
     </main>
   );
 }
 
-const page = { maxWidth: 800, margin: "0 auto", padding: "32px 20px", color: "#0F172A", background: "#FFFFFF", minHeight: "100vh" } as const;
+const page = { maxWidth: 800, margin: "0 auto", padding: "32px 20px", color: "var(--ui-text)", background: "var(--ui-surface)", minHeight: "100vh" } as const;
 
 export default function ReportePage() {
   return (

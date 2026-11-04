@@ -217,7 +217,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 :is(.hubly-app-root, .hb-app-root) .hbtn:hover:not(:disabled):not([aria-disabled="true"]) {
   background: var(--ui-surface-2);
-  border-color: #94A3B8;
+  border-color: var(--ui-text-5);
   color: var(--ui-text);
 }
 
@@ -404,14 +404,14 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 /* 7. Danger (.hbtn-danger) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-danger {
-  background: #EF4444;
+  background: var(--ui-danger);
   color: var(--on-accent);
-  border: 1px solid #DC2626;
+  border: 1px solid var(--ui-danger);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-danger:hover:not(:disabled):not([aria-disabled="true"]) {
-  background: #DC2626;
-  border-color: #B91C1C;
+  background: var(--ui-danger-text);
+  border-color: var(--ui-danger-text);
   color: var(--on-accent);
 }
 
@@ -445,13 +445,13 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-ghost-danger {
-  color: #DC2626;
+  color: var(--ui-danger);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-ghost-danger:hover:not(:disabled):not([aria-disabled="true"]) {
-  background: #FEF2F2;
+  background: var(--ui-danger-soft);
   border-color: transparent;
-  color: #B91C1C;
+  color: var(--ui-danger-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-ghost:active:not(:disabled):not([aria-disabled="true"]),
@@ -1026,7 +1026,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn:hover:not(:disabled) {
   background: var(--ui-surface-2);
-  border-color: #94A3B8;
+  border-color: var(--ui-text-5);
   color: var(--ui-text);
 }
 
@@ -1095,25 +1095,25 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-ink {
-  background: #0F172A;
+  background: var(--ui-text);
   color: var(--on-accent);
-  border-color: #0F172A;
+  border-color: var(--ui-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-ink:hover:not(:disabled) {
-  background: #1E293B;
+  background: var(--ui-text-1);
   color: var(--on-accent);
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-coral {
-  background: #EF4444;
+  background: var(--ui-danger);
   color: var(--on-accent);
-  border-color: #EF4444;
+  border-color: var(--ui-danger);
 }
 
 :is(.hubly-app-root, .hb-app-root) .saas-btn-coral:hover:not(:disabled) {
-  background: #DC2626;
-  border-color: #DC2626;
+  background: var(--ui-danger-text);
+  border-color: var(--ui-danger-text);
 }
 
 /* ==========================================================================
@@ -1149,8 +1149,8 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-badge-danger, .saas-badge-coral, .saas-status-changes) {
-  background: #FEF2F2;
-  color: #DC2626;
+  background: var(--ui-danger-soft);
+  color: var(--ui-danger-text);
 }
 
 :is(.hubly-app-root, .hb-app-root) :is(.hubly-badge-neutral, .saas-badge-neutral, .saas-status-draft) {
@@ -1248,7 +1248,7 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 1px;
-  background: #E2E8F0;
+  background: var(--ui-border);
   border: 1px solid var(--ui-border);
   border-radius: 14px;
   overflow: hidden;

@@ -15,7 +15,7 @@ import { useHublyStore } from "@/lib/store";
 import { backendEnabled } from "@/lib/supabase/config";
 import { hasPendingSave, keepMyVersion, retryLiveSave, discardMyVersion, type SaveState } from "@/lib/live-workspace";
 
-const bannerButton = { border: "1px solid #FFFFFF", background: "transparent", color: "#FFFFFF", borderRadius: 7, padding: "2px 8px", cursor: "pointer", fontWeight: 600 } as const;
+const bannerButton = { border: "1px solid var(--on-accent)", background: "transparent", color: "var(--on-accent)", borderRadius: 7, padding: "2px 8px", cursor: "pointer", fontWeight: 600 } as const;
 
 const ICONOS_BASE = [HublyCalendarIcon, HublyHashIcon, HublyImageIcon, HublyChatIcon, HublyBellIcon, HublyChartIcon, HublyClipboardIcon];
 const ICONOS_CARGA = [...ICONOS_BASE, ...ICONOS_BASE];
@@ -63,7 +63,7 @@ export function SaveStatus() {
   }
   if (state !== "error" && state !== "conflict" && state !== "readonly") return null;
   return (
-    <div role="alert" style={{ position: "fixed", top: 12, left: "50%", transform: "translateX(-50%)", zIndex: 250, maxWidth: "calc(100vw - 32px)", background: "#B91C1C", color: "#FFFFFF", borderRadius: 10, padding: "8px 14px", fontSize: 13, fontWeight: 600, display: "flex", gap: 10, alignItems: "center" }}>
+    <div role="alert" style={{ position: "fixed", top: 12, left: "50%", transform: "translateX(-50%)", zIndex: 250, maxWidth: "calc(100vw - 32px)", background: "var(--ui-danger-text)", color: "var(--on-accent)", borderRadius: 10, padding: "8px 14px", fontSize: 13, fontWeight: 600, display: "flex", gap: 10, alignItems: "center" }}>
       {state === "error"
         ? "No se pudo guardar tu último cambio."
         : state === "readonly"

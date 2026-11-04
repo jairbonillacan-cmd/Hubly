@@ -63,6 +63,20 @@
   --ui-sky-icon: #7CC8EE;
   --ui-sky-card: #FFFFFF;
 
+  /* Estado: peligro, éxito y aviso (guía §3) */
+  --ui-danger: #DC2626;
+  --ui-danger-soft: #FEE2E2;
+  --ui-danger-text: #B91C1C;
+  --ui-danger-border: #FECACA;
+  --ui-success: #10B981;
+  --ui-success-soft: #DCFCE7;
+  --ui-success-text: #15803D;
+  --ui-success-border: #86EFAC;
+  --ui-warning: #D97706;
+  --ui-warning-soft: #FEF3C7;
+  --ui-warning-text: #92400E;
+  --ui-warning-border: #FDE68A;
+
   /* Escala única de capas (guía §5) */
   --layer-header: 20;
   --layer-dropdown: 40;
@@ -100,6 +114,18 @@ html.dark {
   --ui-sky-border: #2F4C63;
   --ui-sky-icon: #2F6288;
   --ui-sky-card: #172330;
+  --ui-danger: #EF4444;
+  --ui-danger-soft: rgb(248 113 113 / 0.16);
+  --ui-danger-text: #FCA5A5;
+  --ui-danger-border: rgb(248 113 113 / 0.35);
+  --ui-success: #10B981;
+  --ui-success-soft: rgb(52 211 153 / 0.16);
+  --ui-success-text: #34D399;
+  --ui-success-border: rgb(52 211 153 / 0.35);
+  --ui-warning: #F59E0B;
+  --ui-warning-soft: rgb(251 191 36 / 0.16);
+  --ui-warning-text: #FCD34D;
+  --ui-warning-border: rgb(251 191 36 / 0.35);
 }
 
 /* En oscuro, el marino no se distingue del fondo: acción intermedia y texto celeste */

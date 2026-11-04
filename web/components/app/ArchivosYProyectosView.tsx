@@ -111,8 +111,8 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
             top: 20,
             right: 24,
             zIndex: 90,
-            background: "#0F172A",
-            color: "#FFFFFF",
+            background: "var(--ui-text)",
+            color: "var(--on-accent)",
             padding: "10px 16px",
             borderRadius: 12,
             fontSize: 13,
@@ -278,7 +278,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                 onClick={() => setNewProjectModal(true)}
                 style={{
                   background: "var(--hb-accent)",
-                  color: "#FFFFFF",
+                  color: "var(--on-accent)",
                   border: "none",
                   borderRadius: 999,
                   height: 36,
@@ -439,8 +439,8 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                       <td style={{ padding: "14px 16px" }}>
                         <span
                           style={{
-                            background: "#DCFCE7",
-                            color: "#15803D",
+                            background: "var(--ui-success-soft)",
+                            color: "var(--ui-success-text)",
                             fontSize: 12,
                             fontWeight: 600,
                             padding: "4px 10px",
@@ -499,7 +499,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
               onClick={() => setNewProjectModal(true)}
               style={{
                 background: "var(--hb-accent)",
-                color: "#FFFFFF",
+                color: "var(--on-accent)",
                 border: "none",
                 borderRadius: 10,
                 height: 38,
@@ -626,7 +626,7 @@ function ArchivosYProyectosInner({ section }: { section?: "proyectos" }) {
                     type="submit"
                     style={{
                       background: "var(--hb-accent)",
-                      color: "#FFFFFF",
+                      color: "var(--on-accent)",
                       border: "none",
                       borderRadius: 10,
                       height: 38,

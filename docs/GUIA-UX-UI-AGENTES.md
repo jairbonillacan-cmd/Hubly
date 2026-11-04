@@ -129,14 +129,27 @@ Todos cambian solos en modo oscuro. **Usa solo esta tabla.**
 | `--ui-sky-soft` | `#DCEFF9` | `#22384A` | Fondo del ítem activo en navegación |
 | `--ui-sky-text` | `#16324F` | `#BFE2F4` | Texto sobre `--ui-sky-soft` |
 | `--ui-sky-border` | `#BFE2F4` | `#2F4C63` | Borde del ítem activo |
+| `--ui-danger` | `#DC2626` | `#EF4444` | Relleno, borde o indicador de error o acción destructiva |
+| `--ui-danger-soft` | `#FEE2E2` | `rgb(248 113 113 / 0.16)` | Fondo suave de error o `STATUS_META.changes` |
+| `--ui-danger-text` | `#B91C1C` | `#FCA5A5` | Texto o icono de error sobre `--ui-danger-soft` o `--ui-surface` |
+| `--ui-danger-border` | `#FECACA` | `rgb(248 113 113 / 0.35)` | Borde suave de aviso de error o botón destructivo |
+| `--ui-success` | `#10B981` | `#10B981` | Punto o indicador de estado correcto o activo |
+| `--ui-success-soft` | `#DCFCE7` | `rgb(52 211 153 / 0.16)` | Fondo suave de `STATUS_META.approved` y `STATUS_META.published` |
+| `--ui-success-text` | `#15803D` | `#34D399` | Texto o icono de éxito sobre `--ui-success-soft` o `--ui-surface` |
+| `--ui-success-border` | `#86EFAC` | `rgb(52 211 153 / 0.35)` | Borde suave de pastilla o contenedor de éxito |
+| `--ui-warning` | `#D97706` | `#F59E0B` | Punto o indicador de aviso o tarea en progreso |
+| `--ui-warning-soft` | `#FEF3C7` | `rgb(251 191 36 / 0.16)` | Fondo suave de aviso o estado en progreso |
+| `--ui-warning-text` | `#92400E` | `#FCD34D` | Texto o icono de aviso sobre `--ui-warning-soft` o `--ui-surface` |
+| `--ui-warning-border` | `#FDE68A` | `rgb(251 191 36 / 0.35)` | Borde suave de aviso |
 
 ### Colores de estado
 
 Solo significan estado. No decoran.
 
-- Estados de un post: se leen de `STATUS_META` en `web/components/app/social/status-meta.ts`. No inventes otros.
-- Error o acción destructiva: `.hbtn-danger` para botones, y `STATUS_META.changes` como referencia de color.
-- Correcto: el verde de `STATUS_META.approved`.
+- Estados de un post: se leen de `STATUS_META` en `web/components/app/social/status-meta.ts` (que usa `--ui-danger*`, `--ui-success*`, `--ui-sky*` y `--ui-muted`). No inventes otros.
+- Error o acción destructiva: `.hbtn-danger` para botones, y `--ui-danger*` para textos, bordes y fondos suaves.
+- Correcto: `--ui-success*`.
+- Aviso o en progreso: `--ui-warning*`.
 
 ### Reglas
 

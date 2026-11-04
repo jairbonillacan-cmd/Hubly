@@ -35,8 +35,8 @@ function InvitacionView() {
 
   const next = encodeURIComponent(`/invitacion/${token}`);
   return (
-    <main style={{ minHeight: "100vh", background: "#F1F9FD", display: "grid", placeItems: "center", padding: 16 }}>
-      <div style={{ width: "100%", maxWidth: 440, background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 18, padding: 24, color: "#0F172A", display: "grid", gap: 12 }}>
+    <main style={{ minHeight: "100vh", background: "var(--ui-bg)", display: "grid", placeItems: "center", padding: 16 }}>
+      <div style={{ width: "100%", maxWidth: 440, background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 18, padding: 24, color: "var(--ui-text)", display: "grid", gap: 12 }}>
         {state === "loading" && <p style={{ margin: 0 }}>Cargando invitación…</p>}
         {state === "invalid" && (
           <>
@@ -61,7 +61,7 @@ function InvitacionView() {
             <p style={text}>
               {invite.email ? `Para ${invite.email}, con acceso` : "Con acceso"} de {ROLE_LABEL[invite.role] || invite.role}.
             </p>
-            <button type="button" onClick={accept} style={{ border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "10px 16px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
+            <button type="button" onClick={accept} style={{ border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "var(--on-accent)", padding: "10px 16px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
               Aceptar invitación
             </button>
           </>
@@ -72,7 +72,7 @@ function InvitacionView() {
 }
 
 const title = { fontSize: 20, fontWeight: 700, margin: 0 } as const;
-const text = { fontSize: 14, color: "#475569", margin: 0 } as const;
+const text = { fontSize: 14, color: "var(--ui-text-3)", margin: 0 } as const;
 
 export default function InvitacionPage() {
   return (

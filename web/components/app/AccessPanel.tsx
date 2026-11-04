@@ -108,7 +108,7 @@ export function AccessPanel() {
         <a href="/onboarding?nueva=1" style={{ fontSize: 12.5, fontWeight: 600, color: "var(--ui-accent-text-2)" }}>Crear otra agencia</a>
       </section>
 
-      {error && <p role="alert" style={{ margin: 0, color: "#B91C1C", fontSize: 13 }}>{error}</p>}
+      {error && <p role="alert" style={{ margin: 0, color: "var(--ui-danger-text)", fontSize: 13 }}>{error}</p>}
 
       <section>
         <h2 style={h2}>Miembros ({members.length})</h2>
@@ -197,4 +197,4 @@ const list = { listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8
 const row = { display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", border: "1px solid var(--ui-border)", borderRadius: 12, padding: "10px 12px" } as const;
 const muted = { fontSize: 12, color: "var(--ui-text-4)" } as const;
 const field = { border: "1px solid var(--ui-border-strong)", borderRadius: 9, padding: "7px 9px", fontSize: 13, background: "var(--ui-surface)", minWidth: 0 } as const;
-const danger = { border: "1px solid #FECACA", background: "#FEF2F2", color: "#B91C1C", borderRadius: 8, padding: "5px 10px", fontSize: 12, fontWeight: 600, cursor: "pointer" } as const;
+const danger = { border: "1px solid var(--ui-danger-border)", background: "var(--ui-danger-soft)", color: "var(--ui-danger-text)", borderRadius: 8, padding: "5px 10px", fontSize: 12, fontWeight: 600, cursor: "pointer" } as const;

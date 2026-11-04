@@ -326,7 +326,7 @@ function DemoReportesPage() {
               alignItems: "center",
               gap: 6,
               background: "var(--hb-accent)",
-              color: "#FFFFFF",
+              color: "var(--on-accent)",
               border: "none",
               borderRadius: 10,
               padding: "8px 16px",
@@ -389,7 +389,7 @@ function DemoReportesPage() {
             alignItems: "center",
             gap: 8,
             background: "var(--hb-accent)",
-            color: "#FFFFFF",
+            color: "var(--on-accent)",
             border: "none",
             borderRadius: 12,
             padding: "10px 22px",
@@ -441,7 +441,7 @@ function DemoReportesPage() {
               padding: "24px 28px",
               borderRadius: 16,
               background: "linear-gradient(135deg, #0F2539 0%, #16324F 100%)",
-              color: "#FFFFFF",
+              color: "var(--on-accent)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -463,7 +463,7 @@ function DemoReportesPage() {
               >
                 Reporte Ejecutivo · {new Date().toLocaleDateString("es-MX", { month: "long", year: "numeric" })}
               </div>
-              <h1 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 4px", color: "#FFFFFF" }}>
+              <h1 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 4px", color: "var(--on-accent)" }}>
                 {brandName} · Informe Mensual de Resultados
               </h1>
               <div style={{ fontSize: 13, color: "#DCEFF9" }}>

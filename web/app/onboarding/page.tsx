@@ -73,15 +73,15 @@ export default function OnboardingPage() {
   };
 
   return (
-    <main style={{ minHeight: "100vh", background: "#F1F9FD", display: "grid", placeItems: "center", padding: 16 }}>
-      <div style={{ width: "100%", maxWidth: 480, background: "#FFFFFF", border: "1px solid #E2E8F0", borderRadius: 18, padding: 24 }}>
+    <main style={{ minHeight: "100vh", background: "var(--ui-bg)", display: "grid", placeItems: "center", padding: 16 }}>
+      <div style={{ width: "100%", maxWidth: 480, background: "var(--ui-surface)", border: "1px solid var(--ui-border)", borderRadius: 18, padding: 24 }}>
         <div style={{ margin: "-6px 0 12px -6px" }}>
           <HublyBrandLogo on="light" height={42} />
         </div>
         <ol aria-label="Pasos" style={{ listStyle: "none", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6, margin: "0 0 20px", padding: 0 }}>
           {STEPS.map((s, i) => (
-            <li key={s} aria-current={i === step ? "step" : undefined} style={{ fontSize: 11.5, fontWeight: 600, color: i <= step ? "var(--hb-accent-text)" : "#64748B" }}>
-              <span style={{ display: "block", height: 4, borderRadius: 999, background: i <= step ? "var(--hb-accent)" : "#E2E8F0", marginBottom: 5 }} />
+            <li key={s} aria-current={i === step ? "step" : undefined} style={{ fontSize: 11.5, fontWeight: 600, color: i <= step ? "var(--hb-accent-text)" : "var(--ui-text-4)" }}>
+              <span style={{ display: "block", height: 4, borderRadius: 999, background: i <= step ? "var(--hb-accent)" : "var(--ui-border)", marginBottom: 5 }} />
               {s}
             </li>
           ))}
@@ -118,10 +118,10 @@ export default function OnboardingPage() {
                 Correos, separados por comas
                 <textarea key="c" autoFocus rows={3} value={invites} onChange={(e) => setInvites(e.target.value)} style={{ ...field, resize: "vertical" }} />
               </label>
-              <p style={{ fontSize: 12.5, color: "#64748B", margin: 0 }}>{backendEnabled ? "Las invitaciones estarán disponibles pronto; este paso se puede omitir." : "Por ahora se crea un enlace de invitación para compartir; todavía no se envía correo."}</p>
+              <p style={{ fontSize: 12.5, color: "var(--ui-text-4)", margin: 0 }}>{backendEnabled ? "Las invitaciones estarán disponibles pronto; este paso se puede omitir." : "Por ahora se crea un enlace de invitación para compartir; todavía no se envía correo."}</p>
             </>
           )}
-          {error && <p role="alert" style={{ color: "#B91C1C", fontSize: 12.5, margin: 0 }}>{error}</p>}
+          {error && <p role="alert" style={{ color: "var(--ui-danger-text)", fontSize: 12.5, margin: 0 }}>{error}</p>}
           <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 4 }}>
             {step > 0 ? <button type="button" onClick={() => setStep(step - 1)} style={secondary}>Atrás</button> : <span />}
             <div style={{ display: "flex", gap: 8 }}>
@@ -135,8 +135,8 @@ export default function OnboardingPage() {
   );
 }
 
-const title = { fontSize: 20, fontWeight: 700, color: "#0F172A", margin: 0 } as const;
-const field = { width: "100%", border: "1px solid #CBD5E1", borderRadius: 9, padding: "9px 11px", fontSize: 14, fontFamily: "inherit", background: "#FFFFFF" } as const;
-const lab = { display: "grid", gap: 4, fontSize: 12.5, fontWeight: 600, color: "#475569" } as const;
-const primary = { border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "9px 16px", fontSize: 13.5, fontWeight: 600, cursor: "pointer" } as const;
-const secondary = { border: "1px solid #CBD5E1", borderRadius: 9, background: "#FFFFFF", color: "#334155", padding: "9px 14px", fontSize: 13.5, fontWeight: 600, cursor: "pointer" } as const;
+const title = { fontSize: 20, fontWeight: 700, color: "var(--ui-text)", margin: 0 } as const;
+const field = { width: "100%", border: "1px solid var(--ui-border-strong)", borderRadius: 9, padding: "9px 11px", fontSize: 14, fontFamily: "inherit", background: "var(--ui-surface)" } as const;
+const lab = { display: "grid", gap: 4, fontSize: 12.5, fontWeight: 600, color: "var(--ui-text-3)" } as const;
+const primary = { border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "var(--on-accent)", padding: "9px 16px", fontSize: 13.5, fontWeight: 600, cursor: "pointer" } as const;
+const secondary = { border: "1px solid var(--ui-border-strong)", borderRadius: 9, background: "var(--ui-surface)", color: "var(--ui-text-2)", padding: "9px 14px", fontSize: 13.5, fontWeight: 600, cursor: "pointer" } as const;

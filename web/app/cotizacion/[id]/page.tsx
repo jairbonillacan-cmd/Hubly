@@ -25,25 +25,25 @@ function CotizacionView() {
   const total = quote.items.reduce((s, i) => s + i.quantity * i.unitPrice, 0);
   return (
     <main style={page}>
-      <style>{`@media print { .no-print { display: none !important; } body { background: #fff !important; } }`}</style>
+      <style>{`@media print { .no-print { display: none !important; } body { background: var(--ui-surface) !important; } }`}</style>
       <div className="no-print" style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
-        <button type="button" onClick={() => window.print()} style={{ border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "#FFFFFF", padding: "9px 16px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
+        <button type="button" onClick={() => window.print()} style={{ border: 0, borderRadius: 9, background: "var(--hb-accent)", color: "var(--on-accent)", padding: "9px 16px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
           Imprimir o guardar PDF
         </button>
       </div>
-      <header style={{ display: "flex", justifyContent: "space-between", gap: 24, flexWrap: "wrap", borderBottom: "2px solid #0F172A", paddingBottom: 16 }}>
+      <header style={{ display: "flex", justifyContent: "space-between", gap: 24, flexWrap: "wrap", borderBottom: "2px solid var(--ui-text)", paddingBottom: 16 }}>
         <div>
-          <div style={{ fontSize: 13, color: "#475569" }}>{agency}</div>
+          <div style={{ fontSize: 13, color: "var(--ui-text-3)" }}>{agency}</div>
           <h1 style={{ fontSize: 26, fontWeight: 700, margin: "4px 0 0" }}>{quote.title}</h1>
         </div>
-        <div style={{ textAlign: "right", fontSize: 13, color: "#475569" }}>
+        <div style={{ textAlign: "right", fontSize: 13, color: "var(--ui-text-3)" }}>
           <div>Cotización · {quote.status}</div>
           <div>{new Date(quote.createdAt).toLocaleDateString("es-MX", { dateStyle: "long" })}</div>
         </div>
       </header>
       {lead && (
         <section style={{ margin: "20px 0", fontSize: 14 }}>
-          <div style={{ fontSize: 12, color: "#475569" }}>Para</div>
+          <div style={{ fontSize: 12, color: "var(--ui-text-3)" }}>Para</div>
           <strong>{lead.company || lead.name}</strong>
           {lead.company && <div>{lead.name}</div>}
           {lead.email && <div>{lead.email}</div>}
@@ -51,7 +51,7 @@ function CotizacionView() {
       )}
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
         <thead>
-          <tr style={{ textAlign: "left", borderBottom: "1px solid #CBD5E1", color: "#475569", fontSize: 12.5 }}>
+          <tr style={{ textAlign: "left", borderBottom: "1px solid var(--ui-border-strong)", color: "var(--ui-text-3)", fontSize: 12.5 }}>
             <th style={cell}>Concepto</th>
             <th style={{ ...cell, textAlign: "right" }}>Cantidad</th>
             <th style={{ ...cell, textAlign: "right" }}>Precio</th>
@@ -60,7 +60,7 @@ function CotizacionView() {
         </thead>
         <tbody>
           {quote.items.map((i) => (
-            <tr key={i.id} style={{ borderBottom: "1px solid #E2E8F0" }}>
+            <tr key={i.id} style={{ borderBottom: "1px solid var(--ui-border)" }}>
               <td style={cell}>{i.description}</td>
               <td style={{ ...cell, textAlign: "right" }}>{i.quantity}</td>
               <td style={{ ...cell, textAlign: "right" }}>{money(i.unitPrice)}</td>
@@ -79,7 +79,7 @@ function CotizacionView() {
   );
 }
 
-const page = { maxWidth: 760, margin: "0 auto", padding: "32px 20px", color: "#0F172A", background: "#FFFFFF", minHeight: "100vh" } as const;
+const page = { maxWidth: 760, margin: "0 auto", padding: "32px 20px", color: "var(--ui-text)", background: "var(--ui-surface)", minHeight: "100vh" } as const;
 const cell = { padding: "10px 6px" } as const;
 
 export default function CotizacionPage() {
