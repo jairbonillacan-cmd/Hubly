@@ -51,7 +51,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F1-4 Equipo y tablero | F1-3 | `lib/store*` | Hecha | `impl-f1-4` | #52 |
 | F1-5 Marcas | F1-4 | `lib/store*` | Hecha | `impl-f1-5` | #53 |
 | F1-6 Posts y chat | F1-5 | `lib/store*`, `useInicioView` | Hecha | `impl-f1-6` | #54 |
-| F1-7 Reglas fuera del store | F1-6 | `lib/store/`, `lib/domain/` | Pendiente | | |
+| F1-7 Reglas fuera del store | F1-6 | `lib/store/`, `lib/domain/` | Hecha | `impl-f1-7` | #55 |
 | F2-1 Selectores | F1 | `lib/domain*` | Pendiente | | |
 | F2-2 Tipos | F1 | `lib/types*` | Pendiente | | |
 | F2-3 Datos de ejemplo | F1 | `lib/seed*` | Pendiente | | |
@@ -115,3 +115,4 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 | 2026-11-03 | F1-4 (#52) | Fusión: `store.ts` de **1.469 a 1.155** líneas. `team.slice.ts` (equipo, invitaciones, actividad; declara `teamMembers` desde `INITIAL_WORKSPACE_DATA.team`), `dashboard.slice.ts` (widgets, onboarding y `dashboardWidgets` derivado de `widgets`, con `OnboardingStepKey`) y `notifications.slice.ts` (avisos; el plan los daba a F1-4 sin archivo, se les dio el suyo). Contrato **8/8 sin tocarlo**; 193 pruebas; `flujos-con-cuentas` en verde. Siguiente: F1-5 (marcas, dos slices). |
 | 2026-11-03 | F1-5 (#53) | Fusión: `store.ts` de **1.155 a 700** líneas. `brands.slice.ts` (`setActiveBrand`, `addBrand` de 165 líneas, `updateBrand`, `updateBrandCore`, `AddBrandInput`) y `brandStrategy.slice.ts` (personas, compromisos, métricas y las tres de recomendaciones, con `CommitmentPeriodKey`). Contrato **8/8 sin tocarlo**; 193 pruebas; `flujos-con-cuentas` en verde. Siguiente: F1-6 (posts y chat), donde entra `runAutomations`. |
 | 2026-11-03 | F1-6 (#54) | Fusión: `store.ts` de **700 a 101** líneas; ya solo tiene el tipo compuesto, la composición y el guardia de lectores. `posts.slice.ts` (publicar, estados, resultados, ideas, comentarios, lote), `chat.slice.ts` (mensajes, canales, programados y cola) y `lib/domain/automations.ts` con `runAutomations` y `AutomationSource`, que evita que domain importe el store. Se quita el `setActiveNotebookId` duplicado de F1-2. Archivos sobre 400: 35 → 34. Contrato **8/8 sin tocarlo**; 193 pruebas; `flujos-con-cuentas` en verde. Siguiente: F1-7 (reglas fuera del store). |
+| 2026-11-03 | F1-7 (#55) | **F1 cerrada.** `lib/domain/tasks.ts` (`buildTask`, `mergeTaskPatch`, `toggleTaskState`), `lib/domain/posts.ts` (`duplicatePostAsDraft`) y `lib/domain/brands.ts` (`applyCommitmentPatch`, `applyRecommendationToBrand`). Los slices quedan como cableado y `lib/domain/` sigue puro. **12 pruebas nuevas** (205 en total). Contrato **8/8 sin tocarlo**. Quedan en los slices solo mutaciones sin decisión (actualizar un miembro, crear un aviso). |
