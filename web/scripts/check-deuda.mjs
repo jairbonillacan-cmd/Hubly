@@ -5,8 +5,8 @@
  * --root apunta a otro árbol del mismo repositorio; lo usan las pruebas.
  */
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { dirname, join, relative, sep } from "node:path";
+import { existsSync, readdirSync, readFileSync, realpathSync, statSync } from "node:fs";
+import { dirname, isAbsolute, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { TANDAS } from "./check-ui-reglas.mjs";
 
@@ -21,7 +21,18 @@ if (rootArg !== -1 && !args[rootArg + 1]) {
   console.error("Falta la ruta después de --root.");
   process.exit(2);
 }
-const root = rootArg === -1 ? join(dirname(fileURLToPath(import.meta.url)), "..") : args[rootArg + 1];
+const rootGiven = rootArg === -1 ? join(dirname(fileURLToPath(import.meta.url)), "..") : args[rootArg + 1];
+// Ruta real: `git rev-parse` la devuelve resuelta y `relative` compara cadenas, no
+// rutas. En macOS el temporal vive bajo /var, que es un enlace a /private/var; sin
+// resolverlo, el árbol salía del repositorio y `previous` devolvía null: el chequeo
+// pasaba en verde sin comparar nada.
+const root = (() => {
+  try {
+    return realpathSync(rootGiven);
+  } catch {
+    return rootGiven; // No existe: lo reporta el git de abajo.
+  }
+})();
 
 // `git show` debe leer el repositorio que contiene a `root`, no el del cwd: con
 // --root son distintos y antes se comparaba cualquier cosa, sin dar error.
@@ -44,6 +55,12 @@ try {
 }
 
 const prefix = relative(repo, root).split(sep).join("/");
+// Si el árbol se sale del repositorio, `git show` falla para todas las bases y
+// `previous` devuelve null: el chequeo daría verde sin haber mirado nada.
+if (isAbsolute(prefix) || prefix.startsWith("..")) {
+  console.error(`--root no está dentro del repositorio ${repo}: ${root}`);
+  process.exit(2);
+}
 const inRepo = (path) => (prefix ? `${prefix}/${path}` : path);
 const current = (path) => readFileSync(join(root, path), "utf8");
 const previous = (path) => {
