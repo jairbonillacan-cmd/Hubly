@@ -11,7 +11,7 @@ Se obtienen con `node scripts/medir-deslop.mjs`, desde `web/`.
 | Medida | Partida (`aa4a1d3`) | Actual | Meta |
 |---|---:|---:|---:|
 | Líneas de `lib/store.ts` | 2,304 | 101 | < 150 |
-| Archivos sobre 400 líneas, sin simuladores ni iconos | 35 | 32 | 0 |
+| Archivos sobre 400 líneas, sin simuladores ni iconos | 35 | 31 | 0 |
 | `page.tsx` sobre 80 líneas | 17 | 17 | 0 |
 | Archivos con prop `view` | 33 | 33 | 0 |
 | `style={{` sin simuladores | 1,475 | 1,453 | < 150 |
@@ -20,7 +20,7 @@ Se obtienen con `node scripts/medir-deslop.mjs`, desde `web/`.
 | Deuda de `check:ui`: total | 2,492 | 2,482 | < 100 |
 | `!important` en CSS | 157 | 157 | < 10 |
 | Líneas con `eslint-disable` | 79 | 78 | < 25 |
-| Exenciones `ui-ok:` | 21 | 21 | No sube |
+| Exenciones `ui-ok:` | 21 | 20 | No sube |
 | `as unknown as` | 7 | 9 | ≤ 2 |
 | Archivos que leen `backendEnabled` | 39 | 42 | ≤ 3, tras D3 |
 
@@ -54,11 +54,11 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F1-7 Reglas fuera del store | F1-6 | `lib/store/`, `lib/domain/` | Hecha | `impl-f1-7` | #55 |
 | F2-1 Selectores | F1 | `lib/domain*` | Hecha | `impl-f2-1` | #56, #57 |
 | F2-2 Tipos | F1 | `lib/types*` | Hecha | `impl-f2-2` | #58 |
-| F2-3 Datos de ejemplo | F1 | `lib/seed*` | En curso | `impl-f2-3` | |
-| F2-4 Servidor | F1 | `app/api/`, `lib/server/` | En curso | `impl-f2-4` | |
+| F2-3 Datos de ejemplo | F1 | `lib/seed*` | Hecha | `impl-f2-3` | #62 |
+| F2-4 Servidor | F1 | `app/api/`, `lib/server/` | Hecha | `impl-f2-4` | #61 |
 | F3-1 Equipo | F1, F2-2 | `dashboard/team/` | Pendiente | | |
-| F3-2 Inicio | F1, F2-2 | `dashboard/inicio/` | Pendiente | | |
-| F3-3 Parrillas | F1, F2-2 | `parrillas/_vista/` | Pendiente | | |
+| F3-2 Inicio | F1, F2-2 | `dashboard/inicio/` | En curso | `impl-f3-2` | |
+| F3-3 Parrillas | F1, F2-2 | `parrillas/_vista/` | En curso | `impl-f3-3` | |
 | F3-4 Anuncios | F1, F2-2, D1 | `anuncios/_vista/` | Pendiente | | |
 | F3-5 Editor de post | F1, F2-2 | `compositor/` | Pendiente | | |
 | F3-6 Libreta y sugerencias | F1, F2-2 | `NotebookReaderModal`, `sugerencias/` | Pendiente | | |
@@ -71,7 +71,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F3-13 Rutas restantes | F1, F2-2 | `ia`, `automatizaciones`, `notificaciones`, `onboarding`, `register`, `cotizacion`, `invitacion` | Pendiente | | |
 | F3-14 Vistas públicas | F1, F2-2 | `share`, `reporte` | Pendiente | | |
 | F3-15 Landing y chat en vivo | F1, F2-2 | `app/page`, `lib/chat-live` | Pendiente | | |
-| F4-1 Tokens | F0 | CSS | En curso | `impl-f4-1` | |
+| F4-1 Tokens | F0 | CSS | Hecha | `impl-f4-1` | #63 |
 | F4-2 Tokens de estado | F4-1 | CSS, guía | Pendiente | | |
 | F4-3 `dashboard-polish.css` | F4-1 | CSS, `(app)/layout` | Pendiente | | |
 | F4-4 `hubly-saas.css` | F4-3 | CSS | Pendiente | | |
@@ -79,7 +79,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F4-6 `style={{}}` | F4-1 | Ver lotes | Pendiente | | |
 | F4-7 Emojis y restos | F4-1, F5-2 | Varios | Pendiente | | |
 | F5-1 Anuncios | D1, F5-3 | `anuncios` | Pendiente | | |
-| F5-2 Logros | D2 | `equipo` | Pendiente | | |
+| F5-2 Logros | D2 | `equipo` | En curso | `impl-f5-2` | |
 | F5-3 Modo demo | D3, F2 | `backendEnabled` | Pendiente | | |
 | F6-1 Excepciones | F1 a F5 | Varios | Pendiente | | |
 | F6-2 Topes | F6-1 | `scripts/` | Pendiente | | |
@@ -122,3 +122,7 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 | 2026-11-04 | F2-2 (#58) | Fusión: `lib/types.ts` (768 líneas) pasa a `lib/types/` con un archivo por dominio y `index.ts`; `@/lib/types` sigue igual. `CoverKind` se muda a `lib/types/cover.ts` (con reexport en `components/Cover`), lo que cierra la última violación `lib-importa-arriba`: capas de 9 a 8 y base actualizada. Se elimina el alias `TaskItem` en todo el código (9 archivos) y se queda `AgencyTask`; el `TaskItem` de Tiptap no se toca. |
 | 2026-11-04 | Punto de control F1 | El dueño probó la app en `localhost:3000` con dos cuentas el 4 de noviembre sin hallar regresiones. Compuerta de F1 superada. |
 | 2026-11-04 | Ola 1 (F2-3, F2-4, F4-1) | En curso en worktrees `Hubly-wt/f2-3`, `Hubly-wt/f2-4` y `Hubly-wt/f4-1`, ramas `deslop/f2-3`, `deslop/f2-4` y `deslop/f4-1`, desde `20184ca`. Archivos disjuntos: `lib/seed*`, `app/api/` + `lib/server/` y CSS globales (`tokens.css`, `globals.css`, `hubly-saas.css`, `app-base.css`, `dashboard-polish.css`). Medidas sincronizadas con `medir-deslop` tras #58 (archivos sobre 400: 33 → 32). |
+| 2026-11-04 | F2-3 (#62) | Fusión (`17cc232`): `lib/seed-data.ts` (1.540 líneas) pasa a 13 módulos por dominio bajo `lib/seed/` (todos < 280 líneas y documentados como exclusivos de la demo y del fixture visual) y queda en **12 líneas** como fachada de reexportación. `check-size-baseline.json` baja de 44 a 40 archivos (37.516 → 31.291 líneas); archivos sobre 400 líneas: `32 → 31`. Contrato del store **8/8 sin tocarlo**. |
+| 2026-11-04 | F2-4 (#61) | Revisión independiente y fusión (`df232b1`): la lógica de servidor de `app/api/workspace/route.ts` (305 → **75 líneas**) y `app/api/members/route.ts` (83 → **41 líneas**) pasa a `lib/server/workspace.ts` (279 líneas) y `lib/server/members.ts` (117 líneas), con todas las rutas y funciones bajo 80 líneas. Flujos con cuentas y permisos de BD (198/198) en verde. **F2 cerrada.** |
+| 2026-11-04 | F4-1 (#63) | Revisión independiente y fusión (`ed3c554`): creado `app/tokens.css` (195 líneas, importado primero en `app/layout.tsx`) como único lugar de definición de variables CSS globales y de alcance (incluyendo `--layer-*` y tokens de éxito en modo oscuro). Retiradas las definiciones de `globals.css`, `hubly-saas.css`, `app-base.css` y `dashboard-polish.css`, junto con 94 duplicados/tokens prohibidos sin uso. Exenciones `ui-ok:`: `21 → 20`; 65/66 vistas de `visual.spec.ts` sin diferencias y 100% de rutas claras/oscuras sin errores. Siguiente en CSS: F4-2. |
+| 2026-11-04 | Ola 2 (F5-2, F3-2, F3-3) | En curso en worktrees `Hubly-wt/f5-2`, `Hubly-wt/f3-2` y `Hubly-wt/f3-3`, ramas `deslop/f5-2`, `deslop/f3-2` y `deslop/f3-3`, desde `ed3c554`. Archivos disjuntos: equipo/logros (`dashboard/team/`, `EquipoView`, `lib/domain/team`), inicio (`dashboard/page`, `dashboard/inicio/`, `InicioView`) y parrillas (`parrillas/page`, `parrillas/_vista/`, `components/app/parrillas/`). |
