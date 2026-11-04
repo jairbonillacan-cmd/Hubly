@@ -1,11 +1,10 @@
 import type { StateCreator } from "zustand";
 import { createActivityItem } from "../domain/activity";
 import { selectAccountRecommendations } from "../domain-selectors";
+import { applyCommitmentPatch, applyRecommendationToBrand, type CommitmentPeriodKey } from "../domain/brands";
 import { persistWorkspaceState } from "./sync";
 import type { HublyStoreState } from "../store";
 import type { AccountCommitment, CustomCommitmentMetric, PeriodCommitmentSnapshot } from "../types";
-
-export type CommitmentPeriodKey = "mes_actual" | "mes_anterior" | "trimestre";
 
 export interface BrandStrategySlice {
   togglePersonaAccepted: (brandId: string, personaId: string) => void;
@@ -52,62 +51,7 @@ export const createBrandStrategySlice: StateCreator<HublyStoreState, [], [], Bra
       });
 
       return {
-        brands: s.brands.map((b) => {
-          if (b.id !== brandId) return b;
-          const prev = b.commitments;
-          const prevSnap = prev.periodHistory[periodKey];
-          const storiesComm =
-            patch.StoriesCommitted ??
-            patch.storiesCommitted ??
-            prevSnap.StoriesCommitted;
-          const storiesComp =
-            patch.StoriesCompleted ??
-            patch.storiesCompleted ??
-            prevSnap.StoriesCompleted;
-
-          const updatedSnap: PeriodCommitmentSnapshot = {
-            ...prevSnap,
-            ...patch,
-            period: periodKey,
-            StoriesCommitted: storiesComm,
-            storiesCommitted: storiesComm,
-            StoriesCompleted: storiesComp,
-            storiesCompleted: storiesComp,
-          };
-
-          const isCurrent = periodKey === "mes_actual";
-          const nextCommitments: AccountCommitment = {
-            ...prev,
-            ...(isCurrent
-              ? {
-                  postsCommitted: updatedSnap.postsCommitted,
-                  postsCompleted: updatedSnap.postsCompleted,
-                  StoriesCommitted: updatedSnap.StoriesCommitted,
-                  StoriesCompleted: updatedSnap.StoriesCompleted,
-                  storiesCommitted: updatedSnap.storiesCommitted,
-                  storiesCompleted: updatedSnap.storiesCompleted,
-                  reelsCommitted: updatedSnap.reelsCommitted,
-                  reelsCompleted: updatedSnap.reelsCompleted,
-                  adCampaignsCommitted: updatedSnap.adCampaignsCommitted,
-                  adCampaignsCompleted: updatedSnap.adCampaignsCompleted,
-                }
-              : {}),
-            hasDeclaredCommitments: patch.hasDeclaredCommitments ?? true,
-            customMetrics: patch.customMetrics ?? prev.customMetrics,
-            periodHistory: {
-              ...prev.periodHistory,
-              [periodKey]: updatedSnap,
-            },
-          };
-
-          return {
-            ...b,
-            monthlyPostTarget: isCurrent
-              ? nextCommitments.postsCommitted
-              : b.monthlyPostTarget,
-            commitments: nextCommitments,
-          };
-        }),
+        brands: s.brands.map((b) => (b.id === brandId ? applyCommitmentPatch(b, patch, periodKey) : b)),
         activityEvents: [event, ...s.activityEvents],
       };
     });
@@ -133,45 +77,7 @@ export const createBrandStrategySlice: StateCreator<HublyStoreState, [], [], Bra
       const rec = allRecs.find((r) => r.id === recommendationId);
       if (!rec) return s;
 
-      const nextBrands = s.brands.map((b) => {
-        if (b.id !== rec.brandId) return b;
-        const prev = b.commitments;
-        const actual = prev.periodHistory.mes_actual;
-
-        const nextPostsCommitted =
-          rec.metricKey === "posts" ? rec.recommendedCommitted : prev.postsCommitted;
-        const nextReelsCommitted =
-          rec.metricKey === "reels" ? rec.recommendedCommitted : prev.reelsCommitted;
-        const nextStoriesCommitted =
-          rec.metricKey === "stories" ? rec.recommendedCommitted : prev.StoriesCommitted;
-        const nextAdsCommitted =
-          rec.metricKey === "ads" ? rec.recommendedCommitted : prev.adCampaignsCommitted;
-
-        return {
-          ...b,
-          monthlyPostTarget: nextPostsCommitted,
-          commitments: {
-            ...prev,
-            postsCommitted: nextPostsCommitted,
-            reelsCommitted: nextReelsCommitted,
-            StoriesCommitted: nextStoriesCommitted,
-            storiesCommitted: nextStoriesCommitted,
-            adCampaignsCommitted: nextAdsCommitted,
-            hasDeclaredCommitments: true,
-            periodHistory: {
-              ...prev.periodHistory,
-              mes_actual: {
-                ...actual,
-                postsCommitted: nextPostsCommitted,
-                reelsCommitted: nextReelsCommitted,
-                StoriesCommitted: nextStoriesCommitted,
-                storiesCommitted: nextStoriesCommitted,
-                adCampaignsCommitted: nextAdsCommitted,
-              },
-            },
-          },
-        };
-      });
+      const nextBrands = s.brands.map((b) => (b.id === rec.brandId ? applyRecommendationToBrand(b, rec) : b));
 
       const event = createActivityItem(s, {
         type: "commitment_updated",

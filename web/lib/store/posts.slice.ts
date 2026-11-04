@@ -1,6 +1,6 @@
 import type { StateCreator } from "zustand";
 import { runAutomations } from "../domain/automations";
-import { withPostLog } from "../domain/posts";
+import { duplicatePostAsDraft, withPostLog } from "../domain/posts";
 import { createActivityItem } from "../domain/activity";
 import { POST_STATUS_LABEL } from "../labels";
 import { localIsoDate } from "../date";
@@ -192,25 +192,7 @@ export const createPostsSlice: StateCreator<HublyStoreState, [], [], PostsSlice>
     const source = get().posts.find((p) => p.id === postId);
     if (!source) return null;
     const id = `post-${Date.now()}`;
-    const copy: SocialPost = withPostLog(
-      {
-        ...source,
-        id,
-        title: `${source.title} (copia)`,
-        status: "draft",
-        statusLabel: "Borrador",
-        scheduledDate: "",
-        scheduledTime: "",
-        comments: [],
-        metrics: undefined,
-        metricsSource: undefined,
-        publishedUrl: undefined,
-        chat: [],
-        activity: [],
-      },
-      `Duplicó «${source.title}»`,
-      get().profile?.name || "Equipo"
-    );
+    const copy = duplicatePostAsDraft(source, id, get().profile?.name || "Equipo");
     set((s) => ({ posts: [copy, ...s.posts] }));
     persistWorkspaceState(get());
     return id;
