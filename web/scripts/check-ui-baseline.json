@@ -218,6 +218,9 @@
   "components/app/dashboard/ExtraWidgets.tsx": {
     "style-inline": 1
   },
+  "components/app/dashboard/InicioContenido.tsx": {
+    "exclamacion": 1
+  },
   "components/app/dashboard/MemberDrawer.tsx": {
     "color-fijo": 4,
     "radio": 2,
@@ -231,70 +234,16 @@
   "components/app/dashboard/SaludCuentasView.tsx": {
     "style-inline": 3
   },
-  "components/app/dashboard/inicio/InicioContenido.tsx": {
-    "exclamacion": 1,
-    "view-prop": 1
-  },
-  "components/app/dashboard/inicio/InicioWidget.tsx": {
-    "view-prop": 1
-  },
-  "components/app/dashboard/inicio/WidgetAdsActivos.tsx": {
-    "style-inline": 7,
-    "view-prop": 1
-  },
-  "components/app/dashboard/inicio/WidgetAprobaciones.tsx": {
-    "color-fijo": 2,
-    "style-inline": 8,
-    "view-prop": 1
-  },
-  "components/app/dashboard/inicio/WidgetGraficaAds.tsx": {
-    "style-inline": 8,
-    "view-prop": 1
-  },
-  "components/app/dashboard/inicio/WidgetHoy.tsx": {
-    "style-inline": 7,
-    "view-prop": 1
-  },
-  "components/app/dashboard/inicio/WidgetLibretas.tsx": {
-    "rgb-fijo": 1,
-    "style-inline": 3,
-    "view-prop": 1
-  },
-  "components/app/dashboard/inicio/WidgetNotificaciones.tsx": {
-    "color-fijo": 1,
-    "style-inline": 8,
-    "view-prop": 1
-  },
-  "components/app/dashboard/inicio/WidgetProyectosCriticos.tsx": {
-    "style-inline": 5,
-    "view-prop": 1
-  },
-  "components/app/dashboard/inicio/WidgetTareas.tsx": {
-    "color-fijo": 6,
-    "rgb-fijo": 2,
-    "style-inline": 28,
-    "view-prop": 1
-  },
-  "components/app/dashboard/inicio/useInicioView.tsx": {
-    "use-store-sin-selector": 1
-  },
   "components/app/dashboard/team/EquipoCabecera.tsx": {
-    "color-fijo": 4,
+    "color-fijo": 3,
     "rgb-fijo": 3,
-    "style-inline": 29,
+    "style-inline": 27,
     "view-prop": 1,
     "z-index-fijo": 1
   },
-  "components/app/dashboard/team/EquipoCatalogo.tsx": {
-    "color-fijo": 2,
-    "rgb-fijo": 1,
-    "style-inline": 32,
-    "view-prop": 1
-  },
   "components/app/dashboard/team/EquipoLogrosRanking.tsx": {
-    "color-fijo": 6,
-    "emoji": 3,
-    "style-inline": 41,
+    "color-fijo": 5,
+    "style-inline": 23,
     "view-prop": 1
   },
   "components/app/dashboard/team/EquipoMiembros.tsx": {
@@ -306,8 +255,7 @@
   "components/app/dashboard/team/EquipoProgreso.tsx": {
     "color-fijo": 4,
     "degradado": 1,
-    "style-inline": 29,
-    "tamano-fuente": 1,
+    "style-inline": 18,
     "view-prop": 1
   },
   "components/app/dashboard/team/EquipoResumen.tsx": {
@@ -317,12 +265,6 @@
     "tamano-fuente": 2,
     "view-prop": 1,
     "z-index-fijo": 1
-  },
-  "components/app/dashboard/team/equipoView-shared.tsx": {
-    "color-fijo": 24,
-    "emoji": 38,
-    "rgb-fijo": 1,
-    "style-inline": 1
   },
   "components/app/media/MediaLibrary.tsx": {
     "color-fijo": 1,

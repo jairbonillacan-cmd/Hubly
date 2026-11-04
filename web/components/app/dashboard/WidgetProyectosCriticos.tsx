@@ -1,14 +1,17 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
-import { HublyClipboardIcon, } from "@/components/app/icons/HublyIcons";
-import {
-  HublyCheckCircleIcon,
-} from "@/components/app/icons/DuotoneIcons";
-import type { InicioViewModel } from "./useInicioView";
+import { useHublyStore } from "@/lib/store";
+import { selectCriticalProjects } from "@/components/app/dashboard/ExtraWidgets";
+import { HublyClipboardIcon } from "@/components/app/icons/HublyIcons";
+import { HublyCheckCircleIcon } from "@/components/app/icons/DuotoneIcons";
 
-export function WidgetProyectosCriticos({ view }: { view: InicioViewModel }) {
-  const { brands, criticalProjects } = view;
+export function WidgetProyectosCriticos() {
+  const brands = useHublyStore((s) => s.brands);
+  const projects = useHublyStore((s) => s.projects);
+  const criticalProjects = useMemo(() => selectCriticalProjects(projects), [projects]);
+
   return (
     <section key="proyectos_criticos" data-widget-id="proyectos_criticos" className="hb-widget">
       <div className="hb-widget-head">
@@ -34,14 +37,18 @@ export function WidgetProyectosCriticos({ view }: { view: InicioViewModel }) {
           <p className="hb-empty-desc">Todos tus proyectos abiertos van en orden.</p>
         </div>
       ) : (
-        <div className="hb-widget-body" style={{ padding: "12px 14px" }}>
+        <div className="hb-widget-body hubly-dashboard-body-projects">
           {criticalProjects.map((project) => (
-            <Link key={project.id} href="/proyectos" className="hubly-task-row" style={{ textDecoration: "none" }}>
-              <span style={{ minWidth: 0 }}>
-                <span className="hubly-task-title" style={{ display: "block", fontWeight: 600 }}>
+            <Link
+              key={project.id}
+              href="/proyectos"
+              className="hubly-task-row hubly-dashboard-project-link"
+            >
+              <span className="hubly-dashboard-item-main">
+                <span className="hubly-task-title hubly-dashboard-project-title">
                   {project.title}
                 </span>
-                <span style={{ fontSize: 11.5, color: "var(--ui-text-4)" }}>
+                <span className="hubly-dashboard-project-meta">
                   {brands.find((b) => b.id === project.brandId)?.name || "Marca"} · {project.status}
                 </span>
               </span>
