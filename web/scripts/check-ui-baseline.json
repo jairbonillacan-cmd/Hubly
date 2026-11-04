@@ -354,7 +354,7 @@
     "view-prop": 1
   },
   "components/app/dashboard/team/EquipoResumen.tsx": {
-    "color-fijo": 2,
+    "color-fijo": 1,
     "rgb-fijo": 1,
     "style-inline": 39,
     "tamano-fuente": 2,
@@ -378,7 +378,7 @@
     "tamano-fuente": 1
   },
   "components/app/shell/BrandSwitcher.tsx": {
-    "color-fijo": 4,
+    "color-fijo": 2,
     "rgb-fijo": 1,
     "style-inline": 16,
     "tamano-fuente": 1,

@@ -4,6 +4,7 @@ import { Modal } from "@/components/app/ui/Modal";
 import React, { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { useHublyStore } from "@/lib/store";
+import { useActiveBrand } from "@/lib/use-active-brand";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import { HublyCatAvatar } from "@/components/app/icons/HublyIcons";
 import { NotebookEditor } from "@/components/app/NotebookEditor";
@@ -93,7 +94,7 @@ export function NotebookReaderModal({
   const updateNotebook = useHublyStore((s) => s.updateNotebook);
   const deleteNotebook = useHublyStore((s) => s.deleteNotebook);
   const brands = useHublyStore((s) => s.brands);
-  const activeBrandId = useHublyStore((s) => s.activeBrandId);
+  const activeBrand = useActiveBrand();
 
   const isOpen =
     (openProp !== undefined
@@ -110,7 +111,7 @@ export function NotebookReaderModal({
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [category, setCategory] = useState("GUÍA DE AGENCIA");
-  const [brandId, setBrandId] = useState(activeBrandId || "brand-min");
+  const [brandId, setBrandId] = useState(activeBrand?.id ?? "");
   const [accentColor, setAccentColor] = useState("#C59B6D");
   const [content, setContent] = useState("");
   const [savedNotice, setSavedNotice] = useState(false);
@@ -142,7 +143,7 @@ export function NotebookReaderModal({
       setTitle("");
       setSubtitle("Notas operativas y acuerdos de cuenta");
       setCategory("ESTRATEGIA");
-      setBrandId(activeBrandId || brands[0]?.id || "brand-min");
+      setBrandId(activeBrand?.id ?? "");
       setAccentColor("#C59B6D");
       setContent("");
     } else {
@@ -151,7 +152,7 @@ export function NotebookReaderModal({
       setCategory(
         currentNotebook.category || currentNotebook.stamp || "LIBRETA KRAFT"
       );
-      setBrandId(currentNotebook.brandId || activeBrandId || "brand-min");
+      setBrandId(currentNotebook.brandId || activeBrand?.id || "");
       setAccentColor(currentNotebook.accentColor || "#C59B6D");
       setContent(currentNotebook.content);
     }
@@ -638,9 +639,7 @@ export function NotebookReaderModal({
                 }}
               >
                 {brands.map((b) => (
-                  <option key={b.id} value={b.id}>
-                    {b.name} ({b.handle})
-                  </option>
+                  <option key={b.id} value={b.id}>{b.name} ({b.handle})</option>
                 ))}
               </select>
             </div>

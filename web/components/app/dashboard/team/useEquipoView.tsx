@@ -3,6 +3,7 @@
 import { copyText } from "@/lib/clipboard";
 import { useMemo, useState } from "react";
 import { useHublyStore } from "@/lib/store";
+import { useActiveBrand } from "@/lib/use-active-brand";
 import { useModalPresence } from "@/lib/use-modal-presence";
 import {
   selectGreetingAndDate,
@@ -21,6 +22,7 @@ export function useEquipoView() {
   const activityEvents = useHublyStore((s) => s.activityEvents);
   const profile = useHublyStore((s) => s.profile);
   const brands = useHublyStore((s) => s.brands);
+  const activeBrand = useActiveBrand();
   const invitations = useHublyStore((s) => s.invitations);
   const testClock = useHublyStore((s) => s.testClock);
   const setInviteModalOpen = useHublyStore((s) => s.setInviteModalOpen);
@@ -126,17 +128,16 @@ export function useEquipoView() {
   );
   const isPrimaryOwner = activeMemberMetrics.id === currentMemberId;
   // Assigned brands for the currently inspected member:
-  // By default on initial load, Jair displays `1 marca` (`Min`),
-  // and reflects any brand toggles made in `Editar marcas`.
+  // On initial load the owner sees the active brand (the one in the sidebar),
+  // and any toggle in `Editar marcas` replaces that.
   const assignedBrands = useMemo(() => {
     if (isPrimaryOwner && !hasCustomizedOwnerBrands) {
-      const minBrand = brands.find((b) => b.id === "brand-min") ?? brands[0];
-      return minBrand ? [minBrand] : [];
+      return activeBrand ? [activeBrand] : [];
     }
-    const ids = selectedRawMember?.brandIds ?? ["brand-min"];
+    const ids = selectedRawMember?.brandIds ?? (activeBrand ? [activeBrand.id] : []);
     const matched = brands.filter((b) => ids.includes(b.id));
     return matched.length > 0 ? matched : brands.slice(0, 1);
-  }, [isPrimaryOwner, hasCustomizedOwnerBrands, selectedRawMember, brands]);
+  }, [isPrimaryOwner, hasCustomizedOwnerBrands, selectedRawMember, brands, activeBrand]);
   // Dynamic person count in header:
   // Starts at 1 persona (owner focus),
   // and immediately increments if demo invitations are accepted (`team.length > 4`) or if `showAllTeamScope` is toggled.
@@ -261,8 +262,8 @@ export function useEquipoView() {
     if (!selectedRawMember) return;
     const baseIds: string[] =
       isPrimaryOwner && !hasCustomizedOwnerBrands
-        ? ["brand-min"]
-        : selectedRawMember.brandIds ?? ["brand-min"];
+        ? (activeBrand ? [activeBrand.id] : [])
+        : selectedRawMember.brandIds ?? (activeBrand ? [activeBrand.id] : []);
     const exists = baseIds.includes(brandId);
     const nextIds = exists
       ? baseIds.filter((id) => id !== brandId)
@@ -277,7 +278,7 @@ export function useEquipoView() {
     recordActivityEvent({
       memberId: activeMemberMetrics.id,
       type: "task_completed",
-      brandId: assignedBrands[0]?.id ?? "brand-min",
+      brandId: assignedBrands[0]?.id ?? activeBrand?.id ?? "",
       durationMinutes: 35,
       metadata: {
         source: "equipo_quick_action",

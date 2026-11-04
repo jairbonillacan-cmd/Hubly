@@ -3,8 +3,9 @@
 import { copyText } from "@/lib/clipboard";
 import React, { useEffect, useState } from "react";
 import { useHublyStore } from "@/lib/store";
+import { useActiveBrand } from "@/lib/use-active-brand";
+import { clientShareUrl } from "@/lib/share-links";
 import { backendEnabled } from "@/lib/supabase/config";
-import { currentAgencyId } from "@/lib/live-workspace";
 import {
   HublyBentoIcon,
   HublyCalendarIcon,
@@ -18,8 +19,6 @@ import { SocialSubTab, } from "./parrillasPage-shared";
 
 /** Estado y datos de ParrillasPage. */
 export function useParrillasPage() {
-  const brands = useHublyStore((s) => s.brands);
-  const activeBrandId = useHublyStore((s) => s.activeBrandId);
   const posts = useHublyStore((s) => s.posts);
   const [activeTab, setActiveTab] = useState<SocialSubTab>("calendario");
   const [showDemoData, setShowDemoData] = useState(backendEnabled);
@@ -47,41 +46,28 @@ export function useParrillasPage() {
     else if (t === "tableros") setActiveTab("tableros");
     else if (t === "calendario") setActiveTab("calendario");
   }, []);
-  const activeBrand =
-    brands.find((b) => b.id === activeBrandId) ||
-    brands.find((b) => b.id === "brand-min") ||
-    brands[0];
+  const activeBrand = useActiveBrand();
   const brandName =
     activeBrand?.name || "";
   const brandHandle =
     activeBrand?.bioLink?.handle || activeBrand?.slug || "";
-  const shareToken = activeBrand?.shareToken || "min-nov";
+  const shareToken = activeBrand?.shareToken ?? "";
   const brandPosts = posts.filter((p) => p.brandId === activeBrand?.id);
   // Quien acaba de usar el editor debe ver su post en el calendario.
   useEffect(() => {
     if (composerOpen) setShowDemoData(true); // eslint-disable-line react-hooks/set-state-in-effect -- URL o editor externos a React
   }, [composerOpen]);
-  const liveShareUrl = async () => {
-    const res = await fetch("/api/share", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ brandId: activeBrand?.id, agencyId: currentAgencyId() }),
-    });
-    if (!res.ok) return null;
-    const { token } = (await res.json()) as { token: string };
-    return `${window.location.origin}/share/${token}`;
-  };
   // Con cuentas reales cada enlace se genera al pedirlo: solo se guarda su hash.
   const handleOpenPortal = async (e: React.MouseEvent) => {
     if (!backendEnabled) return;
     e.preventDefault();
-    const url = await liveShareUrl();
+    const url = await clientShareUrl(activeBrand);
     if (url) window.open(url, "_blank", "noopener");
   };
   const handleCopyClientLink = async (e?: React.MouseEvent) => {
     if (typeof window === "undefined") return;
     if (backendEnabled) e?.preventDefault?.();
-    const url = backendEnabled ? await liveShareUrl() : `${window.location.origin}/share/${shareToken}`;
+    const url = await clientShareUrl(activeBrand);
     if (!url) return;
     void copyText(url).then((ok) => {
       if (!ok) return;
@@ -118,7 +104,7 @@ export function useParrillasPage() {
     { id: "links", label: "Links", icon: <HublyLinkIcon size={18} /> },
   ];
 
-  return { brands, activeBrandId, posts, activeTab, setActiveTab, showDemoData, setShowDemoData, composerOpen, moreNetworksOpen, setMoreNetworksOpen, importModalOpen, setImportModalOpen, accountsModalOpen, setAccountsModalOpen, copiedLink, setCopiedLink, copiedBio, setCopiedBio, linksSubTab, setLinksSubTab, siguenosEnabled, setSiguenosEnabled, whatsappEnabled, setWhatsappEnabled, whatsappNumber, setWhatsappNumber, editingWhatsapp, setEditingWhatsapp, connectingNet, setConnectingNet, activeBrand, brandName, brandHandle, shareToken, brandPosts, liveShareUrl, handleOpenPortal, handleCopyClientLink, handleCopyBioLink, handleConnectNetwork, navItems };
+  return { posts, activeTab, setActiveTab, showDemoData, setShowDemoData, composerOpen, moreNetworksOpen, setMoreNetworksOpen, importModalOpen, setImportModalOpen, accountsModalOpen, setAccountsModalOpen, copiedLink, setCopiedLink, copiedBio, setCopiedBio, linksSubTab, setLinksSubTab, siguenosEnabled, setSiguenosEnabled, whatsappEnabled, setWhatsappEnabled, whatsappNumber, setWhatsappNumber, editingWhatsapp, setEditingWhatsapp, connectingNet, setConnectingNet, activeBrand, brandName, brandHandle, shareToken, brandPosts, handleOpenPortal, handleCopyClientLink, handleCopyBioLink, handleConnectNetwork, navItems };
 }
 
 export type ParrillasPageModel = ReturnType<typeof useParrillasPage>;

@@ -4,13 +4,14 @@ import {
   addDaysToIsoDate,
   resolveDateInTimezone,
   sanitizeTimezone,
-  selectAccountsHealth,
   selectAccountRecommendations,
+  selectAccountsHealth,
   selectGreetingAndDate,
   selectOnboardingStatus,
   selectTasksBreakdown,
   selectTodayPostsAndApprovals,
 } from "./domain-selectors";
+import { selectActiveBrand } from "./active-brand";
 import type { BrandWorkspace, PostItem, TaskItem } from "./types";
 
 const task = (overrides: Partial<TaskItem>): TaskItem =>
@@ -247,4 +248,17 @@ test("el onboarding con estado vacío no avanza ni rompe", () => {
   assert.equal(r.progressPercent, 0);
   assert.equal(r.totalCount, 4);
   assert.equal(r.dismissed, false);
+});
+
+test("la marca activa es la elegida, luego la primera sin archivar, luego la primera", () => {
+  const lista = [
+    brand({ id: "archivada", status: "archived" }),
+    brand({ id: "min", status: "Activo" }),
+    brand({ id: "bruma", status: "Activo" }),
+  ];
+  assert.equal(selectActiveBrand(lista, "bruma")?.id, "bruma");
+  assert.equal(selectActiveBrand(lista, "no-existe")?.id, "min");
+  assert.equal(selectActiveBrand(lista, null)?.id, "min");
+  assert.equal(selectActiveBrand([brand({ id: "solo", status: "archived" })], "otra")?.id, "solo");
+  assert.equal(selectActiveBrand([], "cualquiera"), undefined);
 });

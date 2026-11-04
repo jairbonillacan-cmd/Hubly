@@ -6,6 +6,7 @@ import { backendEnabled } from "@/lib/supabase/config";
 import React, { useState } from "react";
 import Link from "next/link";
 import { useHublyStore } from "@/lib/store";
+import { useActiveBrand } from "@/lib/use-active-brand";
 import { Cover } from "@/components/Cover";
 import {
   HublyBentoIcon as LayoutGrid,
@@ -46,14 +47,9 @@ function ExampleTag() {
 }
 
 function DemoReportesPage() {
-  const brands = useHublyStore((s) => s.brands);
-  const activeBrandId = useHublyStore((s) => s.activeBrandId);
   const posts = useHublyStore((s) => s.posts);
 
-  const activeBrand =
-    brands.find((b) => b.id === activeBrandId) ||
-    brands.find((b) => b.id === "brand-min") ||
-    brands[0];
+  const activeBrand = useActiveBrand();
 
   const brandName =
     activeBrand?.name || "";

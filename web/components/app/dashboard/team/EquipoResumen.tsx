@@ -154,7 +154,7 @@ export function EquipoResumen({ view }: { view: EquipoViewModel }) {
                             width: 18,
                             height: 18,
                             borderRadius: 5,
-                            background: b.id === "brand-min" ? "#16324F" : b.color,
+                            background: b.color || "var(--hb-accent)",
                             color: "#FFFFFF",
                             fontSize: 9.5,
                             fontWeight: 700,

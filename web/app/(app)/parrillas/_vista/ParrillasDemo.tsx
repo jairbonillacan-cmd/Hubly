@@ -14,14 +14,14 @@ export function ParrillasDemo({ view }: { view: ParrillasPageModel }) {
 
   return (
     <>
-      {activeTab === "calendario" && showDemoData && (
+      {activeTab === "calendario" && showDemoData && activeBrand && (
         <div>
           <SocialCalendar brand={activeBrand} posts={brandPosts} onCopyLink={() => void handleCopyClientLink()} />
         </div>
       )}
 
       {/* TAB 6: REPORTES */}
-      {activeTab === "reportes" && backendEnabled && <MonthlyReport brand={activeBrand} posts={brandPosts} />}
+      {activeTab === "reportes" && backendEnabled && activeBrand && <MonthlyReport brand={activeBrand} posts={brandPosts} />}
       {activeTab === "reportes" && !backendEnabled && (
         <div>
           {/* Secondary Toolbar */}
