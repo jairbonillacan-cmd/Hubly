@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { duplicatePostAsDraft, withPostLog } from "./posts";
+import { duplicatePostAsDraft, selectTodayPostsAndApprovals, withPostLog } from "./posts";
+import { post as selectorPost, RELOJ } from "./test-fixtures";
 import type { SocialPost } from "../types";
 
 const post = (overrides: Partial<SocialPost> = {}): SocialPost =>
@@ -46,4 +47,32 @@ test("duplicatePostAsDraft deja un borrador limpio con su registro", () => {
   const actividad = copia.activity ?? [];
   assert.equal(actividad.length, 1);
   assert.match(actividad[0].text, /Duplicó «Post original»/);
+});
+
+// Pruebas del selector que ahora vive aquí
+test("los posts de hoy no dejan pasar posts de otra marca ni borradores", () => {
+  const posts = [
+    selectorPost({ id: "hoy-a", brandId: "a", scheduledDate: "2026-10-31", scheduledTime: "09:00" }),
+    selectorPost({ id: "hoy-a-tarde", brandId: "a", scheduledDate: "2026-10-31", scheduledTime: "14:00" }),
+    selectorPost({ id: "otra-marca", brandId: "b", scheduledDate: "2026-10-31", scheduledTime: "08:00" }),
+    selectorPost({ id: "borrador", brandId: "a", scheduledDate: "2026-10-31", status: "draft" }),
+  ];
+  const r = selectTodayPostsAndApprovals(posts, "a", RELOJ);
+  assert.deepEqual(r.todayPosts.map((p) => p.id), ["hoy-a", "hoy-a-tarde"]);
+  assert.equal(r.todayCount, 2);
+  assert.equal(r.isEmptyToday, false);
+});
+
+test("los posts sin fecha no son de hoy pero sí pueden estar en aprobación", () => {
+  const posts = [selectorPost({ id: "sin-fecha", scheduledDate: "", status: "pending" })];
+  const r = selectTodayPostsAndApprovals(posts, "a", RELOJ);
+  assert.equal(r.isEmptyToday, true);
+  assert.deepEqual(r.approvalPosts.map((p) => p.id), ["sin-fecha"]);
+});
+
+test("con listas vacías los contadores de posts quedan en cero", () => {
+  const r = selectTodayPostsAndApprovals([], "a", RELOJ);
+  assert.equal(r.isEmptyToday, true);
+  assert.equal(r.isEmptyApprovals, true);
+  assert.deepEqual(r.changesRequestedPosts, []);
 });
