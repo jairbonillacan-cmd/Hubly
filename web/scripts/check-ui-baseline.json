@@ -294,9 +294,14 @@
   "components/app/social/CalendarModals.tsx": {
     "style-inline": 3
   },
-  "components/app/social/CalendarioView.tsx": {
-    "color-fijo": 2,
-    "style-inline": 11
+  "components/app/social/CalendarioActividadModal.tsx": {
+    "style-inline": 2
+  },
+  "components/app/social/CalendarioFiltros.tsx": {
+    "style-inline": 1
+  },
+  "components/app/social/CalendarioMarcas.tsx": {
+    "style-inline": 1
   },
   "components/app/social/ComposerExtras.tsx": {
     "style-inline": 10
