@@ -1,43 +1,6 @@
 @import "tailwindcss/theme" layer(theme);
 @import "tailwindcss/utilities" layer(utilities);
 
-:root {
-  --forest: #111c27;
-  --ink: #111c27;
-  --ink-soft: #4a5a6a;
-  --ground: #ffffff;
-  --surface: #ffffff;
-  --surface-warm: #f1f5f9;
-  --sidebar-bg: #0f1c2a;
-  --line: #e3e9ef;
-  --line-strong: #cbd6e0;
-  --green: #16324f;
-  --green-deep: #0f2539;
-  --green-pale: #dceff9;
-  --yellow: #7cc8ee;
-  --yellow-pale: #eaf6fc;
-  --coral: #d9483b;
-  --coral-deep: #b3261e;
-  --coral-pale: #fde8e6;
-  --lilac: #dceff9;
-  --lilac-pale: #eaf6fc;
-  --shadow-window: 0 24px 60px -24px rgb(17 28 39 / 0.35), 0 2px 6px rgb(17 28 39 / 0.08);
-  --shadow-sheet: 0 14px 30px -14px rgb(17 28 39 / 0.4);
-  --shadow-card: 0 4px 16px -4px rgb(17 28 39 / 0.07), 0 1px 2px rgb(17 28 39 / 0.04);
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --hb-accent: #16324f;
-  --hb-accent-hover: #0f2539;
-  --hb-accent-edge: #0b1c2e;
-  --hb-accent-text: #16324f;
-  --hb-accent-rgb: 22 50 79;
-  --on-accent: #ffffff;
-  --font-display: var(--font-bricolage);
-  --display: var(--font-bricolage), "Trebuchet MS", sans-serif;
-  --serif: var(--font-serif), Georgia, serif;
-  --mono: var(--font-mono), monospace;
-  --gutter: clamp(16px, 4vw, 40px);
-}
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -1958,16 +1921,6 @@ a {
 .feature-text .planned.planned--live {
   background: var(--green-pale);
   color: var(--green);
-}
-
-/* En oscuro, el marino no se distingue del fondo: acción intermedia y texto celeste */
-html.dark:has(.hubly-app-root) {
-  --hb-accent: #2a76b0;
-  --hb-accent-hover: #3487c4;
-  --hb-accent-edge: #1d5a88;
-  --hb-accent-text: #9ad4f1;
-  --hb-accent-rgb: 42 118 176;
-  --on-accent: #ffffff;
 }
 
 /* Logo: variante según el tema elegido en Hubly */

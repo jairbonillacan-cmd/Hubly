@@ -6,6 +6,7 @@ import {
   JetBrains_Mono,
   Young_Serif,
 } from "next/font/google";
+import "./tokens.css";
 import "./globals.css";
 import { THEME_INIT_SCRIPT } from "@/lib/theme-init";
 

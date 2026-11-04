@@ -5,170 +5,6 @@
    ========================================================================== */
 
 :is(.hubly-app-root, .hb-app-root) {
-  /* ------------------------------------------------------------------------
-     1. Core SaaS Color Palette (Surfaces, Accents, Text, Semantic, Borders)
-     ------------------------------------------------------------------------ */
-  /* Surfaces */
-  --bg-app: #FFFFFF;
-  --bg-surface: #FFFFFF;
-  --bg-surface-2: #F8FAFC;
-  --bg-surface-3: #F1F5F9;
-  --hubly-bg-shell: #FAFAFA;
-  --hubly-surface: #FFFFFF;
-  --hubly-surface-secondary: #F8FAFC;
-  --hubly-surface-tertiary: #F9FAFB;
-  --hubly-surface-muted: #F1F5F9;
-  --hubly-surface-amber: #F1F9FD;
-  --hubly-surface-amber-pill: #E6F4FB;
-  --hubly-surface-indigo: #EAF6FC;
-  --hubly-surface-indigo-strong: #DCEFF9;
-
-  /* Primary Accents (Indigo & Warm Amber) */
-  --primary: var(--hb-accent);
-  --primary-dark: var(--hb-accent-text);
-  --primary-bg-35: rgb(var(--hb-accent-rgb) / 0.35);
-  --primary-bg-12: rgb(var(--hb-accent-rgb) / 0.12);
-  --primary-bg-06: rgb(var(--hb-accent-rgb) / 0.06);
-  --tinta-primary: var(--hb-accent);
-  --hg-elegido: #5B4FCF;
-  --hubly-indigo: var(--hb-accent);
-  --hubly-indigo-hover: var(--hb-accent-hover);
-  --hubly-indigo-vibrant: #16324F;
-  --hubly-indigo-soft: #EAF6FC;
-  --hubly-indigo-tint: #DCEFF9;
-
-  --accent: var(--hb-accent);
-  --accent-dark: #CF9529;
-  --accent-bg-35: rgb(var(--hb-accent-rgb) / 0.35);
-  --accent-bg-12: rgb(var(--hb-accent-rgb) / 0.12);
-  --accent-bg-06: rgb(var(--hb-accent-rgb) / 0.06);
-  --hubly-amber: var(--hb-accent);
-  --hubly-amber-warm: var(--hb-accent);
-  --hubly-amber-deep: var(--hb-accent-hover);
-  --hubly-amber-text: var(--hb-accent-text);
-  --hubly-amber-bg: #F1F9FD;
-  --hubly-amber-pill: #E6F4FB;
-  --hubly-amber-border: #BFE2F4;
-
-  /* Text Hierarchy */
-  --text-primary: #1E293B;
-  --text-secondary: #475569;
-  --text-muted: #64748B;
-  --text-disabled: #CBD5E1;
-  --hubly-text-ink: #0F172A;
-  --hubly-text-primary: #1E293B;
-  --hubly-text-body: #334155;
-  --hubly-text-secondary: #475569;
-  --hubly-text-muted: #64748B;
-  --hubly-text-subtle: #94A3B8;
-  --hubly-text-disabled: #CBD5E1;
-
-  /* Semantic Tokens (Success, Warning, Danger, Info) */
-  --success: #10B981;
-  --tinta-exito: #059669;
-  --hubly-success: #10B981;
-  --hubly-success-bg: #ECFDF5;
-  --hubly-success-text: #059669;
-
-  --warning: var(--hb-accent);
-  --hubly-warning: var(--hb-accent);
-  --hubly-warning-bg: #F1F9FD;
-  --hubly-warning-text: var(--hb-accent-hover);
-
-  --error: #EF4444;
-  --tinta-error: #DC2626;
-  --hubly-danger: #EF4444;
-  --hubly-danger-bg: #FEF2F2;
-  --hubly-danger-text: #DC2626;
-
-  --info: #3B82F6;
-  --hubly-info: #2563EB;
-  --hubly-info-bg: #EFF6FF;
-  --hubly-info-text: #1D4ED8;
-
-  /* Borders */
-  --border-light: #E2E8F0;
-  --border-medium: #CBD5E1;
-  --border-strong: #94A3B8;
-  --hubly-border: #E2E8F0;
-  --hubly-border-gray: #E5E7EB;
-  --hubly-border-subtle: #F1F5F9;
-  --hubly-border-card: #EDF2F7;
-
-  /* Elevations & Shadows */
-  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.05);
-  --shadow-lg: 0 8px 32px rgba(15, 23, 42, 0.10), 0 2px 8px rgba(15, 23, 42, 0.06);
-  --shadow-xl: 0 24px 64px rgba(15, 23, 42, 0.14), 0 8px 24px rgba(15, 23, 42, 0.08);
-  --shadow-hb: 0 8px 24px rgb(var(--hb-accent-rgb) / 0.35), 0 2px 8px rgb(var(--hb-accent-rgb) / 0.20);
-  --shadow-primary: 0 8px 24px rgb(var(--hb-accent-rgb) / 0.30), 0 2px 8px rgb(var(--hb-accent-rgb) / 0.15);
-
-  /* Typography Families */
-  --hubly-font-sans: var(--font-bricolage), "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --hubly-font-serif: "Instrument Serif", "Playfair Display", Georgia, var(--font-serif), "Young Serif", "Fraunces", Cambria, "Times New Roman", serif;
-  --hubly-font-mono: "Geist Mono", "JetBrains Mono", var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-
-  /* Stacking Layers (z-index Contract) */
-  --hubly-z-canvas: 1;
-  --hubly-z-subnav: 20;
-  --hubly-z-popover: 40;
-  --hubly-z-floating: 45;
-  --hubly-z-drawer: 50;
-  --hubly-z-modal: 60;
-
-  /* Legacy Variable Mapping for Transition Compatibility */
-  --hb-bg: #FAFAFA;
-  --hb-surface: #FFFFFF;
-  --hb-border: #E2E8F0;
-  --hb-border-subtle: #F1F5F9;
-  --hb-border-card: #EDF2F7;
-  --hb-text: #0F172A;
-  --hb-text-secondary: #334155;
-  --hb-text-muted: #64748B;
-  --hb-text-subtle: #94A3B8;
-  --hb-indigo: var(--hb-accent);
-  --hb-indigo-hover: var(--hb-accent-hover);
-  --hb-indigo-soft: #EAF6FC;
-  --hb-amber-bg: #F1F9FD;
-  --hb-amber-pill: #E6F4FB;
-  --hb-amber-border: #BFE2F4;
-  --hb-amber-text: var(--hb-accent-text);
-  --hb-amber-accent: var(--hb-accent);
-  --hb-gold-avatar: #CAA052;
-
-  /* Neutralize Landing Page CSS Variables Inside SaaS Root */
-  --ink: #0F172A;
-  --ink-2: #334155;
-  --ink-soft: #475569;
-  --ink-muted: #64748B;
-  --ground: #FAFAFA;
-  --surface: #FFFFFF;
-  --surface-warm: #F8FAFC;
-  --cream: #F8FAFC;
-  --cream-2: #F1F5F9;
-  --cream-3: #E2E8F0;
-  --line: #E2E8F0;
-  --line-strong: #CBD5E1;
-  --forest: var(--hb-accent);
-  --forest-soft: #EAF6FC;
-  --green: var(--hb-accent);
-  --green-deep: var(--hb-accent-hover);
-  --green-pale: #EAF6FC;
-  --amber: var(--hb-accent);
-  --yellow: var(--hb-accent);
-  --yellow-pale: #E6F4FB;
-  --coral: #EF4444;
-  --coral-deep: #DC2626;
-  --coral-pale: #FEF2F2;
-  --coral-soft: #FEF2F2;
-  --lilac: #DCEFF9;
-  --lilac-pale: #EAF6FC;
-  --display: var(--hubly-font-sans);
-  --font-display: var(--hubly-font-sans);
-  --font-body: var(--hubly-font-sans);
-  --shadow-card: 0 1px 2px rgba(26, 26, 46, 0.04), 0 12px 30px -20px rgb(var(--hb-accent-rgb) / 0.22);
-  --shadow-window: 0 24px 60px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.06);
-
   /* Root Shell Box & Typography Defaults */
   font-family: var(--hubly-font-sans);
   font-size: 14px;
@@ -340,7 +176,6 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
    ========================================================================== */
 
 :is(.hubly-app-root, .hb-app-root) .hbtn {
-  --hbtn-edge: #CBD5E1;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -399,7 +234,6 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 :is(.hubly-app-root, .hb-app-root) .hbtn.is-selected,
 :is(.hubly-app-root, .hb-app-root) .hbtn[aria-pressed="true"] {
-  --hbtn-edge: var(--hb-accent-edge);
   background: var(--ui-sky-soft);
   color: var(--hb-accent-text);
   border-color: var(--hb-accent);
@@ -478,7 +312,6 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 /* 1. Indigo / Primary (.hbtn-indigo, .hbtn-primary) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-indigo,
 :is(.hubly-app-root, .hb-app-root) .hbtn-primary {
-  --hbtn-edge: var(--hb-accent-edge);
   background: var(--hb-accent);
   color: var(--on-accent);
   border: 1px solid var(--hb-accent-hover);
@@ -494,7 +327,6 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 /* 2. Amber (.hbtn-amber, .hbtn-hb) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-amber,
 :is(.hubly-app-root, .hb-app-root) .hbtn-hb {
-  --hbtn-edge: var(--hb-accent-edge);
   background: var(--ui-surface);
   color: var(--ui-text);
   border: 1.5px solid var(--hb-accent);
@@ -508,7 +340,6 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 }
 
 :is(.hubly-app-root, .hb-app-root) .hbtn-amber-solid {
-  --hbtn-edge: var(--hb-accent-edge);
   background: var(--hb-accent);
   color: #4A3200;
   border: 1px solid var(--hb-accent);
@@ -521,7 +352,6 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 /* 3. Secondary / Neutral White (.hbtn-secondary) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-secondary {
-  --hbtn-edge: #C9C9DC;
   background: var(--ui-surface);
   color: var(--ui-text-2);
   border: 1px solid var(--ui-border-strong);
@@ -535,7 +365,6 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 /* 4. Blue (.hbtn-blue) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-blue {
-  --hbtn-edge: #1E40AF;
   background: #2563EB;
   color: var(--on-accent);
   border: 1px solid #1D4ED8;
@@ -549,7 +378,6 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 /* 5. Pink (.hbtn-pink) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-pink {
-  --hbtn-edge: #9D174D;
   background: #EC4899;
   color: var(--on-accent);
   border: 1px solid #DB2777;
@@ -563,7 +391,6 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 /* 6. Purple (.hbtn-purple) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-purple {
-  --hbtn-edge: #4C1D95;
   background: #7C3AED;
   color: var(--on-accent);
   border: 1px solid #6D28D9;
@@ -577,7 +404,6 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 
 /* 7. Danger (.hbtn-danger) */
 :is(.hubly-app-root, .hb-app-root) .hbtn-danger {
-  --hbtn-edge: #B91C1C;
   background: #EF4444;
   color: var(--on-accent);
   border: 1px solid #DC2626;
@@ -593,7 +419,6 @@ body:has(.hubly-app-root, .hb-app-root)::-webkit-scrollbar {
 :is(.hubly-app-root, .hb-app-root) .hbtn-ghost,
 :is(.hubly-app-root, .hb-app-root) .hbtn-ghost-primary,
 :is(.hubly-app-root, .hb-app-root) .hbtn-ghost-danger {
-  --hbtn-edge: transparent;
   background: transparent;
   border-color: transparent;
   box-shadow: none;
