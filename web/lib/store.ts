@@ -9,12 +9,17 @@ import { withPostLog } from "./domain/posts";
 import { createSessionSlice, type SessionSlice } from "./store/session.slice";
 import { createUiSlice, type UiSlice } from "./store/ui.slice";
 import { persistWorkspaceState } from "./store/sync";
+import { createCrmSlice, type CrmSlice } from "./store/crm.slice";
+import { createAutomationsSlice, type AutomationsSlice } from "./store/automations.slice";
+import { createAgentsSlice, type AgentsSlice } from "./store/agents.slice";
+import { createNotebooksSlice, type NotebooksSlice } from "./store/notebooks.slice";
+import { createAssetsSlice, type AssetsSlice } from "./store/assets.slice";
+import { createProjectsSlice, type ProjectsSlice } from "./store/projects.slice";
 import { localIsoDate } from "./date";
 import { nextOccurrence, toggleReaction } from "./chat";
 import { CHAT_NOTIFICATION_PREFIX, chatRemote, newChatId, useChatPresence } from "./chat-live";
 import { moveInList } from "./use-kanban-drag";
 import { backendEnabled } from "./supabase/config";
-import { createAgent, duplicateAgent, isBlankAgent } from "./agents";
 import { currentAgencyId } from "./live-workspace";
 import type {
   AccountCommitment,
@@ -26,23 +31,15 @@ import type {
   ChatMessage,
   ChatReminder,
   ChatScheduledMessage,
-  BrandProject,
   BrandWorkspace,
-  AutomationRule,
   AutomationTrigger,
   ContentIdea,
   CustomCommitmentMetric,
-  Lead,
-  LeadStage,
-  Quote,
   DashboardMetricId,
   DashboardWidgetConfig,
   DashboardWidgetId,
   DashboardWidgetSpan,
   HublyWorkspaceData,
-  MediaAsset,
-  HublyAgent,
-  NotebookItem,
   PeriodCommitmentSnapshot,
   PostExtrasPatch,
   PostStatus,
@@ -105,11 +102,8 @@ type AddTaskInput = Omit<
 interface StoreCoreState extends HublyWorkspaceData {
   teamMembers: TeamMember[];
   dashboardWidgets: DashboardWidgetConfig[];
-  activeNotebookId: string | null;
-
   // UI & Modal Actions
   setActiveBrand: (brandId: string) => void;
-  setActiveNotebookId: (notebookId: string | null) => void;
 
   // Profile & Agency Actions
 
@@ -157,14 +151,6 @@ interface StoreCoreState extends HublyWorkspaceData {
   addIdea: (idea: Pick<ContentIdea, "brandId" | "title" | "notes" | "pillar">) => void;
   removeIdea: (ideaId: string) => void;
   convertIdeaToPost: (ideaId: string) => void;
-  saveLead: (lead: Omit<Lead, "id" | "createdAt"> & { id?: string }) => void;
-  moveLead: (leadId: string, stage: LeadStage, beforeId: string | null) => void;
-  deleteLead: (leadId: string) => void;
-  saveQuote: (quote: Omit<Quote, "id" | "createdAt"> & { id?: string }) => void;
-  deleteQuote: (quoteId: string) => void;
-  addAutomation: (rule: Pick<AutomationRule, "name" | "trigger" | "action" | "text">) => void;
-  toggleAutomation: (ruleId: string) => void;
-  removeAutomation: (ruleId: string) => void;
 
   // Task Actions
   addTask: (task: AddTaskInput) => void;
@@ -175,40 +161,6 @@ interface StoreCoreState extends HublyWorkspaceData {
   addTaskList: (brandId: string, name: string) => void;
   renameTaskList: (brandId: string, oldName: string, newName: string) => void;
   deleteTaskList: (brandId: string, name: string) => void;
-
-  // Agent Actions
-  addAgent: () => HublyAgent;
-  updateAgent: (agentId: string, patch: Partial<HublyAgent>) => void;
-  duplicateAgent: (agentId: string) => HublyAgent | undefined;
-  deleteAgent: (agentId: string) => void;
-
-  // Notebook Actions
-  addNotebook: (input: {
-    title: string;
-    subtitle?: string;
-    category?: string;
-    content?: string;
-    brandId?: string;
-    accentColor?: string;
-    isPinned?: boolean;
-  }) => NotebookItem;
-  updateNotebook: (
-    notebookId: string,
-    patch: Partial<
-      Pick<
-        NotebookItem,
-        | "title"
-        | "subtitle"
-        | "category"
-        | "content"
-        | "brandId"
-        | "accentColor"
-        | "isPinned"
-      >
-    >
-  ) => void;
-  deleteNotebook: (notebookId: string) => void;
-  toggleNotebookPinned: (notebookId: string) => void;
 
   // Team & Activity Actions
   inviteTeamMember: (input: {
@@ -242,11 +194,6 @@ interface StoreCoreState extends HublyWorkspaceData {
   addNotification: (
     notification: Omit<WorkspaceNotification, "id" | "createdAt" | "read">
   ) => void;
-  addAsset: (asset: Omit<MediaAsset, "id" | "uploadedAt" | "usedInPosts">) => void;
-  addProject: (project: Omit<BrandProject, "id">) => void;
-  moveProject: (projectId: string, status: BrandProject["status"], beforeId: string | null) => void;
-  updateProject: (projectId: string, patch: Partial<Omit<BrandProject, "id" | "brandId">>) => void;
-  deleteProject: (projectId: string) => void;
   sendChatMessage: (
     channelId: string,
     text: string,
@@ -272,7 +219,15 @@ interface StoreCoreState extends HublyWorkspaceData {
   flushChatQueue: (now: number) => void;
 }
 
-export type HublyStoreState = StoreCoreState & SessionSlice & UiSlice;
+export type HublyStoreState = StoreCoreState &
+  SessionSlice &
+  UiSlice &
+  CrmSlice &
+  AutomationsSlice &
+  AgentsSlice &
+  NotebooksSlice &
+  AssetsSlice &
+  ProjectsSlice;
 
 
 
@@ -328,12 +283,17 @@ export const useHublyStore = create<HublyStoreState>()((...a) => {
   ...INITIAL_WORKSPACE_DATA, // Siempre primero: aporta los datos guardados
   ...createSessionSlice(...a),
   ...createUiSlice(...a),
+  ...createCrmSlice(...a),
+  ...createAutomationsSlice(...a),
+  ...createAgentsSlice(...a),
+  ...createNotebooksSlice(...a),
+  ...createAssetsSlice(...a),
+  ...createProjectsSlice(...a),
   teamMembers: INITIAL_WORKSPACE_DATA.team,
   dashboardWidgets: INITIAL_WORKSPACE_DATA.widgets.map((w) => ({
     ...w,
     enabled: w.visible,
   })),
-  activeNotebookId: null,
 
   setActiveBrand: (brandId) => {
     if (backendEnabled) {
@@ -858,99 +818,8 @@ export const useHublyStore = create<HublyStoreState>()((...a) => {
     persistWorkspaceState(get());
   },
 
-  saveLead: (input) => {
-    set((s) => {
-      const leads = s.leads || [];
-      if (input.id) {
-        return { leads: leads.map((l) => (l.id === input.id ? { ...l, ...input, id: l.id } : l)) };
-      }
-      return {
-        leads: [{ ...input, id: `lead-${Date.now()}`, createdAt: new Date().toISOString() }, ...leads],
-      };
-    });
-    persistWorkspaceState(get());
-  },
 
-  moveLead: (leadId, stage, beforeId) => {
-    set((s) => ({ leads: moveInList(s.leads || [], leadId, beforeId, (l) => ({ ...l, stage })) }));
-    persistWorkspaceState(get());
-  },
 
-  deleteLead: (leadId) => {
-    set((s) => ({
-      leads: (s.leads || []).filter((l) => l.id !== leadId),
-      quotes: (s.quotes || []).filter((q) => q.leadId !== leadId),
-    }));
-    persistWorkspaceState(get());
-  },
-
-  saveQuote: (input) => {
-    set((s) => {
-      const quotes = s.quotes || [];
-      if (input.id) {
-        return { quotes: quotes.map((q) => (q.id === input.id ? { ...q, ...input, id: q.id } : q)) };
-      }
-      return {
-        quotes: [{ ...input, id: `quote-${Date.now()}`, createdAt: new Date().toISOString() }, ...quotes],
-      };
-    });
-    persistWorkspaceState(get());
-  },
-
-  deleteQuote: (quoteId) => {
-    set((s) => ({ quotes: (s.quotes || []).filter((q) => q.id !== quoteId) }));
-    persistWorkspaceState(get());
-  },
-
-  addAutomation: (rule) => {
-    set((s) => ({
-      automations: [
-        { ...rule, id: `auto-${Date.now()}`, enabled: true, runs: 0 },
-        ...(s.automations || []),
-      ],
-    }));
-    persistWorkspaceState(get());
-  },
-
-  toggleAutomation: (ruleId) => {
-    set((s) => ({
-      automations: (s.automations || []).map((r) => (r.id === ruleId ? { ...r, enabled: !r.enabled } : r)),
-    }));
-    persistWorkspaceState(get());
-  },
-
-  removeAutomation: (ruleId) => {
-    set((s) => ({ automations: (s.automations || []).filter((r) => r.id !== ruleId) }));
-    persistWorkspaceState(get());
-  },
-
-  addAgent: () => {
-    const blank = (get().agents || []).find(isBlankAgent);
-    if (blank) return blank;
-    const created = createAgent();
-    set((s) => ({ agents: [created, ...(s.agents || [])] }));
-    persistWorkspaceState(get());
-    return created;
-  },
-
-  updateAgent: (agentId, patch) => {
-    set((s) => ({ agents: (s.agents || []).map((a) => (a.id === agentId ? { ...a, ...patch } : a)) }));
-    persistWorkspaceState(get());
-  },
-
-  duplicateAgent: (agentId) => {
-    const source = (get().agents || []).find((a) => a.id === agentId);
-    if (!source) return undefined;
-    const copy = duplicateAgent(source);
-    set((s) => ({ agents: [copy, ...(s.agents || [])] }));
-    persistWorkspaceState(get());
-    return copy;
-  },
-
-  deleteAgent: (agentId) => {
-    set((s) => ({ agents: (s.agents || []).filter((a) => a.id !== agentId) }));
-    persistWorkspaceState(get());
-  },
 
   recordPublication: (postId, { url, date }) => {
     set((s) => ({
@@ -1316,81 +1185,6 @@ export const useHublyStore = create<HublyStoreState>()((...a) => {
     persistWorkspaceState(get());
   },
 
-  addNotebook: (input) => {
-    const nowIso = new Date().toISOString();
-    const count = get().notebooks.length + 1;
-    const stampLabel = `N° ${String(count).padStart(2, "0")} · OCT 26`;
-    const created: NotebookItem = {
-      id: `nb-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-      brandId: input.brandId || get().activeBrandId || "brand-min",
-      title: (input.title.trim() || "NUEVA LIBRETA").toUpperCase(),
-      subtitle: input.subtitle || stampLabel,
-      stamp: stampLabel,
-      variant: "space",
-      category: input.category || "Notas de marca",
-      content: input.content ?? "",
-      bgGradient: "linear-gradient(180deg, #D9B78A 0%, #C79F6E 100%)",
-      accentColor: input.accentColor || "#10B981",
-      updatedAt: nowIso,
-      updatedBy: get().profile.name || "Jair",
-      isPinned: input.isPinned ?? false,
-    };
-
-    set((s) => {
-      const event = createActivityItem(s, {
-        type: "notebook_updated",
-        brandId: created.brandId,
-        durationMinutes: 10,
-        metadata: { notebookId: created.id, title: created.title },
-      });
-      return {
-        notebooks: [created, ...s.notebooks],
-        activeNotebookId: created.id,
-        activityEvents: [event, ...s.activityEvents],
-      };
-    });
-    persistWorkspaceState(get());
-    return created;
-  },
-
-  updateNotebook: (notebookId, patch) => {
-    const nowIso = new Date().toISOString();
-    set((s) => ({
-      notebooks: s.notebooks.map((nb) =>
-        nb.id === notebookId
-          ? {
-              ...nb,
-              ...patch,
-              updatedAt: nowIso,
-            }
-          : nb
-      ),
-    }));
-    persistWorkspaceState(get());
-  },
-
-  deleteNotebook: (notebookId) => {
-    set((s) => {
-      const remaining = s.notebooks.filter((nb) => nb.id !== notebookId);
-      return {
-        notebooks: remaining,
-        activeNotebookId:
-          s.activeNotebookId === notebookId ? remaining[0]?.id ?? null : s.activeNotebookId,
-      };
-    });
-    persistWorkspaceState(get());
-  },
-
-  toggleNotebookPinned: (notebookId) => {
-    set((s) => ({
-      notebooks: s.notebooks.map((nb) =>
-        nb.id === notebookId
-          ? { ...nb, isPinned: !nb.isPinned, updatedAt: new Date().toISOString() }
-          : nb
-      ),
-    }));
-    persistWorkspaceState(get());
-  },
 
   inviteTeamMember: (input) => {
     const nowIso = new Date().toISOString();
@@ -1662,44 +1456,7 @@ export const useHublyStore = create<HublyStoreState>()((...a) => {
     persistWorkspaceState(get());
   },
 
-  addAsset: (assetInput) => {
-    set((s) => ({
-      assets: [
-        {
-          ...assetInput,
-          id: `asset-${Date.now()}`,
-          uploadedAt: "Ahora mismo",
-          usedInPosts: 0,
-        },
-        ...s.assets,
-      ],
-    }));
-    persistWorkspaceState(get());
-  },
 
-  addProject: (projInput) => {
-    set((s) => ({
-      projects: [{ ...projInput, id: `proj-${Date.now()}` }, ...s.projects],
-    }));
-    persistWorkspaceState(get());
-  },
-
-  updateProject: (projectId, patch) => {
-    set((s) => ({ projects: s.projects.map((p) => (p.id === projectId ? { ...p, ...patch } : p)) }));
-    persistWorkspaceState(get());
-  },
-
-  deleteProject: (projectId) => {
-    set((s) => ({ projects: s.projects.filter((p) => p.id !== projectId) }));
-    persistWorkspaceState(get());
-  },
-
-  moveProject: (projectId, status, beforeId) => {
-    set((s) => ({
-      projects: moveInList(s.projects, projectId, beforeId, (p) => ({ ...p, status })),
-    }));
-    persistWorkspaceState(get());
-  },
 
   sendChatMessage: (channelId, text, sender = "Jair Bonilla", senderInitials = "JB", options) => {
     const body = text.trim();
