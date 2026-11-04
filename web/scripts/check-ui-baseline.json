@@ -162,10 +162,9 @@
     "style-inline": 2
   },
   "components/app/NotebookReaderModal.tsx": {
-    "color-fijo": 55,
-    "rgb-fijo": 2,
-    "style-inline": 47,
-    "tamano-fuente": 1
+    "color-fijo": 3,
+    "rgb-fijo": 1,
+    "style-inline": 2
   },
   "components/app/PostComposerModal.tsx": {
     "style-inline": 1
@@ -236,6 +235,24 @@
   "components/app/media/MediaLibrary.tsx": {
     "color-fijo": 1,
     "style-inline": 2
+  },
+  "components/app/notebooks/LibretaCabecera.tsx": {
+    "color-fijo": 8,
+    "rgb-fijo": 1,
+    "style-inline": 10
+  },
+  "components/app/notebooks/LibretaFormulario.tsx": {
+    "color-fijo": 17,
+    "style-inline": 18
+  },
+  "components/app/notebooks/LibretaLista.tsx": {
+    "color-fijo": 11,
+    "style-inline": 8,
+    "tamano-fuente": 1
+  },
+  "components/app/notebooks/LibretaPie.tsx": {
+    "color-fijo": 9,
+    "style-inline": 9
   },
   "components/app/parrillas/ParrillasCalendario.tsx": {
     "style-inline": 1
@@ -342,10 +359,14 @@
     "view-prop": 1
   },
   "components/app/sugerencias/SugerenciasCuerpo.tsx": {
-    "color-fijo": 4,
+    "color-fijo": 1,
     "rgb-fijo": 1,
-    "style-inline": 40,
+    "style-inline": 30,
     "view-prop": 1
+  },
+  "components/app/sugerencias/SugerenciasMetricas.tsx": {
+    "color-fijo": 3,
+    "style-inline": 10
   },
   "components/app/sugerencias/SugerenciasPie.tsx": {
     "color-fijo": 1,
