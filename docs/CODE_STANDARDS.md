@@ -22,6 +22,7 @@ Usa `web/components/app/ui/` antes de escribir marcado propio. Si un patrón se 
 
 ## Store y datos
 - Un slice compone; las reglas de negocio van a `lib/domain/`, con pruebas.
+- La marca activa sale de `selectActiveBrand` (`lib/active-brand.ts`): ninguna pantalla la busca por su cuenta ni recurre a un id de ejemplo.
 - No cambies la forma de los datos guardados ni el nombre de sus campos en un refactor.
 
 ## Tamaño

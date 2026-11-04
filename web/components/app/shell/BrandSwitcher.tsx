@@ -63,10 +63,7 @@ export function BrandSwitcher({ activeBrand, brandMenuOpen, setBrandMenuOpen, br
               width: 20,
               height: 20,
               borderRadius: 6,
-              background:
-                activeBrand.id === "brand-min"
-                  ? "#16324F"
-                  : activeBrand.color || "#16324F",
+              background: activeBrand.color || "var(--hb-accent)",
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",

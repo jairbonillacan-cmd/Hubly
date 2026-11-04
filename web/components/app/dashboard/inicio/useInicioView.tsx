@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useHublyStore } from "@/lib/store";
+import { useActiveBrand } from "@/lib/use-active-brand";
 import {
   selectGreetingAndDate,
   selectTasksBreakdown,
@@ -82,10 +83,7 @@ export function useInicioView() {
   const [hiddenWidget, setHiddenWidget] = useState<{ id: DashboardWidgetId; title: string } | null>(null);
   const [layoutCopied, setLayoutCopied] = useState<boolean>(false);
   const gridRef = useRef<HTMLDivElement | null>(null);
-  const activeBrand = useMemo(
-    () => brands.find((b) => b.id === activeBrandId) || brands[0],
-    [brands, activeBrandId]
-  );
+  const activeBrand = useActiveBrand();
   // Selectores de dominio conectados al reloj determinista / timezone
   const greetingInfo = useMemo(
     () => selectGreetingAndDate(profile, testClock?.fixedIsoNow),
@@ -297,7 +295,7 @@ export function useInicioView() {
       upcoming: "Próximas",
     };
     addTask({
-      brandId: activeBrandId || "brand-min",
+      brandId: activeBrand?.id ?? "",
       title: clean,
       dueLabel: dueLabelMap[newTaskBucket],
       dueDate: dueDateIso,

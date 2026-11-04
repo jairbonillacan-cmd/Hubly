@@ -7,6 +7,7 @@ import "./hubly-saas.css";
 import "./app-base.css";
 import "./dashboard-polish.css";
 import { useHublyStore } from "@/lib/store";
+import { useActiveBrand } from "@/lib/use-active-brand";
 import { useHubiChats } from "@/lib/hubi-chats";
 import { useLayer } from "@/lib/use-layer";
 import { HubiChatList } from "@/components/app/HubiChatList";
@@ -47,7 +48,6 @@ export default function SaaSAppLayout({
   const isReferenceFixture = useHublyStore((s) => s.isReferenceFixture);
 
 
-  const brands = useHublyStore((s) => s.brands);
   const activeBrandId = useHublyStore((s) => s.activeBrandId);
 
   const tasks = useHublyStore((s) => s.tasks);
@@ -75,7 +75,7 @@ export default function SaaSAppLayout({
   const notificationsRef = useRef<HTMLDivElement | null>(null);
   const profilePopoverRef = useRef<HTMLDivElement | null>(null);
 
-  // Hydrate workspace from storage/server on mount WITHOUT forcing "brand-min"
+  // Hydrate workspace from storage/server on mount WITHOUT forcing a sample brand
   // (`syncFromServer` automatically inspects `?workspace=` and `?fixture=reference`).
   useEffect(() => {
     void syncFromServer();
@@ -168,14 +168,8 @@ export default function SaaSAppLayout({
     };
   }, [mobileDrawerOpen, brandMenuOpen, notificationsOpen, profileMenuOpen]);
 
-  // Active brand derived strictly from store state (persisted in localStorage)
-  const activeBrand = useMemo(
-    () =>
-      brands.find((b) => b.id === activeBrandId) ||
-      brands.find((b) => b.status !== "archived") ||
-      brands[0],
-    [brands, activeBrandId]
-  );
+  // Marca activa: la misma para el sidebar y para las pantallas (lib/use-active-brand).
+  const activeBrand = useActiveBrand();
 
   // Dynamic counters from store
   const pendingTasksCount = useMemo(() => {
