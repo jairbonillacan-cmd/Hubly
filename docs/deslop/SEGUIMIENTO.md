@@ -8,21 +8,21 @@ Antes de iniciar una tarea, quien coordina la marca **En curso** con su agente. 
 
 Se obtienen con `node scripts/medir-deslop.mjs`, desde `web/`.
 
-| Medida | Partida (`aa4a1d3`) | Actual | Meta |
-|---|---:|---:|---:|
-| Líneas de `lib/store.ts` | 2,304 | 101 | < 150 |
-| Archivos sobre 400 líneas, sin simuladores ni iconos | 35 | 26 | 0 |
-| `page.tsx` sobre 80 líneas | 17 | 17 | 0 |
-| Archivos con prop `view` | 33 | 33 | 0 |
-| `style={{` sin simuladores | 1,475 | 1,453 | < 150 |
-| Deuda de `check:ui`: reglas de siempre | 864 | 836 | < 100 |
-| Deuda de `check:ui`: reglas nuevas | 1,628 | 1,646 | 0 |
-| Deuda de `check:ui`: total | 2,492 | 2,482 | < 100 |
-| `!important` en CSS | 157 | 157 | < 10 |
-| Líneas con `eslint-disable` | 79 | 78 | < 25 |
-| Exenciones `ui-ok:` | 21 | 20 | No sube |
-| `as unknown as` | 7 | 9 | ≤ 2 |
-| Archivos que leen `backendEnabled` | 39 | 42 | ≤ 3, tras D3 |
+| Medida | Partida (`aa4a1d3`) | Actual (`bc3fd18`) | En PR #74 (`F3-6`) | Meta |
+|---|---:|---:|---:|---:|
+| Líneas de `lib/store.ts` | 2,304 | 101 | 101 | < 150 |
+| Archivos sobre 400 líneas, sin simuladores ni iconos | 35 | 25 | 23 | 0 |
+| `page.tsx` sobre 80 líneas | 17 | 16 | 16 | 0 |
+| Archivos con prop `view` | 33 | 9 | 6 | 0 |
+| `style={{` sin simuladores | 1,475 | 961 | 852 | < 150 |
+| Deuda de `check:ui`: reglas de siempre | 864 | 573 | 497 | < 100 |
+| Deuda de `check:ui`: reglas nuevas | 1,628 | 1,127 | 1,015 | 0 |
+| Deuda de `check:ui`: total | 2,492 | 1,700 | 1,512 | < 100 |
+| `!important` en CSS | 157 | 157 | 157 | < 10 |
+| Líneas con `eslint-disable` | 79 | 77 | 77 | < 25 |
+| Exenciones `ui-ok:` | 21 | 18 | 18 | No sube |
+| `as unknown as` | 7 | 9 | 9 | ≤ 2 |
+| Archivos que leen `backendEnabled` | 39 | 42 | 42 | ≤ 3, tras D3 |
 
 Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 
@@ -56,30 +56,30 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F2-2 Tipos | F1 | `lib/types*` | Hecha | `impl-f2-2` | #58 |
 | F2-3 Datos de ejemplo | F1 | `lib/seed*` | Hecha | `impl-f2-3` | #62 |
 | F2-4 Servidor | F1 | `app/api/`, `lib/server/` | Hecha | `impl-f2-4` | #61 |
-| F3-1 Equipo | F1, F2-2 | `dashboard/team/` | Pendiente | | |
-| F3-2 Inicio | F1, F2-2 | `dashboard/inicio/` | En curso | `impl-f3-2` | |
-| F3-3 Parrillas | F1, F2-2 | `parrillas/_vista/` | En curso | `impl-f3-3` | |
-| F3-4 Anuncios | F1, F2-2, D1 | `anuncios/_vista/` | Pendiente | | |
+| F3-1 Equipo | F1, F2-2 | `dashboard/team/` | Hecha | `impl-f3-1` | #71 |
+| F3-2 Inicio | F1, F2-2 | `dashboard/inicio/` | Hecha | `impl-f3-2` | #68 |
+| F3-3 Parrillas | F1, F2-2 | `parrillas/_vista/` | Hecha | `impl-f3-3` | #66 |
+| F3-4 Anuncios | F1, F2-2, D1 | `anuncios/_vista/` | Hecha | `impl-f3-4` | #72 |
 | F3-5 Editor de post | F1, F2-2 | `compositor/` | Pendiente | | |
-| F3-6 Libreta y sugerencias | F1, F2-2 | `NotebookReaderModal`, `sugerencias/` | Pendiente | | |
-| F3-7 Salud | F1, F2-2 | `SaludCuentasView` | Pendiente | | |
-| F3-8 Calendario | F1, F2-2 | `calendario/page` | Pendiente | | |
-| F3-9 Chat | F1, F2-2 | `chat/page` | Pendiente | | |
+| F3-6 Libreta y sugerencias | F1, F2-2 | `NotebookReaderModal`, `sugerencias/` | En revisión | `impl-f3-6` | #74 |
+| F3-7 Salud | F1, F2-2 | `SaludCuentasView` | Hecha | `impl-f3-7` | #69 |
+| F3-8 Calendario | F1, F2-2 | `calendario/page` | Hecha | `impl-f3-8` | #73 |
+| F3-9 Chat | F1, F2-2 | `chat/page` | En curso | `impl-f3-9` | `deslop/f3-9` |
 | F3-10 Layout | F1, F2-2 | `(app)/layout` | Pendiente | | |
 | F3-11 Rutas sueltas | F1, F2-2 | `crm`, `reportes`, `marca`, `marcas`, `ajustes`, `tareas` | Pendiente | | |
 | F3-12 Componentes grandes | F1, F2-2 | Ver lista en la tarea | Pendiente | | |
 | F3-13 Rutas restantes | F1, F2-2 | `ia`, `automatizaciones`, `notificaciones`, `onboarding`, `register`, `cotizacion`, `invitacion` | Pendiente | | |
-| F3-14 Vistas públicas | F1, F2-2 | `share`, `reporte` | Pendiente | | |
+| F3-14 Vistas públicas | F1, F2-2 | `share`, `reporte` | En curso | `impl-f3-14` | `deslop/f3-14` |
 | F3-15 Landing y chat en vivo | F1, F2-2 | `app/page`, `lib/chat-live` | Pendiente | | |
 | F4-1 Tokens | F0 | CSS | Hecha | `impl-f4-1` | #63 |
-| F4-2 Tokens de estado | F4-1 | CSS, guía | Hecha | impl-f4-2 | #70 |
+| F4-2 Tokens de estado | F4-1 | CSS, guía | Hecha | `impl-f4-2` | #70 |
 | F4-3 `dashboard-polish.css` | F4-1 | CSS, `(app)/layout` | Pendiente | | |
 | F4-4 `hubly-saas.css` | F4-3 | CSS | Pendiente | | |
 | F4-5 `!important` y oscuro | F4-4 | CSS | Pendiente | | |
 | F4-6 `style={{}}` | F4-1 | Ver lotes | Pendiente | | |
 | F4-7 Emojis y restos | F4-1, F5-2 | Varios | Pendiente | | |
 | F5-1 Anuncios | D1, F5-3 | `anuncios` | Pendiente | | |
-| F5-2 Logros | D2 | `equipo` | En curso | `impl-f5-2` | |
+| F5-2 Logros | D2 | `equipo` | Hecha | `impl-f5-2` | #67 |
 | F5-3 Modo demo | D3, F2 | `backendEnabled` | Pendiente | | |
 | F6-1 Excepciones | F1 a F5 | Varios | Pendiente | | |
 | F6-2 Topes | F6-1 | `scripts/` | Pendiente | | |
@@ -131,5 +131,7 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 | 2026-11-04 | F3-2 (#68) | Revisión independiente y fusión (`5e973d4`): movidos los componentes de `components/app/dashboard/inicio/` a `components/app/dashboard/` en dos commits, eliminado `view: InicioViewModel` e `inicioView-shared.tsx`, preservado `filterByBrand` compartido entre widgets con props explícitas (`≤ 6` por componente) y `selectGreetingAndDate` antes de `<MotionConfig>` para abortar limpio el prerender de Next 16 (`cacheComponents`), extraídas reglas puras a `lib/domain/dashboard.ts` con pruebas en `lib/domain/dashboard.test.ts` (4/4) y convertidos los `style={{` estáticos a `.hubly-dashboard-*` en `dashboard.css`. Archivos con `view`: `24 → 17`; `style={{`: `1.366 → 1.202`; deuda `check:ui`: `2.248 → 2.110`. |
 | 2026-11-04 | F3-7 (#69) | Revisión independiente y fusión (`3e64506`): movido `SaludCuentasView.tsx` (851 líneas) a `components/app/salud/` en un primer commit y partido en `SaludCuentasView` (145), `useSaludCuentasView` (181), `SaludCabecera` (188), `SaludSugerencias` (133), `SaludTarjetaMarca` (165) y `SaludCompromisos` (279), todos con `≤ 7` props explícitas y sin `view`. Extraídas reglas puras (`resolveCommitmentPeriodKey`, `sortEvaluatedAccounts`, `createCommitmentDraft`, `buildCommitmentSavePayload`) a `lib/domain/account-health.ts` con pruebas en `lib/domain/account-health.test.ts` (7/7). Archivos sobre 400 líneas: `28 → 27`; `eslint-disable`: `78 → 77`. |
 | 2026-11-04 | F3-1 (#71) | Revisión independiente (2 rondas) y fusión (`d2b9c32`): movidos `EquipoView.tsx`, `MemberDrawer.tsx` y `dashboard/team/*` a `components/app/equipo/` en un primer commit, eliminado `view: EquipoViewModel` con props explícitas (`≤ 7`), partidos `EquipoCabecera` (`EquipoFiltros`) y `EquipoResumen` (`EquipoTarjetasResumen`) bajo 300 líneas, extraídas las reglas puras a `lib/domain/team.ts` con pruebas en `lib/domain/team.test.ts` (8/8) y convertidos los `style={{` estáticos a `.hubly-equipo-*` en `equipo.css` (`0` violaciones en `check:ui`, sin bloque `:root` ni tokens prohibidos). Archivos sobre 400 líneas: `27 → 26`; archivos con `view`: `17 → 12`; `style={{`: `1.202 → 1.058`; deuda `check:ui`: `2.110 → 1.923`. |
-| 2026-11-04 | F4-2 (#70) | Revisión independiente (2 rondas) y cierre de la Ola 2: definidos `--ui-danger*`, `--ui-success*` y `--ui-warning*` en claro y oscuro en `app/tokens.css` y documentados en la §3 de `docs/GUIA-UX-UI-AGENTES.md`, con contraste WCAG ≥ 4.5:1 en ambos modos (`--ui-danger: #DC2626` 4.83:1 con `--on-accent`). Sustituidos colores fijos de estado en CSS y componentes sin afectar fondos neutros ni rutas imprimibles fuera de `.hubly-app-root`. `color-fijo` total baja a **341** (`304` en `(app)` + `37` en rutas, `< 350`); deuda `check:ui` total: `1.923 → 1.811` (`584` de siempre + `1.227` nuevas); exenciones `ui-ok:`: `20 → 18`; 66/66 capturas en verde. **Ola 2 cerrada.** Siguiente en Ola 3: F3-4 (Anuncios), F3-6 (Libreta y sugerencias) y F3-8 (Calendario). |
-| 2026-11-04 | Ola 3 (F3-4, F3-6, F3-8) | En curso en worktrees `Hubly-wt/f3-4`, `Hubly-wt/f3-6` y `Hubly-wt/f3-8`, ramas `deslop/f3-4`, `deslop/f3-6` y `deslop/f3-8`. Archivos disjuntos: `anuncios/_vista/` → `components/app/anuncios/`, `NotebookReaderModal.tsx` + `components/app/sugerencias/`, y `app/(app)/calendario/page.tsx` → `components/app/social/`. |
+| 2026-11-04 | F4-2 (#70) | Revisión independiente (2 rondas) y cierre de la Ola 2 (`0783f3f`): definidos `--ui-danger*`, `--ui-success*` y `--ui-warning*` en claro y oscuro en `app/tokens.css` y documentados en la §3 de `docs/GUIA-UX-UI-AGENTES.md`, con contraste WCAG ≥ 4.5:1 en ambos modos (`--ui-danger: #DC2626` 4.83:1 con `--on-accent`). Sustituidos colores fijos de estado en CSS y componentes sin afectar fondos neutros ni rutas imprimibles fuera de `.hubly-app-root`. `color-fijo` total baja a **341** (`304` en `(app)` + `37` en rutas, `< 350`); deuda `check:ui` total: `1.923 → 1.811` (`584` de siempre + `1.227` nuevas); exenciones `ui-ok:`: `20 → 18`; 66/66 capturas en verde. **Ola 2 cerrada.** |
+| 2026-11-04 | F3-4 (#72) | Revisión de coordinación y fusión (`59a9a58`): movida la vista de `app/(app)/anuncios/_vista/` a `components/app/anuncios/` en un primer commit y eliminado `view: DemoAnunciosPageModel`, `demoAnunciosPage-shared.tsx` y las carpetas `_vista/` y `partes/` en el segundo. Extraídos `SAMPLE_ADS`, `SAMPLE_ADS_KPIS` y `filterSampleAds` a `lib/domain/ads.ts` con pruebas en `lib/domain/ads.test.ts` (3/3) y convertidos los `style={{` estáticos a `.hubly-anuncios-*` en `anuncios.css` (`0` violaciones en `check:ui`). Archivos con `view`: `12 → 9`; `style={{`: `1.058 → 968`; deuda `check:ui`: `1.811 → 1.709`. |
+| 2026-11-04 | F3-8 (#73) | Revisión independiente y fusión (`bc3fd18`): `app/(app)/calendario/page.tsx` (804 → 8 líneas) pasa a `components/app/social/CalendarioView.tsx` y sus secciones (`CalendarioCabecera`, `CalendarioFiltros`, `CalendarioLista`, `CalendarioMes`, `CalendarioMarcas`, `CalendarioActividadModal`, `useCalendarioView.ts`, `social.css`), todas con `≤ 7` props explícitas y `0` prop `view`. Extraídas las funciones puras de agenda a `lib/domain/posts.ts` con pruebas en `lib/domain/posts.test.ts` (14/14). Las 3 capturas de referencia de `/calendario` pasan sin diferencias. Archivos sobre 400 líneas: `26 → 25`; `page.tsx` sobre 80 líneas: `17 → 16`; `style={{`: `968 → 961`; deuda `check:ui`: `1.709 → 1.700`. |
+| 2026-11-04 | Cierre del día (F3-6, F3-9, F3-14) | **F3-6 (#74)** en revisión en `Hubly-wt/f3-6` (`deslop/f3-6`, commit `3d439fd`), con los 3 checks de CI (`web`, `secretos`, `flujos-con-cuentas`) en verde y 66/66 capturas visuales en verde (`check:ui` baja a `1.512`, archivos sobre 400 líneas a `23`, archivos con `view` a `6`, `style={{` a `852`), pendiente solo de revisión independiente y fusión. **F3-9** en curso en `Hubly-wt/f3-9` (`deslop/f3-9`, commits `ff32587` y `0ab4dfe` subidos a `origin/deslop/f3-9`), pendiente de correr verificaciones finales y abrir PR. **F3-14** con worktree preparado en `Hubly-wt/f3-14` (`deslop/f3-14`). |
