@@ -8,18 +8,18 @@ Antes de iniciar una tarea, quien coordina la marca **En curso** con su agente. 
 
 Se obtienen con `node scripts/medir-deslop.mjs`, desde `web/`.
 
-| Medida | Partida (`aa4a1d3`) | Anterior (`d7889b1`) | Actual (`44a5716`) | Meta |
+| Medida | Partida (`aa4a1d3`) | Anterior (`44a5716`) | Actual (`dd0905d`) | Meta |
 |---|---:|---:|---:|---:|
 | Líneas de `lib/store.ts` | 2,304 | 101 | 101 | < 150 |
-| Archivos sobre 400 líneas, sin simuladores ni iconos | 35 | 25 | 22 | 0 |
-| `page.tsx` sobre 80 líneas | 17 | 16 | 15 | 0 |
-| Archivos con prop `view` | 33 | 9 | 6 | 0 |
-| `style={{` sin simuladores | 1,475 | 961 | 855 | < 150 |
-| Deuda de `check:ui`: reglas de siempre | 864 | 573 | 497 | < 100 |
-| Deuda de `check:ui`: reglas nuevas | 1,628 | 1,127 | 1,018 | 0 |
-| Deuda de `check:ui`: total | 2,492 | 1,700 | 1,515 | < 100 |
+| Archivos sobre 400 líneas, sin simuladores ni iconos | 35 | 22 | 21 | 0 |
+| `page.tsx` sobre 80 líneas | 17 | 15 | 14 | 0 |
+| Archivos con prop `view` | 33 | 6 | 6 | 0 |
+| `style={{` sin simuladores | 1,475 | 855 | 804 | < 150 |
+| Deuda de `check:ui`: reglas de siempre | 864 | 497 | 471 | < 100 |
+| Deuda de `check:ui`: reglas nuevas | 1,628 | 1,018 | 966 | 0 |
+| Deuda de `check:ui`: total | 2,492 | 1,515 | 1,437 | < 100 |
 | `!important` en CSS | 157 | 157 | 157 | < 10 |
-| Líneas con `eslint-disable` | 79 | 77 | 74 | < 25 |
+| Líneas con `eslint-disable` | 79 | 74 | 73 | < 25 |
 | Exenciones `ui-ok:` | 21 | 18 | 18 | No sube |
 | `as unknown as` | 7 | 9 | 9 | ≤ 2 |
 | Archivos que leen `backendEnabled` | 39 | 42 | 42 | ≤ 3, tras D3 |
@@ -69,7 +69,7 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F3-11 Rutas sueltas | F1, F2-2 | `crm`, `reportes`, `marca`, `marcas`, `ajustes`, `tareas` | Pendiente | | |
 | F3-12 Componentes grandes | F1, F2-2 | Ver lista en la tarea | Pendiente | | |
 | F3-13 Rutas restantes | F1, F2-2 | `ia`, `automatizaciones`, `notificaciones`, `onboarding`, `register`, `cotizacion`, `invitacion` | Pendiente | | |
-| F3-14 Vistas públicas | F1, F2-2 | `share`, `reporte` | En curso | `impl-f3-14` | `deslop/f3-14` |
+| F3-14 Vistas públicas | F1, F2-2 | `share`, `reporte` | Hecha | `impl-f3-14` | #78 |
 | F3-15 Landing y chat en vivo | F1, F2-2 | `app/page`, `lib/chat-live` | Pendiente | | |
 | F4-1 Tokens | F0 | CSS | Hecha | `impl-f4-1` | #63 |
 | F4-2 Tokens de estado | F4-1 | CSS, guía | Hecha | `impl-f4-2` | #70 |
@@ -137,3 +137,4 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 | 2026-11-04 | Cierre del día (F3-6, F3-9, F3-14) | **F3-6 (#74)** en revisión en `Hubly-wt/f3-6` (`deslop/f3-6`, commit `3d439fd`), con los 3 checks de CI (`web`, `secretos`, `flujos-con-cuentas`) en verde y 66/66 capturas visuales en verde (`check:ui` baja a `1.512`, archivos sobre 400 líneas a `23`, archivos con `view` a `6`, `style={{` a `852`), pendiente solo de revisión independiente y fusión. **F3-9** en curso en `Hubly-wt/f3-9` (`deslop/f3-9`, commits `ff32587` y `0ab4dfe` subidos a `origin/deslop/f3-9`), pendiente de correr verificaciones finales y abrir PR. **F3-14** con worktree preparado en `Hubly-wt/f3-14` (`deslop/f3-14`). |
 | 2026-11-04 | F3-6 (#74) | Revisión independiente en dos rondas y fusión (`2eb542f`). La primera revisión **bloqueó** el PR por dos regresiones de color: el avatar de sugerencias perdió `rec.brandColor` (quedaba con `--hb-accent`) y el lector de libretas dejó de pintar lomo e icono con la cubierta (`resolveNotebookColorSpec` quedó sin uso). Se corrigieron con los valores calculados en línea (`489fab7`), comprobados con sonda de navegador: 3 colores de marca distintos en los avatares, y lomo `rgb(58,34,16) → rgb(74,37,17)` e icono `rgb(200,122,81)` al elegir Terracota. Se admitieron los 3 `style-inline` en la base (neto: `check:ui` **1.515**, aún por debajo de `1.700`) y `check-deuda` en verde. `NotebookReaderModal.tsx` (866 líneas) pasa a `notebooks/` (5 módulos + CSS) y `SugerenciasCuerpo.tsx` (492) a `sugerencias/` (5 módulos + CSS); reglas puras a `lib/domain/notebooks.ts` y `lib/domain/recommendations.ts` con pruebas. Archivos con `view`: `9 → 6`; `style={{`: `961 → 855`; archivos sobre 400: `25 → 23`. **Pendiente declarado, no bloqueante:** la paleta Kraft del lector sigue con tokens genéricos (deja de ser crema), `sugerencias/` no se movió a `marca/` (02-ARQUITECTURA) y los iconos de métricas perdieron su color; se decidirá en F3-11 o en una tarea aparte. |
 | 2026-11-04 | F3-9 (#76) | Revisión independiente en dos rondas y fusión (`44a5716`). La primera revisión **bloqueó** por dos textos corruptos (`Se enviarÃ¡` y un comentario `sesiÃ³n`, introducidos al editar el archivo con ida y vuelta de PowerShell); se corrigieron en `ece54da` y el revisor confirmó cero secuencias U+00C3/U+00C2 en todo el dominio. `app/(app)/chat/page.tsx` pasa de 776 a 6 líneas; la vista queda en `components/app/chat/` (5 archivos, `≤ 7` props, sin `view`) y las reglas en `lib/domain/chat.ts` con 6 pruebas. Evidencia: 11/11 `chat.spec.ts`, 66/66 capturas visuales, `lint`/`tsc`/`check:ui`/`check:size`/`check:capas`/`check:muerto`/`build`/`test:db` en verde. `page.tsx` sobre 80: `16 → 15`; archivos sobre 400: `23 → 22`. Quedan sin mover al dominio reglas menores del hook (cola, adjuntos, preferencias, búsqueda del directo) y la cobertura de ramas de `chat.test.ts` es parcial; ninguna bloquea. |
+| 2026-11-04 | F3-14 (#78) | Revisión independiente en dos rondas y fusión (`dd0905d`). La primera revisión **bloqueó** porque `countSharePosts` contaba los borradores como pendientes: el portal mostraba «2 aprobados · 4 por revisar» y «Aprobar todo el mes (4)», pero el store solo aprueba `pending`/`changes`, así que el botón quedaba a medias. Se corrigió (`a4e4354`) contando solo `pending` + `changes` y se ajustaron los estilos a los valores anteriores (radio de tarjeta 18, pie `#334155`, borde de cambios `var(--share-coral)`, botones 38/0 15/14). `app/share/[token]/page.tsx` pasa de 478 a 13 líneas y `app/reporte/[brandId]/page.tsx` de 56 a 9; vistas en `components/app/share/` (4 componentes + hook) y `components/app/reports/ReportePublico.tsx`; reglas en `lib/domain/share.ts` (6 pruebas) y `lib/domain/reports.ts` (2). Las rutas públicas dejan de depender del CSS de `(app)`: antes usaban clases `saas-*` que no se cargaban en `/share`, y ahora tienen paleta propia en `share.css`, `share-cards.css` y `reporte.css`; el reporte ya no importa `dashboard-polish.css` ni lleva un `<style>` con `!important`. Evidencia: sonda sin sesión y con enlace inválido, color de marca en el HTML del servidor, decisiones de aprobar y pedir cambios, 66/66 capturas visuales, `lint`/`tsc`/`check:ui`/`check:size`/`check:capas`/`check:muerto`/`check-deuda`/`build`/`test:db` en verde y 177/177 pruebas. `style={{`: `855 → 804`; `page.tsx` sobre 80: `15 → 14`; archivos sobre 400: `22 → 21`. Declarado: el portal ahora se ve con estilos propios (antes salía sin ellos), `resolveReportMonth` rechaza meses imposibles y quedan diferencias de 1–2 px por la escala de `check:ui`. |
