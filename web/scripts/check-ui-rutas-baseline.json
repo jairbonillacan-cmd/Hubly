@@ -19,17 +19,5 @@
   "app/register/page.tsx": {
     "style-inline": 16,
     "tamano-fuente": 1
-  },
-  "app/reporte/[brandId]/page.tsx": {
-    "color-fijo": 5,
-    "important": 1,
-    "style-inline": 6,
-    "tamano-fuente": 1
-  },
-  "app/share/[token]/page.tsx": {
-    "color-fijo": 9,
-    "rgb-fijo": 7,
-    "style-inline": 45,
-    "tamano-fuente": 4
   }
 }

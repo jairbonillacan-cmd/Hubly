@@ -225,11 +225,14 @@
   "components/app/reports/MonthlyReport.tsx": {
     "color-fijo": 1,
     "radio": 1,
-    "style-inline": 27,
+    "style-inline": 26,
     "tamano-fuente": 1
   },
   "components/app/salud/SaludTarjetaMarca.tsx": {
     "style-inline": 3
+  },
+  "components/app/share/SharePortalCabecera.tsx": {
+    "style-inline": 1
   },
   "components/app/shell/BrandSwitcher.tsx": {
     "color-fijo": 2,

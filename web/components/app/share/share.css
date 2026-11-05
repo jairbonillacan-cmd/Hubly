@@ -1,0 +1,300 @@
+/* Estilos base del portal público de revisión (components/app/share/share.css).
+   Vive fuera de `.hubly-app-root`: define su propia paleta clara y no depende de
+   los tokens de la app autenticada. La portada y el formato de cada post siguen
+   siendo datos y se pintan en línea. Las tarjetas viven en share-cards.css. */
+
+.hubly-share {
+  --share-paper: #F8FAFC;
+  --share-surface: #FFFFFF;
+  --share-ink: #0F172A;
+  --share-ink-soft: #475569;
+  --share-ink-muted: #64748B;
+  --share-line: #E2E8F0;
+  --share-line-strong: #CBD5E1;
+  --share-header: #0F241C;
+  --share-header-ink: #FFFFFF;
+  --share-header-soft: rgb(255 255 255 / 0.68);
+  --share-header-edge: rgb(255 255 255 / 0.2);
+  --share-header-field: rgb(255 255 255 / 0.08);
+  --share-header-ghost: rgb(255 255 255 / 0.1);
+  --share-format-bg: rgb(15 36 28 / 0.8);
+  --share-badge-bg: rgb(16 185 129 / 0.22);
+  --share-badge-ink: #6EE7B7;
+  --share-pending-ink: #9A6406;
+  --share-danger-bg: #FDE8E6;
+  --share-danger-ink: #B3261E;
+  --share-ok-bg: #EAF6FC;
+  --share-accent: #16324F;
+  --share-accent-hover: #0F2539;
+  --share-on-accent: #FFFFFF;
+  --share-shadow: 0 1px 3px rgb(15 23 42 / 0.02);
+  --share-shadow-soft: 0 1px 2px rgb(22 50 79 / 0.25);
+  color-scheme: light;
+  min-height: 100vh;
+  background: var(--share-paper);
+  color: var(--share-ink);
+  font-family: var(--font-display), system-ui, sans-serif;
+  padding-bottom: 64px;
+}
+
+.hubly-share--center {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.hubly-share-invalid-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.hubly-share-invalid-text {
+  font-size: 14px;
+  margin: 0;
+  color: var(--share-ink-soft);
+}
+
+/* Cabecera */
+.hubly-share-header {
+  background: var(--share-header);
+  color: var(--share-header-ink);
+  padding: 18px clamp(20px, 5vw, 56px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.hubly-share-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hubly-share-brand-chip {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  color: var(--share-header-ink);
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.hubly-share-brand-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hubly-share-brand-name {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.hubly-share-brand-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: var(--share-badge-bg);
+  color: var(--share-badge-ink);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hubly-share-brand-meta {
+  font-size: 12px;
+  color: var(--share-header-soft);
+}
+
+.hubly-share-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hubly-share-signer {
+  padding: 7px 12px;
+  border-radius: 9px;
+  border: 1px solid var(--share-header-edge);
+  background: var(--share-header-field);
+  color: var(--share-header-ink);
+  font-size: 12.5px;
+  font-family: inherit;
+}
+
+.hubly-share-signer::placeholder {
+  color: var(--share-header-soft);
+}
+
+/* Botones del portal */
+.hubly-share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--share-ink-soft);
+  background: var(--share-surface);
+  border: 1px solid var(--share-line-strong);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 130ms ease, border-color 130ms ease, color 130ms ease;
+}
+
+.hubly-share-btn:hover:not(:disabled) {
+  background: var(--share-paper);
+  border-color: var(--share-ink-muted);
+  color: var(--share-ink);
+}
+
+.hubly-share-btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.hubly-share-btn--sm {
+  height: 32px;
+  padding: 0 11px;
+  border-radius: 9px;
+  font-size: 12.5px;
+}
+
+.hubly-share-btn--primary {
+  background: var(--share-accent);
+  color: var(--share-on-accent);
+  border-color: var(--share-accent);
+  box-shadow: var(--share-shadow-soft);
+}
+
+.hubly-share-btn--primary:hover:not(:disabled) {
+  background: var(--share-accent-hover);
+  border-color: var(--share-accent-hover);
+  color: var(--share-on-accent);
+}
+
+.hubly-share-btn--outline {
+  border: 1.5px solid var(--share-accent);
+}
+
+.hubly-share-btn--ghost {
+  background: var(--share-header-ghost);
+  color: var(--share-header-ink);
+  border-color: var(--share-header-edge);
+}
+
+.hubly-share-btn--ghost:hover:not(:disabled) {
+  background: var(--share-header-field);
+  border-color: var(--share-header-edge);
+  color: var(--share-header-ink);
+}
+
+.hubly-share-btn--grow {
+  flex: 1;
+}
+
+/* Contenido */
+.hubly-share-body {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px clamp(20px, 4vw, 40px);
+}
+
+.hubly-share-intro {
+  padding: 22px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: var(--share-surface);
+  border: 1px solid var(--share-line);
+  border-radius: 16px;
+  box-shadow: var(--share-shadow);
+}
+
+.hubly-share-intro-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--share-accent);
+  margin-bottom: 4px;
+}
+
+.hubly-share-title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--share-ink);
+  margin: 0;
+}
+
+.hubly-share-title-brand {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.hubly-share-lede {
+  color: var(--share-ink-muted);
+  font-size: 13.5px;
+  margin: 4px 0 0;
+}
+
+.hubly-share-counts {
+  display: flex;
+  gap: 14px;
+}
+
+.hubly-share-count {
+  text-align: center;
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: var(--share-paper);
+}
+
+.hubly-share-count-value {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--share-accent);
+}
+
+.hubly-share-count-value--pending {
+  color: var(--share-pending-ink);
+}
+
+.hubly-share-count-label {
+  font-size: 11.5px;
+  color: var(--share-ink-muted);
+}
+
+.hubly-share-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 560px) {
+  .hubly-share-header,
+  .hubly-share-body {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}

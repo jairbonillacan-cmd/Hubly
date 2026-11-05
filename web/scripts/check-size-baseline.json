@@ -6,7 +6,6 @@
   "app/(app)/reportes/page.tsx": 638,
   "app/globals.css": 2060,
   "app/page.tsx": 525,
-  "app/share/[token]/page.tsx": 479,
   "components/app/ArchivosYProyectosView.tsx": 658,
   "components/app/chat/ChatComposer.tsx": 590,
   "components/app/chat/ChatMessageRow.tsx": 488,
