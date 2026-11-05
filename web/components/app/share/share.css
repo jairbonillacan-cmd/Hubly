@@ -35,7 +35,6 @@
   min-height: 100vh;
   background: var(--share-paper);
   color: var(--share-ink);
-  font-family: var(--font-display), system-ui, sans-serif;
   padding-bottom: 64px;
 }
 
@@ -93,7 +92,7 @@
 }
 
 .hubly-share-brand-name {
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 16px;
 }
@@ -238,7 +237,6 @@
 }
 
 .hubly-share-title {
-  font-family: var(--font-display), system-ui, sans-serif;
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -272,7 +270,7 @@
 }
 
 .hubly-share-count-value {
-  font-family: var(--font-display), system-ui, sans-serif;
+  font-family: var(--font-display);
   font-size: 20px;
   font-weight: 700;
   color: var(--share-accent);
