@@ -7,6 +7,7 @@
   --share-paper: #F8FAFC;
   --share-surface: #FFFFFF;
   --share-ink: #0F172A;
+  --share-ink-2: #334155;
   --share-ink-soft: #475569;
   --share-ink-muted: #64748B;
   --share-line: #E2E8F0;
@@ -23,6 +24,7 @@
   --share-pending-ink: #9A6406;
   --share-danger-bg: #FDE8E6;
   --share-danger-ink: #B3261E;
+  --share-coral: #D9483B;
   --share-ok-bg: #EAF6FC;
   --share-accent: #16324F;
   --share-accent-hover: #0F2539;
@@ -137,12 +139,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  height: 36px;
-  padding: 0 14px;
+  gap: 8px;
+  height: 38px;
+  padding: 0 15px;
   border-radius: 10px;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--share-ink-soft);
   background: var(--share-surface);

@@ -7,7 +7,7 @@
   flex-direction: column;
   background: var(--share-surface);
   border: 1px solid var(--share-line);
-  border-radius: 16px;
+  border-radius: 18px;
   box-shadow: var(--share-shadow);
 }
 
@@ -16,7 +16,7 @@
 }
 
 .hubly-share-card.is-changes {
-  border: 2px solid var(--share-danger-ink);
+  border: 2px solid var(--share-coral);
 }
 
 .hubly-share-card-media {
@@ -104,7 +104,7 @@
 
 .hubly-share-card-caption {
   font-size: 13.5px;
-  color: var(--share-ink-soft);
+  color: var(--share-ink-2);
   line-height: 1.55;
   white-space: pre-line;
   margin: 0 0 16px;

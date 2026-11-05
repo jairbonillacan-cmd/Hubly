@@ -23,7 +23,7 @@ test("resolveSharePostState agrupa los estados que el cliente ve como aprobados"
   assert.equal(resolveSharePostState(post({ status: "draft" })), "pending");
 });
 
-test("countSharePosts separa listos de pendientes e incluye los cambios en pendientes", () => {
+test("countSharePosts cuenta solo pendientes y cambios, y deja fuera los borradores", () => {
   assert.deepEqual(
     countSharePosts([
       post({ status: "approved" }),
@@ -31,8 +31,9 @@ test("countSharePosts separa listos de pendientes e incluye los cambios en pendi
       post({ status: "changes" }),
       post({ status: "pending" }),
       post({ status: "draft" }),
+      post({ status: "draft" }),
     ]),
-    { approved: 2, pending: 3 },
+    { approved: 2, pending: 2 },
   );
   assert.deepEqual(countSharePosts([]), { approved: 0, pending: 0 });
 });

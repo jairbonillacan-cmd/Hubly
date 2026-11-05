@@ -16,13 +16,13 @@ export function resolveSharePostState(post: Pick<SocialPost, "status">): SharePo
   return "pending";
 }
 
-/** Lo que ya está listo frente a lo que sigue en manos del cliente (los cambios también cuentan). */
+/** Lo que está listo frente a lo que espera al cliente. Los borradores no se cuentan. */
 export function countSharePosts(posts: Pick<SocialPost, "status">[]): ShareCounts {
   let approved = 0;
   let pending = 0;
   for (const post of posts) {
     if (APPROVED.has(post.status)) approved += 1;
-    else pending += 1;
+    else if (post.status === "pending" || post.status === "changes") pending += 1;
   }
   return { approved, pending };
 }
