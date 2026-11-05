@@ -8,18 +8,18 @@ Antes de iniciar una tarea, quien coordina la marca **En curso** con su agente. 
 
 Se obtienen con `node scripts/medir-deslop.mjs`, desde `web/`.
 
-| Medida | Partida (`aa4a1d3`) | Actual (`bc3fd18`) | En PR #74 (`F3-6`) | Meta |
+| Medida | Partida (`aa4a1d3`) | Anterior (`d7889b1`) | Actual (`44a5716`) | Meta |
 |---|---:|---:|---:|---:|
 | Líneas de `lib/store.ts` | 2,304 | 101 | 101 | < 150 |
-| Archivos sobre 400 líneas, sin simuladores ni iconos | 35 | 25 | 23 | 0 |
-| `page.tsx` sobre 80 líneas | 17 | 16 | 16 | 0 |
+| Archivos sobre 400 líneas, sin simuladores ni iconos | 35 | 25 | 22 | 0 |
+| `page.tsx` sobre 80 líneas | 17 | 16 | 15 | 0 |
 | Archivos con prop `view` | 33 | 9 | 6 | 0 |
-| `style={{` sin simuladores | 1,475 | 961 | 852 | < 150 |
+| `style={{` sin simuladores | 1,475 | 961 | 855 | < 150 |
 | Deuda de `check:ui`: reglas de siempre | 864 | 573 | 497 | < 100 |
-| Deuda de `check:ui`: reglas nuevas | 1,628 | 1,127 | 1,015 | 0 |
-| Deuda de `check:ui`: total | 2,492 | 1,700 | 1,512 | < 100 |
+| Deuda de `check:ui`: reglas nuevas | 1,628 | 1,127 | 1,018 | 0 |
+| Deuda de `check:ui`: total | 2,492 | 1,700 | 1,515 | < 100 |
 | `!important` en CSS | 157 | 157 | 157 | < 10 |
-| Líneas con `eslint-disable` | 79 | 77 | 77 | < 25 |
+| Líneas con `eslint-disable` | 79 | 77 | 74 | < 25 |
 | Exenciones `ui-ok:` | 21 | 18 | 18 | No sube |
 | `as unknown as` | 7 | 9 | 9 | ≤ 2 |
 | Archivos que leen `backendEnabled` | 39 | 42 | 42 | ≤ 3, tras D3 |
@@ -61,10 +61,10 @@ Los simuladores e iconos sobre 400 líneas (9) son excepción del ADR 0005.
 | F3-3 Parrillas | F1, F2-2 | `parrillas/_vista/` | Hecha | `impl-f3-3` | #66 |
 | F3-4 Anuncios | F1, F2-2, D1 | `anuncios/_vista/` | Hecha | `impl-f3-4` | #72 |
 | F3-5 Editor de post | F1, F2-2 | `compositor/` | Pendiente | | |
-| F3-6 Libreta y sugerencias | F1, F2-2 | `NotebookReaderModal`, `sugerencias/` | En revisión | `impl-f3-6` | #74 |
+| F3-6 Libreta y sugerencias | F1, F2-2 | `NotebookReaderModal`, `sugerencias/` | Hecha | `impl-f3-6` | #74 |
 | F3-7 Salud | F1, F2-2 | `SaludCuentasView` | Hecha | `impl-f3-7` | #69 |
 | F3-8 Calendario | F1, F2-2 | `calendario/page` | Hecha | `impl-f3-8` | #73 |
-| F3-9 Chat | F1, F2-2 | `chat/page` | En curso | `impl-f3-9` | `deslop/f3-9` |
+| F3-9 Chat | F1, F2-2 | `chat/page` | Hecha | `impl-f3-9` | #76 |
 | F3-10 Layout | F1, F2-2 | `(app)/layout` | Pendiente | | |
 | F3-11 Rutas sueltas | F1, F2-2 | `crm`, `reportes`, `marca`, `marcas`, `ajustes`, `tareas` | Pendiente | | |
 | F3-12 Componentes grandes | F1, F2-2 | Ver lista en la tarea | Pendiente | | |
@@ -135,3 +135,5 @@ Lo que un agente descubra y otro deba saber: fecha, tarea y nota. Incluye aquí 
 | 2026-11-04 | F3-4 (#72) | Revisión de coordinación y fusión (`59a9a58`): movida la vista de `app/(app)/anuncios/_vista/` a `components/app/anuncios/` en un primer commit y eliminado `view: DemoAnunciosPageModel`, `demoAnunciosPage-shared.tsx` y las carpetas `_vista/` y `partes/` en el segundo. Extraídos `SAMPLE_ADS`, `SAMPLE_ADS_KPIS` y `filterSampleAds` a `lib/domain/ads.ts` con pruebas en `lib/domain/ads.test.ts` (3/3) y convertidos los `style={{` estáticos a `.hubly-anuncios-*` en `anuncios.css` (`0` violaciones en `check:ui`). Archivos con `view`: `12 → 9`; `style={{`: `1.058 → 968`; deuda `check:ui`: `1.811 → 1.709`. |
 | 2026-11-04 | F3-8 (#73) | Revisión independiente y fusión (`bc3fd18`): `app/(app)/calendario/page.tsx` (804 → 8 líneas) pasa a `components/app/social/CalendarioView.tsx` y sus secciones (`CalendarioCabecera`, `CalendarioFiltros`, `CalendarioLista`, `CalendarioMes`, `CalendarioMarcas`, `CalendarioActividadModal`, `useCalendarioView.ts`, `social.css`), todas con `≤ 7` props explícitas y `0` prop `view`. Extraídas las funciones puras de agenda a `lib/domain/posts.ts` con pruebas en `lib/domain/posts.test.ts` (14/14). Las 3 capturas de referencia de `/calendario` pasan sin diferencias. Archivos sobre 400 líneas: `26 → 25`; `page.tsx` sobre 80 líneas: `17 → 16`; `style={{`: `968 → 961`; deuda `check:ui`: `1.709 → 1.700`. |
 | 2026-11-04 | Cierre del día (F3-6, F3-9, F3-14) | **F3-6 (#74)** en revisión en `Hubly-wt/f3-6` (`deslop/f3-6`, commit `3d439fd`), con los 3 checks de CI (`web`, `secretos`, `flujos-con-cuentas`) en verde y 66/66 capturas visuales en verde (`check:ui` baja a `1.512`, archivos sobre 400 líneas a `23`, archivos con `view` a `6`, `style={{` a `852`), pendiente solo de revisión independiente y fusión. **F3-9** en curso en `Hubly-wt/f3-9` (`deslop/f3-9`, commits `ff32587` y `0ab4dfe` subidos a `origin/deslop/f3-9`), pendiente de correr verificaciones finales y abrir PR. **F3-14** con worktree preparado en `Hubly-wt/f3-14` (`deslop/f3-14`). |
+| 2026-11-04 | F3-6 (#74) | Revisión independiente en dos rondas y fusión (`2eb542f`). La primera revisión **bloqueó** el PR por dos regresiones de color: el avatar de sugerencias perdió `rec.brandColor` (quedaba con `--hb-accent`) y el lector de libretas dejó de pintar lomo e icono con la cubierta (`resolveNotebookColorSpec` quedó sin uso). Se corrigieron con los valores calculados en línea (`489fab7`), comprobados con sonda de navegador: 3 colores de marca distintos en los avatares, y lomo `rgb(58,34,16) → rgb(74,37,17)` e icono `rgb(200,122,81)` al elegir Terracota. Se admitieron los 3 `style-inline` en la base (neto: `check:ui` **1.515**, aún por debajo de `1.700`) y `check-deuda` en verde. `NotebookReaderModal.tsx` (866 líneas) pasa a `notebooks/` (5 módulos + CSS) y `SugerenciasCuerpo.tsx` (492) a `sugerencias/` (5 módulos + CSS); reglas puras a `lib/domain/notebooks.ts` y `lib/domain/recommendations.ts` con pruebas. Archivos con `view`: `9 → 6`; `style={{`: `961 → 855`; archivos sobre 400: `25 → 23`. **Pendiente declarado, no bloqueante:** la paleta Kraft del lector sigue con tokens genéricos (deja de ser crema), `sugerencias/` no se movió a `marca/` (02-ARQUITECTURA) y los iconos de métricas perdieron su color; se decidirá en F3-11 o en una tarea aparte. |
+| 2026-11-04 | F3-9 (#76) | Revisión independiente en dos rondas y fusión (`44a5716`). La primera revisión **bloqueó** por dos textos corruptos (`Se enviarÃ¡` y un comentario `sesiÃ³n`, introducidos al editar el archivo con ida y vuelta de PowerShell); se corrigieron en `ece54da` y el revisor confirmó cero secuencias U+00C3/U+00C2 en todo el dominio. `app/(app)/chat/page.tsx` pasa de 776 a 6 líneas; la vista queda en `components/app/chat/` (5 archivos, `≤ 7` props, sin `view`) y las reglas en `lib/domain/chat.ts` con 6 pruebas. Evidencia: 11/11 `chat.spec.ts`, 66/66 capturas visuales, `lint`/`tsc`/`check:ui`/`check:size`/`check:capas`/`check:muerto`/`build`/`test:db` en verde. `page.tsx` sobre 80: `16 → 15`; archivos sobre 400: `23 → 22`. Quedan sin mover al dominio reglas menores del hook (cola, adjuntos, preferencias, búsqueda del directo) y la cobertura de ramas de `chat.test.ts` es parcial; ninguna bloquea. |
