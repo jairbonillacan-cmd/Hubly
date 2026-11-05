@@ -53,7 +53,7 @@ function writeIds(key: string, ids: string[]) {
   try {
     window.localStorage.setItem(key, JSON.stringify(ids));
   } catch {
-    /* Sin almacenamiento: la preferencia se queda solo en esta sesión. */
+    /* Sin almacenamiento: la preferencia se queda solo en esta sesiÃ³n. */
   }
 }
 
@@ -86,21 +86,21 @@ interface ChatSyncEffectsInput {
   channelQuery: string;
   rootsLength: number;
   scrollRef: React.RefObject<HTMLDivElement | null>;
-  keepScroll: React.MutableRefObject<number | null>;
+  keepScrollRef: React.MutableRefObject<number | null>;
 }
 
 function useChatSyncEffects(input: ChatSyncEffectsInput) {
   const {
     selectedId, setSelectedId, setFocusId, notice, setNotice, listQuery, liveReady,
     setRemoteResults, channels, markChatRead, messagesLength, focusId, channelQuery,
-    rootsLength, scrollRef, keepScroll,
+    rootsLength, scrollRef, keepScrollRef,
   } = input;
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const channel = params.get("c");
     if (channel) {
-      setSelectedId(channel); // eslint-disable-line react-hooks/set-state-in-effect -- dato del navegador o de la red tras hidratar
+      setSelectedId(channel);
       setFocusId(params.get("m"));
     }
   }, [setSelectedId, setFocusId]);
@@ -115,7 +115,7 @@ function useChatSyncEffects(input: ChatSyncEffectsInput) {
     const q = listQuery.trim();
     const search = chatRemote()?.search;
     if (q.length < 2 || !search) {
-      setRemoteResults([]); // eslint-disable-line react-hooks/set-state-in-effect -- dato del navegador o de la red tras hidratar
+      setRemoteResults([]);
       return;
     }
     const timer = window.setTimeout(() => void search(q).then(setRemoteResults), 250);
@@ -127,7 +127,7 @@ function useChatSyncEffects(input: ChatSyncEffectsInput) {
       selectedId === GENERAL_CHANNEL_ID ? channels.find((c) => c.type === "general")
       : selectedId === SELF_CHANNEL_ID ? channels.find((c) => c.type === "self")
       : undefined;
-    if (real) setSelectedId(real.id); // eslint-disable-line react-hooks/set-state-in-effect -- dato del navegador o de la red tras hidratar
+    if (real) setSelectedId(real.id);
   }, [selectedId, channels, setSelectedId]);
 
   useEffect(() => {
@@ -155,13 +155,13 @@ function useChatSyncEffects(input: ChatSyncEffectsInput) {
       return;
     }
     const el = scrollRef.current;
-    if (el && keepScroll.current !== null) {
-      el.scrollTop = el.scrollHeight - keepScroll.current;
-      keepScroll.current = null;
+    if (el && keepScrollRef.current !== null) {
+      el.scrollTop = el.scrollHeight - keepScrollRef.current;
+      keepScrollRef.current = null;
       return;
     }
     if (el && !channelQuery) el.scrollTop = el.scrollHeight;
-  }, [selectedId, rootsLength, focusId, channelQuery, scrollRef, keepScroll]);
+  }, [selectedId, rootsLength, focusId, channelQuery, scrollRef, keepScrollRef]);
 }
 
 function useChatStoreBindings() {
@@ -230,7 +230,7 @@ export function useChatView() {
   const [queueOpen, setQueueOpen] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [remoteResults, setRemoteResults] = useState<ChatMessage[]>([]);
-  const keepScroll = useRef<number | null>(null);
+  const keepScrollRef = useRef<number | null>(null);
   const [muted, toggleMutedId] = usePreferenceList(MUTED_KEY);
   const [pinnedChats, togglePinOf] = usePreferenceList(PINNED_KEY);
   const [hiddenChats, toggleHiddenOf] = usePreferenceList(HIDDEN_KEY);
@@ -275,7 +275,7 @@ export function useChatView() {
   useChatSyncEffects({
     selectedId, setSelectedId, setFocusId, notice, setNotice, listQuery, liveReady,
     setRemoteResults, channels, markChatRead, messagesLength: messages.length,
-    focusId, channelQuery, rootsLength: roots.length, scrollRef, keepScroll,
+    focusId, channelQuery, rootsLength: roots.length, scrollRef, keepScrollRef,
   });
 
   const select = useCallback((id: string | null) => {
@@ -343,7 +343,7 @@ export function useChatView() {
     hiddenCount > 0 || (selectedId && hasOlder[selectedId] && !channelQuery)
       ? () => {
           const el = scrollRef.current;
-          if (el) keepScroll.current = el.scrollHeight - el.scrollTop;
+          if (el) keepScrollRef.current = el.scrollHeight - el.scrollTop;
           setLimit((v) => v + PAGE_SIZE);
           if (hiddenCount === 0 && selectedId) void chatRemote()?.loadOlder(selectedId);
         }
@@ -353,7 +353,7 @@ export function useChatView() {
     if (!active) return;
     scheduleChatMessage({ channelId: active.id, text: text.trim(), sendAt: at, repeat, authorId: myId, sender: myName, senderInitials: myInitials });
     setQueueOpen(true);
-    setNotice(`Se enviará: ${scheduledLabel(at)}`);
+    setNotice(`Se enviarÃ¡: ${scheduledLabel(at)}`);
   };
 
   const subtitle = resolveChatSubtitle(active, channel, brandName, isSelf);
