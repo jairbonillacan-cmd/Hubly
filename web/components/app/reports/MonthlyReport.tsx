@@ -4,6 +4,7 @@ import { useState } from "react";
 import { buildMonthlyReport, type MonthlyReportData } from "@/lib/reporting";
 import { localIsoDate } from "@/lib/date";
 import type { BrandWorkspace, SocialPost } from "@/lib/types";
+import "./reporte.css";
 
 const fmt = (n: number) => n.toLocaleString("es-MX");
 const monthLabel = (m: string) =>
@@ -19,7 +20,7 @@ export function MonthlyReportBody({ brand, report }: { brand?: BrandWorkspace; r
     { label: "Interacción sobre alcance", value: report.engagementRate === null ? "—" : `${report.engagementRate.toFixed(1)}%` },
   ];
   return (
-    <div style={{ display: "grid", gap: 16 }}>
+    <div className="hubly-report-body">
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12 }}>
         {tiles.map((t) => (
           <div key={t.label} style={card}>
