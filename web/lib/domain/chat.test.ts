@@ -32,12 +32,16 @@ const member = (over: Partial<TeamMember>): TeamMember => ({
   role: "Strategist",
   email: "lucia@hubly.mx",
   initials: "LR",
-  color: "#16324F",
+  avatarInitial: "L",
+  avatarColor: "#16324F",
   status: "Activo",
-  tasksAssigned: 2,
+  baseActiveMinutes: 30,
+  brandsCount: 1,
   tasksCompleted: 1,
-  activeTasks: 1,
-  overdueTasks: 0,
+  tasksInProgress: 1,
+  postsPublished: 0,
+  activeTimeLabel: "30 min",
+  points: 0,
   brandIds: ["brand-a"],
   ...over,
 });
@@ -82,11 +86,11 @@ test("hasChatFileAttachment y selectChannelFiles detectan archivos y notas de vo
   assert.deepEqual(selectChannelFiles([fileMsg], null), []);
 });
 
-test("selectChatPeople excluye inactivos y a la persona actual por nombre o correo", () => {
+test("selectChatPeople excluye a quien no está activo y a la persona actual por nombre o correo", () => {
   const team: TeamMember[] = [
     member({ id: "tm-me", name: "Jair Bonilla", email: "jair@hubly.mx" }),
     member({ id: "tm-1", name: "Lucía Ramírez", email: "lucia@hubly.mx", initials: "" }),
-    member({ id: "tm-2", name: "Diego Soto", email: "diego@hubly.mx", status: "Inactivo" }),
+    member({ id: "tm-2", name: "Diego Soto", email: "diego@hubly.mx", status: "Invitado" }),
   ];
 
   assert.deepEqual(selectChatPeople(team, "Jair Bonilla", "jair@hubly.mx"), [

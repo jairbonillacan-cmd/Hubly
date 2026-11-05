@@ -13,7 +13,7 @@ import type {
   ChatMessage,
   SocialPost,
   TeamMember,
-  UserProfile,
+  WorkspaceProfile,
 } from "../types";
 import type { AddTaskInput } from "./tasks";
 
@@ -241,7 +241,7 @@ export function selectChannelPendingAttachments(
 export function resolveMessagePerson(
   m: ChatMessage,
   myName: string,
-  profile: Pick<UserProfile, "role" | "email"> | undefined,
+  profile: Pick<WorkspaceProfile, "role" | "email"> | undefined,
   team: TeamMember[],
   online: string[]
 ) {
