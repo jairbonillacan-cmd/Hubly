@@ -1,11 +1,171 @@
 import { calcPct } from "./account-health-evaluate";
 import { isTaskCompleted } from "./tasks";
 import type {
+  AccountCommitment,
   AccountRecommendation,
   BrandWorkspace,
   PostItem,
   AgencyTask,
+  RecommendationMetricKey,
 } from "../types";
+
+export interface SuggestedMetricItem {
+  id: string;
+  checked: boolean;
+  icon: "globe" | "mouse" | "form" | "chat" | "ig" | "fb";
+  title: string;
+  subtitle: string;
+  target: string;
+}
+
+export const DEFAULT_METRICS: SuggestedMetricItem[] = [
+  {
+    id: "m-lpv",
+    checked: true,
+    icon: "globe",
+    title: "Landing page views / semana",
+    subtitle: "Hoy llegan ~5.5 visitas a la página por semana",
+    target: "5.5",
+  },
+  {
+    id: "m-clicks",
+    checked: true,
+    icon: "mouse",
+    title: "Clicks / semana",
+    subtitle: "Hoy consigue ~330 clics por semana",
+    target: "330",
+  },
+  {
+    id: "m-leads",
+    checked: false,
+    icon: "form",
+    title: "Leads (formularios) / semana",
+    subtitle: "Cuando pides datos en un formulario dentro del anuncio",
+    target: "12",
+  },
+  {
+    id: "m-conv",
+    checked: false,
+    icon: "chat",
+    title: "Conversaciones / semana",
+    subtitle: "Mensajes iniciados por WhatsApp, Messenger o Instagram",
+    target: "25",
+  },
+  {
+    id: "m-ig",
+    checked: false,
+    icon: "ig",
+    title: "Alcance en Instagram / semana",
+    subtitle: "Personas únicas que ven tus publicaciones",
+    target: "5,000",
+  },
+  {
+    id: "m-fb",
+    checked: false,
+    icon: "fb",
+    title: "Alcance en Facebook / semana",
+    subtitle: "Personas únicas que ven tus publicaciones",
+    target: "3,500",
+  },
+];
+
+const METRIC_KEY_LABELS: Record<RecommendationMetricKey, string> = {
+  posts: "Publicaciones mensuales",
+  reels: "Reels mensuales",
+  stories: "Stories mensuales",
+  ads: "Campañas Ads",
+};
+
+export function mapMetricKeyToCommitmentPatch(
+  metricKey: RecommendationMetricKey,
+  value: number
+): Partial<AccountCommitment> {
+  if (metricKey === "posts") return { postsCommitted: value };
+  if (metricKey === "reels") return { reelsCommitted: value };
+  if (metricKey === "stories")
+    return { StoriesCommitted: value, storiesCommitted: value };
+  return { adCampaignsCommitted: value };
+}
+
+export function resolveEffectiveRecommendationValue(
+  rec: Pick<AccountRecommendation, "id" | "recommendedCommitted">,
+  customValues: Record<string, number>
+): number {
+  return customValues[rec.id] !== undefined
+    ? customValues[rec.id]
+    : rec.recommendedCommitted;
+}
+
+export function resolveRecommendationMetricTitle(
+  rec: Pick<AccountRecommendation, "metricKey" | "metricTitle">
+): string {
+  return rec.metricTitle || METRIC_KEY_LABELS[rec.metricKey] || "Compromiso mensual";
+}
+
+export function computeRecommendationDelta(
+  rec: Pick<AccountRecommendation, "id" | "currentCommitted" | "recommendedCommitted">,
+  customValues: Record<string, number>
+): { effectiveValue: number; diffAbs: number; diffPct: number } {
+  const effectiveValue = resolveEffectiveRecommendationValue(rec, customValues);
+  const diffAbs = effectiveValue - rec.currentCommitted;
+  const diffPct =
+    rec.currentCommitted > 0
+      ? Math.round((diffAbs / rec.currentCommitted) * 100)
+      : 100;
+  return { effectiveValue, diffAbs, diffPct };
+}
+
+export function adjustRecommendationValue(
+  rec: Pick<AccountRecommendation, "id" | "recommendedCommitted">,
+  customValues: Record<string, number>,
+  delta: number
+): Record<string, number> {
+  const current = resolveEffectiveRecommendationValue(rec, customValues);
+  const next = Math.max(1, current + delta);
+  return { ...customValues, [rec.id]: next };
+}
+
+export function toggleSuggestedMetric(
+  metrics: SuggestedMetricItem[],
+  id: string
+): SuggestedMetricItem[] {
+  return metrics.map((m) => (m.id === id ? { ...m, checked: !m.checked } : m));
+}
+
+export function updateSuggestedMetricTarget(
+  metrics: SuggestedMetricItem[],
+  id: string,
+  target: string
+): SuggestedMetricItem[] {
+  return metrics.map((m) => (m.id === id ? { ...m, target } : m));
+}
+
+export function buildEnrichedMetricsPayload(
+  metrics: SuggestedMetricItem[],
+  brands: BrandWorkspace[]
+) {
+  const selectedMetrics = metrics.filter((m) => m.checked);
+  const firstBrand = brands[0];
+  return selectedMetrics.map((m) => ({
+    ...m,
+    name: firstBrand?.name || m.title,
+    runsPaidAds: firstBrand?.hasPaidAds ?? true,
+    monthlySpend: firstBrand?.adBudget ?? 8345,
+    commitments: {
+      Publicaciones: firstBrand?.commitments?.postsCommitted ?? 12,
+      Stories: firstBrand?.commitments?.StoriesCommitted ?? 16,
+      Reels: firstBrand?.commitments?.reelsCommitted ?? 4,
+      "Campañas Ads": firstBrand?.commitments?.adCampaignsCommitted ?? 2,
+    },
+    metrics: selectedMetrics.map((sm) => ({
+      id: sm.id,
+      name: sm.title,
+      target: sm.target,
+      unit: "por semana",
+      checked: sm.checked,
+    })),
+  }));
+}
 
 export function selectAccountRecommendations(
   brands: BrandWorkspace[],

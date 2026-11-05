@@ -1,0 +1,310 @@
+/* Estilos del lector y editor de libretas (.hubly-notebooks-*) */
+
+.hubly-notebooks-modal {
+  width: 100%;
+  max-width: 780px;
+  max-height: 90vh;
+  background: var(--ui-surface);
+  border-radius: 20px;
+  border: 1px solid var(--ui-border-strong);
+  box-shadow: var(--shadow-window);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--ui-text);
+  position: relative;
+}
+
+.hubly-notebooks-spine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 14px;
+  z-index: 2;
+}
+
+.hubly-notebooks-header {
+  padding: 16px 22px 14px 32px;
+  background: var(--ui-surface-2);
+  border-bottom: 1px solid var(--ui-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hubly-notebooks-header-left { display: flex; align-items: center; gap: 10px; }
+
+.hubly-notebooks-header-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  color: var(--on-accent);
+  display: grid;
+  place-items: center;
+}
+
+.hubly-notebooks-badges,
+.hubly-notebooks-header-right,
+.hubly-notebooks-footer-left,
+.hubly-notebooks-footer-right { display: flex; align-items: center; gap: 8px; }
+
+.hubly-notebooks-category-badge {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: var(--ui-muted);
+  color: var(--ui-text-2);
+}
+
+.hubly-notebooks-saved-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ui-success-text);
+  background: var(--ui-success-soft);
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.hubly-notebooks-title { margin: 3px 0 0; font-size: 16px; font-weight: 800; color: var(--ui-text); }
+
+.hubly-notebooks-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  border: 1px solid var(--ui-border-strong);
+  background: var(--ui-surface);
+  color: var(--ui-text-3);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.hubly-notebooks-grid {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  flex: 1;
+  min-height: 0;
+  padding-left: 14px;
+}
+
+.hubly-notebooks-sidebar {
+  background: var(--ui-surface-2);
+  border-right: 1px solid var(--ui-border);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+}
+
+.hubly-notebooks-sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.hubly-notebooks-sidebar-title {
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ui-text-3);
+}
+
+.hubly-notebooks-new-btn {
+  padding: 3px 8px;
+  border-radius: 7px;
+  border: 1px solid var(--ui-border-strong);
+  background: var(--ui-surface);
+  color: var(--ui-text-2);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.hubly-notebooks-new-btn[data-active="true"] {
+  background: var(--hb-accent);
+  border-color: var(--hb-accent);
+  color: var(--on-accent);
+}
+
+.hubly-notebooks-item {
+  width: 100%;
+  text-align: left;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ui-text);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.hubly-notebooks-item[aria-pressed="true"] {
+  border-color: var(--ui-border-strong);
+  background: var(--ui-surface);
+}
+
+.hubly-notebooks-item-cat { font-size: 10px; font-weight: 800; color: var(--ui-text-4); text-transform: uppercase; }
+.hubly-notebooks-item-title { font-size: 12.5px; font-weight: 600; line-height: 1.25; }
+.hubly-notebooks-item[aria-pressed="true"] .hubly-notebooks-item-title { font-weight: 800; }
+.hubly-notebooks-item-date { font-size: 10.5px; color: var(--ui-text-4); }
+
+.hubly-notebooks-form {
+  padding: 18px 22px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hubly-notebooks-alert {
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: var(--ui-danger-soft);
+  border: 1px solid var(--ui-danger-border);
+  color: var(--ui-danger-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.hubly-notebooks-row-primary { display: grid; grid-template-columns: 1.4fr 1fr; gap: 10px; }
+.hubly-notebooks-row-secondary { display: grid; grid-template-columns: 1fr 140px; gap: 10px; }
+
+.hubly-notebooks-label {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ui-text-3);
+  margin-bottom: 4px;
+}
+
+.hubly-notebooks-input-title,
+.hubly-notebooks-select,
+.hubly-notebooks-input-sub,
+.hubly-notebooks-input-badge {
+  width: 100%;
+  border-radius: 9px;
+  border: 1px solid var(--ui-border-strong);
+  background: var(--ui-surface);
+  color: var(--ui-text);
+}
+
+.hubly-notebooks-input-title { height: 36px; padding: 0 11px; font-size: 13.5px; font-weight: 700; }
+.hubly-notebooks-select { height: 36px; padding: 0 10px; font-size: 12.5px; font-weight: 600; }
+.hubly-notebooks-input-sub { height: 34px; padding: 0 10px; font-size: 12.5px; }
+.hubly-notebooks-input-badge { height: 34px; padding: 0 10px; font-size: 11.5px; font-weight: 700; }
+
+.hubly-notebooks-cover-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.hubly-notebooks-cover-label { font-size: 11px; font-weight: 700; color: var(--ui-text-3); }
+.hubly-notebooks-cover-options { display: flex; gap: 6px; }
+
+.hubly-notebooks-cover-btn {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: 1px solid var(--ui-border-strong);
+  background: var(--ui-surface);
+  color: var(--ui-text-2);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hubly-notebooks-cover-btn[aria-pressed="true"] {
+  border-color: var(--hb-accent);
+  background: var(--hb-accent);
+  color: var(--on-accent);
+}
+
+.hubly-notebooks-editor-wrap { flex: 1; display: flex; flex-direction: column; }
+
+.hubly-notebooks-footer {
+  padding: 12px 22px 12px 32px;
+  background: var(--ui-surface-2);
+  border-top: 1px solid var(--ui-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.hubly-notebooks-space-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--hb-accent-text);
+  text-decoration: none;
+}
+
+.hubly-notebooks-tasks-btn {
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--ui-border-strong);
+  background: var(--ui-surface);
+  color: var(--ui-text-2);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hubly-notebooks-task-notice { font-size: 11.5px; font-weight: 600; color: var(--ui-text-2); }
+
+.hubly-notebooks-delete-btn {
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--ui-danger-border);
+  background: var(--ui-danger-soft);
+  color: var(--ui-danger-text);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hubly-notebooks-cancel-btn {
+  height: 35px;
+  padding: 0 14px;
+  border-radius: 9px;
+  border: 1px solid var(--ui-border-strong);
+  background: var(--ui-surface);
+  color: var(--ui-text-2);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hubly-notebooks-save-btn {
+  height: 35px;
+  padding: 0 16px;
+  border-radius: 9px;
+  border: none;
+  background: var(--hb-accent);
+  color: var(--on-accent);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}

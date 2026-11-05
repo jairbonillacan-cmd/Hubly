@@ -91,10 +91,6 @@
     "tamano-fuente": 1,
     "z-index-fijo": 2
   },
-  "components/app/AutoSuggestionsModal.tsx": {
-    "rgb-fijo": 1,
-    "style-inline": 1
-  },
   "components/app/CommandPaletteModal.tsx": {
     "style-inline": 1
   },
@@ -132,12 +128,6 @@
   "components/app/NewBrandModal.tsx": {
     "color-fijo": 1,
     "style-inline": 2
-  },
-  "components/app/NotebookReaderModal.tsx": {
-    "color-fijo": 55,
-    "rgb-fijo": 2,
-    "style-inline": 47,
-    "tamano-fuente": 1
   },
   "components/app/PostComposerModal.tsx": {
     "style-inline": 1
@@ -217,6 +207,9 @@
   },
   "components/app/media/MediaLibrary.tsx": {
     "color-fijo": 1,
+    "style-inline": 2
+  },
+  "components/app/notebooks/LibretaCabecera.tsx": {
     "style-inline": 2
   },
   "components/app/parrillas/ParrillasCalendario.tsx": {
@@ -322,26 +315,8 @@
     "color-fijo": 1,
     "style-inline": 2
   },
-  "components/app/sugerencias/AutoSuggestionsModal-shared.tsx": {
-    "color-fijo": 8,
-    "style-inline": 4
-  },
-  "components/app/sugerencias/SugerenciasCabecera.tsx": {
-    "rgb-fijo": 2,
-    "style-inline": 11,
-    "tamano-fuente": 1,
-    "view-prop": 1
-  },
   "components/app/sugerencias/SugerenciasCuerpo.tsx": {
-    "color-fijo": 4,
-    "rgb-fijo": 1,
-    "style-inline": 40,
-    "view-prop": 1
-  },
-  "components/app/sugerencias/SugerenciasPie.tsx": {
-    "color-fijo": 1,
-    "style-inline": 6,
-    "view-prop": 1
+    "style-inline": 1
   },
   "components/app/tasks/NotebooksSection.tsx": {
     "color-fijo": 5,
