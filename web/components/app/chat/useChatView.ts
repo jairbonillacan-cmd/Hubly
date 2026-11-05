@@ -53,7 +53,7 @@ function writeIds(key: string, ids: string[]) {
   try {
     window.localStorage.setItem(key, JSON.stringify(ids));
   } catch {
-    /* Sin almacenamiento: la preferencia se queda solo en esta sesiÃ³n. */
+    /* Sin almacenamiento: la preferencia se queda solo en esta sesión. */
   }
 }
 
@@ -353,7 +353,7 @@ export function useChatView() {
     if (!active) return;
     scheduleChatMessage({ channelId: active.id, text: text.trim(), sendAt: at, repeat, authorId: myId, sender: myName, senderInitials: myInitials });
     setQueueOpen(true);
-    setNotice(`Se enviarÃ¡: ${scheduledLabel(at)}`);
+    setNotice(`Se enviará: ${scheduledLabel(at)}`);
   };
 
   const subtitle = resolveChatSubtitle(active, channel, brandName, isSelf);
