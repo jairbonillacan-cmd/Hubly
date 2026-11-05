@@ -63,7 +63,10 @@ export function SugerenciasCuerpo({
           <div key={rec.id} className="hubly-sugerencias-card">
             <div className="hubly-sugerencias-card-top">
               <div className="hubly-sugerencias-brand-group">
-                <div className="hubly-sugerencias-brand-avatar">
+                <div
+                  className="hubly-sugerencias-brand-avatar"
+                  style={{ background: rec.brandColor }}
+                >
                   {rec.brandInitial}
                 </div>
                 <div>

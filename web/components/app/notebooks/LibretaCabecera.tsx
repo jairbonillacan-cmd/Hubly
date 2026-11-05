@@ -6,11 +6,13 @@ import {
   HublyCloseIcon as X,
   HublyNotebookIcon as BookOpen,
 } from "@/components/app/icons/DuotoneIcons";
+import { resolveNotebookColorSpec } from "@/lib/domain/notebooks";
 
 interface LibretaCabeceraProps {
   titleId: string;
   title: string;
   category: string;
+  accentColor: string;
   isCreatingNew: boolean;
   savedNotice: boolean;
   onClose: () => void;
@@ -20,17 +22,27 @@ export function LibretaCabecera({
   titleId,
   title,
   category,
+  accentColor,
   isCreatingNew,
   savedNotice,
   onClose,
 }: LibretaCabeceraProps) {
+  const colorSpec = resolveNotebookColorSpec(accentColor);
+
   return (
     <>
-      <div aria-hidden="true" className="hubly-notebooks-spine" />
+      <div
+        aria-hidden="true"
+        className="hubly-notebooks-spine"
+        style={{ background: colorSpec.spine }}
+      />
 
       <div className="hubly-notebooks-header">
         <div className="hubly-notebooks-header-left">
-          <div className="hubly-notebooks-header-icon">
+          <div
+            className="hubly-notebooks-header-icon"
+            style={{ background: colorSpec.bg }}
+          >
             <BookOpen size={17} />
           </div>
           <div>

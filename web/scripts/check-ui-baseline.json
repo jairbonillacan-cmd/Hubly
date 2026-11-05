@@ -209,6 +209,9 @@
     "color-fijo": 1,
     "style-inline": 2
   },
+  "components/app/notebooks/LibretaCabecera.tsx": {
+    "style-inline": 2
+  },
   "components/app/parrillas/ParrillasCalendario.tsx": {
     "style-inline": 1
   },
@@ -311,6 +314,9 @@
   "components/app/social/SocialCalendar.tsx": {
     "color-fijo": 1,
     "style-inline": 2
+  },
+  "components/app/sugerencias/SugerenciasCuerpo.tsx": {
+    "style-inline": 1
   },
   "components/app/tasks/NotebooksSection.tsx": {
     "color-fijo": 5,

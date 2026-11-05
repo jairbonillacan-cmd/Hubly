@@ -57,6 +57,7 @@ export function NotebookReaderModal(props: NotebookReaderModalProps = {}) {
         titleId={titleId}
         title={currentNotebook?.title || ""}
         category={category}
+        accentColor={accentColor}
         isCreatingNew={isCreatingNew}
         savedNotice={savedNotice}
         onClose={handleClose}
